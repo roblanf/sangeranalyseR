@@ -1,14 +1,15 @@
 Package: HIVR
 Type: Package
 Title: HIVR: a suite of functions for the analysis of HIV sequence data in R
-Version: 0.1.1
+Version: 0.1.0
+Date: 2015-12-18
 Author: Rob Lanfear <rob.lanfear@gmail.com>
 Maintainer: Rob Lanfear <rob.lanfear@gmail.com>
-Description: This package implements bioinformatic methods to process and make inferences
-from sequencing reads of HIV sequences.
+Description: This package implements bioinformatic methods to process and make inferences from sequencing reads of HIV genomes.
 License: GPL-2
 Depends:
     R (>= 3.0.1),
     sangerseqR,
-    Biostrings
+    Biostrings,
+    parallel,
 RoxygenNote: 5.0.1
