@@ -8,29 +8,15 @@
 #' @param cutoff the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not. 
 #' @param write.files TRUE/FALSE. FALSE (the default): do not write any files to disk. TRUE: write plots and .csv files of secondary peaks to disk, in this case, files are named with the same filename as the .ab1 files, but with .csv and .pdf extensions, and are saved in the same folder as the .ab1 file from which they were created.
 #' 
-#' @return output a list of plots and dataframes of mismatches, one of each for each .ab1 file found (recursively) in the input folder.
+#' @return output a dataframe of secondary peaks
 #'
 #' @keywords chromatogram, peak, mismatch
 #'
 #' @export secondary.peaks.abi.folder
 
-secondary.peaks.abi.folder <- function(folder, cutoff, mc.cores = 1, write.files = FALSE){
-  abi_files = list.files(folder, pattern = "\\.ab1$", full.names = T, recursive = T)
+secondary.peaks.abi.folder <- function(input.folder, cutoff, mc.cores = 1, write.files = FALSE){
+  abi_files = list.files(input.folder, pattern = "\\.ab1$", full.names = T, recursive = T)
   mclapply(abi_files, process.abi.file, cutoff = cutoff, write.files = write.files)
 }
 
 
-process.abi.file <- function(inputfile, cutoff, write.files){
- 
-    seq = readsangerseq(inputfile)
-
-    if(write.files != FALSE){
-        output.folder = dirname(inputfile)
-        prefix = basename(inputfile)
-        r = secondary.peaks(seq, cutoff, output.folder, prefix)
-    }else{
-        r = secondary.peaks(seq, cutoff)
-    }
-
-    return(r)
-}
