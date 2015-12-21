@@ -4,20 +4,20 @@
 \alias{secondary.peaks}
 \title{Check for secondary peaks in a sangerseq object}
 \usage{
-secondary.peaks(seq, cutoff = 0.33, output.folder = NA,
+secondary.peaks(seq, ratio = 0.33, output.folder = NA,
   file.prefix = "seq")
 }
 \arguments{
 \item{seq}{a sangerseq s4 object from the sangerseqR package}
 
-\item{cutoff}{the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.}
+\item{ratio}{the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.}
 
 \item{output.folder}{If output.folder is NA (the default) no files are written. If a valid folder is provided, two files are written to that folder: a .csv file of the secondary peaks (see description below) and a .pdf file of the chromatogram.}
 
 \item{file.prefix}{If output.folder is specified, this is the prefix which will be appended to the .csv and the .pdf file. The default is "seq".}
 }
 \value{
-a data frame with one row per secondary peak above the cutoff, and three columns: "position" is the position of the secondary peak relative to the primary sequence; "primary.basecall" is the primary base call; "secondary.basecall" is the secondary basecall.
+a data frame with one row per secondary peak above the ratio, and three columns: "position" is the position of the secondary peak relative to the primary sequence; "primary.basecall" is the primary base call; "secondary.basecall" is the secondary basecall.
 }
 \description{
 This function scans finds and reports secondary peaks in a sangerseq object. It returns a table of secondary peaks, and optionally saves an annotated chromatogram and a csv file of the peak locations.
