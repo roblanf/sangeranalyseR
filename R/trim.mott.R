@@ -16,17 +16,18 @@
 
 trim.mott <- function(abif.seq, cutoff = 0.05, segment = 20){
 
-    #ported to R from BioPython: http://biopython.org/DIST/docs/api/Bio.SeqIO.AbiIO-pysrc.html 
-
+    abif.seq = abif.seq@data
     start = FALSE # flag for starting position of trimmed sequence
     segment = 20 # minimum sequence length 
     trim_start = 0 # init start index
     cutoff = 0.05 # default cutoff value for calculating base score 
 
-    if(length(abif.seq) <= segment){
+    seqlen = nchar(abif.seq$PBAS.2)
+
+    if(seqlen <= segment){
 
         trim_start = 1
-        trim_finish = nchar(abif.seq$PBAS.2)
+        trim_finish = seqlen
 
     }else{
 
@@ -58,9 +59,8 @@ trim.mott <- function(abif.seq, cutoff = 0.05, segment = 20){
         # marking the end of sequence segment with highest cummulative score 
         trim_finish = which.max(cummul_score)
 
-        return(c("trim_start" = trim_start, "trim_finish" = trim_finish))
-
     }
 
+    return(c("trim_start" = trim_start, "trim_finish" = trim_finish))
 
 }
