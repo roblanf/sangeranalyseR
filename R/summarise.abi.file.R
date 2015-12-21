@@ -42,9 +42,6 @@ summarise.abi.file <- function(inputfile, trim.cutoff = 0.0001, secondary.peak.c
     qual.trimmed = qual[trim.start:trim.finish]
     secondary.peaks.trimmed = subset(secondary.peaks, position > trim.start && position < trim.end )
 
-    print(qual)
-    print(qual.trimmed)
-
     return(c("raw length"               = length(seq@primarySeq), 
              "trimmed length"           = length(seq.trimmed), 
              "raw secondary peaks"      = nrow(secondary.peaks),
