@@ -13,7 +13,6 @@
 #' @export trim.mott
 #'
 
-
 trim.mott <- function(abif.seq, cutoff = 0.05, segment = 20){
 
     abif.seq = abif.seq@data
@@ -21,6 +20,7 @@ trim.mott <- function(abif.seq, cutoff = 0.05, segment = 20){
     trim_start = 0 # init start index
 
     seqlen = nchar(abif.seq$PBAS.2)
+    qual = abif.seq$PCON.2
 
     if(seqlen <= segment){
 
