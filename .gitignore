@@ -1,4 +1,10 @@
-
 .Rproj.user
+*.Rproj.user/
 .Rhistory
 .RData
+^.*\.Rproj$
+^\.Rproj\.user$
+
+.Rproj.user/343C2D6F/sdb/prop/INDEX
+
+.Rproj.user/343C2D6F/pcs/windowlayoutstate.pper
