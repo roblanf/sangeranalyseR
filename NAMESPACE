@@ -2,4 +2,5 @@
 
 export(secondary.peaks)
 export(secondary.peaks.abi.folder)
+export(summarise.abi.file)
 export(trim.mott)
