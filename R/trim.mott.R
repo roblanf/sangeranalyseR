@@ -18,9 +18,7 @@ trim.mott <- function(abif.seq, cutoff = 0.05, segment = 20){
 
     abif.seq = abif.seq@data
     start = FALSE # flag for starting position of trimmed sequence
-    segment = 20 # minimum sequence length 
     trim_start = 0 # init start index
-    cutoff = 0.05 # default cutoff value for calculating base score 
 
     seqlen = nchar(abif.seq$PBAS.2)
 
