@@ -18,7 +18,15 @@ secondary.peaks <- function(seq, ratio = 0.33, output.folder = NA, file.prefix =
   
     # make secondary basecalls, and align them to the original sequence
     basecalls = makeBaseCalls(seq, ratio = ratio)
-    pa = pairwiseAlignment(primarySeq(basecalls), secondarySeq(basecalls), type = "global-local")
+
+    primary = as.character(primarySeq(basecalls))
+    secondary = as.character(secondarySeq(basecalls))
+    seqs = DNAStringSet(c(primary, secondary))
+
+    # these seuqences should be VERY similar...
+    pa = AlignSeqs(seqs, iterations = 0, refinements = 0, verbose = FALSE)
+    pa = PairwiseAlignments(pa)
+
     mismatches = mismatchTable(pa)
 
     r = data.frame("position" = mismatches$PatternStart, "primary.basecall" = mismatches$PatternSubstring, "secondary.basecall" = mismatches$SubjectSubstring)
