@@ -1,11 +1,11 @@
-Package: HIVR
+Package: sangeranalyseR
 Type: Package
-Title: HIVR: a suite of functions for the analysis of HIV sequence data in R
+Title: sangeranalyseR: a suite of functions for the analysis of Sanger sequence data in R
 Version: 0.1.0
 Date: 2015-12-18
 Author: Rob Lanfear <rob.lanfear@gmail.com>
 Maintainer: Rob Lanfear <rob.lanfear@gmail.com>
-Description: This package implements bioinformatic methods to process and make inferences from sequencing reads of HIV genomes.
+Description: This package implements bioinformatic methods to process and make inferences from Sanger sequencing reads, particularly those sequenced with ABI machines.
 License: GPL-2
 Depends:
     R (>= 3.0.1),

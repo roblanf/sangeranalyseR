@@ -4,8 +4,8 @@
 \alias{summarise.abi.file}
 \title{Create a detailed summary of a single ABI sequencing file}
 \usage{
-summarise.abi.file(inputfile, secondary.peak.cutoff = 0.33,
-  write.secondary.peak.files = FALSE)
+summarise.abi.file(inputfile, trim.cutoff = 1e-04,
+  secondary.peak.cutoff = 0.33, write.secondary.peak.files = FALSE)
 }
 \arguments{
 \item{input.folder}{the folder in which to search recursively for *.ab1 files.}

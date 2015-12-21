@@ -14,7 +14,7 @@
 #'
 #' @export summarise.abi.file
 
-summarise.abi.file <- function(inputfile, secondary.peak.cutoff = 0.33, write.secondary.peak.files = FALSE){
+summarise.abi.file <- function(inputfile, trim.cutoff = 0.0001, secondary.peak.cutoff = 0.33, write.secondary.peak.files = FALSE){
  
     seq.abif = read.abif(inputfile)
     seq = sangerseq(seq.abif)
@@ -31,26 +31,28 @@ summarise.abi.file <- function(inputfile, secondary.peak.cutoff = 0.33, write.se
     }
 
     # now we trim the sequence
-    trims = trim.mott(seq.abif)
+    trims = trim.mott(seq.abif, cutoff = trim.cutoff)
     trim.start = trims["trim_start"][[1]]
     trim.finish = trims["trim_finish"][[1]]
 
+
+    # get trimmed and untrimmed version of raw data
     seq.trimmed = seq@primarySeq[trim.start:trim.finish]
+    qual = seq.abif@data$PCON.2
+    qual.trimmed = qual[trim.start:trim.finish]
+    secondary.peaks.trimmed = subset(secondary.peaks, position > trim.start && position < trim.end )
 
+    print(qual)
+    print(qual.trimmed)
 
-    # get the secondary peaks in the 'good sequence'
-    secondary.peaks.goodseq = subset(secondary.peaks, position > trim.start && position < trim.end )
-
-    # summary stats
-    len.seq = length(seq@primarySeq)
-    len.trimmed = length(seq.trimmed)
-    n.secondary = nrow(secondary.peaks)
-    n.secondary.goodseq = nrow(secondary.peaks.goodseq)
-
-
-    return(c("raw length"               = len.seq, 
-             "trimmed length"           = len.trimmed, 
-             "raw secondary peaks"      = n.secondary,
-             "trimmed secondary peaks"  = n.secondary.goodseq))
+    return(c("raw length"               = length(seq@primarySeq), 
+             "trimmed length"           = length(seq.trimmed), 
+             "raw secondary peaks"      = nrow(secondary.peaks),
+             "trimmed secondary peaks"  = nrow(secondary.peaks.trimmed),
+             "raw mean quality"         = mean(qual),
+             "trimmed mean quality"     = mean(qual.trimmed),
+             "raw min quality"          = min(qual),
+             "trimmed min quality"      = min(qual.trimmed)
+             ))
 
 }
