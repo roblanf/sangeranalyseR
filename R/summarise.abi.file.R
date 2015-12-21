@@ -14,20 +14,20 @@
 #'
 #' @export summarise.abi.file
 
-summarise.abi.file <- function(inputfile, cutoff, write.files){
+summarise.abi.file <- function(inputfile, secondary.peak.cutoff = 0.33, write.secondary.peak.files = FALSE){
  
     seq.abif = read.abif(inputfile)
     seq = sangerseq(seq.abif)
 
     # first we get the secondary peaks
-    if(write.files == TRUE){
+    if(write.secondary.peak.files == TRUE){
         output.folder = dirname(inputfile)
         prefix = basename(inputfile)
-        secondary.peaks = secondary.peaks(seq, cutoff, output.folder, prefix)
-    }else if(write.files == FALSE){
-        secondary.peaks = secondary.peaks(seq, cutoff)
+        secondary.peaks = secondary.peaks(seq, secondary.peak.cutoff, output.folder, prefix)
+    }else if(write.secondary.peak.files == FALSE){
+        secondary.peaks = secondary.peaks(seq, secondary.peak.cutoff)
     }else{
-        stop("Unknown option for write.files. Should be TRUE or FALSE")
+        stop("Unknown option for write.secondary.peak.files. Should be TRUE or FALSE")
     }
 
     # now we trim the sequence
@@ -42,7 +42,7 @@ summarise.abi.file <- function(inputfile, cutoff, write.files){
     secondary.peaks.goodseq = subset(secondary.peaks, position > trim.start && position < trim.end )
 
     # summary stats
-    len.seq = length(seq)
+    len.seq = length(seq@primarySeq)
     len.trimmed = length(seq.trimmed)
     n.secondary = nrow(secondary.peaks)
     n.secondary.goodseq = nrow(secondary.peaks.goodseq)

@@ -4,14 +4,15 @@
 \alias{summarise.abi.file}
 \title{Create a detailed summary of a single ABI sequencing file}
 \usage{
-summarise.abi.file(inputfile, cutoff, write.files)
+summarise.abi.file(inputfile, secondary.peak.cutoff = 0.33,
+  write.secondary.peak.files = FALSE)
 }
 \arguments{
+\item{input.folder}{the folder in which to search recursively for *.ab1 files.}
+
 \item{cutoff}{the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.}
 
 \item{write.files}{TRUE/FALSE. FALSE (the default): do not write any files to disk. TRUE: write plots and .csv files of secondary peaks to disk, in this case, files are named with the same filename as the .ab1 files, but with .csv and .pdf extensions, and are saved in the same folder as the .ab1 file from which they were created.}
-
-\item{input.folder}{the folder in which to search recursively for *.ab1 files.}
 }
 \value{
 output a dataframe of secondary peaks
