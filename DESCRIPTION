@@ -9,7 +9,10 @@ Description: This package implements bioinformatic methods to process and make i
 License: GPL-2
 Depends:
     R (>= 3.0.1),
-    sangerseqR,
+    ape,
     Biostrings,
+    DECIPHER,
     parallel,
+    sangerseqR,
+    stringr,
 RoxygenNote: 5.0.1
