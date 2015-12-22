@@ -7,6 +7,7 @@
 #' @param input.folder the folder in which to search recursively for *.ab1 files.
 #' @param cutoff the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not. 
 #' @param write.files TRUE/FALSE. FALSE (the default): do not write any files to disk. TRUE: write plots and .csv files of secondary peaks to disk, in this case, files are named with the same filename as the .ab1 files, but with .csv and .pdf extensions, and are saved in the same folder as the .ab1 file from which they were created.
+#' @param processors The number of processors to use, or NULL (the default) for all available processors
 #' 
 #' @return output a dataframe of secondary peaks
 #'
@@ -14,7 +15,7 @@
 #'
 #' @export summarise.abi.file
 
-summarise.abi.file <- function(inputfile, trim.cutoff = 0.0001, secondary.peak.cutoff = 0.33, write.secondary.peak.files = FALSE){
+summarise.abi.file <- function(inputfile, trim.cutoff = 0.0001, secondary.peak.cutoff = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
  
     seq.abif = read.abif(inputfile)
     seq = sangerseq(seq.abif)
@@ -23,9 +24,9 @@ summarise.abi.file <- function(inputfile, trim.cutoff = 0.0001, secondary.peak.c
     if(write.secondary.peak.files == TRUE){
         output.folder = dirname(inputfile)
         prefix = basename(inputfile)
-        secondary.peaks = secondary.peaks(seq, secondary.peak.cutoff, output.folder, prefix)
+        secondary.peaks = secondary.peaks(seq, secondary.peak.cutoff, output.folder, prefix, processors = processors)
     }else if(write.secondary.peak.files == FALSE){
-        secondary.peaks = secondary.peaks(seq, secondary.peak.cutoff)
+        secondary.peaks = secondary.peaks(seq, secondary.peak.cutoff, processors = processors)
     }else{
         stop("Unknown option for write.secondary.peak.files. Should be TRUE or FALSE")
     }
