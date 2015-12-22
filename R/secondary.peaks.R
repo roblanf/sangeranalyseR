@@ -6,6 +6,7 @@
 #' @param ratio the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not. 
 #' @param output.folder If output.folder is NA (the default) no files are written. If a valid folder is provided, two files are written to that folder: a .csv file of the secondary peaks (see description below) and a .pdf file of the chromatogram.
 #' @param file.prefix If output.folder is specified, this is the prefix which will be appended to the .csv and the .pdf file. The default is "seq".
+#' @param processors The number of processors to use, or NULL (the default) for all available processors
 #' 
 #' @return a data frame with one row per secondary peak above the ratio, and three columns: "position" is the position of the secondary peak relative to the primary sequence; "primary.basecall" is the primary base call; "secondary.basecall" is the secondary basecall. 
 #'
@@ -14,7 +15,7 @@
 #' @export secondary.peaks
 #'
 
-secondary.peaks <- function(seq, ratio = 0.33, output.folder = NA, file.prefix = "seq"){
+secondary.peaks <- function(seq, ratio = 0.33, output.folder = NA, file.prefix = "seq", processors = NULL){
   
     # make secondary basecalls, and align them to the original sequence
     basecalls = makeBaseCalls(seq, ratio = ratio)
@@ -24,7 +25,7 @@ secondary.peaks <- function(seq, ratio = 0.33, output.folder = NA, file.prefix =
     seqs = DNAStringSet(c(primary, secondary))
 
     # these seuqences should be VERY similar...
-    pa = AlignSeqs(seqs, iterations = 0, refinements = 0, verbose = FALSE)
+    pa = AlignSeqs(seqs, iterations = 0, refinements = 0, verbose = FALSE, processors = processors)
     pa = PairwiseAlignments(pa)
 
     mismatches = mismatchTable(pa)
