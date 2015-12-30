@@ -3,8 +3,7 @@
 #' This function attempts to merge any number of forward and reverse sequences into a single consensus sequence. It calculates a number of statistics that should help you decide whether a sensible consensus sequence exists for your data.\cr
 #' Note that sequence names can be provided via the names on the input lists. If this is done, the names will be preserved in the output data. Otherwise, sequences will be called: fwd_1, fwd_2, etc.
 #'
-#' @param fwd.reads a list of forward sequences, each should be a sangerseq s4 object from the sangerseqR package. These sequences will not be reverse-complemented before alignment.
-#' @param rev.reads a list of reverse sequences, each should be a sangerseq s4 object from the sangerseqR package. These sequences will be reverse-complemented before alignment.
+#' @param readgroup a readgroup object, which contains at least two reads to be merged.
 #' @param ref.aa.seq an amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand.
 #' @param minInformation minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 1.0 for this function, implying that the consensus sequence is only called when all fwd and rev reads overlap.
 #' @param minReads minimum number of reads that are required to call a consensus sequence at any given position. This can be used in place of minInformation if you set minInformation to 0.0. For example, if you expect to have non-overlapping reads making up your consensus, but only wish to call a consensus where at least two reads overlap, set minInformation to 0.0 and minReads to 2. If you set both minInformation and minReads, the value corresponding to the larger number of reads will be used.
@@ -27,6 +26,8 @@
 #'
 
 merge.reads <- function(readgroup, ref.aa.seq = NULL, minInformation = 1.0, minReads = 0, processors = NULL, genetic.code = GENETIC_CODE){
+
+    # check input options
 
     fwd.reads = readgroup[[1]]$forward.reads
     rev.reads = readgroup[[1]]$reverse.reads
