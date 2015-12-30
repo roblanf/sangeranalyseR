@@ -4,15 +4,10 @@
 \alias{merge.reads}
 \title{Merge fwd and reverse reads into a single sequence}
 \usage{
-\method{merge}{reads}(fwd.seqs, rev.seqs, ref.aa.seq = NULL,
-  minInformation = 1, minReads = 0, processors = NULL,
-  genetic.code = GENETIC_CODE)
+\method{merge}{reads}(readgroup, ref.aa.seq = NULL, minInformation = 1,
+  minReads = 0, processors = NULL, genetic.code = GENETIC_CODE)
 }
 \arguments{
-\item{fwd.seqs}{a list of forward sequences, each should be a sangerseq s4 object from the sangerseqR package. These sequences will not be reverse-complemented before alignment.}
-
-\item{rev.seqs}{a list of reverse sequences, each should be a sangerseq s4 object from the sangerseqR package. These sequences will be reverse-complemented before alignment.}
-
 \item{ref.aa.seq}{an amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand.}
 
 \item{minInformation}{minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 1.0 for this function, implying that the consensus sequence is only called when all fwd and rev reads overlap.}
@@ -22,6 +17,10 @@
 \item{processors}{The number of processors to use, or NULL (the default) for all available processors}
 
 \item{genetic.code}{Named character vector in the same format as GENETIC_CODE (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
+
+\item{fwd.reads}{a list of forward sequences, each should be a sangerseq s4 object from the sangerseqR package. These sequences will not be reverse-complemented before alignment.}
+
+\item{rev.reads}{a list of reverse sequences, each should be a sangerseq s4 object from the sangerseqR package. These sequences will be reverse-complemented before alignment.}
 }
 \value{
 a list with the following components:
