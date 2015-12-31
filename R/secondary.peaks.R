@@ -1,8 +1,8 @@
 #' Check for secondary peaks in a sangerseq object
 #' 
-#' This function scans finds and reports secondary peaks in a sangerseq object. It returns a table of secondary peaks, and optionally saves an annotated chromatogram and a csv file of the peak locations.
+#' This function finds and reports secondary peaks in a sangerseq object. It returns a table of secondary peaks, and optionally saves an annotated chromatogram and a csv file of the peak locations.
 #' 
-#' @param seq a sangerseq s4 object from the sangerseqR package
+#' @param s a sangerseq s4 object from the sangerseqR package
 #' @param ratio the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not. 
 #' @param output.folder If output.folder is NA (the default) no files are written. If a valid folder is provided, two files are written to that folder: a .csv file of the secondary peaks (see description below) and a .pdf file of the chromatogram.
 #' @param file.prefix If output.folder is specified, this is the prefix which will be appended to the .csv and the .pdf file. The default is "seq".
@@ -15,23 +15,32 @@
 #' @export secondary.peaks
 #'
 
-secondary.peaks <- function(seq, ratio = 0.33, output.folder = NA, file.prefix = "seq", processors = NULL){
+secondary.peaks <- function(s, ratio = 0.33, output.folder = NA, file.prefix = "seq", processors = NULL){
   
     # make secondary basecalls, and align them to the original sequence
-    basecalls = makeBaseCalls(seq, ratio = ratio)
+    basecalls = makeBaseCalls(s, ratio = ratio)
 
-    primary = as.character(primarySeq(basecalls))
-    secondary = as.character(secondarySeq(basecalls))
-    seqs = DNAStringSet(c(primary, secondary))
+    primary = primarySeq(basecalls, string = TRUE)
+    secondary = secondarySeq(basecalls, string = TRUE)
+
+    # perhaps we don't need to align...
+    #seqs = DNAStringSet(c(primary, secondary))
 
     # these seuqences should be VERY similar...
-    pa = AlignSeqs(seqs, iterations = 0, refinements = 0, verbose = FALSE, processors = processors)
-    pa = PairwiseAlignments(pa)
+    #pa = AlignSeqs(seqs, iterations = 0, refinements = 0, verbose = FALSE, processors = processors)
 
-    mismatches = mismatchTable(pa)
 
-    r = data.frame("position" = mismatches$PatternStart, "primary.basecall" = mismatches$PatternSubstring, "secondary.basecall" = mismatches$SubjectSubstring)
+    # NB: it would seem to make more sense to use mismatchTable here, 
+    # but I recoded it this way because mismatchTable had a bug.
+    comp = compareStrings(primary, secondary)
+    diffs = str_locate_all(pattern ='\\?',comp)[[1]][,1]
+    primary.vector = strsplit(primary, split="")[[1]]
+    secondary.vector = strsplit(secondary, split="")[[1]]
 
+    primary.basecall    = primary.vector[diffs]
+    secondary.basecall  = secondary.vector[diffs]
+
+    r = data.frame("position" = diffs, "primary.basecall" = primary.basecall, "secondary.basecall" = secondary.basecall)
 
     if(!is.na(output.folder)){
         if(dir.exists(output.folder)){
