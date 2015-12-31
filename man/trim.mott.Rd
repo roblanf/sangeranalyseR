@@ -9,15 +9,14 @@ trim.mott(abif.seq, cutoff = 0.05, segment = 20)
 \arguments{
 \item{abif.seq}{a abif.seq s4 object from the sangerseqR package}
 
-\item{cutoff}{cutoff value for calculating base scores}
-
 \item{segment}{minimum sequence length to return. If your input sequence is shorter than this, you just get your input sequence back.}
 }
 \value{
 a vector of two integers: "trim_start" the start position of the sequence to keep; "trim_end" the end position of the sequence to keep
 }
 \description{
-Removes low quality bases from the start and end of a sequence. This versino in R was ported from the Biopython implementation of the same algorithm: http://biopython.org/DIST/docs/api/Bio.SeqIO.AbiIO-module.html#_abi_trim. But note that the BioPython implementation always trims off the first base, while this implementation does not. For more information on the alogrithm, see http://www.phrap.org/phredphrap/phred.html http://www.clcbio.com/manual/genomics/Quality_abif_trimming.html
+Removes low quality bases from the start and end of a sequence. This version in R was ported from the Biopython implementation of the same algorithm: http://biopython.org/DIST/docs/api/Bio.SeqIO.AbiIO-module.html#_abi_trim, with one minor change: the BioPython implementation always trims off the first base, while this implementation does not. For more information on the alogrithm, see http://www.phrap.org/phredphrap/phred.html http://www.clcbio.com/manual/genomics/Quality_abif_trimming.html
+Note that the resulting trim.start and trim.end values correspond to the sequence contained in the abif.seq object, which is not always the same as the sequence contained in a sangerseq object derived from the same data (e.g. if the latter has had bases recalled using sangerseqR's makeBaseCalls() method).
 }
 \keyword{phred,}
 \keyword{quality,}
