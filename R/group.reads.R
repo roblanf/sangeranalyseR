@@ -1,24 +1,28 @@
-#' Group ABI reads by recursively reading them from an input folder
+#' Automatically load readsets by grouping .ab1 files by name.
 #' 
 #' Load all reads recursively, then group them by name after removing prefix/suffix. Return a list of lists of filenames of input reads.
 #'
-#' @export load.readgroups
+#' @export load.readsets
 
 
-load.readgroups <- function(input.folder, forward.suffix, reverse.suffix, processors = NULL){
+load.readsets <- function(input.folder, forward.suffix, reverse.suffix, processors = NULL, min.length = NULL, max.secondary.peaks = NULL){
 
-    if(is.null(processors)) { processors = detectCores(all.tests = FALSE, logical = FALSE)}
+    processors = get.processors(processors)
 
     abi.files = list.files(input.folder, pattern = "\\.ab1$", full.names = T, recursive = T)
-    files.clean = abi.files
-    files.clean = str_replace(files.clean, fwd.suffix, replacement = "")
-    files.clean = str_replace(files.clean, rev.suffix, replacement = "")
-    groups = unique(files.clean)
-    readgroup.fnames = lapply(groups, 
+
+    # get a set of unique filenames after removing suffixes
+    group.dataframe = get.group.dataframe(abi.files, forward.suffix, reverse.suffix)
+    groups = unique(group.dataframe$group)
+
+    # load full file paths for readgroups based on unique filenames 
+    # TODO: could be more efficient using split/apply
+    readgroup.fnames = mclapply(groups, 
                         get.readgroup.fnames,
                         abi.files = abi.files, 
                         forward.suffix = forward.suffix,
-                        reverse.suffix = reverse.suffix)
+                        reverse.suffix = reverse.suffix,
+                        mc.cores = processors)
 
     # how we parallelise depends on how many readgroups there are
     if(length(readgroup.fnames[[1]]) > length(readgroup.fnames)){
@@ -38,6 +42,15 @@ load.readgroups <- function(input.folder, forward.suffix, reverse.suffix, proces
 
 }
 
+get.group.dataframe <- function(fname.list, forward.suffix, reverse.suffix){
+
+    files.cleaned = fname.list
+    files.cleaned = str_replace(files.cleaned, fwd.suffix, replacement = "")
+    files.cleaned = str_replace(files.cleaned, rev.suffix, replacement = "")
+
+    return(data.frame("file.path" = fname.list, "group" = files.cleaned))
+
+}
 
 
 load.sangerseqs <- function(filenames){
@@ -46,7 +59,13 @@ load.sangerseqs <- function(filenames){
 }
 
 
+filter.reads <- function(blah){
+    #filter all the reads based on input criteria passed by user
+}
+
 get.readgroup <- function(readgroup.fnames, processors){
+
+    # need to filter the reads as we go here...
 
     rg = make.readgroup(readgroup.fnames$forward.reads, 
                         readgroup.fnames$reverse.reads,

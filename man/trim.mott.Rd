@@ -9,7 +9,7 @@ trim.mott(abif.seq, cutoff = 0.05, segment = 20)
 \arguments{
 \item{abif.seq}{a abif.seq s4 object from the sangerseqR package}
 
-\item{cutoff}{default cutoff value for calculating base scores}
+\item{cutoff}{cutoff value for calculating base scores}
 
 \item{segment}{minimum sequence length to return. If your input sequence is shorter than this, you just get your input sequence back.}
 }

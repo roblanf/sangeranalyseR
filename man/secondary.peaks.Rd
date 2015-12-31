@@ -4,11 +4,11 @@
 \alias{secondary.peaks}
 \title{Check for secondary peaks in a sangerseq object}
 \usage{
-secondary.peaks(seq, ratio = 0.33, output.folder = NA,
-  file.prefix = "seq", processors = NULL)
+secondary.peaks(s, ratio = 0.33, output.folder = NA, file.prefix = "seq",
+  processors = NULL)
 }
 \arguments{
-\item{seq}{a sangerseq s4 object from the sangerseqR package}
+\item{s}{a sangerseq s4 object from the sangerseqR package}
 
 \item{ratio}{the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.}
 
@@ -22,7 +22,7 @@ secondary.peaks(seq, ratio = 0.33, output.folder = NA,
 a data frame with one row per secondary peak above the ratio, and three columns: "position" is the position of the secondary peak relative to the primary sequence; "primary.basecall" is the primary base call; "secondary.basecall" is the secondary basecall.
 }
 \description{
-This function scans finds and reports secondary peaks in a sangerseq object. It returns a table of secondary peaks, and optionally saves an annotated chromatogram and a csv file of the peak locations.
+This function finds and reports secondary peaks in a sangerseq object. It returns a table of secondary peaks, and optionally saves an annotated chromatogram and a csv file of the peak locations.
 }
 \keyword{chromatogram,}
 \keyword{mismatch}

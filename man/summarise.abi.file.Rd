@@ -4,7 +4,7 @@
 \alias{summarise.abi.file}
 \title{Create a detailed summary of a single ABI sequencing file}
 \usage{
-summarise.abi.file(inputfile, trim.cutoff = 1e-04,
+summarise.abi.file(seq.abif, trim.cutoff = 0.05, trim.segment = 20,
   secondary.peak.cutoff = 0.33, write.secondary.peak.files = FALSE,
   processors = NULL)
 }
