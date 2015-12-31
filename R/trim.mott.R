@@ -3,7 +3,7 @@
 #' Removes low quality bases from the start and end of a sequence. This versino in R was ported from the Biopython implementation of the same algorithm: http://biopython.org/DIST/docs/api/Bio.SeqIO.AbiIO-module.html#_abi_trim. But note that the BioPython implementation always trims off the first base, while this implementation does not. For more information on the alogrithm, see http://www.phrap.org/phredphrap/phred.html http://www.clcbio.com/manual/genomics/Quality_abif_trimming.html
 #' 
 #' @param abif.seq a abif.seq s4 object from the sangerseqR package
-#' @param cutoff default cutoff value for calculating base scores
+#' @param cutoff cutoff value for calculating base scores
 #' @param segment minimum sequence length to return. If your input sequence is shorter than this, you just get your input sequence back.
 #' 
 #' @return a vector of two integers: "trim_start" the start position of the sequence to keep; "trim_end" the end position of the sequence to keep
@@ -59,6 +59,6 @@ trim.mott <- function(abif.seq, cutoff = 0.05, segment = 20){
 
     }
 
-    return(c("trim_start" = trim_start, "trim_finish" = trim_finish))
+    return(c("trim.start" = trim_start, "trim.finish" = trim_finish))
 
 }
