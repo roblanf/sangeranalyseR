@@ -6,7 +6,7 @@
 #' @param abif.seq a abif.seq s4 object from the sangerseqR package
 #' @param segment minimum sequence length to return. If your input sequence is shorter than this, you just get your input sequence back.
 #' 
-#' @return a vector of two integers: "trim_start" the start position of the sequence to keep; "trim_end" the end position of the sequence to keep
+#' @return a list of two integers: "trim.start" the start position of the sequence to keep; "trim.finish" the end position of the sequence to keep
 #'
 #' @keywords quality, phred, trimming
 #'
@@ -59,6 +59,6 @@ trim.mott <- function(abif.seq, cutoff = 0.05, segment = 20){
 
     }
 
-    return(c("trim.start" = trim_start, "trim.finish" = trim_finish))
+    return(list("trim.start" = trim_start, "trim.finish" = trim_finish))
 
 }
