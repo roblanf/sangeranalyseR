@@ -12,7 +12,7 @@ trim.mott(abif.seq, cutoff = 0.05, segment = 20)
 \item{segment}{minimum sequence length to return. If your input sequence is shorter than this, you just get your input sequence back.}
 }
 \value{
-a list of two integers: "trim.start" the start position of the sequence to keep; "trim.finish" the end position of the sequence to keep
+a list of two integers: "start" the start position of the sequence to keep; "finish" the end position of the sequence to keep
 }
 \description{
 Removes low quality bases from the start and end of a sequence. This version in R was ported from the Biopython implementation of the same algorithm: http://biopython.org/DIST/docs/api/Bio.SeqIO.AbiIO-module.html#_abi_trim, with one minor change: the BioPython implementation always trims off the first base, while this implementation does not. For more information on the alogrithm, see http://www.phrap.org/phredphrap/phred.html http://www.clcbio.com/manual/genomics/Quality_abif_trimming.html
