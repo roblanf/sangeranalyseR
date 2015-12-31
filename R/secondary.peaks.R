@@ -8,7 +8,11 @@
 #' @param file.prefix If output.folder is specified, this is the prefix which will be appended to the .csv and the .pdf file. The default is "seq".
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #' 
-#' @return a data frame with one row per secondary peak above the ratio, and three columns: "position" is the position of the secondary peak relative to the primary sequence; "primary.basecall" is the primary base call; "secondary.basecall" is the secondary basecall. 
+#' @return A list with two elements:
+#'          \enumerate{
+#'              \item {secondary.peaks}: a data frame with one row per secondary peak above the ratio, and three columns: "position" is the position of the secondary peak relative to the primary sequence; "primary.basecall" is the primary base call; "secondary.basecall" is the secondary basecall. \cr
+#'              \item {read}: the input sangerseq s4 object after having the makeBaseCalls() function from sangerseqR applied to it. This re-calls the primary and secondary bases in the sequence, and resets a lot of the internal data.
+#'          }
 #'
 #' @keywords chromatogram, peak, mismatch
 #'
@@ -53,6 +57,6 @@ secondary.peaks <- function(s, ratio = 0.33, output.folder = NA, file.prefix = "
         }
     }
 
-    return(r)
+    return(list("secondary.peaks" = r, "read" = basecalls))
   
 }
