@@ -8,7 +8,6 @@
 summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, secondary.peak.cutoff = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
  
     seq.sanger = sangerseq(seq.abif)
-    original.primaryseq = primarySeq(seq.sanger)
 
     # first we get the secondary peaks
     # note that the secondary peaks correspond to the seq.sanger object AFTER we
@@ -55,7 +54,7 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, 
 
     # get trimmed and untrimmed version of raw data
     seq.trimmed = seq.sanger@primarySeq[trim.start:trim.finish]
-    secondary.peaks.trimmed = subset(secondary.peaks, position >= trim.start, position <= trim.finish)
+    secondary.peaks.trimmed = subset(secondary.peaks, subset = position >= trim.start && position <= trim.finish)
 
     read.summary = c("raw.length"                       = length(seq.sanger@primarySeq), 
                      "trimmed.length"                   = length(seq.trimmed),
