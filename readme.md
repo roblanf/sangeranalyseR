@@ -137,19 +137,52 @@ summary = summarise.abi.file(seq.abif)
 summary
 ```
 
+This summary shows us a lot of information, which you can unpack by looking at the documentation for the function with ```?summarise.abi.file```. For the purposes of this tutorial, it's worth noting that only one of the 3 secondary peaks falls within the trimmed sequence. Looking back at the whole chromatogram, this suggests that the default trimming cutoff of 0.05 is probably too lenient here. We might choose a more severe one, like this:
+
+```{r eval=FALSE}
+summary = summarise.abi.file(seq.abif, trim.cutoff = 0.0001)
+summary
+```
+
+This gives us no secondary peaks in our trimmed sequence. Note that the trimmed seuqence is now much shorter too (462 bases with the more severe cutoff, versus 664 before). The mean quality score of the trimmed sequence is now higher of course (54.7 now, versus 53.9 before).
+
+In general, it's possible to control exactly how trimming and secondary peak-calling is done by passing the appropriate arguments to the summarise.abi.file function. See ```?summarise.abi.file``` for details.
 
 
-## Step-by-step walkthrough
+## Analysing lots of reads at once
 
-For this tutorial, I'll assume that you have a collection of raw .ab1 files, distributed in a series of folders. Each folder might correspond to a particular group of sequences (e.g. samples taken at a particular date, or from a particular patient). I'll also assume that you have two reads per sequence, one forward and one reverse. 
-
-### 1. Summarise the files
-
-The first thing you probably want to do is get a summary of all of your 
+Typically, in a sanger sequencing project we might generate 10s or 100s of sequencing reads. sangeranalyseR provides a convenient way to summarise all of these reads with the ```summarise.abi.folder``` function. For example, consider our test data. We have a single folder ```test_data``` which contains reads from two different species, each in its own folder. This kind of nested file organisation is both sensible and common. To get summaries of all of the reads in all of the folders, we can do this (you'll need to change the file path of course):
 
 
+```{r eval=FALSE}
+summaries = summarise.abi.folder("~/Desktop/test_data")
+summaries
+```
+
+This gives us a data frame of summaries, one row for each read. In this case the data frame also contains the full file path, as well as the name of the read and the name of the folder that the read is in. This means we can easily make some simple plots to compare statistics, e.g.:
+
+```
+library(ggplot2)
+ggplot(summaries, aes(x = folder.name, y = raw.mean.quality)) + geom_boxplot()
+```
+![plot1](images/plot1.png)
 
 
+```
+ggplot(summaries, aes(x = folder.name, y = trimmed.mean.quality)) + geom_boxplot()
+```
+![plot2](images/plot2.png)
+
+```
+ggplot(summaries, aes(x = folder.name, y = trimmed.secondary.peaks)) + geom_boxplot()
+```
+![plot3](images/plot3.png)
+
+```
+ggplot(summaries, aes(x = trimmed.mean.quality, y = trimmed.secondary.peaks)) + geom_point()
+```
+![plot4](images/plot4.png)
 
 
+The first two plots show clearly that the trimming improves the per-base quality scores. The third plot shows that most sequences have very few secondary peaks in the trimmed sequence, although there are some (quite serious) outliers. The final plot shows that the secondary peaks tend to be called in the lower-quality seuqences.
 
