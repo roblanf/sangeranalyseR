@@ -251,6 +251,16 @@ readset
 
 There are a few important things to note here. First, the ```rev.fnames``` argument we pass to make.readset (the ```rev``` list in the above example) are just the sequences we with to reverse complement. Second, the default for ```make.readset``` is to trim the sequences using the ```trim.mott()``` function with default settings (see above). So the readset we get in this example will be different from the one in the previous example, even though the input reads are identical, because in this example we trimmed off low quality bases from each read first. Third, the ```make.readset()``` function automatically names the sequences with their full filepath. This can help keep track of things later.
 
+Of course, you can control how the trimming works, by passing additional arguments to make.readset, e.g.:
+
+```{r eval=FALSE}
+# we can make a readset without trimming the reads
+readset.untrimmed = make.readset(fwd, rev, trim = FALSE)
+
+# or we can trim the reads more conservatively than the default
+readset.trimmed = make.readset(fwd, rev, trim.cutoff = 0.0001)
+```
+
 Having made our readset, it's just one line to make our consensus sequeunce. We can then view the difference between the two approaches as before.
 
 ```{r eval=FALSE}
@@ -260,4 +270,26 @@ BrowseSeqs(merged.reads$alignment)
 ```
 ![consensus2](images/consensus2.png)
 
-Note the difference in the alignment, because we trimmed the reads this time. 
+Note the difference in the consensus sequence when we use the default settings in ```make.readset```, because by default it trims the reads to remove low quality sequence.
+
+### ```make.readsets```
+
+Often, you will want to make many consensus sequences at once. This can be done with ```make.readsets``` as long as you have named your read files in a systematic way. ```make.readsets``` recursively scanes all files in a folder (i.e. it looks in each folder and subfolder in the input directory) for .ab1 files, and then it groups them by name.
+
+The grouping in ```make.readsets``` works as long as you have consistent suffixes for forward and reverse reads. For example, in the ```/test_data``` folder, you will see that for Drosophila we have the following reads:
+
+```
+BBDCN941-10[C_LepFolF,C_LepFolR]_F.ab1
+BBDCN941-10[C_LepFolF,C_LepFolR]_R.ab1
+BBDEE689-10[LCO1490_t1,HCO2198_t1]_F.ab1
+BBDEE689-10[LCO1490_t1,HCO2198_t1]_R.ab1
+PHDIP946-11[LCO1490_t1,HCO2198_t1]_F.ab1
+PHDIP946-11[LCO1490_t1,HCO2198_t1]_R.ab1
+TDWGB557-10[C_LepFolF,C_LepFolR]_F.ab1
+TDWGB557-10[C_LepFolF,C_LepFolR]_R.ab1
+TDWGB669-10[C_LepFolF,C_LepFolR]_F.ab1
+TDWGB669-10[C_LepFolF,C_LepFolR]_R.ab1
+```
+
+These 10 reads comprise 5 groups, each of which has a forward (suffix 'F') and reverse (suffix 'R') read. This is the setup we need for ```make.readsets``` to work. Your suffixes could be anything you like, as long as they are consistent among all of the reads you are applying the function to. 
+
