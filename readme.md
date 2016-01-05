@@ -186,3 +186,78 @@ ggplot(summaries, aes(x = trimmed.mean.quality, y = trimmed.secondary.peaks)) + 
 
 The first two plots show clearly that the trimming improves the per-base quality scores. The third plot shows that most sequences have very few secondary peaks in the trimmed sequence, although there are some (quite serious) outliers. The final plot shows that the secondary peaks tend to be called in the lower-quality seuqences.
 
+## Merging reads into sequences
+
+If you have more than one read for a particular sequence (e.g. forward and reverse reads), you might want to merge them together into a single consensus seuqence. In sangeranalseR this is done with the by aligning all of the input reads (there can be any number more than one), and then calling a consensus sequence from the resulting alignment.
+
+There are many functions which do this for you in the sangeranalyseR package. This section covers how to use all of those functions. 
+
+### ```merge.reads```
+The most basic function for merging reads (and in some ways the hardest to use) is the ```merge.reads``` function. I demonstrate it here so it's clear what it does. I suspect that you will most commonly use one of the wrapper functions described below, which makes merging reads more simple in most cases. 
+
+This function takes as input a DNAStringSet object (from the BioStrings package), so we have to make one of those from our reads first. In the following example, we do that for the first pair of reads from the ```/test_data/Drosophila_melanogaster``` folder. The key thing to note here is that all of our reads have to be in the same orientation, which usually means we have to reverse complement the reverse reads.
+
+
+```{r eval=FALSE}
+fwd = readsangerseq("~/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]_F.ab1")
+rev = readsangerseq("~/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]_R.ab1")
+
+fwd = primarySeq(fwd)
+rev = primarySeq(rev)
+
+# don't forget to reverse complement
+rev = reverseComplement(rev)
+
+# this gives us an unaligned set of the reads we wish to merge
+reads = DNAStringSet(c(as.character(fwd), as.character(rev)))
+names(reads) = c('fwd', 'rev')
+
+merged.reads = merge.reads(reads)
+merged.reads
+```
+
+The output we get from merged.reads contains a lot of information. To see what it all means, you can use see the documentation with ```?merge.reads```. For now I'll cover just a few things. First, the thing you are probably most interested in is the consensus sequence, which you can get at with:
+
+```{r eval=FALSE}
+merged.reads$consensus
+```
+
+This is a DNAString object (from the BioStrings) package, that contains the consensus of the merged reads. 
+
+Another thing you might be interested in is looking at an alignment of your merged reads and the consensus sequence. The alignment is stored in ```merged.reads$alignment```, and you can view it using the ```BrowseSeqs()``` function from the DECIPHER package like this:
+
+```{r eval=FALSE}
+BrowseSeqs(merged.reads$alignment)
+```
+![consensus](images/consensus.png)
+
+The output also contains a lot of statistics comparing the reads to each other, and to the consensus sequence, so that you can quickly determine if any erroneous reads crept in to your consensus. See the documentation for a full explanation.
+
+
+### ```make.readset```
+
+Constructing the readset to pass to the merge.reads function was a pain. We had to have all the filenames, reverse complement the right sequences, and then put them together. And we didn't even think about trimming the reads before merging them, which is something that many people will want to do in order to get a higher quality consensus sequence. The ```make.readset``` function makes all of this a lot easier. All we need is are lists of the forward and reverse seuqence names.
+
+For example, to create a readset from the same two reads we used above, we would just do this:
+
+```{r eval=FALSE}
+# this time we just make lists of filenames
+fwd = list("~/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]_F.ab1")
+rev = list("~/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]_R.ab1")
+
+readset = make.readset(fwd, rev)
+readset
+```
+
+There are a few important things to note here. First, the ```rev.fnames``` argument we pass to make.readset (the ```rev``` list in the above example) are just the sequences we with to reverse complement. Second, the default for ```make.readset``` is to trim the sequences using the ```trim.mott()``` function with default settings (see above). So the readset we get in this example will be different from the one in the previous example, even though the input reads are identical, because in this example we trimmed off low quality bases from each read first. Third, the ```make.readset()``` function automatically names the sequences with their full filepath. This can help keep track of things later.
+
+Having made our readset, it's just one line to make our consensus sequeunce. We can then view the difference between the two approaches as before.
+
+```{r eval=FALSE}
+merged.reads = merge.reads(readset)
+merged.reads
+BrowseSeqs(merged.reads$alignment)
+```
+![consensus2](images/consensus2.png)
+
+Note the difference in the alignment, because we trimmed the reads this time. 
