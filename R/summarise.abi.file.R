@@ -31,7 +31,7 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, 
     # now we trim the sequence
     trims = trim.mott(seq.abif, cutoff = trim.cutoff)
     qual = seq.abif@data$PCON.2
-    qual.trimmed = qual[trim.start:trim.finish]
+    qual.trimmed = qual[trims$start:trims$finish]
 
     # now we fix up the trim locations to correspond to the sangerseq primary seq object
     print("1")
@@ -43,7 +43,7 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, 
         trim.finish = length(primarySeq(seq.sanger))
 
     }else{
-        trims.fixed = fix.trims(trims, seq.sanger, seq.abif)
+        trims.fixed = fix.trims(trims, seq.sanger, seq.abif, processors)
         trim.start = trims.fixed$start
         trim.finish = trims.fixed$finish
     }
@@ -74,7 +74,7 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, 
 }
 
 
-fix.trims <- function(trims, seq.sanger, seq.abif){
+fix.trims <- function(trims, seq.sanger, seq.abif, processors){
 
     # transfer trim locations from one sequence (denoted in the trims list, and which 
     # correspond to the seq.abif object to another 
@@ -100,11 +100,11 @@ fix.trims <- function(trims, seq.sanger, seq.abif){
     aligned.trimmed = as.character(pa[[1]])
     not.gaps = str_locate_all(aligned.trimmed, pattern = "[^-]")[[1]][,1]
 
-    start = min(not.gaps) - 1
-    finish = max(not.gaps) + 1
+    start = min(not.gaps)
+    finish = max(not.gaps)
 
     if(start < 1){start = 1}
-    if(finish > length(recalled)){finish = nchar(recalled)}
+    if(finish > nchar(recalled)){finish = nchar(recalled)}
 
     return(list("start" = start, "finish" = finish))
 }
