@@ -32,7 +32,6 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
     n.reads = length(readset)
 
     if(n.reads < 2) {stop("You need at least 2 reads for merging reads to be useful")}
-    if(minReads > n.reads){ stop("minReads must be less than or equal to the number of reads you have")}
 
 
     # Try to correct framshifts in the input sequences 
@@ -53,17 +52,18 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
         aln = AlignSeqs(readset, processors = processors, verbose = FALSE)
     }
 
+    if(is.null(names(aln))){
+        names(aln) = paste("read", 1:length(aln), sep="_")
+    }
+
     # call consensus
     print("Calling consensus sequence")
-    implied.minInfo = minReads/n.reads
-    minInformation = max(c(minInformation, implied.minInfo))
     consensus = ConsensusSequence(aln,
                                   minInformation = minInformation,
                                   includeTerminalGaps = TRUE,
                                   ignoreNonBases = FALSE,
                                   threshold = threshold,
                                   noConsensusChar = "-")[[1]]
-
 
     print("Calculating differences between reads and consensus")
     diffs = mclapply(aln, n.pairwise.diffs, subject = consensus, mc.cores = processors)
