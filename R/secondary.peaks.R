@@ -29,7 +29,6 @@ secondary.peaks <- function(s, ratio = 0.33, output.folder = NA, file.prefix = "
 
     # perhaps we don't need to align...
     #seqs = DNAStringSet(c(primary, secondary))
-
     # these seuqences should be VERY similar...
     #pa = AlignSeqs(seqs, iterations = 0, refinements = 0, verbose = FALSE, processors = processors)
 
