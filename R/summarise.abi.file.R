@@ -33,9 +33,6 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, 
     qual.trimmed = qual[trims$start:trims$finish]
 
     # now we fix up the trim locations to correspond to the sangerseq primary seq object
-    print("1")
-    print(nchar(as.character(seq.abif@data$PBAS.2)))
-
     if(trims$start==1 && trims$finish==nchar(as.character(seq.abif@data$PBAS.2))){
         # there's nothing to do, because we didn't trim anything
         trim.start = 1
@@ -46,11 +43,6 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, 
         trim.start = trims.fixed$start
         trim.finish = trims.fixed$finish
     }
-
-    print("3")
-    print(trim.start)
-    print(trim.finish)
-    print(length(primarySeq(seq.sanger)))
 
     # get trimmed and untrimmed version of raw data
     seq.trimmed = seq.sanger@primarySeq[trim.start:trim.finish]
@@ -80,12 +72,6 @@ fix.trims <- function(trims, seq.sanger, seq.abif, processors){
     # the primarySeq(seq.sanger) from the seq.sanger object
 
     # 1. First we trim the original sequence
-
-    print("2")
-    print(trims)
-    print(trims$start)
-    print(trims$finish)
-
     original.seq = seq.abif@data$PBAS.2
 
     original.trimmed = substring(original.seq, trims$start, trims$finish)
