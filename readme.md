@@ -234,6 +234,39 @@ BrowseSeqs(merged.reads$alignment)
 The output also contains a lot of statistics comparing the reads to each other, and to the consensus sequence, so that you can quickly determine if any erroneous reads crept in to your consensus. See the documentation for a full explanation.
 
 
+### ```merge.reads``` and correct frameshifts from chromatograms
+
+People often sequence protein-coding genes, and in this case we often expect our reads to translate into a particular amino acid sequence. When this is the case, it can be useful to attempt to correct frameshift errors in our input reads, as part of the process of calling a consensus seuqence. The ```merge.reads``` function allows for this with the ```ref.aa.seq``` argument. This argument allows us to pass in, as a string, the expected amino acid sequence for all of the reads. 
+
+When you specify an ```ref.aa.seq```, the merge.reads function will use the ```CorrectFrameshifts``` function from the DECIPHER package to try and correct frameshifts in your input reads. It will then use a translation alignment to merge the reads (rather than a DNA alignment, which is the default when not correcting frameshifts), meaning that (as far as possible) your consensus sequence will be in frame with the first base being the first codon position. Below is an example, using the readset from the previous section. Note that the first few lines of the example just demonstrate how you can set the correct genetic code to use for your data.
+
+```{r eval=FALSE}
+# Our reference sequence is COI from Drosophila melanogaster
+# Here's the protein sequence from GenBank
+ref.seq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
+
+
+# Don't forget to set the correct genetic code
+# In this example, we need the invertebrate mitochondrial code
+
+# You can see a table of genetic codes like this
+GENETIC_CODE_TABLE
+
+# And choose the one you want like this
+inv.mito.code = getGeneticCode('SGC4', full.search = T)
+
+merged.reads = merge.reads(reads, ref.aa.seq = ref.seq, genetic.code = inv.mito.code)
+merged.reads
+
+BrowseSeqs(merged.reads$alignment)
+
+```
+
+Note that the merged.reads object now includes an additional item called 'indels', which is a data frame describing how many indels were introduced into each read during the frameshift correction process. In this example, the frameshift correction process made no difference to the consensus, since there were no meaningful frameshifts in the input reads.
+
+You should, of course, be careful about when you use reference sequences to correct frameshifts when merging reads. There's a chance that doing so might unintentionally hide some important biology. For example, if you had sequenced a pseudogene and there was one real frameshift in each of your reads, correcting the frameshifts would give you a consensus sequence without the frameshift. 
+
+
 ### ```make.readset```
 
 Constructing the readset to pass to the merge.reads function was a pain. We had to have all the filenames, reverse complement the right sequences, and then put them together. And we didn't even think about trimming the reads before merging them, which is something that many people will want to do in order to get a higher quality consensus sequence. The ```make.readset``` function makes all of this a lot easier. All we need is are lists of the forward and reverse seuqence names.
