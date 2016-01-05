@@ -36,8 +36,9 @@ loadread <- function(fname, trim, trim.cutoff, trim.segment, revcomp){
 
     if(trim == TRUE){
         trims = trim.mott(read.abi, cutoff = trim.cutoff, segment = trim.segment)
-        trim.start = trims["trim.start"][[1]]
-        trim.finish = trims["trim.finish"][[1]]
+        trims.fixed = fix.trims(trims, seq.sanger, seq.abif, processors)
+        trim.start = trims.fixed$start
+        trim.finish = trims.fixed$finish
     }else if(trim == FALSE){
         trim.start = 1
         trim.finish = length(read.sanger@primarySeq)
