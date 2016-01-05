@@ -2,10 +2,10 @@
 #' 
 #' Load all reads recursively, then group them by name after removing prefix/suffix. Return a list of lists of filenames of input reads.
 #'
-#' @export load.readsets
+#' @export make.readsets
 
 
-load.readsets <- function(input.folder, forward.suffix, reverse.suffix, processors = NULL, min.length = NULL, max.secondary.peaks = NULL){
+make.readsets <- function(input.folder, forward.suffix, reverse.suffix, processors = NULL, min.length = NULL, max.secondary.peaks = NULL){
 
     processors = get.processors(processors)
 
