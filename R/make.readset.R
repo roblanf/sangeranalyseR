@@ -5,7 +5,6 @@
 #' @param trim TRUE/FALSE trim sequences based on quality while creating readgroup? If TRUE, the trim.mott function is applied to each sequence before inclusion in the readgroup. Note, trimming only works if the raw data are stored in ab1 files with appropriate information.
 #' @param trim.cutoff value passed to trim.mott as quality cutoff for sequencing trimming, only used if 'trim' == TRUE
 #' @param trim.segment value passed to trim.mott as minimum seuqence length for sequence trimming, only used if 'trim' == TRUE
-#' @param name an optional name for your readgroup 
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #'
 #' A set of unaligned reads as a DNAstringset object, names are the input file paths.
@@ -13,12 +12,12 @@
 #' @export make.readset
 
 
-make.readset <- function(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.05, trim.segment = 20, name = NULL, processors = NULL){
+make.readset <- function(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.05, trim.segment = 20, processors = NULL){
 
     processors = get.processors(processors)
 
-    fwd.reads = mclapply(fwd.fnames, loadread, trim, trim.cutoff, trim.segment, revcomp = FALSE, mc.cores = processors)
-    rev.reads = mclapply(rev.fnames, loadread, trim, trim.cutoff, trim.segment, revcomp = TRUE, mc.cores = processors)
+    fwd.reads = mclapply(fwd.fnames, loadread, trim, trim.cutoff, trim.segment, revcomp = FALSE, processors = 1, mc.cores = processors)
+    rev.reads = mclapply(rev.fnames, loadread, trim, trim.cutoff, trim.segment, revcomp = TRUE, processors = 1, mc.cores = processors)
 
     names(fwd.reads) = fwd.fnames
     names(rev.reads) = rev.fnames
@@ -29,14 +28,14 @@ make.readset <- function(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.05
 
 }
 
-loadread <- function(fname, trim, trim.cutoff, trim.segment, revcomp){
+loadread <- function(fname, trim, trim.cutoff, trim.segment, revcomp, processors){
 
     read.abi = read.abif(fname)
     read.sanger = makeBaseCalls(sangerseq(read.abi))
 
     if(trim == TRUE){
         trims = trim.mott(read.abi, cutoff = trim.cutoff, segment = trim.segment)
-        trims.fixed = fix.trims(trims, seq.sanger, seq.abif, processors)
+        trims.fixed = fix.trims(trims, read.sanger, read.abi, processors)
         trim.start = trims.fixed$start
         trim.finish = trims.fixed$finish
     }else if(trim == FALSE){
