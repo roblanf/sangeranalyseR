@@ -33,7 +33,7 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
     
 
     # this sometimes happens when we automate things
-    if(length(readset) == 0) {return(NULL)}
+    if(length(readset) < 2) {return(NULL)}
 
     # Try to correct frameshifts in the input sequences 
     if(!is.null(ref.aa.seq)) {
@@ -54,53 +54,43 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
         print(sprintf("%d with stop codons removed", old_length - length(readset)))
     }
 
-    if(length(readset) == 0) {return(NULL)}
+    if(length(readset) < 2) {return(NULL)}
 
-    # align the sequences
-    if(length(readset) > 1){
-        print("Aligning reads")
-        if(!is.null(ref.aa.seq)){
-            aln = AlignTranslation(readset, geneticCode = genetic.code, processors = processors, verbose = FALSE)
-        }else{
-            aln = AlignSeqs(readset, processors = processors, verbose = FALSE)
-        }
-
-        if(is.null(names(aln))){
-            names(aln) = paste("read", 1:length(aln), sep="_")
-        }
-
-        # call consensus
-        print("Calling consensus sequence")
-        consensus = ConsensusSequence(aln,
-                                      minInformation = minInformation,
-                                      includeTerminalGaps = TRUE,
-                                      ignoreNonBases = FALSE,
-                                      threshold = threshold,
-                                      noConsensusChar = "-")[[1]]
-
-        print("Calculating differences between reads and consensus")
-        diffs = mclapply(aln, n.pairwise.diffs, subject = consensus, mc.cores = processors)
-        diffs = do.call(rbind, diffs)
-        diffs.df = data.frame("name" = names(aln), "pairwise.diffs.to.consensus" = diffs[,1], "unused.chars" = diffs[,2])
-        rownames(diffs.df) = NULL
-
-        # get a dendrogram
-        dist = DistanceMatrix(aln, correction = "Jukes-Cantor", penalizeGapLetterMatches = FALSE, processors = processors, verbose = FALSE)
-        dend = IdClusters(dist, asDendrogram = TRUE, processors = processors, verbose = FALSE)
-
-        # add consensus to alignment
-        aln2 = c(aln, DNAStringSet(consensus))
-        names(aln2)[length(aln2)] = "consensus"
-        # strip gaps from consensus (must be an easier way!!)
-        consensus.gapfree = DNAString(paste(del.gaps(consensus), collapse = ''))
+    print("Aligning reads")
+    if(!is.null(ref.aa.seq)){
+        aln = AlignTranslation(readset, geneticCode = genetic.code, processors = processors, verbose = FALSE)
     }else{
-        consensus.gapfree = readset[[1]]
-        aln2 = NULL
-        diffs.df = NULL
-        dist = NULL
-        dend = NULL
+        aln = AlignSeqs(readset, processors = processors, verbose = FALSE)
     }
 
+    if(is.null(names(aln))){
+        names(aln) = paste("read", 1:length(aln), sep="_")
+    }
+
+    # call consensus
+    print("Calling consensus sequence")
+    consensus = ConsensusSequence(aln,
+                                  minInformation = minInformation,
+                                  includeTerminalGaps = TRUE,
+                                  ignoreNonBases = FALSE,
+                                  threshold = threshold,
+                                  noConsensusChar = "-")[[1]]
+
+    print("Calculating differences between reads and consensus")
+    diffs = mclapply(aln, n.pairwise.diffs, subject = consensus, mc.cores = processors)
+    diffs = do.call(rbind, diffs)
+    diffs.df = data.frame("name" = names(aln), "pairwise.diffs.to.consensus" = diffs[,1], "unused.chars" = diffs[,2])
+    rownames(diffs.df) = NULL
+
+    # get a dendrogram
+    dist = DistanceMatrix(aln, correction = "Jukes-Cantor", penalizeGapLetterMatches = FALSE, processors = processors, verbose = FALSE)
+    dend = IdClusters(dist, asDendrogram = TRUE, processors = processors, verbose = FALSE)
+
+    # add consensus to alignment
+    aln2 = c(aln, DNAStringSet(consensus))
+    names(aln2)[length(aln2)] = "consensus"
+    # strip gaps from consensus (must be an easier way!!)
+    consensus.gapfree = DNAString(paste(del.gaps(consensus), collapse = ''))
 
     return(list("consensus" = consensus.gapfree, 
                 "alignment" = aln2, 
