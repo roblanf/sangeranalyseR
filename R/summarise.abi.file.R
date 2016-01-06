@@ -5,7 +5,7 @@
 #'
 #' @export summarise.abi.file
 
-summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, secondary.peak.cutoff = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
+summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
  
     seq.sanger = sangerseq(seq.abif)
 
@@ -17,9 +17,9 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, 
     if(write.secondary.peak.files == TRUE){
         output.folder = dirname(inputfile)
         prefix = basename(inputfile)
-        secondary.peaks.data = secondary.peaks(seq.sanger, secondary.peak.cutoff, output.folder, prefix, processors = processors)
+        secondary.peaks.data = secondary.peaks(seq.sanger, secondary.peak.ratio, output.folder, prefix, processors = processors)
     }else if(write.secondary.peak.files == FALSE){
-        secondary.peaks.data = secondary.peaks(seq.sanger, secondary.peak.cutoff, processors = processors)
+        secondary.peaks.data = secondary.peaks(seq.sanger, secondary.peak.ratio, processors = processors)
     }else{
         stop("Unknown option for write.secondary.peak.files. Should be TRUE or FALSE")
     }
@@ -60,7 +60,7 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, 
                      "trimmed.min.quality"              = min(qual.trimmed)                     
                      )
 
-    return(read.summary)
+    return(list("summary" = read.summary, "read" = seq.sanger))
 
 }
 
