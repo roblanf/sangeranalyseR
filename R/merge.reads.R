@@ -8,6 +8,8 @@
 #' @param threshold Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.05, implying that each consensus base can ignore at most 5 percent of the information at a given position. 
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #' @param genetic.code Named character vector in the same format as GENETIC_CODE (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
+#' @param accept.stop.codons TRUE/FALSE. TRUE (the defualt): keep all reads, regardless of whether they have stop codons; FALSE: reject reads with stop codons. If FALSE is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).
+#' @param reading.frame 1, 2, or 3. Only used if accept.stop.codons == FALSE. This specifies the reading frame that is used to determine stop codons. If you use a ref.aa.seq, then the frame should always be 1, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame. 
 #' 
 #' @return A list with the following components:
 #'          \enumerate{
@@ -24,25 +26,35 @@
 #' @export merge.reads
 #'
 
-merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.05, processors = NULL, genetic.code = GENETIC_CODE){
+merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.05, processors = NULL, genetic.code = GENETIC_CODE, accept.stop.codons = TRUE, reading.frame = 1){
 
     # check input options
     processors = get.processors(processors)
-
     n.reads = length(readset)
 
     if(n.reads < 2) {stop("You need at least 2 reads for merging reads to be useful")}
 
-
-    # Try to correct framshifts in the input sequences 
+    # Try to correct frameshifts in the input sequences 
     if(!is.null(ref.aa.seq)) {
         print("Correcting frameshifts in reads using amino acid reference sequence")
         corrected = CorrectFrameshifts(myXStringSet = readset, myAAStringSet = AAStringSet(ref.aa.seq), geneticCode = genetic.code, type = 'both', processors = processors, verbose = FALSE)
-        reads = corrected$sequences
+        readset = corrected$sequences
         indels = get.indel.df(corrected$indels)        
     }else{
         indels = NULL
     }
+
+    # Remove reads with stop codons
+    if(accept.stop.codons == FALSE){
+        print("Removing reads with stop codons")
+        old_length = length(readset)
+        stops = mclapply(readset, count.stop.codons, reading.frame, genetic.code, mc.cores = processors)
+        readset = readset[which(stops==0)]
+        print(sprintf("%d with stop codons removed", old_length - length(readset)))
+    }
+
+    if(n.reads < 2) {stop("You need at least 2 reads for merging reads to be useful. The number of reads was reduced because some had stop codons")}
+
 
     # align the sequences
     print("Aligning reads")
