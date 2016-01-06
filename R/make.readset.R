@@ -1,4 +1,4 @@
-#' Make a readgroup object
+#' Make a readset
 #' 
 #' @param fwd.fnames a list of full file paths to forward reads from ab1 files (i.e. those that do not need to be reverse-complemented). 
 #' @param rev.fnames a list of full file paths to reverse reads from ab1 files (i.e. those that *do* need to be reverse-complemented). 
@@ -9,7 +9,7 @@
 #' @param min.length reads shorter than this will not be included in the readset. The default (1) means that all reads with length of 1 or more will be included.
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #'
-#' A set of unaligned reads as a DNAstringset object, names are the input file paths.
+#' @return A set of unaligned reads as a DNAstringset object, names are the input file paths.
 #'
 #' @export make.readset
 
@@ -41,7 +41,12 @@ make.readset <- function(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.00
     file.names = basename(abi.fnames)
     all.summaries = cbind.data.frame("file.path" = as.character(abi.fnames), "folder.name" = as.character(folder.names), "file.name" = file.names, all.summaries, stringsAsFactors = FALSE)
 
-    return(list("readset" = readset, "summaries" = all.summaries))
+
+    used.reads = names(readset)
+    all.summaries$read.included.in.readset = all.summaries$file.path %in% used.reads
+
+
+    return(list("readset" = readset, "read.summaries" = all.summaries))
 
 }
 
