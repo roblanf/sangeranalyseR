@@ -106,21 +106,6 @@ load.sangerseqs <- function(filenames){
 }
 
 
-filter.reads <- function(blah){
-    #filter all the reads based on input criteria passed by user
-}
-
-get.readgroup <- function(readgroup.fnames, processors){
-
-    # need to filter the reads as we go here...
-
-    rg = make.readgroup(readgroup.fnames$forward.reads, 
-                        readgroup.fnames$reverse.reads,
-                        processors = processors)
-
-    return(rg)
-}
-
 get.readgroup.fnames <- function(group, abi.files, forward.suffix, reverse.suffix){
 
     # we need to use teh base stri function to use literal strings
