@@ -7,7 +7,7 @@
 
 
 
-summarise.abi.folder <- function(input.folder, trim.cutoff = 0.05, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
+summarise.abi.folder <- function(input.folder, trim.cutoff = 0.0001, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
 
     processors = get.processors(processors)
 

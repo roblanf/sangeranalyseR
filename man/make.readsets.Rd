@@ -5,8 +5,11 @@
 \title{Automatically load readsets by grouping .ab1 files by name.}
 \usage{
 make.readsets(input.folder, forward.suffix, reverse.suffix, trim = TRUE,
-  trim.cutoff = 0.05, processors = NULL, min.length = NULL,
-  max.secondary.peaks = NULL, accept.stop.codons = TRUE)
+  trim.cutoff = 1e-04, processors = NULL, min.length = 1,
+  max.secondary.peaks = NULL, secondary.peak.ratio = 0.33)
+}
+\arguments{
+\item{secondary.peak.ratio}{Only applies if max.secondary.peaks is not NULL. The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are counted. Those below the ratio are not.}
 }
 \description{
 Load all reads recursively, then group them by name after removing prefix/suffix. Return a list of lists of filenames of input reads.

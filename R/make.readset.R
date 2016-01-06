@@ -6,6 +6,7 @@
 #' @param trim.cutoff value passed to trim.mott as quality cutoff for sequencing trimming, only used if 'trim' == TRUE
 #' @param max.secondary.peaks reads with more secondary peaks than this will not be included in the readset. The default (NULL) is to include all reads regardless of secondary peaks 
 #' @param secondary.peak.ratio Only applies if max.secondary.peaks is not NULL. The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are counted. Those below the ratio are not. 
+#' @param min.length reads shorter than this will not be included in the readset. The default (1) means that all reads with length of 1 or more will be included.
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #'
 #' A set of unaligned reads as a DNAstringset object, names are the input file paths.
@@ -13,13 +14,12 @@
 #' @export make.readset
 
 
-make.readset <- function(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.05, max.secondary.peaks = NULL, secondary.peak.ratio = 0.33, processors = NULL){
+make.readset <- function(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.0001, max.secondary.peaks = NULL, secondary.peak.ratio = 0.33, min.length = 1, processors = NULL){
 
     processors = get.processors(processors)
 
-    fwd.dat = mclapply(fwd.fnames, loadread, trim, trim.cutoff, revcomp = FALSE, max.secondary.peaks = max.secondary.peaks, secondary.peak.ratio = secondary.peak.ratio, processors = 1, mc.cores = processors)
-    rev.dat = mclapply(rev.fnames, loadread, trim, trim.cutoff, revcomp = TRUE,  max.secondary.peaks = max.secondary.peaks, secondary.peak.ratio = secondary.peak.ratio, processors = 1, mc.cores = processors)
-
+    fwd.dat = mclapply(fwd.fnames, loadread, trim, trim.cutoff, revcomp = FALSE, max.secondary.peaks = max.secondary.peaks, secondary.peak.ratio = secondary.peak.ratio, min.length = min.length, processors = 1, mc.cores = processors)
+    rev.dat = mclapply(rev.fnames, loadread, trim, trim.cutoff, revcomp = TRUE,  max.secondary.peaks = max.secondary.peaks, secondary.peak.ratio = secondary.peak.ratio, min.length = min.length, processors = 1, mc.cores = processors)
 
     fwd.reads = lapply(fwd.dat, function(x) x[["read"]])
     rev.reads = lapply(rev.dat, function(x) x[["read"]])
@@ -41,12 +41,11 @@ make.readset <- function(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.05
     file.names = basename(abi.fnames)
     all.summaries = cbind.data.frame("file.path" = as.character(abi.fnames), "folder.name" = as.character(folder.names), "file.name" = file.names, all.summaries, stringsAsFactors = FALSE)
 
-
     return(list("readset" = readset, "summaries" = all.summaries))
 
 }
 
-loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, secondary.peak.ratio, processors){
+loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, secondary.peak.ratio, min.length, processors){
 
     read.abi = read.abif(fname)
 
@@ -66,7 +65,7 @@ loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, sec
         sp = summary["raw.secondary.peaks"]
     }
 
-    # Return NULL if the read fails filters
+    # FILTER read based on user specified limits
     read = read.sanger@primarySeq[trim.start:trim.finish]
 
     if(!is.null(max.secondary.peaks)){
@@ -74,6 +73,10 @@ loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, sec
             read = NULL
         }
     }
+
+    if(length(read) < min.length){
+        read = NULL
+    }    
 
     if(!is.null(read)) {
         if(revcomp == TRUE){
@@ -83,4 +86,3 @@ loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, sec
     return(list('read' = read, summary = summary))
 
 }
-

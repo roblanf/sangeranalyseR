@@ -4,7 +4,7 @@
 \alias{summarise.abi.folder}
 \title{Create detailed summaries of all ABI sequencing reads in a folder (recursively searched)}
 \usage{
-summarise.abi.folder(input.folder, trim.cutoff = 0.05,
+summarise.abi.folder(input.folder, trim.cutoff = 1e-04,
   secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE,
   processors = NULL)
 }

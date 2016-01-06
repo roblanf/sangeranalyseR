@@ -2,9 +2,11 @@
 #' 
 #' Load all reads recursively, then group them by name after removing prefix/suffix. Return a list of lists of filenames of input reads.
 #'
+#' @param secondary.peak.ratio Only applies if max.secondary.peaks is not NULL. The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are counted. Those below the ratio are not. 
+#'
 #' @export make.readsets
 
-make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = TRUE, trim.cutoff = 0.05, processors = NULL, min.length = NULL, max.secondary.peaks = NULL, accept.stop.codons = TRUE){
+make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = TRUE, trim.cutoff = 0.0001, processors = NULL, min.length = 1, max.secondary.peaks = NULL, secondary.peak.ratio = 0.33){
 
     processors = get.processors(processors)
 
@@ -35,6 +37,9 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
     rs = mclapply(readset.fnames, make.readset.from.list,
                           trim = trim,
                           trim.cutoff = trim.cutoff,
+                          max.secondary.peaks = max.secondary.peaks,
+                          secondary.peak.ratio = secondary.peak.ratio,
+                          min.length = min.length,
                           processors = processors,                          
                           mc.cores = mc.cores
                           )
@@ -48,7 +53,7 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
 
     summaries$group = group.dataframe$group
 
-    # which reads did we end up using for the readsets
+    # which reads did we end up using for the readsets?
     used.reads = unlist(lapply(readsets, function(x) names(x)))
     summaries$read.included = summaries$file.path %in% used.reads
 
@@ -57,7 +62,7 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
 }
 
 
-make.readset.from.list <- function(fnames, trim, trim.cutoff, processors){
+make.readset.from.list <- function(fnames, trim, trim.cutoff, max.secondary.peaks, secondary.peak.ratio, min.length, processors){
     # this just unpacks the fnames and sends them on, so I can use mclapply
     print(fnames)
 
@@ -67,6 +72,9 @@ make.readset.from.list <- function(fnames, trim, trim.cutoff, processors){
     readset = make.readset(fwd.reads, rev.reads,
                            trim = trim,
                            trim.cutoff = trim.cutoff,
+                           max.secondary.peaks = max.secondary.peaks,
+                           secondary.peak.ratio = secondary.peak.ratio,
+                           min.length = min.length,
                            processors = processors)
 
     return(readset)

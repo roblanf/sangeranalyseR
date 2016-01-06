@@ -291,6 +291,8 @@ BrowseSeqs(merged.reads$alignment)
 
 #### Advanced readset building
 
+1. Control the read trimming
+
 You can control how the trimming works when building readsets, by passing additional arguments to make.readset, e.g.:
 
 ```{r eval=FALSE}
@@ -303,6 +305,8 @@ rs.trimmed = make.readset(fwd, rev, trim.cutoff = 0.0001)
 
 Note the difference in the consensus sequence when we use the default settings in ```make.readset```, because by default it trims the reads to remove low quality sequence.
 
+2. Exclude reads with too many secondary peaks
+
 You can also automatically exclude reads with too many secondary peaks when building your readset. You might want to do this if you had intended to sequence homozygous sequence (e.g. individual viruses, whose products you cloned before sending off). E.g. 
 
 ```{r eval=FALSE}
@@ -313,10 +317,18 @@ rs.trimmed.filtered$readset
 
 In the final case, note that the trimmed and filtered readset has only a single sequence, but the summary data frame contains data for all of the sequences. That way you can see the statistics on all of the reads, not just those that made it into the final set.
 
+2. Exclude short reads
+
+```{r eval=FALSE}
+# let's trim the reads and exlude those with > 1 secondary peak
+rs.trimmed.filtered2 = make.readset(fwd, rev, trim.cutoff = 0.0001, min.length = 500)
+rs.trimmed.filtered2$readset
+```
+
 
 ### ```make.readsets```
 
-Often, you will want to make many consensus sequences at once. This can be done with ```make.readsets``` as long as you have named your read files in a systematic way. ```make.readsets``` recursively scanes all files in a folder (i.e. it looks in each folder and subfolder in the input directory) for .ab1 files, and then it groups them by name.
+Often, you will want to make many readsets sequences at once. This can be done with ```make.readsets``` as long as you have named your read files in a systematic way. ```make.readsets``` recursively scans all files in a folder (i.e. it looks in all of the subfolders and their subfolders etc. of the folder you give to the function) for .ab1 files, and then it groups them by name.
 
 The grouping in ```make.readsets``` works as long as you have consistent suffixes for forward and reverse reads. For example, in the ```/test_data``` folder, you will see that for Drosophila we have the following reads:
 
@@ -333,7 +345,7 @@ TDWGB669-10[C_LepFolF,C_LepFolR]_F.ab1
 TDWGB669-10[C_LepFolF,C_LepFolR]_R.ab1
 ```
 
-These 10 reads comprise 5 groups, each of which has a forward (suffix 'F') and reverse (suffix 'R') read. This is the setup we need for ```make.readsets``` to work. Your suffixes could be anything you like, as long as they are consistent among all of the reads you are applying the function to. 
+These 10 reads comprise 5 groups, each of which has a forward (suffix '_F.ab1') and reverse (suffix '_R.ab1') read. This is the setup we need for ```make.readsets``` to work. Your suffixes could be anything you like, as long as they are consistent among all of the reads you are applying the function to. Each suffix must appear only at the end of the filename.
 
 ```make.readsets``` has all of the same options as its singular cousin ```make.readset```. The main difference is that you point ```make.readsets``` at a folder, instead of giving it lists of filenames. It will then search all the folders and subfolders of that folder and try to group the reads appropriately. As a simple example, let's try and make readsets of all of the reads in the ```/test_data``` folder. 
 

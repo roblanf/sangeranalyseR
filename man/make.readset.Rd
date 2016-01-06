@@ -4,8 +4,8 @@
 \alias{make.readset}
 \title{Make a readgroup object}
 \usage{
-make.readset(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.05,
-  max.secondary.peaks = NULL, secondary.peak.ratio = 0.33,
+make.readset(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 1e-04,
+  max.secondary.peaks = NULL, secondary.peak.ratio = 0.33, min.length = 1,
   processors = NULL)
 }
 \arguments{
@@ -20,6 +20,8 @@ make.readset(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.05,
 \item{max.secondary.peaks}{reads with more secondary peaks than this will not be included in the readset. The default (NULL) is to include all reads regardless of secondary peaks}
 
 \item{secondary.peak.ratio}{Only applies if max.secondary.peaks is not NULL. The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are counted. Those below the ratio are not.}
+
+\item{min.length}{reads shorter than this will not be included in the readset. The default (1) means that all reads with length of 1 or more will be included.}
 
 \item{processors}{The number of processors to use, or NULL (the default) for all available processors
 
