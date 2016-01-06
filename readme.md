@@ -245,21 +245,15 @@ When you specify an ```ref.aa.seq```, the merge.reads function will use the ```C
 # Here's the protein sequence from GenBank
 ref.seq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
 
-
-# Don't forget to set the correct genetic code
-# In this example, we need the invertebrate mitochondrial code
-
-# You can see a table of genetic codes like this
+# Choose your genetic code from this table
 GENETIC_CODE_TABLE
-
-# And choose the one you want like this
 inv.mito.code = getGeneticCode('SGC4', full.search = T)
 
+# Now the easy bit: merge reads and correct frameshifts
 merged.reads = merge.reads(reads, ref.aa.seq = ref.seq, genetic.code = inv.mito.code)
 merged.reads
 
 BrowseSeqs(merged.reads$alignment)
-
 ```
 
 Note that the merged.reads object now includes an additional item called 'indels', which is a data frame describing how many indels were introduced into each read during the frameshift correction process. In this example, the frameshift correction process made no difference to the consensus, since there were no meaningful frameshifts in the input reads.
@@ -325,4 +319,22 @@ TDWGB669-10[C_LepFolF,C_LepFolR]_R.ab1
 ```
 
 These 10 reads comprise 5 groups, each of which has a forward (suffix 'F') and reverse (suffix 'R') read. This is the setup we need for ```make.readsets``` to work. Your suffixes could be anything you like, as long as they are consistent among all of the reads you are applying the function to. 
+
+```make.readsets``` has all of the same options as its singular cousin ```make.readset```. The main difference is that you point ```make.readsets``` at a folder, instead of giving it lists of filenames. It will then search all the folders and subfolders of that folder and try to group the reads appropriately. As a simple example, let's try and make readsets of all of the reads in the ```/test_data``` folder. 
+
+```{r eval=FALSE}
+# you might need to change this line
+input.folder = "~/Desktop/test_data"
+
+# it's important to include the '.ab1' on the suffixes
+forward.suffix = "_F.ab1"
+reverse.suffix = "_R.ab1"
+
+rs = make.readsets(input.folder, forward.suffix, reverse.suffix) 
+rs
+```
+
+## Sample workflow for creating consensus sequences
+
+Here's a suggestion of how we could stitch all of the above into one very simple workflow. The aim is to create a collection of consensus sequences from our sanger sequencing reads. 
 

@@ -5,7 +5,7 @@
 \title{Make a readgroup object}
 \usage{
 make.readset(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.05,
-  trim.segment = 20, name = NULL, processors = NULL)
+  trim.segment = 20, processors = NULL)
 }
 \arguments{
 \item{fwd.fnames}{a list of full file paths to forward reads from ab1 files (i.e. those that do not need to be reverse-complemented).}
@@ -17,8 +17,6 @@ make.readset(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 0.05,
 \item{trim.cutoff}{value passed to trim.mott as quality cutoff for sequencing trimming, only used if 'trim' == TRUE}
 
 \item{trim.segment}{value passed to trim.mott as minimum seuqence length for sequence trimming, only used if 'trim' == TRUE}
-
-\item{name}{an optional name for your readgroup}
 
 \item{processors}{The number of processors to use, or NULL (the default) for all available processors
 

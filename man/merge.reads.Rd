@@ -5,7 +5,8 @@
 \title{Merge sequence reads into a single consensus sequence}
 \usage{
 \method{merge}{reads}(readset, ref.aa.seq = NULL, minInformation = 0.75,
-  threshold = 0.05, processors = NULL, genetic.code = GENETIC_CODE)
+  threshold = 0.05, processors = NULL, genetic.code = GENETIC_CODE,
+  accept.stop.codons = TRUE, frame = 1)
 }
 \arguments{
 \item{readset}{a DNAStringSet object with at least 2 reads}
