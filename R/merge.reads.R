@@ -41,19 +41,21 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
         corrected = CorrectFrameshifts(myXStringSet = readset, myAAStringSet = AAStringSet(ref.aa.seq), geneticCode = genetic.code, type = 'both', processors = processors, verbose = FALSE)
         readset = corrected$sequences
         indels = get.indel.df(corrected$indels)        
+        stops = mclapply(readset, count.stop.codons, reading.frame, genetic.code, mc.cores = processors)
+        stops.df = data.frame('read' = names(readset), "stop.codons" = stops)
     }else{
         indels = NULL
+        stops.df = NULL
     }
 
     # Remove reads with stop codons
     if(accept.stop.codons == FALSE){
         print("Removing reads with stop codons")
         old_length = length(readset)
-        stops = mclapply(readset, count.stop.codons, reading.frame, genetic.code, mc.cores = processors)
         readset = readset[which(stops==0)]
         print(sprintf("%d reads with stop codons removed", old_length - length(readset)))
     }
-
+    
     if(length(readset) < 2) {return(NULL)}
 
     print("Aligning reads")
@@ -97,7 +99,8 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
                 "differences" = diffs.df, 
                 "distance.matrix" = dist,
                 "dendrogram" = dend,
-                "indels" = indels)) 
+                "indels" = indels,
+                "stop.codons" = stops.df)) 
 }
 
 
