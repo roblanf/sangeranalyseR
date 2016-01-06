@@ -4,8 +4,7 @@
 #'
 #' @export make.readsets
 
-
-make.readsets <- function(input.folder, forward.suffix, reverse.suffix, processors = NULL, min.length = NULL, max.secondary.peaks = NULL){
+make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = TRUE, trim.cutoff = 0.05, trim.segment = 20, processors = NULL, min.length = NULL, max.secondary.peaks = NULL, accept.stop.codons = TRUE){
 
     processors = get.processors(processors)
 
@@ -16,16 +15,22 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, processo
     groups = unique(group.dataframe$group)
 
     # load full file paths for readgroups based on unique filenames 
-    # TODO: could be more efficient using split/apply
-    readgroup.fnames = mclapply(groups, 
+    readset.fnames = mclapply(groups, 
                         get.readgroup.fnames,
                         abi.files = abi.files, 
                         forward.suffix = forward.suffix,
                         reverse.suffix = reverse.suffix,
                         mc.cores = processors)
 
+    #TODO: filter the reads we don't want here...
+    # and record a filtering data frame, so that users can easily see
+    # which read contributed to which sequence
+    # this can be just a summary of all the reads, with an extra column
+    # denoting whether the read contributed to a sequence
+
+
     # how we parallelise depends on how many readgroups there are
-    if(length(readgroup.fnames[[1]]) > length(readgroup.fnames)){
+    if(length(readset.fnames[[1]]) > length(readset.fnames)){
         # better to do readgroups sequentially, but parallelise each
         mc.cores = 1 
     }else{
@@ -34,19 +39,45 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, processo
         processors = 1
     }
 
-    readgroups = mclapply(readgroup.fnames, get.readgroup, mc.cores = mc.cores, processors = processors)
+    readsets = mclapply(readset.fnames, make.readset.from.list,
+                          trim = trim,
+                          trim.cutoff = trim.cutoff,
+                          trim.segment = trim.segment,
+                          processors = processors,                          
+                          mc.cores = mc.cores
+                          )
 
-    names(readgroups) = groups
+    names(readsets) = groups
 
-    return(readgroups)
+    return(readsets)
+
+}
+
+
+make.readset.from.list <- function(fnames, trim, trim.cutoff, trim.segment, processors){
+    # this just unpacks the fnames and sends them on, so I can use mclapply
+    print(fnames)
+
+    fwd.reads = fnames$forward.reads
+    rev.reads = fnames$reverse.reads
+
+    readset = make.readset(fwd.reads, rev.reads,
+                           trim = trim,
+                           trim.cutoff = trim.cutoff,
+                           trim.segment = trim.segment,
+                           processors = processors)
+
+    return(readset)
 
 }
 
 get.group.dataframe <- function(fname.list, forward.suffix, reverse.suffix){
 
     files.cleaned = fname.list
-    files.cleaned = str_replace(files.cleaned, fwd.suffix, replacement = "")
-    files.cleaned = str_replace(files.cleaned, rev.suffix, replacement = "")
+
+    # try with and without the .ab1 after the suffixes, just in case
+    files.cleaned = str_replace(files.cleaned, forward.suffix, replacement = "")
+    files.cleaned = str_replace(files.cleaned, reverse.suffix, replacement = "")
 
     return(data.frame("file.path" = fname.list, "group" = files.cleaned))
 
@@ -76,12 +107,14 @@ get.readgroup <- function(readgroup.fnames, processors){
 
 get.readgroup.fnames <- function(group, abi.files, forward.suffix, reverse.suffix){
 
-    indices = which(!is.na(str_match(string = abi.files, pattern = group)))
+    # we need to use teh base stri function to use literal strings
+    # in case there are special characters in the filename
+    indices = which(!is.na(stri_match_first_regex(abi.files, pattern = as.character(group), opts_regex = list("literal" = TRUE))))
 
     filenames = abi.files[indices]
 
-    fwd.fnames = filenames[which(!is.na(str_match(filenames, forward.suffix)))]
-    rev.fnames = filenames[which(!is.na(str_match(filenames, reverse.suffix)))]
+    fwd.fnames = filenames[which(!is.na(stri_match_first_regex(filenames, pattern = forward.suffix, opts_regex = list("literal" = TRUE))))]
+    rev.fnames = filenames[which(!is.na(stri_match_first_regex(filenames, pattern = reverse.suffix, opts_regex = list("literal" = TRUE))))]
 
     readgroup.fnames = list("forward.reads" = fwd.fnames, "reverse.reads" = rev.fnames)
 
