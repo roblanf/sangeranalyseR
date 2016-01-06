@@ -5,7 +5,7 @@
 #'
 #' @export summarise.abi.file
 
-summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, trim.segment = 20, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
+summarise.abi.file <- function(seq.abif, trim.cutoff = 0.05, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
  
     seq.sanger = sangerseq(seq.abif)
 

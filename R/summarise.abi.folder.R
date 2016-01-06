@@ -7,7 +7,7 @@
 
 
 
-summarise.abi.folder <- function(input.folder, trim.cutoff = 0.05, trim.segment = 20, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
+summarise.abi.folder <- function(input.folder, trim.cutoff = 0.05, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
 
     processors = get.processors(processors)
 
@@ -19,7 +19,6 @@ summarise.abi.folder <- function(input.folder, trim.cutoff = 0.05, trim.segment 
     summaries.dat = mclapply(abi.seqs, 
                          summarise.abi.file,
                          trim.cutoff = trim.cutoff,
-                         trim.segment = trim.segment,
                          secondary.peak.ratio = secondary.peak.ratio,
                          write.secondary.peak.files = FALSE,
                          processors = 1,

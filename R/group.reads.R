@@ -4,7 +4,7 @@
 #'
 #' @export make.readsets
 
-make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = TRUE, trim.cutoff = 0.05, trim.segment = 20, processors = NULL, min.length = NULL, max.secondary.peaks = NULL, accept.stop.codons = TRUE){
+make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = TRUE, trim.cutoff = 0.05, processors = NULL, min.length = NULL, max.secondary.peaks = NULL, accept.stop.codons = TRUE){
 
     processors = get.processors(processors)
 
@@ -22,13 +22,6 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
                         reverse.suffix = reverse.suffix,
                         mc.cores = processors)
 
-    #TODO: filter the reads we don't want here...
-    # and record a filtering data frame, so that users can easily see
-    # which read contributed to which sequence
-    # this can be just a summary of all the reads, with an extra column
-    # denoting whether the read contributed to a sequence
-
-
     # how we parallelise depends on how many readgroups there are
     if(length(readset.fnames[[1]]) > length(readset.fnames)){
         # better to do readgroups sequentially, but parallelise each
@@ -39,22 +32,32 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
         processors = 1
     }
 
-    readsets = mclapply(readset.fnames, make.readset.from.list,
+    rs = mclapply(readset.fnames, make.readset.from.list,
                           trim = trim,
                           trim.cutoff = trim.cutoff,
-                          trim.segment = trim.segment,
                           processors = processors,                          
                           mc.cores = mc.cores
                           )
 
-    names(readsets) = groups
+    names(rs) = groups
 
-    return(readsets)
+    readsets = lapply(rs, function(x) x[["readset"]])
+    summaries = lapply(rs, function(x) x[["summaries"]])
+    summaries = do.call(rbind, summaries)    
+    rownames(summaries) = NULL
+
+    summaries$group = group.dataframe$group
+
+    # which reads did we end up using for the readsets
+    used.reads = unlist(lapply(readsets, function(x) names(x)))
+    summaries$read.included = summaries$file.path %in% used.reads
+
+    return(list("readsets" = readsets, "summaries" = summaries))
 
 }
 
 
-make.readset.from.list <- function(fnames, trim, trim.cutoff, trim.segment, processors){
+make.readset.from.list <- function(fnames, trim, trim.cutoff, processors){
     # this just unpacks the fnames and sends them on, so I can use mclapply
     print(fnames)
 
@@ -64,7 +67,6 @@ make.readset.from.list <- function(fnames, trim, trim.cutoff, trim.segment, proc
     readset = make.readset(fwd.reads, rev.reads,
                            trim = trim,
                            trim.cutoff = trim.cutoff,
-                           trim.segment = trim.segment,
                            processors = processors)
 
     return(readset)
