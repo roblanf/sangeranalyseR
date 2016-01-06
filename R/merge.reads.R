@@ -51,11 +51,15 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
     # Remove reads with stop codons
     if(accept.stop.codons == FALSE){
         print("Removing reads with stop codons")
+        if(is.null(ref.aa.seq)){ # otherwise we already did it above
+            stops = mclapply(readset, count.stop.codons, reading.frame, genetic.code, mc.cores = processors)
+            stops.df = data.frame('read' = names(readset), "stop.codons" = stops)
+        }
         old_length = length(readset)
         readset = readset[which(stops==0)]
         print(sprintf("%d reads with stop codons removed", old_length - length(readset)))
     }
-    
+
     if(length(readset) < 2) {return(NULL)}
 
     print("Aligning reads")
