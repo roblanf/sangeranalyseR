@@ -2,7 +2,7 @@
 % Please edit documentation in R/make.readset.R
 \name{make.readset}
 \alias{make.readset}
-\title{Make a readgroup object}
+\title{Make a readset}
 \usage{
 make.readset(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 1e-04,
   max.secondary.peaks = NULL, secondary.peak.ratio = 0.33, min.length = 1,
@@ -23,11 +23,12 @@ make.readset(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 1e-04,
 
 \item{min.length}{reads shorter than this will not be included in the readset. The default (1) means that all reads with length of 1 or more will be included.}
 
-\item{processors}{The number of processors to use, or NULL (the default) for all available processors
-
-A set of unaligned reads as a DNAstringset object, names are the input file paths.}
+\item{processors}{The number of processors to use, or NULL (the default) for all available processors}
+}
+\value{
+A set of unaligned reads as a DNAstringset object, names are the input file paths.
 }
 \description{
-Make a readgroup object
+Make a readset
 }
 
