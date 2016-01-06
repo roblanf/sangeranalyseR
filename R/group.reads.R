@@ -35,7 +35,7 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
         # better to do readgroups sequentially, but parallelise each
         mc.cores = 1 
     }else{
-        # better to do readgroups in parrelle, but sequentially within each
+        # better to do readgroups in parallel, but sequentially within each
         mc.cores = processors
         processors = 1
     }
@@ -53,25 +53,20 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
     names(rs) = groups
 
     readsets = lapply(rs, function(x) x[["readset"]])
-    summaries = lapply(rs, function(x) x[["summaries"]])
+    summaries = lapply(rs, function(x) x[["read.summaries"]])
     summaries = do.call(rbind, summaries)    
     rownames(summaries) = NULL
 
-    summaries$group = group.dataframe$group
+    summaries$readset.name = group.dataframe$group
 
-    # which reads did we end up using for the readsets?
-    used.reads = unlist(lapply(readsets, function(x) names(x)))
-    summaries$read.included = summaries$file.path %in% used.reads
 
-    return(list("readsets" = readsets, "summaries" = summaries))
+    return(list("readsets" = readsets, "read.summaries" = summaries))
 
 }
 
 
 make.readset.from.list <- function(fnames, trim, trim.cutoff, max.secondary.peaks, secondary.peak.ratio, min.length, processors){
     # this just unpacks the fnames and sends them on, so I can use mclapply
-    print(fnames)
-
     fwd.reads = fnames$forward.reads
     rev.reads = fnames$reverse.reads
 
