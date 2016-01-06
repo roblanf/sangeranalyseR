@@ -367,12 +367,25 @@ rs$summaries
 
 ```{r eval=FALSE}
 rs = make.readsets(input.folder, forward.suffix, reverse.suffix, max.secondary.peaks = 0) 
-rs$readsets
 rs$summaries
 ```
 
+In the last example, you can see that many of the readsets are empty and many others contain just a single read, because we chose to exclude sequences with secondary peaks. You can control all of the read filtering as above. 
 
-## Sample workflow for creating consensus sequences
+### Automatically make many consensus sequences with make.consensus.seqs()
 
-Here's a suggestion of how we could stitch all of the above into one very simple workflow. The aim is to create a collection of consensus sequences from our sanger sequencing reads. 
+```make.consensus.seqs``` goes one step further than ```make.readsets```, and merges each readset into a consensus sequence. The idea is that you choose your settings, point the function at the folder that contains all your reads, and get back a set of consensus sequences from all of the reads.
+
+There are obviously pros and cons to this level of automation. The pros are convenience and replicability. In a single line of code, you can create a huge number of consensus sequences from your raw data, and get back not just the sequences but a detialed report on their construction. One con is that this is a one-size-fits-all approach: one collection of settings are applied to ALL the reads and ALL the consensus sequences. Another con is that running this function might take a long time if you have a lot of data, so you should try it out on a small subset of your data first. The function does its best to use all of your processors in a sensible way, but if you're trying to process thousands of reads on a small laptop, it's still going to take a long time. 
+
+Using this function requires some thought (and probably trial and error) in setting the parameters: you need to set parameters for pretty much every function described above. So before you start, it's worth examining your sequences with some of the previous functions, and deciding:
+
+1. Are you going to use a reference sequence?
+2. Are you going to correct frameshifts in the reads?
+3. Are you going to exclude short sequences and those with secondary peaks or stop codons?
+4. How are you going to trim your sequences?
+5. What settings do you want to use to call your consensus sequence?
+
+Making these decisions is non-trivial, and will depend on your project and your data. To make them, you should study the documentation of all the relevant functions. The ```make.consensus.seqs``` function includes relatively conservative defaults for most of the options, but these will not necessarily be sensible for your data. 
+
 
