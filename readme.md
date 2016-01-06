@@ -133,15 +133,15 @@ The chromatogram highlights the locations of the secondary peaks with blue bars.
 The chromatogram suggests that the secondary peaks we saw occurred in noisy low-quality parts of our sequence. We might not care much about this, and instead we might care more about secondary peaks that occur in the high-quality regions of our sequence. To look at this information, we can use the ```summarise.abi.file()``` function. 
 
 ```{r eval=FALSE}
-summary = summarise.abi.file(seq.abif)
-summary
+sa = summarise.abi.file(seq.abif)
+sa$summary
 ```
 
 This summary shows us a lot of information, which you can unpack by looking at the documentation for the function with ```?summarise.abi.file```. For the purposes of this tutorial, it's worth noting that only one of the 3 secondary peaks falls within the trimmed sequence. Looking back at the whole chromatogram, this suggests that the default trimming cutoff of 0.05 is probably too lenient here. We might choose a more severe one, like this:
 
 ```{r eval=FALSE}
-summary = summarise.abi.file(seq.abif, trim.cutoff = 0.0001)
-summary
+sa = summarise.abi.file(seq.abif, trim.cutoff = 0.0001)
+sa$summary
 ```
 
 This gives us no secondary peaks in our trimmed sequence. Note that the trimmed seuqence is now much shorter too (462 bases with the more severe cutoff, versus 664 before). The mean quality score of the trimmed sequence is now higher of course (54.7 now, versus 53.9 before).
@@ -155,31 +155,31 @@ Typically, in a sanger sequencing project we might generate 10s or 100s of seque
 
 
 ```{r eval=FALSE}
-summaries = summarise.abi.folder("~/Desktop/test_data")
-summaries
+sf = summarise.abi.folder("~/Desktop/test_data")
+sf$summaries
 ```
 
 This gives us a data frame of summaries, one row for each read. In this case the data frame also contains the full file path, as well as the name of the read and the name of the folder that the read is in. This means we can easily make some simple plots to compare statistics, e.g.:
 
 ```
 library(ggplot2)
-ggplot(summaries, aes(x = folder.name, y = raw.mean.quality)) + geom_boxplot()
+ggplot(sf$summaries, aes(x = folder.name, y = raw.mean.quality)) + geom_boxplot()
 ```
 ![plot1](images/plot1.png)
 
 
 ```
-ggplot(summaries, aes(x = folder.name, y = trimmed.mean.quality)) + geom_boxplot()
+ggplot(sf$summaries, aes(x = folder.name, y = trimmed.mean.quality)) + geom_boxplot()
 ```
 ![plot2](images/plot2.png)
 
 ```
-ggplot(summaries, aes(x = folder.name, y = trimmed.secondary.peaks)) + geom_boxplot()
+ggplot(sf$summaries, aes(x = folder.name, y = trimmed.secondary.peaks)) + geom_boxplot()
 ```
 ![plot3](images/plot3.png)
 
 ```
-ggplot(summaries, aes(x = trimmed.mean.quality, y = trimmed.secondary.peaks)) + geom_point()
+ggplot(sf$summaries, aes(x = trimmed.mean.quality, y = trimmed.secondary.peaks)) + geom_point()
 ```
 ![plot4](images/plot4.png)
 
