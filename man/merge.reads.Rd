@@ -6,7 +6,7 @@
 \usage{
 \method{merge}{reads}(readset, ref.aa.seq = NULL, minInformation = 0.75,
   threshold = 0.05, processors = NULL, genetic.code = GENETIC_CODE,
-  accept.stop.codons = TRUE, frame = 1)
+  accept.stop.codons = TRUE, reading.frame = 1)
 }
 \arguments{
 \item{readset}{a DNAStringSet object with at least 2 reads}
@@ -20,6 +20,10 @@
 \item{processors}{The number of processors to use, or NULL (the default) for all available processors}
 
 \item{genetic.code}{Named character vector in the same format as GENETIC_CODE (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
+
+\item{accept.stop.codons}{TRUE/FALSE. TRUE (the defualt): keep all reads, regardless of whether they have stop codons; FALSE: reject reads with stop codons. If FALSE is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).}
+
+\item{reading.frame}{1, 2, or 3. Only used if accept.stop.codons == FALSE. This specifies the reading frame that is used to determine stop codons. If you use a ref.aa.seq, then the frame should always be 1, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.}
 }
 \value{
 A list with the following components:

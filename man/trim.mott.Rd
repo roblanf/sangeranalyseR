@@ -4,18 +4,18 @@
 \alias{trim.mott}
 \title{Trim a sequences with Mott's modified trimming algorithm}
 \usage{
-trim.mott(abif.seq, cutoff = 0.05, segment = 20)
+trim.mott(abif.seq, cutoff = 1e-04)
 }
 \arguments{
 \item{abif.seq}{a abif.seq s4 object from the sangerseqR package}
 
-\item{segment}{minimum sequence length to return. If your input sequence is shorter than this, you just get your input sequence back.}
+\item{cutoff}{the cutoff at which you consider a base to be bad. This works on a logarithmic scale, such that if you want to consider a score of 10 as bad, you set cutoff to 0.1; for 20 set it at 0.01; for 30 set it at 0.001; for 40 set it at 0.0001; and so on. Contiguous runs of bases below this quality will be removed from the start and end of the sequence. Given the high quality reads expected of most modern ABI sequencers, the defualt is 0.0001.}
 }
 \value{
-a list of two integers: "start" the start position of the sequence to keep; "finish" the end position of the sequence to keep
+a list of two integers: "start" the start position of the sequence to keep; "finish" the end position of the sequence to keep.
 }
 \description{
-Removes low quality bases from the start and end of a sequence. This version in R was ported from the Biopython implementation of the same algorithm: http://biopython.org/DIST/docs/api/Bio.SeqIO.AbiIO-module.html#_abi_trim, with one minor change: the BioPython implementation always trims off the first base, while this implementation does not. For more information on the alogrithm, see http://www.phrap.org/phredphrap/phred.html http://www.clcbio.com/manual/genomics/Quality_abif_trimming.html
+Removes low quality bases from the start and end of a sequence. This version in R is based on the Biopython implementation of the same algorithm: http://biopython.org/DIST/docs/api/Bio.SeqIO.AbiIO-module.html#_abi_trim, with one minor change: the BioPython implementation always trims off the first base, while this implementation does not. For more information on the alogrithm, see http://www.phrap.org/phredphrap/phred.html http://www.clcbio.com/manual/genomics/Quality_abif_trimming.html
 Note that the resulting trim.start and trim.end values correspond to the sequence contained in the abif.seq object, which is not always the same as the sequence contained in a sangerseq object derived from the same data (e.g. if the latter has had bases recalled using sangerseqR's makeBaseCalls() method).
 }
 \keyword{phred,}

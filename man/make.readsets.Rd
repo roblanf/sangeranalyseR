@@ -5,9 +5,8 @@
 \title{Automatically load readsets by grouping .ab1 files by name.}
 \usage{
 make.readsets(input.folder, forward.suffix, reverse.suffix, trim = TRUE,
-  trim.cutoff = 0.05, trim.segment = 20, processors = NULL,
-  min.length = NULL, max.secondary.peaks = NULL,
-  accept.stop.codons = TRUE)
+  trim.cutoff = 0.05, processors = NULL, min.length = NULL,
+  max.secondary.peaks = NULL, accept.stop.codons = TRUE)
 }
 \description{
 Load all reads recursively, then group them by name after removing prefix/suffix. Return a list of lists of filenames of input reads.

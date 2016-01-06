@@ -212,7 +212,8 @@ rev = reverseComplement(rev)
 reads = DNAStringSet(c(as.character(fwd), as.character(rev)))
 names(reads) = c('fwd', 'rev')
 
-merged.reads = merge.reads(reads)
+merged = merge.reads(reads)
+merged.reads = merged$readset
 merged.reads
 ```
 
@@ -250,8 +251,8 @@ GENETIC_CODE_TABLE
 inv.mito.code = getGeneticCode('SGC4', full.search = T)
 
 # Now the easy bit: merge reads and correct frameshifts
-merged.reads = merge.reads(reads, ref.aa.seq = ref.seq, genetic.code = inv.mito.code)
-merged.reads
+merged = merge.reads(reads, ref.aa.seq = ref.seq, genetic.code = inv.mito.code)
+merged.reads = merged$readset
 
 BrowseSeqs(merged.reads$alignment)
 ```
@@ -272,32 +273,46 @@ For example, to create a readset from the same two reads we used above, we would
 fwd = list("~/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]_F.ab1")
 rev = list("~/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]_R.ab1")
 
-readset = make.readset(fwd, rev)
-readset
+rs = make.readset(fwd, rev)
+rs$readset
 ```
 
-There are a few important things to note here. First, the ```rev.fnames``` argument we pass to make.readset (the ```rev``` list in the above example) are just the sequences we with to reverse complement. Second, the default for ```make.readset``` is to trim the sequences using the ```trim.mott()``` function with default settings (see above). So the readset we get in this example will be different from the one in the previous example, even though the input reads are identical, because in this example we trimmed off low quality bases from each read first. Third, the ```make.readset()``` function automatically names the sequences with their full filepath. This can help keep track of things later.
-
-Of course, you can control how the trimming works, by passing additional arguments to make.readset, e.g.:
-
-```{r eval=FALSE}
-# we can make a readset without trimming the reads
-readset.untrimmed = make.readset(fwd, rev, trim = FALSE)
-
-# or we can trim the reads more conservatively than the default
-readset.trimmed = make.readset(fwd, rev, trim.cutoff = 0.0001)
-```
+There are some important things to note here. First, the ```rev.fnames``` argument we pass to make.readset (the ```rev``` list in the above example) are just the sequences we with to reverse complement. Second, the default for ```make.readset``` is to trim the sequences using the ```trim.mott()``` function with default settings (see above). So the readset we get in this example will be different from the one in the previous example, even though the input reads are identical, because in this example we trimmed off low quality bases from each read first. Third, the function also returns summaries of the reads (which are generated using the ```summarise.abi.file``` function above) which you can access using ```rs$summaries```. Finally, the ```make.readset()``` function automatically names the sequences with their full filepath. This can help keep track of things later. 
 
 Having made our readset, it's just one line to make our consensus sequeunce. We can then view the difference between the two approaches as before.
 
 ```{r eval=FALSE}
-merged.reads = merge.reads(readset)
+merged.reads = merge.reads(rs$readset)
 merged.reads
 BrowseSeqs(merged.reads$alignment)
 ```
 ![consensus2](images/consensus2.png)
 
+
+#### Advanced readset building
+
+You can control how the trimming works when building readsets, by passing additional arguments to make.readset, e.g.:
+
+```{r eval=FALSE}
+# we can make a readset without trimming the reads
+rs.untrimmed = make.readset(fwd, rev, trim = FALSE)
+
+# or we can trim the reads more conservatively than the default
+rs.trimmed = make.readset(fwd, rev, trim.cutoff = 0.0001)
+```
+
 Note the difference in the consensus sequence when we use the default settings in ```make.readset```, because by default it trims the reads to remove low quality sequence.
+
+You can also automatically exclude reads with too many secondary peaks when building your readset. You might want to do this if you had intended to sequence homozygous sequence (e.g. individual viruses, whose products you cloned before sending off). E.g. 
+
+```{r eval=FALSE}
+# let's trim the reads and exlude those with > 1 secondary peak
+rs.trimmed.filtered = make.readset(fwd, rev, trim.cutoff = 0.0001, max.secondary.peaks = 1)
+rs.trimmed.filtered$readset
+```
+
+In the final case, note that the trimmed and filtered readset has only a single sequence, but the summary data frame contains data for all of the sequences. That way you can see the statistics on all of the reads, not just those that made it into the final set.
+
 
 ### ```make.readsets```
 
@@ -331,8 +346,19 @@ forward.suffix = "_F.ab1"
 reverse.suffix = "_R.ab1"
 
 rs = make.readsets(input.folder, forward.suffix, reverse.suffix) 
-rs
+rs$readsets
+rs$summaries
 ```
+
+```make.readsets``` returns a list of two things. The first is a list of readsets, the second is a data frame that summarises all of the input reads. The latter shows which reads were included in readsets, and which were not. In the above example, all of the reads made it into the readsets. One case where they won't is if you exclude reads with secondary peaks, e.g.
+
+
+```{r eval=FALSE}
+rs = make.readsets(input.folder, forward.suffix, reverse.suffix, max.secondary.peaks = 0) 
+rs$readsets
+rs$summaries
+```
+
 
 ## Sample workflow for creating consensus sequences
 
