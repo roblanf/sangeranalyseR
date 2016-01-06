@@ -51,7 +51,7 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
         old_length = length(readset)
         stops = mclapply(readset, count.stop.codons, reading.frame, genetic.code, mc.cores = processors)
         readset = readset[which(stops==0)]
-        print(sprintf("%d with stop codons removed", old_length - length(readset)))
+        print(sprintf("%d reads with stop codons removed", old_length - length(readset)))
     }
 
     if(length(readset) < 2) {return(NULL)}
