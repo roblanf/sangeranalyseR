@@ -212,8 +212,7 @@ rev = reverseComplement(rev)
 reads = DNAStringSet(c(as.character(fwd), as.character(rev)))
 names(reads) = c('fwd', 'rev')
 
-merged = merge.reads(reads)
-merged.reads = merged$readset
+merged.reads = merge.reads(reads)
 merged.reads
 ```
 
@@ -251,8 +250,7 @@ GENETIC_CODE_TABLE
 inv.mito.code = getGeneticCode('SGC4', full.search = T)
 
 # Now the easy bit: merge reads and correct frameshifts
-merged = merge.reads(reads, ref.aa.seq = ref.seq, genetic.code = inv.mito.code)
-merged.reads = merged$readset
+merged.reads = merge.reads(reads, ref.aa.seq = ref.seq, genetic.code = inv.mito.code)
 
 BrowseSeqs(merged.reads$alignment)
 ```
