@@ -35,7 +35,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                        )
 
     readsets = rs$readsets
-    summaries = rs$summaries
+    read.summaries = rs$read.summaries
 
     readset.lengths = unlist(lapply(readsets, function(x) length(x)))
     valid.readsets = readsets[which(readset.lengths >= min.reads)]
@@ -51,7 +51,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
         processors = 1
     }
 
-    merged.readsets = mclapply(valid.readsets,
+    consensi = mclapply(valid.readsets,
                                merge.reads,
                                ref.aa.seq = ref.aa.seq, 
                                minInformation = minInformation, 
@@ -63,14 +63,48 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                                mc.cores = mc.cores
                                )
 
+
+    consensus.summaries = lapply(merged.readsets, summarise.merged.read)
+    consensus.summaries = do.call(rbind, consensus.summaries)
+    consensus.summaries = cbind("consensus.name" = row.names(consensus.summaries), consensus.summaries)
+    row.names(consensus.summaries) = NULL
+    consensus.summaries = data.frame(consensus.summaries)
+
     # which reads made it to the consensus sequence
     used.reads = unlist(lapply(merged.readsets, function(x) as.character(x$differences$name)))
-    summaries$read.included.in.consensus = summaries$file.path %in% used.reads
+    read.summaries$read.included.in.consensus = read.summaries$file.path %in% used.reads
 
     # a column for successful consensus sequence
     success = names(merged.readsets)
-    success.indices = which(summaries$readset.name %in% success)
-    summaries$consensus.name[success.indices] = as.character(summaries$readset.name[success.indices])
+    success.indices = which(read.summaries$readset.name %in% success)
+    read.summaries$consensus.name[success.indices] = as.character(read.summaries$readset.name[success.indices])
 
+    # Now we add more data from the read summaries
+    used.read.summaries = filter(read.summaries, read.included.in.consensus==TRUE)    
+    rsm = melt(used.read.summaries, id.vars = c("consensus.name", "folder.name", "file.name", "readset.name", "file.path", "read.included.in.readset", "read.included.in.consensus"))
+    meds = dcast(rsm, consensus.name ~ variable, median)
+    maxs = dcast(rsm, consensus.name ~ variable, max)
+    mins = dcast(rsm, consensus.name ~ variable, min)
+    more.summaries = data.frame("consensus.name" = meds$consensus.name,
+                                "raw.secondary.peaks.min" = mins$raw.secondary.peaks, 
+                                "raw.secondary.peaks.max" = maxs$raw.secondary.peaks,
+                                "raw.secondary.peaks.med" = meds$raw.secondary.peaks,
+                                "trimmed.secondary.peaks.min" = mins$trimmed.secondary.peaks, 
+                                "trimmed.secondary.peaks.max" = maxs$trimmed.secondary.peaks,
+                                "trimmed.secondary.peaks.med" = meds$trimmed.secondary.peaks,
+                                "raw.mean.quality.min" = mins$raw.mean.quality, 
+                                "raw.mean.quality.max" = maxs$raw.mean.quality,
+                                "raw.mean.quality.med" = meds$raw.mean.quality,
+                                "trimmed.mean.quality.min" = mins$trimmed.mean.quality, 
+                                "trimmed.mean.quality.max" = maxs$trimmed.mean.quality,
+                                "trimmed.mean.quality.med" = meds$trimmed.mean.quality
+                               )
+    consensus.summaries = merge(consensus.summaries, more.summaries, by = "consensus.name", sort = FALSE)
+
+    # make the set of consensus sequences
+    consensus.seqs = lapply(consensi, function(x) x$consensus)
+    consensus.set  = DNAStringSet(consensus.seqs)
+
+    return(list("read.summaries" = read.summaries, "merged.reads" = consensi, "consensus.summaries" = consensus.summaries, "consensus.sequences" = consensus.set ))
 
 }
