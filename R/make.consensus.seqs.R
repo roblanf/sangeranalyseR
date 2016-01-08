@@ -44,11 +44,12 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
 
     if(median(valid.readset.lengths) > length(readsets)){
         # better to do readgroups sequentially, but parallelise each
-        mc.cores = 1 
+        mc.cores = 1
+        c.processors = processors
     }else{
         # better to do readgroups in parallel, but sequentially within each
         mc.cores = processors
-        processors = 1
+        c.processors = 1
     }
 
     consensi = mclapply(valid.readsets,
@@ -56,7 +57,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                                ref.aa.seq = ref.aa.seq, 
                                minInformation = minInformation, 
                                threshold = threshold, 
-                               processors = processors, 
+                               processors = c.processors, 
                                genetic.code = genetic.code, 
                                accept.stop.codons = accept.stop.codons, 
                                reading.frame = reading.frame,
@@ -75,7 +76,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     read.summaries$read.included.in.consensus = read.summaries$file.path %in% used.reads
 
     # a column for successful consensus sequence
-    success = names(merged.readsets)
+    success = names(consensi)
     success.indices = which(read.summaries$readset.name %in% success)
     read.summaries$consensus.name[success.indices] = as.character(read.summaries$readset.name[success.indices])
 
@@ -105,6 +106,26 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     consensus.seqs = lapply(consensi, function(x) x$consensus)
     consensus.set  = DNAStringSet(consensus.seqs)
 
-    return(list("read.summaries" = read.summaries, "merged.reads" = consensi, "consensus.summaries" = consensus.summaries, "consensus.sequences" = consensus.set ))
+
+    # align the consensus sequences
+    aln = AlignSeqs(consensus.set)
+
+    # make a rough NJ tree. Labels are rows in the summary df
+    aln.bin = as.DNAbin(aln)
+    aln.dist = dist.dna(aln.bin)
+    aln.tree = bionj(aln.dist)
+    neat.labels = match(aln.tree$tip.label, 
+                        as.character(consensus.summaries$consensus.name)
+                        )
+    aln.tree$tip.label = neat.labels
+
+    return(list("read.summaries" = read.summaries, 
+                "merged.reads" = consensi, 
+                "consensus.summaries" = consensus.summaries, 
+                "consensus.sequences" = consensus.set, 
+                "consensus.alignment" = aln,
+                "consensus.tree" = aln.tree
+                )
+            )
 
 }
