@@ -386,4 +386,24 @@ Using this function requires some thought (and probably trial and error) in sett
 
 Making these decisions is non-trivial, and will depend on your project and your data. To make them, you should study the documentation of all the relevant functions. The ```make.consensus.seqs``` function includes relatively conservative defaults for most of the options, but these will not necessarily be sensible for your data. 
 
+Running ```make.consensus.seqs``` is not too different from just running ```make.readsets```, then running ```merge.reads``` on each of the readsets you get. What it adds is some sensible parallelisation, and the generation of automatic summary statistics for each of the consensus sequences generated. 
+
+At its simplest, i.e. ignoring all the advice to be careful that I gave above, you can run ```make.consensus.seqs``` specifying just three arguments. To be clear, we'll respecify them all:
+
+```{r eval=FALSE}
+input.folder = "~/Desktop/test_data"
+forward.suffix = "_F.ab1"
+reverse.suffix = "_R.ab1"
+
+cs = make.consensus.seqs(input.folder, forward.suffix, reverse.suffix) 
+```
+
+The function gives you a list of four things:
+
+    \enumerate{
+                \item {merged.reads}: a list of all the merged reads. Each item in this list is the object you would get back from a single call to ```merge.reads```\cr
+                \item {read.summaries}: this is a large dataframe with one row per input read, which gives a lot of information about each read, whether it made it into a readset (or whether it was filtered out for some reason, e.g. its length), whether it made it into a consensus sequence (or whether it was filtered out due to e.g. stop codons)
+                \item {consensus.summaries}: this is another large dataframe with one row per consensus sequence, which gives you a lot of information about each consensus sequence
+                \item {consensus.sequences}: this is a DNAStringSet of all of the unaligned consensus sequences
+              }
 
