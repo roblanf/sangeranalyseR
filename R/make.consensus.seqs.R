@@ -34,15 +34,14 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                        processors = processors
                        )
 
+    # Process readset output, and filter based on number of reads
     readsets = rs$readsets
     read.summaries = rs$read.summaries
-
     readset.lengths = unlist(lapply(readsets, function(x) length(x)))
     valid.readsets = readsets[which(readset.lengths >= min.reads)]
     valid.readset.lengths = unlist(lapply(valid.readsets, function(x) length(x)))
 
-
-    if(median(valid.readset.lengths) > length(readsets)){
+    if(median(valid.readset.lengths) > length(valid.readsets)){
         # better to do readgroups sequentially, but parallelise each
         mc.cores = 1
         c.processors = processors
@@ -64,24 +63,25 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                                mc.cores = mc.cores
                                )
 
-
-    consensus.summaries = lapply(merged.readsets, summarise.merged.read)
+    # Group the summaries
+    consensus.summaries = lapply(consensi, summarise.merged.read)
     consensus.summaries = do.call(rbind, consensus.summaries)
     consensus.summaries = cbind("consensus.name" = row.names(consensus.summaries), consensus.summaries)
     row.names(consensus.summaries) = NULL
     consensus.summaries = data.frame(consensus.summaries)
 
     # which reads made it to the consensus sequence
-    used.reads = unlist(lapply(merged.readsets, function(x) as.character(x$differences$name)))
+    used.reads = unlist(lapply(consensi, function(x) as.character(x$differences$name)))
     read.summaries$read.included.in.consensus = read.summaries$file.path %in% used.reads
 
     # a column for successful consensus sequence
     success = names(consensi)
     success.indices = which(read.summaries$readset.name %in% success)
+    read.summaries$consensus.name = NA
     read.summaries$consensus.name[success.indices] = as.character(read.summaries$readset.name[success.indices])
 
     # Now we add more data from the read summaries
-    used.read.summaries = filter(read.summaries, read.included.in.consensus==TRUE)    
+    used.read.summaries = subset(read.summaries, read.included.in.consensus==TRUE)    
     rsm = melt(used.read.summaries, id.vars = c("consensus.name", "folder.name", "file.name", "readset.name", "file.path", "read.included.in.readset", "read.included.in.consensus"))
     meds = dcast(rsm, consensus.name ~ variable, median)
     maxs = dcast(rsm, consensus.name ~ variable, max)
@@ -114,13 +114,15 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     }
 
     # make a rough NJ tree. Labels are rows in the summary df
-    aln.bin = as.DNAbin(aln)
-    aln.dist = dist.dna(aln.bin)
-    aln.tree = bionj(aln.dist)
-    neat.labels = match(aln.tree$tip.label, 
+    neat.labels = match(names(aln), 
                         as.character(consensus.summaries$consensus.name)
                         )
-    aln.tree$tip.label = neat.labels
+    aln2 = aln
+    names(aln2) = neat.labels
+    aln.bin = as.DNAbin(aln2)
+    aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
+    aln.tree = bionjs(aln.dist)
+
 
     return(list("read.summaries" = read.summaries, 
                 "merged.reads" = consensi, 

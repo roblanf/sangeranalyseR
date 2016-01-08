@@ -15,5 +15,6 @@ Depends:
     parallel,
     reshape2,
     sangerseqR,
+    stringi,
     stringr,
 RoxygenNote: 5.0.1
