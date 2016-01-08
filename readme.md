@@ -370,7 +370,9 @@ rs$summaries
 
 In the last example, you can see that many of the readsets are empty and many others contain just a single read, because we chose to exclude sequences with secondary peaks. You can control all of the read filtering as above. 
 
-### Automatically make many consensus sequences with make.consensus.seqs()
+### Automatically build many consensus sequences with make.consensus.seqs()
+
+#### Introduction
 
 ```make.consensus.seqs``` goes one step further than ```make.readsets```, and merges each readset into a consensus sequence. The idea is that you choose your settings, point the function at the folder that contains all your reads, and get back a set of consensus sequences from all of the reads.
 
@@ -385,6 +387,8 @@ Using this function requires some thought (and probably trial and error) in sett
 5. What settings do you want to use to call your consensus sequence?
 
 Making these decisions is non-trivial, and will depend on your project and your data. To make them, you should study the documentation of all the relevant functions. The ```make.consensus.seqs``` function includes relatively conservative defaults for most of the options, but these will not necessarily be sensible for your data. 
+
+#### Runing ```make.consensus.seqs```
 
 Running ```make.consensus.seqs``` is not too different from just running ```make.readsets```, then running ```merge.reads``` on each of the readsets you get. What it adds is some sensible parallelisation, and the generation of automatic summary statistics for each of the consensus sequences generated. 
 
@@ -405,5 +409,66 @@ The function gives you a list of four things:
                 \item {read.summaries}: this is a large dataframe with one row per input read, which gives a lot of information about each read, whether it made it into a readset (or whether it was filtered out for some reason, e.g. its length), whether it made it into a consensus sequence (or whether it was filtered out due to e.g. stop codons)
                 \item {consensus.summaries}: this is another large dataframe with one row per consensus sequence, which gives you a lot of information about each consensus sequence
                 \item {consensus.sequences}: this is a DNAStringSet of all of the unaligned consensus sequences
+                \item {consensus.alignment}: this is a rough-and-ready alignment of your consensus sequences. You probably shouldn't rely on it for downstream analyses, since automated alignment (especially without human checking) is notoriously bad. However, it's good enough for a first look at your data.
+                \item {consensus.tree}: this is a rough-and-ready Neighbour Joining tree of your consensus sequences. As above, not good enough for downstream analyses, but useful for spotting issues in your sequences (e.g. unexpectedly identical sequences, or sequences that are drastically different) 
+
               }
+
+Of course, it would help if we made some more considered decisions before making the consensus seuqences. For example, we could use our reference amino acid sequence. We could also exclude reads with more than 5 secondary peaks. To do that, we would run the function as follows (noting that we are using a single reference sequence for two different species, which is not always a good idea...):
+
+```{r eval=FALSE}
+ref.seq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
+
+cs = make.consensus.seqs(input.folder, forward.suffix, reverse.suffix, ref.aa.seq = ref.seq, max.secondary.peaks = 5) 
+
+cs$consensus.summaries
+
+```
+
+Note that this gives us fewer consensus sequences: we lost some when we filtered out reads with more than five secondary peaks.
+
+#### Exporting your consensus sequences
+Once you have checked all of your sequences, and you're happy that this stage of the analysis is done, you can easily export them to proceed with your anlaysis using other software. For example, to save your unaligned sequences as a FASTA file (a good format for sequences of differing lengths), you can use the ```write.dna``` function from the ape package:
+
+```{r eval=FALSE}
+# these settings get us the standard FASTA format
+write.dna(cs$consensus.sequences, file = "~/Desktop/test_data/consensus_sequences.fasta", format = 'fasta', nbcol = -1, colsep = "", colw = 10000000)
+```
+
+
+#### Taking a first look at your data
+Because this functions automates a lot of things at once, it's important to take a close look at your consensus sequences before doing any further analysis. A few things will help here, for example:
+
+
+```{r eval=FALSE}
+
+# You could look at individual merged reads in detail
+cs$merged.reads[[1]]
+
+# Look at summaries of all the reads
+cs$read.summaries
+
+# Look at summaries of all the consensus sequences
+cs$consensus.summaries
+
+# Look at the actual sequences
+cs$consensus.sequences
+
+# Look at the aligned sequences
+BrowseSeqs(cs$consensus.alignment)
+
+# Look at the phylogeny (note, tip labels are rows in the summary data frame)
+plot(cs$consensus.tree)
+
+```
+
+If you scan through the alignment, you should see that at least one consensus seuqence has issues. This deserves further inspection. 
+
+![aln2](images/aln2.png)
+
+
+The tree shows that all the Drosophila sequences are very similar, and that there is more variation in the Allolobophora sequences. However, the tip lables are too long to be very useful here. We can fix that:
+
+
+![tree1](images/tree1.png)
 
