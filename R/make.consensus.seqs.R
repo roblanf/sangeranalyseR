@@ -106,9 +106,12 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     consensus.seqs = lapply(consensi, function(x) x$consensus)
     consensus.set  = DNAStringSet(consensus.seqs)
 
-
     # align the consensus sequences
-    aln = AlignSeqs(consensus.set)
+    if(!is.null(ref.aa.seq)){
+        aln = AlignTranslation(consensus.set, geneticCode = genetic.code, processors = processors, verbose = FALSE)
+    }else{
+        aln = AlignSeqs(consensus.set, processors = processors, verbose = FALSE)
+    }
 
     # make a rough NJ tree. Labels are rows in the summary df
     aln.bin = as.DNAbin(aln)
