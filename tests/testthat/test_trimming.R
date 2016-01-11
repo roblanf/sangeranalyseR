@@ -17,3 +17,4 @@ test_that("trimming works", {
     expect_equal(r2$start, 27)
     expect_equal(r2$finish, 477)
 })
+

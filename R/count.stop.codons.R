@@ -10,6 +10,16 @@
 count.stop.codons <- function(sequence, reading.frame = 1, genetic.code = GENETIC_CODE){
 
     if(!reading.frame %in% c(1,2,3)){ stop("reading.frame must be 1, 2, or 3")}
+    if(class(sequence)!='DNAString'){ stop("sequence must be a DNAString object")}
+    if(!("*" %in% genetic.code)) { stop("Your genetic code does not specify any stop codons")}
+
+    l = length(sequence) + 1 - reading.frame
+
+    if(l < 3){
+        warning(sprintf("Cannot calculate stop codons on sequence of length %d in reading frame %d", 
+                        length(sequence), reading.frame))
+        return(NULL)
+    }
 
     # this comes almost straight from the BioStrings manual
     tri = trinucleotideFrequency(sequence[reading.frame:length(sequence)], step=3)
@@ -20,5 +30,5 @@ count.stop.codons <- function(sequence, reading.frame = 1, genetic.code = GENETI
 
     stops = freqs["*"]
 
-    return(stops)
+    return(as.numeric(stops))
 }
