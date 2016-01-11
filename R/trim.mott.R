@@ -15,6 +15,16 @@
 
 trim.mott <- function(abif.seq, cutoff = 0.0001){
 
+    if(class(cutoff)!='numeric' | cutoff < 0){
+        stop("cutoff must be a number of at least 0")
+    }
+
+    if(class(abif.seq)!='abif'){
+        stop("abif.seq must be an 'abif' object from the sangerseqR package")
+    }
+
+
+
     abif.seq = abif.seq@data
     start = FALSE # flag for starting position of trimmed sequence
     trim_start = 0 # init start index
