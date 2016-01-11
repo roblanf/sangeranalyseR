@@ -478,6 +478,7 @@ We can take a look at the summary of that sequence like this:
 subset(cs$consensus.summaries, consensus.name == "/Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/BBDEE689-10[LCO1490_t1,HCO2198_t1]")
 ```
 
+![aln3](images/aln3.png)
 
 We can also look at the tree for these sequences. The labels on the tree correspond to rows in the consensus summary data frame, so you can see immediately that (as expected) the sequences cluster together by species.
 
