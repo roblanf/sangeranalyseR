@@ -20,6 +20,11 @@ sangeranalyseR relies heavily on packages from CRAN and Bioconductor. If you don
 ```{r eval=FALSE}
 # CRAN packages
 install.packages("parallel")
+install.packages("ape")
+install.packages("reshape2")
+install.packages("phangorn")
+install.packages("stringi")
+install.packages("stringr")
 
 # Bioconductor packages
 source("https://bioconductor.org/biocLite.R")
