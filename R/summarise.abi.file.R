@@ -5,7 +5,7 @@
 #'
 #' @export summarise.abi.file
 
-summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
+summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ratio = 0.33, output.folder = NA, prefix = "seq", processors = NULL){
  
     seq.sanger = sangerseq(seq.abif)
 
@@ -14,16 +14,7 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ra
     # have called makeBaseCalls. And that this means the trim locations and the 
     # secondary peak locations do not match, since makeBaseCalls usually calls
     # fewer bases than the standard ABI calls.
-    if(write.secondary.peak.files == TRUE){
-        output.folder = dirname(inputfile)
-        prefix = basename(inputfile)
-        secondary.peaks.data = secondary.peaks(seq.sanger, secondary.peak.ratio, output.folder, prefix, processors = processors)
-    }else if(write.secondary.peak.files == FALSE){
-        secondary.peaks.data = secondary.peaks(seq.sanger, secondary.peak.ratio, processors = processors)
-    }else{
-        stop("Unknown option for write.secondary.peak.files. Should be TRUE or FALSE")
-    }
-
+    secondary.peaks.data = secondary.peaks(seq.sanger, secondary.peak.ratio, output.folder, prefix, processors = processors)
     secondary.peaks = secondary.peaks.data$secondary.peaks
     seq.sanger = secondary.peaks.data$read
 

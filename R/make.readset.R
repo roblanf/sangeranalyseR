@@ -54,7 +54,7 @@ loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, sec
 
     read.abi = read.abif(fname)
 
-    s = summarise.abi.file(read.abi, trim.cutoff, secondary.peak.ratio, write.secondary.peak.files = FALSE, processors = processors)
+    s = summarise.abi.file(read.abi, trim.cutoff, secondary.peak.ratio, processors = processors)
 
     summary = s$summary
     read.sanger = s$read
