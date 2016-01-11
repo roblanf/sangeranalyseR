@@ -16,13 +16,18 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
 
     processors = get.processors(processors)
 
+    print("Looking for .ab1 files...")
     abi.files = list.files(input.folder, pattern = "\\.ab1$", full.names = T, recursive = T)
 
     # get a set of unique filenames after removing suffixes
+    print(sprintf("Grouping %d files into sets by filename...", length(abi.files)))
     group.dataframe = get.group.dataframe(abi.files, forward.suffix, reverse.suffix)
     groups = unique(group.dataframe$group)
 
+    print(sprintf("Found %d sets of files", length(groups)))
+
     # load full file paths for readgroups based on unique filenames 
+    print("Loading .ab1 files...")
     readset.fnames = mclapply(groups, 
                         get.readgroup.fnames,
                         abi.files = abi.files, 
@@ -40,6 +45,7 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
         processors = 1
     }
 
+    print("Constructing readsets...")
     rs = mclapply(readset.fnames, make.readset.from.list,
                           trim = trim,
                           trim.cutoff = trim.cutoff,
@@ -52,6 +58,7 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
 
     names(rs) = groups
 
+    print("Building read summaries...")
     readsets = lapply(rs, function(x) x[["readset"]])
     summaries = lapply(rs, function(x) x[["read.summaries"]])
     summaries = do.call(rbind, summaries)    
