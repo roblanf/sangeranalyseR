@@ -8,7 +8,7 @@
 #' @param trim.cutoff value passed to trim.mott as quality cutoff for sequencing trimming, only used if 'trim' == TRUE
 #' @param max.secondary.peaks reads with more secondary peaks than this will not be included in the readset. The default (NULL) is to include all reads regardless of secondary peaks 
 #' @param secondary.peak.ratio Only applies if max.secondary.peaks is not NULL. The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are counted. Those below the ratio are not. 
-#' @param min.length reads shorter than this will not be included in the readset. The default (1) means that all reads with length of 1 or more will be included.
+#' @param min.length reads shorter than this will not be included in the readset. The default (20) means that all reads with length of 20 or more will be included. Note that this is the length of a read after it has been trimmed.
 #' @param ref.aa.seq an amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand.
 #' @param minInformation minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75implying that 3/4 of all reads must be present in order to call a consensus.
 #' @param threshold Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.05, implying that each consensus base can ignore at most 5 percent of the information at a given position. 
@@ -19,7 +19,7 @@
 #'
 #' @export make.consensus.seqs
 
-make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, min.reads = 2, trim = TRUE, trim.cutoff = 0.0001, min.length = 1, max.secondary.peaks = NULL, secondary.peak.ratio = 0.33, ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.05, genetic.code = GENETIC_CODE, accept.stop.codons = TRUE, reading.frame = 1,  processors = NULL){
+make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, min.reads = 2, trim = TRUE, trim.cutoff = 0.0001, min.length = 20, max.secondary.peaks = NULL, secondary.peak.ratio = 0.33, ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.05, genetic.code = GENETIC_CODE, accept.stop.codons = TRUE, reading.frame = 1,  processors = NULL){
 
     processors = get.processors(processors)
 
@@ -56,6 +56,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     }
 
     print("Building consensus sequences...")
+
     consensi = mclapply(valid.readsets,
                                merge.reads,
                                ref.aa.seq = ref.aa.seq, 
@@ -67,6 +68,8 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                                reading.frame = reading.frame,
                                mc.cores = mc.cores
                                )
+
+    print(consensi)
 
     # make the set of consensus sequences
     consensus.seqs = lapply(consensi, function(x) x$consensus)
@@ -100,7 +103,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     meds = dcast(rsm, consensus.name ~ variable, median)
     maxs = dcast(rsm, consensus.name ~ variable, max)
     mins = dcast(rsm, consensus.name ~ variable, min)
-    more.summaries = data.frame("consensus.name" = meds$consensus.name,
+    more.summaries = data.frame("consensus.name" = as.character(meds$consensus.name),
                                 "raw.secondary.peaks.min" = mins$raw.secondary.peaks, 
                                 "raw.secondary.peaks.max" = maxs$raw.secondary.peaks,
                                 "raw.secondary.peaks.med" = meds$raw.secondary.peaks,
@@ -114,6 +117,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                                 "trimmed.mean.quality.max" = maxs$trimmed.mean.quality,
                                 "trimmed.mean.quality.med" = meds$trimmed.mean.quality
                                )
+
     consensus.summaries = merge(consensus.summaries, more.summaries, by = "consensus.name", sort = FALSE)
 
 
