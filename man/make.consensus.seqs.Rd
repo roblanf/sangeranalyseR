@@ -44,6 +44,9 @@ make.consensus.seqs(input.folder, forward.suffix, reverse.suffix,
 
 \item{processors}{The number of processors to use, or NULL (the default) for all available processors}
 }
+\value{
+Note that the consensus.tree should not be used for inference, but only as a guide to help judge problems in the consensus sequences. This tree is built using ape's njs() function, and negative branch lengths are then converted to their absolute values. The latter process aids viewing clarity (so should help when looking for problems in the consensus seuqences), but has little biological validity.
+}
 \description{
 Automatically make consensus sequences by grouping .ab1 files by name.
 }
