@@ -35,11 +35,15 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                        )
 
     # Process readset output, and filter based on number of reads
+    print(sprintf("Filtering readsets with <%d reads...", min.reads))
     readsets = rs$readsets
     read.summaries = rs$read.summaries
     readset.lengths = unlist(lapply(readsets, function(x) length(x)))
     valid.readsets = readsets[which(readset.lengths >= min.reads)]
     valid.readset.lengths = unlist(lapply(valid.readsets, function(x) length(x)))
+
+    print(sprintf("After filtering, %d of %d readsets remain", length(valid.readsets), length(readsets)))
+
 
     if(median(valid.readset.lengths) > length(valid.readsets)){
         # better to do readgroups sequentially, but parallelise each
@@ -51,6 +55,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
         c.processors = 1
     }
 
+    print("Building consensus sequences...")
     consensi = mclapply(valid.readsets,
                                merge.reads,
                                ref.aa.seq = ref.aa.seq, 
@@ -64,7 +69,8 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                                )
 
     # Group the summaries
-    consensus.summaries = lapply(consensi, summarise.merged.read)
+    print("Summarising consensus sequences...")
+    consensus.summaries = mclapply(consensi, summarise.merged.read, mc.cores = processors)
     consensus.summaries = do.call(rbind, consensus.summaries)
     consensus.summaries = cbind("consensus.name" = row.names(consensus.summaries), consensus.summaries)
     row.names(consensus.summaries) = NULL
@@ -107,6 +113,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     consensus.set  = DNAStringSet(consensus.seqs)
 
     # align the consensus sequences
+    print("Aligning consensus sequences...")
     if(!is.null(ref.aa.seq)){
         aln = AlignTranslation(consensus.set, geneticCode = genetic.code, processors = processors, verbose = FALSE)
     }else{
@@ -114,6 +121,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     }
 
     # make a rough NJ tree. Labels are rows in the summary df
+    print("Building tree of consensus sequences...")
     neat.labels = match(names(aln), 
                         as.character(consensus.summaries$consensus.name)
                         )
