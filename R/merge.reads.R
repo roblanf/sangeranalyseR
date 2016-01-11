@@ -37,17 +37,23 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
 
     # Try to correct frameshifts in the input sequences 
     if(!is.null(ref.aa.seq)) {
+
         print("Correcting frameshifts in reads using amino acid reference sequence")
         corrected = CorrectFrameshifts(myXStringSet = readset, myAAStringSet = AAStringSet(ref.aa.seq), geneticCode = genetic.code, type = 'both', processors = processors, verbose = FALSE)
         readset = corrected$sequences
-        indels = get.indel.df(corrected$indels)        
+        indels = get.indel.df(corrected$indels)
         stops = as.numeric(unlist(mclapply(readset, count.stop.codons, reading.frame, genetic.code, mc.cores = processors)))
         stops.df = data.frame("read" = names(readset), "stop.codons" = stops)
-
+        readset.lengths = unlist(lapply(readset, function(x) length(x)))
+        readset = readset[which(readset.lengths>0)]
     }else{
         indels = NULL
         stops.df = NULL
     }
+
+    # we might end up removing sequences during frameshift correction
+    if(length(readset) < 2) {return(NULL)}
+
 
     # Remove reads with stop codons
     if(accept.stop.codons == FALSE){
