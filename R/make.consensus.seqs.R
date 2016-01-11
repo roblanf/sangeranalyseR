@@ -136,6 +136,9 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
     aln.tree = bionjs(aln.dist)
 
+    # just in case there are negative branch lengths...
+    aln.tree = nnls.tree(aln.dist, aln.tree)
+
 
     return(list("read.summaries" = read.summaries, 
                 "merged.reads" = consensi, 
