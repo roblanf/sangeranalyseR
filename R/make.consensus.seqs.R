@@ -71,8 +71,6 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                                mc.cores = mc.cores
                                )
 
-    print(consensi)
-
     # make the set of consensus sequences
     consensus.seqs = lapply(consensi, function(x) x$consensus)
     # Some are null, becuase reads can be removed for e.g. stop codons
