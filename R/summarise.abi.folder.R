@@ -11,10 +11,16 @@ summarise.abi.folder <- function(input.folder, trim.cutoff = 0.0001, secondary.p
 
     processors = get.processors(processors)
 
+    print("Looking for .ab1 files...")
     abi.fnames = list.files(input.folder, pattern = "\\.ab1$", full.names = T, recursive = T)
 
+    print(sprintf(("Found %d .ab1 files..."), length(abi.fnames)))
+
+
+    print("Loading reads...")
     abi.seqs = mclapply(abi.fnames, read.abif, mc.cores = processors)
 
+    print("Calculating read summaries...")
     # now make a data.frame of summaries of all the files
     summaries.dat = mclapply(abi.seqs, 
                          summarise.abi.file,
@@ -25,6 +31,7 @@ summarise.abi.folder <- function(input.folder, trim.cutoff = 0.0001, secondary.p
                          mc.cores = processors  
                          )
 
+    print("Cleaning up")
     summaries = lapply(summaries.dat, function(x) x[["summary"]])
     summaries = do.call(rbind, summaries)
 
