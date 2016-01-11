@@ -5,7 +5,7 @@
 \title{Automatically make consensus sequences by grouping .ab1 files by name.}
 \usage{
 make.consensus.seqs(input.folder, forward.suffix, reverse.suffix,
-  min.reads = 2, trim = TRUE, trim.cutoff = 1e-04, min.length = 1,
+  min.reads = 2, trim = TRUE, trim.cutoff = 1e-04, min.length = 20,
   max.secondary.peaks = NULL, secondary.peak.ratio = 0.33,
   ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.05,
   genetic.code = GENETIC_CODE, accept.stop.codons = TRUE,
@@ -24,7 +24,7 @@ make.consensus.seqs(input.folder, forward.suffix, reverse.suffix,
 
 \item{trim.cutoff}{value passed to trim.mott as quality cutoff for sequencing trimming, only used if 'trim' == TRUE}
 
-\item{min.length}{reads shorter than this will not be included in the readset. The default (1) means that all reads with length of 1 or more will be included.}
+\item{min.length}{reads shorter than this will not be included in the readset. The default (20) means that all reads with length of 20 or more will be included. Note that this is the length of a read after it has been trimmed.}
 
 \item{max.secondary.peaks}{reads with more secondary peaks than this will not be included in the readset. The default (NULL) is to include all reads regardless of secondary peaks}
 

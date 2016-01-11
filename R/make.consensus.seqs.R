@@ -17,6 +17,8 @@
 #' @param reading.frame 1, 2, or 3. Only used if accept.stop.codons == FALSE. This specifies the reading frame that is used to determine stop codons. If you use a ref.aa.seq, then the frame should always be 1, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame. 
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #'
+#' @return Note that the consensus.tree should not be used for inference, but only as a guide to help judge problems in the consensus sequences. This tree is built using ape's njs() function, and negative branch lengths are then converted to their absolute values. The latter process aids viewing clarity (so should help when looking for problems in the consensus seuqences), but has little biological validity. 
+
 #' @export make.consensus.seqs
 
 make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, min.reads = 2, trim = TRUE, trim.cutoff = 0.0001, min.length = 20, max.secondary.peaks = NULL, secondary.peak.ratio = 0.33, ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.05, genetic.code = GENETIC_CODE, accept.stop.codons = TRUE, reading.frame = 1,  processors = NULL){
@@ -138,11 +140,17 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     names(aln2) = neat.labels
     aln.bin = as.DNAbin(aln2)
     aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
-    aln.tree = bionjs(aln.dist)
 
-    # just in case there are negative branch lengths...
-    aln.tree = nnls.tree(aln.dist, aln.tree)
+    # Sometimes it's impossible to make a tree...
+    aln.tree = NULL
+    try({
+            aln.tree = bionjs(aln.dist)
 
+            # deal with -ve branches
+            # This is not necessarily accurate, but it is good enough to judge seuqences using the tree
+            aln.tree$edge.length[which(aln.tree$edge.length<0)] = abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])            },
+            silent = TRUE
+        )
 
     return(list("read.summaries" = read.summaries, 
                 "merged.reads" = consensi, 
