@@ -5,7 +5,7 @@
 \title{Create a detailed summary of a single ABI sequencing file}
 \usage{
 summarise.abi.file(seq.abif, trim.cutoff = 1e-04,
-  secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE,
+  secondary.peak.ratio = 0.33, output.folder = NA, prefix = "seq",
   processors = NULL)
 }
 \description{
