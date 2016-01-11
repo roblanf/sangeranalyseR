@@ -472,7 +472,14 @@ If you scan through the alignment, you should see that at least one consensus se
 ![aln2](images/aln2.png)
 
 
-The tree shows that all the Drosophila sequences are very similar, and that there is more variation in the Allolobophora sequences. However, the tip lables are too long to be very useful here. We can fix that:
+We can take a look at the summary of that sequence like this:
+
+```{r eval=FALSE}
+subset(cs$consensus.summaries, consensus.name == "/Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/BBDEE689-10[LCO1490_t1,HCO2198_t1]")
+```
+
+
+We can also look at the tree for these sequences. The labels on the tree correspond to rows in the consensus summary data frame, so you can see immediately that (as expected) the sequences cluster together by species.
 
 
 ![tree1](images/tree1.png)
