@@ -68,6 +68,14 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                                mc.cores = mc.cores
                                )
 
+    # make the set of consensus sequences
+    consensus.seqs = lapply(consensi, function(x) x$consensus)
+    # Some are null, becuase reads can be removed for e.g. stop codons
+    consensus.seqs = Filter(Negate(is.null), consensus.seqs)
+    consensus.set  = DNAStringSet(consensus.seqs)
+
+    print(sprintf("Successfully built %d consensus sequences", length(consensus.set)))
+
     # Group the summaries
     print("Summarising consensus sequences...")
     consensus.summaries = mclapply(consensi, summarise.merged.read, mc.cores = processors)
@@ -108,9 +116,6 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
                                )
     consensus.summaries = merge(consensus.summaries, more.summaries, by = "consensus.name", sort = FALSE)
 
-    # make the set of consensus sequences
-    consensus.seqs = lapply(consensi, function(x) x$consensus)
-    consensus.set  = DNAStringSet(consensus.seqs)
 
     # align the consensus sequences
     print("Aligning consensus sequences...")
