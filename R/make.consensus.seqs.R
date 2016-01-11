@@ -120,6 +120,7 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
 
     consensus.summaries = merge(consensus.summaries, more.summaries, by = "consensus.name", sort = FALSE)
 
+    consensus.summaries$consensus.name = as.character(consensus.summaries$consensus.name)
 
     # align the consensus sequences
     print("Aligning consensus sequences...")
