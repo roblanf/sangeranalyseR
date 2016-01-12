@@ -247,7 +247,8 @@ ggplot(sf$summaries, aes(x = folder.name, y = trimmed.mean.quality)) + geom_boxp
 ![plot2](images/plot2.png)
 
 ```
-ggplot(sf$summaries, aes(x = folder.name, y = trimmed.secondary.peaks)) + geom_boxplot()
+# In this case, we also add a add horizontal lines at a cutoff of 2
+ggplot(sf$summaries, aes(x = folder.name, y = trimmed.secondary.peaks)) + geom_boxplot() + geom_hline(yintercept = 2, linetype = 3, colour = 'red')
 ```
 ![plot3](images/plot3.png)
 
