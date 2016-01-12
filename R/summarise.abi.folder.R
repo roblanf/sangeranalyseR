@@ -26,7 +26,6 @@ summarise.abi.folder <- function(input.folder, trim.cutoff = 0.0001, secondary.p
                          summarise.abi.file,
                          trim.cutoff = trim.cutoff,
                          secondary.peak.ratio = secondary.peak.ratio,
-                         write.secondary.peak.files = FALSE,
                          processors = 1,
                          mc.cores = processors  
                          )
