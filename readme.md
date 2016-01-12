@@ -425,6 +425,46 @@ rs.trimmed.filtered2 = make.readset(fwd, rev, trim.cutoff = 0.0001, min.length =
 rs.trimmed.filtered2$readset
 ```
 
+4. If you have more complicated naming
+
+The above examples work well when you have a single forward and reverse read for each sequence. But what if you have more than that. For example, what if your filenames look something like this:
+
+```
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/egg_F1.ab1
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/egg_F2.ab1
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/egg_F3.ab1
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/egg_F4.ab1
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/egg_R1.ab1
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/egg_R2.ab1
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/egg_R3.ab1
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/egg_R4.ab1
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/TDWGB669-10[C_LepFolF,C_LepFolR]_F.ab1
+/Users/robertlanfear/Desktop/test_data/many_bogus_reads/TDWGB669-10[C_LepFolF,C_LepFolR]_R.ab1
+```
+
+In this case, you have 4 forward and 4 reverse reads for the 'egg' sequence. And a single forward and reverse read for the other sequence. To deal with this, you need to use a [regular expression](https://en.wikipedia.org/wiki/Regular_expression) to specify your forward and reverse reads. Regular expressions take some practice, so if you haven't used them before expect to spend some time learning. Google around and there are plenty of resources.
+
+Let's start by assuming that you are only interested in the 'egg' sequences. In this case, we want to specify that the suffixes should be '_R' or '_F' followed by a number, and then '.ab1'. To do that with a regular expression, we would do this:
+
+```
+forward.suffix = "_F[1-9].ab1"
+reverse.suffix = "_R[1-9].ab1"
+```
+
+The bit in square brackets does the magic, and just specifies that any number from 1-9 could follow the F or the R. 
+
+Those regular expressions won't match the last two reads above, because those don't have anything inbetween the F/R and the '.ab1'. So if we used ```make.readset()``` in this case with the suffixes above, those reads wouldn't be included in any of the readsets. 
+
+If you did want to include them, you'd need to modify your regular expression to look for an 'F' or 'R', followed by either nothing or a number, followed by '.ab1'. To do that, you could use the '*', which says to expect 0 or more of whatever came before:
+
+```
+forward.suffix = "_F[1-9]*.ab1"
+reverse.suffix = "_R[1-9]*.ab1"
+```
+
+These suffixes will match all the files, so in this case you'd get back two readgroups from ```make.readset()```, one with 8 reads, and one with two reads.
+
+Regular expressions take some getting used to, but they can be very powerful tools. As long as your files are named in such a way that the first part of the filename can define the group, and the rest the suffix, you will probably be able to define forward and reverse suffixes so that ```make.readset()``` will work the way you want.
 
 ### ```make.readsets```
 

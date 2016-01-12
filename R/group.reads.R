@@ -24,15 +24,17 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
     group.dataframe = get.group.dataframe(abi.files, forward.suffix, reverse.suffix)
     groups = unique(group.dataframe$group)
 
-    print(sprintf("Found %d sets of files", length(groups)))
+    print(sprintf("%d of the files matched either the forward or reverse suffixes", nrow(group.dataframe)))
+
+    print(sprintf("Grouped these into %d sets of files", length(groups)))
 
     # load full file paths for readgroups based on unique filenames 
     print("Loading .ab1 files...")
     readset.fnames = mclapply(groups, 
                         get.readgroup.fnames,
-                        abi.files = abi.files, 
+                        group.dataframe = group.dataframe,
                         forward.suffix = forward.suffix,
-                        reverse.suffix = reverse.suffix,
+                        reverse.suffix = reverse.suffix, 
                         mc.cores = processors)
 
     # how we parallelise depends on how many readgroups there are
@@ -57,6 +59,8 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
                           )
 
     names(rs) = groups
+
+    print(rs)
 
     print("Building read summaries...")
     readsets = lapply(rs, function(x) x[["readset"]])
@@ -92,12 +96,20 @@ make.readset.from.list <- function(fnames, trim, trim.cutoff, max.secondary.peak
 get.group.dataframe <- function(fname.list, forward.suffix, reverse.suffix){
 
     files.cleaned = fname.list
+    f.matches = str_match(files.cleaned, forward.suffix)
+    f.indices = which(!is.na(f.matches))
+    r.matches = str_match(files.cleaned, reverse.suffix)
+    r.indices = which(!is.na(r.matches))
+
+    #ONLY keep files that do match the suffixes:
+    keep = c(f.indices, r.indices)
+    files.cleaned = files.cleaned[keep]
 
     # try with and without the .ab1 after the suffixes, just in case
     files.cleaned = str_replace(files.cleaned, forward.suffix, replacement = "")
     files.cleaned = str_replace(files.cleaned, reverse.suffix, replacement = "")
 
-    return(data.frame("file.path" = fname.list, "group" = files.cleaned))
+    return(data.frame("file.path" = fname.list[keep], "group" = files.cleaned))
 
 }
 
@@ -108,16 +120,17 @@ load.sangerseqs <- function(filenames){
 }
 
 
-get.readgroup.fnames <- function(group, abi.files, forward.suffix, reverse.suffix){
+get.readgroup.fnames <- function(group, group.dataframe, forward.suffix, reverse.suffix){
 
-    # we need to use teh base stri function to use literal strings
-    # in case there are special characters in the filename
-    indices = which(!is.na(stri_match_first_regex(abi.files, pattern = as.character(group), opts_regex = list("literal" = TRUE))))
+    readgroup.fnames = as.character(group.dataframe$file.path[which(group.dataframe$group == group)])
 
-    filenames = abi.files[indices]
+    f.matches = str_match(readgroup.fnames, forward.suffix)
+    f.indices = which(!is.na(f.matches))
+    fwd.fnames = as.character(group.dataframe$file.path[f.indices])
 
-    fwd.fnames = filenames[which(!is.na(stri_match_first_regex(filenames, pattern = forward.suffix, opts_regex = list("literal" = TRUE))))]
-    rev.fnames = filenames[which(!is.na(stri_match_first_regex(filenames, pattern = reverse.suffix, opts_regex = list("literal" = TRUE))))]
+    r.matches = str_match(readgroup.fnames, reverse.suffix)
+    r.indices = which(!is.na(r.matches))
+    rev.fnames = as.character(group.dataframe$file.path[r.indices])
 
     readgroup.fnames = list("forward.reads" = fwd.fnames, "reverse.reads" = rev.fnames)
 
