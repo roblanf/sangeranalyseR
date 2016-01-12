@@ -231,6 +231,7 @@ This gives us a data frame of summaries, one row for each read. Here it is:
 25    /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/TDWGB669-10[C_LepFolF,C_LepFolR]_F.ab1  Drosophila_melanogaster   TDWGB669-10[C_LepFolF,C_LepFolR]_F.ab1        680            553         23         575                   6                       1         52.00441             56.83183               2                  13
 26    /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/TDWGB669-10[C_LepFolF,C_LepFolR]_R.ab1  Drosophila_melanogaster   TDWGB669-10[C_LepFolF,C_LepFolR]_R.ab1        686            605         33         637                   8                       0         54.37263             58.22975               1                  18
 ```
+
 For the most part, each row in this data frame is the same as you would get from a single call to ```analyse.abi.file```, except that here the data frame also contains the full file path, as well as the name of the read and the name of the folder that the read is in. This means we can easily make some simple plots to compare statistics, e.g.:
 
 ```
@@ -285,6 +286,7 @@ reads = DNAStringSet(c(as.character(fwd), as.character(rev)))
 names(reads) = c('fwd', 'rev')
 
 merged.reads = merge.reads(reads)
+names(merged.reads)
 merged.reads
 ```
 
@@ -294,7 +296,12 @@ The output we get from merged.reads contains a lot of information. To see what i
 merged.reads$consensus
 ```
 
-This is a DNAString object (from the BioStrings) package, that contains the consensus of the merged reads.
+This is a DNAString object (from the BioStrings) package, that contains the consensus of the merged reads:
+
+```
+  659-letter "DNAString" instance
+seq: NNNNNNNNNNNNNNNNNNNNNNGNTTGANCTGNNNNGTTGGAACATCTTTAAGAATTTTAATTCGAGCTGAATTA...GATCGAAATTTAAATACATCATTTTTNNNNNNNGCNNGAGGAGGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+```
 
 Another thing you might be interested in is looking at an alignment of your merged reads and the consensus sequence. The alignment is stored in ```merged.reads$alignment```, and you can view it using the ```BrowseSeqs()``` function from the DECIPHER package like this:
 
@@ -303,7 +310,13 @@ BrowseSeqs(merged.reads$alignment)
 ```
 ![consensus](images/consensus.png)
 
-The output also contains a lot of statistics comparing the reads to each other, and to the consensus sequence, so that you can quickly determine if any erroneous reads crept in to your consensus. See the documentation for a full explanation.
+The output also contains a lot of statistics comparing the reads to each other, and to the consensus sequence, so that you can quickly determine if any erroneous reads crept in to your consensus. See the documentation for a full explanation. As an example, typing ```merged.reads$differeces``` gives you a data frame of differences between each read and the consensus, as well as the number of characters in each read that did not contribute to the consensus sequence:
+
+```
+  name pairwise.diffs.to.consensus unused.chars
+1  fwd                          40           28
+2  rev                          27           32
+```
 
 
 ### ```merge.reads``` and correct frameshifts from chromatograms
@@ -347,9 +360,25 @@ rs = make.readset(fwd, rev)
 rs$readset
 ```
 
-There are some important things to note here. First, the ```rev.fnames``` argument we pass to make.readset (the ```rev``` list in the above example) are just the sequences we with to reverse complement. Second, the default for ```make.readset``` is to trim the sequences using the ```trim.mott()``` function with default settings (see above). So the readset we get in this example will be different from the one in the previous example, even though the input reads are identical, because in this example we trimmed off low quality bases from each read first. Third, the function also returns summaries of the reads (which are generated using the ```summarise.abi.file``` function above) which you can access using ```rs$summaries```. Finally, the ```make.readset()``` function automatically names the sequences with their full filepath. This can help keep track of things later.
+Your output should look something like this:
 
-Having made our readset, it's just one line to make our consensus sequeunce. We can then view the difference between the two approaches as before.
+```
+  A DNAStringSet instance of length 2
+    width seq                                                                                                                            names               
+[1]   451 GAGCTGGATAGTTGGAACATCTTTAAGAATTTTAATTCGAGCTGAATTAGGACATCCTGGAG...TTCTTCAATTTTATGAGCTGTAAATTTTATTACAACTGTAATTAATATACGATCAACAGGA ~/Desktop/test_da...
+[2]   565 ATTCGAGCTGAATTAGGACATCCTGGAGCATTAATTGGAGATGATCAAATTTATAATGTAAT...GCTATTACTATATTATTAACAGATCGAAATTTAAATACATCATTTTTTGACCAGCTGGACG ~/Desktop/test_da...
+```
+
+There are some important things to note here. First, the ```rev.fnames``` argument we pass to make.readset (the ```rev``` list in the above example) are just the sequences we want to reverse complement. Second, the default for ```make.readset``` is to trim the sequences using the ```trim.mott()``` function with default settings (see above). So the readset we get in this example will be different from the one in the previous example, even though the input reads are identical. Third, the ```make.readset()``` function automatically names the sequences with their full filepath, which can help keep track of things later. Finally, the function also returns summaries of the reads (which are generated using the ```summarise.abi.file``` function above) which you can access using ```rs$read.summaries```: 
+
+```
+                                                                           file.path             folder.name                              file.name raw.length trimmed.length trim.start trim.finish raw.secondary.peaks trimmed.secondary.peaks raw.mean.quality trimmed.mean.quality raw.min.quality trimmed.min.quality read.included.in.readset
+1 ~/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]_F.ab1 Drosophila_melanogaster BBDCN941-10[C_LepFolF,C_LepFolR]_F.ab1        687            451         27         477                  23                       1         48.37118             55.45011               1                   6                     TRUE
+2 ~/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]_R.ab1 Drosophila_melanogaster BBDCN941-10[C_LepFolF,C_LepFolR]_R.ab1        690            565         34         598                  19                       2         51.73227             56.44071               1                   5                     TRUE
+
+```
+
+Having made our readset, it's just one line to make our consensus sequeunce. We can then view the consensus alignment.
 
 ```
 merged.reads = merge.reads(rs$readset)
@@ -370,7 +399,7 @@ You can control how the trimming works when building readsets, by passing additi
 rs.untrimmed = make.readset(fwd, rev, trim = FALSE)
 
 # or we can trim the reads more conservatively than the default
-rs.trimmed = make.readset(fwd, rev, trim.cutoff = 0.0001)
+rs.trimmed = make.readset(fwd, rev, trim.cutoff = 0.000001)
 ```
 
 Note the difference in the consensus sequence when we use the default settings in ```make.readset```, because by default it trims the reads to remove low quality sequence.
@@ -390,7 +419,7 @@ In the final case, note that the trimmed and filtered readset has only a single 
 2. Exclude short reads
 
 ```
-# let's trim the reads and exlude those with > 1 secondary peak
+# here we trim the reads, and exclude those that are <500 bases long after trimming
 rs.trimmed.filtered2 = make.readset(fwd, rev, trim.cutoff = 0.0001, min.length = 500)
 rs.trimmed.filtered2$readset
 ```
@@ -398,7 +427,7 @@ rs.trimmed.filtered2$readset
 
 ### ```make.readsets```
 
-Often, you will want to make many readsets sequences at once. This can be done with ```make.readsets``` as long as you have named your read files in a systematic way. ```make.readsets``` recursively scans all files in a folder (i.e. it looks in all of the subfolders and their subfolders etc. of the folder you give to the function) for .ab1 files, and then it groups them by name.
+Often, you will want to make many readsets sequences at once. This can be done with ```make.readsets``` as long as you have named your read files in a systematic way. ```make.readsets``` recursively scans all files in a parent folder (i.e. it looks in all of the subfolders and their subfolders, and so on) for .ab1 files, and then it groups them by name.
 
 The grouping in ```make.readsets``` works as long as you have consistent suffixes for forward and reverse reads. For example, in the ```/test_data``` folder, you will see that for Drosophila we have the following reads:
 
@@ -429,15 +458,133 @@ reverse.suffix = "_R.ab1"
 
 rs = make.readsets(input.folder, forward.suffix, reverse.suffix)
 rs$readsets
-rs$summaries
+rs$read.summaries
 ```
 
-```make.readsets``` returns a list of two things. The first is a list of readsets, the second is a data frame that summarises all of the input reads. The latter shows which reads were included in readsets, and which were not. In the above example, all of the reads made it into the readsets. One case where they won't is if you exclude reads with secondary peaks, e.g.
+```rs$readsets``` is a list of readsets:
+
+```
+$`/Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO006-09[LCO1490_t1,HCO2198_t1]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   462 TCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATC...CTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG /Users/robertlanf...
+[2]   641 TTTATATTTTATTCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTT...CGAAACCTCAATACTTCATTCTTTGATCCTGCCGGTGGTGGAGACCCCATCCTCT /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO007-09[LCO1490_t1,HCO2198_t1]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   655 CTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGA...TGGTGGAGACCCCATCCTCTACCAACACTTATTCTGATTTTTTGGTCACCCTGAG /Users/robertlanf...
+[2]   601 GGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCC...GACCGAAACCTCAATACTTCATTCTTTGATCCTGCCGGTGGTGGAGACCCCATCC /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO040-09[LCO1490_t1,HCO2198_t1]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   629 GGGGGCTGGTATAAGACTCCTAATTCGAATTGAGCTAAGACAGCCGGGAGCATTT...GATCCTGCTGGAGGTGGAGATCCAATCCTATACCAACACTTATTCTGATTTTTTG /Users/robertlanf...
+[2]   563 GTATAAGACTCCTAATTCGAATTGAGCTAAGACAGCCGGGAGCATTTCTAGGAAG...ATTAGCCGGTGCAATTACTATACTACTTACCGATCGAAATCGTAAATACCTCCTT /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO041-09[LCO1490_t1,HCO2198_t1]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   607 GGCGTCTGAGCAGGAATGGTAGGAGCTGGTATAAGACTCCTAATTCGAATTGAGC...ACTATATTACTTACCGATCGAAATCTAAATACCTCCTTCTTTGATCCTGCTGGGG /Users/robertlanf...
+[2]   630 TACTTTATTTTAGGCGTCTGAGCAGGAATGGTAGGAGCTGGTATAAGACTCCTAA...TACCGATCGAAATCTAAATACCTCCTTCTTTGATCCTGCTGGGGGTGGAGATCCA /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII384-13[C_LepFolF,C_LepFolR]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   594 GCGTCTGAGCAGGATAGTAGGGGCTGGTATAAGACTCCTAATTCGAATTGAGCTA...CCGGTGCAATTACTATACTACTTACCGATCGAAATCTAAATACCTCCTTCTTTGA /Users/robertlanf...
+[2]   546 ATTTCTAGGAAGGGATCAACTCTATAACACTATTGTAACTGCTCACGCATTTGTA...TTACCGATCGAAATCTAAATACCTCCTTCTTTGACCCTGCTGGAGGCGGAGATCC /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII395-13[C_LepFolF,C_LepFolR]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   446 GAGCACGATAGTAGGGGCTGGTATAAGACTCCTAATTCGAATTGAGCTAAGACAG...TCATCAATCTTGGGTGCCATTAATTTTATTACTACTGTTATTAACATACGATGAA /Users/robertlanf...
+[2]   400 TCCCACGTCTTAACAACATAAGATTTTGACTCCTTCCCCCATCACTAATCCTTCT...TACTTACCGATCGAAAATCTAAATACCTCCCTCTTTGACCCTGCTGGAGGCGGAG /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII396-13[C_LepFolF,C_LepFolR]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   502 GAGCATGATAGTAGGAGCCGGTATAAGGCTCCTAATTCGAATTGAGCTAAGACAA...AGGCTTACGACTTGAACGAATCCCATTATTCGTTTGAGCCGTTCTAATTACAGTG /Users/robertlanf...
+[2]   541 TAGGGAGAGATCAACTTTATAACACTATTGTAACTGCTCACGCATTTGTAATAAT...TTACTGATCGAAATCTAAATACCTCCTTCTTTGACCCTGCTGGAGGTGGAGATCC /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII397-13[C_LepFolF,C_LepFolR]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   498 GAGCACGATAGTAGGAGCCGGTATAAGGCTCCTAATTCGAATTGAGCTAAGACAA...GAAGAGGCTTACGACTTGAACGAATCCCATTATTCGTTTGAGCCGTTCTAATTAC /Users/robertlanf...
+[2]   483 TTTCTTTCTAGTAATACCCGTATTTATTGGGGGGTTCGGTAATTGACTTCTGCCT...TACTTACTGATCGAAAATCTAAATACCTCCCTCTTTGACCCTGCTGGAGGTGGAG /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   451 GAGCTGGATAGTTGGAACATCTTTAAGAATTTTAATTCGAGCTGAATTAGGACAT...AATTTTATGAGCTGTAAATTTTATTACAACTGTAATTAATATACGATCAACAGGA /Users/robertlanf...
+[2]   565 ATTCGAGCTGAATTAGGACATCCTGGAGCATTAATTGGAGATGATCAAATTTATA...ACTATATTATTAACAGATCGAAATTTAAATACATCATTTTTTGACCAGCTGGACG /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/BBDEE689-10[LCO1490_t1,HCO2198_t1]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   243 TTTATTTTTGGAGCTTGAGCTGGAATAGTTGGAACATCTTTAAGAATTTTAATTC...AGTGCCTTTAATATTAGGTGCTCCTGATATAGCATTTCCACGAATAAATAATATA /Users/robertlanf...
+[2]   389 AGATTTTGACTTCTACCTCCTGCTCTTTCTTTACTATTAGTAAGTAGAATAGTTG...ATCGAAATTTAAATACATCATTTTTTGACCCAGCGGGAGGAGGAGATCCTATTTT /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/PHDIP946-11[LCO1490_t1,HCO2198_t1]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   654 TTTATATTTTATTTTTGGAGCTTGAGCTGGAATAGTTGGAACATCTTTAAGAATT...CATCATTTTTTGACCCAGCGGGAGGAGGAGATCCTATTTTATACCAACATTTATT /Users/robertlanf...
+[2]   606 TCTTTAAGAATTTTAATTCGAGCTGAATTAGGACATCCTGGAGCATTAATTGGAG...AAATACATCATTTTTTGACCCAGCGGGAGGAGGAGATCCTATTTTATACCAACAT /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/TDWGB557-10[C_LepFolF,C_LepFolR]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   343 GGTATAGTTGGACATCTTTAAGAATTTTAATTCGAGCTGAATTAGGACCTCTTGG...GGACAGGATGAACTGTTTATCCACCTCTATCCGCTGGAATTGCTCATGGTGGAGC /Users/robertlanf...
+[2]   582 TCTTTAAGAATTTTAATTCGAGCTGAATTAGGACATCCTGGAGCATTAATTGGAG...TATATTATTAACAGATCGAAATTTAAATACATCATTTTTTGACCCAGCGGGAGGA /Users/robertlanf...
+
+$`/Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/TDWGB669-10[C_LepFolF,C_LepFolR]`
+  A DNAStringSet instance of length 2
+    width seq                                                                                                               names               
+[1]   553 GAGCTGGATAGTTGGAGCATCTTTAAGAATTTTAATTCGAGCTGAATTAGGACAT...TGCTTTATTATTATTATTATCACTTCCAGTACTAGCAGGAGCTATTACTATATTA /Users/robertlanf...
+[2]   605 GAGCTTGAGCTGGAATAGTTGGAACATCTTTAAGAATTTTAATTCGAGCTGAATT...TACTATATTATTAACAGATCGAAATTTAAATACATCATTTTTTGACCCAGCGGGA /Users/robertlanf...
+```
+
+
+```rs$read.summaries``` includes the usual summary of each read, as well as information on the group to which that read belongs, and whether it was included in a readset (it might not be, if you are filtering reads out based on their length, the number of secondary peaks, etc). In the example above, we didn't filter out any reads. But here's an example where we filter out all reads with secondary peaks in the trimmed sequences:
+
 
 
 ```
 rs = make.readsets(input.folder, forward.suffix, reverse.suffix, max.secondary.peaks = 0)
-rs$summaries
+
+# for simplicity, let's look at it without the full file path:
+rs$read.summaries[,-1]
+```
+
+The data frame looks like this
+
+```
+                folder.name                                file.name raw.length trimmed.length trim.start trim.finish raw.secondary.peaks trimmed.secondary.peaks raw.mean.quality trimmed.mean.quality raw.min.quality trimmed.min.quality read.included.in.readset                                                                                       readset.name
+1  Allolobophora_chlorotica ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1        702            462         16         477                   3                       0         52.80228             58.20779               1                  13                     TRUE /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO006-09[LCO1490_t1,HCO2198_t1]
+2  Allolobophora_chlorotica ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1        705            641         18         658                   4                       1         54.85106             57.27301               3                   6                    FALSE /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO006-09[LCO1490_t1,HCO2198_t1]
+3  Allolobophora_chlorotica ACHLO007-09[LCO1490_t1,HCO2198_t1]_F.ab1        703            655         25         679                   1                       1         55.65861             57.74504               3                  15                    FALSE /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO007-09[LCO1490_t1,HCO2198_t1]
+4  Allolobophora_chlorotica ACHLO007-09[LCO1490_t1,HCO2198_t1]_R.ab1        703            601         21         621                   4                       1         54.53901             57.67055               1                   6                    FALSE /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO007-09[LCO1490_t1,HCO2198_t1]
+5  Allolobophora_chlorotica ACHLO040-09[LCO1490_t1,HCO2198_t1]_F.ab1        705            629         43         671                  15                       3         54.24965             57.77107               1                  10                    FALSE /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO040-09[LCO1490_t1,HCO2198_t1]
+6  Allolobophora_chlorotica ACHLO040-09[LCO1490_t1,HCO2198_t1]_R.ab1        710            563         57         619                  14                       1         51.58873             57.14565               2                   7                    FALSE /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO040-09[LCO1490_t1,HCO2198_t1]
+7  Allolobophora_chlorotica ACHLO041-09[LCO1490_t1,HCO2198_t1]_F.ab1        703            607         21         627                   1                       0         55.35277             58.27842               2                  14                     TRUE /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO041-09[LCO1490_t1,HCO2198_t1]
+8  Allolobophora_chlorotica ACHLO041-09[LCO1490_t1,HCO2198_t1]_R.ab1        705            630         24         653                   6                       1         54.34043             57.33333               1                  12                    FALSE /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/ACHLO041-09[LCO1490_t1,HCO2198_t1]
+9  Allolobophora_chlorotica   RBNII384-13[C_LepFolF,C_LepFolR]_F.ab1        680            594         18         611                   5                       0         53.30015             56.95791               2                   8                     TRUE   /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII384-13[C_LepFolF,C_LepFolR]
+10 Allolobophora_chlorotica   RBNII384-13[C_LepFolF,C_LepFolR]_R.ab1        676            546         17         562                   8                       0         53.97640             57.86447               2                  11                     TRUE   /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII384-13[C_LepFolF,C_LepFolR]
+11 Allolobophora_chlorotica   RBNII395-13[C_LepFolF,C_LepFolR]_F.ab1        671            446         21         466                   8                       1         46.89427             53.48206               1                  10                    FALSE   /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII395-13[C_LepFolF,C_LepFolR]
+12 Allolobophora_chlorotica   RBNII395-13[C_LepFolF,C_LepFolR]_R.ab1        678            400         21         420                  23                      14         40.00292             44.26750               1                   4                    FALSE   /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII395-13[C_LepFolF,C_LepFolR]
+13 Allolobophora_chlorotica   RBNII396-13[C_LepFolF,C_LepFolR]_F.ab1        666            502         10         511                   4                       0         51.93731             56.80279               1                  12                     TRUE   /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII396-13[C_LepFolF,C_LepFolR]
+14 Allolobophora_chlorotica   RBNII396-13[C_LepFolF,C_LepFolR]_R.ab1        679            541         15         555                   7                       0         51.38653             56.56562               1                   8                     TRUE   /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII396-13[C_LepFolF,C_LepFolR]
+15 Allolobophora_chlorotica   RBNII397-13[C_LepFolF,C_LepFolR]_F.ab1        674            498         19         516                  11                       1         49.76254             54.57028               1                   4                    FALSE   /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII397-13[C_LepFolF,C_LepFolR]
+16 Allolobophora_chlorotica   RBNII397-13[C_LepFolF,C_LepFolR]_R.ab1        672            483         19         501                  13                       9         45.04713             48.62526               2                   5                    FALSE   /Users/robertlanfear/Desktop/test_data/Allolobophora_chlorotica/RBNII397-13[C_LepFolF,C_LepFolR]
+17  Drosophila_melanogaster   BBDCN941-10[C_LepFolF,C_LepFolR]_F.ab1        687            451         27         477                  23                       1         48.37118             55.45011               1                   6                    FALSE    /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]
+18  Drosophila_melanogaster   BBDCN941-10[C_LepFolF,C_LepFolR]_R.ab1        690            565         34         598                  19                       2         51.73227             56.44071               1                   5                    FALSE    /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/BBDCN941-10[C_LepFolF,C_LepFolR]
+19  Drosophila_melanogaster BBDEE689-10[LCO1490_t1,HCO2198_t1]_F.ab1        716            243         24         266                  25                       0         44.24302             57.60082               2                  18                     TRUE  /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/BBDEE689-10[LCO1490_t1,HCO2198_t1]
+20  Drosophila_melanogaster BBDEE689-10[LCO1490_t1,HCO2198_t1]_R.ab1        716            389         32         420                  20                       0         48.62570             59.15424               1                  12                     TRUE  /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/BBDEE689-10[LCO1490_t1,HCO2198_t1]
+21  Drosophila_melanogaster PHDIP946-11[LCO1490_t1,HCO2198_t1]_F.ab1        712            654         13         666                   3                       0         55.53156             57.97859               2                  14                     TRUE  /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/PHDIP946-11[LCO1490_t1,HCO2198_t1]
+22  Drosophila_melanogaster PHDIP946-11[LCO1490_t1,HCO2198_t1]_R.ab1        716            606         21         626                   6                       0         52.88842             56.83333               2                   9                     TRUE  /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/PHDIP946-11[LCO1490_t1,HCO2198_t1]
+23  Drosophila_melanogaster   TDWGB557-10[C_LepFolF,C_LepFolR]_F.ab1        685            343         32         374                  20                       5         51.21168             55.13411               1                   6                    FALSE    /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/TDWGB557-10[C_LepFolF,C_LepFolR]
+24  Drosophila_melanogaster   TDWGB557-10[C_LepFolF,C_LepFolR]_R.ab1        680            582         28         609                   5                       0         54.77059             58.13918               1                  13                     TRUE    /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/TDWGB557-10[C_LepFolF,C_LepFolR]
+25  Drosophila_melanogaster   TDWGB669-10[C_LepFolF,C_LepFolR]_F.ab1        680            553         23         575                   6                       1         52.00441             56.83183               2                  13                    FALSE    /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/TDWGB669-10[C_LepFolF,C_LepFolR]
+26  Drosophila_melanogaster   TDWGB669-10[C_LepFolF,C_LepFolR]_R.ab1        686            605         33         637                   8                       0         54.37263             58.22975               1                  18                     TRUE    /Users/robertlanfear/Desktop/test_data/Drosophila_melanogaster/TDWGB669-10[C_LepFolF,C_LepFolR]
 ```
 
 In the last example, you can see that many of the readsets are empty and many others contain just a single read, because we chose to exclude sequences with secondary peaks. You can control all of the read filtering as above.
@@ -476,15 +623,36 @@ cs = make.consensus.seqs(input.folder, forward.suffix, reverse.suffix)
 
 The function gives you a list of four things:
 
-    \enumerate{
-                \item {merged.reads}: a list of all the merged reads. Each item in this list is the object you would get back from a single call to ```merge.reads```\cr
-                \item {read.summaries}: this is a large dataframe with one row per input read, which gives a lot of information about each read, whether it made it into a readset (or whether it was filtered out for some reason, e.g. its length), whether it made it into a consensus sequence (or whether it was filtered out due to e.g. stop codons)
-                \item {consensus.summaries}: this is another large dataframe with one row per consensus sequence, which gives you a lot of information about each consensus sequence
-                \item {consensus.sequences}: this is a DNAStringSet of all of the unaligned consensus sequences
-                \item {consensus.alignment}: this is a rough-and-ready alignment of your consensus sequences. You probably shouldn't rely on it for downstream analyses, since automated alignment (especially without human checking) is notoriously bad. However, it's good enough for a first look at your data.
-                \item {consensus.tree}: this is a rough-and-ready Neighbour Joining tree of your consensus sequences. As above, not good enough for downstream analyses, but useful for spotting issues in your sequences (e.g. unexpectedly identical sequences, or sequences that are drastically different)
+1. merged.reads: a list of all the merged reads. Each item in this list is the object you would get back from a single call to ```merge.reads```\cr
 
-              }
+2. read.summaries: this is a large dataframe with one row per input read, which gives a lot of information about each read, whether it made it into a readset (or whether it was filtered out for some reason, e.g. its length), whether it made it into a consensus sequence (or whether it was filtered out due to e.g. stop codons)
+
+3. consensus.summaries: this is another large dataframe with one row per consensus sequence, which gives you a lot of information about each consensus sequence
+
+4. consensus.sequences: this is a DNAStringSet of all of the unaligned consensus sequences
+
+5. consensus.alignment: this is a rough-and-ready alignment of your consensus sequences. You probably shouldn't rely on it for downstream analyses, since automated alignment (especially without human checking) is notoriously bad. However, it's good enough for a first look at your data.
+
+6. consensus.tree: this is a rough-and-ready Neighbour Joining tree of your consensus sequences. As above, not good enough for downstream analyses, but useful for spotting issues in your sequences (e.g. unexpectedly identical sequences, or sequences that are drastically different)
+
+You can access those in the usual way, with the $ sign, e.g. ```cs$consensus.sequences``` will give you something like this:
+
+```
+  A DNAStringSet instance of length 13
+     width seq                                                                                                                                                                                    names               
+ [1]   462 TCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGA...GCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG /Users/robertlanf...
+ [2]   601 GGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACT...AGTGCTAGCAGGTGCCATTACCATACTTCTTACCGACCGAAACCTCAATACTTCATTCTTTGATCCTGCCGGTGGTGGAGACCCCATCC /Users/robertlanf...
+ [3]   562 GTATAAGACTCCTAATTCGAATTGAGCTAAGACAGCCGGGAGCATTTCTAGGAAGGGATCAACTCTATAACACTATTGTAACTGCTCACG...ATTACAGTGGTCCTTCTACTCTTATCCTTACCAGTATTAGCCGGTGCAATTACTATACTACTTACCGATCGAAATCTAAATACCTCCTT /Users/robertlanf...
+ [4]   607 GGCGTCTGAGCAGGAATGGTAGGAGCTGGTATAAGACTCCTAATTCGAATTGAGCTAAGACAGCCGGGAGCATTCCTAGGAAGGGATCAG...ACTCCTATCCCTACCAGTGTTAGCCGGTGCAATTACTATATTACTTACCGATCGAAATCTAAATACCTCCTTCTTTGATCCTGCTGGGG /Users/robertlanf...
+ [5]   525 ATTTCTAGGAAGGGATCAACTCTATAACACTATTGTAACTGCTCACGCATTTGTAATAATTTTCTTTCTAGTAATACCTGTATTTATTGG...GTGGTCCTTCTACTCTTATCTTTACCAGTATTAGCCGGTGCAATTACTATACTACTTACCGATCGAAATCTAAATACCTCCTTCTTTGA /Users/robertlanf...
+ ...   ... ...
+ [9]   417 ATTCGAGCTGAATTAGGACATCCTGGAGCATTAATTGGAGATGATCAAATTTATAATGTAATTGTAACTGCACATGCTTTTATTATAATT...CTATTTTTTCTCTACATTTAGCAGGAATTTCTTCAATTTTAKGAGCTGTAAATTTTATTACAACTGTAATTAATATACGATCAACAGGA /Users/robertlanf...
+[10]   239 WKWATWKTTGRARMTKGAGCTGGRAYAGKWKGAACTSTTTAWSMAYYTYWATYCGCTGRAWTWGSWCATSSTGGAGCWTYARTTGKAGRW...TMMSTATTATWAYTGSTKKATTWKKAWWWTKATYASTKCCWKTAMTAKYAGGWGCTMYTRMTATAKYATTWMCACGAAWWWWWAATAYA /Users/robertlanf...
+[11]   606 TCTTTAAGAATTTTAATTCGAGCTGAATTAGGACATCCTGGAGCATTAATTGGAGATGATCAAATTTATAATGTAATTGTAACTGCACAT...GAGCTATTACTATATTATTAACAGATCGAAATTTAAATACATCATTTTTTGACCCAGCGGGAGGAGGAGATCCTATTTTATACCAACAT /Users/robertlanf...
+[12]   329 TCTTTAAGAATTTTAATTCGAGCTGAATTAGGACMTCYTGGAGCATTAATTGGAGATGATCAAATTTATAATGTAATTGTAACTGCACAT...CTATTAGTAAGTAGAATAGTTGAAAATGGAGCTGGGACAGGATGAACTGTTTATCCACCTCTATCCGCTGGAATTGCTCATGGTGGAGC /Users/robertlanf...
+[13]   553 GAGCTGGATAGTTGGARCATCTTTAAGAATTTTAATTCGAGCTGAATTAGGACATCCTGGAGCATTAATTGGAGATGATCAAATTTATAA...GTATACCTTTATTTGTTTGATCAGTAGTTATTACTGCTTTATTATTATTATTATCACTTCCAGTACTAGCAGGAGCTATTACTATATTA /Users/robertlanf...
+
+```
 
 Of course, it would help if we made some more considered decisions before making the consensus seuqences. For example, we could use our reference amino acid sequence. We could also exclude reads with more than 5 secondary peaks. To do that, we would run the function as follows (noting that we are using a single reference sequence for two different species, which is not always a good idea...):
 
@@ -492,8 +660,6 @@ Of course, it would help if we made some more considered decisions before making
 ref.seq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
 
 cs = make.consensus.seqs(input.folder, forward.suffix, reverse.suffix, ref.aa.seq = ref.seq, max.secondary.peaks = 5)
-
-cs$consensus.summaries
 
 ```
 
@@ -513,7 +679,6 @@ Because this functions automates a lot of things at once, it's important to take
 
 
 ```
-
 # You could look at individual merged reads in detail
 cs$merged.reads[[1]]
 
@@ -531,7 +696,6 @@ BrowseSeqs(cs$consensus.alignment)
 
 # Look at the phylogeny (note, tip labels are rows in the summary data frame)
 plot(cs$consensus.tree)
-
 ```
 
 If you scan through the alignment, you should see that at least one consensus seuqence has issues. This deserves further inspection.
@@ -546,8 +710,10 @@ subset(cs$consensus.summaries, consensus.name == "/Users/robertlanfear/Desktop/t
 ```
 
 
-We can also look at the tree for these sequences. The labels on the tree correspond to rows in the consensus summary data frame, so, by comparing it to the alignment you can see immediately that (as expected) the sequences cluster together by species.
+We can also look at the tree for these sequences using plot(cs$consensus.tree). The labels on the tree correspond to rows in the consensus summary data frame, so, by comparing it to the alignment you can see immediately that (as expected) the sequences cluster together by species.
 
 
 ![tree1](images/tree1.png)
 ![aln3](images/aln3.png)
+
+
