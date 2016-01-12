@@ -1,7 +1,25 @@
 #' Create a detailed summary of a single ABI sequencing file
 #' 
+#' @param seq.abif an abif.seq s4 object from the sangerseqR package
+#' @param trim.cutoff the cutoff at which you consider a base to be bad. This works on a logarithmic scale, such that if you want to consider a score of 10 as bad, you set cutoff to 0.1; for 20 set it at 0.01; for 30 set it at 0.001; for 40 set it at 0.0001; and so on. Contiguous runs of bases below this quality will be removed from the start and end of the sequence. Given the high quality reads expected of most modern ABI sequencers, the defualt is 0.0001.
+#' @param secondary.peak.ratio the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not. 
+#' @param output.folder If output.folder is NA (the default) no files are written. If a valid folder is provided, two files are written to that folder: a .csv file of the secondary peaks (see description below) and a .pdf file of the chromatogram.
+#' @param file.prefix If output.folder is specified, this is the prefix which will be appended to the .csv and the .pdf file. The default is "seq".
+#' @param processors The number of processors to use, or NULL (the default) for all available processors
 #'
-#' @keywords chromatogram, peak, mismatch
+#' @return A numeric vector including:
+#'          \enumerate{
+#'              \item {raw.length}: the length of the untrimmed sequence, note that this is the sequence after conversion to a sangerseq object, and then the recalling the bases with MakeBaseCalls from the sangerseqR package\cr
+#'              \item {trimmed.length}: the length of the trimmed sequence, after trimming using trim.mott from this package and the parameter supplied to this function \cr
+#'              \item {trim.start}: the start position of the good sequence, see trim.mott for more details\cr
+#'              \item {trim.finish}: the finish position of the good sequence, see trim.mott for more details\cr
+#'              \item {raw.secondary.peaks}: the number of secondary peaks in the raw sequence, called with the secondary.peaks function from this package and the parameters supplied to this function \cr
+#'              \item {trimmed.secondary.peaks}: the number of secondary peaks in the trimmed sequence, called with the secondary.peaks function from this package and the parameters supplied to this function \cr
+#'              \item {raw.mean.quality}: the mean quality score of the raw sequence \cr
+#'              \item {trimmed.mean.quality}: the mean quality score of the trimmed sequence \cr
+#'              \item {raw.min.quality}: the minimum quality score of the raw sequence \cr
+#'              \item {trimmed.min.quality}: the minimum quality score of the trimmed sequence \cr
+#'          }  
 #'
 #' @export summarise.abi.file
 
