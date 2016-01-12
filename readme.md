@@ -416,7 +416,7 @@ rs.trimmed.filtered$readset
 
 In the final case, note that the trimmed and filtered readset has only a single sequence, but the summary data frame contains data for all of the sequences. That way you can see the statistics on all of the reads, not just those that made it into the final set.
 
-2. Exclude short reads
+3. Exclude short reads
 
 ```
 # here we trim the reads, and exclude those that are <500 bases long after trimming
