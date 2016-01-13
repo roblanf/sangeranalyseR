@@ -105,7 +105,7 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
     # strip gaps from consensus (must be an easier way!!)
     consensus.gapfree = DNAString(paste(del.gaps(consensus), collapse = ''))
 
-    merged.read = (list("consensus" = consensus.gapfree, 
+    merged.read = list("consensus" = consensus.gapfree, 
                 "alignment" = aln2, 
                 "differences" = diffs.df, 
                 "distance.matrix" = dist,
