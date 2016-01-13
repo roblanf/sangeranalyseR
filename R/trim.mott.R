@@ -51,7 +51,7 @@ trim.mott <- function(abif.seq, cutoff = 0.0001){
 
     for(i in 2:length(score_list)){
         score = cummul_score[length(cummul_score)] + score_list[i]
-        if(score < 0){
+        if(score <= 0){
             cummul_score = c(cummul_score, 0)
         }else{
             cummul_score = c(cummul_score, score)
@@ -67,6 +67,10 @@ trim.mott <- function(abif.seq, cutoff = 0.0001){
         trim_finish = which.max(cummul_score)
 
     }
+
+    # fix an edge case, where all scores are worse than the cutoff
+    # in this case you wouldn't want to keep any bases at all
+    if(sum(cummul_score)==0){trim_finish = 0}
 
     return(list("start" = trim_start, "finish" = trim_finish))
 
