@@ -88,7 +88,8 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     consensus.summaries = data.frame(consensus.summaries)
 
     # which reads made it to the consensus sequence
-    used.reads = unlist(lapply(consensi, function(x) as.character(x$differences$name)))
+    # careful, this list also has 'consensus' in it a lot
+    used.reads = unlist(lapply(consensi, function(x) as.character(names(x$alignment))))
     read.summaries$read.included.in.consensus = read.summaries$file.path %in% used.reads
 
     # a column for successful consensus sequence
