@@ -124,11 +124,11 @@ get.readgroup.fnames <- function(group, group.dataframe, forward.suffix, reverse
 
     f.matches = str_match(readgroup.fnames, forward.suffix)
     f.indices = which(!is.na(f.matches))
-    fwd.fnames = as.character(group.dataframe$file.path[f.indices])
+    fwd.fnames = as.character(readgroup.fnames[f.indices])
 
     r.matches = str_match(readgroup.fnames, reverse.suffix)
     r.indices = which(!is.na(r.matches))
-    rev.fnames = as.character(group.dataframe$file.path[r.indices])
+    rev.fnames = as.character(readgroup.fnames[r.indices])
 
     readgroup.fnames = list("forward.reads" = fwd.fnames, "reverse.reads" = rev.fnames)
 
