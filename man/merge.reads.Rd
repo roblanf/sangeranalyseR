@@ -26,7 +26,7 @@
 \item{reading.frame}{1, 2, or 3. Only used if accept.stop.codons == FALSE. This specifies the reading frame that is used to determine stop codons. If you use a ref.aa.seq, then the frame should always be 1, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.}
 }
 \value{
-A list with the following components:
+A merged.read object, which is a list with the following components:
          \enumerate{
              \item {consensus}: the consensus sequence from the merged reads.\cr
              \item {alignment}: the alignment of all the reads, with the called consensus sequence. E.g. if the list was called 'merged.reads', you could use BrowseSeqs(merged.reads$alignment) to view the alignment.
