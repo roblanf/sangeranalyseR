@@ -31,10 +31,10 @@ summarise.abi.folder <- function(input.folder, trim.cutoff = 0.0001, secondary.p
                          )
 
     print("Cleaning up")
-    summaries = lapply(summaries.dat, function(x) x[["summary"]])
+    summaries = mclapply(summaries.dat, function(x) x[["summary"]], mc.cores = processors)
     summaries = do.call(rbind, summaries)
 
-    reads = lapply(summaries.dat, function(x) x[["read"]])
+    reads = mclapply(summaries.dat, function(x) x[["read"]], mc.cores = processors)
 
     folder.names = basename(dirname(abi.fnames))
     file.names = basename(abi.fnames)
