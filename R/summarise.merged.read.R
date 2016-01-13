@@ -28,7 +28,7 @@
 
 summarise.merged.read <- function(merged.read){
 
-    if(class(merged.read != 'merged.read')){ stop("merged.read must be a merged.read object")}
+    if(class(merged.read) != 'merged.read') { stop("merged.read must be a merged.read object")}
 
     m = merged.read
     reads = m$alignment[1:(length(m$alignment)-1)]
