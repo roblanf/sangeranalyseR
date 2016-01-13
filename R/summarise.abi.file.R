@@ -40,6 +40,7 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ra
     trims = trim.mott(seq.abif, cutoff = trim.cutoff)
     qual = seq.abif@data$PCON.2
     qual.trimmed = qual[trims$start:trims$finish]
+    if(length(qual.trimmed==0)){qual.trimmed = c(NA)} # so we can summarise later
 
     # now we fix up the trim locations to correspond to the sangerseq primary seq object
     if(trims$start==1 && trims$finish==nchar(as.character(seq.abif@data$PBAS.2))){
