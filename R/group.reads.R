@@ -44,7 +44,7 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
     }else{
         # better to do readgroups in parallel, but sequentially within each
         mc.cores = processors
-        processors = 1
+        c.processors = 1
     }
 
     print("Constructing readsets...")
@@ -54,15 +54,15 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
                           max.secondary.peaks = max.secondary.peaks,
                           secondary.peak.ratio = secondary.peak.ratio,
                           min.length = min.length,
-                          processors = processors,                          
+                          processors = c.processors,                          
                           mc.cores = mc.cores
                           )
 
     names(rs) = groups
 
     print("Building read summaries...")
-    readsets = lapply(rs, function(x) x[["readset"]])
-    summaries = lapply(rs, function(x) x[["read.summaries"]])
+    readsets = mclapply(rs, function(x) x[["readset"]], mc.cores = processors)
+    summaries = mclapply(rs, function(x) x[["read.summaries"]], mc.cores = processors)
     summaries = do.call(rbind, summaries)    
     rownames(summaries) = NULL
 
@@ -124,11 +124,11 @@ get.readgroup.fnames <- function(group, group.dataframe, forward.suffix, reverse
 
     f.matches = str_match(readgroup.fnames, forward.suffix)
     f.indices = which(!is.na(f.matches))
-    fwd.fnames = as.character(readgroup.fnames[f.indices])
+    fwd.fnames = readgroup.fnames[f.indices]
 
     r.matches = str_match(readgroup.fnames, reverse.suffix)
     r.indices = which(!is.na(r.matches))
-    rev.fnames = as.character(readgroup.fnames[r.indices])
+    rev.fnames = readgroup.fnames[r.indices]
 
     readgroup.fnames = list("forward.reads" = fwd.fnames, "reverse.reads" = rev.fnames)
 
