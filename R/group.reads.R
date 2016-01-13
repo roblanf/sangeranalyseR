@@ -66,8 +66,9 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
     summaries = do.call(rbind, summaries)    
     rownames(summaries) = NULL
 
-    summaries$readset.name = group.dataframe$group
+    names(group.dataframe) = c('file.path', 'readset.name')
 
+    summaries = merge(summaries, group.dataframe, by = 'file.path')
 
     return(list("readsets" = readsets, "read.summaries" = summaries))
 
