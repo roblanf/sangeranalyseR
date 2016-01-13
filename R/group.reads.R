@@ -60,8 +60,6 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
 
     names(rs) = groups
 
-    print(rs)
-
     print("Building read summaries...")
     readsets = lapply(rs, function(x) x[["readset"]])
     summaries = lapply(rs, function(x) x[["read.summaries"]])
