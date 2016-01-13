@@ -80,6 +80,11 @@ fix.trims <- function(trims, seq.sanger, seq.abif, processors){
     # correspond to the seq.abif object to another 
     # the primarySeq(seq.sanger) from the seq.sanger object
 
+    if(trims$start == 0 & trims$finish == 0){
+        # no need to do anything fancy here...
+        return(trims)
+    }
+
     # 1. First we trim the original sequence
     original.seq = seq.abif@data$PBAS.2
 
