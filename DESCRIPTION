@@ -15,7 +15,6 @@ Depends:
     parallel,
     reshape2,
     phangorn,
-    rmarkdown,
     sangerseqR,
     stringi,
     stringr,

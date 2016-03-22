@@ -1,5 +1,5 @@
 #' Create detailed summaries of all ABI sequencing reads in a folder (recursively searched)
-#'
+#' 
 #'
 #' @keywords chromatogram, peak, mismatch
 #'
@@ -7,7 +7,7 @@
 
 
 
-summarise.abi.folder <- function(input.folder, trim.cutoff = 0.0001, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL, outfile = NULL){
+summarise.abi.folder <- function(input.folder, trim.cutoff = 0.0001, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
 
     processors = get.processors(processors)
 
@@ -22,12 +22,12 @@ summarise.abi.folder <- function(input.folder, trim.cutoff = 0.0001, secondary.p
 
     print("Calculating read summaries...")
     # now make a data.frame of summaries of all the files
-    summaries.dat = mclapply(abi.seqs,
+    summaries.dat = mclapply(abi.seqs, 
                          summarise.abi.file,
                          trim.cutoff = trim.cutoff,
                          secondary.peak.ratio = secondary.peak.ratio,
                          processors = 1,
-                         mc.cores = processors
+                         mc.cores = processors  
                          )
 
     print("Cleaning up")
@@ -40,12 +40,6 @@ summarise.abi.folder <- function(input.folder, trim.cutoff = 0.0001, secondary.p
     file.names = basename(abi.fnames)
 
     summaries = cbind.data.frame("file.path" = as.character(abi.fnames), "folder.name" = as.character(folder.names), "file.name" = file.names, summaries, stringsAsFactors = FALSE)
-
-   if(!is.null(outfile)){
-      rmd.path <- paste(system.file(package = "sangeranalyseR"), "/data/summarise.abi.folder.Rmd", sep = "")
-      render(rmd.path, output_file = outfile)
-   }
-
 
     return(list("summaries" = summaries, "reads" = reads))
 
