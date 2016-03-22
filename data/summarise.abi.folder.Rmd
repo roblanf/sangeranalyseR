@@ -1,0 +1,74 @@
+# Data summary
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+library(knitr)
+library(ggplot2)
+library(GGally)
+kable(summaries[,-1], align = "c")
+```
+
+
+# Read length vs. quality
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+qplot(raw.length, raw.mean.quality, data=summaries, color=folder.name) 
+```
+
+
+# Raw length
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+qplot(raw.length, data=summaries, geom="density", fill = folder.name, alpha = 0.5) + scale_alpha(guide = "none")
+```
+
+
+# Trimmed length 
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+qplot(trimmed.length, data=summaries, geom="density", fill = folder.name, alpha = 0.5) + scale_alpha(guide = "none")
+```
+
+
+# Trimmed start
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+qplot(trim.start, data=summaries, geom="density", fill = folder.name, alpha = 0.5) + scale_alpha(guide = "none")
+```
+
+
+# Trimmed finish
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+qplot(trim.finish, data=summaries, geom="density", fill = folder.name, alpha = 0.5) + scale_alpha(guide = "none")
+```
+
+# Raw secondary peaks
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+qplot(raw.secondary.peaks, data=summaries, geom="density", fill = folder.name, alpha = 0.5) + scale_alpha(guide = "none")
+```
+
+# Trimmed secondary peaks
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+qplot(trimmed.secondary.peaks, data=summaries, geom="density", fill = folder.name, alpha = 0.5) + scale_alpha(guide = "none")
+```
+
+# Raw mean quality
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+qplot(raw.mean.quality, data=summaries, geom="density", fill = folder.name, alpha = 0.5) + scale_alpha(guide = "none")
+```
+
+# Raw min quality
+```{r, out.width='\\textwidth', fig.retina=NULL, echo=FALSE}
+qplot(raw.min.quality, data=summaries, geom="density", fill = folder.name, alpha = 0.5) + scale_alpha(guide = "none")
+```
+
+
+# Pairwise plots
+```{r, out.width='\\textwidth', fig.retina=NULL, echo = FALSE}
+plot.df <- summaries[,sapply(summaries, function(x) is.numeric(x))]
+for(i in 1:length(colnames(plot.df)) - 1){
+    for(j in (i + 1):length(colnames(plot.df))){
+        if(!all(is.na(plot.df[,i])) & !all(is.na(plot.df[,j]))){
+            # I am not at all sure why I have to wrap this in a print statment,
+            # but apparently that's the only way to get the plots into the html file.
+            print(qplot(plot.df[,i], plot.df[,j], color = as.factor(summaries$folder.name)) +
+                      xlab(colnames(plot.df)[i]) + ylab(colnames(plot.df)[j]) + 
+                      theme(legend.title=element_blank()))
+        }
+    }
+}
+```
