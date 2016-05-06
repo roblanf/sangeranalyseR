@@ -1,12 +1,12 @@
 #' Automatically load readsets by grouping .ab1 files by name.
-#' 
+#'
 #' @param input.folder The parent folder of all of the reads contained in ab1 files you wish to analyse. Subfolders will be scanned recursively.
 #' @param forward.suffix the suffix of the filenames for forward reads, i.e. reads that do not need to be reverse-complemented. Include the full suffix, e.g. "forward.ab1".
 #' @param reverse.suffix the suffix of the filenames for reverse reads, i.e. reads that *do* need to be reverse-complemented. Include the full suffix, e.g. "reverse.ab1".
 #' @param trim TRUE/FALSE trim sequences based on quality while creating readgroup? If TRUE, the trim.mott function is applied to each sequence before inclusion in the readgroup. Note, trimming only works if the raw data are stored in ab1 files with appropriate information.
 #' @param trim.cutoff value passed to trim.mott as quality cutoff for sequencing trimming, only used if 'trim' == TRUE
-#' @param max.secondary.peaks reads with more secondary peaks than this will not be included in the readset. The default (NULL) is to include all reads regardless of secondary peaks 
-#' @param secondary.peak.ratio Only applies if max.secondary.peaks is not NULL. The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are counted. Those below the ratio are not. 
+#' @param max.secondary.peaks reads with more secondary peaks than this will not be included in the readset. The default (NULL) is to include all reads regardless of secondary peaks
+#' @param secondary.peak.ratio Only applies if max.secondary.peaks is not NULL. The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are counted. Those below the ratio are not.
 #' @param min.length reads shorter than this will not be included in the readset. The default (1) means that all reads with length of 1 or more will be included.
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #'
@@ -28,19 +28,20 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
 
     print(sprintf("Grouped these into %d sets of files", length(groups)))
 
-    # load full file paths for readgroups based on unique filenames 
+    # load full file paths for readgroups based on unique filenames
     print("Loading .ab1 files...")
-    readset.fnames = mclapply(groups, 
+    readset.fnames = mclapply(groups,
                         get.readgroup.fnames,
                         group.dataframe = group.dataframe,
                         forward.suffix = forward.suffix,
-                        reverse.suffix = reverse.suffix, 
+                        reverse.suffix = reverse.suffix,
                         mc.cores = processors)
 
     # how we parallelise depends on how many readgroups there are
     if(length(readset.fnames[[1]]) > length(readset.fnames)){
         # better to do readgroups sequentially, but parallelise each
-        mc.cores = 1 
+        mc.cores = 1
+        c.processors = processors
     }else{
         # better to do readgroups in parallel, but sequentially within each
         mc.cores = processors
@@ -54,7 +55,7 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
                           max.secondary.peaks = max.secondary.peaks,
                           secondary.peak.ratio = secondary.peak.ratio,
                           min.length = min.length,
-                          processors = c.processors,                          
+                          processors = c.processors,
                           mc.cores = mc.cores
                           )
 
@@ -63,7 +64,7 @@ make.readsets <- function(input.folder, forward.suffix, reverse.suffix, trim = T
     print("Building read summaries...")
     readsets = mclapply(rs, function(x) x[["readset"]], mc.cores = processors)
     summaries = mclapply(rs, function(x) x[["read.summaries"]], mc.cores = processors)
-    summaries = do.call(rbind, summaries)    
+    summaries = do.call(rbind, summaries)
     rownames(summaries) = NULL
 
     names(group.dataframe) = c('file.path', 'readset.name')
