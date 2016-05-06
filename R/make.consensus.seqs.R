@@ -124,34 +124,38 @@ make.consensus.seqs <- function(input.folder, forward.suffix, reverse.suffix, mi
     consensus.summaries$consensus.name = as.character(consensus.summaries$consensus.name)
 
     # align the consensus sequences
-    print("Aligning consensus sequences...")
-    if(!is.null(ref.aa.seq)){
-        aln = AlignTranslation(consensus.set, geneticCode = genetic.code, processors = processors, verbose = FALSE)
+    if(length(consensus.set)>1){
+        print("Aligning consensus sequences...")
+        if(!is.null(ref.aa.seq)){
+            aln = AlignTranslation(consensus.set, geneticCode = genetic.code, processors = processors, verbose = FALSE)
+        }else{
+            aln = AlignSeqs(consensus.set, processors = processors, verbose = FALSE)
+        }
+
+        # make a rough NJ tree. Labels are rows in the summary df
+        print("Building tree of consensus sequences...")
+        neat.labels = match(names(aln), 
+                            as.character(consensus.summaries$consensus.name)
+                            )
+        aln2 = aln
+        names(aln2) = neat.labels
+        aln.bin = as.DNAbin(aln2)
+        aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
+
+        # Sometimes it's impossible to make a tree...
+        aln.tree = NULL
+        try({
+                aln.tree = bionjs(aln.dist)
+
+                # deal with -ve branches
+                # This is not necessarily accurate, but it is good enough to judge seuqences using the tree
+                aln.tree$edge.length[which(aln.tree$edge.length<0)] = abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])            },
+                silent = TRUE
+            )
     }else{
-        aln = AlignSeqs(consensus.set, processors = processors, verbose = FALSE)
+        aln = NA
+        aln.tree = NA
     }
-
-    # make a rough NJ tree. Labels are rows in the summary df
-    print("Building tree of consensus sequences...")
-    neat.labels = match(names(aln), 
-                        as.character(consensus.summaries$consensus.name)
-                        )
-    aln2 = aln
-    names(aln2) = neat.labels
-    aln.bin = as.DNAbin(aln2)
-    aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
-
-    # Sometimes it's impossible to make a tree...
-    aln.tree = NULL
-    try({
-            aln.tree = bionjs(aln.dist)
-
-            # deal with -ve branches
-            # This is not necessarily accurate, but it is good enough to judge seuqences using the tree
-            aln.tree$edge.length[which(aln.tree$edge.length<0)] = abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])            },
-            silent = TRUE
-        )
-
     return(list("read.summaries" = read.summaries, 
                 "merged.reads" = consensi, 
                 "consensus.summaries" = consensus.summaries, 
