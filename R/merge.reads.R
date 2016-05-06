@@ -5,7 +5,7 @@
 #' @param readset a DNAStringSet object with at least 2 reads
 #' @param ref.aa.seq an amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand.
 #' @param minInformation minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75implying that 3/4 of all reads must be present in order to call a consensus.
-#' @param threshold Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.05, implying that each consensus base can ignore at most 5 percent of the information at a given position. 
+#' @param threshold Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base must use at least half of the infomration at a given position. 
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #' @param genetic.code Named character vector in the same format as GENETIC_CODE (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @param accept.stop.codons TRUE/FALSE. TRUE (the defualt): keep all reads, regardless of whether they have stop codons; FALSE: reject reads with stop codons. If FALSE is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).
@@ -26,7 +26,7 @@
 #' @export merge.reads
 #'
 
-merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.05, processors = NULL, genetic.code = GENETIC_CODE, accept.stop.codons = TRUE, reading.frame = 1){
+merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.5, processors = NULL, genetic.code = GENETIC_CODE, accept.stop.codons = TRUE, reading.frame = 1){
 
     # check input options
     processors = get.processors(processors)
@@ -87,7 +87,8 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
                                   includeTerminalGaps = TRUE,
                                   ignoreNonBases = FALSE,
                                   threshold = threshold,
-                                  noConsensusChar = "-")[[1]]
+                                  noConsensusChar = "-"
+                                  )[[1]]
 
     print("Calculating differences between reads and consensus")
     diffs = mclapply(aln, n.pairwise.diffs, subject = consensus, mc.cores = processors)

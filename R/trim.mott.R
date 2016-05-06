@@ -36,7 +36,7 @@ trim.mott <- function(abif.seq, cutoff = 0.0001){
     score_list = cutoff - (10 ** (qual / -10.0))
 
     # calculate cummulative score 
-    # if cummulative value < 0, set it to 0 
+    # if cumulative value < 0, set it to 0 
     # the BioPython implementation always trims the first base, 
     # this implementation does not. 
     score = score_list[1]

@@ -5,7 +5,7 @@
 \title{Merge sequence reads into a single consensus sequence}
 \usage{
 \method{merge}{reads}(readset, ref.aa.seq = NULL, minInformation = 0.75,
-  threshold = 0.05, processors = NULL, genetic.code = GENETIC_CODE,
+  threshold = 0.5, processors = NULL, genetic.code = GENETIC_CODE,
   accept.stop.codons = TRUE, reading.frame = 1)
 }
 \arguments{
@@ -15,7 +15,7 @@
 
 \item{minInformation}{minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75implying that 3/4 of all reads must be present in order to call a consensus.}
 
-\item{threshold}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.05, implying that each consensus base can ignore at most 5 percent of the information at a given position.}
+\item{threshold}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base must use at least half of the infomration at a given position.}
 
 \item{processors}{The number of processors to use, or NULL (the default) for all available processors}
 
