@@ -7,7 +7,7 @@
 make.consensus.seqs(input.folder, forward.suffix, reverse.suffix,
   min.reads = 2, trim = TRUE, trim.cutoff = 1e-04, min.length = 20,
   max.secondary.peaks = NULL, secondary.peak.ratio = 0.33,
-  ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.05,
+  ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.5,
   genetic.code = GENETIC_CODE, accept.stop.codons = TRUE,
   reading.frame = 1, processors = NULL)
 }
@@ -34,7 +34,7 @@ make.consensus.seqs(input.folder, forward.suffix, reverse.suffix,
 
 \item{minInformation}{minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75implying that 3/4 of all reads must be present in order to call a consensus.}
 
-\item{threshold}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.05, implying that each consensus base can ignore at most 5 percent of the information at a given position.}
+\item{threshold}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.}
 
 \item{genetic.code}{Named character vector in the same format as GENETIC_CODE (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
 
