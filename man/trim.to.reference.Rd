@@ -2,18 +2,18 @@
 % Please edit documentation in R/trim.to.reference.R
 \name{trim.to.reference}
 \alias{trim.to.reference}
-\title{Trim an aligned XStringSet object to the limits of a supplied reference sequence}
+\title{Trim an alignment to the limits of a supplied reference sequence}
 \usage{
-trim.to.reference(stringset, reference)
+trim.to.reference(alignment, reference)
 }
 \arguments{
-\item{stringset}{an XStringSet object}
+\item{alignment}{a DNAStringSet object}
 
-\item{reference}{an XStringSet object of the same type as the XStringSet object}
+\item{reference}{a DNA sequence as a DNAString sequence}
 }
 \description{
-This function profile aligns the XStringSet object to the
+This function profile aligns the alignment to the
 reference sequence. It then trims the alignment to the limits of the 
-reference sequence, and returns a trimmed alignment
+reference sequence, and returns the trimmed alignment.
 }
 

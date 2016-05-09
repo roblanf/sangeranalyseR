@@ -1,21 +1,30 @@
-#' Trim an aligned XStringSet object to the limits of a supplied reference sequence
+#' Trim an alignment to the limits of a supplied reference sequence
 #'
-#' This function profile aligns the XStringSet object to the
+#' This function profile aligns the alignment to the
 #' reference sequence. It then trims the alignment to the limits of the 
-#' reference sequence, and returns a trimmed alignment
+#' reference sequence, and returns the trimmed alignment.
 #'
-#' @param stringset an XStringSet object
-#' @param reference an XStringSet object of the same type as the XStringSet object
+#' @param alignment a DNAStringSet object
+#' @param reference a DNA sequence as a DNAString sequence
 #'
 #' @export trim.to.reference
 
-trim.to.reference <- function(stringset, reference){
+trim.to.reference <- function(alignment, reference){
 
-    aln = AlignProfiles(stringset, reference)
+    if(class(alignment)!='DNAStringSet'){ stop("alignment must be a DNAStringSet object")}
+    if(class(reference)!='DNAString'){ stop("reference must be a DNAString object")}
 
-    names(reference) = 'ref'
+    ref = DNAStringSet(reference)
+    names(ref) = 'ref'
+    aln = AlignProfiles(alignment, ref)
 
-    
+    ref.aligned = as.character(aln['ref'])
+    not.gaps = str_locate_all(ref.aligned, pattern = "[^-]")[[1]][,1]
+    ref.start = min(not.gaps)
+    ref.finish = max(not.gaps)
 
+    aln.trimmed = subseq(alignment, ref.start, ref.finish)
+
+    return(aln.trimmed)    
 
 }
