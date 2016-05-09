@@ -4,7 +4,7 @@
 #'
 #' @param readset a DNAStringSet object with at least 2 reads
 #' @param ref.aa.seq an amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand.
-#' @param minInformation minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75implying that 3/4 of all reads must be present in order to call a consensus.
+#' @param minInformation minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that 3/4 of all reads must be present in order to call a consensus.
 #' @param threshold Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base must use at least half of the infomration at a given position. 
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #' @param genetic.code Named character vector in the same format as GENETIC_CODE (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
@@ -19,6 +19,7 @@
 #'              \item {distance.matrix}: a distance matrix of genetic distances (corrected with the JC model) between all of the input reads.
 #'              \item {dendrogram}: a dendrogram depicting the distance.matrix. E.g. if the list was called 'merged.reads', you could use plot(merged.reads$dendrogram) to see the dendrogram.
 #'              \item {indels}: if you specified a reference sequence via ref.aa.seq, then this will be a data frame describing the number of indels and deletions that were made to each of the input reads in order to correct frameshift mutations.
+#'              \item {secondary.peak.columns}: this is a data frame with one row for each column in the alignment that contained more than one secondary peak. The data frame has three columns: the column number of the alignment; the number of secondary peaks in that column; and the bases (with IUPAC ambiguity codes representing secondary peak calls) in that column represented as a string.
 #'          }
 #'
 #' @keywords merge, reads, alignment, sequence
@@ -26,12 +27,11 @@
 #' @export merge.reads
 #'
 
-merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, threshold = 0.5, processors = NULL, genetic.code = GENETIC_CODE, accept.stop.codons = TRUE, reading.frame = 1){
+merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.5, threshold = 0.5, processors = NULL, genetic.code = GENETIC_CODE, accept.stop.codons = TRUE, reading.frame = 1){
 
     # check input options
     processors = get.processors(processors)
     
-
     # this sometimes happens when we automate things
     if(length(readset) < 2) {return(NULL)}
 
@@ -85,9 +85,10 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
     consensus = ConsensusSequence(aln,
                                   minInformation = minInformation,
                                   includeTerminalGaps = TRUE,
-                                  ignoreNonBases = FALSE,
+                                  ignoreNonBases = TRUE,
                                   threshold = threshold,
-                                  noConsensusChar = "-"
+                                  noConsensusChar = "-",
+                                  ambiguity = TRUE
                                   )[[1]]
 
     print("Calculating differences between reads and consensus")
@@ -106,13 +107,17 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.75, thres
     # strip gaps from consensus (must be an easier way!!)
     consensus.gapfree = DNAString(paste(del.gaps(consensus), collapse = ''))
 
+    # count columns in the alignment with >1 coincident secondary peaks
+    sp.df = count.coincident.sp(aln, processors = processors)
+
     merged.read = list("consensus" = consensus.gapfree, 
                 "alignment" = aln2, 
                 "differences" = diffs.df, 
                 "distance.matrix" = dist,
                 "dendrogram" = dend,
                 "indels" = indels,
-                "stop.codons" = stops.df)
+                "stop.codons" = stops.df,
+                "secondary.peak.columns" = sp.df)
 
     class(merged.read) = "merged.read"
 
@@ -146,3 +151,31 @@ n.pairwise.diffs <- function(pattern, subject){
     return(c(qs, ps))
 }
 
+count.coincident.sp <- function(aln, processors){
+    # make a data frame of columns in the alignment that have
+    # more than one secondary peak
+
+    is = 1:aln@ranges@width[1]
+    r = mclapply(is, one_ambiguous_column, aln=aln, mc.cores = processors)
+    r = Filter(Negate(is.null), r)
+
+    if(length(r)>0){
+        r = as.data.frame(matrix(unlist(r), nrow=length(r), byrow=T))
+        names(r) = c('column.number', 'ambiguities', 'column')
+        return(r)
+    }else{
+        return(NULL)
+    }
+
+}
+
+ambiguous = names(IUPAC_CODE_MAP)[5:length(names(IUPAC_CODE_MAP))]
+
+one_ambiguous_column <- function(i, aln){
+    col = as.character(subseq(aln, i, i))
+    str = paste(col, sep="", collapse="")
+    amb = sum(col %in% ambiguous)
+    if(amb>1){
+        return(c(i, amb, str))
+    }
+}

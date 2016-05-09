@@ -43,6 +43,8 @@ summarise.merged.read <- function(merged.read){
     stops = m$stop.codons$stop.codons
     if(is.null(stops)){ stops = NA }
 
+    spc = nrow(m$secondary.peak.columns)
+    if(is.null(spc)){ spc = 0 }
 
     summary = list(
                 "consensus.len"     = length(m$consensus),
@@ -61,7 +63,8 @@ summarise.merged.read <- function(merged.read){
                 "deletions.med"     = median(deletions),
                 "stops.min"         = min(stops),
                 "stops.max"         = max(stops),
-                "stops.med"         = median(stops)
+                "stops.med"         = median(stops),
+                "secondary.peak.cols" = spc
                 )
 
     return(summary)

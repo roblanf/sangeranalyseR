@@ -5,11 +5,17 @@
 #' reference sequence, and returns a trimmed alignment
 #'
 #' @param stringset an XStringSet object
-#' @param reference an XString object of the same type as the XStringSet object
+#' @param reference an XStringSet object of the same type as the XStringSet object
 #'
 #' @export trim.to.reference
 
 trim.to.reference <- function(stringset, reference){
+
+    aln = AlignProfiles(stringset, reference)
+
+    names(reference) = 'ref'
+
+    
 
 
 }

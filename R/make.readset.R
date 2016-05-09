@@ -57,7 +57,13 @@ loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, sec
     s = summarise.abi.file(read.abi, trim.cutoff, secondary.peak.ratio, processors = processors)
 
     summary = s$summary
-    read.sanger = s$read
+
+    # here we store the secondary peaks by storing them in a single sequence
+    # as ambiguity codes. Note, this is version of a read that we use.
+    # So in this package, a read has an ambiguit whereever there's a 
+    # secondary peak
+    d = c(DNAStringSet(s$read@primarySeq), DNAStringSet(s$read@secondarySeq))
+    read = ConsensusSequence(d)[[1]]
 
     if(trim == TRUE){
         trim.start = summary["trim.start"]
@@ -66,12 +72,12 @@ loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, sec
 
     }else if(trim == FALSE){
         trim.start = 1
-        trim.finish = length(read.sanger@primarySeq)
+        trim.finish = length(read)
         sp = summary["raw.secondary.peaks"]
     }
 
     # FILTER read based on user specified limits
-    read = read.sanger@primarySeq[trim.start:trim.finish]
+    read = read[trim.start:trim.finish]
 
     if(!is.null(max.secondary.peaks)){
         if(sp > max.secondary.peaks){

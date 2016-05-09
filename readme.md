@@ -309,6 +309,13 @@ Another thing you might be interested in is looking at an alignment of your merg
 ```
 BrowseSeqs(merged.reads$alignment)
 ```
+
+Finally, the output contains information on columns of the alignment that contain secondary peaks in more than one read. These are useful for diagnosing cases where you have sequenced a heterozygote, or perhaps a mixture of sequences. For example, if you work on HIV viruses, you might be trying to sequence a single virus at a time. Many secondary peaks are noise, but if you see secondary peaks in more than one read for a given column in the alignment, that starts to look like good evidence that you have sequenced >1 virus. You can get at this information as follows:
+
+```
+merged.reads$secondary.peak.columns
+```
+
 ![consensus](images/consensus.png)
 
 The output also contains a lot of statistics comparing the reads to each other, and to the consensus sequence, so that you can quickly determine if any erroneous reads crept in to your consensus. See the documentation for a full explanation. As an example, typing ```merged.reads$differeces``` gives you a data frame of differences between each read and the consensus, as well as the number of characters in each read that did not contribute to the consensus sequence:
