@@ -9,7 +9,7 @@
 #' @param min.length reads shorter than this will not be included in the readset. The default (1) means that all reads with length of 1 or more will be included.
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #'
-#' @return A set of unaligned reads as a DNAstringset object, names are the input file paths.
+#' @return A set of unaligned reads as a DNAstringset object, names are the input file paths. Note that secondary peaks are encoded in these reads as ambiguous bases using IUPAC ambiguity codes.
 #'
 #' @export make.readset
 
