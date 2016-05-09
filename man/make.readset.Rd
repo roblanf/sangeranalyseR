@@ -26,7 +26,7 @@ make.readset(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 1e-04,
 \item{processors}{The number of processors to use, or NULL (the default) for all available processors}
 }
 \value{
-A set of unaligned reads as a DNAstringset object, names are the input file paths.
+A set of unaligned reads as a DNAstringset object, names are the input file paths. Note that secondary peaks are encoded in these reads as ambiguous bases using IUPAC ambiguity codes.
 }
 \description{
 Make a readset

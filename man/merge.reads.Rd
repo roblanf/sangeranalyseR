@@ -34,6 +34,7 @@ A merged.read object, which is a list with the following components:
              \item {distance.matrix}: a distance matrix of genetic distances (corrected with the JC model) between all of the input reads.
              \item {dendrogram}: a dendrogram depicting the distance.matrix. E.g. if the list was called 'merged.reads', you could use plot(merged.reads$dendrogram) to see the dendrogram.
              \item {indels}: if you specified a reference sequence via ref.aa.seq, then this will be a data frame describing the number of indels and deletions that were made to each of the input reads in order to correct frameshift mutations.
+             \item {secondary.peak.columns}: this is a data frame with one row for each column in the alignment that contained more than one secondary peak. The data frame has three columns: the column number of the alignment; the number of secondary peaks in that column; and the bases (with IUPAC ambiguity codes representing secondary peak calls) in that column represented as a string.
          }
 }
 \description{
