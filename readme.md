@@ -19,7 +19,6 @@ sangeranalyseR relies heavily on packages from CRAN and Bioconductor. If you don
 
 ```
 # CRAN packages
-install.packages("parallel")
 install.packages("ape")
 install.packages("reshape2")
 install.packages("phangorn")
