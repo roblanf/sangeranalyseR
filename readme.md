@@ -59,7 +59,7 @@ library(sangeranalyseR)
 
 # Using sangeranalyseR
 
-To demonstrate the basics of using this package, I have put together some test data that comprises .ab1 sequencing files from two species. The data are publically available from http://www.boldsystems.org/, and are provided in the ```/test_data``` folder in this reposotory.
+To demonstrate the basics of using this package, I have put together some test data that comprises .ab1 sequencing files from two species. The data are publicly available from http://www.boldsystems.org/, and are provided in the ```/test_data``` folder in this reposotory.
 
 To follow along with this tutorial, download the test data to your machine, and enter the commands below, changing the file paths to the data files and folders where necessary (I'm using a mac and put the test data in a folder called ```test_data``` on my desktop).
 
