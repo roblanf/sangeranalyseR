@@ -99,7 +99,7 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.5, thresh
 
     # get a dendrogram
     dist = DistanceMatrix(aln, correction = "Jukes-Cantor", penalizeGapLetterMatches = FALSE, processors = processors, verbose = FALSE)
-    dend = IdClusters(dist, asDendrogram = TRUE, processors = processors, verbose = FALSE)
+    dend = IdClusters(dist, type = "dendrogram", processors = processors, verbose = FALSE)
 
     # add consensus to alignment
     aln2 = c(aln, DNAStringSet(consensus))
