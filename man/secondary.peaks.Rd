@@ -31,4 +31,3 @@ This function finds and reports secondary peaks in a sangerseq object. It return
 \keyword{chromatogram,}
 \keyword{mismatch}
 \keyword{peak,}
-

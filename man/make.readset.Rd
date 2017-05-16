@@ -31,4 +31,3 @@ A set of unaligned reads as a DNAstringset object, names are the input file path
 \description{
 Make a readset
 }
-

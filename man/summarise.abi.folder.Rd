@@ -14,4 +14,3 @@ Create detailed summaries of all ABI sequencing reads in a folder (recursively s
 \keyword{chromatogram,}
 \keyword{mismatch}
 \keyword{peak,}
-

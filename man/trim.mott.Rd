@@ -21,4 +21,3 @@ Note that the resulting trim.start and trim.end values correspond to the sequenc
 \keyword{phred,}
 \keyword{quality,}
 \keyword{trimming}
-

@@ -16,4 +16,3 @@ This function profile aligns the alignment to the
 reference sequence. It then trims the alignment to the limits of the 
 reference sequence, and returns the trimmed alignment.
 }
-

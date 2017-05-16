@@ -16,4 +16,3 @@ count.stop.codons(sequence, reading.frame = 1, genetic.code = GENETIC_CODE)
 \description{
 Count stop codons in a DNA sequence
 }
-

@@ -30,4 +30,3 @@ make.readsets(input.folder, forward.suffix, reverse.suffix, trim = TRUE,
 \description{
 Automatically load readsets by grouping .ab1 files by name.
 }
-

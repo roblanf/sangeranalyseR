@@ -39,4 +39,3 @@ A numeric vector including:
 \description{
 Create a detailed summary of a single ABI sequencing file
 }
-
