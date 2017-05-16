@@ -1,7 +1,18 @@
+#' @import ape
+#' @import Biostrings
+#' @import DECIPHER
+#' @import parallel
+#' @import reshape2
+#' @import phangorn
+#' @import sangerseqR
+#' @import stringi
+#' @import stringr
+#' @importFrom stats median
+#' @importFrom utils write.csv
 
 
 get.processors <- function(processors){
-    
+
     if(Sys.info()["sysname"] == 'Windows'){
         # mclapply is not supported on windows
         # so we give a single processor,
@@ -10,7 +21,7 @@ get.processors <- function(processors){
         return(1)
     }
 
-    if(is.null(processors)){ 
+    if(is.null(processors)){
         processors = detectCores(all.tests = FALSE, logical = FALSE)
     }
 

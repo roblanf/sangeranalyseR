@@ -18,15 +18,5 @@ Depends:
     sangerseqR,
     stringi,
     stringr,
-Imports: 
-    ape,
-    Biostrings,
-    DECIPHER,
-    parallel,
-    reshape2,
-    phangorn,
-    sangerseqR,
-    stringi,
-    stringr,
 RoxygenNote: 6.0.1
 Suggests: testthat
