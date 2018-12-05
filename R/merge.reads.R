@@ -105,7 +105,7 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.5, thresh
     aln2 = c(aln, DNAStringSet(consensus))
     names(aln2)[length(aln2)] = "consensus"
     # strip gaps from consensus (must be an easier way!!)
-    consensus.gapfree = DNAString(paste(del.gaps(consensus), collapse = ''))
+    consensus.gapfree = DNAString(paste(as.matrix(del.gaps(consensus), collapse = '')))
 
     # count columns in the alignment with >1 coincident secondary peaks
     sp.df = count.coincident.sp(aln, processors = processors)
