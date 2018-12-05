@@ -34,7 +34,7 @@ summarise.merged.read <- function(merged.read){
 
     reads = m$alignment[1:(length(m$alignment)-1)]
 
-    read.lens = unlist(lapply(reads, function(x) length(DNAString(paste(as.matrix((del.gaps(x), collapse = ''))))))
+    read.lens = unlist(lapply(reads, function(x) length(DNAString(paste(del.gaps(x), collapse = '')))))
 
     # the NAs allow us to take min/max/med and get NA back
     # TODO: reduce these to refer to only the reads that made it...
