@@ -31,7 +31,9 @@ summarise.merged.read <- function(merged.read){
     if(class(merged.read) != 'merged.read') { stop("merged.read must be a merged.read object")}
 
     m = merged.read
+
     reads = m$alignment[1:(length(m$alignment)-1)]
+
     read.lens = unlist(lapply(reads, function(x) length(DNAString(paste(as.matrix((del.gaps(x), collapse = ''))))))
 
     # the NAs allow us to take min/max/med and get NA back
@@ -42,7 +44,6 @@ summarise.merged.read <- function(merged.read){
     if(is.null(deletions)){ deletions = NA }
     stops = m$stop.codons$stop.codons
     if(is.null(stops)){ stops = NA }
-
     spc = nrow(m$secondary.peak.columns)
     if(is.null(spc)){ spc = 0 }
 
@@ -68,5 +69,4 @@ summarise.merged.read <- function(merged.read){
                 )
 
     return(summary)
-
 }
