@@ -1,5 +1,5 @@
 #' Produce a one-row summary of a merged read
-#' 
+#'
 #' @param merged.read a merged.read object produced by the merge.reads() function
 #'
 #' @return A numeric vector including (note that insertions, deletions, and stop codons will only be called if the read was merged with a reference amino acid sequence):
@@ -21,7 +21,7 @@
 #'              \item {stops.min}: the smallest number of stop codons inferred in a read \cr
 #'              \item {stops.max}: the larges number of stop codons inferred in a read \cr
 #'              \item {stops.med}: the median number of stop codons inferred in a read \cr
-#'          }  
+#'          }
 #'
 #' @export summarise.merged.read
 
@@ -34,7 +34,11 @@ summarise.merged.read <- function(merged.read){
 
     reads = m$alignment[1:(length(m$alignment)-1)]
 
-    read.lens = unlist(lapply(reads, function(x) length(DNAString(paste(del.gaps(x), collapse = '')))))
+    read.lens = unlist(lapply(reads, function(x) length(RemoveGaps(DNAStringSet(x))[[1]])))
+    print(read.lens)
+
+
+
 
     # the NAs allow us to take min/max/med and get NA back
     # TODO: reduce these to refer to only the reads that made it...
