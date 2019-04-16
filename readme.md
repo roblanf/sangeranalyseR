@@ -26,10 +26,11 @@ install.packages("stringi")
 install.packages("stringr")
 
 # Bioconductor packages
-source("https://bioconductor.org/biocLite.R")
-biocLite("DECIPHER")
-biocLite("Biostrings")
-biocLite("sangerseqR")
+if (!requireNamespace("BiocManager"))
+    install.packages("BiocManager")
+BiocManager::install()
+
+BiocManager::install(c("DECIPHER", "Biostrings", "sangerseqR"))
 ```
 
 The easiest way to install sangeranalyseR is to install it straight from GitHub:
