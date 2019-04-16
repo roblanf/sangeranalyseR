@@ -1,16 +1,16 @@
 #' Merge sequence reads into a single consensus sequence
-#' 
+#'
 #' This function attempts to merge any number of unaligned reads into a single consensus sequence. It calculates a number of statistics that should help you decide whether a sensible consensus sequence exists for your data.\cr
 #'
 #' @param readset a DNAStringSet object with at least 2 reads
 #' @param ref.aa.seq an amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand.
 #' @param minInformation minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that 3/4 of all reads must be present in order to call a consensus.
-#' @param threshold Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base must use at least half of the infomration at a given position. 
+#' @param threshold Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base must use at least half of the infomration at a given position.
 #' @param processors The number of processors to use, or NULL (the default) for all available processors
 #' @param genetic.code Named character vector in the same format as GENETIC_CODE (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @param accept.stop.codons TRUE/FALSE. TRUE (the defualt): keep all reads, regardless of whether they have stop codons; FALSE: reject reads with stop codons. If FALSE is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).
-#' @param reading.frame 1, 2, or 3. Only used if accept.stop.codons == FALSE. This specifies the reading frame that is used to determine stop codons. If you use a ref.aa.seq, then the frame should always be 1, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame. 
-#' 
+#' @param reading.frame 1, 2, or 3. Only used if accept.stop.codons == FALSE. This specifies the reading frame that is used to determine stop codons. If you use a ref.aa.seq, then the frame should always be 1, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
+#'
 #' @return A merged.read object, which is a list with the following components:
 #'          \enumerate{
 #'              \item {consensus}: the consensus sequence from the merged reads.\cr
@@ -31,11 +31,11 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.5, thresh
 
     # check input options
     processors = get.processors(processors)
-    
+
     # this sometimes happens when we automate things
     if(length(readset) < 2) {return(NULL)}
 
-    # Try to correct frameshifts in the input sequences 
+    # Try to correct frameshifts in the input sequences
     if(!is.null(ref.aa.seq)) {
 
         print("Correcting frameshifts in reads using amino acid reference sequence")
@@ -105,14 +105,14 @@ merge.reads <- function(readset, ref.aa.seq = NULL, minInformation = 0.5, thresh
     aln2 = c(aln, DNAStringSet(consensus))
     names(aln2)[length(aln2)] = "consensus"
     # strip gaps from consensus (must be an easier way!!)
-    consensus.gapfree = DNAString(paste(del.gaps(consensus), collapse = ''))
+    consensus.gapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
 
     # count columns in the alignment with >1 coincident secondary peaks
     sp.df = count.coincident.sp(aln, processors = processors)
 
-    merged.read = list("consensus" = consensus.gapfree, 
-                "alignment" = aln2, 
-                "differences" = diffs.df, 
+    merged.read = list("consensus" = consensus.gapfree,
+                "alignment" = aln2,
+                "differences" = diffs.df,
                 "distance.matrix" = dist,
                 "dendrogram" = dend,
                 "indels" = indels,
@@ -130,7 +130,7 @@ get.indel.df <- function(indel.list){
     r = lapply(indel.list, indel.row)
     indel.df = data.frame(matrix(unlist(r), byrow = T, nrow = length(indel.list)))
     indel.df = cbind(names(indel.list), indel.df)
-    names(indel.df) = c('read', 'insertions', 'deletions', 'distance')    
+    names(indel.df) = c('read', 'insertions', 'deletions', 'distance')
     return(indel.df)
 
 }
