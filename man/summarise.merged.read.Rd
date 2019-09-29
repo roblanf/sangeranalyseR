@@ -34,4 +34,3 @@ A numeric vector including (note that insertions, deletions, and stop codons wil
 \description{
 Produce a one-row summary of a merged read
 }
-

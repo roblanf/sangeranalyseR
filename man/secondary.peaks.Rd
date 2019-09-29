@@ -4,8 +4,8 @@
 \alias{secondary.peaks}
 \title{Check for secondary peaks in a sangerseq object}
 \usage{
-secondary.peaks(s, ratio = 0.33, output.folder = NA, file.prefix = "seq",
-  processors = NULL)
+secondary.peaks(s, ratio = 0.33, output.folder = NA,
+  file.prefix = "seq", processors = NULL)
 }
 \arguments{
 \item{s}{a sangerseq s4 object from the sangerseqR package}
@@ -31,4 +31,3 @@ This function finds and reports secondary peaks in a sangerseq object. It return
 \keyword{chromatogram,}
 \keyword{mismatch}
 \keyword{peak,}
-

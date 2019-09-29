@@ -44,4 +44,3 @@ This function attempts to merge any number of unaligned reads into a single cons
 \keyword{merge,}
 \keyword{reads,}
 \keyword{sequence}
-

@@ -5,8 +5,8 @@
 \title{Make a readset}
 \usage{
 make.readset(fwd.fnames, rev.fnames, trim = TRUE, trim.cutoff = 1e-04,
-  max.secondary.peaks = NULL, secondary.peak.ratio = 0.33, min.length = 1,
-  processors = NULL)
+  max.secondary.peaks = NULL, secondary.peak.ratio = 0.33,
+  min.length = 1, processors = NULL)
 }
 \arguments{
 \item{fwd.fnames}{a list of full file paths to forward reads from ab1 files (i.e. those that do not need to be reverse-complemented).}
@@ -31,4 +31,3 @@ A set of unaligned reads as a DNAstringset object, names are the input file path
 \description{
 Make a readset
 }
-

@@ -1,0 +1,10 @@
+CHANGES IN VERSION 0.99.1
+------------------------
+
+    o Base class: SangerReads is designed to store each forward/revers reads.
+
+
+CHANGES IN VERSION 0.1.0
+------------------------
+
+    o Project starts.

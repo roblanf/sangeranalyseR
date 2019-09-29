@@ -4,7 +4,8 @@
 \alias{count.stop.codons}
 \title{Count stop codons in a DNA sequence}
 \usage{
-count.stop.codons(sequence, reading.frame = 1, genetic.code = GENETIC_CODE)
+count.stop.codons(sequence, reading.frame = 1,
+  genetic.code = GENETIC_CODE)
 }
 \arguments{
 \item{sequence}{a DNAString object}
@@ -16,4 +17,3 @@ count.stop.codons(sequence, reading.frame = 1, genetic.code = GENETIC_CODE)
 \description{
 Count stop codons in a DNA sequence
 }
-

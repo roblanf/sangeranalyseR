@@ -50,4 +50,3 @@ Note that the consensus.tree should not be used for inference, but only as a gui
 \description{
 Automatically make consensus sequences by grouping .ab1 files by name.
 }
-
