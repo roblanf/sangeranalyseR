@@ -51,8 +51,6 @@ setClass("SangerReads",
          ### -------------------------------------------------------------------
          validity = function(object) {
              errors <- character()
-             file.exists(object@forwardReadFileName)
-
              if (!file.exists(object@forwardReadFileName)) {
                  msg <- paste("'", object@forwardReadFileName, "'",
                               " foward read file does not exist.", sep = "")
@@ -63,6 +61,15 @@ setClass("SangerReads",
                               " reverse read file does not exist.", sep = "")
                  errors <- c(errors, msg)
              }
+
+             if (length(errors) == 0) {
+                 forwardReadRF = read.abif(object@forwardReadFileName)
+                 reverseReadRF = read.abif(object@reverseReadFileName)
+                 seq.sanger = sangerseq(forwardRead)
+                 TRUE
+            } else {
+                errors
+            }
          }
 )
 
@@ -70,4 +77,23 @@ setClass("SangerReads",
 
 
 
+### S4 class example package Try First
+setClass("Person",
+         slots = c(
+             name = "character",
+             age = "numeric"
+         )
+)
+
+
+john <- new("Person", name = "John Smith", age = NA_real_)
+setGeneric("age", function(x) standardGeneric("age"))
+setGeneric("age<-", function(x, value) standardGeneric("age<-"))
+setMethod("age", "Person", function(x) x@age)
+setMethod("age<-", "Person", function(x, value) {
+    x@age <- value
+    x
+})
+
+age(john) <- 50
 
