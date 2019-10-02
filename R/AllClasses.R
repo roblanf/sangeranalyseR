@@ -28,16 +28,30 @@ setClass("SangerReads",
          ### Input type of each variable
          ### -------------------------------------------------------------------
          representation(
-             forwardReadFileName = "character",
-             reverseReadFileName = "character",
-             forwardRead         = "abif",
-             reverseRead         = "abif"
+             forwardReadFileName  = "character",
+             reverseReadFileName  = "character",
+             forwardReadAbif      = "abif",
+             reverseReadAbif      = "abif",
+             forwardReadSangerseq = "sangerseq",
+             reverseReadSangerseq = "sangerseq"
          ),
 )
 
-# Constructor for SangerReads
-setMethod("initialize", "SangerReads", function(.Object, ..., forwardReadFileName = forwardReadFileName, reverseReadFileName = reverseReadFileName, forwardRead=new("abif"), reverseRead=new("abif")) {
-    ## do work of initialization
+### ============================================================================
+### Overwrite initialize for SangerReads (New constructor)
+### ============================================================================
+setMethod("initialize",
+          "SangerReads",
+          function(.Object, ...,
+                   forwardReadFileName = forwardReadFileName,
+                   reverseReadFileName = reverseReadFileName,
+                   forwardReadAbif=new("abif"),
+                   reverseReadAbif=new("abif"),
+                   forwardReadSangerseq=new("sangerseq"),
+                   reverseReadSangerseq=new("sangerseq")) {
+    ### ------------------------------------------------------------------------
+    ### Input parameter prechecking
+    ### ------------------------------------------------------------------------
     errors <- character()
     if (!file.exists(forwardReadFileName)) {
         msg <- paste("\n'", forwardReadFileName, "'",
@@ -50,16 +64,28 @@ setMethod("initialize", "SangerReads", function(.Object, ..., forwardReadFileNam
         errors <- c(errors, msg)
     }
     if (length(errors) == 0) {
-        message("Creating forwardRead ...\n")
-        forwardRead = read.abif(forwardReadFileName)
-        message("Creating reverseRead ...\n")
-        reverseRead = read.abif(reverseReadFileName)
+        ### ------------------------------------------------------------------------
+        ### Prechecking success. Start abif & sangerseq creation.
+        ### ------------------------------------------------------------------------
+        message("Forward read: Creating abif & sangerseq ...")
+        message("    Creating forwardReadAbif ...")
+        forwardReadAbif = read.abif(forwardReadFileName)
+        message("    Creating forwardReadSangerseq ...\n")
+        forwardReadSangerseq = sangerseq(forwardReadAbif)
+
+        message("Reverse read: Creating abif & sangerseq ...")
+        message("    Creating reverseReadAbif ...")
+        reverseReadAbif = read.abif(reverseReadFileName)
+        message("    Creating reverseReadSangerseq ...\n")
+        reverseReadSangerseq = sangerseq(reverseReadAbif)
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
                    forwardReadFileName = forwardReadFileName,
                    reverseReadFileName = reverseReadFileName,
-                   forwardRead=forwardRead,
-                   reverseRead=reverseRead)
+                   forwardReadAbif=forwardReadAbif,
+                   reverseReadAbif=reverseReadAbif,
+                   forwardReadSangerseq=forwardReadSangerseq,
+                   reverseReadSangerseq=reverseReadSangerseq)
 })
