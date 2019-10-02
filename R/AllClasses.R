@@ -21,9 +21,8 @@
 #' A_chloroticaReverseReadFN <- file.path(inputFilesPath,
 #'                                        "Allolobophora_chlorotica",
 #'                                        "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1")
-#' A_chloroticaRead <- new("SangerReads",
-#'                          forwardReadFileName = A_chloroticaForwardReadFN,
-#'                          reverseReadFileName = A_chloroticaReverseReadFN)
+#' A_chloroticaRead <- new("SangerReads", forwardReadFileName = A_chloroticaForwardReadFN,
+#'                                 reverseReadFileName = A_chloroticaReverseReadFN)
 setClass("SangerReads",
          ### -------------------------------------------------------------------
          ### Input type of each variable
@@ -31,69 +30,36 @@ setClass("SangerReads",
          representation(
              forwardReadFileName = "character",
              reverseReadFileName = "character",
-             forwardRead         = "character",
-             reverseRead         = "character",
-             consensusRead       = "character",
-             qualityMatrix       = "data.frame"
+             forwardRead         = "abif",
+             reverseRead         = "abif"
          ),
-         # ### -------------------------------------------------------------------
-         # ### Initial value
-         # ### -------------------------------------------------------------------
-         # prototype(
-         #     forwardReadFileName    = NULL,
-         #     reverseReadFileName    = NULL,
-         #     forwardRead            = NULL,
-         #     reverseRead            = NULL,
-         #     consensusRead          = "",
-         #     qualityMatrix          = data.frame()),
-         ### -------------------------------------------------------------------
-         ### Input validity check
-         ### -------------------------------------------------------------------
-         validity = function(object) {
-             errors <- character()
-             if (!file.exists(object@forwardReadFileName)) {
-                 msg <- paste("'", object@forwardReadFileName, "'",
-                              " foward read file does not exist.", sep = "")
-                 errors <- c(errors, msg)
-             }
-             if (!file.exists(object@reverseReadFileName)) {
-                 msg <- paste("'", object@reverseReadFileName, "'",
-                              " reverse read file does not exist.", sep = "")
-                 errors <- c(errors, msg)
-             }
-
-             if (length(errors) == 0) {
-                 forwardReadRF = read.abif(object@forwardReadFileName)
-                 reverseReadRF = read.abif(object@reverseReadFileName)
-                 seq.sanger = sangerseq(forwardRead)
-                 TRUE
-            } else {
-                errors
-            }
-         }
 )
 
-
-
-
-
-### S4 class example package Try First
-setClass("Person",
-         slots = c(
-             name = "character",
-             age = "numeric"
-         )
-)
-
-
-john <- new("Person", name = "John Smith", age = NA_real_)
-setGeneric("age", function(x) standardGeneric("age"))
-setGeneric("age<-", function(x, value) standardGeneric("age<-"))
-setMethod("age", "Person", function(x) x@age)
-setMethod("age<-", "Person", function(x, value) {
-    x@age <- value
-    x
+# Constructor for SangerReads
+setMethod("initialize", "SangerReads", function(.Object, ..., forwardReadFileName = forwardReadFileName, reverseReadFileName = reverseReadFileName, forwardRead=new("abif"), reverseRead=new("abif")) {
+    ## do work of initialization
+    errors <- character()
+    if (!file.exists(forwardReadFileName)) {
+        msg <- paste("\n'", forwardReadFileName, "'",
+                     " foward read file does not exist.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    if (!file.exists(reverseReadFileName)) {
+        msg <- paste("\n'", reverseReadFileName, "'",
+                     " reverse read file does not exist.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    if (length(errors) == 0) {
+        message("Creating forwardRead ...\n")
+        forwardRead = read.abif(forwardReadFileName)
+        message("Creating reverseRead ...\n")
+        reverseRead = read.abif(reverseReadFileName)
+    } else {
+        stop(errors)
+    }
+    callNextMethod(.Object, ...,
+                   forwardReadFileName = forwardReadFileName,
+                   reverseReadFileName = reverseReadFileName,
+                   forwardRead=forwardRead,
+                   reverseRead=reverseRead)
 })
-
-age(john) <- 50
-

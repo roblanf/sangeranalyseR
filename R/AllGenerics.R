@@ -1,24 +1,12 @@
 #Constructor
 #' @export
 #' @rdname SangerReadss-class
-setGeneric("SangerReads", function(obj) standardGeneric("SangerReads"))
-
-
-setMethod("SangerReads", "abif",
-          function(obj) {
-              res <- new("SangerReads")
-          })
-
-
-# setGeneric("forward", function(x) standardGeneric("forward"))
+# setGeneric("SangerReads", function(obj1, obj2) standardGeneric("SangerReads"))
 #
-# setMethod("forward", signature("SangerReads"), function(object) {
-#     3
-# })
+#
+# setMethod("SangerReads", "SangerReads",
+#           function(obj1, obj2) {
+#               res <- new("SangerReads")
+#           })
 
-### sangerseqR package Try First
-hetab1 <- read.abif(system.file("extdata", "heterozygous.ab1", package = "sangerseqR"))
-str(hetab1, list.len = 20)
 
-homoscf <- read.scf(system.file("extdata", "homozygous.scf", package = "sangerseqR"))
-str(homoscf)
