@@ -20,3 +20,23 @@ Depends:
     stringr,
 RoxygenNote: 6.1.1
 Suggests: testthat
+Collate: 
+    'AllGenerics.R'
+    'ClassQualityReport.R'
+    'ClassSangeranalyseSeq.R'
+    'ClassSangerReads.R'
+    'LoadMessage.R'
+    'count.stop.codons.R'
+    'group.reads.R'
+    'make.consensus.seqs.R'
+    'make.readset.R'
+    'merge.reads.R'
+    'sangeranalyseR_package.R'
+    'sangeranalyseR_show_method.R'
+    'secondary.peaks.R'
+    'summarise.abi.file.R'
+    'summarise.abi.folder.R'
+    'summarise.merged.read.R'
+    'trim.mott.R'
+    'trim.to.reference.R'
+    'util.R'
