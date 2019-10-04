@@ -47,47 +47,81 @@ setMethod("initialize",
                   ### Prechecking success.
                   ### ----------------------------------------------------------
 
+                  ### ----------------------------------------------------------
+                  ### Quality Trimming (Still need to add)
+                  ### ----------------------------------------------------------
                   # calculate base score
-                  qualityBaseScore = - (10** (qualityScoreNumeric / (-10.0)))
+                  # Calculate probability error per base (through column) ==> Q = -10log10(P)
+                  qualityBaseScore = 10** (qualityScoreNumeric / (-10.0))
+                  cumsum(qualityBaseScore)
+
+                  cutoff = 0.0001
+                  qualityBaseScoreCut = cutoff - (10 ** (qualityScoreNumeric / -10.0))
+                  cumsum(qualityBaseScoreCut)
+
+                  readLen = length(qualityScoreNumeric)
+
+                  ### ----------------------------------------------------------
+                  ### Quality Report Visualization for single read
+                  ###    1. Phed score for each pair
+                  ###    2. Cumulative trimming percentage
+                  ### ----------------------------------------------------------
+                  qualityPlotDf<- data.frame(1:length(qualityScoreNumeric),
+                                             qualityScoreNumeric)
+                  colnames(qualityPlotDf) <- c("Index", "Score")
+
+                  ggplot(as.data.frame(qualityPlotDf),
+                         aes(Index, Score)) +
+                      geom_point()
 
 
-                  # score_list = cutoff - (10 ** (qual / -10.0))
-                  # # calculate cummulative score
-                  # # if cumulative value < 0, set it to 0
-                  # # the BioPython implementation always trims the first base,
-                  # # this implementation does not.
-                  # score = score_list[1]
-                  # if(score < 0){
-                  #     score = 0
-                  # }else{
-                  #     trim_start = 1
-                  #     start = TRUE
-                  # }
-                  #
-                  # cummul_score = c(score)
-                  #
-                  # for(i in 2:length(score_list)){
-                  #     score = cummul_score[length(cummul_score)] + score_list[i]
-                  #     if(score <= 0){
-                  #         cummul_score = c(cummul_score, 0)
-                  #     }else{
-                  #         cummul_score = c(cummul_score, score)
-                  #         if(start == FALSE){
-                  #             # trim_start = value when cummulative score is first > 0
-                  #             trim_start = i
-                  #             start = TRUE
-                  #         }
-                  #     }
-                  #
-                  #     # trim_finish = index of highest cummulative score,
-                  #     # marking the end of sequence segment with highest cummulative score
-                  #     trim_finish = which.max(cummul_score)
-                  #
-                  # }
-                  #
-                  # # fix an edge case, where all scores are worse than the cutoff
-                  # # in this case you wouldn't want to keep any bases at all
-                  # if(sum(cummul_score)==0){trim_finish = 0}
+                  trimmingStartPos = 3L
+                  trimmingFinishPos = length(qualityScoreNumeric) - 5
+
+                  stepRatio = 1 / readLen
+                  trimmingStartPos / readLen
+                  trimmingFinishPos / readLen
+
+                  trimmedPer <- c()
+                  remainedPer <- c()
+
+                  for (i in 1:trimmingStartPos) {
+                      if (i != trimmingStartPos) {
+                          print("Start Trimming")
+                          trimmedPer <- c(trimmedPer, stepRatio)
+                          remainedPer <- c(remainedPer, 0)
+                      }
+                  }
+
+                  for (i in trimmingStartPos:trimmingFinishPos) {
+                      trimmedPer <- c(trimmedPer, 0)
+                      remainedPer <- c(remainedPer, stepRatio)
+                  }
+
+
+                  for (i in trimmingFinishPos:readLen) {
+                      if (i != trimmingFinishPos) {
+                          print("End Trimming")
+                          trimmedPer <- c(trimmedPer, stepRatio)
+                          remainedPer <- c(remainedPer, 0)
+                      }
+                  }
+
+                  trimmedPer <- cumsum(trimmedPer)
+                  remainedPer <- cumsum(remainedPer)
+
+                  trimmedPerPlot <- data.frame(1:length(trimmedPer),
+                                               trimmedPer,
+                                               remainedPer)
+                  colnames(trimmedPerPlot) <- c("Index",
+                                                "TrimmedPercent",
+                                                "RemainingPercent")
+
+                  ggplot(as.data.frame(trimmedPerPlot),
+                         aes(Index, Percent)) +
+                      geom_line() +
+                      geom_point()
+
 
 
               } else {
