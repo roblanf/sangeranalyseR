@@ -26,6 +26,7 @@ Collate:
     'ClassSangeranalyseSeq.R'
     'ClassSangerReads.R'
     'LoadMessage.R'
+    'MethodsQualityReport.R'
     'count.stop.codons.R'
     'group.reads.R'
     'make.consensus.seqs.R'

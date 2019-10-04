@@ -61,68 +61,78 @@ setMethod("initialize",
 
                   readLen = length(qualityScoreNumeric)
 
+
+
                   ### ----------------------------------------------------------
                   ### Quality Report Visualization for single read
                   ###    1. Phed score for each pair
                   ###    2. Cumulative trimming percentage
                   ### ----------------------------------------------------------
-                  qualityPlotDf<- data.frame(1:length(qualityScoreNumeric),
-                                             qualityScoreNumeric)
-                  colnames(qualityPlotDf) <- c("Index", "Score")
-
-                  ggplot(as.data.frame(qualityPlotDf),
-                         aes(Index, Score)) +
-                      geom_point()
-
-
-                  trimmingStartPos = 3L
-                  trimmingFinishPos = length(qualityScoreNumeric) - 5
-
-                  stepRatio = 1 / readLen
-                  trimmingStartPos / readLen
-                  trimmingFinishPos / readLen
-
-                  trimmedPer <- c()
-                  remainedPer <- c()
-
-                  for (i in 1:trimmingStartPos) {
-                      if (i != trimmingStartPos) {
-                          print("Start Trimming")
-                          trimmedPer <- c(trimmedPer, stepRatio)
-                          remainedPer <- c(remainedPer, 0)
-                      }
-                  }
-
-                  for (i in trimmingStartPos:trimmingFinishPos) {
-                      trimmedPer <- c(trimmedPer, 0)
-                      remainedPer <- c(remainedPer, stepRatio)
-                  }
-
-
-                  for (i in trimmingFinishPos:readLen) {
-                      if (i != trimmingFinishPos) {
-                          print("End Trimming")
-                          trimmedPer <- c(trimmedPer, stepRatio)
-                          remainedPer <- c(remainedPer, 0)
-                      }
-                  }
-
-                  trimmedPer <- cumsum(trimmedPer)
-                  remainedPer <- cumsum(remainedPer)
-
-                  trimmedPerPlot <- data.frame(1:length(trimmedPer),
-                                               trimmedPer,
-                                               remainedPer)
-                  colnames(trimmedPerPlot) <- c("Index",
-                                                "TrimmedPercent",
-                                                "RemainingPercent")
-
-                  ggplot(as.data.frame(trimmedPerPlot),
-                         aes(Index, Percent)) +
-                      geom_line() +
-                      geom_point()
-
-
+                  # qualityPlotDf<- data.frame(1:length(qualityScoreNumeric),
+                  #                            qualityScoreNumeric)
+                  # colnames(qualityPlotDf) <- c("Index", "Score")
+                  #
+                  # ggplot(as.data.frame(qualityPlotDf),
+                  #        aes(Index, Score)) +
+                  #     geom_point()
+                  #
+                  #
+                  trimmingStartPos = 50L
+                  trimmingFinishPos = length(qualityScoreNumeric) - 20L
+                  #
+                  # stepRatio = 1 / readLen
+                  # trimmingStartPos / readLen
+                  # trimmingFinishPos / readLen
+                  #
+                  # trimmedPer <- c()
+                  # remainingPer <- c()
+                  #
+                  # for (i in 1:trimmingStartPos) {
+                  #     if (i != trimmingStartPos) {
+                  #         print("Start Trimming")
+                  #         trimmedPer <- c(trimmedPer, stepRatio)
+                  #     }
+                  # }
+                  #
+                  # for (i in trimmingStartPos:trimmingFinishPos) {
+                  #     trimmedPer <- c(trimmedPer, 0)
+                  # }
+                  #
+                  #
+                  # for (i in trimmingFinishPos:readLen) {
+                  #     if (i != trimmingFinishPos) {
+                  #         print("End Trimming")
+                  #         trimmedPer <- c(trimmedPer, stepRatio)
+                  #     }
+                  # }
+                  #
+                  # trimmedPer <- cumsum(trimmedPer)
+                  # remainingPer = 1 - trimmedPer
+                  #
+                  # PerData <- data.frame(1:length(trimmedPer),
+                  #                       trimmedPer, remainingPer)
+                  #
+                  # colnames(PerData) <- c("Base",
+                  #                        "Trimmed Percent",
+                  #                        "Remaining Percent")
+                  #
+                  # PerDataPlot <- melt(PerData, id.vars = c("Base"))
+                  #
+                  # ggplot(as.data.frame(PerDataPlot),
+                  #        aes(x=Base, y=value, colour=variable)) +
+                  #     geom_line() +
+                  #     geom_point() +
+                  #     theme_bw() +
+                  #     xlab("Base Index") + ylab("Percentage") +
+                  #     ggtitle("Quality Trimming Percentage Plot") +
+                  #     theme(axis.text.x = element_text(angle = 90, hjust = 1),
+                  #           plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+                  #           axis.title.x = element_text(size = 10),
+                  #           axis.title.y = element_text(size = 10),
+                  #           legend.position="top",
+                  #           legend.text = element_text(size = 6),
+                  #           legend.title = element_blank())
+                  #
 
               } else {
                   stop(errors)
@@ -130,6 +140,78 @@ setMethod("initialize",
               callNextMethod(.Object, ...,
                              qualityScoreNumeric = qualityScoreNumeric,
                              qualityBaseScore    = qualityBaseScore,
-                             trimmingStartPos    = 0L,
-                             trimmingFinishPos   = 0L)
+                             trimmingStartPos    = trimmingStartPos,
+                             trimmingFinishPos   = trimmingFinishPos)
           })
+
+
+### ============================================================================
+###
+### ============================================================================
+#' @export
+setGeneric("trimmingRatioPlot", function(object) {
+    standardGeneric("trimmingRatioPlot")
+})
+
+
+### ============================================================================
+###
+### ============================================================================
+setMethod("trimmingRatioPlot",  "qualityReport", function(object){
+    trimmingStartPos = object@trimmingStartPos
+    trimmingFinishPos = object@trimmingFinishPos
+    readLen = length(object@qualityScoreNumeric)
+
+    stepRatio = 1 / readLen
+    trimmingStartPos / readLen
+    trimmingFinishPos / readLen
+
+    trimmedPer <- c()
+    remainingPer <- c()
+
+    for (i in 1:trimmingStartPos) {
+        if (i != trimmingStartPos) {
+            print("Start Trimming")
+            trimmedPer <- c(trimmedPer, stepRatio)
+        }
+    }
+
+    for (i in trimmingStartPos:trimmingFinishPos) {
+        trimmedPer <- c(trimmedPer, 0)
+    }
+
+
+    for (i in trimmingFinishPos:readLen) {
+        if (i != trimmingFinishPos) {
+            print("End Trimming")
+            trimmedPer <- c(trimmedPer, stepRatio)
+        }
+    }
+
+    trimmedPer <- cumsum(trimmedPer)
+    remainingPer = 1 - trimmedPer
+
+    PerData <- data.frame(1:length(trimmedPer),
+                          trimmedPer, remainingPer)
+
+    colnames(PerData) <- c("Base",
+                           "Trimmed Percent",
+                           "Remaining Percent")
+
+    PerDataPlot <- melt(PerData, id.vars = c("Base"))
+
+    ggplot(as.data.frame(PerDataPlot),
+           aes(x=Base, y=value, colour=variable)) +
+        geom_line() +
+        geom_point() +
+        theme_bw() +
+        xlab("Base Index") + ylab("Percentage") +
+        ggtitle("Quality Trimming Percentage Plot") +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1),
+              plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+              axis.title.x = element_text(size = 10),
+              axis.title.y = element_text(size = 10),
+              legend.position="top",
+              legend.text = element_text(size = 6),
+              legend.title = element_blank())
+})
