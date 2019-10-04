@@ -19,7 +19,9 @@ setClass("qualityReport",
              qualityScoreNumeric     = "numeric",
              qualityBaseScore        = "numeric",
              trimmingStartPos        = "integer",
-             trimmingFinishPos       = "integer"
+             trimmingFinishPos       = "integer",
+             cutoffQualityScore      = "integer",
+             slidingWindowSize       = "integer"
          ),
 )
 
@@ -32,7 +34,9 @@ setMethod("initialize",
                    qualityScoreNumeric = qualityScoreNumeric,
                    qualityBaseScore    = 0,
                    trimmingStartPos    = 0L,
-                   trimmingFinishPos   = 0L) {
+                   trimmingFinishPos   = 0L,
+                   cutoffQualityScore  = 20L,
+                   slidingWindowSize   = 5L) {
               ### --------------------------------------------------------------
               ### Input parameter prechecking
               ### --------------------------------------------------------------
@@ -48,20 +52,25 @@ setMethod("initialize",
                   ### ----------------------------------------------------------
 
                   ### ----------------------------------------------------------
-                  ### Quality Trimming (Still need to add)
+                  ### Quality Trimming (Using slideing window VERSION 1)
                   ### ----------------------------------------------------------
                   # calculate base score
                   # Calculate probability error per base (through column) ==> Q = -10log10(P)
-                  qualityBaseScore = 10** (qualityScoreNumeric / (-10.0))
-                  cumsum(qualityBaseScore)
+                  readLen <- length(qualityScoreNumeric)
 
-                  cutoff = 0.0001
-                  qualityBaseScoreCut = cutoff - (10 ** (qualityScoreNumeric / -10.0))
-                  cumsum(qualityBaseScoreCut)
+                  qualityPbCutoff <- 10** (cutoffQualityScore / (-10.0))
+                  qualityBaseScore <- 10** (qualityScoreNumeric / (-10.0))
 
-                  readLen = length(qualityScoreNumeric)
-
-
+                  remainingIndex <- c()
+                  for (i in 1:(readLen-slidingWindowSize+1)) {
+                      meanSLidingWindow <- mean(qualityBaseScore[i:(i+slidingWindowSize-1)])
+                      if (meanSLidingWindow < qualityPbCutoff) {
+                          remainingIndex <- c(remainingIndex, i)
+                          # or ==> i + floor(slidingWindowSize/3)
+                      }
+                  }
+                  trimmingStartPos = remainingIndex[1]
+                  trimmingFinishPos = remainingIndex[length(remainingIndex)]
 
                   ### ----------------------------------------------------------
                   ### Quality Report Visualization for single read
@@ -77,8 +86,8 @@ setMethod("initialize",
                   #     geom_point()
                   #
                   #
-                  trimmingStartPos = 50L
-                  trimmingFinishPos = length(qualityScoreNumeric) - 20L
+                  # trimmingStartPos = 50L
+                  # trimmingFinishPos = length(qualityScoreNumeric) - 20L
                   #
                   # stepRatio = 1 / readLen
                   # trimmingStartPos / readLen
@@ -141,7 +150,9 @@ setMethod("initialize",
                              qualityScoreNumeric = qualityScoreNumeric,
                              qualityBaseScore    = qualityBaseScore,
                              trimmingStartPos    = trimmingStartPos,
-                             trimmingFinishPos   = trimmingFinishPos)
+                             trimmingFinishPos   = trimmingFinishPos,
+                             cutoffQualityScore  = cutoffQualityScore,
+                             slidingWindowSize   = slidingWindowSize)
           })
 
 
@@ -152,6 +163,15 @@ setMethod("initialize",
 setGeneric("trimmingRatioPlot", function(object) {
     standardGeneric("trimmingRatioPlot")
 })
+
+### ============================================================================
+###
+### ============================================================================
+#' @export
+setGeneric("qualityBasePlot", function(object) {
+    standardGeneric("qualityBasePlot")
+})
+
 
 
 ### ============================================================================
@@ -206,6 +226,38 @@ setMethod("trimmingRatioPlot",  "qualityReport", function(object){
         geom_point() +
         theme_bw() +
         xlab("Base Index") + ylab("Percentage") +
+        ggtitle("Quality Trimming Percentage Plot") +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1),
+              plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+              axis.title.x = element_text(size = 10),
+              axis.title.y = element_text(size = 10),
+              legend.position="top",
+              legend.text = element_text(size = 6),
+              legend.title = element_blank())
+})
+
+
+
+### ============================================================================
+###
+### ============================================================================
+setMethod("qualityBasePlot",  "qualityReport", function(object){
+    trimmingStartPos = object@trimmingStartPos
+    trimmingFinishPos = object@trimmingFinishPos
+    readLen = length(object@qualityScoreNumeric)
+
+    qualityPlotDf<- data.frame(1:length(object@qualityScoreNumeric),
+                               object@qualityScoreNumeric)
+    colnames(qualityPlotDf) <- c("Index", "Score")
+
+    ggplot(as.data.frame(qualityPlotDf),
+           aes(Index, Score)) +
+        geom_point() + theme_bw() +
+        xlab("Base Index") + ylab("Phred Quality Score") +
+        geom_vline(xintercept = trimmingStartPos,
+                   color = "red", size=1) +
+        geom_vline(xintercept = trimmingFinishPos,
+                   color = "red", size=1) +
         ggtitle("Quality Trimming Percentage Plot") +
         theme(axis.text.x = element_text(angle = 90, hjust = 1),
               plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
