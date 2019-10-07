@@ -33,7 +33,9 @@ A_chloroticaRvReadFN <- file.path(inputFilesPath,
                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1")
 A_chloroticaRead <- new("SangerMergeReads",
                         forwardReadFileName = A_chloroticaFdReadFN,
-                        reverseReadFileName = A_chloroticaRvReadFN)
+                        reverseReadFileName = A_chloroticaRvReadFN,
+                        cutoffQualityScore  = 50L,
+                        slidingWindowSize   = 8L)
 }
 \author{
 Kuan-Hao Chao

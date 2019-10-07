@@ -27,6 +27,8 @@ Collate:
     'ClassSangerSingleRead.R'
     'ClassSangerMergeReads.R'
     'LoadMessage.R'
+    'MethodSangerMergeReads.R'
+    'MethodSangerSingleRead.R'
     'MethodsQualityReport.R'
     'count.stop.codons.R'
     'group.reads.R'

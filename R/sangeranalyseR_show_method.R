@@ -6,9 +6,10 @@ setMethod(f='show', signature='SangerMergeReads', function(object){
     # )
 
     cat(is(object)[[1]], "\n",
-        "       forwardReadFileName: ", object@forwardReadFileName, "\n",
-        "       reverseReadFileName:  ", object@reverseReadFileName, "\n",
+        "       forwardReadFileName: ",
+        object@forwardReadSangerseq@readFileName, "\n",
+        "       reverseReadFileName:  ",
+        object@reverseReadSangerseq@readFileName, "\n",
         sep = ""
     )
-
 })
