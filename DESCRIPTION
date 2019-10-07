@@ -18,13 +18,14 @@ Depends:
     sangerseqR,
     stringi,
     stringr,
+    ggplot2
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 
     'AllGenerics.R'
     'ClassQualityReport.R'
-    'ClassSangeranalyseSeq.R'
-    'ClassSangerReads.R'
+    'ClassSangerSingleRead.R'
+    'ClassSangerMergeReads.R'
     'LoadMessage.R'
     'MethodsQualityReport.R'
     'count.stop.codons.R'

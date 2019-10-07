@@ -1,4 +1,4 @@
-#' @title SangerReads
+#' @title SangerMergeReads
 #'
 #' @description  An S4 class for storing reads of sanger sequencing.
 #'
@@ -9,13 +9,13 @@
 #' @slot forwardReadSangerseq .
 #' @slot reverseReadSangerseq .
 #'
-#' @name SangerReads-class
+#' @name SangerMergeReads-class
 #'
-#' @rdname SangerReads-class
+#' @rdname SangerMergeReads-class
 #'
-#' @exportClass SangerReads
+#' @exportClass SangerMergeReads
 #' @author Kuan-Hao Chao
-#' @include ClassQualityReport.R ClassSangeranalyseSeq.R
+#' @include ClassQualityReport.R ClassSangerSingleRead.R
 #' @examples
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFdReadFN <- file.path(inputFilesPath,
@@ -24,20 +24,18 @@
 #' A_chloroticaRvReadFN <- file.path(inputFilesPath,
 #'                                   "Allolobophora_chlorotica",
 #'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1")
-#' A_chloroticaRead <- new("SangerReads",
+#' A_chloroticaRead <- new("SangerMergeReads",
 #'                         forwardReadFileName = A_chloroticaFdReadFN,
 #'                         reverseReadFileName = A_chloroticaRvReadFN)
-setClass("SangerReads",
+setClass("SangerMergeReads",
          ### -------------------------------------------------------------------
          ### Input type of each variable
          ### -------------------------------------------------------------------
          representation(
              forwardReadFileName     = "character",
              reverseReadFileName     = "character",
-             forwardReadRawAbif      = "abif",
-             reverseReadRawAbif      = "abif",
-             forwardReadSangerseq    = "SangeranalyseSeq",
-             reverseReadSangerseq    = "SangeranalyseSeq"
+             forwardReadSangerseq    = "sangerSingleRead",
+             reverseReadSangerseq    = "sangerSingleRead"
          ),
 )
 
@@ -45,14 +43,12 @@ setClass("SangerReads",
 ### Overwrite initialize for SangerReads (New constructor)
 ### ============================================================================
 setMethod("initialize",
-          "SangerReads",
+          "SangerMergeReads",
           function(.Object, ...,
                    forwardReadFileName = forwardReadFileName,
                    reverseReadFileName = reverseReadFileName,
-                   forwardReadRawAbif=new("abif"),
-                   reverseReadRawAbif=new("abif"),
-                   forwardReadSangerseq=new("sangerseq"),
-                   reverseReadSangerseq=new("sangerseq")) {
+                   forwardReadSangerseq=new("sangerSingleRead"),
+                   reverseReadSangerseq=new("sangerSingleRead")) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
@@ -76,10 +72,11 @@ setMethod("initialize",
         forwardReadRawAbif = read.abif(forwardReadFileName)
         message("    Creating forwardReadSangerseq ...\n")
         forwardReadSangerseq = sangerseq(forwardReadRawAbif)
-        forwardReadSangerseq <- as(forwardReadSangerseq,"SangeranalyseSeq")
+        forwardReadSangerseq <- as(forwardReadSangerseq,"sangerSingleRead")
         forwardQualityRep <- new("qualityReport",
                                  qualityScoreNumeric =
                                      forwardReadRawAbif@data$PCON.2)
+        forwardReadSangerseq@rawData <- forwardReadRawAbif
         forwardReadSangerseq@qualityReport <- forwardQualityRep
 
 
@@ -88,20 +85,19 @@ setMethod("initialize",
         reverseReadRawAbif = read.abif(reverseReadFileName)
         message("    Creating reverseReadSangerseq ...\n")
         reverseReadSangerseq = sangerseq(reverseReadRawAbif)
-        reverseReadSangerseq <- as(reverseReadSangerseq,"SangeranalyseSeq")
+        reverseReadSangerseq <- as(reverseReadSangerseq,"sangerSingleRead")
         reverseQualityRep <- new("qualityReport",
                                  qualityScoreNumeric =
                                      reverseReadRawAbif@data$PCON.2)
+        reverseReadSangerseq@rawData <- reverseReadRawAbif
         reverseReadSangerseq@qualityReport <- reverseQualityRep
 
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
-                   forwardReadFileName = forwardReadFileName,
-                   reverseReadFileName = reverseReadFileName,
-                   forwardReadRawAbif=forwardReadRawAbif,
-                   reverseReadRawAbif=reverseReadRawAbif,
-                   forwardReadSangerseq=forwardReadSangerseq,
-                   reverseReadSangerseq=reverseReadSangerseq)
+                   forwardReadFileName  = forwardReadFileName,
+                   reverseReadFileName  = reverseReadFileName,
+                   forwardReadSangerseq = forwardReadSangerseq,
+                   reverseReadSangerseq = reverseReadSangerseq)
 })
