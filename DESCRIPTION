@@ -18,7 +18,8 @@ Depends:
     sangerseqR,
     stringi,
     stringr,
-    ggplot2
+    ggplot2,
+    gridExtra
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 
@@ -26,10 +27,12 @@ Collate:
     'ClassQualityReport.R'
     'ClassSangerSingleRead.R'
     'ClassSangerMergeReads.R'
+    'Constructors.R'
     'LoadMessage.R'
     'MethodSangerMergeReads.R'
     'MethodSangerSingleRead.R'
     'MethodsQualityReport.R'
+    'UtilitiesFunc.R'
     'count.stop.codons.R'
     'group.reads.R'
     'make.consensus.seqs.R'

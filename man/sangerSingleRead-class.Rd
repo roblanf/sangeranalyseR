@@ -11,9 +11,20 @@ An S4 class extending sangerseq S4 class
 \section{Slots}{
 
 \describe{
-\item{\code{qualityReport}}{.}
+\item{\code{readFeature}}{.}
 }}
 
+\examples{
+inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
+A_chloroticaFdReadFN <- file.path(inputFilesPath,
+                                  "Allolobophora_chlorotica",
+                                  "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
+A_chloroticaRead <- new("sangerSingleRead",
+                        readFeature         = "ForwardRead",
+                        readFileName        = A_chloroticaFdReadFN,
+                        cutoffQualityScore  = 60L,
+                        slidingWindowSize   = 8L)
+}
 \author{
 Kuan-Hao Chao
 }

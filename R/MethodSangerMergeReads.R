@@ -40,3 +40,49 @@ setMethod("qualityBasePlot",  "SangerMergeReads", function(object){
 
     grid.arrange(fdPlotting, rvPlotting, ncol=2)
 })
+
+
+## ============================================================================
+##
+## ============================================================================
+setMethod("updateQualityParam",  "SangerMergeReads",
+          function(object,
+                   cutoffQualityScore = 20,
+                   slidingWindowSize  = 5){
+    ### ------------------------------------------------------------------------
+    ### Updating forward read quality parameters
+    ### ------------------------------------------------------------------------
+    qualityBaseScoreFD <-
+        object@forwardReadSangerseq@qualityReport@qualityBaseScore
+    trimmingPosFD <- inside_calculate_trimming(qualityBaseScoreFD,
+                                               cutoffQualityScore,
+                                               slidingWindowSize)
+
+    object@forwardReadSangerseq@qualityReport@cutoffQualityScore <-
+        cutoffQualityScore
+    object@forwardReadSangerseq@qualityReport@slidingWindowSize <-
+        slidingWindowSize
+    object@forwardReadSangerseq@qualityReport@trimmingStartPos <-
+        trimmingPosFD[1]
+    object@forwardReadSangerseq@qualityReport@trimmingFinishPos <-
+        trimmingPosFD[2]
+
+    ### ------------------------------------------------------------------------
+    ### Updating reverse read quality parameters
+    ### ------------------------------------------------------------------------
+    qualityBaseScoreRV <-
+        object@reverseReadSangerseq@qualityReport@qualityBaseScore
+    trimmingPosRV <- inside_calculate_trimming(qualityBaseScoreRV,
+                                               cutoffQualityScore,
+                                               slidingWindowSize)
+    trimmingStartPosRV <- trimmingPosRV[1]
+    trimmingFinishPosRV <- trimmingPosRV[2]
+
+    object@reverseReadSangerseq@qualityReport@cutoffQualityScore <- cutoffQualityScore
+    object@reverseReadSangerseq@qualityReport@slidingWindowSize <- slidingWindowSize
+    object@reverseReadSangerseq@qualityReport@trimmingStartPos <-
+        trimmingPosRV[1]
+    object@reverseReadSangerseq@qualityReport@trimmingFinishPos <-
+        trimmingPosRV[2]
+    return(object)
+})

@@ -1,5 +1,5 @@
 ### ============================================================================
-###
+### Defined in QualityReport
 ### ============================================================================
 #' @export
 setGeneric("preTrimmingRatioPlot", function(object) {
@@ -7,7 +7,7 @@ setGeneric("preTrimmingRatioPlot", function(object) {
 })
 
 ### ============================================================================
-###
+### Defined in QualityReport
 ### ============================================================================
 #' @export
 setGeneric("preQualityBasePlot", function(object) {
@@ -16,7 +16,7 @@ setGeneric("preQualityBasePlot", function(object) {
 
 
 ### ============================================================================
-###
+### Defined in QualityReport, sangerSingleRead, sangerMergeReads
 ### ============================================================================
 #' @export
 setGeneric("trimmingRatioPlot", function(object) {
@@ -24,10 +24,21 @@ setGeneric("trimmingRatioPlot", function(object) {
 })
 
 ### ============================================================================
-###
+### Defined in QualityReport, sangerSingleRead, sangerMergeReads
 ### ============================================================================
 #' @export
 setGeneric("qualityBasePlot", function(object) {
     standardGeneric("qualityBasePlot")
 })
+
+### ============================================================================
+### Defined in QualityReport, sangerSingleRead, sangerMergeReads
+### ============================================================================
+#' @export
+setGeneric("updateQualityParam", function(object,
+                                          cutoffQualityScore = 20L,
+                                          slidingWindowSize  = 5L) {
+    standardGeneric("updateQualityParam")
+})
+
 

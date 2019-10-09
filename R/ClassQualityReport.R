@@ -17,7 +17,7 @@ setClass("qualityReport",
          ### -------------------------------------------------------------------
          representation(
              readFeature             = "character",
-             qualityScoreNumeric     = "numeric",
+             qualityPhredScores     = "numeric",
              qualityBaseScore        = "numeric",
              trimmingStartPos        = "integer",
              trimmingFinishPos       = "integer",
@@ -33,7 +33,7 @@ setMethod("initialize",
           "qualityReport",
           function(.Object, ...,
                    readFeature         = character(0),
-                   qualityScoreNumeric = qualityScoreNumeric,
+                   qualityPhredScores = qualityPhredScores,
                    qualityBaseScore    = 0,
                    trimmingStartPos    = 0L,
                    trimmingFinishPos   = 0L,
@@ -59,29 +59,32 @@ setMethod("initialize",
                   # calculate base score
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
-                  readLen <- length(qualityScoreNumeric)
+                  qualityBaseScore <- 10** (qualityPhredScores / (-10.0))
 
-                  qualityPbCutoff <- 10** (cutoffQualityScore / (-10.0))
-                  qualityBaseScore <- 10** (qualityScoreNumeric / (-10.0))
-
-                  remainingIndex <- c()
-                  for (i in 1:(readLen-slidingWindowSize+1)) {
-                      meanSLidingWindow <-
-                          mean(qualityBaseScore[i:(i+slidingWindowSize-1)])
-                      if (meanSLidingWindow < qualityPbCutoff) {
-                          remainingIndex <- c(remainingIndex, i)
-                          # or ==> i + floor(slidingWindowSize/3)
-                      }
-                  }
-                  trimmingStartPos = remainingIndex[1]
-                  trimmingFinishPos = remainingIndex[length(remainingIndex)]
+                  trimmingPos <- inside_calculate_trimming(qualityBaseScore,
+                                                           cutoffQualityScore,
+                                                           slidingWindowSize)
+                  trimmingStartPos <- trimmingPos[1]
+                  trimmingFinishPos <- trimmingPos[2]
+                  # qualityPbCutoff <- 10** (cutoffQualityScore / (-10.0))
+                  # remainingIndex <- c()
+                  # for (i in 1:(readLen-slidingWindowSize+1)) {
+                  #     meanSLidingWindow <-
+                  #         mean(qualityBaseScore[i:(i+slidingWindowSize-1)])
+                  #     if (meanSLidingWindow < qualityPbCutoff) {
+                  #         remainingIndex <- c(remainingIndex, i)
+                  #         # or ==> i + floor(slidingWindowSize/3)
+                  #     }
+                  # }
+                  # trimmingStartPos = remainingIndex[1]
+                  # trimmingFinishPos = remainingIndex[length(remainingIndex)]
 
               } else {
                   stop(errors)
               }
               callNextMethod(.Object, ...,
                              readFeature         = readFeature,
-                             qualityScoreNumeric = qualityScoreNumeric,
+                             qualityPhredScores = qualityPhredScores,
                              qualityBaseScore    = qualityBaseScore,
                              trimmingStartPos    = trimmingStartPos,
                              trimmingFinishPos   = trimmingFinishPos,

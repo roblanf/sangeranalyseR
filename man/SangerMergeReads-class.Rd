@@ -10,14 +10,6 @@ An S4 class for storing reads of sanger sequencing.
 \section{Slots}{
 
 \describe{
-\item{\code{forwardReadFileName}}{.}
-
-\item{\code{reverseReadFileName}}{.}
-
-\item{\code{forwardReadRawAbif}}{.}
-
-\item{\code{reverseReadRawAbif}}{.}
-
 \item{\code{forwardReadSangerseq}}{.}
 
 \item{\code{reverseReadSangerseq}}{.}
@@ -34,7 +26,7 @@ A_chloroticaRvReadFN <- file.path(inputFilesPath,
 A_chloroticaRead <- new("SangerMergeReads",
                         forwardReadFileName = A_chloroticaFdReadFN,
                         reverseReadFileName = A_chloroticaRvReadFN,
-                        cutoffQualityScore  = 50L,
+                        cutoffQualityScore  = 20L,
                         slidingWindowSize   = 8L)
 }
 \author{

@@ -31,9 +31,7 @@ setClass(
     slots=c(readFeature         = "character",
             readFileName        = "character",
             abifRawData         = "abif",
-            qualityReport       = "qualityReport",
-            cutoffQualityScore  = "integer",
-            slidingWindowSize   = "integer")
+            qualityReport       = "qualityReport")
 ) -> sangerSingleRead
 
 
@@ -90,7 +88,7 @@ setMethod("initialize",
                   abifRawData         = readRawAbif
                   qualityReport <- new("qualityReport",
                                        readFeature = readFeature,
-                                       qualityScoreNumeric =
+                                       qualityPhredScores =
                                            readRawAbif@data$PCON.2,
                                        cutoffQualityScore = cutoffQualityScore,
                                        slidingWindowSize = slidingWindowSize)
@@ -110,7 +108,5 @@ setMethod("initialize",
                              peakPosMatrix       = peakPosMatrix,
                              peakAmpMatrix       = peakAmpMatrix,
                              abifRawData         = abifRawData,
-                             qualityReport       = qualityReport,
-                             cutoffQualityScore  = cutoffQualityScore,
-                             slidingWindowSize   = slidingWindowSize)
+                             qualityReport       = qualityReport)
           })

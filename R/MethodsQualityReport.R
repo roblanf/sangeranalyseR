@@ -5,7 +5,7 @@ setMethod("preTrimmingRatioPlot",  "qualityReport", function(object){
     readFeature <- object@readFeature
     trimmingStartPos = object@trimmingStartPos
     trimmingFinishPos = object@trimmingFinishPos
-    readLen = length(object@qualityScoreNumeric)
+    readLen = length(object@qualityPhredScores)
 
     stepRatio = 1 / readLen
     trimmingStartPos / readLen
@@ -68,10 +68,10 @@ setMethod("preQualityBasePlot",  "qualityReport", function(object){
     readFeature <- object@readFeature
     trimmingStartPos = object@trimmingStartPos
     trimmingFinishPos = object@trimmingFinishPos
-    readLen = length(object@qualityScoreNumeric)
+    readLen = length(object@qualityPhredScores)
 
-    qualityPlotDf<- data.frame(1:length(object@qualityScoreNumeric),
-                               object@qualityScoreNumeric)
+    qualityPlotDf<- data.frame(1:length(object@qualityPhredScores),
+                               object@qualityPhredScores)
     colnames(qualityPlotDf) <- c("Index", "Score")
 
     p <- ggplot(as.data.frame(qualityPlotDf),

@@ -31,9 +31,7 @@ setClass("SangerMergeReads",
          ### -------------------------------------------------------------------
          representation(
              forwardReadSangerseq    = "sangerSingleRead",
-             reverseReadSangerseq    = "sangerSingleRead",
-             cutoffQualityScore      = "integer",
-             slidingWindowSize       = "integer"
+             reverseReadSangerseq    = "sangerSingleRead"
          ),
 )
 
@@ -84,7 +82,5 @@ setMethod("initialize",
     }
     callNextMethod(.Object, ...,
                    forwardReadSangerseq = forwardReadSangerseq,
-                   reverseReadSangerseq = reverseReadSangerseq,
-                   cutoffQualityScore   = cutoffQualityScore,
-                   slidingWindowSize    = slidingWindowSize)
+                   reverseReadSangerseq = reverseReadSangerseq)
 })
