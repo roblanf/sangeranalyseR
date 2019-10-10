@@ -26,7 +26,7 @@ A_chloroticaRvReadFN <- file.path(inputFilesPath,
 A_chloroticaRead <- new("SangerMergeReads",
                         forwardReadFileName = A_chloroticaFdReadFN,
                         reverseReadFileName = A_chloroticaRvReadFN,
-                        cutoffQualityScore  = 20L,
+                        cutoffQualityScore  = 50L,
                         slidingWindowSize   = 8L)
 }
 \author{
