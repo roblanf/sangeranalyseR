@@ -16,7 +16,7 @@ setGeneric("preQualityBasePlot", function(object) {
 
 
 ### ============================================================================
-### Defined in QualityReport, sangerSingleRead, sangerMergeReads
+### Defined in QualityReport, SangerSingleRead, SangerMergeReads
 ### ============================================================================
 #' @export
 setGeneric("trimmingRatioPlot", function(object) {
@@ -24,7 +24,7 @@ setGeneric("trimmingRatioPlot", function(object) {
 })
 
 ### ============================================================================
-### Defined in QualityReport, sangerSingleRead, sangerMergeReads
+### Defined in QualityReport, SangerSingleRead, SangerMergeReads
 ### ============================================================================
 #' @export
 setGeneric("qualityBasePlot", function(object) {
@@ -32,7 +32,7 @@ setGeneric("qualityBasePlot", function(object) {
 })
 
 ### ============================================================================
-### Defined in QualityReport, sangerSingleRead, sangerMergeReads
+### Defined in QualityReport, SangerSingleRead, SangerMergeReads
 ### ============================================================================
 #' @export
 setGeneric("updateQualityParam", function(object,

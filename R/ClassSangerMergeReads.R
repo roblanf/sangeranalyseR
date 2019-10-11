@@ -1,9 +1,12 @@
 #' @title SangerMergeReads
 #'
-#' @description  An S4 class for storing reads of sanger sequencing.
+#' @description  An S4 class for storing forward and reverse reads of
+#'   sanger sequencing.
 #'
 #' @slot forwardReadSangerseq .
 #' @slot reverseReadSangerseq .
+#' @slot cutoffQualityScore .
+#' @slot slidingWindowSize .
 #'
 #' @name SangerMergeReads-class
 #'
@@ -20,18 +23,18 @@
 #' A_chloroticaRvReadFN <- file.path(inputFilesPath,
 #'                                   "Allolobophora_chlorotica",
 #'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1")
-#' A_chloroticaRead <- new("SangerMergeReads",
-#'                         forwardReadFileName = A_chloroticaFdReadFN,
-#'                         reverseReadFileName = A_chloroticaRvReadFN,
-#'                         cutoffQualityScore  = 50L,
-#'                         slidingWindowSize   = 8L)
+#' A_chloroticMergeReads <- new("SangerMergeReads",
+#'                              forwardReadFileName = A_chloroticaFdReadFN,
+#'                              reverseReadFileName = A_chloroticaRvReadFN,
+#'                              cutoffQualityScore  = 50L,
+#'                              slidingWindowSize   = 8L)
 setClass("SangerMergeReads",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerMergeReads'
          ### -------------------------------------------------------------------
          representation(
-             forwardReadSangerseq    = "sangerSingleRead",
-             reverseReadSangerseq    = "sangerSingleRead"
+             forwardReadSangerseq    = "SangerSingleRead",
+             reverseReadSangerseq    = "SangerSingleRead"
          ),
 )
 
@@ -43,8 +46,8 @@ setMethod("initialize",
           function(.Object, ...,
                    forwardReadFileName  = forwardReadFileName,
                    reverseReadFileName  = reverseReadFileName,
-                   forwardReadSangerseq = new("sangerSingleRead"),
-                   reverseReadSangerseq = new("sangerSingleRead"),
+                   forwardReadSangerseq = new("SangerSingleRead"),
+                   reverseReadSangerseq = new("SangerSingleRead"),
                    cutoffQualityScore   = 20L,
                    slidingWindowSize    = 5L) {
     ### ------------------------------------------------------------------------
@@ -67,12 +70,12 @@ setMethod("initialize",
     ### Prechecking success. Start to create forward and reverse reads.
     ### ------------------------------------------------------------------------
     if (length(errors) == 0) {
-        forwardReadSangerseq = new("sangerSingleRead",
+        forwardReadSangerseq = new("SangerSingleRead",
                                    readFeature         = "ForwardRead",
                                    readFileName        = forwardReadFileName,
                                    cutoffQualityScore  = cutoffQualityScore,
                                    slidingWindowSize   = slidingWindowSize)
-        reverseReadSangerseq = new("sangerSingleRead",
+        reverseReadSangerseq = new("SangerSingleRead",
                                    readFeature         = "ReverseRead",
                                    readFileName        = reverseReadFileName,
                                    cutoffQualityScore  = cutoffQualityScore,

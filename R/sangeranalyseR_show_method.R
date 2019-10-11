@@ -1,8 +1,8 @@
 # the show method:
 setMethod(f='show', signature='SangerMergeReads', function(object){
     # cat("SangerMergeReads S4 object\n",
-    #     "             forwardReadFileName :", object@forwardReadFileName, "\n",
-    #     "             reverseReadFileName :", object@reverseReadFileName, "\n",
+    #     "          forwardReadFileName :", object@forwardReadFileName, "\n",
+    #     "          reverseReadFileName :", object@reverseReadFileName, "\n",
     # )
 
     cat(is(object)[[1]], "\n",

@@ -1,7 +1,7 @@
 ### ============================================================================
-### Plotting trimmed and remaining ratio for "qualityReport" S4 object
+### Plotting trimmed and remaining ratio for "QualityReport" S4 object
 ### ============================================================================
-setMethod("preTrimmingRatioPlot",  "qualityReport", function(object){
+setMethod("preTrimmingRatioPlot",  "QualityReport", function(object){
     readFeature <- object@readFeature
     trimmingStartPos = object@trimmingStartPos
     trimmingFinishPos = object@trimmingFinishPos
@@ -51,7 +51,9 @@ setMethod("preTrimmingRatioPlot",  "qualityReport", function(object){
             xlab("Base Index") + ylab("Percentage") +
             ggtitle(paste(readFeature, " Quality Trimming Percentage Plot")) +
             theme(axis.text.x = element_text(angle = 90, hjust = 1),
-                  plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+                  plot.title = element_text(size = 15,
+                                            face = "bold",
+                                            hjust = 0.5),
                   axis.title.x = element_text(size = 10),
                   axis.title.y = element_text(size = 10),
                   legend.position="top",
@@ -62,9 +64,9 @@ setMethod("preTrimmingRatioPlot",  "qualityReport", function(object){
 
 
 ### ============================================================================
-### Plotting quality for each base for "qualityReport" S4 object
+### Plotting quality for each base for "QualityReport" S4 object
 ### ============================================================================
-setMethod("preQualityBasePlot",  "qualityReport", function(object){
+setMethod("preQualityBasePlot",  "QualityReport", function(object){
     readFeature <- object@readFeature
     trimmingStartPos = object@trimmingStartPos
     trimmingFinishPos = object@trimmingFinishPos
@@ -95,9 +97,12 @@ setMethod("preQualityBasePlot",  "qualityReport", function(object){
 
 
 ### ============================================================================
-### Plotting trimmed and remaining ratio for "qualityReport" S4 object
+### Plotting trimmed and remaining ratio for "QualityReport" S4 object
 ### ============================================================================
-setMethod("trimmingRatioPlot",  "qualityReport", function(object){
+#' @example
+#' load("data/A_chloroticaSingleRead.RDdata")
+#' trimmingRatioPlot(A_chloroticaSingleRead@QualityReport)
+setMethod("trimmingRatioPlot",  "QualityReport", function(object){
     plotting <- preTrimmingRatioPlot(object)
     plotting
 })
@@ -105,9 +110,69 @@ setMethod("trimmingRatioPlot",  "qualityReport", function(object){
 
 
 ### ============================================================================
-### Plotting quality for each base for "qualityReport" S4 object
+### Plotting quality for each base for "QualityReport" S4 object
 ### ============================================================================
-setMethod("qualityBasePlot",  "qualityReport", function(object){
+#' @example
+#' load("data/A_chloroticaSingleRead.RDdata")
+#' qualityBasePlot(A_chloroticaSingleRead@QualityReport)
+setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
     plotting
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## =============================================================================
+## Updating quality parameters for QualityReport object.
+## =============================================================================
+#' @example
+#' load("data/A_chloroticaSingleRead.RDdata")
+#' QualityReport <- A_chloroticaSingleRead@QualityReport
+#' trimmingRatioPlot(QualityReport)
+#' qualityBasePlot(QualityReport)
+#' QualityReport@cutoffQualityScore
+#' QualityReport@slidingWindowSize
+#'
+#' QualityReport <- updateQualityParam(QualityReport, 20L, 5L)
+#'
+#' trimmingRatioPlot(QualityReport)
+#' qualityBasePlot(QualityReport)
+#' QualityReport@cutoffQualityScore
+#' QualityReport@slidingWindowSize
+setMethod("updateQualityParam",  "QualityReport",
+          function(object,
+                   cutoffQualityScore = 20L,
+                   slidingWindowSize  = 5L){
+              ### --------------------------------------------------------------
+              ### Updating QualityReport quality parameters
+              ### --------------------------------------------------------------
+              qualityBaseScore <- object@qualityBaseScore
+              trimmingPos <- inside_calculate_trimming(qualityBaseScore,
+                                                       cutoffQualityScore,
+                                                       slidingWindowSize)
+              object@cutoffQualityScore <- cutoffQualityScore
+              object@slidingWindowSize <- slidingWindowSize
+              object@trimmingStartPos <- trimmingPos[1]
+              object@trimmingFinishPos <- trimmingPos[2]
+              return(object)
+          })

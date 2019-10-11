@@ -1,23 +1,39 @@
-#' @title qualityReport
+#' @title QualityReport
 #'
-#' @description  An S4 class for quality report for a SangeranalyseSeq S4 object
+#' @description  An S4 class for quality report for a SangerSingleRead S4 object
 #'
-#' @slot forward.read .
+#' @slot readFeature .
+#' @slot qualityPhredScores .
+#' @slot qualityBaseScore .
+#' @slot trimmingStartPos .
+#' @slot trimmingFinishPos .
+#' @slot cutoffQualityScore .
+#' @slot slidingWindowSize .
 #'
-#' @name qualityReport-class
+#' @name QualityReport-class
 #'
-#' @rdname qualityReport-class
+#' @rdname QualityReport-class
 #'
-#' @exportClass qualityReport
+#' @exportClass QualityReport
 #' @author Kuan-Hao Chao
 #' @examples
-setClass("qualityReport",
+#' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
+#' A_chloroticaFdReadFN <- file.path(inputFilesPath,
+#'                                   "Allolobophora_chlorotica",
+#'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
+#' A_chloroticaRead <-
+#'        SangerSingleRead(readFeature         = "ForwardRead",
+#'                         readFileName        = A_chloroticaFdReadFN,
+#'                         cutoffQualityScore  = 60L,
+#'                         slidingWindowSize   = 8L)
+#' "@@"(A_chloroticaRead, QualityReport)
+setClass("QualityReport",
          ### -------------------------------------------------------------------
          ### Input type of each variable
          ### -------------------------------------------------------------------
          representation(
              readFeature             = "character",
-             qualityPhredScores     = "numeric",
+             qualityPhredScores      = "numeric",
              qualityBaseScore        = "numeric",
              trimmingStartPos        = "integer",
              trimmingFinishPos       = "integer",
@@ -27,10 +43,10 @@ setClass("qualityReport",
 )
 
 ### ============================================================================
-### Overwrite initialize for qualityReport (New constructor)
+### Overwrite initialize for QualityReport (New constructor)
 ### ============================================================================
 setMethod("initialize",
-          "qualityReport",
+          "QualityReport",
           function(.Object, ...,
                    readFeature         = character(0),
                    qualityPhredScores = qualityPhredScores,
@@ -66,19 +82,6 @@ setMethod("initialize",
                                                            slidingWindowSize)
                   trimmingStartPos <- trimmingPos[1]
                   trimmingFinishPos <- trimmingPos[2]
-                  # qualityPbCutoff <- 10** (cutoffQualityScore / (-10.0))
-                  # remainingIndex <- c()
-                  # for (i in 1:(readLen-slidingWindowSize+1)) {
-                  #     meanSLidingWindow <-
-                  #         mean(qualityBaseScore[i:(i+slidingWindowSize-1)])
-                  #     if (meanSLidingWindow < qualityPbCutoff) {
-                  #         remainingIndex <- c(remainingIndex, i)
-                  #         # or ==> i + floor(slidingWindowSize/3)
-                  #     }
-                  # }
-                  # trimmingStartPos = remainingIndex[1]
-                  # trimmingFinishPos = remainingIndex[length(remainingIndex)]
-
               } else {
                   stop(errors)
               }

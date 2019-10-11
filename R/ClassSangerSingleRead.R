@@ -1,14 +1,14 @@
-#' @title sangerSingleRead
+#' @title SangerSingleRead
 #'
 #' @description  An S4 class extending sangerseq S4 class
 #'
 #' @slot readFeature .
 #'
-#' @name sangerSingleRead-class
+#' @name SangerSingleRead-class
 #'
-#' @rdname sangerSingleRead-class
+#' @rdname SangerSingleRead-class
 #'
-#' @exportClass sangerSingleRead
+#' @exportClass SangerSingleRead
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R
 #' @examples
@@ -16,13 +16,13 @@
 #' A_chloroticaFdReadFN <- file.path(inputFilesPath,
 #'                                   "Allolobophora_chlorotica",
 #'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
-#' A_chloroticaRead <- new("sangerSingleRead",
-#'                         readFeature         = "ForwardRead",
-#'                         readFileName        = A_chloroticaFdReadFN,
-#'                         cutoffQualityScore  = 60L,
-#'                         slidingWindowSize   = 8L)
+#' A_chloroticaSingleRead <- new("SangerSingleRead",
+#'                               readFeature         = "ForwardRead",
+#'                               readFileName        = A_chloroticaFdReadFN,
+#'                               cutoffQualityScore  = 60L,
+#'                               slidingWindowSize   = 8L)
 setClass(
-    "sangerSingleRead",
+    "SangerSingleRead",
     ### -------------------------------------------------------------------
     ### Input type of each variable of 'SangerMergeReads'.
     ###     * Inherit from 'sangerseq' from sangerseqR.
@@ -31,15 +31,15 @@ setClass(
     slots=c(readFeature         = "character",
             readFileName        = "character",
             abifRawData         = "abif",
-            qualityReport       = "qualityReport")
-) -> sangerSingleRead
+            QualityReport       = "QualityReport")
+) -> SangerSingleRead
 
 
 ### ============================================================================
-### Overwrite initialize for sangerSingleRead (New constructor)
+### Overwrite initialize for SangerSingleRead (New constructor)
 ### ============================================================================
 setMethod("initialize",
-          "sangerSingleRead",
+          "SangerSingleRead",
           function(.Object, ...,
                    readFeature         = character(0),
                    readFileName        = character(0),
@@ -51,7 +51,7 @@ setMethod("initialize",
                    peakPosMatrix       = peakPosMatrix,
                    peakAmpMatrix       = peakAmpMatrix,
                    abifRawData         = abifRawData,
-                   qualityReport       = qualityReport,
+                   QualityReport       = QualityReport,
                    cutoffQualityScore  = 20L,
                    slidingWindowSize   = 5L) {
               ### --------------------------------------------------------------
@@ -69,7 +69,7 @@ setMethod("initialize",
               }
 
               ### --------------------------------------------------------------
-              ### Prechecking success. Start to create 'sangerSingleRead'
+              ### Prechecking success. Start to create 'SangerSingleRead'
               ### --------------------------------------------------------------
               if (length(errors) == 0) {
                   message(readFeature, " read: Creating abif & sangerseq ...")
@@ -86,7 +86,7 @@ setMethod("initialize",
                   peakPosMatrix       = readSangerseq@peakPosMatrix
                   peakAmpMatrix       = readSangerseq@peakAmpMatrix
                   abifRawData         = readRawAbif
-                  qualityReport <- new("qualityReport",
+                  QualityReport <- new("QualityReport",
                                        readFeature = readFeature,
                                        qualityPhredScores =
                                            readRawAbif@data$PCON.2,
@@ -108,5 +108,5 @@ setMethod("initialize",
                              peakPosMatrix       = peakPosMatrix,
                              peakAmpMatrix       = peakAmpMatrix,
                              abifRawData         = abifRawData,
-                             qualityReport       = qualityReport)
+                             QualityReport       = QualityReport)
           })

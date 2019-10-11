@@ -5,7 +5,8 @@
 \alias{SangerMergeReads-class}
 \title{SangerMergeReads}
 \description{
-An S4 class for storing reads of sanger sequencing.
+An S4 class for storing forward and reverse reads of
+  sanger sequencing.
 }
 \section{Slots}{
 
@@ -13,6 +14,10 @@ An S4 class for storing reads of sanger sequencing.
 \item{\code{forwardReadSangerseq}}{.}
 
 \item{\code{reverseReadSangerseq}}{.}
+
+\item{\code{cutoffQualityScore}}{.}
+
+\item{\code{slidingWindowSize}}{.}
 }}
 
 \examples{
@@ -23,11 +28,11 @@ A_chloroticaFdReadFN <- file.path(inputFilesPath,
 A_chloroticaRvReadFN <- file.path(inputFilesPath,
                                   "Allolobophora_chlorotica",
                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1")
-A_chloroticaRead <- new("SangerMergeReads",
-                        forwardReadFileName = A_chloroticaFdReadFN,
-                        reverseReadFileName = A_chloroticaRvReadFN,
-                        cutoffQualityScore  = 50L,
-                        slidingWindowSize   = 8L)
+A_chloroticMergeReads <- new("SangerMergeReads",
+                             forwardReadFileName = A_chloroticaFdReadFN,
+                             reverseReadFileName = A_chloroticaRvReadFN,
+                             cutoffQualityScore  = 50L,
+                             slidingWindowSize   = 8L)
 }
 \author{
 Kuan-Hao Chao
