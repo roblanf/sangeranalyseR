@@ -63,6 +63,7 @@ setMethod("initialize",
                   errors <- c(errors, msg)
               }
               if (!file.exists(readFileName)) {
+                  cat ("readFileName", readFileName)
                   msg <- paste("\n'", readFileName, "'",
                                " foward read file does not exist.\n", sep = "")
                   errors <- c(errors, msg)

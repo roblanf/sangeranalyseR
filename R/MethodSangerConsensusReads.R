@@ -1,10 +1,10 @@
 ### ============================================================================
-### Plotting trimmed and remaining ratio for "SangerMergeReads" S4 object
+### Plotting trimmed and remaining ratio for "SangerConsensusRead" S4 object
 ### ============================================================================
 #' @example
-#' load("data/A_chloroticaMergeReads.RDdata")
-#' trimmingRatioPlot(A_chloroticaMergeReads)
-setMethod("trimmingRatioPlot",  "SangerMergeReads", function(object){
+#' load("data/A_chloroticaConsensusRead.RDdata")
+#' trimmingRatioPlot(A_chloroticaConsensusRead)
+setMethod("trimmingRatioPlot",  "SangerConsensusRead", function(object){
     ### ------------------------------------------------------------------------
     ### Trimmed ratio plot for forward read
     ### ------------------------------------------------------------------------
@@ -26,12 +26,12 @@ setMethod("trimmingRatioPlot",  "SangerMergeReads", function(object){
 
 
 ### ============================================================================
-### Plotting quality for each base for "SangerMergeReads" S4 object
+### Plotting quality for each base for "SangerConsensusRead" S4 object
 ### ============================================================================
 #' @example
-#' load("data/A_chloroticaMergeReads.RDdata")
-#' qualityBasePlot(A_chloroticaMergeReads)
-setMethod("qualityBasePlot",  "SangerMergeReads", function(object){
+#' load("data/A_chloroticaConsensusRead.RDdata")
+#' qualityBasePlot(A_chloroticaConsensusRead)
+setMethod("qualityBasePlot",  "SangerConsensusRead", function(object){
     ### ------------------------------------------------------------------------
     ### Quality base plot for forward read
     ### ------------------------------------------------------------------------
@@ -49,22 +49,22 @@ setMethod("qualityBasePlot",  "SangerMergeReads", function(object){
 
 
 ## ============================================================================
-## Updating quality parameters for SangerMergeReads object.
+## Updating quality parameters for SangerConsensusRead object.
 ## ============================================================================
 #' @example
-#' load("data/A_chloroticaMergeReads.RDdata")
-#' trimmingRatioPlot(A_chloroticaMergeReads)
-#' qualityBasePlot(A_chloroticaMergeReads)
-#' A_chloroticaMergeReads@forwardReadSangerseq@QualityReport@cutoffQualityScore
-#' A_chloroticaMergeReads@forwardReadSangerseq@QualityReport@slidingWindowSize
+#' load("data/A_chloroticaConsensusRead.RDdata")
+#' trimmingRatioPlot(A_chloroticaConsensusRead)
+#' qualityBasePlot(A_chloroticaConsensusRead)
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@cutoffQualityScore
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@slidingWindowSize
 #'
-#' A_chloroticaMergeReads <- updateQualityParam(A_chloroticaMergeReads, 20L, 5L)
+#' A_chloroticaConsensusRead <- updateQualityParam(A_chloroticaConsensusRead, 20L, 5L)
 #'
-#' trimmingRatioPlot(A_chloroticaMergeReads)
-#' qualityBasePlot(A_chloroticaMergeReads)
-#' A_chloroticaMergeReads@forwardReadSangerseq@QualityReport@cutoffQualityScore
-#' A_chloroticaMergeReads@forwardReadSangerseq@QualityReport@slidingWindowSize
-setMethod("updateQualityParam",  "SangerMergeReads",
+#' trimmingRatioPlot(A_chloroticaConsensusRead)
+#' qualityBasePlot(A_chloroticaConsensusRead)
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@cutoffQualityScore
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@slidingWindowSize
+setMethod("updateQualityParam",  "SangerConsensusRead",
           function(object,
                    cutoffQualityScore = 20L,
                    slidingWindowSize  = 5L){

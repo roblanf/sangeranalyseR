@@ -13,27 +13,22 @@
 #' @author Kuan-Hao Chao
 #' @example
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-#' A_chloroticaFdReadFN <- file.path(inputFilesPath,
-#'                                   "Allolobophora_chlorotica",
-#'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
-#' A_chloroticaRvReadFN <- file.path(inputFilesPath,
-#'                                   "Allolobophora_chlorotica",
-#'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1")
-#' A_chloroticaMergeReads <-
-#'          SangerMergeReads(forwardReadFileName = A_chloroticaFdReadFN,
-#'                           reverseReadFileName = A_chloroticaRvReadFN,
-#'                           cutoffQualityScore  = 50L,
-#'                           slidingWindowSize   = 8L)
-SangerMergeReads <- function(forwardReadFileName = character(0),
-                             reverseReadFileName = character(0),
-                             cutoffQualityScore   = 20L,
-                             slidingWindowSize    = 5L) {
-    newMergeReads <- new("SangerMergeReads",
-                         forwardReadFileName = forwardReadFileName,
-                         reverseReadFileName = reverseReadFileName,
-                         cutoffQualityScore  = cutoffQualityScore,
-                         slidingWindowSize   = slidingWindowSize)
-    return(newMergeReads)
+#' samplesRegExp <- "ACHL"
+#' A_chloroticConsensusReads <- new("SangerConsensusRead",
+#'                                  parentDirectory     = inputFilesParentDir,
+#'                                  readsRegularExp     = samplesRegExp,
+#'                                  cutoffQualityScore  = 50L,
+#'                                  slidingWindowSize   = 8L)
+SangerConsensusRead <- function(parentDirectory = character(0),
+                                readsRegularExp = character(0),
+                                cutoffQualityScore   = 20L,
+                                slidingWindowSize    = 5L) {
+    newConsensusReads <- new("SangerConsensusRead",
+                             parentDirectory    = parentDirectory,
+                             readsRegularExp    = readsRegularExp,
+                             cutoffQualityScore = cutoffQualityScore,
+                             slidingWindowSize  = slidingWindowSize)
+    return(newConsensusReads)
 }
 
 
