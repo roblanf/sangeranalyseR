@@ -2,6 +2,7 @@
 
 export(SangerConsensusRead)
 export(SangerSingleRead)
+export(launchApp)
 export(preQualityBasePlot)
 export(preTrimmingRatioPlot)
 export(qualityBasePlot)

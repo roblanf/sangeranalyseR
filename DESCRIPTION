@@ -19,7 +19,8 @@ Depends:
     stringi,
     stringr,
     ggplot2,
-    gridExtra
+    gridExtra,
+    shiny
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 
@@ -32,6 +33,9 @@ Collate:
     'MethodSangerConsensusReads.R'
     'MethodSangerSingleRead.R'
     'MethodsQualityReport.R'
+    'ShinyAppServer.R'
+    'ShinyAppUI.R'
+    'ShinyLaunchApp.R'
     'TRY_FILE.R'
     'UtilitiesFunc.R'
     'sangeranalyseR_package.R'
