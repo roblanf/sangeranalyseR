@@ -12,7 +12,8 @@
 #' launchAppConsensusRead(consensusReadsList)
 launchAppConsensusRead <- function(SangerConsensusRead) {
     ### ------------------------------------------------------------------------
-    ### Checking SangerConsensusRead input parameter is S4 object
+    ### Checking SangerConsensusRead input parameter is a list containing
+    ### one S4 object.
     ### ------------------------------------------------------------------------
     shinyOptions(SangerConsensusReadSet = SangerConsensusRead)
     shinyApp(consensusUI, consensusServer, options = SangerConsensusRead)
