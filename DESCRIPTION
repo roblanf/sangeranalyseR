@@ -20,7 +20,8 @@ Depends:
     stringr,
     ggplot2,
     gridExtra,
-    shiny
+    shiny,
+    shinydashboard
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 

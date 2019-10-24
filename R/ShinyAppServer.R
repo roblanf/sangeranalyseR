@@ -1,21 +1,34 @@
-# Define server logic required to draw a histogram ----
-server <- function(input, output) {
+consensusServer <- function(input, output, session) {
+    SangerConsensusRead <- getShinyOption("SangerConsensusReadSet")
+    SangerSingleReadNum <- length((SangerConsensusRead[[1]])@SangerReadsList)
 
-    # Histogram of the Old Faithful Geyser Data ----
-    # with requested number of bins
-    # This expression that generates a histogram is wrapped in a call
-    # to renderPlot to indicate that:
-    #
-    # 1. It is "reactive" and therefore should be automatically
-    #    re-executed when inputs (input$bins) change
-    # 2. Its output type is a plot
-    output$distPlot <- renderPlot({
+    output$clientdataText <- renderText({
+        SangerSingleReadNum
+    })
 
-        x    <- faithful$waiting
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+    # output$menu <- renderMenu({
+    #     for (iterater in c(1:SangerSingleReadNum)) {
+    #         sidebarMenu(
+    #             menuItem("Menu item", icon = icon("calendar"))
+    #         )
+    #     }
+    # })
+    output$menuitem <- renderMenu({
+        menuItem("Menu item", icon = icon("calendar"))
+    })
 
-        hist(x, breaks = bins, col = "#75AADB", border = "white",
-             xlab = "Waiting time to next eruption (in mins)",
-             main = "Histogram of waiting times")
+    # # A histogram
+    # output$myplot <- renderPlot({
+    #     hist(rnorm(input$obs), main = "Generated in renderPlot()")
+    # })
+
+    set.seed(122)
+    histdata <- rnorm(500)
+
+    # output$selected_var <- renderText(cdata)
+
+    output$plot1 <- renderPlot({
+        data <- histdata[seq_len(input$slider)]
+        hist(data)
     })
 }

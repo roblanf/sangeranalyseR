@@ -1,26 +1,24 @@
 # Define UI for app that draws a histogram ----
-ui <- fluidPage(
+consensusUI <- dashboardPage(
+    dashboardHeader(title = "sangeranalyseR"),
+    dashboardSidebar(
+        sidebarMenu(
+            menuItemOutput("menuitem")
+        )
+    ),
+    dashboardBody(
+        # Boxes need to be put in a row (or column)
+        textOutput("selected_var"),
+        h3("clientData values"),
+        verbatimTextOutput("clientdataText"),
+        plotOutput("myplot"),
+        fluidRow(
+            box(plotOutput("plot1", height = 250)),
 
-    # App title ----
-    titlePanel("Welcome to sangeranalyseR !"),
-
-    ### This is just example code for now !!
-    # Sidebar layout with input and output definitions ----
-    sidebarLayout(
-        # Sidebar panel for inputs ----
-        sidebarPanel(
-            # Input: Slider for the number of bins ----
-            sliderInput(inputId = "bins",
-                        label = "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Main panel for displaying outputs ----
-        mainPanel(
-            # Output: Histogram ----
-            plotOutput(outputId = "distPlot")
+            box(
+                title = "Controls",
+                sliderInput("slider", "Number of observations:", 1, 100, 50)
+            )
         )
     )
 )

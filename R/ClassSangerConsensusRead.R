@@ -16,7 +16,8 @@
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerSingleRead.R
 #' @examples
-#' inputFilesParentDir <- system.file("extdata/", package = "sangeranalyseR")
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 #' samplesRegExp <- "ACHL"
 #' A_chloroticConsensusReads <- new("SangerConsensusRead",
 #'                                  parentDirectory = inputFilesParentDir,
@@ -56,10 +57,10 @@ setMethod("initialize",
 
     parentDirFiles <- list.files(parentDirectory)
     selectInputFiles <- parentDirFiles[grepl(readsRegularExp, parentDirFiles)]
-    allReadFiles <- lapply(parentDirectory, file.path, selectInputFiles)
+    allReads <- lapply(parentDirectory, file.path, selectInputFiles)
     readsNumber <- length(allReads[[1]])
     # sapply to check all files are exist.
-    allErrorMsg <- sapply(c(allReads[[1]], "ff"), function(filePath) {
+    allErrorMsg <- sapply(c(allReads[[1]]), function(filePath) {
         if (!file.exists(filePath)) {
             msg <- paste("\n'", filePath, "'",
                          " read file does not exist.\n", sep = "")
@@ -74,11 +75,13 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     if (length(errors) == 0) {
         # sapply to create SangerSingleRead list.
-        SangerSingleReadList <- sapply(allReadFiles[[1]], SangerSingleRead,
+        SangerSingleReadList <- sapply(allReads[[1]], SangerSingleRead,
                readFeature = "Reads", cutoffQualityScore, slidingWindowSize)
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
+                   parentDirectory = parentDirectory,
+                   readsRegularExp = readsRegularExp,
                    SangerReadsList = SangerSingleReadList)
 })
