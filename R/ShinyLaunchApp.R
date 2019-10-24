@@ -9,7 +9,7 @@
 #'                                  cutoffQualityScore  = 50L,
 #'                                  slidingWindowSize   = 8L)
 #' consensusReadsList <- list(A_chloroticConsensusReads)
-#' launchAppConsensusRead(launchAppConsensusRead)
+#' launchAppConsensusRead(consensusReadsList)
 launchAppConsensusRead <- function(SangerConsensusRead) {
     ### ------------------------------------------------------------------------
     ### Checking SangerConsensusRead input parameter is S4 object
