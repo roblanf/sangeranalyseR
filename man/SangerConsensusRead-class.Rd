@@ -21,7 +21,8 @@ An S4 class for storing multiple single reads to build up new
 }}
 
 \examples{
-inputFilesParentDir <- system.file("extdata/", package = "sangeranalyseR")
+rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 samplesRegExp <- "ACHL"
 A_chloroticConsensusReads <- new("SangerConsensusRead",
                                  parentDirectory = inputFilesParentDir,

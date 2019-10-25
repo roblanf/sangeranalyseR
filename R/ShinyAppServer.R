@@ -8,19 +8,26 @@ consensusServer <- function(input, output, session) {
     SangerConsensusRead <- getShinyOption("SangerConsensusReadSet")
     SangerConsensusRead <- SangerConsensusRead[[1]]
     SangerSingleReadNum <- length((SangerConsensusRead)@SangerReadsList)
-    SangerSingleReadFiles <- sapply(1:SangerSingleReadNum, function(i)
+    SangerSingleReadBFN <- sapply(1:SangerSingleReadNum, function(i)
+               basename(SangerConsensusRead@SangerReadsList[[i]]@readFileName))
+    SangerSingleReadAFN <- sapply(1:SangerSingleReadNum, function(i)
+        SangerConsensusRead@SangerReadsList[[i]]@readFileName)
+
+    SangerSingleReadAFN <- sapply(1:SangerSingleReadNum, function(i)
+        SangerConsensusRead@SangerReadsList[[i]]@readFileName)
+
+    SangerSingleReadFeature <- sapply(1:SangerSingleReadNum, function(i)
         paste0(i, "_",
-               basename(
-                   SangerConsensusRead@SangerReadsList[[i]]@readFileName)))
+                   SangerConsensusRead@SangerReadsList[[i]]@readFeature))
 
     ### ------------------------------------------------------------------------
     ### Adding dynamic menu to sidebar.
     ### ------------------------------------------------------------------------
-    output$menu <- renderMenu({
-        menu_list2 <- sapply(1:SangerSingleReadNum, function(i) {
-            list(menuItem(SangerSingleReadFiles[i], tabName = "main", selected = TRUE))
+    output$singleReadMenu <- renderMenu({
+        menu_list <- sapply(1:SangerSingleReadNum, function(i) {
+            list(menuItem(SangerSingleReadFeature[i], tabName = SangerSingleReadFeature[i], selected = TRUE, icon = icon("angle-right")))
         })
-        sidebarMenu(.list = menu_list2)
+        sidebarMenu(.list = menu_list)
     })
 
     ### ------------------------------------------------------------------------
@@ -28,5 +35,24 @@ consensusServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$clientdataText <- renderText({
         SangerSingleReadNum
+    })
+
+
+    output$consensusReadMenu_content <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        if (input$sidebar_menu == "consensusReadMenu") box("consensusReadMenu")
+    })
+
+
+    output$singelReadMenu_content <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+            # box(sidebar_menu[[1]])
+            h1(paste0("File: ",  SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]]))
+            # h5(paste0("Absolute File Path: ",  SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]]))
+
+            # box(SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]])
+            # box(SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]])
+        }
     })
 }

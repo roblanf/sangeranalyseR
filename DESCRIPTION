@@ -21,7 +21,8 @@ Depends:
     ggplot2,
     gridExtra,
     shiny,
-    shinydashboard
+    shinydashboard,
+    data.table
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 

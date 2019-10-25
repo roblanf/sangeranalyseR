@@ -2,13 +2,13 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' samplesRegExp <- "ACHL"
-#' A_chloroticConsensusReads <- new("SangerConsensusRead",
+#' samplesRegExp <- ".ab1"
+#' B_chloroticConsensusReads <- new("SangerConsensusRead",
 #'                                  parentDirectory = inputFilesParentDir,
 #'                                  readsRegularExp = samplesRegExp,
 #'                                  cutoffQualityScore  = 50L,
 #'                                  slidingWindowSize   = 8L)
-#' consensusReadsList <- list(A_chloroticConsensusReads)
+#' consensusReadsList <- list(B_chloroticConsensusReads)
 #' launchAppConsensusRead(consensusReadsList)
 launchAppConsensusRead <- function(SangerConsensusRead) {
     ### ------------------------------------------------------------------------
