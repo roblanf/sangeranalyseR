@@ -14,11 +14,11 @@ consensusUI <- dashboardPage(
             sidebarMenuOutput("singleReadMenu")
         )
     ),
-
     ### ------------------------------------------------------------------------
     ### Others
     ### ------------------------------------------------------------------------
     dashboardBody(
+        textOutput("res"),
         uiOutput("consensusReadMenu_content"),
         uiOutput("singelReadMenu_content"),
         tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),
