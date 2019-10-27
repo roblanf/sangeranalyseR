@@ -4,15 +4,16 @@
 consensusUI <- dashboardPage(
     skin = "green",
     dashboardHeader(
-        title = "Dynamic sidebar"
+        title = "sangeranalyseR"
     ),
     ### ------------------------------------------------------------------------
     ### Adding dynamic menu to sidebar. (Two layers)
     ### ------------------------------------------------------------------------
     dashboardSidebar(
+        useShinyjs(debug = TRUE),
         sidebarMenu(
             id = "sidebar_menu",
-            menuItem("Consensus Read", tabName = "consensusReadMenu", icon=icon("dashboard")),
+            menuItem("Consensus Read", tabName = "Overview", icon=icon("dashboard")),
             sidebarMenuOutput("singleReadMenu")
         )
     ),
@@ -20,9 +21,10 @@ consensusUI <- dashboardPage(
     ### Others
     ### ------------------------------------------------------------------------
     dashboardBody(
+        useShinyjs(debug = TRUE),
         tags$script(HTML('
             $(document).ready(function() {
-            $("header").find("nav").append(\'<span id="pageHeader" class="myClass"> Dynamic Text </span>\');
+            $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Overview </span>\');
             })
         ')),
         tags$head(tags$style(HTML(
@@ -42,6 +44,8 @@ consensusUI <- dashboardPage(
         ),
         tags$style(
             HTML(".shiny-notification {
+             color: white;
+             background-color:#0E8C3A;
              position:fixed;
              top: calc(50% - 150px);
              left: calc(50% - 150px);
@@ -61,7 +65,6 @@ consensusUI <- dashboardPage(
         tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),
         textOutput("selected_var"),
         h3("clientData values"),
-        verbatimTextOutput("clientdataText"),
-        useShinyjs()
+        verbatimTextOutput("clientdataText")
     )
 )

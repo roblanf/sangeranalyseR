@@ -62,47 +62,60 @@ consensusServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$singleReadMenu <- renderMenu({
         menu_list <- sapply(1:SangerSingleReadNum, function(i) {
-            list(menuItem(SangerSingleReadFeature[i], tabName = SangerSingleReadFeature[i], selected = TRUE, icon = icon("angle-right")))
+            list(menuItem(SangerSingleReadFeature[i],
+                          tabName = SangerSingleReadFeature[i],
+                          selected = TRUE, icon = icon("angle-right")))
         })
         sidebarMenu(.list = menu_list)
     })
     # Select consensus Read Menu first
-    isolate({updateTabItems(session, "sidebar_menu", "consensusReadMenu")})
+    isolate({updateTabItems(session, "sidebar_menu", "Overview")})
 
     ### ------------------------------------------------------------------------
-    ### Other features to add.
+    ### Adding dynamic rightHeader text
     ### ------------------------------------------------------------------------
     observeEvent(input$sidebar_menu, {
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
-        html("pageHeader", menuItem)
+        html("rightHeader", menuItem)
     })
 
     output$clientdataText <- renderText({
         SangerSingleReadNum
     })
 
+    ### ------------------------------------------------------------------------
+    ### Dynamic page navigation
+    ### ------------------------------------------------------------------------
     output$consensusReadMenu_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        if (input$sidebar_menu == "consensusReadMenu") box("consensusReadMenu")
-    })
-
-    output$singelReadMenu_content <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+        if (input$sidebar_menu == "Overview") {
             fluidRow(
-                # box(sidebar_menu[[1]])
-                box(title = "Row File: ", solidHeader = TRUE, status = "success", width = 12, h1(paste0(SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]]))),
-                # h5(paste0("Absolute File Path: ",  SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]]))
-
-                box(SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]]),
-                box(SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]]),
+                useShinyjs(),
+                box("Overview")
             )
         }
     })
 
+    output$singelReadMenu_content <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        if (input$sidebar_menu != "Overview") {
+            if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+                fluidRow(
+                    useShinyjs(),
+                    # box(sidebar_menu[[1]])
+                    box(title = "Row File: ", solidHeader = TRUE, status = "success", width = 12, h1(paste0(SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]]))),
+                    # h5(paste0("Absolute File Path: ",  SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]]))
 
+                    box(SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]]),
+                    box(SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]]),
+                )
+            }
+        }
+    })
 
-
+    ### ------------------------------------------------------------------------
+    ### Button: Save S4 object / Close UI
+    ### ------------------------------------------------------------------------
     observeEvent(input$saveS4, {
         btn <- input$saveS4
         id <- paste0('txt', btn)
