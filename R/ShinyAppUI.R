@@ -18,7 +18,22 @@ consensusUI <- dashboardPage(
     ### Others
     ### ------------------------------------------------------------------------
     dashboardBody(
+        tags$style(
+            HTML(".shiny-notification {
+             position:fixed;
+             top: calc(50% - 150px);
+             left: calc(50% - 150px);
+             width: 500px;
+             font-size: 24px;
+             font-weight: bold;
+             overflow-wrap: break-word;
+             }
+             "
+            )
+        ),
         textOutput("res"),
+        actionButton('saveS4', 'Save S4 object'),
+        tags$div(id = 'placeholder'),
         uiOutput("consensusReadMenu_content"),
         uiOutput("singelReadMenu_content"),
         tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),

@@ -76,7 +76,6 @@ consensusServer <- function(input, output, session) {
         paste("You've selected:", input$sidebar_menu)
     })
 
-
     output$clientdataText <- renderText({
         SangerSingleReadNum
     })
@@ -93,12 +92,39 @@ consensusServer <- function(input, output, session) {
         if (!is.na(as.numeric(sidebar_menu[[1]]))) {
             fluidRow(
                 # box(sidebar_menu[[1]])
-                box(title = "Row File: ", solidHeader = TRUE, status = "primary", width = 12, h1(paste0(SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]]))),
+                box(title = "Row File: ", solidHeader = TRUE, status = "success", width = 12, h1(paste0(SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]]))),
                 # h5(paste0("Absolute File Path: ",  SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]]))
 
                 box(SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]]),
                 box(SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]]),
             )
         }
+    })
+
+
+
+
+    observeEvent(input$saveS4, {
+        btn <- input$saveS4
+        id <- paste0('txt', btn)
+        newS4Object <- file.path(tempdir(), "SangerConsensusRead.Rda")
+        saveRDS(SangerConsensusRead, file=newS4Object)
+        message("New S4 object is store as: ", newS4Object)
+        showNotification(paste("New S4 object is store as:", newS4Object), type = "message", duration = 10)
+        NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
+        # shinyOptions(NewSangerConsensusReadSet = newS4)
+
+
+        # save(SangerConsensusRead, file="SangerConsensusRead.rda")
+
+
+        insertUI(
+            selector = '#placeholder',
+            ## wrap element in a div with id for ease of removal
+            ui = tags$div(
+                tags$p(paste('Element number', btn)),
+                id = id
+            )
+        )
     })
 }

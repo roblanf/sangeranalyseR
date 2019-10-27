@@ -8,15 +8,15 @@
 #'                                  readsRegularExp = samplesRegExp,
 #'                                  cutoffQualityScore  = 50L,
 #'                                  slidingWindowSize   = 8L)
-#' consensusReadsList <- list(B_chloroticConsensusReads)
-#' launchAppConsensusRead(consensusReadsList)
+#' RShiny <- launchAppConsensusRead(list(B_chloroticConsensusReads))
 launchAppConsensusRead <- function(SangerConsensusRead) {
     ### ------------------------------------------------------------------------
     ### Checking SangerConsensusRead input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------
     shinyOptions(SangerConsensusReadSet = SangerConsensusRead)
-    shinyApp(consensusUI, consensusServer, options = SangerConsensusRead)
+    newSangerConsensusRead <- shinyApp(consensusUI, consensusServer, options = SangerConsensusRead)
+    return(newSangerConsensusRead)
 }
 
 #' @export
