@@ -72,20 +72,19 @@ consensusServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### Other features to add.
     ### ------------------------------------------------------------------------
-    output$res <- renderText({
-        paste("You've selected:", input$sidebar_menu)
+    observeEvent(input$sidebar_menu, {
+        menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
+        html("pageHeader", menuItem)
     })
 
     output$clientdataText <- renderText({
         SangerSingleReadNum
     })
 
-
     output$consensusReadMenu_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
         if (input$sidebar_menu == "consensusReadMenu") box("consensusReadMenu")
     })
-
 
     output$singelReadMenu_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
@@ -113,18 +112,10 @@ consensusServer <- function(input, output, session) {
         showNotification(paste("New S4 object is store as:", newS4Object), type = "message", duration = 10)
         NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
         # shinyOptions(NewSangerConsensusReadSet = newS4)
-
-
-        # save(SangerConsensusRead, file="SangerConsensusRead.rda")
-
-
-        insertUI(
-            selector = '#placeholder',
-            ## wrap element in a div with id for ease of removal
-            ui = tags$div(
-                tags$p(paste('Element number', btn)),
-                id = id
-            )
-        )
+    })
+    observeEvent(input$closeUI, {
+        btn <- input$closeUI
+        stopApp()
     })
 }
+

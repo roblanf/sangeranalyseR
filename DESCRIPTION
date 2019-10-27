@@ -22,7 +22,8 @@ Depends:
     gridExtra,
     shiny,
     shinydashboard,
-    data.table
+    shinyjs,
+    data.table,
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 
