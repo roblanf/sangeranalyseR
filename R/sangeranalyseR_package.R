@@ -8,3 +8,4 @@
 #' @importFrom shinydashboard
 #' @importFrom data.table tstrsplit
 #' @importFrom shinyjs useShinyjs html
+#' @importFrom plotly

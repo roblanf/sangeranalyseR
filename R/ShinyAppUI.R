@@ -22,6 +22,13 @@ consensusUI <- dashboardPage(
     ### ------------------------------------------------------------------------
     dashboardBody(
         useShinyjs(debug = TRUE),
+
+        # tabItems(
+        #     id = "tab_items",
+        #     # menuItem("Consensus Read", tabName = "Overview", icon=icon("dashboard")),
+        #     sidebarMenuOutput("singleReadMenu")
+        # )
+
         tags$script(HTML('
             $(document).ready(function() {
             $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Overview </span>\');

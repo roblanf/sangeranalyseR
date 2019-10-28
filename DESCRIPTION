@@ -24,6 +24,7 @@ Depends:
     shinydashboard,
     shinyjs,
     data.table,
+    plotly
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 
