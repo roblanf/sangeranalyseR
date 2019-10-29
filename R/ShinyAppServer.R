@@ -120,7 +120,10 @@ consensusServer <- function(input, output, session) {
                             uiOutput("trimmingFinishPos"),
                         ),
                         tags$hr(style = ("border-top: 5px double #A9A9A9;")),
-                        plotlyOutput("qualityTrimmingRatioPlot")
+                        column(6,
+                               plotlyOutput("qualityTrimmingRatioPlot")),
+                        column(6,
+                               plotlyOutput("qualityQualityBasePlot")),
                     ),
 
 
@@ -434,8 +437,8 @@ consensusServer <- function(input, output, session) {
                               trimmedPer, remainingPer)
 
         colnames(PerData) <- c("Base",
-                               "Trimmed Percent",
-                               "Remaining Percent")
+                               "Trimmed Ratio",
+                               "Remaining Ratio")
         # Change font setting
         # f <- list(
         #     family = "Courier New, monospace",
@@ -459,21 +462,99 @@ consensusServer <- function(input, output, session) {
                 text = ~paste("BP Index : ",
                               Base, '<sup>th</sup><br>Read Ratio :',
                               value, '%')) %>%
-            layout(xaxis = x, yaxis = y) %>%
+            layout(xaxis = x, yaxis = y, legend = list(orientation = 'h',
+                                                       xanchor = "center",  # use center of legend as anchor
+                                                       x = 0.5, y = 1.1)) %>%
             add_annotations(
-                text = "Trimmed",
+                text = "Trimmed Ratio (Each BP)",
                 x = (trimmingStartPos + trimmingFinishPos) / 2,
                 y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
-                    + 0.05,
+                    + 0.06,
                 showarrow=FALSE
             ) %>%
             add_annotations(
-                text = "Remaining",
+                text = "Remaining Ratio (Each BP)",
                 x = (trimmingStartPos+trimmingFinishPos) / 2,
                 y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
-                    - 0.05,
+                    - 0.06,
                 showarrow=FALSE
             )
+    })
+
+    output$qualityQualityBasePlot <- renderPlotly({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        readFeature <- SangerSingleReadFeature[[strtoi(sidebar_menu[[1]])]]
+        trimmingStartPos = trimmedRV[["trimmedStart"]]
+        trimmingFinishPos = trimmedRV[["trimmedEnd"]]
+        qualityPhredScores = SangerSingleReadQualReport[[
+            strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+        readLen = length(qualityPhredScores)
+
+        qualityPlotDf<- data.frame(1:length(qualityPhredScores),
+                                   qualityPhredScores)
+        colnames(qualityPlotDf) <- c("Index", "Score")
+        x <- list(
+            title = "Base Pair Index"
+            # titlefont = f
+        )
+        y <- list(
+            title = "Phred Quality Score"
+            # titlefont = f
+        )
+
+        plot_ly(data=qualityPlotDf,
+                x=~Index) %>%
+            add_markers(y=~Score,
+                        text = ~paste("BP Index : ",
+                                      Index,
+                                      '<sup>th</sup><br>Phred Quality Score :',
+                                      Score),
+                        name = 'Quality Each BP') %>%
+            add_trace(x=seq(trimmingStartPos,
+                            trimmingFinishPos,
+                            len=trimmingFinishPos-trimmingStartPos+1),
+                      y=rep(70, trimmingFinishPos-trimmingStartPos+1),
+                      mode="lines", hoverinfo="text",
+                      text=paste("Trimmed Reads BP length:",
+                                 trimmingFinishPos-trimmingStartPos+1,
+                                 "BPs <br>",
+                                 "Trimmed Reads BP ratio:",
+                                 round((trimmingFinishPos - trimmingStartPos+1)/
+                                           readLen * 100,
+                                       digits=2),
+                                 "%"),
+                      line = list(width = 12),
+                      name = 'Trimmed Read') %>%
+            add_trace(x=seq(0,readLen,len=readLen),
+                      y=rep(80, readLen), mode="lines", hoverinfo="text",
+                      text=paste("Whole Reads BP length:",
+                                 readLen,
+                                 "BPs <br>",
+                                 "Trimmed Reads BP ratio: 100 %"),
+                      line = list(width = 12),
+                      name = 'Remaining Read') %>%
+            layout(xaxis = x, yaxis = y,
+                   shapes = list(vline(trimmingStartPos),
+                                 vline(trimmingFinishPos)),
+                   legend = list(orientation = 'h',
+                                 xanchor = "center",  # use center of legend as anchor
+                                 x = 0.5, y = 1.1)) %>%
+            # add_segments(x = trimmingStartPos, xend = trimmingFinishPos, y = 70, yend = 70, inherit = TRUE, width = 10, line = list(width = 8)) %>%
+            # add_segments(x = 0, xend = readLen, y = 75, yend = 75, inherit = TRUE, width = 4, line = list(width = 8)) %>%
+            add_annotations(
+                text = "Trimming Strat <br> BP Index",
+                x = trimmingStartPos + 40,
+                y = 15,
+                showarrow=FALSE
+            ) %>%
+            add_annotations(
+                text = "Trimming End <br> BP Index",
+                x = trimmingFinishPos - 40,
+                y = 15,
+                showarrow=FALSE
+            )
+            # add_markers(qualityPlotDf, x=~Index, y=~Score)
+            # add_segments(x = trimmingStartPos, xend = trimmingFinishPos, y = 70, yend = 70, inherit = TRUE)
     })
 
     output$info <- renderText({
@@ -481,6 +562,17 @@ consensusServer <- function(input, output, session) {
     })
 }
 
+vline <- function(x = 0, color = "red") {
+    list(
+        type = "line",
+        y0 = 0,
+        y1 = 1,
+        yref = "paper",
+        x0 = x,
+        x1 = x,
+        line = list(color = color)
+    )
+}
 
 
 
