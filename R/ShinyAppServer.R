@@ -100,27 +100,30 @@ consensusServer <- function(input, output, session) {
                 fluidRow(
                     useShinyjs(),
                     # box(sidebar_menu[[1]])
-                    box(title = "Raw File: ", solidHeader = TRUE,
+                    box(title = tags$p("Raw File: ",
+                                style = "font-size: 26px;
+                                         font-weight: bold;"),
+                        solidHeader = TRUE,
                         status = "success", width = 12,
                         h1(paste0(
                             SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]])),
-                        h5(
-                            paste("( full path:",
-                                  SangerSingleReadAFN[[
-                                      strtoi(sidebar_menu[[1]])]],
-                                  ")"))),
-                    box(title = tags$p("Quality Visualization: ",
+                        tags$h5(paste("( full path:",
+                                      SangerSingleReadAFN[[
+                                          strtoi(sidebar_menu[[1]])]],
+                                      ")")), style = "font-style:italic"),
+                    box(title = tags$p("Quality Report: ",
                                        style = "font-size: 26px;
                                        font-weight: bold;"),
+                        solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
-                        # data("mtcars"),
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         fluidRow(
                             uiOutput("cutoffQualityScore"),
                             uiOutput("slidingWindowSize"),
                             uiOutput("trimmingStartPos"),
                             uiOutput("trimmingFinishPos"),
                         ),
-                        tags$hr(style = ("border-top: 5px double #A9A9A9;")),
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         fluidRow(
                             column(6,
                                    uiOutput("trimmedRatio")
@@ -374,7 +377,7 @@ consensusServer <- function(input, output, session) {
                                      style = "font-size: 15px;
                                             font-weight: bold;"),
                    value = tags$p(paste(strtoi(trimmedRV[["remainingBP"]]), "BPs"),
-                                  style = "font-size: 40px;"),
+                                  style = "font-size: 32px;"),
                    icon = icon("dna", "fa-sm"),
                    color = "olive",
                    width = 12,
@@ -393,7 +396,7 @@ consensusServer <- function(input, output, session) {
                                      style = "font-size: 15px;
                                             font-weight: bold;"),
                    value = tags$p(paste(trimmedRV[["trimmedRatio"]], "%"),
-                                  style = "font-size: 29px;"),
+                                  style = "font-size: 32px;"),
                    icon = icon("divide", "fa-sm"),
                    color = "olive",
                    width = 12,
@@ -540,7 +543,7 @@ consensusServer <- function(input, output, session) {
                                  "BPs <br>",
                                  "Trimmed Reads BP ratio: 100 %"),
                       line = list(width = 12),
-                      name = 'Remaining Read') %>%
+                      name = 'Whole Read') %>%
             layout(xaxis = x, yaxis = y,
                    shapes = list(vline(trimmingStartPos),
                                  vline(trimmingFinishPos)),

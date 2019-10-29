@@ -9,3 +9,5 @@
 #' @importFrom data.table tstrsplit
 #' @importFrom shinyjs useShinyjs html
 #' @importFrom plotly
+#' @importFrom DECIPHER AlignSeqs
+#' @importFrom Biostrings DNAStringSet
