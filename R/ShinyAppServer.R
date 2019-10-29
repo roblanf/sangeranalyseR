@@ -56,7 +56,8 @@ consensusServer <- function(input, output, session) {
     SangerSingleReadPeakAmpMat <- sapply(1:SangerSingleReadNum, function(i)
         SangerConsensus@SangerReadsList[[i]]@peakAmpMatrix)
 
-    trimmedRV <- reactiveValues(trimmedStart=0, trimmedEnd=0)
+    trimmedRV <- reactiveValues(trimmedStart = 0, trimmedEnd = 0,
+                                remainingBP = 0, trimmedRatio = 0)
 
     ############################################################################
     ### output$ID
@@ -120,66 +121,19 @@ consensusServer <- function(input, output, session) {
                             uiOutput("trimmingFinishPos"),
                         ),
                         tags$hr(style = ("border-top: 5px double #A9A9A9;")),
+                        fluidRow(
+                            column(6,
+                                   uiOutput("trimmedRatio")
+                            ),
+                            column(6,
+                                   uiOutput("remainingBP")
+                            )
+                        ),
                         column(6,
                                plotlyOutput("qualityTrimmingRatioPlot")),
                         column(6,
                                plotlyOutput("qualityQualityBasePlot")),
                     ),
-
-
-
-
-
-
-
-
-                    # readFeature <- SangerSingleReadFeature[[strtoi(sidebar_menu[[1]])]]
-                    # trimmingStartPos = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]
-                    # trimmingFinishPos = object@trimmingFinishPos
-                    # readLen = length(object@qualityPhredScores)
-                    #
-                    # stepRatio = 1 / readLen
-                    # trimmingStartPos / readLen
-                    # trimmingFinishPos / readLen
-                    #
-                    # trimmedPer <- c()
-                    # remainingPer <- c()
-                    #
-                    # for (i in 1:trimmingStartPos) {
-                    #     if (i != trimmingStartPos) {
-                    #         trimmedPer <- c(trimmedPer, stepRatio)
-                    #     }
-                    # }
-                    #
-                    # for (i in trimmingStartPos:trimmingFinishPos) {
-                    #     trimmedPer <- c(trimmedPer, 0)
-                    # }
-                    #
-                    #
-                    # for (i in trimmingFinishPos:readLen) {
-                    #     if (i != trimmingFinishPos) {
-                    #         trimmedPer <- c(trimmedPer, stepRatio)
-                    #     }
-                    # }
-                    #
-                    # trimmedPer <- cumsum(trimmedPer)
-                    # remainingPer = 1 - trimmedPer
-                    #
-                    # PerData <- data.frame(1:length(trimmedPer),
-                    #                       trimmedPer, remainingPer)
-                    #
-                    # colnames(PerData) <- c("Base",
-                    #                        "Trimmed Percent",
-                    #                        "Remaining Percent")
-                    #
-                    # PerDataPlot <- melt(PerData, id.vars = c("Base"))
-                    # plot_ly(data=mtcars, x=~wt, y=~mpg, mode="markers")
-
-                    # plot_ly(data=mtcars, x=~wt, y=~mpg, mode="markers"))
-                    # h5(paste0("Absolute File Path: ",  SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]]))
-
-                    # box(SangerSingleReadAFN[[strtoi(sidebar_menu[[1]])]]),
-                    # box(SangerSingleReadBFN[[strtoi(sidebar_menu[[1]])]]),
                 )
             }
         }
@@ -203,12 +157,12 @@ consensusServer <- function(input, output, session) {
             trimmedRV[["trimmedEnd"]] <-
                 SangerSingleReadQualReport[[
                     strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
-            message("sidebar_menu[[1]]: ",
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@trimmingStartPos)
-            message("sidebar_menu[[1]]: ",
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@trimmingFinishPos)
+            qualityPhredScores = SangerSingleReadQualReport[[
+                strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+
+            readLen = length(qualityPhredScores)
+            trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+            trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
         }
     })
 
@@ -261,6 +215,15 @@ consensusServer <- function(input, output, session) {
                 trimmedRV[["trimmedEnd"]] <-
                     SangerSingleReadQualReport[[
                         strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
+                qualityPhredScores = SangerSingleReadQualReport[[
+                    strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+                readLen = length(qualityPhredScores)
+                trimmedRV[["remainingBP"]] <-
+                    trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+                trimmedRV[["trimmedRatio"]] <-
+                    round(((trimmedRV[["trimmedEnd"]] -
+                                trimmedRV[["trimmedStart"]] + 1) / readLen)*100,
+                          digits = 2)
             }
         }
     })
@@ -277,9 +240,7 @@ consensusServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[
                         strtoi(sidebar_menu[[1]])]]@cutoffQualityScore,
                     strtoi(input$slidingWindowSizeText))
-            message("Outside!!!: ", trimmingPos[1], "  ", trimmingPos[1])
             if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
-                message("Iutside!!!")
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
                     slidingWindowSize <<- strtoi(input$slidingWindowSizeText)
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
@@ -292,6 +253,15 @@ consensusServer <- function(input, output, session) {
                 trimmedRV[["trimmedEnd"]] <-
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
                     trimmingFinishPos
+                qualityPhredScores = SangerSingleReadQualReport[[
+                    strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+                readLen = length(qualityPhredScores)
+                trimmedRV[["remainingBP"]] <-
+                    trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+                trimmedRV[["trimmedRatio"]] <-
+                    round(((trimmedRV[["trimmedEnd"]] -
+                                trimmedRV[["trimmedStart"]] + 1) / readLen)*100,
+                          digits = 2)
             }
         }
     })
@@ -386,9 +356,47 @@ consensusServer <- function(input, output, session) {
                                      style = "font-size: 15px;
                                             font-weight: bold;"),
                    value = tags$p(toString(trimmedRV[["trimmedEnd"]]),
-                                  style = "font-size: 29px;"),
+                                  style = "font-size: 40px;"),
                    icon = icon("times-circle", "fa-sm"),
                    color = "olive", width = 12,
+               ),
+        )
+    })
+
+    ### ------------------------------------------------------------------------
+    ### valueBox: Change remainingBP
+    ### ------------------------------------------------------------------------
+    output$remainingBP <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        column(8,
+               valueBox(
+                   subtitle = tags$p("Remaining Read Length",
+                                     style = "font-size: 15px;
+                                            font-weight: bold;"),
+                   value = tags$p(paste(strtoi(trimmedRV[["remainingBP"]]), "BPs"),
+                                  style = "font-size: 40px;"),
+                   icon = icon("dna", "fa-sm"),
+                   color = "olive",
+                   width = 12,
+               ),
+        )
+    })
+
+    ### ------------------------------------------------------------------------
+    ### valueBox: Change trimmedRatio
+    ### ------------------------------------------------------------------------
+    output$trimmedRatio <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        column(8,
+               valueBox(
+                   subtitle = tags$p("Trimmed Ratio",
+                                     style = "font-size: 15px;
+                                            font-weight: bold;"),
+                   value = tags$p(paste(trimmedRV[["trimmedRatio"]], "%"),
+                                  style = "font-size: 29px;"),
+                   icon = icon("divide", "fa-sm"),
+                   color = "olive",
+                   width = 12,
                ),
         )
     })
