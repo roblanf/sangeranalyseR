@@ -47,7 +47,8 @@ consensusUI <- dashboardPage(
         }'))),
         tags$head(
             tags$style(HTML('#closeUI{background-color:red; color:white; font-size: 23; font-weight: bold;}')),
-            tags$style(HTML('#saveS4{background-color: #b3d9ff; font-size: 23; font-weight: bold;}'))
+            tags$style(HTML('#saveS4{background-color: #b3d9ff; font-size: 23; font-weight: bold;}')),
+            # tags$style(HTML(".fa { font-size: 30px; }"))
         ),
         tags$style(
             HTML(".shiny-notification {
