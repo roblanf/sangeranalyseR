@@ -13,7 +13,9 @@ An S4 class for storing multiple single reads to build up new
 \describe{
 \item{\code{parentDirectory}}{.}
 
-\item{\code{readsRegularExp}}{.}
+\item{\code{forwardReadsRegularExp}}{.}
+
+\item{\code{reverseReadsRegularExp}}{.}
 
 \item{\code{cutoffQualityScore}}{.}
 
@@ -23,12 +25,14 @@ An S4 class for storing multiple single reads to build up new
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-samplesRegExp <- "ACHL"
+forwardRegExp <- "^ACHLO([0-9]*)-09\\\\[LCO1490_t1,HCO2198_t1\\\\]_F.ab1$"
+reverseRegExp <- "^ACHLO([0-9]*)-09\\\\[LCO1490_t1,HCO2198_t1\\\\]_R.ab1$"
 A_chloroticConsensusReads <- new("SangerConsensusRead",
-                                 parentDirectory = inputFilesParentDir,
-                                 readsRegularExp = samplesRegExp,
-                                 cutoffQualityScore  = 50L,
-                                 slidingWindowSize   = 8L)
+                                 parentDirectory       = inputFilesParentDir,
+                                 forwardReadsRegularExp= forwardRegExp,
+                                 reverseReadsRegularExp= reverseRegExp,
+                                 cutoffQualityScore    = 50L,
+                                 slidingWindowSize     = 8L)
 }
 \author{
 Kuan-Hao Chao

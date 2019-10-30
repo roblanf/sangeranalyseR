@@ -4,7 +4,8 @@
 #'  consensus read
 #'
 #' @slot parentDirectory .
-#' @slot readsRegularExp .
+#' @slot forwardReadsRegularExp .
+#' @slot reverseReadsRegularExp .
 #' @slot cutoffQualityScore .
 #' @slot slidingWindowSize .
 #'
@@ -18,20 +19,35 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' samplesRegExp <- "ACHL"
+#' forwardRegExp <- "^ACHLO([0-9]*)-09\\[LCO1490_t1,HCO2198_t1\\]_F.ab1$"
+#' reverseRegExp <- "^ACHLO([0-9]*)-09\\[LCO1490_t1,HCO2198_t1\\]_R.ab1$"
 #' A_chloroticConsensusReads <- new("SangerConsensusRead",
-#'                                  parentDirectory = inputFilesParentDir,
-#'                                  readsRegularExp = samplesRegExp,
-#'                                  cutoffQualityScore  = 50L,
-#'                                  slidingWindowSize   = 8L)
+#'                                  parentDirectory       = inputFilesParentDir,
+#'                                  forwardReadsRegularExp= forwardRegExp,
+#'                                  reverseReadsRegularExp= reverseRegExp,
+#'                                  cutoffQualityScore    = 50L,
+#'                                  slidingWindowSize     = 8L)
 setClass("SangerConsensusRead",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerConsensusRead'
          ### -------------------------------------------------------------------
          representation(
-             parentDirectory    = "character",
-             readsRegularExp    = "character",
-             SangerReadsList    = "list"
+             parentDirectory           = "character",
+             forwardReadsRegularExp    = "character",
+             reverseReadsRegularExp    = "character",
+             # minReadsNum               = "numeric",
+             # minReadLength             = "numeric",
+             # maxSecondaryPeaks         = "numeric",
+             # secondaryPeakRatio        = "numeric",
+             # refAminoAcidSeq           = "character",
+             # minInformation            = "numeric",
+             # threshold                 = "numeric",
+             # geneticCode               = "vector",
+             # acceptStopCodons          = "logical",
+             # readingFrame              = "numeric",
+             # processorsNum             = "numeric",
+             forwardReadsList          = "list",
+             reverseReadsList          = "list"
          ),
 )
 
@@ -41,10 +57,11 @@ setClass("SangerConsensusRead",
 setMethod("initialize",
           "SangerConsensusRead",
           function(.Object, ...,
-                   parentDirectory      = parentDirectory,
-                   readsRegularExp      = readsRegularExp,
-                   cutoffQualityScore   = 20L,
-                   slidingWindowSize    = 5L) {
+                   parentDirectory        = parentDirectory,
+                   forwardReadsRegularExp = forwardReadsRegularExp,
+                   reverseReadsRegularExp = reverseReadsRegularExp,
+                   cutoffQualityScore     = 20L,
+                   slidingWindowSize      = 5L) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
@@ -54,31 +71,50 @@ setMethod("initialize",
                      " parent directory does not exist.\n", sep = "")
         errors <- c(errors, msg)
     }
-
     parentDirFiles <- list.files(parentDirectory)
-    selectInputFiles <- parentDirFiles[grepl(readsRegularExp, parentDirFiles)]
-    allReads <- lapply(parentDirectory, file.path, selectInputFiles)
-    readsNumber <- length(allReads[[1]])
-    # sapply to check all files are exist.
-    allErrorMsg <- sapply(c(allReads[[1]]), function(filePath) {
+    forwardSelectInputFiles <- parentDirFiles[grepl(forwardReadsRegularExp,
+                                                    parentDirFiles)]
+    reverseSelectInputFiles <- parentDirFiles[grepl(reverseReadsRegularExp,
+                                                    parentDirFiles)]
+    forwardAllReads <- lapply(parentDirectory, file.path,
+                              forwardSelectInputFiles)
+    reverseAllReads <- lapply(parentDirectory, file.path,
+                              reverseSelectInputFiles)
+
+    forwardNumber <- length(forwardAllReads[[1]])
+    reverseNumber <- length(reverseAllReads[[1]])
+    # sapply to check all forwardAllReads files are exist.
+    forwardAllErrorMsg <- sapply(c(forwardAllReads[[1]]), function(filePath) {
         if (!file.exists(filePath)) {
             msg <- paste("\n'", filePath, "'",
-                         " read file does not exist.\n", sep = "")
+                         " forward read file does not exist.\n", sep = "")
             return(msg)
         }
         return()
     })
-    errors <- c(errors, unlist(allErrorMsg), use.names = FALSE)
+    reverseAllErrorMsg <- sapply(c(reverseAllReads[[1]]), function(filePath) {
+        if (!file.exists(filePath)) {
+            msg <- paste("\n'", filePath, "'",
+                         " reverse read file does not exist.\n", sep = "")
+            return(msg)
+        }
+        return()
+    })
+    errors <- c(errors, unlist(forwardAllErrorMsg), use.names = FALSE)
+    errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
+
 
     ### ------------------------------------------------------------------------
     ### Prechecking success. Start to create multiple reads.
     ### ------------------------------------------------------------------------
     if (length(errors) == 0) {
         # sapply to create SangerSingleRead list.
-        SangerSingleReadList <- sapply(allReads[[1]], SangerSingleRead,
-               readFeature = "Reads", cutoffQualityScore, slidingWindowSize)
-
-
+        forwardReadsList <- sapply(forwardAllReads[[1]], SangerSingleRead,
+                                         readFeature = "Forward Reads",
+                                         cutoffQualityScore, slidingWindowSize)
+        reverseReadsList <- sapply(reverseAllReads[[1]], SangerSingleRead,
+                                         readFeature = "Reverse Reads",
+                                         cutoffQualityScore, slidingWindowSize)
         # # Try to correct frameshifts in the input sequences
         # if(!is.null(ref.aa.seq)) {
         #
@@ -108,14 +144,15 @@ setMethod("initialize",
         #     print(sprintf("%d reads with stop codons removed", old_length - length(readset)))
         # }
 
-
+        ############
+        ### Here ###
+        ############
         # SangerSingleRead list number checking
-        if (length(SangerSingleReadList) < 2) {
-            stop("There are only ", length(SangerSingleReadList), " reads",
-                 " in this directory. (requires at least two reads)")
-        }
+        # if (length(SangerSingleReadList) < 2) {
+        #     stop("There are only ", length(SangerSingleReadList), " reads",
+        #          " in this directory. (requires at least two reads)")
+        # }
 
-        print("Aligning reads")
 
 
         # if(!is.null(ref.aa.seq)){
@@ -125,31 +162,34 @@ setMethod("initialize",
         # }
 
 
+        ############
+        ### Here ###
+        ############
+        # SangerSingleReadNum <- length(SangerSingleReadList)
+        # SangerDNAStringList <- sapply(1:SangerSingleReadNum, function(i)
+        #     as.character(primarySeq(SangerSingleReadList[[i]])))
+        # SangerDNAStringSet <- DNAStringSet(SangerDNAStringList)
+        #
+        # aln = AlignSeqs(SangerDNAStringSet, verbose = FALSE)
+        #
+        #
+        # if(is.null(names(aln))){
+        #     names(aln) = paste("read", 1:length(aln), sep="_")
+        # }
 
-
-
-        SangerSingleReadNum <- length(SangerSingleReadList)
-        SangerDNAStringList <- sapply(1:SangerSingleReadNum, function(i)
-            as.character(primarySeq(SangerSingleReadList[[i]])))
-        SangerDNAStringSet <- DNAStringSet(SangerDNAStringList)
-
-        aln = AlignSeqs(SangerDNAStringSet, verbose = FALSE)
-
-
-        if(is.null(names(aln))){
-            names(aln) = paste("read", 1:length(aln), sep="_")
-        }
-
+        ############
+        ### Here ###
+        ############
         # call consensus
-        print("Calling consensus sequence")
-        consensus = ConsensusSequence(aln,
-                                      # minInformation = minInformation,
-                                      includeTerminalGaps = TRUE,
-                                      ignoreNonBases = TRUE,
-                                      # threshold = threshold,
-                                      noConsensusChar = "-",
-                                      ambiguity = TRUE
-        )[[1]]
+        # print("Calling consensus sequence")
+        # consensus = ConsensusSequence(aln,
+        #                               # minInformation = minInformation,
+        #                               includeTerminalGaps = TRUE,
+        #                               ignoreNonBases = TRUE,
+        #                               # threshold = threshold,
+        #                               noConsensusChar = "-",
+        #                               ambiguity = TRUE
+        # )[[1]]
 
         # print("Calculating differences between reads and consensus")
         # diffs = mclapply(aln, n.pairwise.diffs, subject = consensus, mc.cores = processors)
@@ -180,39 +220,13 @@ setMethod("initialize",
         #                    "secondary.peak.columns" = sp.df)
         #
         # class(merged.read) = "merged.read"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
-                   parentDirectory = parentDirectory,
-                   readsRegularExp = readsRegularExp,
-                   SangerReadsList = SangerSingleReadList)
+                   parentDirectory        = parentDirectory,
+                   forwardReadsRegularExp = forwardReadsRegularExp,
+                   reverseReadsRegularExp = reverseReadsRegularExp,
+                   forwardReadsList       = forwardReadsList,
+                   reverseReadsList       = reverseReadsList)
 })
