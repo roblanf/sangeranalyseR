@@ -3,11 +3,19 @@
 #' @description  An S4 class for storing multiple single reads to build up new
 #'  consensus read
 #'
-#' @slot parentDirectory .
-#' @slot forwardReadsRegularExp .
-#' @slot reverseReadsRegularExp .
-#' @slot cutoffQualityScore .
-#' @slot slidingWindowSize .
+#' @slot parentDirectory
+#' @slot forwardReadsRegularExp
+#' @slot reverseReadsRegularExp
+#' @slot forwardReadsList
+#' @slot reverseReadsList
+#' @slot minReadsNum
+#' @slot minReadLength
+#' @slot refAminoAcidSeq
+#' @slot minFractionCall
+#' @slot maxFractionLost
+#' @slot geneticCode
+#' @slot acceptStopCodons
+#' @slot readingFrame
 #'
 #' @name SangerConsensusRead-class
 #'
@@ -35,19 +43,16 @@ setClass("SangerConsensusRead",
              parentDirectory           = "character",
              forwardReadsRegularExp    = "character",
              reverseReadsRegularExp    = "character",
-             # minReadsNum               = "numeric",
-             # minReadLength             = "numeric",
-             # maxSecondaryPeaks         = "numeric",
-             # secondaryPeakRatio        = "numeric",
-             # refAminoAcidSeq           = "character",
-             # minInformation            = "numeric",
-             # threshold                 = "numeric",
-             # geneticCode               = "vector",
-             # acceptStopCodons          = "logical",
-             # readingFrame              = "numeric",
-             # processorsNum             = "numeric",
              forwardReadsList          = "list",
-             reverseReadsList          = "list"
+             reverseReadsList          = "list",
+             minReadsNum               = "numeric",
+             minReadLength             = "numeric",
+             refAminoAcidSeq           = "character",
+             minFractionCall           = "numeric",
+             maxFractionLost           = "numeric",
+             geneticCode               = "character",
+             acceptStopCodons          = "logical",
+             readingFrame              = "numeric"
          ),
 )
 
@@ -61,7 +66,16 @@ setMethod("initialize",
                    forwardReadsRegularExp = forwardReadsRegularExp,
                    reverseReadsRegularExp = reverseReadsRegularExp,
                    cutoffQualityScore     = 20L,
-                   slidingWindowSize      = 5L) {
+                   slidingWindowSize      = 5L,
+                   minReadsNum            = 2,
+                   minReadLength          = 20,
+                   refAminoAcidSeq        = NULL,
+                   minFractionCall        = 0.5,
+                   maxFractionLost        = 0.5,
+                   geneticCode            = GENETIC_CODE,
+                   acceptStopCodons       = TRUE,
+                   readingFrame           = 1,
+                   processorsNum          = 1) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
@@ -228,5 +242,13 @@ setMethod("initialize",
                    forwardReadsRegularExp = forwardReadsRegularExp,
                    reverseReadsRegularExp = reverseReadsRegularExp,
                    forwardReadsList       = forwardReadsList,
-                   reverseReadsList       = reverseReadsList)
+                   reverseReadsList       = reverseReadsList,
+                   minReadsNum            = minReadsNum,
+                   minReadLength          = minReadLength,
+                   refAminoAcidSeq        = refAminoAcidSeq,
+                   minFractionCall        = minFractionCall,
+                   maxFractionLost        = maxFractionLost,
+                   geneticCode            = geneticCode,
+                   acceptStopCodons       = acceptStopCodons,
+                   readingFrame           = readingFrame)
 })

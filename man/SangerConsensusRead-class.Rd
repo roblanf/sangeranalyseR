@@ -11,15 +11,7 @@ An S4 class for storing multiple single reads to build up new
 \section{Slots}{
 
 \describe{
-\item{\code{parentDirectory}}{.}
-
-\item{\code{forwardReadsRegularExp}}{.}
-
-\item{\code{reverseReadsRegularExp}}{.}
-
-\item{\code{cutoffQualityScore}}{.}
-
-\item{\code{slidingWindowSize}}{.}
+\item{\code{readingFrame}}{}
 }}
 
 \examples{

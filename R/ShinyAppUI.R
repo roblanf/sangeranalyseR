@@ -4,7 +4,10 @@
 consensusUI <- dashboardPage(
     skin = "green",
     dashboardHeader(
-        title = "sangeranalyseR"
+        title = "sangeranalyseR",
+        tags$li(class = "dropdown",
+                actionButton('saveS4', 'Save S4 object'),
+                actionButton('closeUI', 'Close UI'))
     ),
     ### ------------------------------------------------------------------------
     ### Adding dynamic menu to sidebar. (Two layers)
@@ -22,12 +25,20 @@ consensusUI <- dashboardPage(
     ### ------------------------------------------------------------------------
     dashboardBody(
         useShinyjs(debug = TRUE),
-
-        # tabItems(
-        #     id = "tab_items",
-        #     # menuItem("Consensus Read", tabName = "Overview", icon=icon("dashboard")),
-        #     sidebarMenuOutput("singleReadMenu")
-        # )
+        ### --------------------------------------------------------------------
+        ### Box style changing
+        ### --------------------------------------------------------------------
+        tags$style(HTML("
+                    .box.box-solid.box-success>.box-header {
+                    }
+                    .box.box-solid.box-success{
+                    border-bottom-color:#f3ffe6;
+                    border-left-color:#f3ffe6;
+                    border-right-color:#f3ffe6;
+                    border-top-color:#f3ffe6;
+                    background:#f3ffe6
+                    }
+                    ")),
 
         tags$script(HTML('
             $(document).ready(function() {
@@ -46,8 +57,8 @@ consensusUI <- dashboardPage(
             font-weight: bold;
         }'))),
         tags$head(
-            tags$style(HTML('#closeUI{background-color:red; color:white; font-size: 23; font-weight: bold;}')),
-            tags$style(HTML('#saveS4{background-color: #b3d9ff; font-size: 23; font-weight: bold;}')),
+            tags$style(HTML('#closeUI{background-color:red; color:white; padding:15px; font-size: 35; font-weight: bold;}')),
+            tags$style(HTML('#saveS4{background-color:#0083FF; color:white; padding:15px; font-size: 35; font-weight: bold;}')),
             # tags$style(HTML(".fa { font-size: 30px; }"))
         ),
         tags$style(
@@ -65,9 +76,6 @@ consensusUI <- dashboardPage(
              "
             )
         ),
-        # textOutput("res"),
-
-        box(status = "success", width = 12, htmlOutput("res"), actionButton('saveS4', 'Save S4 object'), actionButton('closeUI', 'Close UI')),
         uiOutput("consensusReadMenu_content"),
         uiOutput("singelReadMenu_content"),
         tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),

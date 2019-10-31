@@ -172,10 +172,18 @@ consensusServer <- function(input, output, session) {
                                    uiOutput("remainingBP")
                             )
                         ),
-                        column(6,
-                               plotlyOutput("qualityTrimmingRatioPlot")),
-                        column(6,
-                               plotlyOutput("qualityQualityBasePlot")),
+                        box(title = tags$p("Cumulative Ratio Plot",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 6,
+                            plotlyOutput("qualityTrimmingRatioPlot")),
+                        box(title = tags$p("Cumulative Ratio Plot",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 6,
+                            plotlyOutput("qualityQualityBasePlot")),
                     ),
                 )
             }

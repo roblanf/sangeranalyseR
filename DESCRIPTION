@@ -29,6 +29,7 @@ RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 
     'AllGenerics.R'
+    'ClassBaseCall.R'
     'ClassQualityReport.R'
     'ClassSangerSingleRead.R'
     'ClassSangerConsensusRead.R'
