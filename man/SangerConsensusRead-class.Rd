@@ -23,8 +23,8 @@ A_chloroticConsensusReads <- new("SangerConsensusRead",
                                  parentDirectory       = inputFilesParentDir,
                                  forwardReadsRegularExp= forwardRegExp,
                                  reverseReadsRegularExp= reverseRegExp,
-                                 cutoffQualityScore    = 50L,
-                                 slidingWindowSize     = 8L)
+                                 cutoffQualityScore    = 50,
+                                 slidingWindowSize     = 8)
 }
 \author{
 Kuan-Hao Chao

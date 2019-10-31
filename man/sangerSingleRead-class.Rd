@@ -26,8 +26,8 @@ A_chloroticaFdReadFN <- file.path(inputFilesPath,
 A_chloroticaSingleRead <- new("SangerSingleRead",
                               readFeature         = "ForwardRead",
                               readFileName        = A_chloroticaFdReadFN,
-                              cutoffQualityScore  = 60L,
-                              slidingWindowSize   = 8L)
+                              cutoffQualityScore  = 60,
+                              slidingWindowSize   = 8)
 }
 \author{
 Kuan-Hao Chao

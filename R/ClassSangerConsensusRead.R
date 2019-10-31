@@ -67,25 +67,43 @@ setMethod("initialize",
                    reverseReadsRegularExp = reverseReadsRegularExp,
                    cutoffQualityScore     = 20,
                    slidingWindowSize      = 5,
+                   refAminoAcidSeq        = "",
+
                    minReadsNum            = 2,
                    minReadLength          = 20,
-                   refAminoAcidSeq        = NULL,
+
                    minFractionCall        = 0.5,
                    maxFractionLost        = 0.5,
+
                    geneticCode            = GENETIC_CODE,
                    acceptStopCodons       = TRUE,
+
                    readingFrame           = 1,
                    processorsNum          = 1) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
     errors <- character()
+
+    errors <- checkCutoffQualityScore(cutoffQualityScore, errors)
+    errors <- checkSlidingWindowSize(slidingWindowSize, errors)
+    errors <- checkMinReadsNum(minReadsNum, errors)
+    errors <- checkMinReadLength(minReadLength, errors)
+    errors <- checkMinFractionCall(minFractionCall, errors)
+    errors <- checkMaxFractionLost(maxFractionLost, errors)
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ### 'parentDirectory' prechecking
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if (!file.exists(parentDirectory)) {
         msg <- paste("\n'", parentDirectory, "'",
                      " parent directory does not exist.\n", sep = "")
         errors <- c(errors, msg)
     }
-    refAminoAcidSeq = ""
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ### 'forwardAllReads' & 'reverseAllReads' files prechecking
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     parentDirFiles <- list.files(parentDirectory)
     forwardSelectInputFiles <- parentDirFiles[grepl(forwardReadsRegularExp,
                                                     parentDirFiles)]
@@ -118,7 +136,6 @@ setMethod("initialize",
     errors <- c(errors, unlist(forwardAllErrorMsg), use.names = FALSE)
     errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
 
-
     ### ------------------------------------------------------------------------
     ### Prechecking success. Start to create multiple reads.
     ### ------------------------------------------------------------------------
@@ -130,6 +147,8 @@ setMethod("initialize",
         reverseReadsList <- sapply(reverseAllReads[[1]], SangerSingleRead,
                                          readFeature = "Reverse Reads",
                                          cutoffQualityScore, slidingWindowSize)
+
+
         # # Try to correct frameshifts in the input sequences
         # if(!is.null(ref.aa.seq)) {
         #

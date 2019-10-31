@@ -69,6 +69,23 @@ setMethod("initialize",
                   errors <- c(errors, msg)
               }
 
+              if (cutoffQualityScore > 60 || cutoffQualityScore < 0 ||
+                  cutoffQualityScore%%1!=0) {
+                  msg <- paste("\n'Your input cutoffQualityScore is: ",
+                               cutoffQualityScore, "' is invalid.",
+                               "'cutoffQualityScore' should",
+                               "be between 0 and 60.\n", sep = "")
+                  errors <- c(errors, msg)
+              }
+
+              if (slidingWindowSize > 20 || slidingWindowSize < 0 ||
+                  slidingWindowSize%%1!=0) {
+                  msg <- paste("\n'Your input slidingWindowSize is: ",
+                               slidingWindowSize, "' is invalid.",
+                               "'slidingWindowSize' should",
+                               "be between 0 and 20.\n", sep = "")
+                  errors <- c(errors, msg)
+              }
               ### --------------------------------------------------------------
               ### Prechecking success. Start to create 'SangerSingleRead'
               ### --------------------------------------------------------------

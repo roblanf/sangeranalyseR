@@ -34,6 +34,7 @@ Collate:
     'ClassSangerSingleRead.R'
     'ClassSangerConsensusRead.R'
     'Constructors.R'
+    'InputCheck.R'
     'LoadMessage.R'
     'MethodSangerConsensusReads.R'
     'MethodSangerSingleRead.R'
