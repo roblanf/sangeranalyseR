@@ -35,10 +35,10 @@ setClass("QualityReport",
              readFeature             = "character",
              qualityPhredScores      = "numeric",
              qualityBaseScore        = "numeric",
-             trimmingStartPos        = "integer",
-             trimmingFinishPos       = "integer",
-             cutoffQualityScore      = "integer",
-             slidingWindowSize       = "integer"
+             trimmingStartPos        = "numeric",
+             trimmingFinishPos       = "numeric",
+             cutoffQualityScore      = "numeric",
+             slidingWindowSize       = "numeric"
          ),
 )
 
@@ -51,10 +51,10 @@ setMethod("initialize",
                    readFeature         = character(0),
                    qualityPhredScores = qualityPhredScores,
                    qualityBaseScore    = 0,
-                   trimmingStartPos    = 0L,
-                   trimmingFinishPos   = 0L,
-                   cutoffQualityScore  = 20L,
-                   slidingWindowSize   = 5L) {
+                   trimmingStartPos    = 0,
+                   trimmingFinishPos   = 0,
+                   cutoffQualityScore  = 20,
+                   slidingWindowSize   = 5) {
               ### --------------------------------------------------------------
               ### Input parameter prechecking
               ### --------------------------------------------------------------

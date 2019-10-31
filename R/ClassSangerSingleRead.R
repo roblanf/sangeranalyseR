@@ -19,8 +19,8 @@
 #' A_chloroticaSingleRead <- new("SangerSingleRead",
 #'                               readFeature         = "ForwardRead",
 #'                               readFileName        = A_chloroticaFdReadFN,
-#'                               cutoffQualityScore  = 60L,
-#'                               slidingWindowSize   = 8L)
+#'                               cutoffQualityScore  = 60,
+#'                               slidingWindowSize   = 8)
 setClass(
     "SangerSingleRead",
     ### -------------------------------------------------------------------
@@ -52,8 +52,8 @@ setMethod("initialize",
                    peakAmpMatrix       = peakAmpMatrix,
                    abifRawData         = abifRawData,
                    QualityReport       = QualityReport,
-                   cutoffQualityScore  = 20L,
-                   slidingWindowSize   = 5L) {
+                   cutoffQualityScore  = 20,
+                   slidingWindowSize   = 5) {
               ### --------------------------------------------------------------
               ### Input parameter prechecking
               ### --------------------------------------------------------------

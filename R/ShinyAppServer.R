@@ -641,7 +641,10 @@ inside_calculate_trimming <- function(qualityBaseScore,
     readLen <- length(qualityBaseScore)
     qualityPbCutoff <- 10** (cutoffQualityScore / (-10.0))
     remainingIndex <- c()
-    if (slidingWindowSize > 20 || qualityBaseScore > 60) {
+    if (slidingWindowSize > 20 || slidingWindowSize < 0 ||
+        slidingWindowSize%%1!=0 ||
+        cutoffQualityScore > 60 || cutoffQualityScore < 0 ||
+        cutoffQualityScore%%1!=0) {
         trimmingStartPos = NULL
         trimmingFinishPos = NULL
     } else {

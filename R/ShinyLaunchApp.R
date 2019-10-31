@@ -8,8 +8,8 @@
 #'                                  parentDirectory       = inputFilesParentDir,
 #'                                  forwardReadsRegularExp= forwardRegExp,
 #'                                  reverseReadsRegularExp= reverseRegExp,
-#'                                  cutoffQualityScore    = 50L,
-#'                                  slidingWindowSize     = 8L)
+#'                                  cutoffQualityScore    = 50,
+#'                                  slidingWindowSize     = 8)
 #' RShiny <- launchAppConsensusRead(list(A_chloroticConsensusReads))
 launchAppConsensusRead <- function(SangerConsensusRead) {
     ### ------------------------------------------------------------------------

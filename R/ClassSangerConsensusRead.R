@@ -33,8 +33,8 @@
 #'                                  parentDirectory       = inputFilesParentDir,
 #'                                  forwardReadsRegularExp= forwardRegExp,
 #'                                  reverseReadsRegularExp= reverseRegExp,
-#'                                  cutoffQualityScore    = 50L,
-#'                                  slidingWindowSize     = 8L)
+#'                                  cutoffQualityScore    = 50,
+#'                                  slidingWindowSize     = 8)
 setClass("SangerConsensusRead",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerConsensusRead'
@@ -65,8 +65,8 @@ setMethod("initialize",
                    parentDirectory        = parentDirectory,
                    forwardReadsRegularExp = forwardReadsRegularExp,
                    reverseReadsRegularExp = reverseReadsRegularExp,
-                   cutoffQualityScore     = 20L,
-                   slidingWindowSize      = 5L,
+                   cutoffQualityScore     = 20,
+                   slidingWindowSize      = 5,
                    minReadsNum            = 2,
                    minReadLength          = 20,
                    refAminoAcidSeq        = NULL,
@@ -85,6 +85,7 @@ setMethod("initialize",
                      " parent directory does not exist.\n", sep = "")
         errors <- c(errors, msg)
     }
+    refAminoAcidSeq = ""
     parentDirFiles <- list.files(parentDirectory)
     forwardSelectInputFiles <- parentDirFiles[grepl(forwardReadsRegularExp,
                                                     parentDirFiles)]
