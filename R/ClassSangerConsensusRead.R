@@ -91,6 +91,8 @@ setMethod("initialize",
     errors <- checkMinReadLength(minReadLength, errors)
     errors <- checkMinFractionCall(minFractionCall, errors)
     errors <- checkMaxFractionLost(maxFractionLost, errors)
+    errors <- checkReadingFrame(readingFrame, errors)
+    errors <- checkGeneticCode(geneticCode, errors)
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ### 'parentDirectory' prechecking
@@ -119,8 +121,8 @@ setMethod("initialize",
     # sapply to check all forwardAllReads files are exist.
     forwardAllErrorMsg <- sapply(c(forwardAllReads[[1]]), function(filePath) {
         if (!file.exists(filePath)) {
-            msg <- paste("\n'", filePath, "'",
-                         " forward read file does not exist.\n", sep = "")
+            msg <- paste("\n'", filePath, "' forward read file does ",
+                         "not exist.\n", sep = "")
             return(msg)
         }
         return()
@@ -148,112 +150,137 @@ setMethod("initialize",
                                          readFeature = "Reverse Reads",
                                          cutoffQualityScore, slidingWindowSize)
 
+        ### --------------------------------------------------------------------
+        ### forward & reverse character reads list string creation
+        ### --------------------------------------------------------------------
+        fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
+            as.character(primarySeq(forwardRead))
+        })
+        rRDNAStringSet <- sapply(reverseReadsList, function(reverseRead) {
+            as.character(primarySeq(reverseRead))
+        })
+        frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),
+                                          unlist(rRDNAStringSet)))
 
-        # # Try to correct frameshifts in the input sequences
-        # if(!is.null(ref.aa.seq)) {
-        #
-        #     print("Correcting frameshifts in reads using amino acid reference sequence")
-        #     corrected = CorrectFrameshifts(myXStringSet = readset, myAAStringSet = AAStringSet(ref.aa.seq), geneticCode = genetic.code, type = 'both', processors = processors, verbose = FALSE)
-        #     readset = corrected$sequences
-        #     indels = get.indel.df(corrected$indels)
-        #     stops = as.numeric(unlist(mclapply(readset, count.stop.codons, reading.frame, genetic.code, mc.cores = processors)))
-        #     stops.df = data.frame("read" = names(readset), "stop.codons" = stops)
-        #     readset.lengths = unlist(lapply(readset, function(x) length(x)))
-        #     readset = readset[which(readset.lengths>0)]
-        # }else{
-        #     indels = NULL
-        #     stops.df = NULL
-        # }
+        if(length(frReadSet) < 2) {
+            error <- paste("\n'Valid abif files should be more than 2.\n",
+                           sep = "")
+            stop(error)
+        }
+        processorsNum <- getProcessors(processorsNum)
+
+        ### --------------------------------------------------------------------
+        ### Amino acid reference sequence CorrectFrameshifts correction
+        ### --------------------------------------------------------------------
+        if (refAminoAcidSeq != "") {
+            message("Correcting frameshifts in reads using amino acid reference sequence")
+
+            # # My test refAminoAcidSeq data
+            # no_N_string <- str_replace_all(frReadSet[1], "N", "T")
+            # example.dna <- DNAStringSet(c(`IGHV1-18*01`=no_N_string))
+            # refAminoAcidSeq <- translate(example.dna)
+
+            # Verbose should be FALSE, but I get error when calling it
+            corrected =
+                CorrectFrameshifts(myXStringSet = frReadSet,
+                                   myAAStringSet = AAStringSet(refAminoAcidSeq),
+                                   geneticCode = geneticCode,
+                                   type = 'both',
+                                   processors = processorsNum)
+            frReadSet = corrected$sequences
+            indels = getIndelDf(corrected$indels)
+            stops = as.numeric(unlist(mclapply(frReadSet, countStopSodons,
+                                               readingFrame, geneticCode,
+                                               mc.cores = processorsNum)))
+            stopsDf = data.frame("read" = names(frReadSet), "stop.codons" = stops)
+            frReadSetLen = unlist(lapply(frReadSet, function(x) length(x)))
+            frReadSet = frReadSet[which(frReadSetLen>0)]
+        } else {
+            indels = NULL
+            stopsDf = NULL
+        }
+
+        if(length(frReadSet) < 2) {
+            error <- paste("\n'After running 'CorrectFrameshifts' function, ",
+                           "forward and reverse reads should be more than 2.\n",
+                           sep = "")
+            stop(error)
+        }
+
+        ### --------------------------------------------------------------------
+        ### Reads with stop codons elimination
+        ### --------------------------------------------------------------------
+        if (!acceptStopCodons) {
+            ### ----------------------------------------------------------------
+            ### Remove reads with stop codons
+            ### ----------------------------------------------------------------
+            print("Removing reads with stop codons")
+            if(refAminoAcidSeq == ""){ # otherwise we already did it above
+                stops =
+                    as.numeric(unlist(mclapply(frReadSet,
+                                               countStopSodons,
+                                               readingFrame, geneticCode,
+                                               mc.cores = processorsNum)))
+                stopsDf = data.frame("read" = names(frReadSet),
+                                     "stopCodons" = stops)
+            }
+            old_length = length(frReadSet)
+            frReadSet = frReadSet[which(stops==0)]
+            # Modify
+            print(sprintf("%d reads with stop codons removed", old_length - length(frReadSet)))
+        }
+
+        if(length(frReadSet) < 2) {
+            error <- paste("\n'After removing reads with stop codons, ",
+                           "forward and reverse reads should be more than 2.\n",
+                           sep = "")
+            stop(error)
+        }
+
+        ### --------------------------------------------------------------------
+        ### Start aligning reads
+        ### --------------------------------------------------------------------
+        if (refAminoAcidSeq != "") {
+            aln = AlignTranslation(frReadSet, geneticCode = geneticCode, processors = processorsNum, verbose = FALSE)
+        } else {
+            aln = AlignSeqs(frReadSet, processors = processorsNum, verbose = FALSE)
+        }
+
+        if(is.null(names(aln))){
+            names(aln) = paste("read", 1:length(aln), sep="_")
+        }
+
+        print("Calling consensus sequence")
+        consensus = ConsensusSequence(aln,
+                                      minInformation = minFractionCall,
+                                      includeTerminalGaps = TRUE,
+                                      ignoreNonBases = TRUE,
+                                      threshold = maxFractionLost,
+                                      noConsensusChar = "-",
+                                      ambiguity = TRUE
+        )[[1]]
+
+        print("Calculating differences between reads and consensus")
+        diffs = mclapply(aln, nPairwiseDiffs, subject = consensus, mc.cores = processorsNum)
+        diffs = do.call(rbind, diffs)
+        diffsDf = data.frame("name" = names(aln), "pairwise.diffs.to.consensus" = diffs[,1], "unused.chars" = diffs[,2])
+        rownames(diffsDf) = NULL
 
 
-        # # Remove reads with stop codons
-        # if(accept.stop.codons == FALSE){
-        #     print("Removing reads with stop codons")
-        #     if(is.null(ref.aa.seq)){ # otherwise we already did it above
-        #         stops = as.numeric(unlist(mclapply(readset, count.stop.codons, reading.frame, genetic.code, mc.cores = processors)))
-        #         stops.df = data.frame("read" = names(readset), "stop.codons" = stops)
-        #     }
-        #     old_length = length(readset)
-        #     readset = readset[which(stops==0)]
-        #     print(sprintf("%d reads with stop codons removed", old_length - length(readset)))
-        # }
+        # get a dendrogram
+        dist = DistanceMatrix(aln, correction = "Jukes-Cantor",
+                              penalizeGapLetterMatches = FALSE,
+                              processors = processorsNum, verbose = FALSE)
+        dend = IdClusters(dist, type = "dendrogram", processors = processorsNum, verbose = FALSE)
 
-        ############
-        ### Here ###
-        ############
-        # SangerSingleRead list number checking
-        # if (length(SangerSingleReadList) < 2) {
-        #     stop("There are only ", length(SangerSingleReadList), " reads",
-        #          " in this directory. (requires at least two reads)")
-        # }
+        # add consensus to alignment
+        aln2 = c(aln, DNAStringSet(consensus))
+        names(aln2)[length(aln2)] = "consensus"
+        # strip gaps from consensus (must be an easier way!!)
+        consensusGapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
 
-
-
-        # if(!is.null(ref.aa.seq)){
-        #     aln = AlignTranslation(readset, geneticCode = genetic.code, processors = processors, verbose = FALSE)
-        # }else{
-        #     aln = AlignSeqs(readset, processors = processors, verbose = FALSE)
-        # }
-
-
-        ############
-        ### Here ###
-        ############
-        # SangerSingleReadNum <- length(SangerSingleReadList)
-        # SangerDNAStringList <- sapply(1:SangerSingleReadNum, function(i)
-        #     as.character(primarySeq(SangerSingleReadList[[i]])))
-        # SangerDNAStringSet <- DNAStringSet(SangerDNAStringList)
-        #
-        # aln = AlignSeqs(SangerDNAStringSet, verbose = FALSE)
-        #
-        #
-        # if(is.null(names(aln))){
-        #     names(aln) = paste("read", 1:length(aln), sep="_")
-        # }
-
-        ############
-        ### Here ###
-        ############
-        # call consensus
-        # print("Calling consensus sequence")
-        # consensus = ConsensusSequence(aln,
-        #                               # minInformation = minInformation,
-        #                               includeTerminalGaps = TRUE,
-        #                               ignoreNonBases = TRUE,
-        #                               # threshold = threshold,
-        #                               noConsensusChar = "-",
-        #                               ambiguity = TRUE
-        # )[[1]]
-
-        # print("Calculating differences between reads and consensus")
-        # diffs = mclapply(aln, n.pairwise.diffs, subject = consensus, mc.cores = processors)
-        # diffs = do.call(rbind, diffs)
-        # diffs.df = data.frame("name" = names(aln), "pairwise.diffs.to.consensus" = diffs[,1], "unused.chars" = diffs[,2])
-        # rownames(diffs.df) = NULL
-        #
-        # # get a dendrogram
-        # dist = DistanceMatrix(aln, correction = "Jukes-Cantor", penalizeGapLetterMatches = FALSE, processors = processors, verbose = FALSE)
-        # dend = IdClusters(dist, type = "dendrogram", processors = processors, verbose = FALSE)
-        #
-        # # add consensus to alignment
-        # aln2 = c(aln, DNAStringSet(consensus))
-        # names(aln2)[length(aln2)] = "consensus"
-        # # strip gaps from consensus (must be an easier way!!)
-        # consensus.gapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
-        #
-        # # count columns in the alignment with >1 coincident secondary peaks
-        # sp.df = count.coincident.sp(aln, processors = processors)
-        #
-        # merged.read = list("consensus" = consensus.gapfree,
-        #                    "alignment" = aln2,
-        #                    "differences" = diffs.df,
-        #                    "distance.matrix" = dist,
-        #                    "dendrogram" = dend,
-        #                    "indels" = indels,
-        #                    "stop.codons" = stops.df,
-        #                    "secondary.peak.columns" = sp.df)
-        #
-        # class(merged.read) = "merged.read"
+        # count columns in the alignment with >1 coincident secondary peaks
+        spDf = countCoincidentSp(aln, processors = processorsNum)
     } else {
         stop(errors)
     }

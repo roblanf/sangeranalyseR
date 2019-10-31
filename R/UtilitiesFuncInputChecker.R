@@ -66,6 +66,25 @@ checkMaxFractionLost <- function(maxFractionLost, errors) {
 }
 
 
+checkGeneticCode <- function(geneticCode, errors) {
+    if(!("*" %in% geneticCode)) {
+        msg <- paste("\n'geneticCode' does not specify any stop codons.\n",
+                     sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
+
+checkReadingFrame <- function(readingFrame, errors) {
+    if(!readingFrame %in% c(1,2,3)) {
+        msg <- paste("\n'readingFrame' must be 1, 2, or 3.\n",
+                     sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
 # Waiting list ~~
 # refAminoAcidSeq
 # geneticCode

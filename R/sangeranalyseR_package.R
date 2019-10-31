@@ -1,7 +1,7 @@
 #' sangeranalyseR-package
 #'
 #' @name sangeranalyseR
-#' @importFrom sangerseqR read.abif sangerseq
+#' @importFrom sangerseqR read.abif sangerseq primarySeq
 #' @importFrom ggplot2 ggplot
 #' @importFrom gridExtra grid.arrange
 #' @importFrom shiny shinyApp
@@ -9,5 +9,5 @@
 #' @importFrom data.table tstrsplit
 #' @importFrom shinyjs useShinyjs html
 #' @importFrom plotly
-#' @importFrom DECIPHER AlignSeqs
-#' @importFrom Biostrings DNAStringSet GENETIC_CODE
+#' @importFrom DECIPHER AlignSeqs AlignTranslation ConsensusSequence
+#' @importFrom Biostrings DNAStringSet GENETIC_CODE trinucleotideFrequency
