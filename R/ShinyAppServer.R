@@ -180,12 +180,60 @@ consensusServer <- function(input, output, session) {
                     status = "success", width = 12,
                     tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                     fluidRow(
-                        uiOutput("SCMinReadsNum"),
-                        uiOutput("SCMinReadLength"),
-                        uiOutput("SCMinFractionCall"),
-                        uiOutput("SCMaxFractionLost"),
-                        uiOutput("SCAcceptStopCodons"),
-                        uiOutput("SCReadingFrame"),
+                        column(3,
+                               uiOutput("SCMinReadsNum"),
+                               tags$ul(
+                                   textInput("SCMinReadsNumText",
+                                             label = p("Change Value"),
+                                             value = toString(SCMinReadsNum),
+                                             width = '95%')
+                               ),
+                        ),
+                        column(3,
+                               uiOutput("SCMinReadLength"),
+                               tags$ul(
+                                   textInput("SCMinReadLengthText",
+                                             label = p("Change Value"),
+                                             value = toString(SCMinReadLength),
+                                             width = '95%')
+                               ),
+                        ),
+                        column(3,
+                               uiOutput("SCMinFractionCall"),
+                               tags$ul(
+                                   textInput("SCMinFractionCallText",
+                                             label = p("Change Value"),
+                                             value = toString(SCMinFractionCall),
+                                             width = '95%')
+                               ),
+                        ),
+                        column(3,
+                               uiOutput("SCMaxFractionLost"),
+                               tags$ul(
+                                   textInput("SCMaxFractionLostText",
+                                             label = p("Change Value"),
+                                             value = toString(SCMaxFractionLost),
+                                             width = '95%')
+                               ),
+                        ),
+                        column(3,
+                               uiOutput("SCAcceptStopCodons"),
+                               tags$ul(
+                                   textInput("SCAcceptStopCodonsText",
+                                             label = p("Change Value"),
+                                             value = toString(SCAcceptStopCodons),
+                                             width = '95%')
+                               ),
+                        ),
+                        column(3,
+                               uiOutput("SCReadingFrame"),
+                               tags$ul(
+                                   textInput("SCReadingFrameText",
+                                             label = p("Change Value"),
+                                             value = toString(SCReadingFrame),
+                                             width = '95%')
+                               ),
+                        ),
                     ),
                 ),
             )
@@ -423,33 +471,94 @@ consensusServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### valueBox: Change cutoffQualityScore
     ### ------------------------------------------------------------------------
-
-    # uiOutput("SCMinReadLength"),
-    # uiOutput("SCMinFractionCall"),
-    # uiOutput("SCMaxFractionLost"),
-    # uiOutput("SCAcceptStopCodons"),
-    # uiOutput("SCReadingFrame"),
-
-
     output$SCMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        column(3,
-               valueBox(
-                   subtitle = tags$p("MinReadsNum",
-                                     style = "font-size: 15px;
+        valueBox(
+            subtitle = tags$p("MinReadsNum",
+                              style = "font-size: 15px;
                                             font-weight: bold;"),
-                   value = tags$p(strtoi(input$SCMinReadsNumText),
-                                  style = "font-size: 29px;"),
-                   icon = icon("cut", "fa-sm"),
-                   color = "olive",
-                   width = 12,
-               ),
-               tags$ul(
-                   textInput("SCMinReadsNumText",
-                             label = p("Change Value"),
-                             value = toString(SCMinReadsNum),
-                             width = '95%')
-               ),
+            value = tags$p(strtoi(input$SCMinReadsNumText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+
+    output$SCMinReadLength <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        valueBox(
+            subtitle = tags$p("MinReadLength",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(input$SCMinReadLengthText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+
+    output$SCMinFractionCall <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        valueBox(
+            subtitle = tags$p("MinFractionCall",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(as.numeric(input$SCMinFractionCallText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+
+    output$SCMaxFractionLost <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        valueBox(
+            subtitle = tags$p("MaxFractionLost",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(as.numeric(input$SCMaxFractionLostText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+
+    output$SCAcceptStopCodons <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        if (input$SCAcceptStopCodonsText == TRUE) {
+            inputSCAcceptStopCodonsText = "TRUE"
+        } else if (input$SCAcceptStopCodonsText == FALSE) {
+            inputSCAcceptStopCodonsText = "FALSE"
+        } else {
+            inputSCAcceptStopCodonsText = "NA"
+        }
+        valueBox(
+            subtitle = tags$p("AcceptStopCodons",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(inputSCAcceptStopCodonsText,
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+
+    output$SCReadingFrame <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        valueBox(
+            subtitle = tags$p("ReadingFrame",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(input$SCReadingFrameText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
         )
     })
 
