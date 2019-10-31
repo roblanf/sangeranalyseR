@@ -16,6 +16,14 @@
 #' @slot geneticCode
 #' @slot acceptStopCodons
 #' @slot readingFrame
+#' @slot consensusRead
+#' @slot alignment
+#' @slot differencesDF
+#' @slot distanceMatrix
+#' @slot dendrogram
+#' @slot indelsDF
+#' @slot stopCodonsDF
+#' @slot secondaryPeakDF
 #'
 #' @name SangerConsensusRead-class
 #'
@@ -33,7 +41,7 @@
 #'                                  parentDirectory       = inputFilesParentDir,
 #'                                  forwardReadsRegularExp= forwardRegExp,
 #'                                  reverseReadsRegularExp= reverseRegExp,
-#'                                  cutoffQualityScore    = 50,
+#'                                  cutoffQualityScore    = 20,
 #'                                  slidingWindowSize     = 8)
 setClass("SangerConsensusRead",
          ### -------------------------------------------------------------------
@@ -52,8 +60,16 @@ setClass("SangerConsensusRead",
              maxFractionLost           = "numeric",
              geneticCode               = "character",
              acceptStopCodons          = "logical",
-             readingFrame              = "numeric"
-         ),
+             readingFrame              = "numeric",
+             consensusRead             = "DNAString",
+             alignment                 = "DNAStringSet",
+             differencesDF             = "data.frame",
+             distanceMatrix            = "matrix",
+             dendrogram                = "list",
+             indelsDF                  = "data.frame",
+             stopCodonsDF              = "data.frame",
+             secondaryPeakDF           = "data.frame"
+             ),
 )
 
 ### ============================================================================
@@ -68,16 +84,12 @@ setMethod("initialize",
                    cutoffQualityScore     = 20,
                    slidingWindowSize      = 5,
                    refAminoAcidSeq        = "",
-
                    minReadsNum            = 2,
                    minReadLength          = 20,
-
                    minFractionCall        = 0.5,
                    maxFractionLost        = 0.5,
-
                    geneticCode            = GENETIC_CODE,
                    acceptStopCodons       = TRUE,
-
                    readingFrame           = 1,
                    processorsNum          = 1) {
     ### ------------------------------------------------------------------------
@@ -94,18 +106,18 @@ setMethod("initialize",
     errors <- checkReadingFrame(readingFrame, errors)
     errors <- checkGeneticCode(geneticCode, errors)
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ### ------------------------------------------------------------------------
     ### 'parentDirectory' prechecking
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ### ------------------------------------------------------------------------
     if (!file.exists(parentDirectory)) {
         msg <- paste("\n'", parentDirectory, "'",
                      " parent directory does not exist.\n", sep = "")
         errors <- c(errors, msg)
     }
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ### ------------------------------------------------------------------------
     ### 'forwardAllReads' & 'reverseAllReads' files prechecking
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ### ------------------------------------------------------------------------
     parentDirFiles <- list.files(parentDirectory)
     forwardSelectInputFiles <- parentDirFiles[grepl(forwardReadsRegularExp,
                                                     parentDirFiles)]
@@ -144,10 +156,10 @@ setMethod("initialize",
     if (length(errors) == 0) {
         # sapply to create SangerSingleRead list.
         forwardReadsList <- sapply(forwardAllReads[[1]], SangerSingleRead,
-                                         readFeature = "Forward Reads",
+                                         readFeature = "Forward_Reads",
                                          cutoffQualityScore, slidingWindowSize)
         reverseReadsList <- sapply(reverseAllReads[[1]], SangerSingleRead,
-                                         readFeature = "Reverse Reads",
+                                         readFeature = "Reverse_Reads",
                                          cutoffQualityScore, slidingWindowSize)
 
         ### --------------------------------------------------------------------
@@ -157,10 +169,16 @@ setMethod("initialize",
             as.character(primarySeq(forwardRead))
         })
         rRDNAStringSet <- sapply(reverseReadsList, function(reverseRead) {
-            as.character(primarySeq(reverseRead))
+            as.character(reverseComplement(primarySeq(reverseRead)))
         })
+
+        ### --------------------------------------------------------------------
+        ### DNAStringSet storing forward & reverse reads ! (Origin)
+        ### --------------------------------------------------------------------
         frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),
                                           unlist(rRDNAStringSet)))
+        frReadFeatureList <- c(rep("Forward_Reads", length(fRDNAStringSet)),
+                               rep("Reverse_Reads", length(rRDNAStringSet)))
 
         if(length(frReadSet) < 2) {
             error <- paste("\n'Valid abif files should be more than 2.\n",
@@ -173,13 +191,12 @@ setMethod("initialize",
         ### Amino acid reference sequence CorrectFrameshifts correction
         ### --------------------------------------------------------------------
         if (refAminoAcidSeq != "") {
-            message("Correcting frameshifts in reads using amino acid reference sequence")
-
-            # # My test refAminoAcidSeq data
+            message("Correcting frameshifts in reads using amino acid",
+                    "reference sequence")
+            # My test refAminoAcidSeq data
             # no_N_string <- str_replace_all(frReadSet[1], "N", "T")
             # example.dna <- DNAStringSet(c(`IGHV1-18*01`=no_N_string))
             # refAminoAcidSeq <- translate(example.dna)
-
             # Verbose should be FALSE, but I get error when calling it
             corrected =
                 CorrectFrameshifts(myXStringSet = frReadSet,
@@ -192,12 +209,13 @@ setMethod("initialize",
             stops = as.numeric(unlist(mclapply(frReadSet, countStopSodons,
                                                readingFrame, geneticCode,
                                                mc.cores = processorsNum)))
-            stopsDf = data.frame("read" = names(frReadSet), "stop.codons" = stops)
+            stopsDf = data.frame("read" = names(frReadSet),
+                                 "stop.codons" = stops)
             frReadSetLen = unlist(lapply(frReadSet, function(x) length(x)))
             frReadSet = frReadSet[which(frReadSetLen>0)]
         } else {
-            indels = NULL
-            stopsDf = NULL
+            indels = data.frame()
+            stopsDf = data.frame()
         }
 
         if(length(frReadSet) < 2) {
@@ -227,7 +245,8 @@ setMethod("initialize",
             old_length = length(frReadSet)
             frReadSet = frReadSet[which(stops==0)]
             # Modify
-            print(sprintf("%d reads with stop codons removed", old_length - length(frReadSet)))
+            message(old_length - length(frReadSet),
+                    "reads with stop codons removed")
         }
 
         if(length(frReadSet) < 2) {
@@ -241,14 +260,14 @@ setMethod("initialize",
         ### Start aligning reads
         ### --------------------------------------------------------------------
         if (refAminoAcidSeq != "") {
-            aln = AlignTranslation(frReadSet, geneticCode = geneticCode, processors = processorsNum, verbose = FALSE)
+            aln = AlignTranslation(frReadSet, geneticCode = geneticCode,
+                                   processors = processorsNum, verbose = FALSE)
         } else {
-            aln = AlignSeqs(frReadSet, processors = processorsNum, verbose = FALSE)
+            aln = AlignSeqs(frReadSet,
+                            processors = processorsNum, verbose = FALSE)
         }
-
-        if(is.null(names(aln))){
-            names(aln) = paste("read", 1:length(aln), sep="_")
-        }
+        names(aln) = paste(1:length(aln), "Read",
+                           basename(names(aln)), sep="_")
 
         print("Calling consensus sequence")
         consensus = ConsensusSequence(aln,
@@ -261,21 +280,24 @@ setMethod("initialize",
         )[[1]]
 
         print("Calculating differences between reads and consensus")
-        diffs = mclapply(aln, nPairwiseDiffs, subject = consensus, mc.cores = processorsNum)
+        diffs = mclapply(aln, nPairwiseDiffs,
+                         subject = consensus, mc.cores = processorsNum)
         diffs = do.call(rbind, diffs)
-        diffsDf = data.frame("name" = names(aln), "pairwise.diffs.to.consensus" = diffs[,1], "unused.chars" = diffs[,2])
+        diffsDf = data.frame("name" = names(aln),
+                             "pairwise.diffs.to.consensus" = diffs[,1],
+                             "unused.chars" = diffs[,2])
         rownames(diffsDf) = NULL
-
 
         # get a dendrogram
         dist = DistanceMatrix(aln, correction = "Jukes-Cantor",
                               penalizeGapLetterMatches = FALSE,
                               processors = processorsNum, verbose = FALSE)
-        dend = IdClusters(dist, type = "dendrogram", processors = processorsNum, verbose = FALSE)
+        dend = IdClusters(dist, type = "both",
+                          processors = processorsNum, verbose = FALSE)
 
         # add consensus to alignment
         aln2 = c(aln, DNAStringSet(consensus))
-        names(aln2)[length(aln2)] = "consensus"
+        names(aln2)[length(aln2)] = "Consensus"
         # strip gaps from consensus (must be an easier way!!)
         consensusGapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
 
@@ -297,5 +319,14 @@ setMethod("initialize",
                    maxFractionLost        = maxFractionLost,
                    geneticCode            = geneticCode,
                    acceptStopCodons       = acceptStopCodons,
-                   readingFrame           = readingFrame)
+                   readingFrame           = readingFrame,
+                   consensusRead          = consensusGapfree,
+                   differencesDF          = diffsDf,
+                   alignment              = aln2,
+                   distanceMatrix         = dist,
+                   dendrogram             = dend,
+                   indelsDF               = indels,
+                   stopCodonsDF           = stopsDf,
+                   secondaryPeakDF        = spDf)
 })
+

@@ -11,7 +11,7 @@ An S4 class for storing multiple single reads to build up new
 \section{Slots}{
 
 \describe{
-\item{\code{readingFrame}}{}
+\item{\code{secondaryPeakDF}}{}
 }}
 
 \examples{
@@ -23,7 +23,7 @@ A_chloroticConsensusReads <- new("SangerConsensusRead",
                                  parentDirectory       = inputFilesParentDir,
                                  forwardReadsRegularExp= forwardRegExp,
                                  reverseReadsRegularExp= reverseRegExp,
-                                 cutoffQualityScore    = 50,
+                                 cutoffQualityScore    = 20,
                                  slidingWindowSize     = 8)
 }
 \author{

@@ -10,4 +10,6 @@
 #' @importFrom shinyjs useShinyjs html
 #' @importFrom plotly
 #' @importFrom DECIPHER AlignSeqs AlignTranslation ConsensusSequence
+#'               CorrectFrameshifts DistanceMatrix IdClusters RemoveGaps
 #' @importFrom Biostrings DNAStringSet GENETIC_CODE trinucleotideFrequency
+#'               reverseComplement

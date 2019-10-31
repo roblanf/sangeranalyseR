@@ -85,15 +85,6 @@ oneAmbiguousColumn <- function(i, aln){
 }
 
 
-
-#' Count stop codons in a DNA sequence
-#'
-#' @param sequence a DNAString object
-#' @param readingFrame a number from 1 to 3 denoting the reading frame of the sequence
-#' @param geneticCode Named character vector in the same format as GENETIC_CODE (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
-#'
-#' @export count.stop.codons
-#'
 countStopSodons <- function(sequence, readingFrame = 1, geneticCode = GENETIC_CODE){
     l = length(sequence) + 1 - readingFrame
     if(l < 3){
