@@ -8,9 +8,54 @@ consensusServer <- function(input, output, session) {
     SangerConsensusRead <- getShinyOption("SangerConsensusReadSet")
     SangerConsensus <- SangerConsensusRead[[1]]
 
+
+    ### ------------------------------------------------------------------------
+    ### ConsensusRead-related parameters initialization.
+    ### ------------------------------------------------------------------------
+    SCMinReadsNum <- SangerConsensus@minReadsNum
+    SCMinReadLength <- SangerConsensus@minReadLength
+
+
+    SCRefAminoAcidSeq <- SangerConsensus@refAminoAcidSeq
+
+
+    SCMinFractionCall <- SangerConsensus@minFractionCall
+    SCMaxFractionLost <- SangerConsensus@maxFractionLost
+
+
+    SCGeneticCode <- SangerConsensus@geneticCode
+
+
+    SCAcceptStopCodons <- SangerConsensus@acceptStopCodons
+    SCReadingFrame <- SangerConsensus@readingFrame
+
+    as.character(SangerConsensus@consensusRead)
+
+    # aln = AlignSeqs(c(DNAStringSet(SangerConsensus@consensusRead), DNAStringSet(SangerConsensus@consensusRead)),
+    #                 processors = 1, verbose = FALSE)
+
+
+    SangerConsensus@alignment
+    SangerConsensus@differencesDF
+    SangerConsensus@distanceMatrix
+
+    SangerConsensus@dendrogram
+
+    SangerConsensus@indelsDF
+    SangerConsensus@stopCodonsDF
+
+    SangerConsensus@secondaryPeakDF
+
+
+
+
+
     SangerConsensusForRegExp <- SangerConsensus@forwardReadsRegularExp
     SangerConsensusRevRegExp <- SangerConsensus@reverseReadsRegularExp
 
+    ### ------------------------------------------------------------------------
+    ### Reads-related parameters initialization.
+    ### ------------------------------------------------------------------------
     forwardReadNum <- length((SangerConsensus)@forwardReadsList)
     reverseReadNum <- length((SangerConsensus)@reverseReadsList)
     SangerSingleReadNum <- forwardReadNum + reverseReadNum
@@ -124,7 +169,25 @@ consensusServer <- function(input, output, session) {
         if (input$sidebar_menu == "Overview") {
             fluidRow(
                 useShinyjs(),
-                box("Overview")
+                box("Overview"),
+
+
+
+                box(title = tags$p("Parameters: ",
+                                   style = "font-size: 26px;
+                                       font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    fluidRow(
+                        uiOutput("SCMinReadsNum"),
+                        uiOutput("SCMinReadLength"),
+                        uiOutput("SCMinFractionCall"),
+                        uiOutput("SCMaxFractionLost"),
+                        uiOutput("SCAcceptStopCodons"),
+                        uiOutput("SCReadingFrame"),
+                    ),
+                ),
             )
         }
     })
@@ -158,10 +221,36 @@ consensusServer <- function(input, output, session) {
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         fluidRow(
-                            uiOutput("cutoffQualityScore"),
-                            uiOutput("slidingWindowSize"),
-                            uiOutput("trimmingStartPos"),
-                            uiOutput("trimmingFinishPos"),
+                            column(3,
+                                   uiOutput("cutoffQualityScore"),
+                                   tags$ul(
+                                       textInput("cutoffQualityScoreText",
+                                                 label = p("Change Value"),
+                                                 value = toString(
+                                                     SangerSingleReadQualReport[[
+                                                         strtoi(sidebar_menu[[1]])]]@
+                                                         cutoffQualityScore),
+                                                 width = '95%')
+                                   ),
+                            ),
+                            column(3,
+                                   uiOutput("slidingWindowSize"),
+                                   tags$ul(
+                                       textInput("slidingWindowSizeText",
+                                                 label = p("Change Value"),
+                                                 value =
+                                                     toString(SangerSingleReadQualReport[[
+                                                         strtoi(sidebar_menu[[1]])]]@
+                                                             slidingWindowSize),
+                                                 width = '95%')
+                                   ),
+                            ),
+                            column(3,
+                                   uiOutput("trimmingStartPos"),
+                            ),
+                            column(3,
+                                   uiOutput("trimmingFinishPos"),
+                            )
                         ),
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         fluidRow(
@@ -245,36 +334,42 @@ consensusServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     observeEvent(input$cutoffQualityScoreText, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        if (!is.na(strtoi(input$cutoffQualityScoreText))) {
-            trimmingPos <-
-                inside_calculate_trimming(
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        qualityBaseScore, strtoi(input$cutoffQualityScoreText),
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        slidingWindowSize)
-            if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
+        if (!is.na(strtoi(input$cutoffQualityScoreText)) &&
+            strtoi(input$cutoffQualityScoreText) > 0 &&
+            strtoi(input$cutoffQualityScoreText) <= 60 &&
+            strtoi(input$cutoffQualityScoreText) %% 1 ==0) {
+            inputCutoffQualityScoreText <- input$cutoffQualityScoreText
+        } else {
+            inputCutoffQualityScoreText <- 20
+        }
+        trimmingPos <-
+            inside_calculate_trimming(
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    cutoffQualityScore <<- strtoi(input$cutoffQualityScoreText)
+                    qualityBaseScore, strtoi(inputCutoffQualityScoreText),
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmingStartPos <<- trimmingPos[1]
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmingFinishPos <<- trimmingPos[2]
-                trimmedRV[["trimmedStart"]] <-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@trimmingStartPos
-                trimmedRV[["trimmedEnd"]] <-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
-                qualityPhredScores = SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@qualityPhredScores
-                readLen = length(qualityPhredScores)
-                trimmedRV[["remainingBP"]] <-
-                    trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
-                trimmedRV[["trimmedRatio"]] <-
-                    round(((trimmedRV[["trimmedEnd"]] -
-                                trimmedRV[["trimmedStart"]] + 1) / readLen)*100,
-                          digits = 2)
-            }
+                    slidingWindowSize)
+        if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
+            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                cutoffQualityScore <<- strtoi(inputCutoffQualityScoreText)
+            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                trimmingStartPos <<- trimmingPos[1]
+            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                trimmingFinishPos <<- trimmingPos[2]
+            trimmedRV[["trimmedStart"]] <-
+                SangerSingleReadQualReport[[
+                    strtoi(sidebar_menu[[1]])]]@trimmingStartPos
+            trimmedRV[["trimmedEnd"]] <-
+                SangerSingleReadQualReport[[
+                    strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
+            qualityPhredScores = SangerSingleReadQualReport[[
+                strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+            readLen = length(qualityPhredScores)
+            trimmedRV[["remainingBP"]] <-
+                trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+            trimmedRV[["trimmedRatio"]] <-
+                round(((trimmedRV[["trimmedEnd"]] -
+                            trimmedRV[["trimmedStart"]] + 1) / readLen)*100,
+                      digits = 2)
         }
     })
 
@@ -283,64 +378,106 @@ consensusServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     observeEvent(input$slidingWindowSizeText, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        if (!is.na(strtoi(input$slidingWindowSizeText))) {
-            trimmingPos <-
-                inside_calculate_trimming(SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@cutoffQualityScore,
-                    strtoi(input$slidingWindowSizeText))
-            if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
+        if (!is.na(strtoi(input$slidingWindowSizeText)) &&
+            strtoi(input$slidingWindowSizeText) > 0 &&
+            strtoi(input$slidingWindowSizeText) <= 20 &&
+            strtoi(input$slidingWindowSizeText) %% 1 ==0) {
+            inputSlidingWindowSizeText <- input$slidingWindowSizeText
+        } else {
+            inputSlidingWindowSizeText <- 5
+        }
+        trimmingPos <-
+            inside_calculate_trimming(SangerSingleReadQualReport[[
+                strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
+                SangerSingleReadQualReport[[
+                    strtoi(sidebar_menu[[1]])]]@cutoffQualityScore,
+                strtoi(inputSlidingWindowSizeText))
+        if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
+            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                slidingWindowSize <<- strtoi(inputSlidingWindowSizeText)
+            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                trimmingStartPos <<- trimmingPos[1]
+            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                trimmingFinishPos <<- trimmingPos[2]
+            trimmedRV[["trimmedStart"]] <-
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    slidingWindowSize <<- strtoi(input$slidingWindowSizeText)
+                trimmingStartPos
+            trimmedRV[["trimmedEnd"]] <-
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmingStartPos <<- trimmingPos[1]
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmingFinishPos <<- trimmingPos[2]
-                trimmedRV[["trimmedStart"]] <-
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmingStartPos
-                trimmedRV[["trimmedEnd"]] <-
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmingFinishPos
-                qualityPhredScores = SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@qualityPhredScores
-                readLen = length(qualityPhredScores)
-                trimmedRV[["remainingBP"]] <-
-                    trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
-                trimmedRV[["trimmedRatio"]] <-
-                    round(((trimmedRV[["trimmedEnd"]] -
-                                trimmedRV[["trimmedStart"]] + 1) / readLen)*100,
-                          digits = 2)
-            }
+                trimmingFinishPos
+            qualityPhredScores = SangerSingleReadQualReport[[
+                strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+            readLen = length(qualityPhredScores)
+            trimmedRV[["remainingBP"]] <-
+                trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+            trimmedRV[["trimmedRatio"]] <-
+                round(((trimmedRV[["trimmedEnd"]] -
+                            trimmedRV[["trimmedStart"]] + 1) / readLen)*100,
+                      digits = 2)
         }
     })
 
+    ############################################################################
+    ### ConsensusRead (Overview)
+    ############################################################################
     ### ------------------------------------------------------------------------
     ### valueBox: Change cutoffQualityScore
     ### ------------------------------------------------------------------------
-    output$cutoffQualityScore <- renderUI({
+
+    # uiOutput("SCMinReadLength"),
+    # uiOutput("SCMinFractionCall"),
+    # uiOutput("SCMaxFractionLost"),
+    # uiOutput("SCAcceptStopCodons"),
+    # uiOutput("SCReadingFrame"),
+
+
+    output$SCMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
         column(3,
                valueBox(
-                   subtitle = tags$p("Cut Off Quality Score",
+                   subtitle = tags$p("MinReadsNum",
                                      style = "font-size: 15px;
                                             font-weight: bold;"),
-                   value = tags$p(strtoi(input$cutoffQualityScoreText),
+                   value = tags$p(strtoi(input$SCMinReadsNumText),
                                   style = "font-size: 29px;"),
                    icon = icon("cut", "fa-sm"),
                    color = "olive",
                    width = 12,
                ),
                tags$ul(
-                   textInput("cutoffQualityScoreText",
+                   textInput("SCMinReadsNumText",
                              label = p("Change Value"),
-                             value = toString(
-                                 SangerSingleReadQualReport[[
-                                     strtoi(sidebar_menu[[1]])]]@
-                                     cutoffQualityScore),
+                             value = toString(SCMinReadsNum),
                              width = '95%')
                ),
+        )
+    })
+
+    ############################################################################
+    ### Each Read
+    ############################################################################
+    ### ------------------------------------------------------------------------
+    ### valueBox: Change cutoffQualityScore
+    ### ------------------------------------------------------------------------
+    output$cutoffQualityScore <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        if (!is.na(strtoi(input$cutoffQualityScoreText)) &&
+            strtoi(input$cutoffQualityScoreText) > 0 &&
+            strtoi(input$cutoffQualityScoreText) <= 60 &&
+            strtoi(input$cutoffQualityScoreText) %% 1 ==0) {
+            inputCutoffQualityScoreText <- input$cutoffQualityScoreText
+        } else {
+            inputCutoffQualityScoreText <- 20
+        }
+        valueBox(
+            subtitle = tags$p("Cut Off Quality Score",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(inputCutoffQualityScoreText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
         )
     })
 
@@ -349,27 +486,23 @@ consensusServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$slidingWindowSize <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        column(3,
-               valueBox(
-                   # strtoi(input$cutoffQualityScoreText
-                   subtitle = tags$p("Sliding Window Size ",
-                                     style = "font-size: 15px;
+        if (!is.na(strtoi(input$slidingWindowSizeText)) &&
+            strtoi(input$slidingWindowSizeText) > 0 &&
+            strtoi(input$slidingWindowSizeText) <= 20 &&
+            strtoi(input$slidingWindowSizeText) %% 1 ==0) {
+            inputSlidingWindowSizeText <- input$slidingWindowSizeText
+        } else {
+            inputSlidingWindowSizeText <- 5
+        }
+        valueBox(
+            # strtoi(input$cutoffQualityScoreText
+            subtitle = tags$p("Sliding Window Size ",
+                              style = "font-size: 15px;
                                             font-weight: bold;"),
-                   value = tags$p(strtoi(input$slidingWindowSizeText),
-                                  style = "font-size: 29px;"),
-                   icon = icon("expand", "fa-sm"),
-                   color = "olive", width = 12,
-               ),
-               tags$ul(
-                   textInput("slidingWindowSizeText",
-                             label = p("Change Value"),
-                             value =
-                                 toString(SangerSingleReadQualReport[[
-                                     strtoi(sidebar_menu[[1]])]]@
-                                         slidingWindowSize),
-                             width = '95%')
-               ),
-
+            value = tags$p(strtoi(inputSlidingWindowSizeText),
+                           style = "font-size: 29px;"),
+            icon = icon("expand", "fa-sm"),
+            color = "olive", width = 12,
         )
     })
 
@@ -380,16 +513,14 @@ consensusServer <- function(input, output, session) {
         input$cutoffQualityScoreText
         input$slidingWindowSizeText
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        column(3,
-               valueBox(
-                   subtitle = tags$p("Trimming Start Pos ",
-                                     style = "font-size: 15px;
+        valueBox(
+            subtitle = tags$p("Trimming Start Pos ",
+                              style = "font-size: 15px;
                                             font-weight: bold;"),
-                   value = tags$p(toString(trimmedRV[["trimmedStart"]]),
-                                  style = "font-size: 29px;"),
-                   icon = icon("check-circle", "fa-sm"),
-                   color = "olive", width = 12,
-               ),
+            value = tags$p(toString(trimmedRV[["trimmedStart"]]),
+                           style = "font-size: 29px;"),
+            icon = icon("check-circle", "fa-sm"),
+            color = "olive", width = 12,
         )
     })
 
@@ -400,16 +531,14 @@ consensusServer <- function(input, output, session) {
         input$cutoffQualityScoreText
         input$slidingWindowSizeText
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        column(3,
-               valueBox(
-                   subtitle = tags$p("Trimming End Pos ",
-                                     style = "font-size: 15px;
+        valueBox(
+            subtitle = tags$p("Trimming End Pos ",
+                              style = "font-size: 15px;
                                             font-weight: bold;"),
-                   value = tags$p(toString(trimmedRV[["trimmedEnd"]]),
-                                  style = "font-size: 40px;"),
-                   icon = icon("times-circle", "fa-sm"),
-                   color = "olive", width = 12,
-               ),
+            value = tags$p(toString(trimmedRV[["trimmedEnd"]]),
+                           style = "font-size: 40px;"),
+            icon = icon("times-circle", "fa-sm"),
+            color = "olive", width = 12,
         )
     })
 

@@ -68,6 +68,8 @@ setMethod("initialize",
                                " foward read file does not exist.\n", sep = "")
                   errors <- c(errors, msg)
               }
+              errors <- checkCutoffQualityScore(cutoffQualityScore, errors)
+              errors <- checkSlidingWindowSize(slidingWindowSize, errors)
 
               if (cutoffQualityScore > 60 || cutoffQualityScore < 0 ||
                   cutoffQualityScore%%1!=0) {
