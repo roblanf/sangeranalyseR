@@ -35,16 +35,16 @@ consensusServer <- function(input, output, session) {
     #                 processors = 1, verbose = FALSE)
 
 
-    SangerConsensus@alignment
-    SangerConsensus@differencesDF
-    SangerConsensus@distanceMatrix
+    SCAlignment<- SangerConsensus@alignment
+    SCDifferencesDF<- SangerConsensus@differencesDF
+    SCDistanceMatrix <- SangerConsensus@distanceMatrix
 
-    SangerConsensus@dendrogram
+    SCDendrogram <- SangerConsensus@dendrogram
 
-    SangerConsensus@indelsDF
-    SangerConsensus@stopCodonsDF
+    SCIndelsDF <- SangerConsensus@indelsDF
+    SCStopCodonsDF <- SangerConsensus@stopCodonsDF
 
-    SangerConsensus@secondaryPeakDF
+    SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
 
 
 
@@ -59,6 +59,11 @@ consensusServer <- function(input, output, session) {
     forwardReadNum <- length((SangerConsensus)@forwardReadsList)
     reverseReadNum <- length((SangerConsensus)@reverseReadsList)
     SangerSingleReadNum <- forwardReadNum + reverseReadNum
+
+    # Forward & reverse reads list
+    SangerConsensusFRReadsList <- c(SangerConsensus@forwardReadsList,
+                                    SangerConsensus@reverseReadsList)
+
     # readFileName (basename)
     forwardReadBFN <- sapply(1:forwardReadNum, function(i)
         basename(SangerConsensus@forwardReadsList[[i]]@readFileName))
@@ -169,10 +174,6 @@ consensusServer <- function(input, output, session) {
         if (input$sidebar_menu == "Overview") {
             fluidRow(
                 useShinyjs(),
-                box("Overview"),
-
-
-
                 box(title = tags$p("Parameters: ",
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
@@ -186,7 +187,7 @@ consensusServer <- function(input, output, session) {
                                    textInput("SCMinReadsNumText",
                                              label = p("Change Value"),
                                              value = toString(SCMinReadsNum),
-                                             width = '95%')
+                                             width = '90%')
                                ),
                         ),
                         column(3,
@@ -195,7 +196,7 @@ consensusServer <- function(input, output, session) {
                                    textInput("SCMinReadLengthText",
                                              label = p("Change Value"),
                                              value = toString(SCMinReadLength),
-                                             width = '95%')
+                                             width = '90%')
                                ),
                         ),
                         column(3,
@@ -204,7 +205,7 @@ consensusServer <- function(input, output, session) {
                                    textInput("SCMinFractionCallText",
                                              label = p("Change Value"),
                                              value = toString(SCMinFractionCall),
-                                             width = '95%')
+                                             width = '90%')
                                ),
                         ),
                         column(3,
@@ -213,7 +214,7 @@ consensusServer <- function(input, output, session) {
                                    textInput("SCMaxFractionLostText",
                                              label = p("Change Value"),
                                              value = toString(SCMaxFractionLost),
-                                             width = '95%')
+                                             width = '90%')
                                ),
                         ),
                         column(3,
@@ -222,7 +223,7 @@ consensusServer <- function(input, output, session) {
                                    textInput("SCAcceptStopCodonsText",
                                              label = p("Change Value"),
                                              value = toString(SCAcceptStopCodons),
-                                             width = '95%')
+                                             width = '90%')
                                ),
                         ),
                         column(3,
@@ -231,11 +232,43 @@ consensusServer <- function(input, output, session) {
                                    textInput("SCReadingFrameText",
                                              label = p("Change Value"),
                                              value = toString(SCReadingFrame),
-                                             width = '95%')
+                                             width = '90%')
                                ),
                         ),
                     ),
                 ),
+                box(title = tags$p("Results: ",
+                                   style = "font-size: 26px;
+                                       font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    box(title = tags$p("Differences Dataframe",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               dataTableOutput("differencesDF"), style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                        )
+                    ),
+
+                    box(title = tags$p("Secondary Peak Dataframe",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               dataTableOutput("secondaryPeakDF"), style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                        )
+                    ),
+                    # differencesDF             = "data.frame",
+                    # distanceMatrix            = "matrix",
+                    # dendrogram                = "list",
+                    # indelsDF                  = "data.frame",
+                    # stopCodonsDF              = "data.frame",
+                    # secondaryPeakDF           = "data.frame"
+                )
             )
         }
     })
@@ -278,7 +311,7 @@ consensusServer <- function(input, output, session) {
                                                      SangerSingleReadQualReport[[
                                                          strtoi(sidebar_menu[[1]])]]@
                                                          cutoffQualityScore),
-                                                 width = '95%')
+                                                 width = '90%')
                                    ),
                             ),
                             column(3,
@@ -290,7 +323,7 @@ consensusServer <- function(input, output, session) {
                                                      toString(SangerSingleReadQualReport[[
                                                          strtoi(sidebar_menu[[1]])]]@
                                                              slidingWindowSize),
-                                                 width = '95%')
+                                                 width = '90%')
                                    ),
                             ),
                             column(3,
@@ -321,7 +354,7 @@ consensusServer <- function(input, output, session) {
                             collapsible = TRUE,
                             status = "success", width = 6,
                             plotlyOutput("qualityQualityBasePlot")),
-                    ),
+                    )
                 )
             }
         }
@@ -468,6 +501,27 @@ consensusServer <- function(input, output, session) {
     ############################################################################
     ### ConsensusRead (Overview)
     ############################################################################
+    # chromatogram
+    # output$chromatogram <- renderUI({
+    #     sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+    #     chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]])
+    #
+    #     chromatogramIn(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], trim5=0, trim3=0,
+    #                     showcalls=c("primary", "secondary", "both", "none"),
+    #                     width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
+    #                     filename=NULL, showtrim=FALSE, showhets=TRUE)
+    #     # valueBox(
+    #     #     subtitle = tags$p("MinReadsNum",
+    #     #                       style = "font-size: 15px;
+    #     #                                     font-weight: bold;"),
+    #     #     value = tags$p(strtoi(input$SCMinReadsNumText),
+    #     #                    style = "font-size: 29px;"),
+    #     #     icon = icon("cut", "fa-sm"),
+    #     #     color = "olive",
+    #     #     width = 12,
+    #     # )
+    # })
+
     ### ------------------------------------------------------------------------
     ### valueBox: Change cutoffQualityScore
     ### ------------------------------------------------------------------------
@@ -645,7 +699,7 @@ consensusServer <- function(input, output, session) {
                               style = "font-size: 15px;
                                             font-weight: bold;"),
             value = tags$p(toString(trimmedRV[["trimmedEnd"]]),
-                           style = "font-size: 40px;"),
+                           style = "font-size: 29px;"),
             icon = icon("times-circle", "fa-sm"),
             color = "olive", width = 12,
         )
@@ -851,6 +905,35 @@ consensusServer <- function(input, output, session) {
             )
             # add_markers(qualityPlotDf, x=~Index, y=~Score)
             # add_segments(x = trimmingStartPos, xend = trimmingFinishPos, y = 70, yend = 70, inherit = TRUE)
+    })
+
+
+    output$differencesDF = renderDataTable({
+
+        SCDifferencesDF
+        # SCDistanceMatrix <- SangerConsensus@distanceMatrix
+        #
+        # SCDendrogram <- SangerConsensus@dendrogram
+        #
+        # SCIndelsDF <- SangerConsensus@indelsDF
+        # SCStopCodonsDF <- SangerConsensus@stopCodonsDF
+        #
+        # SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
+        # dataTableOutput("secondaryPeakDF")
+
+        # differencesDF             = "data.frame",
+        # distanceMatrix            = "matrix",
+        # dendrogram                = "list",
+        # indelsDF                  = "data.frame",
+        # stopCodonsDF              = "data.frame",
+        # secondaryPeakDF           = "data.frame"
+
+    })
+
+
+    output$secondaryPeakDF = renderDataTable({
+
+        SCDistanceMatrix
     })
 
     output$info <- renderText({
