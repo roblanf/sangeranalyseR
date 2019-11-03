@@ -49,9 +49,9 @@ consensusServer <- function(input, output, session) {
 
 
 
-
-    SangerConsensusForRegExp <- SangerConsensus@forwardReadsRegularExp
-    SangerConsensusRevRegExp <- SangerConsensus@reverseReadsRegularExp
+    SangerConsensusForRegExp <- SangerConsensus@consenesusReadName
+    SangerConsensusForRegExp <- SangerConsensus@suffixForwardRegExp
+    SangerConsensusRevRegExp <- SangerConsensus@suffixReverseRegExp
 
     ### ------------------------------------------------------------------------
     ### Reads-related parameters initialization.

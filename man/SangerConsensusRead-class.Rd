@@ -11,18 +11,25 @@ An S4 class for storing multiple single reads to build up new
 \section{Slots}{
 
 \describe{
+\item{\code{consenesusReadName}}{.}
+
+\item{\code{suffixForwardRegExp}}{.}
+
+\item{\code{suffixReverseRegExp}}{.}
+
 \item{\code{secondaryPeakDF}}{}
 }}
 
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-forwardRegExp <- "^ACHLO([0-9]*)-09\\\\[LCO1490_t1,HCO2198_t1\\\\]_F.ab1$"
-reverseRegExp <- "^ACHLO([0-9]*)-09\\\\[LCO1490_t1,HCO2198_t1\\\\]_R.ab1$"
+consenesusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 A_chloroticConsensusReads <- new("SangerConsensusRead",
                                  parentDirectory       = inputFilesParentDir,
-                                 forwardReadsRegularExp= forwardRegExp,
-                                 reverseReadsRegularExp= reverseRegExp,
+                                 suffixForwardRegExp   = suffixForwardRegExp,
+                                 suffixReverseRegExp   = suffixReverseRegExp,
                                  cutoffQualityScore    = 20,
                                  slidingWindowSize     = 8)
 }

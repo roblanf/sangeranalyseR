@@ -16,8 +16,14 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' forwardRegExp <- "^ACHLO([0-9]*)-09\\[LCO1490_t1,HCO2198_t1\\]_F.ab1$"
-#' reverseRegExp <- "^ACHLO([0-9]*)-09\\[LCO1490_t1,HCO2198_t1\\]_R.ab1$"
+#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' SangerProject <- new("SangerProject",
+#'                      parentDirectory       = inputFilesParentDir,
+#'                      suffixForwardRegExp   = suffixForwardRegExp,
+#'                      suffixReverseRegExp   = suffixReverseRegExp,
+#'                      cutoffQualityScore    = 20,
+#'                      slidingWindowSize     = 8)
 setClass("SangerProject",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
@@ -29,7 +35,8 @@ setClass("SangerProject",
          ### -------------------------------------------------------------------
          representation(
              parentDirectory           = "character",
-             suffixRegExp              = "character",
+             suffixForwardRegExp       = "character",
+             suffixReverseRegExp       = "character",
              consensusReadsList        = "list"
              ),
 )
@@ -41,8 +48,8 @@ setMethod("initialize",
           "SangerProject",
           function(.Object, ...,
                    parentDirectory        = parentDirectory,
-                   suffixForwardRegExp    = "_[F][0-9]*.ab1",
-                   suffixReverseRegExp    = "_[R][0-9]*.ab1",
+                   suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
+                   suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
                    cutoffQualityScore     = 20,
                    slidingWindowSize      = 5,
                    refAminoAcidSeq        = "",
@@ -81,43 +88,38 @@ setMethod("initialize",
     ### 'forwardAllReads' & 'reverseAllReads' files prechecking
     ### ------------------------------------------------------------------------
     parentDirFiles <- list.files(parentDirectory)
-    forwardSelectInputFiles <- parentDirFiles[grepl(forwardReadsRegularExp,
+    forwardSelectInputFiles <- parentDirFiles[grepl(suffixForwardRegExp,
                                                     parentDirFiles)]
-    reverseSelectInputFiles <- parentDirFiles[grepl(reverseReadsRegularExp,
+    reverseSelectInputFiles <- parentDirFiles[grepl(suffixReverseRegExp,
                                                     parentDirFiles)]
-    forwardAllReads <- lapply(parentDirectory, file.path,
-                              forwardSelectInputFiles)
-    reverseAllReads <- lapply(parentDirectory, file.path,
-                              reverseSelectInputFiles)
 
-    forwardNumber <- length(forwardAllReads[[1]])
-    reverseNumber <- length(reverseAllReads[[1]])
+    # Find possible consensus Name for forward and reverse reads
+    forwardConsensusName <- unlist(str_split(forwardSelectInputFiles, suffixForwardRegExp, n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+    reverseConsensusName <- unlist(str_split(reverseSelectInputFiles, suffixReverseRegExp, n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+
+    consensusReadsName <- union(forwardConsensusName, reverseConsensusName)
+    consensusReadsNumber <- length(consensusReadsName)
+
+    # Create consensusReads for all list of consensusReadsNumber
+
+    SangerConsensusReadList <- sapply(consensusReadsName, function(eachConsRead) {
+        SangerConsensusRead(parentDirectory, eachConsRead,
+                            suffixForwardRegExp, suffixReverseRegExp,
+                            cutoffQualityScore, slidingWindowSize,
+                            refAminoAcidSeq, minReadsNum, minReadLength,
+                            minFractionCall, maxFractionLost, geneticCode,
+                            acceptStopCodons, readingFrame, processorsNum)
+    })
+
     if (length(errors) == 0) {
 
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
-                   parentDirectory        = parentDirectory,
-                   forwardReadsRegularExp = forwardReadsRegularExp,
-                   reverseReadsRegularExp = reverseReadsRegularExp,
-                   forwardReadsList       = forwardReadsList,
-                   reverseReadsList       = reverseReadsList,
-                   minReadsNum            = minReadsNum,
-                   minReadLength          = minReadLength,
-                   refAminoAcidSeq        = refAminoAcidSeq,
-                   minFractionCall        = minFractionCall,
-                   maxFractionLost        = maxFractionLost,
-                   geneticCode            = geneticCode,
-                   acceptStopCodons       = acceptStopCodons,
-                   readingFrame           = readingFrame,
-                   consensusRead          = consensusGapfree,
-                   differencesDF          = diffsDf,
-                   alignment              = aln2,
-                   distanceMatrix         = dist,
-                   dendrogram             = dend,
-                   indelsDF               = indels,
-                   stopCodonsDF           = stopsDf,
-                   secondaryPeakDF        = spDf)
+                   parentDirectory           = parentDirectory,
+                   suffixForwardRegExp       = suffixForwardRegExp,
+                   suffixReverseRegExp       = suffixReverseRegExp,
+                   consensusReadsList        = SangerConsensusReadList)
 })
 

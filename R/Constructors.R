@@ -4,9 +4,20 @@
 #' @description
 #'
 #' @param forwardReadFileName .
-#' @param reverseReadFileName .
-#' @param cutoffQualityScore
-#' @param slidingWindowSize
+#' @param consenesusReadName .
+#' @param suffixForwardRegExp .
+#' @param suffixReverseRegExp .
+#' @param cutoffQualityScore .
+#' @param slidingWindowSize .
+#' @param refAminoAcidSeq .
+#' @param minReadsNum .
+#' @param minReadLength .
+#' @param minFractionCall .
+#' @param maxFractionLost .
+#' @param geneticCode .
+#' @param acceptStopCodons .
+#' @param readingFrame .
+#' @param processorsNum .
 #'
 #' @return SangerMergeReads
 #' @export
@@ -19,15 +30,37 @@
 #'                                  readsRegularExp     = samplesRegExp,
 #'                                  cutoffQualityScore  = 50L,
 #'                                  slidingWindowSize   = 8L)
-SangerConsensusRead <- function(parentDirectory = character(0),
-                                readsRegularExp = character(0),
-                                cutoffQualityScore   = 20L,
-                                slidingWindowSize    = 5L) {
+SangerConsensusRead <- function(parentDirectory        = character(0),
+                                consenesusReadName     = character(0),
+                                suffixForwardRegExp    = character(0),
+                                suffixReverseRegExp    = character(0),
+                                cutoffQualityScore     = 20,
+                                slidingWindowSize      = 5,
+                                refAminoAcidSeq        = "",
+                                minReadsNum            = 2,
+                                minReadLength          = 20,
+                                minFractionCall        = 0.5,
+                                maxFractionLost        = 0.5,
+                                geneticCode            = GENETIC_CODE,
+                                acceptStopCodons       = TRUE,
+                                readingFrame           = 1,
+                                processorsNum          = 1) {
     newConsensusReads <- new("SangerConsensusRead",
-                             parentDirectory    = parentDirectory,
-                             readsRegularExp    = readsRegularExp,
-                             cutoffQualityScore = cutoffQualityScore,
-                             slidingWindowSize  = slidingWindowSize)
+                             parentDirectory        = parentDirectory,
+                             consenesusReadName     = consenesusReadName,
+                             suffixForwardRegExp    = suffixForwardRegExp,
+                             suffixReverseRegExp    = suffixReverseRegExp,
+                             cutoffQualityScore     = cutoffQualityScore,
+                             slidingWindowSize      = slidingWindowSize,
+                             refAminoAcidSeq        = refAminoAcidSeq,
+                             minReadsNum            = minReadsNum,
+                             minReadLength          = minReadLength,
+                             minFractionCall        = minFractionCall,
+                             maxFractionLost        = maxFractionLost,
+                             geneticCode            = geneticCode,
+                             acceptStopCodons       = acceptStopCodons,
+                             readingFrame           = readingFrame,
+                             processorsNum          = processorsNum)
     return(newConsensusReads)
 }
 
