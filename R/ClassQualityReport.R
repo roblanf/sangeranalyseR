@@ -49,12 +49,9 @@ setMethod("initialize",
           "QualityReport",
           function(.Object, ...,
                    readFeature         = character(0),
-                   qualityPhredScores = qualityPhredScores,
-                   qualityBaseScore    = 0,
-                   trimmingStartPos    = 0,
-                   trimmingFinishPos   = 0,
                    cutoffQualityScore  = 20,
                    slidingWindowSize   = 5) {
+              message("Inside QualityReport constructor")
               ### --------------------------------------------------------------
               ### Input parameter prechecking
               ### --------------------------------------------------------------
@@ -76,7 +73,7 @@ setMethod("initialize",
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
                   qualityBaseScore <- 10** (qualityPhredScores / (-10.0))
-
+                  message("qualityBaseScore: ", qualityBaseScore)
                   trimmingPos <- inside_calculate_trimming(qualityBaseScore,
                                                            cutoffQualityScore,
                                                            slidingWindowSize)
@@ -87,7 +84,7 @@ setMethod("initialize",
               }
               callNextMethod(.Object, ...,
                              readFeature         = readFeature,
-                             qualityPhredScores = qualityPhredScores,
+                             qualityPhredScores  = qualityPhredScores,
                              qualityBaseScore    = qualityBaseScore,
                              trimmingStartPos    = trimmingStartPos,
                              trimmingFinishPos   = trimmingFinishPos,

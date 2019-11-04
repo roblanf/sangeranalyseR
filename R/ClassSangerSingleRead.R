@@ -106,12 +106,14 @@ setMethod("initialize",
                   peakPosMatrix       = readSangerseq@peakPosMatrix
                   peakAmpMatrix       = readSangerseq@peakAmpMatrix
                   abifRawData         = readRawAbif
+                  message("Before calling QualityReport")
                   QualityReport <- new("QualityReport",
                                        readFeature = readFeature,
                                        qualityPhredScores =
                                            readRawAbif@data$PCON.2,
                                        cutoffQualityScore = cutoffQualityScore,
                                        slidingWindowSize = slidingWindowSize)
+                  message("After calling QualityReport")
                   cutoffQualityScore <- cutoffQualityScore
                   slidingWindowSize <- slidingWindowSize
               } else {

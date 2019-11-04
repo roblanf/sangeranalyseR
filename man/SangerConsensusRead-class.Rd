@@ -28,6 +28,7 @@ suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 A_chloroticConsensusReads <- new("SangerConsensusRead",
                                  parentDirectory       = inputFilesParentDir,
+                                 consenesusReadName    = consenesusReadName,
                                  suffixForwardRegExp   = suffixForwardRegExp,
                                  suffixReverseRegExp   = suffixReverseRegExp,
                                  cutoffQualityScore    = 20,

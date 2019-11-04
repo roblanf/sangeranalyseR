@@ -1,7 +1,7 @@
 ### ============================================================================
 ### R shiny consensus read UI function
 ### ============================================================================
-consensusUI <- dashboardPage(
+consensusReadUI <- dashboardPage(
     skin = "green",
     dashboardHeader(
         title = "sangeranalyseR",

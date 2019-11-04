@@ -1,7 +1,7 @@
 ### ============================================================================
 ### R shiny consensus read server function
 ### ============================================================================
-consensusServer <- function(input, output, session) {
+consensusReadServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### SangerConsensusRead parameters initialization.
     ### ------------------------------------------------------------------------
@@ -423,6 +423,8 @@ consensusServer <- function(input, output, session) {
         } else {
             inputCutoffQualityScoreText <- 20
         }
+
+        ## PROBLEM HERE !!!!!!
         trimmingPos <-
             inside_calculate_trimming(
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
@@ -953,9 +955,6 @@ vline <- function(x = 0, color = "red") {
     )
 }
 
-
-
-
 inside_calculate_trimming <- function(qualityBaseScore,
                                       cutoffQualityScore,
                                       slidingWindowSize) {
@@ -970,6 +969,7 @@ inside_calculate_trimming <- function(qualityBaseScore,
         trimmingFinishPos = NULL
     } else {
         for (i in 1:(readLen-slidingWindowSize+1)) {
+
             meanSLidingWindow <-
                 mean(qualityBaseScore[i:(i+slidingWindowSize-1)])
             if (meanSLidingWindow < qualityPbCutoff) {
@@ -980,6 +980,7 @@ inside_calculate_trimming <- function(qualityBaseScore,
         trimmingStartPos = remainingIndex[1]
         trimmingFinishPos = remainingIndex[length(remainingIndex)]
     }
+    message("trimmingStartPos: ", trimmingStartPos, " trimmingFinishPos: ", trimmingFinishPos)
     return(c(trimmingStartPos, trimmingFinishPos))
 }
 

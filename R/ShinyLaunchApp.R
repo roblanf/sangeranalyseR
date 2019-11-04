@@ -11,7 +11,7 @@
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
 #'                                  cutoffQualityScore    = 20,
-#'                                  slidingWindowSize     = 8)
+#'                                  slidingWindowSize     = 5)
 #' RShiny <- launchAppConsensusRead(list(A_chloroticConsensusReads))
 launchAppConsensusRead <- function(SangerConsensusRead) {
     ### ------------------------------------------------------------------------
@@ -19,11 +19,19 @@ launchAppConsensusRead <- function(SangerConsensusRead) {
     ### one S4 object.
     ### ------------------------------------------------------------------------
     shinyOptions(SangerConsensusReadSet = SangerConsensusRead)
-    newSangerConsensusRead <- shinyApp(consensusUI, consensusServer, options = SangerConsensusRead)
+    newSangerConsensusRead <- shinyApp(consensusReadUI, consensusReadServer,
+                                       options = SangerConsensusRead)
     return(newSangerConsensusRead)
 }
 
 #' @export
-launchAppSangerProject <- function() {
-    shinyApp(ui, server)
+launchAppAlignedConsensusSet <- function() {
+    ### ------------------------------------------------------------------------
+    ### Checking SangerConsensusRead input parameter is a list containing
+    ### one S4 object.
+    ### ------------------------------------------------------------------------
+    shinyOptions(alignedConsensusSet = alignedConsensusSet)
+    newSangerConsensusRead <- shinyApp(consensusReadUI, consensusReadServer,
+                                       options = SangerConsensusRead)
+    return(newSangerConsensusRead)
 }

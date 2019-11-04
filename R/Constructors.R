@@ -83,7 +83,7 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFdReadFN <- file.path(inputFilesPath,
 #'                                   "Allolobophora_chlorotica",
-#'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
+#'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 #' A_chloroticaSingleRead <-
 #'        SangerSingleRead(readFeature         = "ForwardRead",
 #'                         readFileName        = A_chloroticaFdReadFN,
