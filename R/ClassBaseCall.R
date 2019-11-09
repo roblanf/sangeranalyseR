@@ -26,7 +26,7 @@ setClass("BaseCall",
 ### Overwrite initialize for QualityReport (New constructor)
 ### ============================================================================
 setMethod("initialize",
-          "QualityReport",
+          "BaseCall",
           function(.Object, ...,
                    readFeature         = character(0)) {
               ### --------------------------------------------------------------

@@ -20,7 +20,7 @@
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFdReadFN <- file.path(inputFilesPath,
 #'                                   "Allolobophora_chlorotica",
-#'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
+#'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 #' A_chloroticaRead <-
 #'        SangerSingleRead(readFeature         = "ForwardRead",
 #'                         readFileName        = A_chloroticaFdReadFN,
@@ -49,13 +49,12 @@ setMethod("initialize",
           "QualityReport",
           function(.Object, ...,
                    readFeature         = character(0),
+                   qualityPhredScores  = numeric(0),
                    cutoffQualityScore  = 20,
                    slidingWindowSize   = 5) {
-              message("Inside QualityReport constructor")
               ### --------------------------------------------------------------
               ### Input parameter prechecking
               ### --------------------------------------------------------------
-              errors <- character()
               errors <- character()
               if (identical(readFeature, character(0))) {
                   msg <- paste("\nYou must assign value to 'readFeature'\n")
@@ -73,7 +72,6 @@ setMethod("initialize",
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
                   qualityBaseScore <- 10** (qualityPhredScores / (-10.0))
-                  message("qualityBaseScore: ", qualityBaseScore)
                   trimmingPos <- inside_calculate_trimming(qualityBaseScore,
                                                            cutoffQualityScore,
                                                            slidingWindowSize)
