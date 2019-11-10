@@ -1,4 +1,7 @@
-AlignedConsensusSetUI <- dashboardPage(
+### ============================================================================
+### R shiny alignedConsensusSet UI function
+### ============================================================================
+alignedConsensusSetUI <- dashboardPage(
     skin = "green",
     dashboardHeader(
         title = "sangeranalyseR",
@@ -72,11 +75,5 @@ AlignedConsensusSetUI <- dashboardPage(
              "
             )
         ),
-        uiOutput("consensusReadMenu_content"),
-        uiOutput("singelReadMenu_content"),
-        tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),
-        textOutput("selected_var"),
-        h3("clientData values"),
-        verbatimTextOutput("clientdataText")
     )
 )

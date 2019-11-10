@@ -18,20 +18,32 @@ launchAppConsensusRead <- function(SangerConsensusRead) {
     ### Checking SangerConsensusRead input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------
-    shinyOptions(SangerConsensusReadSet = SangerConsensusRead)
+    shinyOptions(SangerConsensusRead = SangerConsensusRead)
     newSangerConsensusRead <- shinyApp(consensusReadUI, consensusReadServer,
                                        options = SangerConsensusRead)
     return(newSangerConsensusRead)
 }
 
 #' @export
-launchAppAlignedConsensusSet <- function() {
+#' @examples
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
+#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
+#'                      parentDirectory       = inputFilesParentDir,
+#'                      suffixForwardRegExp   = suffixForwardRegExp,
+#'                      suffixReverseRegExp   = suffixReverseRegExp,
+#'                      cutoffQualityScore    = 20,
+#'                      slidingWindowSize     = 8)
+#' RShiny <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))
+launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet) {
     ### ------------------------------------------------------------------------
-    ### Checking SangerConsensusRead input parameter is a list containing
+    ### Checking AlignedConsensusSet input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------
-    shinyOptions(alignedConsensusSet = alignedConsensusSet)
-    newSangerConsensusSet <- shinyApp(consensusReadUI, consensusReadServer,
-                                      options = SangerConsensusRead)
-    return(newSangerConsensusRead)
+    shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
+    newSangerAlignedConsensusSet <- shinyApp(alignedConsensusSetUI, alignedConsensusSetServer,
+                                      options = SangerAlignedConsensusSet)
+    return(newSangerAlignedConsensusSet)
 }

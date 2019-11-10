@@ -1,11 +1,11 @@
 ### ============================================================================
-### R shiny consensus read server function
+### R shiny consensusRead server function
 ### ============================================================================
 consensusReadServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### SangerConsensusRead parameters initialization.
     ### ------------------------------------------------------------------------
-    SangerConsensusRead <- getShinyOption("SangerConsensusReadSet")
+    SangerConsensusRead <- getShinyOption("SangerConsensusRead")
     SangerConsensus <- SangerConsensusRead[[1]]
 
 

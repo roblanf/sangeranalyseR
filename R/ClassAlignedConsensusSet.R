@@ -1,4 +1,4 @@
-#' @title AlignedConsensusRead
+#' @title SangerAlignedConsensusSet
 #'
 #' @description  An S4 class for storing multiple single consensus reads to
 #'
@@ -6,11 +6,11 @@
 #' @slot suffixRegExp
 #' @slot consensusReadsList
 #'
-#' @name AlignedConsensusRead-class
+#' @name SangerAlignedConsensusSet-class
 #'
-#' @rdname AlignedConsensusRead-class
+#' @rdname SangerAlignedConsensusSet-class
 #'
-#' @exportClass AlignedConsensusRead
+#' @exportClass SangerAlignedConsensusSet
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerSingleRead.R
 #' @examples
@@ -18,20 +18,20 @@
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' AlignedConsensusRead <- new("AlignedConsensusRead",
+#' SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
 #'                      parentDirectory       = inputFilesParentDir,
 #'                      suffixForwardRegExp   = suffixForwardRegExp,
 #'                      suffixReverseRegExp   = suffixReverseRegExp,
 #'                      cutoffQualityScore    = 20,
 #'                      slidingWindowSize     = 8)
-setClass("AlignedConsensusRead",
+setClass("SangerAlignedConsensusSet",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
          #  1. Naming: XXXXX_F[0-9]*.ab1 / XXXXX_R[0-9]*.ab1
          #        For same consensus reads, XXXXX must be same.
          #  2. Users can set
          ### -------------------------------------------------------------------
-         ### Input type of each variable of 'AlignedConsensusRead'
+         ### Input type of each variable of 'SangerAlignedConsensusSet'
          ### -------------------------------------------------------------------
          representation(
              parentDirectory           = "character",
@@ -45,7 +45,7 @@ setClass("AlignedConsensusRead",
 ### Overwrite initialize for 'SangerConsensusRead' (New constructor)
 ### ============================================================================
 setMethod("initialize",
-          "AlignedConsensusRead",
+          "SangerAlignedConsensusSet",
           function(.Object, ...,
                    parentDirectory        = parentDirectory,
                    suffixForwardRegExp    = "_[F]_[0-9]*.ab1",

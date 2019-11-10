@@ -1,7 +1,6 @@
 ### ============================================================================
-### R shiny consensus read UI function
+### R shiny consensusRead UI function
 ### ============================================================================
-# source("R/ShinyUIModule.R")
 consensusReadUI <- dashboardPage(
     skin = "green",
     dashboardHeader(
