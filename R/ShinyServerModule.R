@@ -72,8 +72,9 @@ dynamicMenuSubSideBar <- function(input, output, session, SangerCSetParam) {
                 list(menuSubItem(text = SangerCSetParam[[i]]$SangerSingleReadFeature[[j]],
                                  tabName = SangerCSetParam[[i]]$SangerSingleReadFeature[[j]]))
             })
-            list(menuItem(text = paste0(i, "_ConsensusRead"),
-                          tabName = paste0(i, "_ConsensusRead"),
+            SangerCSetParam[[i]]$SCName
+            list(menuItem(text = SangerCSetParam[[i]]$SCName,
+                          tabName = SangerCSetParam[[i]]$SCName,
                           selected = TRUE, icon = icon("angle-right"),
                           SangerCSMenuSubItem))
         })
