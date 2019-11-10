@@ -25,7 +25,8 @@ Depends:
     shinyjs,
     data.table,
     plotly,
-    DT
+    DT,
+    zeallot
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 
@@ -45,6 +46,7 @@ Collate:
     'ShinyAppSangerConsensusReadServer.R'
     'ShinyAppSangerConsensusReadUI.R'
     'ShinyLaunchApp.R'
+    'ShinyServerModule.R'
     'TRY_FILE.R'
     'UtilitiesFunc.R'
     'UtilitiesFuncInputChecker.R'

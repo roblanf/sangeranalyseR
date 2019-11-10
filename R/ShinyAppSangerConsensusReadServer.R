@@ -9,9 +9,9 @@ consensusReadServer <- function(input, output, session) {
     SangerConsensus <- SangerConsensusRead[[1]]
 
 
-    ### ------------------------------------------------------------------------
-    ### ConsensusRead-related parameters initialization.
-    ### ------------------------------------------------------------------------
+    # ### ------------------------------------------------------------------------
+    # ### ConsensusRead-related parameters initialization.
+    # ### ------------------------------------------------------------------------
     SCMinReadsNum <- SangerConsensus@minReadsNum
     SCMinReadLength <- SangerConsensus@minReadLength
 
@@ -140,12 +140,12 @@ consensusReadServer <- function(input, output, session) {
         SangerConsensus@reverseReadsList[[i]]@peakPosMatrix)
     SangerSingleReadPeakPosMat <- c(forwardReadReadPeakPosMat,
                                     reverseReadReadPeakPosMat)
-    # peakAmpMatrix
-    # forwardReadPeakAmpMat <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@peakAmpMatrix)
-    # reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@peakAmpMatrix)
-    # SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat, reverseReadPeakAmpMat)
+    peakAmpMatrix
+    forwardReadPeakAmpMat <- sapply(1:forwardReadNum, function(i)
+        SangerConsensus@forwardReadsList[[i]]@peakAmpMatrix)
+    reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
+        SangerConsensus@reverseReadsList[[i]]@peakAmpMatrix)
+    SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat, reverseReadPeakAmpMat)
     trimmedRV <- reactiveValues(trimmedStart = 0, trimmedEnd = 0,
                                 remainingBP = 0, trimmedRatio = 0)
 
@@ -155,16 +155,17 @@ consensusReadServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### Adding dynamic menu to sidebar.
     ### ------------------------------------------------------------------------
-    output$singleReadMenu <- renderMenu({
-        menu_list <- sapply(1:SangerSingleReadNum, function(i) {
-            list(menuItem(SangerSingleReadFeature[i],
-                          tabName = SangerSingleReadFeature[i],
-                          selected = TRUE, icon = icon("angle-right")))
-        })
-        sidebarMenu(.list = menu_list)
-    })
-    # Select consensus Read Menu first
-    isolate({updateTabItems(session, "sidebar_menu", "Overview")})
+    dynamicMenuSideBar(input, output, session, SangerSingleReadNum, SangerSingleReadFeature)
+    # output$singleReadMenu <- renderMenu({
+    #     menu_list <- sapply(1:SangerSingleReadNum, function(i) {
+    #         list(menuItem(SangerSingleReadFeature[i],
+    #                       tabName = SangerSingleReadFeature[i],
+    #                       selected = TRUE, icon = icon("angle-right")))
+    #     })
+    #     sidebarMenu(.list = menu_list)
+    # })
+    # # Select consensus Read Menu first
+    # isolate({updateTabItems(session, "sidebar_menu", "Overview")})
 
     ### ------------------------------------------------------------------------
     ### Dynamic page navigation: consensusReadMenu_content
@@ -954,33 +955,3 @@ vline <- function(x = 0, color = "red") {
         line = list(color = color)
     )
 }
-
-inside_calculate_trimming <- function(qualityBaseScore,
-                                      cutoffQualityScore,
-                                      slidingWindowSize) {
-    readLen <- length(qualityBaseScore)
-    qualityPbCutoff <- 10** (cutoffQualityScore / (-10.0))
-    remainingIndex <- c()
-    if (slidingWindowSize > 20 || slidingWindowSize < 0 ||
-        slidingWindowSize%%1!=0 ||
-        cutoffQualityScore > 60 || cutoffQualityScore < 0 ||
-        cutoffQualityScore%%1!=0) {
-        trimmingStartPos = NULL
-        trimmingFinishPos = NULL
-    } else {
-        for (i in 1:(readLen-slidingWindowSize+1)) {
-
-            meanSLidingWindow <-
-                mean(qualityBaseScore[i:(i+slidingWindowSize-1)])
-            if (meanSLidingWindow < qualityPbCutoff) {
-                remainingIndex <- c(remainingIndex, i)
-                # or ==> i + floor(slidingWindowSize/3)
-            }
-        }
-        trimmingStartPos = remainingIndex[1]
-        trimmingFinishPos = remainingIndex[length(remainingIndex)]
-    }
-    message("trimmingStartPos: ", trimmingStartPos, " trimmingFinishPos: ", trimmingFinishPos)
-    return(c(trimmingStartPos, trimmingFinishPos))
-}
-

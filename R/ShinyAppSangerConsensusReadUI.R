@@ -1,6 +1,7 @@
 ### ============================================================================
 ### R shiny consensus read UI function
 ### ============================================================================
+# source("R/ShinyUIModule.R")
 consensusReadUI <- dashboardPage(
     skin = "green",
     dashboardHeader(
@@ -39,7 +40,6 @@ consensusReadUI <- dashboardPage(
                     background:#f3ffe6
                     }
                     ")),
-
         tags$script(HTML('
             $(document).ready(function() {
             $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Overview </span>\');
@@ -84,4 +84,3 @@ consensusReadUI <- dashboardPage(
         verbatimTextOutput("clientdataText")
     )
 )
-

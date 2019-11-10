@@ -14,3 +14,4 @@
 #' @importFrom Biostrings DNAStringSet GENETIC_CODE trinucleotideFrequency
 #'               reverseComplement
 #' @importFrom DT dataTableOutput
+#' @importFrom zeallot

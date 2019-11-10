@@ -31,7 +31,7 @@ launchAppAlignedConsensusSet <- function() {
     ### one S4 object.
     ### ------------------------------------------------------------------------
     shinyOptions(alignedConsensusSet = alignedConsensusSet)
-    newSangerConsensusRead <- shinyApp(consensusReadUI, consensusReadServer,
-                                       options = SangerConsensusRead)
+    newSangerConsensusSet <- shinyApp(consensusReadUI, consensusReadServer,
+                                      options = SangerConsensusRead)
     return(newSangerConsensusRead)
 }
