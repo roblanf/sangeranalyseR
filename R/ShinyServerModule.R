@@ -30,7 +30,7 @@ inside_calculate_trimming <- function(qualityBaseScore,
 ### ============================================================================
 ### Adding dynamic menu to sidebar.
 ### ============================================================================
-dynamicMenuSideBar <- function(input, output, session,
+dynamicMenuSideBarSC <- function(input, output, session,
                                SangerSingleReadNum, SangerSingleReadFeature) {
     output$singleReadMenu <- renderMenu({
         menu_list <- sapply(1:SangerSingleReadNum, function(i) {
@@ -44,26 +44,7 @@ dynamicMenuSideBar <- function(input, output, session,
     isolate({updateTabItems(session, "sidebar_menu", "Overview")})
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### ============================================================================
-### Adding dynamic menu (submenuItem) to sidebar.
-### ============================================================================
-dynamicMenuSubSideBar <- function(input, output, session, SangerCSetParam) {
+dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
     output$singleReadMenu <- renderMenu({
         SangerCSNum <- length(SangerCSetParam)
         menu_list <- sapply(1:SangerCSNum, function(i) {
@@ -83,19 +64,6 @@ dynamicMenuSubSideBar <- function(input, output, session, SangerCSetParam) {
     # Select consensus Read Menu first
     isolate({updateTabItems(session, "sidebar_menu", "Overview")})
 }
-
-
-
-
-# menu_list <- sapply(1:10, function(i) {
-#     list(i)
-#     menu_list_2 <- sapply(1:5, function(j) {
-#         c("a")
-#     })
-#     return(menu_list_2)
-# })
-
-
 
 ### ============================================================================
 ### observeEvent: Adding dynamic rightHeader text
@@ -127,12 +95,26 @@ observeEventDynamicRightHeader <- function(input, output, session, trimmedRV,
 ### ============================================================================
 ### observeEvent: Button Save S4 object
 ### ============================================================================
-observeEventButtonSave <- function(input, output, session, SangerConsensus) {
+observeEventButtonSaveSC <- function(input, output, session, SangerConsensus) {
     observeEvent(input$saveS4, {
         btn <- input$saveS4
         id <- paste0('txt', btn)
         newS4Object <- file.path(tempdir(), "SangerConsensus.Rda")
         saveRDS(SangerConsensus, file=newS4Object)
+        message("New S4 object is store as: ", newS4Object)
+        showNotification(paste("New S4 object is store as:", newS4Object),
+                         type = "message", duration = 10)
+        NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
+        # shinyOptions(NewSangerConsensusSet = newS4)
+    })
+}
+
+observeEventButtonSaveSCSet <- function(input, output, session, SangerCSetParam) {
+    observeEvent(input$saveS4, {
+        btn <- input$saveS4
+        id <- paste0('txt', btn)
+        newS4Object <- file.path(tempdir(), "SangerAlignedConsensusSet.Rda")
+        saveRDS(SangerCSetParam, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
         showNotification(paste("New S4 object is store as:", newS4Object),
                          type = "message", duration = 10)

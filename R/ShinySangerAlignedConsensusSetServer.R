@@ -156,5 +156,11 @@ alignedConsensusSetServer <- function(input, output, session) {
     ############################################################################
     ### output$ID
     ############################################################################
-    dynamicMenuSubSideBar(input, output, session, SangerCSetParam)
+    dynamicMenuSideBarSCSet(input, output, session, SangerCSetParam)
+
+    observeEventDynamicRightHeader(input, output, session, trimmedRV,
+                                   SangerSingleReadQualReport)
+
+    observeEventButtonSaveSCSet(input, output, session, SangerCSetParam)
+    observeEventButtonClose(input, output, session)
 }

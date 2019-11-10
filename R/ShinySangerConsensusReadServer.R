@@ -143,7 +143,7 @@ consensusReadServer <- function(input, output, session) {
     ############################################################################
     ### output$ID
     ############################################################################
-    dynamicMenuSideBar(input, output, session, SangerSingleReadNum, SangerSingleReadFeature)
+    dynamicMenuSideBarSC(input, output, session, SangerSingleReadNum, SangerSingleReadFeature)
 
     ### ------------------------------------------------------------------------
     ### Dynamic page navigation: consensusReadMenu_content
@@ -342,7 +342,7 @@ consensusReadServer <- function(input, output, session) {
     observeEventDynamicRightHeader(input, output, session, trimmedRV,
                                    SangerSingleReadQualReport)
 
-    observeEventButtonSave(input, output, session, SangerConsensus)
+    observeEventButtonSaveSC(input, output, session, SangerConsensus)
     observeEventButtonClose(input, output, session)
 
 
