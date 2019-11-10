@@ -44,6 +44,58 @@ dynamicMenuSideBar <- function(input, output, session,
     isolate({updateTabItems(session, "sidebar_menu", "Overview")})
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### ============================================================================
+### Adding dynamic menu (submenuItem) to sidebar.
+### ============================================================================
+dynamicMenuSubSideBar <- function(input, output, session, SangerCSetParam) {
+    output$singleReadMenu <- renderMenu({
+        SangerCSNum <- length(SangerCSetParam)
+        menu_list <- sapply(1:SangerCSNum, function(i) {
+            SangerSingleReadNum <- SangerCSetParam[[i]]$SangerSingleReadNum
+            SangerCSMenuSubItem <- sapply(1:SangerSingleReadNum, function(j) {
+                list(menuSubItem(text = SangerCSetParam[[i]]$SangerSingleReadFeature[[j]],
+                                 tabName = SangerCSetParam[[i]]$SangerSingleReadFeature[[j]]))
+            })
+            list(menuItem(text = paste0(i, "_ConsensusRead"),
+                          tabName = paste0(i, "_ConsensusRead"),
+                          selected = TRUE, icon = icon("angle-right"),
+                          SangerCSMenuSubItem))
+        })
+        sidebarMenu(.list = menu_list)
+    })
+    # Select consensus Read Menu first
+    isolate({updateTabItems(session, "sidebar_menu", "Overview")})
+}
+
+
+
+
+# menu_list <- sapply(1:10, function(i) {
+#     list(i)
+#     menu_list_2 <- sapply(1:5, function(j) {
+#         c("a")
+#     })
+#     return(menu_list_2)
+# })
+
+
+
 ### ============================================================================
 ### observeEvent: Adding dynamic rightHeader text
 ### ============================================================================

@@ -46,4 +46,9 @@ launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet) {
     newSangerAlignedConsensusSet <- shinyApp(alignedConsensusSetUI, alignedConsensusSetServer,
                                       options = SangerAlignedConsensusSet)
     return(newSangerAlignedConsensusSet)
+
+    # shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
+    # newSangerConsensusRead <- shinyApp(alignedConsensusSetUI, alignedConsensusSetServer,
+    #                                    options = SangerConsensusRead)
+    # return(newSangerConsensusRead)
 }

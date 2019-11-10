@@ -29,12 +29,6 @@ consensusReadServer <- function(input, output, session) {
     SCAcceptStopCodons <- SangerConsensus@acceptStopCodons
     SCReadingFrame <- SangerConsensus@readingFrame
 
-    as.character(SangerConsensus@consensusRead)
-
-    # aln = AlignSeqs(c(DNAStringSet(SangerConsensus@consensusRead), DNAStringSet(SangerConsensus@consensusRead)),
-    #                 processors = 1, verbose = FALSE)
-
-
     SCAlignment<- SangerConsensus@alignment
     SCDifferencesDF<- SangerConsensus@differencesDF
     SCDistanceMatrix <- SangerConsensus@distanceMatrix
@@ -45,9 +39,6 @@ consensusReadServer <- function(input, output, session) {
     SCStopCodonsDF <- SangerConsensus@stopCodonsDF
 
     SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
-
-
-
 
     SangerConsensusForRegExp <- SangerConsensus@consenesusReadName
     SangerConsensusForRegExp <- SangerConsensus@suffixForwardRegExp

@@ -163,10 +163,10 @@ setMethod("initialize",
     if (length(errors) == 0) {
         # sapply to create SangerSingleRead list.
         forwardReadsList <- sapply(forwardAllReads[[1]], SangerSingleRead,
-                                   readFeature = "Forward_Reads",
+                                   readFeature = "Forward_Read",
                                    cutoffQualityScore, slidingWindowSize)
         reverseReadsList <- sapply(reverseAllReads[[1]], SangerSingleRead,
-                                   readFeature = "Reverse_Reads",
+                                   readFeature = "Reverse_Read",
                                    cutoffQualityScore, slidingWindowSize)
 
         ### --------------------------------------------------------------------
