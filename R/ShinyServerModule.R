@@ -94,7 +94,7 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
         sidebarMenu(.list = menu_list)
     })
     # Select consensus Read Menu first
-    isolate({updateTabItems(session, "sidebar_menu", "Sanger Consensus Set Overview")})
+    isolate({updateTabItems(session, "sidebar_menu", "Sanger Aligned Consensus Set Overview")})
 }
 
 ### ============================================================================

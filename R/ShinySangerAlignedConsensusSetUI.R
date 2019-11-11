@@ -16,7 +16,7 @@ alignedConsensusSetUI <- dashboardPage(
         useShinyjs(debug = TRUE),
         sidebarMenu(
             id = "sidebar_menu",
-            menuItem("Aligned Consensus Set", tabName = "Sanger Consensus Set Overview", icon=icon("dashboard")),
+            menuItem("Aligned Consensus Set", tabName = "Sanger Aligned Consensus Set Overview", icon=icon("dashboard")),
             sidebarMenuOutput("singleReadMenu")
         )
     ),
@@ -41,7 +41,7 @@ alignedConsensusSetUI <- dashboardPage(
                     ")),
         tags$script(HTML('
             $(document).ready(function() {
-            $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Sanger Consensus Set Overview </span>\');
+            $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Sanger Aligned Consensus Set Overview </span>\');
             })
         ')),
         tags$head(tags$style(HTML(
@@ -75,7 +75,7 @@ alignedConsensusSetUI <- dashboardPage(
              "
             )
         ),
-        tags$style(HTML(".sidebar-menu li a[data-value='Sanger Consensus Set Overview']
+        tags$style(HTML(".sidebar-menu li a[data-value='Sanger Aligned Consensus Set Overview']
                         { font-size: 18px; font-weight: bold }")),
         tags$style(HTML(".sidebar-menu ul li a
                         { font-size: 15px}")),

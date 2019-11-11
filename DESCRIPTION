@@ -26,7 +26,8 @@ Depends:
     data.table,
     plotly,
     DT,
-    zeallot
+    zeallot,
+    rhandsontable
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 
