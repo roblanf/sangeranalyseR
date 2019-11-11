@@ -52,11 +52,17 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
                 list(menuSubItem(text = SangerCSetParam[[i]]$SangerSingleReadFeature[[j]],
                                  tabName = SangerCSetParam[[i]]$SangerSingleReadFeature[[j]]))
             })
+            SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerCSetParam[[i]]$SCName, "Overview"),
+                                                 tabName = paste(SangerCSetParam[[i]]$SCName))),
+                                     SangerCSMenuSubItem)
             SangerCSetParam[[i]]$SCName
+            # list(convertMenuItem(menuItem(text = SangerCSetParam[[i]]$SCName,
+            #               tabName = SangerCSetParam[[i]]$SCName,
+            #               icon = icon("minus"), SangerCSMenuSubItem),
+            #               SangerCSetParam[[i]]$SCName))
             list(menuItem(text = SangerCSetParam[[i]]$SCName,
                           tabName = SangerCSetParam[[i]]$SCName,
-                          selected = TRUE, icon = icon("minus"),
-                          SangerCSMenuSubItem))
+                          icon = icon("minus"), SangerCSMenuSubItem))
         })
         sidebarMenu(.list = menu_list)
     })
@@ -93,26 +99,30 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
 
 observeEventDynamicHeaderSCSet <- function(input, output, session, trimmedRV,
                                            SangerCSetParam) {
-    observeEvent(input$sidebar_menu, {
-        menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
-        html("rightHeader", menuItem)
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
-        if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
-            trimmedRV[["trimmedStart"]] <-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmingStartPos
-            trimmedRV[["trimmedEnd"]] <-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
-            qualityPhredScores = SangerSingleReadQualReport[[
-                strtoi(sidebar_menu[[1]])]]@qualityPhredScores
 
-            readLen = length(qualityPhredScores)
-            trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
-            trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
-        }
+    output$res <- renderText({
+        paste("You've selected:", input$sidebar_menu)
     })
+    # observeEvent(input$sidebar_menu, {
+    #     menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
+    #     html("rightHeader", menuItem)
+    #     sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+    #     # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
+    #     if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
+    #         trimmedRV[["trimmedStart"]] <-
+    #             SangerSingleReadQualReport[[
+    #                 strtoi(sidebar_menu[[1]])]]@trimmingStartPos
+    #         trimmedRV[["trimmedEnd"]] <-
+    #             SangerSingleReadQualReport[[
+    #                 strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
+    #         qualityPhredScores = SangerSingleReadQualReport[[
+    #             strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+    #
+    #         readLen = length(qualityPhredScores)
+    #         trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+    #         trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
+    #     }
+    # })
 }
 
 ### ============================================================================
