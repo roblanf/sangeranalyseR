@@ -23,7 +23,6 @@ inside_calculate_trimming <- function(qualityBaseScore,
         trimmingStartPos = remainingIndex[1]
         trimmingFinishPos = remainingIndex[length(remainingIndex)]
     }
-    message("trimmingStartPos: ", trimmingStartPos, " trimmingFinishPos: ", trimmingFinishPos)
     return(c(trimmingStartPos, trimmingFinishPos))
 }
 
@@ -34,9 +33,9 @@ dynamicMenuSideBarSC <- function(input, output, session,
                                SangerSingleReadNum, SangerSingleReadFeature) {
     output$singleReadMenu <- renderMenu({
         menu_list <- sapply(1:SangerSingleReadNum, function(i) {
-            list(menuItem(SangerSingleReadFeature[i],
+            list(menuItem(text = SangerSingleReadFeature[i],
                           tabName = SangerSingleReadFeature[i],
-                          selected = TRUE, icon = icon("angle-right")))
+                          selected = TRUE, icon = icon("minus")))
         })
         sidebarMenu(.list = menu_list)
     })
@@ -56,7 +55,7 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
             SangerCSetParam[[i]]$SCName
             list(menuItem(text = SangerCSetParam[[i]]$SCName,
                           tabName = SangerCSetParam[[i]]$SCName,
-                          selected = TRUE, icon = icon("angle-right"),
+                          selected = TRUE, icon = icon("minus"),
                           SangerCSMenuSubItem))
         })
         sidebarMenu(.list = menu_list)
@@ -68,14 +67,38 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
 ### ============================================================================
 ### observeEvent: Adding dynamic rightHeader text
 ### ============================================================================
-observeEventDynamicRightHeader <- function(input, output, session, trimmedRV,
+observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
                                            SangerSingleReadQualReport) {
     observeEvent(input$sidebar_menu, {
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
         html("rightHeader", menuItem)
         sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
         # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
-        if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+        if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
+            trimmedRV[["trimmedStart"]] <-
+                SangerSingleReadQualReport[[
+                    strtoi(sidebar_menu[[1]])]]@trimmingStartPos
+            trimmedRV[["trimmedEnd"]] <-
+                SangerSingleReadQualReport[[
+                    strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
+            qualityPhredScores = SangerSingleReadQualReport[[
+                strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+
+            readLen = length(qualityPhredScores)
+            trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+            trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
+        }
+    })
+}
+
+observeEventDynamicHeaderSCSet <- function(input, output, session, trimmedRV,
+                                           SangerCSetParam) {
+    observeEvent(input$sidebar_menu, {
+        menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
+        html("rightHeader", menuItem)
+        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
+        if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
             trimmedRV[["trimmedStart"]] <-
                 SangerSingleReadQualReport[[
                     strtoi(sidebar_menu[[1]])]]@trimmingStartPos
@@ -181,7 +204,7 @@ valueBoxSCMinFractionCall <- function(input, output, session) {
             subtitle = tags$p("MinFractionCall",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(as.numeric(input$SCMinFractionCallText),
+            value = tags$p(suppressWarnings(as.numeric(input$SCMinFractionCallText)),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -200,7 +223,7 @@ valueBoxSCMaxFractionLost <- function(input, output, session) {
             subtitle = tags$p("MaxFractionLost",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(as.numeric(input$SCMaxFractionLostText),
+            value = tags$p(suppressWarnings(as.numeric(input$SCMaxFractionLostText)),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",

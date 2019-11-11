@@ -2,6 +2,8 @@
 ### R shiny consensusRead server function
 ### ============================================================================
 consensusReadServer <- function(input, output, session) {
+    # Suppress Warning
+    options(warn = -1)
     ### ------------------------------------------------------------------------
     ### SangerConsensusRead parameters initialization.
     ### ------------------------------------------------------------------------
@@ -339,9 +341,8 @@ consensusReadServer <- function(input, output, session) {
     ############################################################################
     ### observeEvent(input$
     ############################################################################
-    observeEventDynamicRightHeader(input, output, session, trimmedRV,
-                                   SangerSingleReadQualReport)
-
+    observeEventDynamicHeaderSC(input, output, session, trimmedRV,
+                              SangerSingleReadQualReport)
     observeEventButtonSaveSC(input, output, session, SangerConsensus)
     observeEventButtonClose(input, output, session)
 

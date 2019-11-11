@@ -16,7 +16,8 @@ consensusReadUI <- dashboardPage(
         useShinyjs(debug = TRUE),
         sidebarMenu(
             id = "sidebar_menu",
-            menuItem("Consensus Read", tabName = "Overview", icon=icon("dashboard")),
+            menuItem(text = "Consensus Read",
+                     tabName = "Overview", icon=icon("dashboard")),
             sidebarMenuOutput("singleReadMenu")
         )
     ),
@@ -75,6 +76,10 @@ consensusReadUI <- dashboardPage(
              "
             )
         ),
+        tags$style(HTML(".sidebar-menu li a[data-value='Overview']
+                        { font-size: 18px; font-weight: bold }")),
+        tags$style(HTML(".sidebar-menu ul li a
+                        { font-size: 15px;}")),
         uiOutput("consensusReadMenu_content"),
         uiOutput("singelReadMenu_content"),
         tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),
