@@ -22,7 +22,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         ### ConsensusRead-related parameters initialization.
         ### --------------------------------------------------------------------
         # readFeature
-        SCName <- paste0(i, "_Consensus_Read")
+        SCName <- paste0(i, " Consensus Read")
         SCMinReadsNum <- SangerCSetList[[i]]@minReadsNum
         SCMinReadLength <- SangerCSetList[[i]]@minReadLength
         SCRefAminoAcidSeq <- SangerCSetList[[i]]@refAminoAcidSeq
@@ -70,10 +70,10 @@ alignedConsensusSetServer <- function(input, output, session) {
 
         # readFeature
         forwardReadFeature <- sapply(1:forwardReadNum, function(i)
-            paste0(i, "_",
+            paste0(i, " ",
                    SangerSingleReadFReadsList[[i]]@readFeature))
         reverseReadFeature <- sapply(1:reverseReadNum, function(i)
-            paste0(i+forwardReadNum, "_",
+            paste0(i+forwardReadNum, " ",
                    SangerSingleReadRReadsList[[i]]@readFeature))
         SangerSingleReadFeature <- c(forwardReadFeature, reverseReadFeature)
 

@@ -163,10 +163,10 @@ setMethod("initialize",
     if (length(errors) == 0) {
         # sapply to create SangerSingleRead list.
         forwardReadsList <- sapply(forwardAllReads[[1]], SangerSingleRead,
-                                   readFeature = "Forward_Read",
+                                   readFeature = "Forward Read",
                                    cutoffQualityScore, slidingWindowSize)
         reverseReadsList <- sapply(reverseAllReads[[1]], SangerSingleRead,
-                                   readFeature = "Reverse_Read",
+                                   readFeature = "Reverse Read",
                                    cutoffQualityScore, slidingWindowSize)
 
         ### --------------------------------------------------------------------
@@ -184,8 +184,8 @@ setMethod("initialize",
         ### --------------------------------------------------------------------
         frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),
                                           unlist(rRDNAStringSet)))
-        frReadFeatureList <- c(rep("Forward_Reads", length(fRDNAStringSet)),
-                               rep("Reverse_Reads", length(rRDNAStringSet)))
+        frReadFeatureList <- c(rep("Forward Reads", length(fRDNAStringSet)),
+                               rep("Reverse Reads", length(rRDNAStringSet)))
 
         if(length(frReadSet) < 2) {
             error <- paste("\n'Valid abif files should be more than 2.\n",

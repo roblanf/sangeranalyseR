@@ -17,7 +17,7 @@ consensusReadUI <- dashboardPage(
         sidebarMenu(
             id = "sidebar_menu",
             menuItem(text = "Consensus Read",
-                     tabName = "Overview", icon=icon("dashboard")),
+                     tabName = "Sanger Consensus Read Overview", icon=icon("dashboard")),
             sidebarMenuOutput("singleReadMenu")
         )
     ),
@@ -42,7 +42,7 @@ consensusReadUI <- dashboardPage(
                     ")),
         tags$script(HTML('
             $(document).ready(function() {
-            $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Overview </span>\');
+            $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Sanger Consensus Read Overview </span>\');
             })
         ')),
         tags$head(tags$style(HTML(
@@ -76,10 +76,10 @@ consensusReadUI <- dashboardPage(
              "
             )
         ),
-        tags$style(HTML(".sidebar-menu li a[data-value='Overview']
+        tags$style(HTML(".sidebar-menu li a[data-value='Sanger Consensus Read Overview']
                         { font-size: 18px; font-weight: bold }")),
         tags$style(HTML(".sidebar-menu ul li a
-                        { font-size: 15px;}")),
+                        { font-size: 15px}")),
         uiOutput("consensusReadMenu_content"),
         uiOutput("singelReadMenu_content"),
         tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),

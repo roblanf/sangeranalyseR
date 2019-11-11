@@ -72,10 +72,10 @@ consensusReadServer <- function(input, output, session) {
 
     # readFeature
     forwardReadFeature <- sapply(1:forwardReadNum, function(i)
-        paste0(i, "_",
+        paste0(i, " ",
                SangerConsensus@forwardReadsList[[i]]@readFeature))
     reverseReadFeature <- sapply(1:reverseReadNum, function(i)
-        paste0(i+forwardReadNum, "_",
+        paste0(i+forwardReadNum, " ",
                SangerConsensus@reverseReadsList[[i]]@readFeature))
     SangerSingleReadFeature <- c(forwardReadFeature, reverseReadFeature)
 
@@ -151,8 +151,8 @@ consensusReadServer <- function(input, output, session) {
     ### Dynamic page navigation: consensusReadMenu_content
     ### ------------------------------------------------------------------------
     output$consensusReadMenu_content <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-        if (input$sidebar_menu == "Overview") {
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        if (input$sidebar_menu == "Sanger Consensus Read Overview") {
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p("Parameters: ",
@@ -255,9 +255,9 @@ consensusReadServer <- function(input, output, session) {
     })
 
     output$singelReadMenu_content <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         data(mtcars)
-        if (input$sidebar_menu != "Overview") {
+        if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
                 fluidRow(
                     useShinyjs(),
@@ -348,7 +348,7 @@ consensusReadServer <- function(input, output, session) {
 
 
     observeEvent(input$cutoffQualityScoreText, {
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (!is.na(strtoi(input$cutoffQualityScoreText)) &&
             strtoi(input$cutoffQualityScoreText) > 0 &&
             strtoi(input$cutoffQualityScoreText) <= 60 &&
@@ -389,7 +389,7 @@ consensusReadServer <- function(input, output, session) {
     })
 
     observeEvent(input$slidingWindowSizeText, {
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (!is.na(strtoi(input$slidingWindowSizeText)) &&
             strtoi(input$slidingWindowSizeText) > 0 &&
             strtoi(input$slidingWindowSizeText) <= 20 &&
@@ -430,11 +430,11 @@ consensusReadServer <- function(input, output, session) {
     })
 
     ############################################################################
-    ### ConsensusRead (Overview)
+    ### ConsensusRead (Sanger Consensus Read Overview)
     ############################################################################
     # chromatogram
     # output$chromatogram <- renderUI({
-    #     sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+    #     sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
     #     chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]])
     #
     #     chromatogramIn(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], trim5=0, trim3=0,

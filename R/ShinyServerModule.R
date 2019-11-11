@@ -26,6 +26,37 @@ inside_calculate_trimming <- function(qualityBaseScore,
     return(c(trimmingStartPos, trimmingFinishPos))
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### ============================================================================
 ### Adding dynamic menu to sidebar.
 ### ============================================================================
@@ -40,7 +71,7 @@ dynamicMenuSideBarSC <- function(input, output, session,
         sidebarMenu(.list = menu_list)
     })
     # Select consensus Read Menu first
-    isolate({updateTabItems(session, "sidebar_menu", "Overview")})
+    isolate({updateTabItems(session, "sidebar_menu", "Sanger Consensus Read Overview")})
 }
 
 dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
@@ -50,16 +81,12 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
             SangerSingleReadNum <- SangerCSetParam[[i]]$SangerSingleReadNum
             SangerCSMenuSubItem <- sapply(1:SangerSingleReadNum, function(j) {
                 list(menuSubItem(text = SangerCSetParam[[i]]$SangerSingleReadFeature[[j]],
-                                 tabName = SangerCSetParam[[i]]$SangerSingleReadFeature[[j]]))
+                                 tabName = paste0(i, " Consensus Read - ", SangerCSetParam[[i]]$SangerSingleReadFeature[[j]])))
             })
             SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerCSetParam[[i]]$SCName, "Overview"),
-                                                 tabName = paste(SangerCSetParam[[i]]$SCName))),
+                                                      tabName = paste0(i, " Sanger Consensus Read Overview"), icon = icon("align-left"))),
                                      SangerCSMenuSubItem)
             SangerCSetParam[[i]]$SCName
-            # list(convertMenuItem(menuItem(text = SangerCSetParam[[i]]$SCName,
-            #               tabName = SangerCSetParam[[i]]$SCName,
-            #               icon = icon("minus"), SangerCSMenuSubItem),
-            #               SangerCSetParam[[i]]$SCName))
             list(menuItem(text = SangerCSetParam[[i]]$SCName,
                           tabName = SangerCSetParam[[i]]$SCName,
                           icon = icon("minus"), SangerCSMenuSubItem))
@@ -67,7 +94,7 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
         sidebarMenu(.list = menu_list)
     })
     # Select consensus Read Menu first
-    isolate({updateTabItems(session, "sidebar_menu", "Overview")})
+    isolate({updateTabItems(session, "sidebar_menu", "Sanger Consensus Set Overview")})
 }
 
 ### ============================================================================
@@ -78,7 +105,7 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
     observeEvent(input$sidebar_menu, {
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
         html("rightHeader", menuItem)
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
         if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
             trimmedRV[["trimmedStart"]] <-
@@ -103,26 +130,27 @@ observeEventDynamicHeaderSCSet <- function(input, output, session, trimmedRV,
     output$res <- renderText({
         paste("You've selected:", input$sidebar_menu)
     })
-    # observeEvent(input$sidebar_menu, {
-    #     menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
-    #     html("rightHeader", menuItem)
-    #     sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
-    #     # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
-    #     if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
-    #         trimmedRV[["trimmedStart"]] <-
-    #             SangerSingleReadQualReport[[
-    #                 strtoi(sidebar_menu[[1]])]]@trimmingStartPos
-    #         trimmedRV[["trimmedEnd"]] <-
-    #             SangerSingleReadQualReport[[
-    #                 strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
-    #         qualityPhredScores = SangerSingleReadQualReport[[
-    #             strtoi(sidebar_menu[[1]])]]@qualityPhredScores
-    #
-    #         readLen = length(qualityPhredScores)
-    #         trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
-    #         trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
-    #     }
-    # })
+
+    observeEvent(input$sidebar_menu, {
+        menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
+        html("rightHeader", menuItem)
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
+        if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
+        #     trimmedRV[["trimmedStart"]] <-
+        #         SangerSingleReadQualReport[[
+        #             strtoi(sidebar_menu[[1]])]]@trimmingStartPos
+        #     trimmedRV[["trimmedEnd"]] <-
+        #         SangerSingleReadQualReport[[
+        #             strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
+        #     qualityPhredScores = SangerSingleReadQualReport[[
+        #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+        #
+        #     readLen = length(qualityPhredScores)
+        #     trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+        #     trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
+        }
+    })
 }
 
 ### ============================================================================
@@ -171,7 +199,7 @@ observeEventButtonClose <- function(input, output, session) {
 ### ============================================================================
 valueBoxSCMinReadsNum <- function(input, output, session) {
     output$SCMinReadsNum <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MinReadsNum",
                               style = "font-size: 15px;
@@ -190,7 +218,7 @@ valueBoxSCMinReadsNum <- function(input, output, session) {
 ### ============================================================================
 valueBoxSCMinReadLength <- function(input, output, session) {
     output$SCMinReadLength <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MinReadLength",
                               style = "font-size: 15px;
@@ -209,7 +237,7 @@ valueBoxSCMinReadLength <- function(input, output, session) {
 ### ============================================================================
 valueBoxSCMinFractionCall <- function(input, output, session) {
     output$SCMinFractionCall <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MinFractionCall",
                               style = "font-size: 15px;
@@ -228,7 +256,7 @@ valueBoxSCMinFractionCall <- function(input, output, session) {
 ### ============================================================================
 valueBoxSCMaxFractionLost <- function(input, output, session) {
     output$SCMaxFractionLost <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MaxFractionLost",
                               style = "font-size: 15px;
@@ -247,7 +275,7 @@ valueBoxSCMaxFractionLost <- function(input, output, session) {
 ### ============================================================================
 valueBoxSCAcceptStopCodons <- function(input, output, session) {
     output$SCAcceptStopCodons <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$SCAcceptStopCodonsText == TRUE) {
             inputSCAcceptStopCodonsText = "TRUE"
         } else if (input$SCAcceptStopCodonsText == FALSE) {
@@ -273,7 +301,7 @@ valueBoxSCAcceptStopCodons <- function(input, output, session) {
 ### ============================================================================
 valueBoxSCReadingFrame <- function(input, output, session) {
     output$SCReadingFrame <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("ReadingFrame",
                               style = "font-size: 15px;
@@ -296,7 +324,7 @@ valueBoxSCReadingFrame <- function(input, output, session) {
 ### ============================================================================
 valueBoxCutoffQualityScore <- function(input, output, session) {
     output$cutoffQualityScore <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (!is.na(strtoi(input$cutoffQualityScoreText)) &&
             strtoi(input$cutoffQualityScoreText) > 0 &&
             strtoi(input$cutoffQualityScoreText) <= 60 &&
@@ -323,7 +351,7 @@ valueBoxCutoffQualityScore <- function(input, output, session) {
 ### ============================================================================
 valueBoxSlidingWindowSize <- function(input, output, session) {
     output$slidingWindowSize <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (!is.na(strtoi(input$slidingWindowSizeText)) &&
             strtoi(input$slidingWindowSizeText) > 0 &&
             strtoi(input$slidingWindowSizeText) <= 20 &&
@@ -352,7 +380,7 @@ valueBoxTrimmingStartPos <- function(input, output, session, trimmedRV) {
     output$trimmingStartPos <- renderUI({
         input$cutoffQualityScoreText
         input$slidingWindowSizeText
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimming Start Pos ",
                               style = "font-size: 15px;
@@ -372,7 +400,7 @@ valueBoxTrimmingFinishPos <- function(input, output, session, trimmedRV) {
     output$trimmingFinishPos <- renderUI({
         input$cutoffQualityScoreText
         input$slidingWindowSizeText
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimming End Pos ",
                               style = "font-size: 15px;
@@ -390,7 +418,7 @@ valueBoxTrimmingFinishPos <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxRemainingBP <- function(input, output, session, trimmedRV) {
     output$remainingBP <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         column(8,
                valueBox(
                    subtitle = tags$p("Remaining Read Length",
@@ -411,7 +439,7 @@ valueBoxRemainingBP <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxTrimmedRatio <- function(input, output, session, trimmedRV) {
     output$trimmedRatio <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         column(8,
                valueBox(
                    subtitle = tags$p("Remaining Ratio",
@@ -444,7 +472,7 @@ qualityTrimmingRatioPlot <- function(input, output, session, trimmedRV,
                                      SangerSingleReadQualReport,
                                      SangerSingleReadFeature) {
     output$qualityTrimmingRatioPlot <- renderPlotly({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readFeature <- SangerSingleReadFeature[[strtoi(sidebar_menu[[1]])]]
         trimmingStartPos = trimmedRV[["trimmedStart"]]
         trimmingFinishPos = trimmedRV[["trimmedEnd"]]
@@ -535,7 +563,7 @@ qualityQualityBasePlot <- function(input, output, session, trimmedRV,
                                    SangerSingleReadQualReport,
                                    SangerSingleReadFeature) {
     output$qualityQualityBasePlot <- renderPlotly({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, "_")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readFeature <- SangerSingleReadFeature[[strtoi(sidebar_menu[[1]])]]
         trimmingStartPos = trimmedRV[["trimmedStart"]]
         trimmingFinishPos = trimmedRV[["trimmedEnd"]]
