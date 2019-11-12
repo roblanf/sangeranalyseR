@@ -440,10 +440,29 @@ consensusReadServer <- function(input, output, session) {
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                        column(12,
+                               column(3,
+                                      sliderInput("ChromatogramBasePerRow",
+                                                  label = h3("Slider"), min = 0,
+                                                  max = 200, value = 100),
+                                          ),
+                               column(3,
+                                      uiOutput("ChromatogramTrimmingStartPos"),
+                               ),
+                               column(3,
+                                      uiOutput("ChromatogramTrimmingFinishPos"),
+                               ),
+                               column(3,
+                                      numericInput("num",
+                                                   h3("Signal Ratio Cutoff"),
+                                                   value = 0.33),
+                                      checkboxInput("ChromatogramCheckShowTrimmed", "Whether show trimmed region", value = TRUE),)
+                        ),
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         column(width = 12,
-                               plotOutput("chromatogram"),
-                        )
-                            # style = "height:100px; overflow-y: scroll;overflow-x: scroll;")
+                               tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                               plotOutput("chromatogram", height = "100%"),
+                            style = "height:1000px;")
                     )
                 )
             }
@@ -559,10 +578,15 @@ consensusReadServer <- function(input, output, session) {
         # chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]])
         chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], trim5=0, trim3=0,
                      showcalls=c("primary", "secondary", "both", "none"),
-                     width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
+                     width=100, height=50, cex.mtext=1, cex.base=1, ylim=3,
                      filename=NULL, showtrim=FALSE, showhets=TRUE)
     })
 
+
+    # chromatogram(SangerConsensusFRReadsList[[1]], trim5=0, trim3=0,
+    #              showcalls=c("primary", "secondary", "both", "none"),
+    #              width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
+    #              filename=NULL, showtrim=FALSE, showhets=TRUE)
 
 
 
@@ -788,6 +812,10 @@ consensusReadServer <- function(input, output, session) {
     valueBoxSlidingWindowSize (input, output, session)
     valueBoxTrimmingStartPos (input, output, session, trimmedRV)
     valueBoxTrimmingFinishPos (input, output, session, trimmedRV)
+
+    valueBoxChromTrimmingStartPos (input, output, session, trimmedRV)
+    valueBoxChromTrimmingFinishPos (input, output, session, trimmedRV)
+
     valueBoxRemainingBP (input, output, session, trimmedRV)
     valueBoxTrimmedRatio (input, output, session, trimmedRV)
     clientdataText (input, output, session)

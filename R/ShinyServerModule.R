@@ -373,13 +373,13 @@ valueBoxSlidingWindowSize <- function(input, output, session) {
     })
 }
 
+
+
 ### ============================================================================
 ### valueBox: Change trimmingStartPos
 ### ============================================================================
 valueBoxTrimmingStartPos <- function(input, output, session, trimmedRV) {
     output$trimmingStartPos <- renderUI({
-        input$cutoffQualityScoreText
-        input$slidingWindowSizeText
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimming Start Pos ",
@@ -398,8 +398,6 @@ valueBoxTrimmingStartPos <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxTrimmingFinishPos <- function(input, output, session, trimmedRV) {
     output$trimmingFinishPos <- renderUI({
-        input$cutoffQualityScoreText
-        input$slidingWindowSizeText
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimming End Pos ",
@@ -412,6 +410,46 @@ valueBoxTrimmingFinishPos <- function(input, output, session, trimmedRV) {
         )
     })
 }
+
+
+
+### ============================================================================
+### valueBox: Change trimmingStartPos
+### ============================================================================
+valueBoxChromTrimmingStartPos <- function(input, output, session, trimmedRV) {
+    output$ChromatogramTrimmingStartPos <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        valueBox(
+            subtitle = tags$p("Trimming Start Pos ",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(toString(trimmedRV[["trimmedStart"]]),
+                           style = "font-size: 29px;"),
+            icon = icon("check-circle", "fa-sm"),
+            color = "olive", width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: Change trimmingFinishPos
+### ============================================================================
+valueBoxChromTrimmingFinishPos <- function(input, output, session, trimmedRV) {
+    output$ChromatogramTrimmingFinishPos <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        valueBox(
+            subtitle = tags$p("Trimming End Pos ",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(toString(trimmedRV[["trimmedEnd"]]),
+                           style = "font-size: 29px;"),
+            icon = icon("times-circle", "fa-sm"),
+            color = "olive", width = 12,
+        )
+    })
+}
+
+
 
 ### ============================================================================
 ### valueBox: Change remainingBP
