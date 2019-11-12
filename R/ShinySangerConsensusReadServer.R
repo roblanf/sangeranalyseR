@@ -353,10 +353,8 @@ consensusReadServer <- function(input, output, session) {
                             collapsible = TRUE,
                             status = "success", width = 12,
                             column(width = 12,
-                                   column(width = 12,
-                                          excelOutput("primarySeqDF"),
-                                          excelOutput("secondSeqDF"),
-                                   ),
+                                   excelOutput("primarySeqDF", width = "100%", height = "80"),
+                                   excelOutput("secondSeqDF", width = "100%", height = "80"),
                             style = "height:500px; overflow-y: scroll;overflow-x: scroll;")
                         ),
                     ),
@@ -718,13 +716,18 @@ consensusReadServer <- function(input, output, session) {
 
     output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        excelTable(data = SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]], defaultColWidth = 30, editable = TRUE, fullscreen = FALSE)
-        # rhandsontable(SangerSingleReadPrimSeqDF[[1]], rowHeaders = NULL, overflow = 'visible')
+        excelTable(data = SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]])
+                   # , defaultColWidth = 30, editable = TRUE, rowResize = TRUE)
+        # tags$head(tags$style(HTML("#primarySeqDF { height = 100%;}")))
+
     })
 
     output$secondSeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        excelTable(data = SangerSingleReadSecoSeqDF[[strtoi(sidebar_menu[[1]])]], defaultColWidth = 30, editable = TRUE, fullscreen = FALSE)
+        excelTable(data = SangerSingleReadSecoSeqDF[[strtoi(sidebar_menu[[1]])]])
+                   # , defaultColWidth = 30, editable = TRUE, rowResize = TRUE)
+        # tags$head(tags$style(HTML("#secondSeqDF { height = 100%; }")))
+        # tags$head(tags$style(HTML(".jexcel_content { overflow-y: auto; height: 100%;}")))
     })
 
 #
@@ -782,3 +785,4 @@ consensusReadServer <- function(input, output, session) {
         paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
     })
 }
+

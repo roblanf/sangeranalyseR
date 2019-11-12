@@ -59,7 +59,8 @@ consensusReadUI <- dashboardPage(
         tags$head(
             tags$style(HTML('#closeUI{background-color:red; color:white; padding:15px; font-size: 35; font-weight: bold;}')),
             tags$style(HTML('#saveS4{background-color:#0083FF; color:white; padding:15px; font-size: 35; font-weight: bold;}')),
-            # tags$style(HTML(".fa { font-size: 30px; }"))
+            ## Overwrite .jexcel_content Height!!
+            tags$style(HTML(".jexcel_content { overflow-y: auto; height: 100% !important;}"))
         ),
         tags$style(
             HTML(".shiny-notification {
