@@ -15,3 +15,4 @@
 #'               reverseComplement
 #' @importFrom DT dataTableOutput
 #' @importFrom zeallot
+#' @importFrom excelR

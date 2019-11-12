@@ -27,7 +27,8 @@ Depends:
     plotly,
     DT,
     zeallot,
-    rhandsontable
+    rhandsontable,
+    excelR
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 

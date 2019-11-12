@@ -133,6 +133,7 @@ consensusReadServer <- function(input, output, session) {
         aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls1 <- basecalls1[1:length(aveposition)]
         basecalls1DF <- data.frame(t(data.frame(basecalls1)))
+        rownames(basecalls1DF) <- "Primary"
         return(basecalls1DF)
         }
     )
@@ -141,6 +142,7 @@ consensusReadServer <- function(input, output, session) {
         aveposition <- rowMeans(SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls1 <- basecalls1[1:length(aveposition)]
         basecalls1DF <- data.frame(t(data.frame(basecalls1)))
+        rownames(basecalls1DF) <- "Second "
         return(basecalls1DF)
         }
     )
@@ -159,6 +161,33 @@ consensusReadServer <- function(input, output, session) {
     reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
         SangerConsensus@reverseReadsList[[i]]@secondarySeq)
     SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
+
+
+
+
+
+    # secondarySeqDF
+    forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
+        basecalls1 <- unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@secondarySeq), ""))
+        aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        basecalls1 <- basecalls1[1:length(aveposition)]
+        basecalls1DF <- data.frame(t(data.frame(basecalls1)))
+        return(basecalls1DF)
+        }
+    )
+    reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(i) {
+        basecalls1 <- unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@secondarySeq), ""))
+        aveposition <- rowMeans(SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        basecalls1 <- basecalls1[1:length(aveposition)]
+        basecalls1DF <- data.frame(t(data.frame(basecalls1)))
+        return(basecalls1DF)
+        }
+    )
+    SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
+
+
+
+
     # traceMatrix
     forwardReadTraceMat <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@traceMatrix)
@@ -312,6 +341,25 @@ consensusReadServer <- function(input, output, session) {
                                       SangerSingleReadAFN[[
                                           strtoi(sidebar_menu[[1]])]],
                                       ")"), style = "font-style:italic")),
+                    box(title = tags$p("Primary & Secondary Peaks: ",
+                                       style = "font-size: 26px;
+                                       font-weight: bold;"),
+                        solidHeader = TRUE, collapsible = TRUE,
+                        status = "success", width = 12,
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                        box(title = tags$p("BP (ATCG)",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   column(width = 12,
+                                          excelOutput("primarySeqDF"),
+                                          excelOutput("secondSeqDF"),
+                                   ),
+                            style = "height:500px; overflow-y: scroll;overflow-x: scroll;")
+                        ),
+                    ),
                     box(title = tags$p("Quality Report: ",
                                        style = "font-size: 26px;
                                        font-weight: bold;"),
@@ -372,25 +420,16 @@ consensusReadServer <- function(input, output, session) {
                             status = "success", width = 6,
                             plotlyOutput("qualityQualityBasePlot")),
                     ),
-                    box(title = tags$p("Base Call: ",
+                    box(title = tags$p("Chromatogram: ",
                                        style = "font-size: 26px;
                                        font-weight: bold;"),
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        box(title = tags$p("BP (ATCG)",
-                                           style = "font-size: 24px;
-                                       font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 12,
-                                   column(width = 12,
-                                          rHandsontableOutput("primarySeqDF"),
-                                          rHandsontableOutput("primarySeqDF2")
-                                    ),
-                            )
-                                   # style = "height:100px; overflow-y: scroll;overflow-x: scroll;")
-                        ),
+                        column(width = 12,
+                               plotOutput("chromatogram"),
+                        )
+                            # style = "height:100px; overflow-y: scroll;overflow-x: scroll;")
                     )
                 )
             }
@@ -501,25 +540,19 @@ consensusReadServer <- function(input, output, session) {
     ### ConsensusRead (Sanger Consensus Read Overview)
     ############################################################################
     # chromatogram
-    # output$chromatogram <- renderUI({
-    #     sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-    #     chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]])
-    #
-    #     chromatogramIn(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], trim5=0, trim3=0,
-    #                     showcalls=c("primary", "secondary", "both", "none"),
-    #                     width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
-    #                     filename=NULL, showtrim=FALSE, showhets=TRUE)
-    #     # valueBox(
-    #     #     subtitle = tags$p("MinReadsNum",
-    #     #                       style = "font-size: 15px;
-    #     #                                     font-weight: bold;"),
-    #     #     value = tags$p(strtoi(input$SCMinReadsNumText),
-    #     #                    style = "font-size: 29px;"),
-    #     #     icon = icon("cut", "fa-sm"),
-    #     #     color = "olive",
-    #     #     width = 12,
-    #     # )
-    # })
+    output$chromatogram <- renderPlot({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        # chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]])
+        chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], trim5=0, trim3=0,
+                     showcalls=c("primary", "secondary", "both", "none"),
+                     width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
+                     filename=NULL, showtrim=FALSE, showhets=TRUE)
+    })
+
+
+
+
+
 
 
 
@@ -530,11 +563,16 @@ consensusReadServer <- function(input, output, session) {
 
 
     # obj <- A_chloroticaSingleRead
+    # hetsangerseq <- readsangerseq("/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/inst/extdata/Allolobophora_chlorotica/RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
+    # # chromatogram(hetsangerseq, showcalls="both", )
+    # chromatogram(hetsangerseq, width = 100, height = 2, trim5 = 50, trim3 = 100, showcalls = "both")
     #
-    # chromatogram(homosangerseq)
+    # hetcalls <- makeBaseCalls(hetsangerseq, ratio = 0.33)
+    # chromatogram(hetcalls, width = 100, height = 2, trim5 = 0, trim3 = 0, showcalls = "both")
     #
-    # # A_chloroticaSingleRead
-    # chromatogram <- function(obj, trim5=0, trim3=0,
+    #
+    # A_chloroticaSingleRead
+    # chromatogram <- function(obj, trim5=30, trim3=30,
     #          showcalls="both",
     #          width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
     #          filename=NULL, showtrim=FALSE, showhets=TRUE) {
@@ -678,17 +716,22 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-    output$primarySeqDF <- renderRHandsontable({
+    output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        strtoi(sidebar_menu[[1]])
-        rhandsontable(SangerSingleReadPrimSeqDF[[1]], rowHeaders = NULL, overflow = 'visible', mergeCells = TRUE)
+        excelTable(data = SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]], defaultColWidth = 30, editable = TRUE, fullscreen = FALSE)
+        # rhandsontable(SangerSingleReadPrimSeqDF[[1]], rowHeaders = NULL, overflow = 'visible')
     })
 
-
-    output$primarySeqDF2 <- renderRHandsontable({
+    output$secondSeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        rhandsontable(SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]], rowHeaders = NULL, overflow = 'visible', width = 100, height = 100)
+        excelTable(data = SangerSingleReadSecoSeqDF[[strtoi(sidebar_menu[[1]])]], defaultColWidth = 30, editable = TRUE, fullscreen = FALSE)
     })
+
+#
+#     output$primarySeqDF2 <- renderRHandsontable({
+#         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+#         rhandsontable(SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]], rowHeaders = NULL, overflow = 'visible', width = 100, height = 100)
+#     })
 
 
 
