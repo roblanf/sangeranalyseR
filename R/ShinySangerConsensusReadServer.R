@@ -129,7 +129,7 @@ consensusReadServer <- function(input, output, session) {
 
     # primarySeqDF
     forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
-        unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@primarySeq), ""))
+        basecalls1 <- unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@primarySeq), ""))
         aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls1 <- basecalls1[1:length(aveposition)]
         basecalls1DF <- data.frame(t(data.frame(basecalls1)))
@@ -137,7 +137,7 @@ consensusReadServer <- function(input, output, session) {
         }
     )
     reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(i) {
-        unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@primarySeq), ""))
+        basecalls1 <- unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@primarySeq), ""))
         aveposition <- rowMeans(SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls1 <- basecalls1[1:length(aveposition)]
         basecalls1DF <- data.frame(t(data.frame(basecalls1)))
@@ -384,8 +384,12 @@ consensusReadServer <- function(input, output, session) {
                             collapsible = TRUE,
                             status = "success", width = 12,
                             column(width = 12,
-                                   rHandsontableOutput("primarySeqDF"),
-                                   style = "height:500px; overflow-y: scroll;overflow-x: scroll;")
+                                   column(width = 12,
+                                          rHandsontableOutput("primarySeqDF"),
+                                          rHandsontableOutput("primarySeqDF2")
+                                    ),
+                            )
+                                   # style = "height:100px; overflow-y: scroll;overflow-x: scroll;")
                         ),
                     )
                 )
@@ -525,12 +529,13 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-
-
-
+    # obj <- A_chloroticaSingleRead
+    #
+    # chromatogram(homosangerseq)
+    #
     # # A_chloroticaSingleRead
     # chromatogram <- function(obj, trim5=0, trim3=0,
-    #          showcalls=c("primary", "secondary", "both", "none"),
+    #          showcalls="both",
     #          width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
     #          filename=NULL, showtrim=FALSE, showhets=TRUE) {
     #     originalpar <- par(no.readonly=TRUE)
@@ -675,10 +680,15 @@ consensusReadServer <- function(input, output, session) {
 
     output$primarySeqDF <- renderRHandsontable({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        rhandsontable(SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]], rowHeaders = NULL)
+        strtoi(sidebar_menu[[1]])
+        rhandsontable(SangerSingleReadPrimSeqDF[[1]], rowHeaders = NULL, overflow = 'visible', mergeCells = TRUE)
     })
 
 
+    output$primarySeqDF2 <- renderRHandsontable({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        rhandsontable(SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]], rowHeaders = NULL, overflow = 'visible', width = 100, height = 100)
+    })
 
 
 
