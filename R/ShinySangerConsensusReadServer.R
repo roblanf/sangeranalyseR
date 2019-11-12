@@ -115,7 +115,7 @@ consensusReadServer <- function(input, output, session) {
     reverseReadPrimSeq <- sapply(1:reverseReadNum, function(i)
         SangerConsensus@reverseReadsList[[i]]@primarySeq)
     SangerSingleReadPrimSeq <- c(forwardReadPrimSeq, reverseReadPrimSeq)
-    SangerSingleReadPrimSeqChara <- as.character(SangerSingleReadPrimSeq)
+    # SangerSingleReadPrimSeqChara <- as.character(SangerSingleReadPrimSeq)
 
 
 
@@ -132,7 +132,8 @@ consensusReadServer <- function(input, output, session) {
         basecalls1 <- unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@primarySeq), ""))
         aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls1 <- basecalls1[1:length(aveposition)]
-        basecalls1DF <- data.frame(t(data.frame(basecalls1)))
+        basecalls1DF <- data.frame(t(data.frame(basecalls1)), stringsAsFactors = FALSE)
+        colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
         rownames(basecalls1DF) <- "Primary"
         return(basecalls1DF)
         }
@@ -141,8 +142,9 @@ consensusReadServer <- function(input, output, session) {
         basecalls1 <- unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@primarySeq), ""))
         aveposition <- rowMeans(SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls1 <- basecalls1[1:length(aveposition)]
-        basecalls1DF <- data.frame(t(data.frame(basecalls1)))
-        rownames(basecalls1DF) <- "Second "
+        basecalls1DF <- data.frame(t(data.frame(basecalls1)), stringsAsFactors = FALSE)
+        colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
+        rownames(basecalls1DF) <- "Primary "
         return(basecalls1DF)
         }
     )
@@ -168,19 +170,23 @@ consensusReadServer <- function(input, output, session) {
 
     # secondarySeqDF
     forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
-        basecalls1 <- unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@secondarySeq), ""))
+        basecalls2 <- unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@secondarySeq), ""))
         aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        basecalls1 <- basecalls1[1:length(aveposition)]
-        basecalls1DF <- data.frame(t(data.frame(basecalls1)))
-        return(basecalls1DF)
+        basecalls2 <- basecalls2[1:length(aveposition)]
+        basecalls2DF <- data.frame(t(data.frame(basecalls2)), stringsAsFactors = FALSE)
+        colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
+        rownames(basecalls2DF) <- " Second"
+        return(basecalls2DF)
         }
     )
     reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(i) {
-        basecalls1 <- unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@secondarySeq), ""))
-        aveposition <- rowMeans(SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        basecalls1 <- basecalls1[1:length(aveposition)]
-        basecalls1DF <- data.frame(t(data.frame(basecalls1)))
-        return(basecalls1DF)
+        basecalls2 <- unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@secondarySeq), ""))
+        aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        basecalls2 <- basecalls2[1:length(aveposition)]
+        basecalls2DF <- data.frame(t(data.frame(basecalls2)), stringsAsFactors = FALSE)
+        colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
+        rownames(basecalls2DF) <- " Second"
+        return(basecalls2DF)
         }
     )
     SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
@@ -347,16 +353,26 @@ consensusReadServer <- function(input, output, session) {
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        box(title = tags$p("BP (ATCG)",
-                                           style = "font-size: 24px;
+                        # box(title = tags$p("Base",
+                        #                    style = "font-size: 24px;
+                        #                font-weight: bold;"),
+                        #     collapsible = TRUE,
+                        #     status = "success", width = 12,
+                        column(width = 1,
+                               tags$p("Primary",
+                                      style = "font-size: 15px;
                                        font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 12,
-                                   excelOutput("primarySeqDF", width = "100%", height = "80"),
-                                   excelOutput("secondSeqDF", width = "100%", height = "80"),
-                            style = "height:500px; overflow-y: scroll;overflow-x: scroll;")
+                               tags$br(),
+                               tags$br(),
+                               tags$p("Second",
+                                      style = "font-size: 15px;
+                                       font-weight: bold;"),
                         ),
+                        column(width = 11,
+                               excelOutput("primarySeqDF", width = "100%", height = "50"),
+                               excelOutput("secondSeqDF", width = "100%", height = "50"),
+                               style = "overflow-y: scroll; overflow-x: scroll;")
+                        # ),
                     ),
                     box(title = tags$p("Quality Report: ",
                                        style = "font-size: 26px;
@@ -669,7 +685,7 @@ consensusReadServer <- function(input, output, session) {
     #         for(k in 1:length(lab1)) {
     #             if (showcalls=="primary" | showcalls=="both") {
     #                 if (is.na(basecalls1[1]) & basecallwarning1==0) {
-    #                     warning("Primary basecalls missing")
+    #                     warning("Prfimary basecalls missing")
     #                     basecallwarning1 = 1
     #                 }
     #                 else if (length(lab1) > 0) {
@@ -716,18 +732,21 @@ consensusReadServer <- function(input, output, session) {
 
     output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        excelTable(data = SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]])
-                   # , defaultColWidth = 30, editable = TRUE, rowResize = TRUE)
-        # tags$head(tags$style(HTML("#primarySeqDF { height = 100%;}")))
+        excelTable(data = SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]],
+                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
 
     })
 
     output$secondSeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        excelTable(data = SangerSingleReadSecoSeqDF[[strtoi(sidebar_menu[[1]])]])
-                   # , defaultColWidth = 30, editable = TRUE, rowResize = TRUE)
-        # tags$head(tags$style(HTML("#secondSeqDF { height = 100%; }")))
-        # tags$head(tags$style(HTML(".jexcel_content { overflow-y: auto; height: 100%;}")))
+        excelTable(data = SangerSingleReadSecoSeqDF[[strtoi(sidebar_menu[[1]])]],
+                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
 #
