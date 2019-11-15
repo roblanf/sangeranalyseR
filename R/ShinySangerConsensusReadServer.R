@@ -330,9 +330,17 @@ consensusReadServer <- function(input, output, session) {
 
     output$singelReadMenu_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        data(mtcars)
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+
+
+
+
+
+
+
+
+
                 fluidRow(
                     useShinyjs(),
                     # box(sidebar_menu[[1]])
@@ -461,8 +469,9 @@ consensusReadServer <- function(input, output, session) {
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         column(width = 12,
                                tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                               plotOutput("chromatogram", height = "100%"),
-                            style = "height:1200px;")
+                               uiOutput("chromatogramUIOutput"),
+                               # plotOutput("chromatogram", height = chromatogramRowNum),
+                        )
                     )
                 )
             }
@@ -595,13 +604,6 @@ consensusReadServer <- function(input, output, session) {
     # chromatogram
     output$chromatogram <- renderPlot({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        # chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]])
-
-        # chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], trim5=0, trim3=0,
-        #              showcalls=c("primary", "secondary", "both", "none"),
-        #              width=strtoi(input$ChromatogramBasePerRow), height=50, cex.mtext=1, cex.base=1, ylim=3,
-        #              filename=NULL, showtrim=FALSE, showhets=TRUE)
-
         qualityPhredScores = SangerSingleReadQualReport[[
             strtoi(sidebar_menu[[1]])]]@qualityPhredScores
         readLen = length(qualityPhredScores)
@@ -768,28 +770,6 @@ consensusReadServer <- function(input, output, session) {
     # }
 
 
-    # mtcars %>% ggvis(x = ~wt) %>%
-    #     layer_densities(
-    #         adjust = input_slider(.1, 2, value = 1, step = .1, label = "Bandwidth adjustment"),
-    #         input_text(inputParse("Input")),
-    #         kernel = input_select(
-    #             c("Gaussian" = "gaussian",
-    #               "Epanechnikov" = "epanechnikov",
-    #               "Rectangular" = "rectangular",
-    #               "Triangular" = "triangular",
-    #               "Biweight" = "biweight",
-    #               "Cosine" = "cosine",
-    #               "Optcosine" = "optcosine"),
-    #             label = "Kernel")
-    #     )
-    #
-    # inputParse <- function(text) {
-    #     return(paste0(text, "fdsf"))
-    # }
-
-
-
-
 
 
 
@@ -880,11 +860,40 @@ consensusReadServer <- function(input, output, session) {
     })
 
 
+    output$chromatogramUIOutput <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        if (input$sidebar_menu != "Sanger Consensus Read Overview") {
+            if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+                chromatogramRowNumAns = chromatogramRowNum(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], strtoi(input$ChromatogramBasePerRow)) * 200
+                plotOutput("chromatogram", height = chromatogramRowNumAns)
+            }
+        }
+    })
 
 
 
 
 
 
+}
+
+
+
+chromatogramRowNum <- function(obj, width) {
+    traces <- obj@traceMatrix
+    basecalls1 <- unlist(strsplit(toString(obj@primarySeq), ""))
+    message("basecalls1: ", basecalls1)
+    aveposition <- rowMeans(obj@peakPosMatrix, na.rm=TRUE)
+    basecalls1 <- basecalls1[1:length(aveposition)]
+    valuesperbase <- nrow(traces)/length(basecalls1)
+    message("valuesperbase: ", valuesperbase)
+    message("width: ", width)
+    tracewidth <- width*valuesperbase
+    message("tracewidth: ", tracewidth)
+    breaks <- seq(1,nrow(traces), by=tracewidth)
+    message("breaks: ", breaks)
+    numplots <- length(breaks)
+    message("numplots: ", numplots)
+    return(numplots)
 }
 
