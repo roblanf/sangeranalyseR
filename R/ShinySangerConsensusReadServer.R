@@ -227,6 +227,38 @@ consensusReadServer <- function(input, output, session) {
     output$consensusReadMenu_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu == "Sanger Consensus Read Overview") {
+            # Input can change
+                # minReadsNum               = "numeric",
+                # minReadLength             = "numeric",
+                # minFractionCall           = "numeric",
+                # maxFractionLost           = "numeric",
+
+            # Input cannot change
+                # parentDirectory           = "character",
+                # suffixForwardRegExp       = "character",
+                # suffixReverseRegExp       = "character",
+                # refAminoAcidSeq           = "character",
+                # geneticCode               = "character",
+                # acceptStopCodons          = "logical",
+
+            # Output (always have values)
+                # consenesusReadName        = "character",
+
+            # Output (sometime don't have values)
+                # forwardReadsList          = "list",
+                # reverseReadsList          = "list",
+                # readingFrame              = "numeric",
+                # consensusRead             = "DNAString",
+                # alignment                 = "DNAStringSet",
+                # differencesDF             = "data.frame",
+                # distanceMatrix            = "matrix",
+                # dendrogram                = "list",
+                # indelsDF                  = "data.frame",
+                # stopCodonsDF              = "data.frame",
+                # secondaryPeakDF           = "data.frame"
+
+
+
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p("Parameters: ",
@@ -332,15 +364,6 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
-
-
-
-
-
-
-
-
-
                 fluidRow(
                     useShinyjs(),
                     # box(sidebar_menu[[1]])
@@ -451,7 +474,7 @@ consensusReadServer <- function(input, output, session) {
                         column(12,
                                column(3,
                                       sliderInput("ChromatogramBasePerRow",
-                                                  label = h3("Slider"), min = 0,
+                                                  label = h3("Slider"), min = 5,
                                                   max = 200, value = 100),
                                           ),
                                column(3,
@@ -470,7 +493,6 @@ consensusReadServer <- function(input, output, session) {
                         column(width = 12,
                                tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                                uiOutput("chromatogramUIOutput"),
-                               # plotOutput("chromatogram", height = chromatogramRowNum),
                         )
                     )
                 )
@@ -602,12 +624,24 @@ consensusReadServer <- function(input, output, session) {
     ### ConsensusRead (Sanger Consensus Read Overview)
     ############################################################################
     # chromatogram
+    output$chromatogramUIOutput <- renderUI({
+        message("Inside output$chromatogramUIOutput !")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        if (input$sidebar_menu != "Sanger Consensus Read Overview") {
+            if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+                chromatogramRowNumAns = chromatogramRowNum(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], strtoi(input$ChromatogramBasePerRow)) * 200
+                message("chromatogramRowNumAns: ", chromatogramRowNumAns)
+                plotOutput("chromatogram", height = chromatogramRowNumAns)
+            }
+        }
+    })
+
     output$chromatogram <- renderPlot({
+        message("Inside output$chromatogram !")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         qualityPhredScores = SangerSingleReadQualReport[[
             strtoi(sidebar_menu[[1]])]]@qualityPhredScores
         readLen = length(qualityPhredScores)
-
         hetcalls <- makeBaseCalls(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]],
                                   ratio = as.numeric(input$ChromatogramSignalRatioCutoff))
         chromatogram(hetcalls, width = strtoi(input$ChromatogramBasePerRow),
@@ -615,14 +649,6 @@ consensusReadServer <- function(input, output, session) {
                      trim3 = readLen - trimmedRV[["trimmedEnd"]],
                      showtrim = (input$ChromatogramCheckShowTrimmed),
                      showcalls = "both")
-        # column(3,
-        #        numericInput("num",
-        #                     h3("Signal Ratio Cutoff"),
-        #                     value = 0.33),
-        #        checkboxInput("ChromatogramCheckShowTrimmed", "Whether show trimmed region", value = TRUE),)
-        #
-        #
-        #
     })
 
 
@@ -858,42 +884,20 @@ consensusReadServer <- function(input, output, session) {
     output$info <- renderText({
         paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
     })
-
-
-    output$chromatogramUIOutput <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (input$sidebar_menu != "Sanger Consensus Read Overview") {
-            if (!is.na(as.numeric(sidebar_menu[[1]]))) {
-                chromatogramRowNumAns = chromatogramRowNum(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], strtoi(input$ChromatogramBasePerRow)) * 200
-                plotOutput("chromatogram", height = chromatogramRowNumAns)
-            }
-        }
-    })
-
-
-
-
-
-
 }
 
 
 
 chromatogramRowNum <- function(obj, width) {
+    message("Inside chromatogramRowNum() !")
     traces <- obj@traceMatrix
     basecalls1 <- unlist(strsplit(toString(obj@primarySeq), ""))
-    message("basecalls1: ", basecalls1)
     aveposition <- rowMeans(obj@peakPosMatrix, na.rm=TRUE)
     basecalls1 <- basecalls1[1:length(aveposition)]
     valuesperbase <- nrow(traces)/length(basecalls1)
-    message("valuesperbase: ", valuesperbase)
-    message("width: ", width)
     tracewidth <- width*valuesperbase
-    message("tracewidth: ", tracewidth)
     breaks <- seq(1,nrow(traces), by=tracewidth)
-    message("breaks: ", breaks)
     numplots <- length(breaks)
-    message("numplots: ", numplots)
     return(numplots)
 }
 
