@@ -453,7 +453,7 @@ consensusReadServer <- function(input, output, session) {
                                       uiOutput("ChromatogramTrimmingFinishPos"),
                                ),
                                column(3,
-                                      numericInput("num",
+                                      numericInput("ChromatogramSignalRatioCutoff",
                                                    h3("Signal Ratio Cutoff"),
                                                    value = 0.33),
                                       checkboxInput("ChromatogramCheckShowTrimmed", "Whether show trimmed region", value = TRUE),)
@@ -462,7 +462,7 @@ consensusReadServer <- function(input, output, session) {
                         column(width = 12,
                                tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                                plotOutput("chromatogram", height = "100%"),
-                            style = "height:1000px;")
+                            style = "height:1200px;")
                     )
                 )
             }
@@ -569,6 +569,26 @@ consensusReadServer <- function(input, output, session) {
         }
     })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ############################################################################
     ### ConsensusRead (Sanger Consensus Read Overview)
     ############################################################################
@@ -576,10 +596,46 @@ consensusReadServer <- function(input, output, session) {
     output$chromatogram <- renderPlot({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         # chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]])
-        chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], trim5=0, trim3=0,
-                     showcalls=c("primary", "secondary", "both", "none"),
-                     width=100, height=50, cex.mtext=1, cex.base=1, ylim=3,
-                     filename=NULL, showtrim=FALSE, showhets=TRUE)
+
+        # chromatogram(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], trim5=0, trim3=0,
+        #              showcalls=c("primary", "secondary", "both", "none"),
+        #              width=strtoi(input$ChromatogramBasePerRow), height=50, cex.mtext=1, cex.base=1, ylim=3,
+        #              filename=NULL, showtrim=FALSE, showhets=TRUE)
+
+        qualityPhredScores = SangerSingleReadQualReport[[
+            strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+        readLen = length(qualityPhredScores)
+
+        hetcalls <- makeBaseCalls(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], ratio = strtoi(input$ChromatogramSignalRatioCutoff))
+        chromatogram(hetcalls, width = strtoi(input$ChromatogramBasePerRow), height = 2, trim5 = trimmedRV[["trimmedStart"]], trim3 = readLen - trimmedRV[["trimmedEnd"]], showcalls = "both")
+
+
+
+
+
+
+
+
+
+        # column(3,
+        #        sliderInput("ChromatogramBasePerRow",
+        #                    label = h3("Slider"), min = 0,
+        #                    max = 200, value = 100),
+        # ),
+        # column(3,
+        #        uiOutput("ChromatogramTrimmingStartPos"),
+        # ),
+        # column(3,
+        #        uiOutput("ChromatogramTrimmingFinishPos"),
+        # ),
+        # column(3,
+        #        numericInput("num",
+        #                     h3("Signal Ratio Cutoff"),
+        #                     value = 0.33),
+        #        checkboxInput("ChromatogramCheckShowTrimmed", "Whether show trimmed region", value = TRUE),)
+        #
+        #
+        #
     })
 
 
@@ -622,11 +678,6 @@ consensusReadServer <- function(input, output, session) {
     #     aveposition <- rowMeans(obj@peakPosMatrix, na.rm=TRUE)
     #     basecalls1 <- basecalls1[1:length(aveposition)]
     #     basecalls2 <- basecalls2[1:length(aveposition)]
-    #
-    #
-    #
-    #
-    #
     #     if(showtrim == FALSE) {
     #         if(trim5+trim3 > length(basecalls1)) basecalls1 <- ""
     #         else basecalls1 <- basecalls1[(1 + trim5):(length(basecalls1) - trim3)]
@@ -713,9 +764,9 @@ consensusReadServer <- function(input, output, session) {
     #                     basecallwarning1 = 1
     #                 }
     #                 else if (length(lab1) > 0) {
-    #                     axis(side=3, at=pos[k], labels=lab1[k], col.axis=colors1[k],
-    #                          family="mono", cex=cex.base, line=ifelse(showcalls=="both", 0,
-    #                                                                   -1), tick=FALSE)
+    #                     # axis(side=3, at=pos[k], labels=lab1[k], col.axis=colors1[k],
+    #                     #      family="mono", cex=cex.base, line=ifelse(showcalls=="both", 0,
+    #                     #                                               -1), tick=FALSE)
     #                 }
     #             }
     #             if (showcalls=="secondary" | showcalls=="both") {
@@ -724,8 +775,8 @@ consensusReadServer <- function(input, output, session) {
     #                     basecallwarning2 = 1
     #                 }
     #                 else if (length(lab2) > 0) {
-    #                     axis(side=3, at=pos[k], labels=lab2[k], col.axis=colors2[k],
-    #                          family="mono", cex=cex.base, line=-1, tick=FALSE)
+    #                     # axis(side=3, at=pos[k], labels=lab2[k], col.axis=colors2[k],
+    #                     #      family="mono", cex=cex.base, line=-1, tick=FALSE)
     #                 }
     #             }
     #         }
@@ -739,6 +790,25 @@ consensusReadServer <- function(input, output, session) {
     #     else par(originalpar)
     # }
 
+
+    # mtcars %>% ggvis(x = ~wt) %>%
+    #     layer_densities(
+    #         adjust = input_slider(.1, 2, value = 1, step = .1, label = "Bandwidth adjustment"),
+    #         input_text(inputParse("Input")),
+    #         kernel = input_select(
+    #             c("Gaussian" = "gaussian",
+    #               "Epanechnikov" = "epanechnikov",
+    #               "Rectangular" = "rectangular",
+    #               "Triangular" = "triangular",
+    #               "Biweight" = "biweight",
+    #               "Cosine" = "cosine",
+    #               "Optcosine" = "optcosine"),
+    #             label = "Kernel")
+    #     )
+    #
+    # inputParse <- function(text) {
+    #     return(paste0(text, "fdsf"))
+    # }
 
 
 
@@ -831,5 +901,13 @@ consensusReadServer <- function(input, output, session) {
     output$info <- renderText({
         paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
     })
+
+
+
+
+
+
+
+
 }
 
