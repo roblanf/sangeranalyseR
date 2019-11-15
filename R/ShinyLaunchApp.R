@@ -2,7 +2,7 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' consenesusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+#' consenesusReadName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' A_chloroticConsensusReads <- new("SangerConsensusRead",

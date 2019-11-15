@@ -606,28 +606,13 @@ consensusReadServer <- function(input, output, session) {
             strtoi(sidebar_menu[[1]])]]@qualityPhredScores
         readLen = length(qualityPhredScores)
 
-        hetcalls <- makeBaseCalls(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], ratio = strtoi(input$ChromatogramSignalRatioCutoff))
-        chromatogram(hetcalls, width = strtoi(input$ChromatogramBasePerRow), height = 2, trim5 = trimmedRV[["trimmedStart"]], trim3 = readLen - trimmedRV[["trimmedEnd"]], showcalls = "both")
-
-
-
-
-
-
-
-
-
-        # column(3,
-        #        sliderInput("ChromatogramBasePerRow",
-        #                    label = h3("Slider"), min = 0,
-        #                    max = 200, value = 100),
-        # ),
-        # column(3,
-        #        uiOutput("ChromatogramTrimmingStartPos"),
-        # ),
-        # column(3,
-        #        uiOutput("ChromatogramTrimmingFinishPos"),
-        # ),
+        hetcalls <- makeBaseCalls(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]],
+                                  ratio = as.numeric(input$ChromatogramSignalRatioCutoff))
+        chromatogram(hetcalls, width = strtoi(input$ChromatogramBasePerRow),
+                     height = 2, trim5 = trimmedRV[["trimmedStart"]],
+                     trim3 = readLen - trimmedRV[["trimmedEnd"]],
+                     showtrim = (input$ChromatogramCheckShowTrimmed),
+                     showcalls = "both")
         # column(3,
         #        numericInput("num",
         #                     h3("Signal Ratio Cutoff"),
@@ -637,14 +622,6 @@ consensusReadServer <- function(input, output, session) {
         #
         #
     })
-
-
-    # chromatogram(SangerConsensusFRReadsList[[1]], trim5=0, trim3=0,
-    #              showcalls=c("primary", "secondary", "both", "none"),
-    #              width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
-    #              filename=NULL, showtrim=FALSE, showhets=TRUE)
-
-
 
 
 
