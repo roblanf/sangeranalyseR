@@ -400,8 +400,8 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                         ),
                         column(width = 11,
-                               excelOutput("primarySeqDF", width = "100%", height = "50")%>%withSpinner(),
-                               excelOutput("secondSeqDF", width = "100%", height = "50")%>%withSpinner(),
+                               excelOutput("primarySeqDF", width = "100%", height = "50"),
+                               excelOutput("secondSeqDF", width = "100%", height = "50"),
                                style = "overflow-y: scroll; overflow-x: scroll;")
                         # ),
                     ),
