@@ -12,7 +12,6 @@ inside_calculate_trimming <- function(qualityBaseScore,
         trimmingFinishPos = NULL
     } else {
         for (i in 1:(readLen-slidingWindowSize+1)) {
-
             meanSLidingWindow <-
                 mean(qualityBaseScore[i:(i+slidingWindowSize-1)])
             if (meanSLidingWindow < qualityPbCutoff) {

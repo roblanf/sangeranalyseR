@@ -269,7 +269,7 @@ consensusReadServer <- function(input, output, session) {
                     tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                     fluidRow(
                         column(3,
-                               uiOutput("SCMinReadsNum"),
+                               uiOutput("SCMinReadsNum")%>% withSpinner(),
                                tags$ul(
                                    textInput("SCMinReadsNumText",
                                              label = p("Change Value"),
@@ -278,7 +278,7 @@ consensusReadServer <- function(input, output, session) {
                                ),
                         ),
                         column(3,
-                               uiOutput("SCMinReadLength"),
+                               uiOutput("SCMinReadLength") %>% withSpinner(),
                                tags$ul(
                                    textInput("SCMinReadLengthText",
                                              label = p("Change Value"),
@@ -287,7 +287,7 @@ consensusReadServer <- function(input, output, session) {
                                ),
                         ),
                         column(3,
-                               uiOutput("SCMinFractionCall"),
+                               uiOutput("SCMinFractionCall")%>% withSpinner(),
                                tags$ul(
                                    textInput("SCMinFractionCallText",
                                              label = p("Change Value"),
@@ -296,7 +296,7 @@ consensusReadServer <- function(input, output, session) {
                                ),
                         ),
                         column(3,
-                               uiOutput("SCMaxFractionLost"),
+                               uiOutput("SCMaxFractionLost")%>% withSpinner(),
                                tags$ul(
                                    textInput("SCMaxFractionLostText",
                                              label = p("Change Value"),
@@ -305,7 +305,7 @@ consensusReadServer <- function(input, output, session) {
                                ),
                         ),
                         column(3,
-                               uiOutput("SCAcceptStopCodons"),
+                               uiOutput("SCAcceptStopCodons")%>% withSpinner(),
                                tags$ul(
                                    textInput("SCAcceptStopCodonsText",
                                              label = p("Change Value"),
@@ -314,7 +314,7 @@ consensusReadServer <- function(input, output, session) {
                                ),
                         ),
                         column(3,
-                               uiOutput("SCReadingFrame"),
+                               uiOutput("SCReadingFrame")%>% withSpinner(),
                                tags$ul(
                                    textInput("SCReadingFrameText",
                                              label = p("Change Value"),
@@ -336,7 +336,7 @@ consensusReadServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               dataTableOutput("differencesDF"), style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                               dataTableOutput("differencesDF")%>%withSpinner(), style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
                         )
                     ),
 
@@ -346,7 +346,7 @@ consensusReadServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               dataTableOutput("secondaryPeakDF"), style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                               dataTableOutput("secondaryPeakDF")%>%withSpinner(), style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
                         )
                     ),
                     # differencesDF             = "data.frame",
@@ -400,8 +400,8 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                         ),
                         column(width = 11,
-                               excelOutput("primarySeqDF", width = "100%", height = "50"),
-                               excelOutput("secondSeqDF", width = "100%", height = "50"),
+                               excelOutput("primarySeqDF", width = "100%", height = "50")%>%withSpinner(),
+                               excelOutput("secondSeqDF", width = "100%", height = "50")%>%withSpinner(),
                                style = "overflow-y: scroll; overflow-x: scroll;")
                         # ),
                     ),
@@ -413,7 +413,7 @@ consensusReadServer <- function(input, output, session) {
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         fluidRow(
                             column(3,
-                                   uiOutput("cutoffQualityScore"),
+                                   uiOutput("cutoffQualityScore")%>%withSpinner(),
                                    tags$ul(
                                        textInput("cutoffQualityScoreText",
                                                  label = p("Change Value"),
@@ -425,7 +425,7 @@ consensusReadServer <- function(input, output, session) {
                                    ),
                             ),
                             column(3,
-                                   uiOutput("slidingWindowSize"),
+                                   uiOutput("slidingWindowSize")%>%withSpinner(),
                                    tags$ul(
                                        textInput("slidingWindowSizeText",
                                                  label = p("Change Value"),
@@ -437,19 +437,19 @@ consensusReadServer <- function(input, output, session) {
                                    ),
                             ),
                             column(3,
-                                   uiOutput("trimmingStartPos"),
+                                   uiOutput("trimmingStartPos")%>%withSpinner(),
                             ),
                             column(3,
-                                   uiOutput("trimmingFinishPos"),
+                                   uiOutput("trimmingFinishPos")%>%withSpinner(),
                             )
                         ),
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         fluidRow(
                             column(6,
-                                   uiOutput("trimmedRatio")
+                                   uiOutput("trimmedRatio")%>%withSpinner()
                             ),
                             column(6,
-                                   uiOutput("remainingBP")
+                                   uiOutput("remainingBP")%>%withSpinner()
                             )
                         ),
                         box(title = tags$p("Cumulative Ratio Plot",
@@ -457,13 +457,13 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 6,
-                            plotlyOutput("qualityTrimmingRatioPlot")),
+                            plotlyOutput("qualityTrimmingRatioPlot")%>%withSpinner()),
                         box(title = tags$p("Cumulative Ratio Plot",
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 6,
-                            plotlyOutput("qualityQualityBasePlot")),
+                            plotlyOutput("qualityQualityBasePlot")%>%withSpinner()),
                     ),
                     box(title = tags$p("Chromatogram: ",
                                        style = "font-size: 26px;
@@ -478,10 +478,10 @@ consensusReadServer <- function(input, output, session) {
                                                   max = 200, value = 100),
                                           ),
                                column(3,
-                                      uiOutput("ChromatogramTrimmingStartPos"),
+                                      uiOutput("ChromatogramTrimmingStartPos")%>%withSpinner(),
                                ),
                                column(3,
-                                      uiOutput("ChromatogramTrimmingFinishPos"),
+                                      uiOutput("ChromatogramTrimmingFinishPos")%>%withSpinner(),
                                ),
                                column(3,
                                       numericInput("ChromatogramSignalRatioCutoff",
@@ -631,7 +631,7 @@ consensusReadServer <- function(input, output, session) {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
                 chromatogramRowNumAns = chromatogramRowNum(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], strtoi(input$ChromatogramBasePerRow)) * 200
                 message("chromatogramRowNumAns: ", chromatogramRowNumAns)
-                plotOutput("chromatogram", height = chromatogramRowNumAns)
+                plotOutput("chromatogram", height = chromatogramRowNumAns)%>%withSpinner()
             }
         }
     })
@@ -900,4 +900,5 @@ chromatogramRowNum <- function(obj, width) {
     numplots <- length(breaks)
     return(numplots)
 }
+
 
