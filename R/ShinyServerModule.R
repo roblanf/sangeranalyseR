@@ -682,7 +682,6 @@ qualityQualityBasePlot <- function(input, output, session, trimmedRV,
 ### ============================================================================
 overViewDifferencesDataFrame <- function(input, output, session, SCDifferencesDF) {
     output$differencesDF = renderDataTable({
-
         SCDifferencesDF
         # SCDistanceMatrix <- SangerConsensus@distanceMatrix
         #
@@ -711,6 +710,22 @@ overViewSecondaryPeakDataFrame <- function(input, output, session, SCDistanceMat
 
         SCDistanceMatrix
     })
+}
+
+
+### ============================================================================
+### chromatogram row number counting
+### ============================================================================
+chromatogramRowNum <- function(obj, width) {
+    traces <- obj@traceMatrix
+    basecalls1 <- unlist(strsplit(toString(obj@primarySeq), ""))
+    aveposition <- rowMeans(obj@peakPosMatrix, na.rm=TRUE)
+    basecalls1 <- basecalls1[1:length(aveposition)]
+    valuesperbase <- nrow(traces)/length(basecalls1)
+    tracewidth <- width*valuesperbase
+    breaks <- seq(1,nrow(traces), by=tracewidth)
+    numplots <- length(breaks)
+    return(numplots)
 }
 
 

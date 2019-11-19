@@ -10,38 +10,24 @@ consensusReadServer <- function(input, output, session) {
     SangerConsensusRead <- getShinyOption("SangerConsensusRead")
     SangerConsensus <- SangerConsensusRead[[1]]
 
-
-    # ### ------------------------------------------------------------------------
-    # ### ConsensusRead-related parameters initialization.
-    # ### ------------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
+    ### ConsensusRead-related parameters initialization.
+    ### ------------------------------------------------------------------------
     SCMinReadsNum <- SangerConsensus@minReadsNum
     SCMinReadLength <- SangerConsensus@minReadLength
-
-
     SCRefAminoAcidSeq <- SangerConsensus@refAminoAcidSeq
-
-
     SCMinFractionCall <- SangerConsensus@minFractionCall
     SCMaxFractionLost <- SangerConsensus@maxFractionLost
-
-
     SCGeneticCode <- SangerConsensus@geneticCode
-
-
     SCAcceptStopCodons <- SangerConsensus@acceptStopCodons
     SCReadingFrame <- SangerConsensus@readingFrame
-
     SCAlignment<- SangerConsensus@alignment
     SCDifferencesDF<- SangerConsensus@differencesDF
     SCDistanceMatrix <- SangerConsensus@distanceMatrix
-
     SCDendrogram <- SangerConsensus@dendrogram
-
     SCIndelsDF <- SangerConsensus@indelsDF
     SCStopCodonsDF <- SangerConsensus@stopCodonsDF
-
     SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
-
     SangerConsensusForRegExp <- SangerConsensus@consenesusReadName
     SangerConsensusForRegExp <- SangerConsensus@suffixForwardRegExp
     SangerConsensusRevRegExp <- SangerConsensus@suffixReverseRegExp
@@ -63,6 +49,7 @@ consensusReadServer <- function(input, output, session) {
     reverseReadBFN <- sapply(1:reverseReadNum, function(i)
         basename(SangerConsensus@reverseReadsList[[i]]@readFileName))
     SangerSingleReadBFN <- c(forwardReadBFN, reverseReadBFN)
+
     # readFileName (absolute)
     forwardReadAFN <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@readFileName)
@@ -102,13 +89,6 @@ consensusReadServer <- function(input, output, session) {
         SangerConsensus@reverseReadsList[[i]]@primarySeqID)
     SangerSingleReadPrimSeqID <- c(forwardReadPrimSeqID, reverseReadPrimSeqID)
 
-
-    # basecalls1 <- unlist(strsplit(toString(obj@primarySeq), ""))
-    # basecalls2 <- unlist(strsplit(toString(obj@secondarySeq), ""))
-    # aveposition <- rowMeans(obj@peakPosMatrix, na.rm=TRUE)
-    # basecalls1 <- basecalls1[1:length(aveposition)]
-    # basecalls2 <- basecalls2[1:length(aveposition)]
-
     # primarySeq
     forwardReadPrimSeq <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@primarySeq)
@@ -116,16 +96,6 @@ consensusReadServer <- function(input, output, session) {
         SangerConsensus@reverseReadsList[[i]]@primarySeq)
     SangerSingleReadPrimSeq <- c(forwardReadPrimSeq, reverseReadPrimSeq)
     # SangerSingleReadPrimSeqChara <- as.character(SangerSingleReadPrimSeq)
-
-
-
-
-
-
-
-
-
-
 
     # primarySeqDF
     forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
@@ -150,23 +120,19 @@ consensusReadServer <- function(input, output, session) {
     )
     SangerSingleReadPrimSeqDF <- c(forwardReadPrimSeqDF, reverseReadPrimSeqDF)
 
-
     # secondarySeqID
     forwardReadSecoSeqID <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@secondarySeqID)
     reverseReadSecoSeqID <- sapply(1:reverseReadNum, function(i)
         SangerConsensus@reverseReadsList[[i]]@secondarySeqID)
     SangerSingleReadSecoSeqID <- c(forwardReadSecoSeqID, reverseReadSecoSeqID)
+
     # secondarySeq
     forwardReadSecoSeq <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@secondarySeq)
     reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
         SangerConsensus@reverseReadsList[[i]]@secondarySeq)
     SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
-
-
-
-
 
     # secondarySeqDF
     forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
@@ -191,15 +157,13 @@ consensusReadServer <- function(input, output, session) {
     )
     SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
 
-
-
-
     # traceMatrix
     forwardReadTraceMat <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@traceMatrix)
     reverseReadTraceMat <- sapply(1:reverseReadNum, function(i)
         SangerConsensus@reverseReadsList[[i]]@traceMatrix)
     SangerSingleReadTraceMat <- c(forwardReadTraceMat, reverseReadTraceMat)
+
     # peakPosMatrix
     forwardReadReadPeakPosMat <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@peakPosMatrix)
@@ -207,7 +171,7 @@ consensusReadServer <- function(input, output, session) {
         SangerConsensus@reverseReadsList[[i]]@peakPosMatrix)
     SangerSingleReadPeakPosMat <- c(forwardReadReadPeakPosMat,
                                     reverseReadReadPeakPosMat)
-    peakAmpMatrix
+    # peakAmpMatrix
     forwardReadPeakAmpMat <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@peakAmpMatrix)
     reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
@@ -384,11 +348,6 @@ consensusReadServer <- function(input, output, session) {
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        # box(title = tags$p("Base",
-                        #                    style = "font-size: 24px;
-                        #                font-weight: bold;"),
-                        #     collapsible = TRUE,
-                        #     status = "success", width = 12,
                         column(width = 1,
                                tags$p("Primary",
                                       style = "font-size: 15px;
@@ -514,7 +473,211 @@ consensusReadServer <- function(input, output, session) {
     ############################################################################
     observeEventDynamicHeaderSC(input, output, session, trimmedRV,
                               SangerSingleReadQualReport)
-    observeEventButtonSaveSC(input, output, session, SangerConsensus)
+    # observeEventButtonSaveSC(input, output, session, SangerConsensus)
+
+    observeEvent(input$saveS4, {
+        btn <- input$saveS4
+        id <- paste0('txt', btn)
+        newS4Object <- file.path(tempdir(), "SangerConsensus.Rda")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ### ------------------------------------------------------------------------
+        ### ConsensusRead-related parameters initialization.
+        ### ------------------------------------------------------------------------
+        SangerConsensus@minReadsNum <- SCMinReadsNum
+        SangerConsensus@minReadLength <- SCMinReadLength
+        SangerConsensus@refAminoAcidSeq <- SCRefAminoAcidSeq
+        SangerConsensus@minFractionCall <- SCMinFractionCall
+        SangerConsensus@maxFractionLost <- SCMaxFractionLost
+        SangerConsensus@geneticCode <- SCGeneticCode
+        SangerConsensus@acceptStopCodons <- SCAcceptStopCodons
+        SangerConsensus@readingFrame <- SCReadingFrame
+        SangerConsensus@alignment <- SCAlignment
+        SangerConsensus@differencesDF <- SCDifferencesDF
+        SangerConsensus@distanceMatrix <- SCDistanceMatrix
+        SangerConsensus@dendrogram <- SCDendrogram
+        SangerConsensus@indelsDF <- SCIndelsDF
+        SangerConsensus@stopCodonsDF <- SCStopCodonsDF
+        SangerConsensus@secondaryPeakDF <- SCSecondaryPeakDF
+        SangerConsensus@consenesusReadName <- SangerConsensusForRegExp
+        SangerConsensus@suffixForwardRegExp <- SangerConsensusForRegExp
+        SangerConsensus@suffixReverseRegExp <- SangerConsensusRevRegExp
+
+        ### ------------------------------------------------------------------------
+        ### Reads-related parameters initialization.
+        ### ------------------------------------------------------------------------
+
+        # QualityReport
+        forwardReadQualReport <- sapply(1:forwardReadNum, function(i)
+            SangerConsensus@forwardReadsList[[i]]@QualityReport)
+        reverseReadQualReport <- sapply(1:reverseReadNum, function(i)
+            SangerConsensus@reverseReadsList[[i]]@QualityReport)
+        SangerSingleReadQualReport <- c(forwardReadQualReport,
+                                        reverseReadQualReport)
+
+
+
+
+
+
+        # primarySeqID
+        forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(i)
+            SangerConsensus@forwardReadsList[[i]]@primarySeqID)
+        reverseReadPrimSeqID <- sapply(1:reverseReadNum, function(i)
+            SangerConsensus@reverseReadsList[[i]]@primarySeqID)
+        SangerSingleReadPrimSeqID <- c(forwardReadPrimSeqID, reverseReadPrimSeqID)
+
+        # primarySeq
+        forwardReadPrimSeq <- sapply(1:forwardReadNum, function(i)
+            SangerConsensus@forwardReadsList[[i]]@primarySeq)
+        reverseReadPrimSeq <- sapply(1:reverseReadNum, function(i)
+            SangerConsensus@reverseReadsList[[i]]@primarySeq)
+        SangerSingleReadPrimSeq <- c(forwardReadPrimSeq, reverseReadPrimSeq)
+        # SangerSingleReadPrimSeqChara <- as.character(SangerSingleReadPrimSeq)
+
+        # primarySeqDF
+        forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
+            basecalls1 <- unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@primarySeq), ""))
+            aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+            basecalls1 <- basecalls1[1:length(aveposition)]
+            basecalls1DF <- data.frame(t(data.frame(basecalls1)), stringsAsFactors = FALSE)
+            colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
+            rownames(basecalls1DF) <- "Primary"
+            return(basecalls1DF)
+            }
+        )
+
+        reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(i) {
+            basecalls1 <- unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@primarySeq), ""))
+            aveposition <- rowMeans(SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+            basecalls1 <- basecalls1[1:length(aveposition)]
+            basecalls1DF <- data.frame(t(data.frame(basecalls1)), stringsAsFactors = FALSE)
+            colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
+            rownames(basecalls1DF) <- "Primary "
+            return(basecalls1DF)
+            }
+        )
+        SangerSingleReadPrimSeqDF <- c(forwardReadPrimSeqDF, reverseReadPrimSeqDF)
+
+        # secondarySeqID
+        forwardReadSecoSeqID <- sapply(1:forwardReadNum, function(i)
+            SangerConsensus@forwardReadsList[[i]]@secondarySeqID)
+        reverseReadSecoSeqID <- sapply(1:reverseReadNum, function(i)
+            SangerConsensus@reverseReadsList[[i]]@secondarySeqID)
+        SangerSingleReadSecoSeqID <- c(forwardReadSecoSeqID, reverseReadSecoSeqID)
+
+        # secondarySeq
+        forwardReadSecoSeq <- sapply(1:forwardReadNum, function(i)
+            SangerConsensus@forwardReadsList[[i]]@secondarySeq)
+        reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
+            SangerConsensus@reverseReadsList[[i]]@secondarySeq)
+        SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
+
+        # secondarySeqDF
+        forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
+            basecalls2 <- unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@secondarySeq), ""))
+            aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+            basecalls2 <- basecalls2[1:length(aveposition)]
+            basecalls2DF <- data.frame(t(data.frame(basecalls2)), stringsAsFactors = FALSE)
+            colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
+            rownames(basecalls2DF) <- " Second"
+            return(basecalls2DF)
+        }
+        )
+        reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(i) {
+            basecalls2 <- unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@secondarySeq), ""))
+            aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+            basecalls2 <- basecalls2[1:length(aveposition)]
+            basecalls2DF <- data.frame(t(data.frame(basecalls2)), stringsAsFactors = FALSE)
+            colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
+            rownames(basecalls2DF) <- " Second"
+            return(basecalls2DF)
+        }
+        )
+        SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
+
+        # traceMatrix
+        forwardReadTraceMat <- sapply(1:forwardReadNum, function(i)
+            SangerConsensus@forwardReadsList[[i]]@traceMatrix)
+        reverseReadTraceMat <- sapply(1:reverseReadNum, function(i)
+            SangerConsensus@reverseReadsList[[i]]@traceMatrix)
+        SangerSingleReadTraceMat <- c(forwardReadTraceMat, reverseReadTraceMat)
+
+        # peakPosMatrix
+        forwardReadReadPeakPosMat <- sapply(1:forwardReadNum, function(i)
+            SangerConsensus@forwardReadsList[[i]]@peakPosMatrix)
+        reverseReadReadPeakPosMat <- sapply(1:reverseReadNum, function(i)
+            SangerConsensus@reverseReadsList[[i]]@peakPosMatrix)
+        SangerSingleReadPeakPosMat <- c(forwardReadReadPeakPosMat,
+                                        reverseReadReadPeakPosMat)
+        # peakAmpMatrix
+        forwardReadPeakAmpMat <- sapply(1:forwardReadNum, function(i)
+            SangerConsensus@forwardReadsList[[i]]@peakAmpMatrix)
+        reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
+            SangerConsensus@reverseReadsList[[i]]@peakAmpMatrix)
+        SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat, reverseReadPeakAmpMat)
+        trimmedRV <- reactiveValues(trimmedStart = 0, trimmedEnd = 0,
+                                    remainingBP = 0, trimmedRatio = 0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        saveRDS(SangerConsensus, file=newS4Object)
+        message("New S4 object is store as: ", newS4Object)
+        showNotification(paste("New S4 object is store as:", newS4Object),
+                         type = "message", duration = 10)
+        NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
+        # shinyOptions(NewSangerConsensusSet = newS4)
+    })
+
+
     observeEventButtonClose(input, output, session)
 
 
@@ -536,11 +699,11 @@ consensusReadServer <- function(input, output, session) {
                     slidingWindowSize)
         if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                cutoffQualityScore <<- strtoi(inputCutoffQualityScoreText)
+                cutoffQualityScore <- strtoi(inputCutoffQualityScoreText)
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmingStartPos <<- trimmingPos[1]
+                trimmingStartPos <- trimmingPos[1]
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmingFinishPos <<- trimmingPos[2]
+                trimmingFinishPos <- trimmingPos[2]
             trimmedRV[["trimmedStart"]] <-
                 SangerSingleReadQualReport[[
                     strtoi(sidebar_menu[[1]])]]@trimmingStartPos
@@ -625,7 +788,6 @@ consensusReadServer <- function(input, output, session) {
     ############################################################################
     # chromatogram
     output$chromatogramUIOutput <- renderUI({
-        message("Inside output$chromatogramUIOutput !")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
@@ -637,7 +799,6 @@ consensusReadServer <- function(input, output, session) {
     })
 
     output$chromatogram <- renderPlot({
-        message("Inside output$chromatogram !")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         qualityPhredScores = SangerSingleReadQualReport[[
             strtoi(sidebar_menu[[1]])]]@qualityPhredScores
@@ -826,22 +987,12 @@ consensusReadServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
+
 #
 #     output$primarySeqDF2 <- renderRHandsontable({
 #         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
 #         rhandsontable(SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]], rowHeaders = NULL, overflow = 'visible', width = 100, height = 100)
 #     })
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -884,21 +1035,7 @@ consensusReadServer <- function(input, output, session) {
     output$info <- renderText({
         paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
     })
+
+
+
 }
-
-
-
-chromatogramRowNum <- function(obj, width) {
-    message("Inside chromatogramRowNum() !")
-    traces <- obj@traceMatrix
-    basecalls1 <- unlist(strsplit(toString(obj@primarySeq), ""))
-    aveposition <- rowMeans(obj@peakPosMatrix, na.rm=TRUE)
-    basecalls1 <- basecalls1[1:length(aveposition)]
-    valuesperbase <- nrow(traces)/length(basecalls1)
-    tracewidth <- width*valuesperbase
-    breaks <- seq(1,nrow(traces), by=tracewidth)
-    numplots <- length(breaks)
-    return(numplots)
-}
-
-
