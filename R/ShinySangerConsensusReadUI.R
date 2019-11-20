@@ -81,8 +81,8 @@ consensusReadUI <- dashboardPage(
                         { font-size: 18px; font-weight: bold }")),
         tags$style(HTML(".sidebar-menu ul li a
                         { font-size: 15px}")),
-        uiOutput("consensusReadMenu_content"),
-        uiOutput("singelReadMenu_content"),
+        uiOutput("consensusReadMenu_content") %>% withSpinner(),
+        uiOutput("singelReadMenu_content") %>% withSpinner(),
         tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),
         textOutput("selected_var"),
         h3("clientData values"),
