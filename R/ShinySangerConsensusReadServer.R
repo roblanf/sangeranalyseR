@@ -220,6 +220,7 @@ consensusReadServer <- function(input, output, session) {
                 # indelsDF                  = "data.frame",
                 # stopCodonsDF              = "data.frame",
                 # secondaryPeakDF           = "data.frame"
+
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p("Parameters: ",
@@ -231,57 +232,57 @@ consensusReadServer <- function(input, output, session) {
                     fluidRow(
                         column(3,
                                uiOutput("SCMinReadsNum") ,
-                               tags$ul(
-                                   textInput("SCMinReadsNumText",
-                                             label = p("Change Value"),
-                                             value = toString(SCMinReadsNum),
-                                             width = '90%')
-                               ),
+                               # tags$ul(
+                               #     textInput("SCMinReadsNumText",
+                               #               label = p("Change Value"),
+                               #               value = toString(SCMinReadsNum),
+                               #               width = '90%')
+                               # ),
                         ),
                         column(3,
                                uiOutput("SCMinReadLength")  ,
-                               tags$ul(
-                                   textInput("SCMinReadLengthText",
-                                             label = p("Change Value"),
-                                             value = toString(SCMinReadLength),
-                                             width = '90%')
-                               ),
+                               # tags$ul(
+                               #     textInput("SCMinReadLengthText",
+                               #               label = p("Change Value"),
+                               #               value = toString(SCMinReadLength),
+                               #               width = '90%')
+                               # ),
                         ),
                         column(3,
                                uiOutput("SCMinFractionCall") ,
-                               tags$ul(
-                                   textInput("SCMinFractionCallText",
-                                             label = p("Change Value"),
-                                             value = toString(SCMinFractionCall),
-                                             width = '90%')
-                               ),
+                               # tags$ul(
+                               #     textInput("SCMinFractionCallText",
+                               #               label = p("Change Value"),
+                               #               value = toString(SCMinFractionCall),
+                               #               width = '90%')
+                               # ),
                         ),
                         column(3,
                                uiOutput("SCMaxFractionLost") ,
-                               tags$ul(
-                                   textInput("SCMaxFractionLostText",
-                                             label = p("Change Value"),
-                                             value = toString(SCMaxFractionLost),
-                                             width = '90%')
-                               ),
+                               # tags$ul(
+                               #     textInput("SCMaxFractionLostText",
+                               #               label = p("Change Value"),
+                               #               value = toString(SCMaxFractionLost),
+                               #               width = '90%')
+                               # ),
                         ),
                         column(3,
                                uiOutput("SCAcceptStopCodons") ,
-                               tags$ul(
-                                   textInput("SCAcceptStopCodonsText",
-                                             label = p("Change Value"),
-                                             value = toString(SCAcceptStopCodons),
-                                             width = '90%')
-                               ),
+                               # tags$ul(
+                               #     textInput("SCAcceptStopCodonsText",
+                               #               label = p("Change Value"),
+                               #               value = toString(SCAcceptStopCodons),
+                               #               width = '90%')
+                               # ),
                         ),
                         column(3,
                                uiOutput("SCReadingFrame") ,
-                               tags$ul(
-                                   textInput("SCReadingFrameText",
-                                             label = p("Change Value"),
-                                             value = toString(SCReadingFrame),
-                                             width = '90%')
-                               ),
+                               # tags$ul(
+                               #     textInput("SCReadingFrameText",
+                               #               label = p("Change Value"),
+                               #               value = toString(SCReadingFrame),
+                               #               width = '90%')
+                               # ),
                         ),
                     ),
                 ),
@@ -320,6 +321,23 @@ consensusReadServer <- function(input, output, session) {
             )
         }
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     output$singelReadMenu_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -976,12 +994,12 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-    valueBoxSCMinReadsNum(input, output, session)
-    valueBoxSCMinReadLength(input, output, session)
-    valueBoxSCMinFractionCall(input, output, session)
-    valueBoxSCMaxFractionLost(input, output, session)
-    valueBoxSCAcceptStopCodons(input, output, session)
-    valueBoxSCReadingFrame(input, output, session)
+    valueBoxSCMinReadsNum(input, output, SCMinReadsNum, session)
+    valueBoxSCMinReadLength(input, output, SCMinReadLength, session)
+    valueBoxSCMinFractionCall(input, output, SCMinFractionCall, session)
+    valueBoxSCMaxFractionLost(input, output, SCMaxFractionLost, session)
+    valueBoxSCAcceptStopCodons(input, output, SCAcceptStopCodons, session)
+    valueBoxSCReadingFrame(input, output, SCReadingFrame, session)
 
     valueBoxCutoffQualityScore (input, output, session)
     valueBoxSlidingWindowSize (input, output, session)

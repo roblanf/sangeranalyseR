@@ -196,14 +196,31 @@ observeEventButtonClose <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCMinReadsNum
 ### ============================================================================
-valueBoxSCMinReadsNum <- function(input, output, session) {
+
+
+# SCRefAminoAcidSeq <- SangerConsensus@refAminoAcidSeq
+# SCGeneticCode <- SangerConsensus@geneticCode
+# SCAlignment<- SangerConsensus@alignment
+# SCDifferencesDF<- SangerConsensus@differencesDF
+# SCDistanceMatrix <- SangerConsensus@distanceMatrix
+# SCDendrogram <- SangerConsensus@dendrogram
+# SCIndelsDF <- SangerConsensus@indelsDF
+# SCStopCodonsDF <- SangerConsensus@stopCodonsDF
+# SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
+# SangerConsensusForRegExp <- SangerConsensus@consenesusReadName
+# SangerConsensusForRegExp <- SangerConsensus@suffixForwardRegExp
+# SangerConsensusRevRegExp <- SangerConsensus@suffixReverseRegExp
+
+
+
+valueBoxSCMinReadsNum <- function(input, output, SCMinReadsNum, session) {
     output$SCMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MinReadsNum",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(input$SCMinReadsNumText),
+            value = tags$p(strtoi(SCMinReadsNum),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -215,14 +232,14 @@ valueBoxSCMinReadsNum <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCMinReadLength
 ### ============================================================================
-valueBoxSCMinReadLength <- function(input, output, session) {
+valueBoxSCMinReadLength <- function(input, output, SCMinReadLength, session) {
     output$SCMinReadLength <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MinReadLength",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(input$SCMinReadLengthText),
+            value = tags$p(strtoi(SCMinReadLength),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -234,14 +251,14 @@ valueBoxSCMinReadLength <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCMinFractionCall
 ### ============================================================================
-valueBoxSCMinFractionCall <- function(input, output, session) {
+valueBoxSCMinFractionCall <- function(input, output, SCMinFractionCall, session) {
     output$SCMinFractionCall <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MinFractionCall",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(suppressWarnings(as.numeric(input$SCMinFractionCallText)),
+            value = tags$p(as.numeric(SCMinFractionCall),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -253,14 +270,14 @@ valueBoxSCMinFractionCall <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCMaxFractionLost
 ### ============================================================================
-valueBoxSCMaxFractionLost <- function(input, output, session) {
+valueBoxSCMaxFractionLost <- function(input, output, SCMaxFractionLost, session) {
     output$SCMaxFractionLost <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MaxFractionLost",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(suppressWarnings(as.numeric(input$SCMaxFractionLostText)),
+            value = tags$p(as.numeric(SCMaxFractionLost),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -272,21 +289,14 @@ valueBoxSCMaxFractionLost <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCAcceptStopCodons
 ### ============================================================================
-valueBoxSCAcceptStopCodons <- function(input, output, session) {
+valueBoxSCAcceptStopCodons <- function(input, output, SCAcceptStopCodons, session) {
     output$SCAcceptStopCodons <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (input$SCAcceptStopCodonsText == TRUE) {
-            inputSCAcceptStopCodonsText = "TRUE"
-        } else if (input$SCAcceptStopCodonsText == FALSE) {
-            inputSCAcceptStopCodonsText = "FALSE"
-        } else {
-            inputSCAcceptStopCodonsText = "NA"
-        }
         valueBox(
             subtitle = tags$p("AcceptStopCodons",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(inputSCAcceptStopCodonsText,
+            value = tags$p(SCAcceptStopCodons,
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -298,14 +308,14 @@ valueBoxSCAcceptStopCodons <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCReadingFrame
 ### ============================================================================
-valueBoxSCReadingFrame <- function(input, output, session) {
+valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
     output$SCReadingFrame <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("ReadingFrame",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(input$SCReadingFrameText),
+            value = tags$p(strtoi(SCReadingFrame),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
