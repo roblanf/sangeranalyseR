@@ -8,11 +8,17 @@ consensusReadServer <- function(input, output, session) {
     ### SangerConsensusRead parameters initialization.
     ### ------------------------------------------------------------------------
     SangerConsensusRead <- getShinyOption("SangerConsensusRead")
+    shinyDirectory <- getShinyOption("shinyDirectory")
     SangerConsensus <- SangerConsensusRead[[1]]
 
     ### ------------------------------------------------------------------------
     ### ConsensusRead-related parameters initialization.
     ### ------------------------------------------------------------------------
+    parentDirectory <- SangerConsensus@parentDirectory
+    consenesusReadName <- SangerConsensus@consenesusReadName
+    suffixForwardRegExp <- SangerConsensus@suffixForwardRegExp
+    suffixReverseRegExp <- SangerConsensus@suffixReverseRegExp
+
     SCMinReadsNum <- SangerConsensus@minReadsNum
     SCMinReadLength <- SangerConsensus@minReadLength
     SCRefAminoAcidSeq <- SangerConsensus@refAminoAcidSeq
@@ -28,9 +34,6 @@ consensusReadServer <- function(input, output, session) {
     SCIndelsDF <- SangerConsensus@indelsDF
     SCStopCodonsDF <- SangerConsensus@stopCodonsDF
     SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
-    SangerConsensusForRegExp <- SangerConsensus@consenesusReadName
-    SangerConsensusForRegExp <- SangerConsensus@suffixForwardRegExp
-    SangerConsensusRevRegExp <- SangerConsensus@suffixReverseRegExp
 
     ### ------------------------------------------------------------------------
     ### Reads-related parameters initialization.
@@ -221,8 +224,61 @@ consensusReadServer <- function(input, output, session) {
                 # stopCodonsDF              = "data.frame",
                 # secondaryPeakDF           = "data.frame"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            # refAminoAcidSeq (string)
+            # geneticCode
+            # consensusRead (BrowseSeqs)
+            # distanceMatrix
+            # dendrogram
+            # indelsDF
+            # stopCodonsDF
+
+
             fluidRow(
                 useShinyjs(),
+                h1(parentDirectory),
+                h1(consenesusReadName),
+                h1(suffixForwardRegExp),
+                h1(suffixReverseRegExp),
+                h1(forwardReadNum),
+                h1(reverseReadNum),
+
+                # If it is null
+                h1(SCRefAminoAcidSeq),
+
+                column(width = 12,
+                       excelOutput("geneticCodeDF", width = "100%", height = "50"),
+                       style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                ),
+                column(width = 12,
+                       htmlOutput("consensusAlignmentHTML"),
+                ),
+
+                # h1(SCconsensusRead),
+                # h1(SCdistanceMatrix),
+                # h1(SCdendrogram),
+                # h1(SCindelsDF),
+                # h1(SCstopCodonsDF),
+
+
                 box(title = tags$p("Parameters: ",
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
@@ -493,7 +549,7 @@ consensusReadServer <- function(input, output, session) {
     observeEvent(input$saveS4, {
         btn <- input$saveS4
         id <- paste0('txt', btn)
-        newS4Object <- file.path(tempdir(), "SangerConsensus.Rda")
+        newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
 
 
 
@@ -518,24 +574,24 @@ consensusReadServer <- function(input, output, session) {
         ### ------------------------------------------------------------------------
         ### ConsensusRead-related parameters initialization.
         ### ------------------------------------------------------------------------
-        SangerConsensus@minReadsNum <<- SCMinReadsNum
-        SangerConsensus@minReadLength <<- SCMinReadLength
-        SangerConsensus@refAminoAcidSeq <<- SCRefAminoAcidSeq
-        SangerConsensus@minFractionCall <<- SCMinFractionCall
-        SangerConsensus@maxFractionLost <<- SCMaxFractionLost
-        SangerConsensus@geneticCode <<- SCGeneticCode
-        SangerConsensus@acceptStopCodons <<- SCAcceptStopCodons
-        SangerConsensus@readingFrame <<- SCReadingFrame
-        SangerConsensus@alignment <<- SCAlignment
-        SangerConsensus@differencesDF <<- SCDifferencesDF
-        SangerConsensus@distanceMatrix <<- SCDistanceMatrix
-        SangerConsensus@dendrogram <<- SCDendrogram
-        SangerConsensus@indelsDF <<- SCIndelsDF
-        SangerConsensus@stopCodonsDF <<- SCStopCodonsDF
-        SangerConsensus@secondaryPeakDF <<- SCSecondaryPeakDF
-        SangerConsensus@consenesusReadName <<- SangerConsensusForRegExp
-        SangerConsensus@suffixForwardRegExp <<- SangerConsensusForRegExp
-        SangerConsensus@suffixReverseRegExp <<- SangerConsensusRevRegExp
+        # SangerConsensus@minReadsNum <<- SCMinReadsNum
+        # SangerConsensus@minReadLength <<- SCMinReadLength
+        # SangerConsensus@refAminoAcidSeq <<- SCRefAminoAcidSeq
+        # SangerConsensus@minFractionCall <<- SCMinFractionCall
+        # SangerConsensus@maxFractionLost <<- SCMaxFractionLost
+        # SangerConsensus@geneticCode <<- SCGeneticCode
+        # SangerConsensus@acceptStopCodons <<- SCAcceptStopCodons
+        # SangerConsensus@readingFrame <<- SCReadingFrame
+        # SangerConsensus@alignment <<- SCAlignment
+        # SangerConsensus@differencesDF <<- SCDifferencesDF
+        # SangerConsensus@distanceMatrix <<- SCDistanceMatrix
+        # SangerConsensus@dendrogram <<- SCDendrogram
+        # SangerConsensus@indelsDF <<- SCIndelsDF
+        # SangerConsensus@stopCodonsDF <<- SCStopCodonsDF
+        # SangerConsensus@secondaryPeakDF <<- SCSecondaryPeakDF
+        # SangerConsensus@consenesusReadName <<- suffixForwardRegExp
+        # SangerConsensus@suffixForwardRegExp <<- suffixReverseRegExp
+        # SangerConsensus@suffixReverseRegExp <<- SangerConsensusRevRegExp
 
         ### ------------------------------------------------------------------------
         ### Reads-related parameters initialization.
@@ -752,26 +808,6 @@ consensusReadServer <- function(input, output, session) {
         }
     })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ############################################################################
     ### ConsensusRead (Sanger Consensus Read Overview)
     ############################################################################
@@ -800,6 +836,51 @@ consensusReadServer <- function(input, output, session) {
                      showtrim = (input$ChromatogramCheckShowTrimmed),
                      showcalls = "both")
     })
+
+
+
+
+
+
+
+
+
+    output$primarySeqDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        excelTable(data = SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]],
+                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+
+    })
+    output$geneticCodeDF <- renderExcel({
+        excelTable(data =  t(data.frame(SCGeneticCode)),
+                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+    })
+
+
+
+
+
+
+
+
+
+
+
+    output$consensusAlignmentHTML<-renderUI({
+        browseSeqHTML <- file.path(shinyDirectory, paste0(A_chloroticConsensusReads@consenesusReadName, "_Alignment_BrowseSeqs.html"))
+        if (!file.exists(browseSeqHTML)) {
+            BrowseSeqs(A_chloroticConsensusReads@alignment, openURL=FALSE, htmlFile=browseSeqHTML)
+        }
+        includeHTML(file.path(shinyDirectory, paste0(A_chloroticConsensusReads@consenesusReadName, "_Alignment_BrowseSeqs.html")))
+    })
+
+
 
 
 

@@ -213,6 +213,11 @@ observeEventButtonClose <- function(input, output, session) {
 
 
 
+
+
+
+
+
 valueBoxSCMinReadsNum <- function(input, output, SCMinReadsNum, session) {
     output$SCMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")

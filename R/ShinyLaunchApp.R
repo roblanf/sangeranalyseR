@@ -13,15 +13,23 @@
 #'                                  cutoffQualityScore    = 20,
 #'                                  slidingWindowSize     = 5)
 #' RShiny <- launchAppConsensusRead(list(A_chloroticConsensusReads))
-launchAppConsensusRead <- function(SangerConsensusRead) {
+launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
     ### ------------------------------------------------------------------------
     ### Checking SangerConsensusRead input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------
-    shinyOptions(SangerConsensusRead = SangerConsensusRead)
-    newSangerConsensusRead <- shinyApp(consensusReadUI, consensusReadServer,
-                                       options = SangerConsensusRead)
-    return(newSangerConsensusRead)
+    if (is.null(directory)) {
+        directory <- tempdir()
+    }
+    if (dir.exists(directory)) {
+        shinyOptions(SangerConsensusRead = SangerConsensusRead)
+        shinyOptions(shinyDirectory = directory)
+        newSangerConsensusRead <- shinyApp(consensusReadUI, consensusReadServer,
+                                           options = SangerConsensusRead)
+        return(newSangerConsensusRead)
+    } else {
+        stop("'", directory, "' is not valid. Please check again")
+    }
 }
 
 #' @export
