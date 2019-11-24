@@ -183,8 +183,10 @@ consensusReadServer <- function(input, output, session) {
     reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
         SangerConsensus@reverseReadsList[[i]]@peakAmpMatrix)
     SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat, reverseReadPeakAmpMat)
+    # trimmedQS <- reactiveValues(cuffOffQuality = 0, slidingWindowSize = 0)
     trimmedRV <- reactiveValues(trimmedStart = 0, trimmedEnd = 0,
                                 remainingBP = 0, trimmedRatio = 0)
+
 
     ############################################################################
     ### output$ID
@@ -765,6 +767,8 @@ consensusReadServer <- function(input, output, session) {
         }
         trimmingPos <-
             inside_calculate_trimming(
+                # trimmedQS[["cuffOffQuality"]],
+                # trimmedQS[["slidingWindowSize"]])
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
                     qualityBaseScore, strtoi(inputCutoffQualityScoreText),
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@

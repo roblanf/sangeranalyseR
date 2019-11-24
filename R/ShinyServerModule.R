@@ -329,6 +329,8 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
     })
 }
 
+# trimmedQS <- reactiveValues(cuffOffQuality = 0, slidingWindowSize = 0)
+
 
 ################################################################################
 ### Each Read
@@ -339,6 +341,8 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
 valueBoxCutoffQualityScore <- function(input, output, session) {
     output$cutoffQualityScore <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        # trimmedQS[["cuffOffQuality"]],
+        # trimmedQS[["slidingWindowSize"]])
         if (!is.na(strtoi(input$cutoffQualityScoreText)) &&
             strtoi(input$cutoffQualityScoreText) > 0 &&
             strtoi(input$cutoffQualityScoreText) <= 60 &&
@@ -386,6 +390,37 @@ valueBoxSlidingWindowSize <- function(input, output, session) {
         )
     })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
