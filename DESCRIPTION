@@ -29,7 +29,7 @@ Depends:
     zeallot,
     rhandsontable,
     excelR,
-    shinycssloaders
+    shinycssloaders,
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 

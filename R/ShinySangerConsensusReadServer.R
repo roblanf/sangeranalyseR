@@ -192,77 +192,17 @@ consensusReadServer <- function(input, output, session) {
     dynamicMenuSideBarSC(input, output, session, SangerSingleReadNum, SangerSingleReadFeature)
 
     ### ------------------------------------------------------------------------
-    ### Dynamic page navigation: consensusReadMenu_content
+    ### Dynamic page navigation: consensusRead_content
     ### ------------------------------------------------------------------------
-    output$consensusReadMenu_content <- renderUI({
+    output$consensusRead_content <- renderUI({
+        # show_waiter(spin_fading_circles())
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu == "Sanger Consensus Read Overview") {
-            # Input can change
-                # minReadsNum               = "numeric",
-                # minReadLength             = "numeric",
-                # minFractionCall           = "numeric",
-                # maxFractionLost           = "numeric",
-
-            # Input cannot change
-                # parentDirectory           = "character",
-                # suffixForwardRegExp       = "character",
-                # suffixReverseRegExp       = "character",
-                # refAminoAcidSeq           = "character",
-                # geneticCode               = "character",
-                # acceptStopCodons          = "logical",
-
-            # Output (always have values)
-                # consenesusReadName        = "character",
-
-            # Output (sometime don't have values)
-                # forwardReadsList          = "list",
-                # reverseReadsList          = "list",
-                # readingFrame              = "numeric",
-                # consensusRead             = "DNAString",
-                # alignment                 = "DNAStringSet",
-                # differencesDF             = "data.frame",
-                # distanceMatrix            = "matrix",
-                # dendrogram                = "list",
-                # indelsDF                  = "data.frame",
-                # stopCodonsDF              = "data.frame",
-                # secondaryPeakDF           = "data.frame"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             # refAminoAcidSeq (string)
-            # geneticCode
-            # consensusRead (BrowseSeqs)
-            # distanceMatrix
-            # dendrogram
-
-            # indelsDF
-            # stopCodonsDF
-
-
+            # show_waiter(spin_fading_circles())
             fluidRow(
                 useShinyjs(),
-
-
                 # h1(SCconsensusRead),
-
-
                 box(title = tags$p("Input Parameters: ",
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
@@ -467,30 +407,10 @@ consensusReadServer <- function(input, output, session) {
                     ),
                 ),
             )
-        }
-    })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    output$singelReadMenu_content <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (input$sidebar_menu != "Sanger Consensus Read Overview") {
+            # hide_waiter()
+        } else {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+                # show_waiter(spin_fading_circles())
                 fluidRow(
                     useShinyjs(),
                     # box(sidebar_menu[[1]])
@@ -579,13 +499,13 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 6,
-                            plotlyOutput("qualityTrimmingRatioPlot") ),
+                            plotlyOutput("qualityTrimmingRatioPlot") %>% withSpinner()),
                         box(title = tags$p("Cumulative Ratio Plot",
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 6,
-                            plotlyOutput("qualityQualityBasePlot") ),
+                            plotlyOutput("qualityQualityBasePlot") %>% withSpinner()),
                     ),
                     box(title = tags$p("Chromatogram: ",
                                        style = "font-size: 26px;
@@ -598,7 +518,7 @@ consensusReadServer <- function(input, output, session) {
                                       sliderInput("ChromatogramBasePerRow",
                                                   label = h3("Slider"), min = 5,
                                                   max = 200, value = 100),
-                                          ),
+                               ),
                                column(3,
                                       uiOutput("ChromatogramTrimmingStartPos") ,
                                ),
@@ -618,9 +538,24 @@ consensusReadServer <- function(input, output, session) {
                         )
                     )
                 )
+                # hide_waiter()
             }
         }
+        # hide_waiter()
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -910,23 +845,27 @@ consensusReadServer <- function(input, output, session) {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
                 chromatogramRowNumAns = chromatogramRowNum(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], strtoi(input$ChromatogramBasePerRow)) * 200
                 message("chromatogramRowNumAns: ", chromatogramRowNumAns)
-                plotOutput("chromatogram", height = chromatogramRowNumAns)
+                plotOutput("chromatogram", height = chromatogramRowNumAns) %>% withSpinner()
             }
         }
     })
 
     output$chromatogram <- renderPlot({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        qualityPhredScores = SangerSingleReadQualReport[[
-            strtoi(sidebar_menu[[1]])]]@qualityPhredScores
-        readLen = length(qualityPhredScores)
-        hetcalls <- makeBaseCalls(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]],
-                                  ratio = as.numeric(input$ChromatogramSignalRatioCutoff))
-        chromatogram(hetcalls, width = strtoi(input$ChromatogramBasePerRow),
-                     height = 2, trim5 = trimmedRV[["trimmedStart"]],
-                     trim3 = readLen - trimmedRV[["trimmedEnd"]],
-                     showtrim = (input$ChromatogramCheckShowTrimmed),
-                     showcalls = "both")
+        if (input$sidebar_menu != "Sanger Consensus Read Overview") {
+            if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+                qualityPhredScores = SangerSingleReadQualReport[[
+                    strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+                readLen = length(qualityPhredScores)
+                hetcalls <- makeBaseCalls(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]],
+                                          ratio = as.numeric(input$ChromatogramSignalRatioCutoff))
+                chromatogram(hetcalls, width = strtoi(input$ChromatogramBasePerRow),
+                             height = 2, trim5 = trimmedRV[["trimmedStart"]],
+                             trim3 = readLen - trimmedRV[["trimmedEnd"]],
+                             showtrim = (input$ChromatogramCheckShowTrimmed),
+                             showcalls = "both")
+            }
+        }
     })
 
 

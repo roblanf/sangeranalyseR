@@ -61,3 +61,4 @@ launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet) {
     #                                    options = SangerConsensusRead)
     # return(newSangerConsensusRead)
 }
+
