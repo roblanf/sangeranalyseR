@@ -258,90 +258,126 @@ consensusReadServer <- function(input, output, session) {
 
             fluidRow(
                 useShinyjs(),
-                h1(parentDirectory),
-                h1(consenesusReadName),
-                h1(suffixForwardRegExp),
-                h1(suffixReverseRegExp),
-                h1(forwardReadNum),
-                h1(reverseReadNum),
 
-                # If it is null
-                h1(SCRefAminoAcidSeq),
-
-                column(width = 12,
-                       excelOutput("geneticCodeDF", width = "100%", height = "50"),
-                       style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
-                ),
-                column(width = 12,
-                       htmlOutput("consensusAlignmentHTML"),
-                ),
 
                 # h1(SCconsensusRead),
-                # h1(SCdendrogram),
-                # h1(SCindelsDF),
-                # h1(SCstopCodonsDF),
+                # h1(SCIndelsDF),
+                # h1(SCStopCodonsDF),
 
 
-                box(title = tags$p("Parameters: ",
+                box(title = tags$p("Input Parameters: ",
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
                     status = "success", width = 12,
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                     fluidRow(
+                        column(12,
+                               column(2,
+                                      h4("Output Directory: ", style="font-weight: bold;"),
+                               ),
+                               column(10,
+                                      h4(shinyDirectory),
+                               )
+                        ),
+                        column(12,
+                               column(2,
+                                      h4("Parent Directory: ", style="font-weight: bold;"),
+                               ),
+                               column(10,
+                                      h4(parentDirectory),
+                               )
+                        ),
+                        column(12,
+                               column(2,
+                                      h4("Consenesus Read Name: ", style="font-weight: bold;"),
+                               ),
+                               column(10,
+                                      h4(consenesusReadName),
+                               )
+                        ),
+                        column(12,
+                               column(2,
+                                      h4("Forward Suffix RegExp: ", style="font-weight: bold;"),
+                               ),
+                               column(10,
+                                      h4(suffixForwardRegExp),
+                               )
+                        ),
+                        column(12,
+                               column(2,
+                                      h4("Forward Read Number: ", style="font-weight: bold;"),
+                               ),
+                               column(10,
+                                      h4(forwardReadNum),
+                               )
+                        ),
+                        column(12,
+                               column(2,
+                                      h4("Reverse Suffix RegExp: ", style="font-weight: bold;"),
+                               ),
+                               column(10,
+                                      h4(suffixReverseRegExp),
+                               )
+                        ),
+                        column(12,
+                               column(2,
+                                      h4("Reverse Read Number: ", style="font-weight: bold;"),
+                               ),
+                               column(10,
+                                      h4(reverseReadNum),
+                               )
+                        ),
+                        ################################################
+                        #### Add this after having reference sample ####
+                        ################################################
+                        # If it is null
+                        # h1(SCRefAminoAcidSeq),
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+
+                        box(title = tags$p("GeneticCode Data Frame",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   excelOutput("geneticCodeDF", width = "100%", height = "50"),
+                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                            ),
+                        ),
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+
+                        box(title = tags$p("GeneticCode Data Frame",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   htmlOutput("consensusAlignmentHTML"),
+                            ),
+                        ),
+
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+
                         column(3,
                                uiOutput("SCMinReadsNum") ,
-                               # tags$ul(
-                               #     textInput("SCMinReadsNumText",
-                               #               label = p("Change Value"),
-                               #               value = toString(SCMinReadsNum),
-                               #               width = '90%')
-                               # ),
                         ),
                         column(3,
                                uiOutput("SCMinReadLength")  ,
-                               # tags$ul(
-                               #     textInput("SCMinReadLengthText",
-                               #               label = p("Change Value"),
-                               #               value = toString(SCMinReadLength),
-                               #               width = '90%')
-                               # ),
                         ),
                         column(3,
                                uiOutput("SCMinFractionCall") ,
-                               # tags$ul(
-                               #     textInput("SCMinFractionCallText",
-                               #               label = p("Change Value"),
-                               #               value = toString(SCMinFractionCall),
-                               #               width = '90%')
-                               # ),
                         ),
                         column(3,
                                uiOutput("SCMaxFractionLost") ,
-                               # tags$ul(
-                               #     textInput("SCMaxFractionLostText",
-                               #               label = p("Change Value"),
-                               #               value = toString(SCMaxFractionLost),
-                               #               width = '90%')
-                               # ),
                         ),
                         column(3,
                                uiOutput("SCAcceptStopCodons") ,
-                               # tags$ul(
-                               #     textInput("SCAcceptStopCodonsText",
-                               #               label = p("Change Value"),
-                               #               value = toString(SCAcceptStopCodons),
-                               #               width = '90%')
-                               # ),
                         ),
                         column(3,
                                uiOutput("SCReadingFrame") ,
-                               # tags$ul(
-                               #     textInput("SCReadingFrameText",
-                               #               label = p("Change Value"),
-                               #               value = toString(SCReadingFrame),
-                               #               width = '90%')
-                               # ),
                         ),
                     ),
                 ),
@@ -357,7 +393,7 @@ consensusReadServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               dataTableOutput("differencesDF") , style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                               dataTableOutput("differencesDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
                         )
                     ),
 
@@ -370,30 +406,42 @@ consensusReadServer <- function(input, output, session) {
                                # plot()
                                plotOutput("dendrogramPlot"),
                                # dataTableOutput("differencesDF")
-                               style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                               style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
                         ),
                         column(width = 12,
                                dataTableOutput("dendrogramDF"),
-                               style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                               style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
                         )
                     ),
-
-
                     box(title = tags$p("Secondary Peak Dataframe",
                                        style = "font-size: 24px;
                                        font-weight: bold;"),
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               dataTableOutput("secondaryPeakDF") , style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                               dataTableOutput("secondaryPeakDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
                         )
                     ),
-                    # differencesDF             = "data.frame",
-                    # distanceMatrix            = "matrix",
-                    # dendrogram                = "list",
-                    # indelsDF                  = "data.frame",
-                    # stopCodonsDF              = "data.frame",
-                    # secondaryPeakDF           = "data.frame"
+                    box(title = tags$p("Indels",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCIndelsDFUI"),
+                               style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                        )
+                    ),
+                    box(title = tags$p("Stop Codons",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCStopCodonsDFUI"),
+                               style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                        )
+                    )
                 )
             )
         }
@@ -908,6 +956,36 @@ consensusReadServer <- function(input, output, session) {
     output$dendrogramPlot <- renderPlot({
         plot(SCDendrogram[[2]])
     })
+
+
+
+
+
+    output$SCIndelsDFUI <- renderUI({
+        if (all(dim(SCIndelsDF) == c(0,0))) {
+            h4("'Indels' data frame is empty.")
+        } else {
+            dataTableOutput("SCIndelsDF")
+
+        }
+    })
+
+    output$SCStopCodonsDFUI <- renderUI({
+        if (all(dim(SCStopCodonsDF) == c(0,0))) {
+            h4("'Stop Codons' data frame is empty.")
+        } else {
+            dataTableOutput("SCStopCodonsDF")
+        }
+    })
+
+    output$SCIndelsDF <- renderDataTable({
+        SCIndelsDF
+    })
+
+    output$SCStopCodonsDF <- renderDataTable({
+        SCStopCodonsDF
+    })
+
 
 
 
