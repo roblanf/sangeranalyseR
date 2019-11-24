@@ -300,6 +300,7 @@ setMethod("initialize",
                               penalizeGapLetterMatches = FALSE,
                               processors = processorsNum, verbose = FALSE)
         dend = IdClusters(dist, type = "both",
+                          showPlot = "inexact",
                           processors = processorsNum, verbose = FALSE)
 
         # add consensus to alignment

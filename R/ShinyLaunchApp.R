@@ -20,6 +20,7 @@ launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
     ### ------------------------------------------------------------------------
     if (is.null(directory)) {
         directory <- tempdir()
+        suppressWarnings(dir.create(directory))
     }
     if (dir.exists(directory)) {
         shinyOptions(SangerConsensusRead = SangerConsensusRead)

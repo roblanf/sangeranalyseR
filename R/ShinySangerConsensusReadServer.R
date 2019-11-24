@@ -9,6 +9,7 @@ consensusReadServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     SangerConsensusRead <- getShinyOption("SangerConsensusRead")
     shinyDirectory <- getShinyOption("shinyDirectory")
+    message("shinyDirectory: ", shinyDirectory)
     SangerConsensus <- SangerConsensusRead[[1]]
 
     ### ------------------------------------------------------------------------
@@ -34,6 +35,8 @@ consensusReadServer <- function(input, output, session) {
     SCIndelsDF <- SangerConsensus@indelsDF
     SCStopCodonsDF <- SangerConsensus@stopCodonsDF
     SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
+
+    message("Length of SCDendrogram: ", length(SCDendrogram))
 
     ### ------------------------------------------------------------------------
     ### Reads-related parameters initialization.
@@ -248,6 +251,7 @@ consensusReadServer <- function(input, output, session) {
             # consensusRead (BrowseSeqs)
             # distanceMatrix
             # dendrogram
+
             # indelsDF
             # stopCodonsDF
 
@@ -273,7 +277,6 @@ consensusReadServer <- function(input, output, session) {
                 ),
 
                 # h1(SCconsensusRead),
-                # h1(SCdistanceMatrix),
                 # h1(SCdendrogram),
                 # h1(SCindelsDF),
                 # h1(SCstopCodonsDF),
@@ -357,6 +360,24 @@ consensusReadServer <- function(input, output, session) {
                                dataTableOutput("differencesDF") , style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
                         )
                     ),
+
+                    box(title = tags$p("Dendrogram",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               # plot()
+                               plotOutput("dendrogramPlot"),
+                               # dataTableOutput("differencesDF")
+                               style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                        ),
+                        column(width = 12,
+                               dataTableOutput("dendrogramDF"),
+                               style = "height:500px; overflow-y: scroll;overflow-x: scroll;"
+                        )
+                    ),
+
 
                     box(title = tags$p("Secondary Peak Dataframe",
                                        style = "font-size: 24px;
@@ -880,7 +901,13 @@ consensusReadServer <- function(input, output, session) {
         includeHTML(file.path(shinyDirectory, paste0(A_chloroticConsensusReads@consenesusReadName, "_Alignment_BrowseSeqs.html")))
     })
 
+    output$dendrogramDF <- renderDataTable({
+        SCDendrogram[[1]]
+    })
 
+    output$dendrogramPlot <- renderPlot({
+        plot(SCDendrogram[[2]])
+    })
 
 
 
