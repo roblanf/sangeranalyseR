@@ -507,15 +507,6 @@ valueBoxTrimmedRatio <- function(input, output, session, trimmedRV) {
     })
 }
 
-### ============================================================================
-### clientdataText
-### ============================================================================
-clientdataText <- function(input, output, session) {
-    output$clientdataText <- renderText({
-        SangerSingleReadNum
-    })
-}
-
 
 ### ============================================================================
 ### qualityTrimmingRatioPlot

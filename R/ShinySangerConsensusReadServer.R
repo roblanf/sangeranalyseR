@@ -261,8 +261,6 @@ consensusReadServer <- function(input, output, session) {
 
 
                 # h1(SCconsensusRead),
-                # h1(SCIndelsDF),
-                # h1(SCStopCodonsDF),
 
 
                 box(title = tags$p("Input Parameters: ",
@@ -270,84 +268,96 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
                     status = "success", width = 12,
+                    tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
                     fluidRow(
                         column(12,
-                               column(2,
+                               column(3,
                                       h4("Output Directory: ", style="font-weight: bold;"),
                                ),
-                               column(10,
+                               column(9,
                                       h4(shinyDirectory),
                                )
                         ),
                         column(12,
-                               column(2,
+                               column(3,
                                       h4("Parent Directory: ", style="font-weight: bold;"),
                                ),
-                               column(10,
+                               column(9,
                                       h4(parentDirectory),
                                )
                         ),
                         column(12,
-                               column(2,
+                               column(3,
                                       h4("Consenesus Read Name: ", style="font-weight: bold;"),
                                ),
-                               column(10,
+                               column(9,
                                       h4(consenesusReadName),
                                )
                         ),
                         column(12,
-                               column(2,
+                               column(3,
                                       h4("Forward Suffix RegExp: ", style="font-weight: bold;"),
                                ),
-                               column(10,
+                               column(9,
                                       h4(suffixForwardRegExp),
                                )
                         ),
                         column(12,
-                               column(2,
+                               column(3,
                                       h4("Forward Read Number: ", style="font-weight: bold;"),
                                ),
-                               column(10,
+                               column(9,
                                       h4(forwardReadNum),
                                )
                         ),
                         column(12,
-                               column(2,
+                               column(3,
                                       h4("Reverse Suffix RegExp: ", style="font-weight: bold;"),
                                ),
-                               column(10,
+                               column(9,
                                       h4(suffixReverseRegExp),
                                )
                         ),
                         column(12,
-                               column(2,
+                               column(3,
                                       h4("Reverse Read Number: ", style="font-weight: bold;"),
                                ),
-                               column(10,
+                               column(9,
                                       h4(reverseReadNum),
                                )
                         ),
-                        ################################################
-                        #### Add this after having reference sample ####
-                        ################################################
-                        # If it is null
-                        # h1(SCRefAminoAcidSeq),
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-
+                    ),
+                    ################################################
+                    #### Add this after having reference sample ####
+                    ################################################
+                    # If it is null
+                    # h1(SCRefAminoAcidSeq),
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    fluidRow(
                         box(title = tags$p("GeneticCode Data Frame",
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 12,
-                            column(width = 12,
+                            column(width = 2,
+                                   tags$p("Tri-nucleotide:",
+                                          style = "font-size: 15px;
+                                       font-weight: bold;"),
+                                   tags$p("Amino Acid : ",
+                                          style = "font-size: 15px;
+                                       font-weight: bold;"),
+                                   tags$p("('*' : stop codon) ",
+                                          style = "font-size: 12px;
+                                       font-weight: italic;"),
+                            ),
+                            column(width = 10,
                                    excelOutput("geneticCodeDF", width = "100%", height = "50"),
                                    style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
                             ),
                         ),
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-
+                    ),
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    fluidRow(
                         box(title = tags$p("GeneticCode Data Frame",
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -357,10 +367,9 @@ consensusReadServer <- function(input, output, session) {
                                    htmlOutput("consensusAlignmentHTML"),
                             ),
                         ),
-
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-
+                    ),
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    fluidRow(
                         column(3,
                                uiOutput("SCMinReadsNum") ,
                         ),
@@ -386,63 +395,77 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
                     status = "success", width = 12,
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                    box(title = tags$p("Differences Dataframe",
-                                       style = "font-size: 24px;
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    fluidRow(
+                        box(title = tags$p("Differences Dataframe",
+                                           style = "font-size: 24px;
                                        font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               dataTableOutput("differencesDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                        )
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   dataTableOutput("differencesDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                            )
+                        ),
+                    ),
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    fluidRow(
+                        box(title = tags$p("Dendrogram",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   # plot()
+                                   plotOutput("dendrogramPlot"),
+                                   # dataTableOutput("differencesDF")
+                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                            ),
+                            column(width = 12,
+                                   dataTableOutput("dendrogramDF"),
+                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                            )
+                        ),
+                    ),
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    fluidRow(
+                        box(title = tags$p("Secondary Peak Dataframe",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   dataTableOutput("secondaryPeakDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                            )
+                        ),
+                    ),
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    fluidRow(
+                        box(title = tags$p("Indels",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   uiOutput("SCIndelsDFUI"),
+                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                            )
+                        ),
                     ),
 
-                    box(title = tags$p("Dendrogram",
-                                       style = "font-size: 24px;
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    fluidRow(
+                        box(title = tags$p("Stop Codons",
+                                           style = "font-size: 24px;
                                        font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               # plot()
-                               plotOutput("dendrogramPlot"),
-                               # dataTableOutput("differencesDF")
-                               style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                        ),
-                        column(width = 12,
-                               dataTableOutput("dendrogramDF"),
-                               style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   uiOutput("SCStopCodonsDFUI"),
+                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                            )
                         )
                     ),
-                    box(title = tags$p("Secondary Peak Dataframe",
-                                       style = "font-size: 24px;
-                                       font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               dataTableOutput("secondaryPeakDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                        )
-                    ),
-                    box(title = tags$p("Indels",
-                                       style = "font-size: 24px;
-                                       font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               uiOutput("SCIndelsDFUI"),
-                               style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                        )
-                    ),
-                    box(title = tags$p("Stop Codons",
-                                       style = "font-size: 24px;
-                                       font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               uiOutput("SCStopCodonsDFUI"),
-                               style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                        )
-                    )
-                )
+                ),
             )
         }
     })
@@ -487,7 +510,7 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                        tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                         column(width = 1,
                                tags$p("Primary",
                                       style = "font-size: 15px;
@@ -509,7 +532,7 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                        tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                         fluidRow(
                             column(3,
                                    uiOutput("cutoffQualityScore") ,
@@ -569,7 +592,7 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                        tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                         column(12,
                                column(3,
                                       sliderInput("ChromatogramBasePerRow",
@@ -963,7 +986,7 @@ consensusReadServer <- function(input, output, session) {
 
     output$SCIndelsDFUI <- renderUI({
         if (all(dim(SCIndelsDF) == c(0,0))) {
-            h4("'Indels' data frame is empty.")
+            h4("*** 'Indels' data frame is empty. ***", style="font-weight: bold; font-style: italic;")
         } else {
             dataTableOutput("SCIndelsDF")
 
@@ -972,7 +995,7 @@ consensusReadServer <- function(input, output, session) {
 
     output$SCStopCodonsDFUI <- renderUI({
         if (all(dim(SCStopCodonsDF) == c(0,0))) {
-            h4("'Stop Codons' data frame is empty.")
+            h4("*** 'Stop Codons' data frame is empty. ***", style="font-weight: bold; font-style: italic;")
         } else {
             dataTableOutput("SCStopCodonsDF")
         }
@@ -1197,7 +1220,6 @@ consensusReadServer <- function(input, output, session) {
 
     valueBoxRemainingBP (input, output, session, trimmedRV)
     valueBoxTrimmedRatio (input, output, session, trimmedRV)
-    clientdataText (input, output, session)
 
     qualityTrimmingRatioPlot (input, output, session, trimmedRV,
                               SangerSingleReadQualReport,
@@ -1210,7 +1232,7 @@ consensusReadServer <- function(input, output, session) {
     output$info <- renderText({
         paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
     })
-
+    RShiny
 
 
 }
