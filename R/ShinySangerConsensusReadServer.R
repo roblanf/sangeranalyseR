@@ -297,7 +297,7 @@ consensusReadServer <- function(input, output, session) {
                     ),
                     tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                     fluidRow(
-                        box(title = tags$p("GeneticCode Data Frame",
+                        box(title = tags$p("Alignment",
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,

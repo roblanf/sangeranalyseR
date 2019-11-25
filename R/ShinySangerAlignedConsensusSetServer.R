@@ -39,7 +39,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         SCIndelsDF <- SangerCSetList[[i]]@indelsDF
         SCStopCodonsDF <- SangerCSetList[[i]]@stopCodonsDF
         SCSecondaryPeakDF <- SangerCSetList[[i]]@secondaryPeakDF
-        SangerConsensusForRegExp <- SangerCSetList[[i]]@consenesusReadName
+        SCconsenesusReadName <- SangerCSetList[[i]]@consenesusReadName
         SangerConsensusForRegExp <- SangerCSetList[[i]]@suffixForwardRegExp
         SangerConsensusRevRegExp <- SangerCSetList[[i]]@suffixReverseRegExp
 
@@ -146,7 +146,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SCMinReadLength = SCMinReadLength,
                     SCRefAminoAcidSeq = SCRefAminoAcidSeq,
                     SCMinFractionCall = SCMinFractionCall,
-                    SCMaxFractionLost = SCMinFractionCall,
+                    SCMaxFractionLost = SCMaxFractionLost,
                     SCGeneticCode = SCGeneticCode,
                     SCAcceptStopCodons = SCAcceptStopCodons,
                     SCReadingFrame = SCReadingFrame,
@@ -158,8 +158,13 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SCIndelsDF = SCIndelsDF,
                     SCStopCodonsDF = SCStopCodonsDF,
                     SCSecondaryPeakDF = SCSecondaryPeakDF,
+                    SCconsenesusReadName = SCconsenesusReadName,
                     SangerConsensusForRegExp = SangerConsensusForRegExp,
                     SangerConsensusRevRegExp = SangerConsensusRevRegExp,
+                    SangerSingleReadFReadsList = SangerSingleReadFReadsList,
+                    SangerSingleReadRReadsList = SangerSingleReadRReadsList,
+                    forwardReadNum = forwardReadNum,
+                    reverseReadNum = reverseReadNum,
                     SangerSingleReadNum = SangerSingleReadNum,
                     SangerConsensusFRReadsList = SangerConsensusFRReadsList,
                     SangerSingleReadBFN = SangerSingleReadBFN,
@@ -189,29 +194,59 @@ alignedConsensusSetServer <- function(input, output, session) {
     #     paste("You've selected:", input$sidebar_menu)
     # })
 
-
     output$aligned_consensusRead_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
-            SangerConsensusSet
-            shinyDirectory
-            SangerConsensusSet
-            SangerCSetParentDir
-
-            SangerCSetSuffixForwardRegExp
-            SangerCSetSuffixReverseRegExp
-            SangerCSetList
-            SangerConsensusSetNum
 
             h1(paste("You've selected:", input$sidebar_menu))
-
-            column(12,
-                   column(3,
-                          h4("Output Directory: ", style="font-weight: bold;"),
-                   ),
-                   column(9,
-                          h4(shinyDirectory),
-                   )
+            box(title = tags$p("Input Parameters: ",
+                               style = "font-size: 26px;
+                                       font-weight: bold;"),
+                solidHeader = TRUE, collapsible = TRUE,
+                status = "success", width = 12,
+                tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
+                fluidRow(
+                    column(12,
+                           column(3,
+                                  h4("Output Directory: ", style="font-weight: bold;"),
+                           ),
+                           column(9,
+                                  h4(shinyDirectory),
+                           )
+                    ),
+                    column(12,
+                           column(3,
+                                  h4("Parent Directory: ", style="font-weight: bold;"),
+                           ),
+                           column(9,
+                                  h4(SangerCSetParentDir),
+                           )
+                    ),
+                    column(12,
+                           column(3,
+                                  h4("Forward Suffix RegExp: ", style="font-weight: bold;"),
+                           ),
+                           column(9,
+                                  h4(SangerCSetSuffixForwardRegExp),
+                           )
+                    ),
+                    column(12,
+                           column(3,
+                                  h4("Reverse Suffix RegExp: ", style="font-weight: bold;"),
+                           ),
+                           column(9,
+                                  h4(SangerCSetSuffixReverseRegExp),
+                           )
+                    ),
+                    column(12,
+                           column(3,
+                                  h4("Consensus Read Number: ", style="font-weight: bold;"),
+                           ),
+                           column(9,
+                                  h4(SangerConsensusSetNum),
+                           )
+                    ),
+                )
             )
         } else {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
@@ -222,46 +257,39 @@ alignedConsensusSetServer <- function(input, output, session) {
                     consensusReadIndex <- sidebar_menu[[1]]
                     h1(paste("You've selected:", input$sidebar_menu))
 
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCName
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMinReadsNum
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMinReadLength
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCRefAminoAcidSeq
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMinFractionCall
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMaxFractionLost
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCGeneticCode
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCAcceptStopCodons
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCReadingFrame
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCConsensusRead
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCAlignment
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDifferencesDF
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDendrogram
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCIndelsDF
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCSecondaryPeakDF
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusForRegExp
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusRevRegExp
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadNum
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusFRReadsList
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadBFN
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadAFN
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadFeature
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadAbifRawData
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadQualReport
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPrimSeqID
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPrimSeq
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadSecoSeqID
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadSecoSeq
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadTraceMat
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPeakPosMat
-                    SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPeakAmpMat
-
-
-
-
-
-
-
+                    SCName <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCName
+                    SCMinReadsNum <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMinReadsNum
+                    SCMinReadLength <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMinReadLength
+                    SCRefAminoAcidSeq <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCRefAminoAcidSeq
+                    SCMinFractionCall <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMinFractionCall
+                    SCMaxFractionLost <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMaxFractionLost
+                    SCGeneticCode <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCGeneticCode
+                    SCAcceptStopCodons <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCAcceptStopCodons
+                    SCReadingFrame <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCReadingFrame
+                    SCConsensusRead <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCConsensusRead
+                    SCAlignment <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCAlignment
+                    SCDifferencesDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDifferencesDF
+                    SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
+                    SCDendrogram <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDendrogram
+                    SCIndelsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCIndelsDF
+                    SCStopCodonsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
+                    SCSecondaryPeakDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCSecondaryPeakDF
+                    SangerConsensusForRegExp <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusForRegExp
+                    SangerConsensusRevRegExp <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusRevRegExp
+                    SangerSingleReadNum <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadNum
+                    SangerConsensusFRReadsList <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusFRReadsList
+                    SangerSingleReadBFN <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadBFN
+                    SangerSingleReadAFN <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadAFN
+                    SangerSingleReadFeature <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadFeature
+                    SangerSingleReadAbifRawData <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadAbifRawData
+                    SangerSingleReadQualReport <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadQualReport
+                    SangerSingleReadPrimSeqID <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPrimSeqID
+                    SangerSingleReadPrimSeq <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPrimSeq
+                    SangerSingleReadSecoSeqID <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadSecoSeqID
+                    SangerSingleReadSecoSeq <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadSecoSeq
+                    SangerSingleReadTraceMat <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadTraceMat
+                    SangerSingleReadPeakPosMat <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPeakPosMat
+                    SangerSingleReadPeakAmpMat <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPeakAmpMat
 
 
 
@@ -276,53 +304,12 @@ alignedConsensusSetServer <- function(input, output, session) {
                             status = "success", width = 12,
                             tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
                             fluidRow(
-
-                                column(12,
-                                       column(3,
-                                              h4("Parent Directory: ", style="font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(parentDirectory),
-                                       )
-                                ),
                                 column(12,
                                        column(3,
                                               h4("Consenesus Read Name: ", style="font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(consenesusReadName),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              h4("Forward Suffix RegExp: ", style="font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(suffixForwardRegExp),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              h4("Forward Read Number: ", style="font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(forwardReadNum),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              h4("Reverse Suffix RegExp: ", style="font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(suffixReverseRegExp),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              h4("Reverse Read Number: ", style="font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(reverseReadNum),
+                                              h4(SCName),
                                        )
                                 ),
                             ),
@@ -356,126 +343,100 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                             ),
                             tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("GeneticCode Data Frame",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           htmlOutput("consensusAlignmentHTML"),
-                                    ),
-                                ),
-                            ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            # fluidRow(
+                            #     box(title = tags$p("GeneticCode Data Frame",
+                            #                        style = "font-size: 24px;
+                            #            font-weight: bold;"),
+                            #         collapsible = TRUE,
+                            #         status = "success", width = 12,
+                            #         column(width = 12,
+                            #                htmlOutput("consensusAlignmentHTML"),
+                            #         ),
+                            #     ),
+                            # ),
+                            # tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 column(3,
-                                       uiOutput("SCMinReadsNum") ,
+                                       valueBox(
+                                           subtitle = tags$p("MinReadsNum",
+                                                             style = "font-size: 15px;
+                                                             font-weight: bold;"),
+                                           value = tags$p(strtoi(SCMinReadsNum),
+                                                          style = "font-size: 29px;"),
+                                           icon = icon("cut", "fa-sm"),
+                                           color = "olive",
+                                           width = 12,
+                                       )
+                                       # uiOutput("SCMinReadsNum") ,
                                 ),
                                 column(3,
-                                       uiOutput("SCMinReadLength")  ,
+                                       valueBox(
+                                           subtitle = tags$p("MinReadLength",
+                                                             style = "font-size: 15px;
+                                            font-weight: bold;"),
+                                           value = tags$p(strtoi(SCMinReadLength),
+                                                          style = "font-size: 29px;"),
+                                           icon = icon("cut", "fa-sm"),
+                                           color = "olive",
+                                           width = 12,
+                                       ),
+                                       # uiOutput("SCMinReadLength")  ,
                                 ),
                                 column(3,
-                                       uiOutput("SCMinFractionCall") ,
+                                       valueBox(
+                                           subtitle = tags$p("MinFractionCall",
+                                                             style = "font-size: 15px;
+                                            font-weight: bold;"),
+                                           value = tags$p(as.numeric(SCMinFractionCall),
+                                                          style = "font-size: 29px;"),
+                                           icon = icon("cut", "fa-sm"),
+                                           color = "olive",
+                                           width = 12,
+                                       ),
+                                       # uiOutput("SCMinFractionCall") ,
                                 ),
                                 column(3,
-                                       uiOutput("SCMaxFractionLost") ,
+                                       valueBox(
+                                           subtitle = tags$p("MaxFractionLost",
+                                                             style = "font-size: 15px;
+                                            font-weight: bold;"),
+                                           value = tags$p(as.numeric(SCMaxFractionLost),
+                                                          style = "font-size: 29px;"),
+                                           icon = icon("cut", "fa-sm"),
+                                           color = "olive",
+                                           width = 12,
+                                       ),
+                                       # uiOutput("SCMaxFractionLost") ,
                                 ),
                                 column(3,
-                                       uiOutput("SCAcceptStopCodons") ,
+                                       valueBox(
+                                           subtitle = tags$p("AcceptStopCodons",
+                                                             style = "font-size: 15px;
+                                            font-weight: bold;"),
+                                           value = tags$p(SCAcceptStopCodons,
+                                                          style = "font-size: 29px;"),
+                                           icon = icon("cut", "fa-sm"),
+                                           color = "olive",
+                                           width = 12,
+                                       ),
+                                       # uiOutput("SCAcceptStopCodons") ,
                                 ),
                                 column(3,
-                                       uiOutput("SCReadingFrame") ,
+                                       valueBox(
+                                           subtitle = tags$p("ReadingFrame",
+                                                             style = "font-size: 15px;
+                                            font-weight: bold;"),
+                                           value = tags$p(strtoi(SCReadingFrame),
+                                                          style = "font-size: 29px;"),
+                                           icon = icon("cut", "fa-sm"),
+                                           color = "olive",
+                                           width = 12,
+                                       ),
+                                       # uiOutput("SCReadingFrame") ,
                                 ),
-                            ),
-                        ),
-                        box(title = tags$p("Results: ",
-                                           style = "font-size: 26px;
-                                       font-weight: bold;"),
-                            solidHeader = TRUE, collapsible = TRUE,
-                            status = "success", width = 12,
-                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Differences Dataframe",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           dataTableOutput("differencesDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                                    )
-                                ),
-                            ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Dendrogram",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           # plot()
-                                           plotOutput("dendrogramPlot"),
-                                           # dataTableOutput("differencesDF")
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                                    ),
-                                    column(width = 12,
-                                           dataTableOutput("dendrogramDF"),
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                                    )
-                                ),
-                            ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Secondary Peak Dataframe",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           dataTableOutput("secondaryPeakDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                                    )
-                                ),
-                            ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Indels",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           uiOutput("SCIndelsDFUI"),
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                                    )
-                                ),
-                            ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Stop Codons",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           uiOutput("SCStopCodonsDFUI"),
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
-                                    )
-                                )
                             ),
                         ),
                     )
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -490,18 +451,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                            sidebar_menu[[7]] == "Read") {
                     consensusReadIndex <- sidebar_menu[[1]]
                     singleReadIndex <- sidebar_menu[[5]]
-
-
-
-
-
-
-
-
-
-
-
-
 
                     h1(paste("You've selected:", input$sidebar_menu))
                 }
@@ -536,4 +485,16 @@ alignedConsensusSetServer <- function(input, output, session) {
     })
     observeEventButtonSaveSCSet(input, output, session, SangerCSetParam)
     observeEventButtonClose(input, output, session)
+
+
+    output$geneticCodeDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCGeneticCode <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCGeneticCode
+        excelTable(data =  t(data.frame(SCGeneticCode)),
+                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+    })
+
 }
