@@ -79,6 +79,6 @@ alignedConsensusSetUI <- dashboardPage(
                         { font-size: 18px; font-weight: bold }")),
         tags$style(HTML(".sidebar-menu ul li a
                         { font-size: 15px}")),
-        textOutput("res")
+        uiOutput("aligned_consensusRead_content"),
     )
 )

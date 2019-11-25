@@ -46,16 +46,24 @@ launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
 #'                      cutoffQualityScore    = 20,
 #'                      slidingWindowSize     = 8)
 #' RShiny <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))
-launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet) {
+launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet, directory = NULL) {
     ### ------------------------------------------------------------------------
     ### Checking AlignedConsensusSet input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------
-    shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
-    newSangerAlignedConsensusSet <- shinyApp(alignedConsensusSetUI, alignedConsensusSetServer,
-                                      options = SangerAlignedConsensusSet)
-    return(newSangerAlignedConsensusSet)
-
+    if (is.null(directory)) {
+        directory <- tempdir()
+        suppressWarnings(dir.create(directory))
+    }
+    if (dir.exists(directory)) {
+        shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
+        shinyOptions(shinyDirectory = directory)
+        newSangerAlignedConsensusSet <- shinyApp(alignedConsensusSetUI, alignedConsensusSetServer,
+                                                 options = SangerAlignedConsensusSet)
+        return(newSangerAlignedConsensusSet)
+    } else {
+        stop("'", directory, "' is not valid. Please check again")
+    }
     # shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
     # newSangerConsensusRead <- shinyApp(alignedConsensusSetUI, alignedConsensusSetServer,
     #                                    options = SangerConsensusRead)

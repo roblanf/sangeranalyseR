@@ -8,7 +8,7 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### SangerConsensusRead parameters initialization.
     ### ------------------------------------------------------------------------
     SangerConsensusSet <- getShinyOption("SangerAlignedConsensusSet")
-
+    shinyDirectory <- getShinyOption("shinyDirectory")
     SangerConsensusSet <- SangerConsensusSet[[1]]
     SangerCSetParentDir <- SangerConsensusSet@parentDirectory
 
@@ -186,8 +186,64 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### output$ID
     ############################################################################
     dynamicMenuSideBarSCSet(input, output, session, SangerCSetParam)
-    observeEventDynamicHeaderSCSet(input, output, session, trimmedRV,
-                                               SangerCSetParam)
+    # observeEventDynamicHeaderSCSet(input, output, session, trimmedRV,
+    #                                            SangerCSetParam)
+    # output$res <- renderText({
+    #     paste("You've selected:", input$sidebar_menu)
+    # })
+
+
+    output$aligned_consensusRead_content <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
+            h1(paste("You've selected:", input$sidebar_menu))
+        } else {
+            if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+                if (sidebar_menu[[2]] == "Sanger" &&
+                    sidebar_menu[[3]] == "Consensus" &&
+                    sidebar_menu[[4]] == "Read" &&
+                    sidebar_menu[[5]] == "Overview") {
+                    consensusReadIndex <- sidebar_menu[[1]]
+                    h1(paste("You've selected:", input$sidebar_menu))
+                } else if (sidebar_menu[[2]] == "Consensus" &&
+                           sidebar_menu[[3]] == "Read" &&
+                           sidebar_menu[[4]] == "-" &&
+                           !is.na(as.numeric(sidebar_menu[[5]])) &&
+                           (sidebar_menu[[6]] == "Forward" || sidebar_menu[[6]] == "Reverse") &&
+                           sidebar_menu[[7]] == "Read") {
+                    consensusReadIndex <- sidebar_menu[[1]]
+                    singleReadIndex <- sidebar_menu[[5]]
+                    h1(paste("You've selected:", input$sidebar_menu))
+                }
+            }
+        }
+    })
+
+
+
+
+
+
+    observeEvent(input$sidebar_menu, {
+        menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
+        html("rightHeader", menuItem)
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
+        if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
+            #     trimmedRV[["trimmedStart"]] <-
+            #         SangerSingleReadQualReport[[
+            #             strtoi(sidebar_menu[[1]])]]@trimmingStartPos
+            #     trimmedRV[["trimmedEnd"]] <-
+            #         SangerSingleReadQualReport[[
+            #             strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
+            #     qualityPhredScores = SangerSingleReadQualReport[[
+            #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+            #
+            #     readLen = length(qualityPhredScores)
+            #     trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+            #     trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
+        }
+    })
     observeEventButtonSaveSCSet(input, output, session, SangerCSetParam)
     observeEventButtonClose(input, output, session)
 }

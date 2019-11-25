@@ -123,34 +123,55 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
     })
 }
 
-observeEventDynamicHeaderSCSet <- function(input, output, session, trimmedRV,
-                                           SangerCSetParam) {
 
-    output$res <- renderText({
-        paste("You've selected:", input$sidebar_menu)
-    })
 
-    observeEvent(input$sidebar_menu, {
-        menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
-        html("rightHeader", menuItem)
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
-        if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
-        #     trimmedRV[["trimmedStart"]] <-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@trimmingStartPos
-        #     trimmedRV[["trimmedEnd"]] <-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
-        #     qualityPhredScores = SangerSingleReadQualReport[[
-        #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
-        #
-        #     readLen = length(qualityPhredScores)
-        #     trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
-        #     trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
-        }
-    })
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# observeEventDynamicHeaderSCSet <- function(input, output, session, trimmedRV,
+#                                            SangerCSetParam) {
+#
+#     output$res <- renderText({
+#         paste("You've selected:", input$sidebar_menu)
+#     })
+#
+#     observeEvent(input$sidebar_menu, {
+#         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
+#         html("rightHeader", menuItem)
+#         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+#         # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
+#         if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
+#         #     trimmedRV[["trimmedStart"]] <-
+#         #         SangerSingleReadQualReport[[
+#         #             strtoi(sidebar_menu[[1]])]]@trimmingStartPos
+#         #     trimmedRV[["trimmedEnd"]] <-
+#         #         SangerSingleReadQualReport[[
+#         #             strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
+#         #     qualityPhredScores = SangerSingleReadQualReport[[
+#         #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+#         #
+#         #     readLen = length(qualityPhredScores)
+#         #     trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
+#         #     trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
+#         }
+#     })
+# }
 
 ### ============================================================================
 ### observeEvent: Button Save S4 object
