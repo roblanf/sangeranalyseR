@@ -107,6 +107,37 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerSingleReadRReadsList[[i]]@primarySeq)
         SangerSingleReadPrimSeq <- c(forwardReadPrimSeq, reverseReadPrimSeq)
 
+
+        # primarySeqDF
+        forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
+            basecalls1 <- unlist(strsplit(
+                toString(SangerSingleReadFReadsList[[i]]@primarySeq), ""))
+            aveposition <- rowMeans(
+                SangerSingleReadFReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+            basecalls1 <- basecalls1[1:length(aveposition)]
+            basecalls1DF <- data.frame(
+                t(data.frame(basecalls1)), stringsAsFactors = FALSE)
+            colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
+            rownames(basecalls1DF) <- "Primary"
+            return(basecalls1DF)
+            }
+        )
+        reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(i) {
+            basecalls1 <- unlist(strsplit(
+                toString(SangerSingleReadRReadsList[[i]]@primarySeq), ""))
+            aveposition <- rowMeans(
+                SangerSingleReadRReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+            basecalls1 <- basecalls1[1:length(aveposition)]
+            basecalls1DF <- data.frame(
+                t(data.frame(basecalls1)), stringsAsFactors = FALSE)
+            colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
+            rownames(basecalls1DF) <- "Primary "
+            return(basecalls1DF)
+            }
+        )
+        SangerSingleReadPrimSeqDF <- c(forwardReadPrimSeqDF, reverseReadPrimSeqDF)
+
+
         # secondarySeqID
         forwardReadSecoSeqID <- sapply(1:forwardReadNum, function(i)
             SangerSingleReadFReadsList[[i]]@secondarySeqID)
@@ -120,6 +151,43 @@ alignedConsensusSetServer <- function(input, output, session) {
         reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
             SangerSingleReadRReadsList[[i]]@secondarySeq)
         SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
+
+        # secondarySeq
+        forwardReadSecoSeq <- sapply(1:forwardReadNum, function(i)
+            SangerSingleReadFReadsList[[i]]@secondarySeq)
+        reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
+            SangerSingleReadRReadsList[[i]]@secondarySeq)
+        SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
+
+        # secondarySeqDF
+        forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
+            basecalls2 <- unlist(strsplit(
+                toString(SangerSingleReadFReadsList[[i]]@secondarySeq), ""))
+            aveposition <- rowMeans(
+                SangerSingleReadFReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+            basecalls2 <- basecalls2[1:length(aveposition)]
+            basecalls2DF <- data.frame(
+                t(data.frame(basecalls2)), stringsAsFactors = FALSE)
+            colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
+            rownames(basecalls2DF) <- " Second"
+            return(basecalls2DF)
+            }
+        )
+        reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(i) {
+            basecalls2 <- unlist(strsplit(toString(
+                SangerSingleReadRReadsList[[i]]@secondarySeq), ""))
+            aveposition <- rowMeans(
+                SangerSingleReadRReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+            basecalls2 <- basecalls2[1:length(aveposition)]
+            basecalls2DF <- data.frame(
+                t(data.frame(basecalls2)), stringsAsFactors = FALSE)
+            colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
+            rownames(basecalls2DF) <- " Second"
+            return(basecalls2DF)
+            }
+        )
+        SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
+
 
         # traceMatrix
         forwardReadTraceMat <- sapply(1:forwardReadNum, function(i)
@@ -174,8 +242,14 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadQualReport = SangerSingleReadQualReport,
                     SangerSingleReadPrimSeqID = SangerSingleReadPrimSeqID,
                     SangerSingleReadPrimSeq = SangerSingleReadPrimSeq,
+                    forwardReadPrimSeqDF = forwardReadPrimSeqDF,
+                    reverseReadPrimSeqDF = reverseReadPrimSeqDF,
+                    SangerSingleReadPrimSeqDF = SangerSingleReadPrimSeqDF,
                     SangerSingleReadSecoSeqID = SangerSingleReadSecoSeqID,
                     SangerSingleReadSecoSeq = SangerSingleReadSecoSeq,
+                    forwardReadSecoSeqDF = forwardReadSecoSeqDF,
+                    reverseReadSecoSeqDF = reverseReadSecoSeqDF,
+                    SangerSingleReadSecoSeqDF = SangerSingleReadSecoSeqDF,
                     SangerSingleReadTraceMat = SangerSingleReadTraceMat,
                     SangerSingleReadPeakPosMat = SangerSingleReadPeakPosMat,
                     SangerSingleReadPeakAmpMat = SangerSingleReadPeakAmpMat))
@@ -210,7 +284,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                     ),
                     column(12,
                            column(3,
-                                  h4("Parent Directory: ", style="font-weight: bold;"),
+                                  h4("Raw ABI Parent Directory: ", style="font-weight: bold;"),
                            ),
                            column(9,
                                   h4(SangerCSetParentDir),
@@ -243,87 +317,37 @@ alignedConsensusSetServer <- function(input, output, session) {
                 )
             )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         } else {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
                 if (sidebar_menu[[2]] == "Sanger" &&
                     sidebar_menu[[3]] == "Consensus" &&
                     sidebar_menu[[4]] == "Read" &&
                     sidebar_menu[[5]] == "Overview") {
-                    consensusReadIndex <- sidebar_menu[[1]]
-                    h1(paste("You've selected:", input$sidebar_menu))
+                    consensusReadIndex <- strtoi(sidebar_menu[[1]])
 
-                    SCName <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCName
-                    SCMinReadsNum <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMinReadsNum
-                    SCMinReadLength <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMinReadLength
-                    SCRefAminoAcidSeq <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCRefAminoAcidSeq
-                    SCMinFractionCall <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMinFractionCall
-                    SCMaxFractionLost <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCMaxFractionLost
-                    SCGeneticCode <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCGeneticCode
-                    SCAcceptStopCodons <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCAcceptStopCodons
-                    SCReadingFrame <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCReadingFrame
-                    SCConsensusRead <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCConsensusRead
-                    SCAlignment <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCAlignment
-                    SCDifferencesDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDifferencesDF
-                    SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
-                    SCDendrogram <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDendrogram
-                    SCIndelsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCIndelsDF
-                    SCStopCodonsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
-                    SCSecondaryPeakDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCSecondaryPeakDF
-                    SCconsenesusReadName <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCconsenesusReadName
-                    SangerConsensusForRegExp <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusForRegExp
-                    SangerConsensusRevRegExp <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusRevRegExp
-                    SangerSingleReadNum <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadNum
-                    SangerConsensusFRReadsList <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusFRReadsList
-                    SangerSingleReadBFN <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadBFN
-                    SangerSingleReadAFN <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadAFN
-                    SangerSingleReadFeature <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadFeature
-                    SangerSingleReadAbifRawData <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadAbifRawData
-                    SangerSingleReadQualReport <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadQualReport
-                    SangerSingleReadPrimSeqID <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPrimSeqID
-                    SangerSingleReadPrimSeq <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPrimSeq
-                    SangerSingleReadSecoSeqID <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadSecoSeqID
-                    SangerSingleReadSecoSeq <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadSecoSeq
-                    SangerSingleReadTraceMat <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadTraceMat
-                    SangerSingleReadPeakPosMat <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPeakPosMat
-                    SangerSingleReadPeakAmpMat <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPeakAmpMat
+                    SCName <- SangerCSetParam[[consensusReadIndex]]$SCName
+                    SCMinReadsNum <- SangerCSetParam[[consensusReadIndex]]$SCMinReadsNum
+                    SCMinReadLength <- SangerCSetParam[[consensusReadIndex]]$SCMinReadLength
+                    SCRefAminoAcidSeq <- SangerCSetParam[[consensusReadIndex]]$SCRefAminoAcidSeq
+                    SCMinFractionCall <- SangerCSetParam[[consensusReadIndex]]$SCMinFractionCall
+                    SCMaxFractionLost <- SangerCSetParam[[consensusReadIndex]]$SCMaxFractionLost
+                    SCGeneticCode <- SangerCSetParam[[consensusReadIndex]]$SCGeneticCode
+                    SCAcceptStopCodons <- SangerCSetParam[[consensusReadIndex]]$SCAcceptStopCodons
+                    SCReadingFrame <- SangerCSetParam[[consensusReadIndex]]$SCReadingFrame
+                    SCConsensusRead <- SangerCSetParam[[consensusReadIndex]]$SCConsensusRead
+                    SCAlignment <- SangerCSetParam[[consensusReadIndex]]$SCAlignment
+                    SCDifferencesDF <- SangerCSetParam[[consensusReadIndex]]$SCDifferencesDF
+                    SCDistanceMatrix <- SangerCSetParam[[consensusReadIndex]]$SCDistanceMatrix
+                    SCDendrogram <- SangerCSetParam[[consensusReadIndex]]$SCDendrogram
+                    SCIndelsDF <- SangerCSetParam[[consensusReadIndex]]$SCIndelsDF
+                    SCStopCodonsDF <- SangerCSetParam[[consensusReadIndex]]$SCStopCodonsDF
+                    SCSecondaryPeakDF <- SangerCSetParam[[consensusReadIndex]]$SCSecondaryPeakDF
+                    SCconsenesusReadName <- SangerCSetParam[[consensusReadIndex]]$SCconsenesusReadName
+                    SangerConsensusForRegExp <- SangerCSetParam[[consensusReadIndex]]$SangerConsensusForRegExp
+                    SangerConsensusRevRegExp <- SangerCSetParam[[consensusReadIndex]]$SangerConsensusRevRegExp
+                    SangerSingleforwardReadNum <- SangerCSetParam[[consensusReadIndex]]$forwardReadNum
+                    SangerSinglereverseReadNum <- SangerCSetParam[[consensusReadIndex]]$reverseReadNum
+                    SangerSingleReadNum <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadNum
 
                     # BrowseSeqs_html
                     if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
@@ -337,6 +361,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                     fluidRow(
                         useShinyjs(),
                         # h1(SCconsensusRead),
+                        h1(paste("You've selected:", input$sidebar_menu)),
                         box(title = tags$p("Input Parameters: ",
                                            style = "font-size: 26px;
                                        font-weight: bold;"),
@@ -346,10 +371,50 @@ alignedConsensusSetServer <- function(input, output, session) {
                             fluidRow(
                                 column(12,
                                        column(3,
-                                              h4("Consenesus Read Name: ", style="font-weight: bold;"),
+                                              h4("Consenesus Read Number: ", style="font-weight: bold;"),
                                        ),
                                        column(9,
                                               h4(SCName),
+                                       )
+                                ),
+                                column(12,
+                                       column(3,
+                                              h4("Consenesus Read Name: ", style="font-weight: bold;"),
+                                       ),
+                                       column(9,
+                                              h4(SCconsenesusReadName),
+                                       )
+                                ),
+                                column(12,
+                                       column(3,
+                                              h4("Forward Suffix RegExp: ", style="font-weight: bold;"),
+                                       ),
+                                       column(9,
+                                              h4(SangerCSetSuffixForwardRegExp),
+                                       )
+                                ),
+                                column(12,
+                                       column(3,
+                                              h4("Forward Read Number: ", style="font-weight: bold;"),
+                                       ),
+                                       column(9,
+                                              h4(SangerSingleforwardReadNum),
+                                       )
+                                ),
+                                column(12,
+                                       column(3,
+                                              h4("Reverse Suffix RegExp: ", style="font-weight: bold;"),
+                                       ),
+                                       column(9,
+                                              h4(SangerCSetSuffixReverseRegExp),
+                                       )
+                                ),
+                                column(12,
+                                       column(3,
+                                              h4("Reverse Read Number: ", style="font-weight: bold;"),
+                                       ),
+                                       column(9,
+                                              h4(SangerSinglereverseReadNum),
                                        )
                                 ),
                             ),
@@ -556,22 +621,104 @@ alignedConsensusSetServer <- function(input, output, session) {
                             ),
                         ),
                     )
-
-
-
-
-
-
                 } else if (sidebar_menu[[2]] == "Consensus" &&
                            sidebar_menu[[3]] == "Read" &&
                            sidebar_menu[[4]] == "-" &&
                            !is.na(as.numeric(sidebar_menu[[5]])) &&
                            (sidebar_menu[[6]] == "Forward" || sidebar_menu[[6]] == "Reverse") &&
                            sidebar_menu[[7]] == "Read") {
-                    consensusReadIndex <- sidebar_menu[[1]]
-                    singleReadIndex <- sidebar_menu[[5]]
-
+                    consensusReadIndex <- strtoi(sidebar_menu[[1]])
+                    singleReadIndex <- strtoi(sidebar_menu[[5]])
+                    SangerConsensusFRReadsList <- SangerCSetParam[[consensusReadIndex]]$SangerConsensusFRReadsList
+                    SangerSingleReadBFN <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadBFN
+                    SangerSingleReadAFN <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadAFN
+                    SangerSingleReadFeature <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadFeature
+                    SangerSingleReadAbifRawData <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadAbifRawData
+                    SangerSingleReadQualReport <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport
+                    SangerSingleReadPrimSeqID <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPrimSeqID
+                    SangerSingleReadPrimSeq <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPrimSeq
+                    forwardReadPrimSeqDF <- SangerCSetParam[[consensusReadIndex]]$forwardReadPrimSeqDF
+                    reverseReadPrimSeqDF <- SangerCSetParam[[consensusReadIndex]]$reverseReadPrimSeqDF
+                    SangerSingleReadPrimSeqDF <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPrimSeqDF
+                    SangerSingleReadSecoSeqID <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadSecoSeqID
+                    SangerSingleReadSecoSeq <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadSecoSeq
+                    forwardReadSecoSeqDF <- SangerCSetParam[[consensusReadIndex]]$forwardReadPrimSeqDF
+                    reverseReadSecoSeqDF <- SangerCSetParam[[consensusReadIndex]]$reverseReadSecoSeqDF
+                    SangerSingleReadSecoSeqDF <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadSecoSeqDF
+                    SangerSingleReadTraceMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadTraceMat
+                    SangerSingleReadPeakPosMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPeakPosMat
+                    SangerSingleReadPeakAmpMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPeakAmpMat
                     h1(paste("You've selected:", input$sidebar_menu))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    fluidRow(
+                        useShinyjs(),
+                        h1("consensusReadIndex: ", consensusReadIndex, "  singleReadIndex: ", singleReadIndex),
+                        box(title = tags$p("Raw File: ",
+                                           style = "font-size: 26px;
+                                         font-weight: bold;"),
+                            solidHeader = TRUE,
+                            status = "success", width = 12,
+                            h1(paste0(
+                                SangerSingleReadBFN[[singleReadIndex]])),
+                            tags$h5(paste("( full path:",
+                                          SangerSingleReadAFN[[
+                                              singleReadIndex]],
+                                          ")"), style = "font-style:italic")),
+                        box(title = tags$p("Primary & Secondary Peaks: ",
+                                           style = "font-size: 26px;
+                                       font-weight: bold;"),
+                            solidHeader = TRUE, collapsible = TRUE,
+                            status = "success", width = 12,
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            column(width = 1,
+                                   tags$p("Primary",
+                                          style = "font-size: 15px;
+                                       font-weight: bold;"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p("Second",
+                                          style = "font-size: 15px;
+                                       font-weight: bold;"),
+                            ),
+                            column(width = 11,
+                                   excelTable(data =
+                                                  SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                                              defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                                              columnResize = FALSE, allowInsertRow = FALSE,
+                                              allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                                              allowDeleteColumn = FALSE, allowRenameColumn = FALSE),
+                                   # excelTable(data =
+                                   #                SangerSingleReadSecoSeqDF[[singleReadIndex]],
+                                   #            defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                                   #            columnResize = FALSE, allowInsertRow = FALSE,
+                                   #            allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                                   #            allowDeleteColumn = FALSE, allowRenameColumn = FALSE),
+                                   # excelOutput("primarySeqDF",
+                                   #             width = "100%", height = "50"),
+                                   # excelOutput("secondSeqDF",
+                                   #             width = "100%", height = "50"),
+                                   style = paste("overflow-y: scroll;",
+                                                 "overflow-x: scroll;"))
+                            # ),
+                        ),
+                    )
                 }
             }
         }
@@ -702,18 +849,5 @@ alignedConsensusSetServer <- function(input, output, session) {
         SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
         SCDistanceMatrix
     })
-
-    # output$consensusAlignmentHTML<-renderUI({
-    #     sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-    #     if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
-    #         dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
-    #     }
-    #     localAlignment <- SangerCSetParam[[paste0(sidebar_menu[[1]]$SCAlignment
-    #     browseSeqHTML <- file.path(shinyDirectory, "BrowseSeqs_html", paste0(sidebar_menu[[1]], "_", localAlignment, "_Alignment_BrowseSeqs.html"))
-    #     if (!file.exists(browseSeqHTML)) {
-    #         BrowseSeqs(localAlignment, openURL=FALSE, htmlFile=browseSeqHTML)
-    #     }
-    #     includeHTML(browseSeqHTML)
-    # })
 }
 

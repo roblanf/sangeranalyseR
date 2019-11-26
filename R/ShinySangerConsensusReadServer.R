@@ -236,7 +236,7 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Parent Directory: ",
+                                      h4("Raw ABI Parent Directory: ",
                                          style="font-weight: bold;"),
                                ),
                                column(9,
