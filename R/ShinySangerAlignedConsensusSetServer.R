@@ -247,6 +247,45 @@ alignedConsensusSetServer <- function(input, output, session) {
                     ),
                 )
             )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         } else {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
                 if (sidebar_menu[[2]] == "Sanger" &&
@@ -446,6 +485,80 @@ alignedConsensusSetServer <- function(input, output, session) {
                             tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         ),
 
+                        box(title = tags$p("Results: ",
+                                           style = "font-size: 26px;
+                                       font-weight: bold;"),
+                            solidHeader = TRUE, collapsible = TRUE,
+                            status = "success", width = 12,
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            fluidRow(
+                                box(title = tags$p("Differences Dataframe",
+                                                   style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    column(width = 12,
+                                           dataTableOutput("differencesDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                    )
+                                ),
+                            ),
+                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            fluidRow(
+                                box(title = tags$p("Dendrogram",
+                                                   style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    column(width = 12,
+                                           # plot()
+                                           plotOutput("dendrogramPlot"),
+                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                    ),
+                                    column(width = 12,
+                                           dataTableOutput("dendrogramDF"),
+                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                    )
+                                ),
+                            ),
+                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            fluidRow(
+                                box(title = tags$p("Secondary Peak Dataframe",
+                                                   style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    column(width = 12,
+                                           dataTableOutput("secondaryPeakDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                    )
+                                ),
+                            ),
+                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            fluidRow(
+                                box(title = tags$p("Indels",
+                                                   style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    column(width = 12,
+                                           uiOutput("SCIndelsDFUI"),
+                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                    )
+                                ),
+                            ),
+                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            fluidRow(
+                                box(title = tags$p("Stop Codons",
+                                                   style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    column(width = 12,
+                                           uiOutput("SCStopCodonsDFUI"),
+                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                    )
+                                )
+                            ),
+                        ),
                     )
 
 
@@ -506,6 +619,66 @@ alignedConsensusSetServer <- function(input, output, session) {
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
+
+    output$differencesDF = renderDataTable({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCDifferencesDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDifferencesDF
+        SCDifferencesDF
+    })
+
+    output$dendrogramDF <- renderDataTable({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCDendrogram <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDendrogram
+        SCDendrogram[[1]]
+    })
+
+    output$dendrogramPlot <- renderPlot({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCDendrogram <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDendrogram
+        plot(SCDendrogram[[2]])
+    })
+
+    output$SCIndelsDFUI <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCIndelsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCIndelsDF
+        if (all(dim(SCIndelsDF) == c(0,0))) {
+            h4("*** 'Indels' data frame is empty. ***", style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCIndelsDF")
+        }
+    })
+
+    output$SCStopCodonsDFUI <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCStopCodonsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
+        if (all(dim(SCStopCodonsDF) == c(0,0))) {
+            h4("*** 'Stop Codons' data frame is empty. ***", style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCStopCodonsDF")
+        }
+    })
+
+    output$SCIndelsDF <- renderDataTable({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCIndelsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCIndelsDF
+        SCIndelsDF
+    })
+
+    output$SCStopCodonsDF <- renderDataTable({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCStopCodonsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
+        SCStopCodonsDF
+    })
+
+    output$secondaryPeakDF = renderDataTable({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
+        SCDistanceMatrix
+    })
+
+
+
+
 
     # output$consensusAlignmentHTML<-renderUI({
     #     sidebar_menu <- tstrsplit(input$sidebar_menu, " ")

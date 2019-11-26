@@ -769,7 +769,6 @@ overViewDifferencesDataFrame <- function(input, output, session, SCDifferencesDF
 ### ============================================================================
 overViewSecondaryPeakDataFrame <- function(input, output, session, SCDistanceMatrix) {
     output$secondaryPeakDF = renderDataTable({
-
         SCDistanceMatrix
     })
 }
