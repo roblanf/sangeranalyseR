@@ -98,7 +98,8 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerSingleReadFReadsList[[j]]@primarySeqID)
         reverseReadPrimSeqID <- sapply(1:reverseReadNum, function(j)
             SangerSingleReadRReadsList[[j]]@primarySeqID)
-        SangerSingleReadPrimSeqID <- c(forwardReadPrimSeqID, reverseReadPrimSeqID)
+        SangerSingleReadPrimSeqID <- c(forwardReadPrimSeqID,
+                                       reverseReadPrimSeqID)
 
         # primarySeq
         forwardReadPrimSeq <- sapply(1:forwardReadNum, function(j)
@@ -143,7 +144,8 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerSingleReadFReadsList[[j]]@secondarySeqID)
         reverseReadSecoSeqID <- sapply(1:reverseReadNum, function(j)
             SangerSingleReadRReadsList[[j]]@secondarySeqID)
-        SangerSingleReadSecoSeqID <- c(forwardReadSecoSeqID, reverseReadSecoSeqID)
+        SangerSingleReadSecoSeqID <- c(forwardReadSecoSeqID,
+                                       reverseReadSecoSeqID)
 
         # secondarySeq
         forwardReadSecoSeq <- sapply(1:forwardReadNum, function(j)
@@ -186,7 +188,8 @@ alignedConsensusSetServer <- function(input, output, session) {
             return(basecalls2DF)
             }
         )
-        SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
+        SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF,
+                                       reverseReadSecoSeqDF)
 
 
         # traceMatrix
@@ -194,7 +197,8 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerSingleReadFReadsList[[j]]@traceMatrix)
         reverseReadTraceMat <- sapply(1:reverseReadNum, function(j)
             SangerSingleReadRReadsList[[j]]@traceMatrix)
-        SangerSingleReadTraceMat <- c(forwardReadTraceMat, reverseReadTraceMat)
+        SangerSingleReadTraceMat <- c(forwardReadTraceMat,
+                                      reverseReadTraceMat)
 
         # peakPosMatrix
         forwardReadReadPeakPosMat <- sapply(1:forwardReadNum, function(j)
@@ -208,7 +212,8 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerSingleReadFReadsList[[j]]@peakAmpMatrix)
         reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(j)
             SangerSingleReadRReadsList[[j]]@peakAmpMatrix)
-        SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat, reverseReadPeakAmpMat)
+        SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat,
+                                        reverseReadPeakAmpMat)
         return(list(SCName = SCName,
                     SCMinReadsNum = SCMinReadsNum,
                     SCMinReadLength = SCMinReadLength,
@@ -277,7 +282,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                 fluidRow(
                     column(12,
                            column(3,
-                                  h4("Output Directory: ", style="font-weight: bold;"),
+                                  h4("Output Directory: ",
+                                     style="font-weight: bold;"),
                            ),
                            column(9,
                                   h4(shinyDirectory),
@@ -285,7 +291,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                     ),
                     column(12,
                            column(3,
-                                  h4("Raw ABI Parent Directory: ", style="font-weight: bold;"),
+                                  h4("Raw ABI Parent Directory: ",
+                                     style="font-weight: bold;"),
                            ),
                            column(9,
                                   h4(SangerCSetParentDir),
@@ -293,7 +300,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                     ),
                     column(12,
                            column(3,
-                                  h4("Forward Suffix RegExp: ", style="font-weight: bold;"),
+                                  h4("Forward Suffix RegExp: ",
+                                     style="font-weight: bold;"),
                            ),
                            column(9,
                                   h4(SangerCSetSuffixForwardRegExp),
@@ -301,7 +309,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                     ),
                     column(12,
                            column(3,
-                                  h4("Reverse Suffix RegExp: ", style="font-weight: bold;"),
+                                  h4("Reverse Suffix RegExp: ",
+                                     style="font-weight: bold;"),
                            ),
                            column(9,
                                   h4(SangerCSetSuffixReverseRegExp),
@@ -309,7 +318,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                     ),
                     column(12,
                            column(3,
-                                  h4("Consensus Read Number: ", style="font-weight: bold;"),
+                                  h4("Consensus Read Number: ",
+                                     style="font-weight: bold;"),
                            ),
                            column(9,
                                   h4(SangerConsensusSetNum),
@@ -327,36 +337,67 @@ alignedConsensusSetServer <- function(input, output, session) {
                     consensusReadIndex <- strtoi(sidebar_menu[[1]])
 
                     SCName <- SangerCSetParam[[consensusReadIndex]]$SCName
-                    SCMinReadsNum <- SangerCSetParam[[consensusReadIndex]]$SCMinReadsNum
-                    SCMinReadLength <- SangerCSetParam[[consensusReadIndex]]$SCMinReadLength
-                    SCRefAminoAcidSeq <- SangerCSetParam[[consensusReadIndex]]$SCRefAminoAcidSeq
-                    SCMinFractionCall <- SangerCSetParam[[consensusReadIndex]]$SCMinFractionCall
-                    SCMaxFractionLost <- SangerCSetParam[[consensusReadIndex]]$SCMaxFractionLost
-                    SCGeneticCode <- SangerCSetParam[[consensusReadIndex]]$SCGeneticCode
-                    SCAcceptStopCodons <- SangerCSetParam[[consensusReadIndex]]$SCAcceptStopCodons
-                    SCReadingFrame <- SangerCSetParam[[consensusReadIndex]]$SCReadingFrame
-                    SCConsensusRead <- SangerCSetParam[[consensusReadIndex]]$SCConsensusRead
-                    SCAlignment <- SangerCSetParam[[consensusReadIndex]]$SCAlignment
-                    SCDifferencesDF <- SangerCSetParam[[consensusReadIndex]]$SCDifferencesDF
-                    SCDistanceMatrix <- SangerCSetParam[[consensusReadIndex]]$SCDistanceMatrix
-                    SCDendrogram <- SangerCSetParam[[consensusReadIndex]]$SCDendrogram
-                    SCIndelsDF <- SangerCSetParam[[consensusReadIndex]]$SCIndelsDF
-                    SCStopCodonsDF <- SangerCSetParam[[consensusReadIndex]]$SCStopCodonsDF
-                    SCSecondaryPeakDF <- SangerCSetParam[[consensusReadIndex]]$SCSecondaryPeakDF
-                    SCconsenesusReadName <- SangerCSetParam[[consensusReadIndex]]$SCconsenesusReadName
-                    SangerConsensusForRegExp <- SangerCSetParam[[consensusReadIndex]]$SangerConsensusForRegExp
-                    SangerConsensusRevRegExp <- SangerCSetParam[[consensusReadIndex]]$SangerConsensusRevRegExp
-                    SangerSingleforwardReadNum <- SangerCSetParam[[consensusReadIndex]]$forwardReadNum
-                    SangerSinglereverseReadNum <- SangerCSetParam[[consensusReadIndex]]$reverseReadNum
-                    SangerSingleReadNum <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadNum
+                    SCMinReadsNum <-
+                        SangerCSetParam[[consensusReadIndex]]$SCMinReadsNum
+                    SCMinReadLength <-
+                        SangerCSetParam[[consensusReadIndex]]$SCMinReadLength
+                    SCRefAminoAcidSeq <-
+                        SangerCSetParam[[consensusReadIndex]]$SCRefAminoAcidSeq
+                    SCMinFractionCall <-
+                        SangerCSetParam[[consensusReadIndex]]$SCMinFractionCall
+                    SCMaxFractionLost <-
+                        SangerCSetParam[[consensusReadIndex]]$SCMaxFractionLost
+                    SCGeneticCode <-
+                        SangerCSetParam[[consensusReadIndex]]$SCGeneticCode
+                    SCAcceptStopCodons <-
+                        SangerCSetParam[[consensusReadIndex]]$SCAcceptStopCodons
+                    SCReadingFrame <-
+                        SangerCSetParam[[consensusReadIndex]]$SCReadingFrame
+                    SCConsensusRead <-
+                        SangerCSetParam[[consensusReadIndex]]$SCConsensusRead
+                    SCAlignment <-
+                        SangerCSetParam[[consensusReadIndex]]$SCAlignment
+                    SCDifferencesDF <-
+                        SangerCSetParam[[consensusReadIndex]]$SCDifferencesDF
+                    SCDistanceMatrix <-
+                        SangerCSetParam[[consensusReadIndex]]$SCDistanceMatrix
+                    SCDendrogram <-
+                        SangerCSetParam[[consensusReadIndex]]$SCDendrogram
+                    SCIndelsDF <-
+                        SangerCSetParam[[consensusReadIndex]]$SCIndelsDF
+                    SCStopCodonsDF <-
+                        SangerCSetParam[[consensusReadIndex]]$SCStopCodonsDF
+                    SCSecondaryPeakDF <-
+                        SangerCSetParam[[consensusReadIndex]]$SCSecondaryPeakDF
+                    SCconsenesusReadName <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                        SCconsenesusReadName
+                    SangerConsensusForRegExp <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                        SangerConsensusForRegExp
+                    SangerConsensusRevRegExp <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                        SangerConsensusRevRegExp
+                    SangerSingleforwardReadNum <-
+                        SangerCSetParam[[consensusReadIndex]]$forwardReadNum
+                    SangerSinglereverseReadNum <-
+                        SangerCSetParam[[consensusReadIndex]]$reverseReadNum
+                    SangerSingleReadNum <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                        SangerSingleReadNum
 
                     # BrowseSeqs_html
                     if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
                         dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
                     }
-                    browseSeqHTML <- file.path(shinyDirectory, "BrowseSeqs_html", paste0(sidebar_menu[[1]], "_", SCconsenesusReadName, "_Alignment_BrowseSeqs.html"))
+                    browseSeqHTML <-
+                        file.path(shinyDirectory, "BrowseSeqs_html",
+                                  paste0(sidebar_menu[[1]], "_",
+                                         SCconsenesusReadName,
+                                         "_Alignment_BrowseSeqs.html"))
                     if (!file.exists(browseSeqHTML)) {
-                        BrowseSeqs(SCAlignment, openURL=FALSE, htmlFile=browseSeqHTML)
+                        BrowseSeqs(SCAlignment,
+                                   openURL=FALSE, htmlFile=browseSeqHTML)
                     }
 
                     fluidRow(
@@ -368,11 +409,13 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 0.2px hidden #A9A9A9;")),
                             fluidRow(
                                 column(12,
                                        column(3,
-                                              h4("Consenesus Read Number: ", style="font-weight: bold;"),
+                                              h4("Consenesus Read Number: ",
+                                                 style="font-weight: bold;"),
                                        ),
                                        column(9,
                                               h4(SCName),
@@ -380,7 +423,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Consenesus Read Name: ", style="font-weight: bold;"),
+                                              h4("Consenesus Read Name: ",
+                                                 style="font-weight: bold;"),
                                        ),
                                        column(9,
                                               h4(SCconsenesusReadName),
@@ -388,7 +432,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Forward Suffix RegExp: ", style="font-weight: bold;"),
+                                              h4("Forward Suffix RegExp: ",
+                                                 style="font-weight: bold;"),
                                        ),
                                        column(9,
                                               h4(SangerCSetSuffixForwardRegExp),
@@ -396,7 +441,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Forward Read Number: ", style="font-weight: bold;"),
+                                              h4("Forward Read Number: ",
+                                                 style="font-weight: bold;"),
                                        ),
                                        column(9,
                                               h4(SangerSingleforwardReadNum),
@@ -404,7 +450,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Reverse Suffix RegExp: ", style="font-weight: bold;"),
+                                              h4("Reverse Suffix RegExp: ",
+                                                 style="font-weight: bold;"),
                                        ),
                                        column(9,
                                               h4(SangerCSetSuffixReverseRegExp),
@@ -412,7 +459,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Reverse Read Number: ", style="font-weight: bold;"),
+                                              h4("Reverse Read Number: ",
+                                                 style="font-weight: bold;"),
                                        ),
                                        column(9,
                                               h4(SangerSinglereverseReadNum),
@@ -424,7 +472,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                             ################################################
                             # If it is null
                             # h1(SCRefAminoAcidSeq),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 box(title = tags$p("Genetic Code Data Frame",
                                                    style = "font-size: 24px;
@@ -443,20 +492,27 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: italic;"),
                                     ),
                                     column(width = 10,
-                                           excelOutput("geneticCodeDF", width = "100%", height = "50"),
-                                           style = "height:100%; overflow-y: hidden; overflow-x: scroll;"
+                                           excelOutput("geneticCodeDF",
+                                                       width = "100%",
+                                                       height = "50"),
+                                           style = paste("height:100%;",
+                                                         "overflow-y: hidden;",
+                                                         "overflow-x: scroll;")
                                     ),
                                 ),
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 column(3,
                                        valueBox(
-                                           subtitle = tags$p("MinReadsNum",
-                                                             style = "font-size: 15px;
-                                                             font-weight: bold;"),
-                                           value = tags$p(strtoi(SCMinReadsNum),
-                                                          style = "font-size: 29px;"),
+                                           subtitle =
+                                               tags$p("MinReadsNum",
+                                                      style = "font-size: 15px;
+                                                      font-weight: bold;"),
+                                           value =
+                                               tags$p(strtoi(SCMinReadsNum),
+                                                     style ="font-size: 29px;"),
                                            icon = icon("cut", "fa-sm"),
                                            color = "olive",
                                            width = 12,
@@ -465,11 +521,13 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                                 column(3,
                                        valueBox(
-                                           subtitle = tags$p("MinReadLength",
-                                                             style = "font-size: 15px;
+                                           subtitle =
+                                               tags$p("MinReadLength",
+                                                      style = "font-size: 15px;
                                             font-weight: bold;"),
-                                           value = tags$p(strtoi(SCMinReadLength),
-                                                          style = "font-size: 29px;"),
+                                           value =
+                                               tags$p(strtoi(SCMinReadLength),
+                                                      style="font-size: 29px;"),
                                            icon = icon("cut", "fa-sm"),
                                            color = "olive",
                                            width = 12,
@@ -478,37 +536,43 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                                 column(3,
                                        valueBox(
-                                           subtitle = tags$p("MinFractionCall",
-                                                             style = "font-size: 15px;
+                                           subtitle =
+                                               tags$p("MinFractionCall",
+                                                      style = "font-size: 15px;
                                             font-weight: bold;"),
-                                           value = tags$p(as.numeric(SCMinFractionCall),
-                                                          style = "font-size: 29px;"),
+                                           value =
+                                               tags$p(
+                                                   as.numeric(SCMinFractionCall),
+                                                   style = "font-size: 29px;"),
                                            icon = icon("cut", "fa-sm"),
                                            color = "olive",
                                            width = 12,
                                        ),
-                                       # uiOutput("SCMinFractionCall") ,
                                 ),
                                 column(3,
                                        valueBox(
-                                           subtitle = tags$p("MaxFractionLost",
-                                                             style = "font-size: 15px;
+                                           subtitle =
+                                               tags$p("MaxFractionLost",
+                                                      style = "font-size: 15px;
                                             font-weight: bold;"),
-                                           value = tags$p(as.numeric(SCMaxFractionLost),
-                                                          style = "font-size: 29px;"),
+                                           value =
+                                               tags$p(
+                                                   as.numeric(SCMaxFractionLost),
+                                                   style = "font-size: 29px;"),
                                            icon = icon("cut", "fa-sm"),
                                            color = "olive",
                                            width = 12,
                                        ),
-                                       # uiOutput("SCMaxFractionLost") ,
                                 ),
                                 column(3,
                                        valueBox(
-                                           subtitle = tags$p("AcceptStopCodons",
-                                                             style = "font-size: 15px;
+                                           subtitle =
+                                               tags$p("AcceptStopCodons",
+                                                      style = "font-size: 15px;
                                             font-weight: bold;"),
-                                           value = tags$p(SCAcceptStopCodons,
-                                                          style = "font-size: 29px;"),
+                                           value =
+                                               tags$p(SCAcceptStopCodons,
+                                                      style="font-size: 29px;"),
                                            icon = icon("cut", "fa-sm"),
                                            color = "olive",
                                            width = 12,
@@ -517,19 +581,21 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                                 column(3,
                                        valueBox(
-                                           subtitle = tags$p("ReadingFrame",
-                                                             style = "font-size: 15px;
-                                            font-weight: bold;"),
-                                           value = tags$p(strtoi(SCReadingFrame),
-                                                          style = "font-size: 29px;"),
+                                           subtitle =
+                                               tags$p("ReadingFrame",
+                                                      style = "font-size: 15px;
+                                                      font-weight: bold;"),
+                                           value =
+                                               tags$p(strtoi(SCReadingFrame),
+                                                      style="font-size: 29px;"),
                                            icon = icon("cut", "fa-sm"),
                                            color = "olive",
                                            width = 12,
                                        ),
-                                       # uiOutput("SCReadingFrame") ,
                                 ),
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                         ),
 
                         box(title = tags$p("Results: ",
@@ -545,8 +611,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     collapsible = TRUE,
                                     status = "success", width = 12,
                                     column(width = 12,
-                                           # htmlOutput("consensusAlignmentHTML"),
-                                           # sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
                                            includeHTML(browseSeqHTML)
                                     ),
                                 ),
@@ -559,11 +623,15 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     collapsible = TRUE,
                                     status = "success", width = 12,
                                     column(width = 12,
-                                           dataTableOutput("differencesDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                           dataTableOutput("differencesDF") ,
+                                           style = paste0("height:100%;",
+                                                          "overflow-y:scroll;",
+                                                          "overflow-x: scroll;")
                                     )
                                 ),
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 box(title = tags$p("Dendrogram",
                                                    style = "font-size: 24px;
@@ -573,15 +641,20 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     column(width = 12,
                                            # plot()
                                            plotOutput("dendrogramPlot"),
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                           style = paste0("height:100%;",
+                                                          "overflow-y:scroll;",
+                                                          "overflow-x: scroll;")
                                     ),
                                     column(width = 12,
                                            dataTableOutput("dendrogramDF"),
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                           style = paste0("height:100%;",
+                                                          "overflow-y:scroll;",
+                                                          "overflow-x: scroll;")
                                     )
                                 ),
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 box(title = tags$p("Secondary Peak Dataframe",
                                                    style = "font-size: 24px;
@@ -590,11 +663,14 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     status = "success", width = 12,
                                     column(width = 12,
                                            uiOutput("secondaryPeakDFUI"),
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                           style = paste0("height:100%;",
+                                                          "overflow-y:scroll;",
+                                                          "overflow-x: scroll;")
                                     )
                                 ),
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 box(title = tags$p("Indels Dataframe",
                                                    style = "font-size: 24px;
@@ -603,11 +679,14 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     status = "success", width = 12,
                                     column(width = 12,
                                            uiOutput("SCIndelsDFUI"),
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                           style = paste0("height:100%;",
+                                                          "overflow-y:scroll;",
+                                                          "overflow-x: scroll;")
                                     )
                                 ),
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 box(title = tags$p("Stop Codons Dataframe",
                                                    style = "font-size: 24px;
@@ -616,7 +695,9 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     status = "success", width = 12,
                                     column(width = 12,
                                            uiOutput("SCStopCodonsDFUI"),
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                           style = paste0("height:100%;",
+                                                          "overflow-y:scroll;",
+                                                          "overflow-x: scroll;")
                                     )
                                 )
                             ),
