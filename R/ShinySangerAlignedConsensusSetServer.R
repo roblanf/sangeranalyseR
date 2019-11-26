@@ -45,7 +45,7 @@ alignedConsensusSetServer <- function(input, output, session) {
 
         # Forward & reverse reads list
         SangerSingleReadFReadsList <- SangerCSetList[[i]]@forwardReadsList
-        SangerSingleReadRReadsList <- SangerCSetList[[1]]@reverseReadsList
+        SangerSingleReadRReadsList <- SangerCSetList[[i]]@reverseReadsList
         forwardReadNum <- length(SangerSingleReadFReadsList)
         reverseReadNum <- length(SangerSingleReadRReadsList)
         SangerSingleReadNum <- forwardReadNum + reverseReadNum
@@ -55,65 +55,65 @@ alignedConsensusSetServer <- function(input, output, session) {
                                         SangerSingleReadRReadsList)
 
         # readFileName (basename)
-        forwardReadBFN <- sapply(1:forwardReadNum, function(i)
-            basename(SangerSingleReadFReadsList[[i]]@readFileName))
-        reverseReadBFN <- sapply(1:reverseReadNum, function(i)
-            basename(SangerSingleReadRReadsList[[i]]@readFileName))
+        forwardReadBFN <- sapply(1:forwardReadNum, function(j)
+            basename(SangerSingleReadFReadsList[[j]]@readFileName))
+        reverseReadBFN <- sapply(1:reverseReadNum, function(j)
+            basename(SangerSingleReadRReadsList[[j]]@readFileName))
         SangerSingleReadBFN <- c(forwardReadBFN, reverseReadBFN)
 
         # readFileName (absolute)
-        forwardReadAFN <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@readFileName)
-        reverseReadAFN <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@readFileName)
+        forwardReadAFN <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@readFileName)
+        reverseReadAFN <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@readFileName)
         SangerSingleReadAFN <- c(forwardReadAFN, reverseReadAFN)
 
         # readFeature
-        forwardReadFeature <- sapply(1:forwardReadNum, function(i)
-            paste0(i, " ",
-                   SangerSingleReadFReadsList[[i]]@readFeature))
-        reverseReadFeature <- sapply(1:reverseReadNum, function(i)
-            paste0(i+forwardReadNum, " ",
-                   SangerSingleReadRReadsList[[i]]@readFeature))
+        forwardReadFeature <- sapply(1:forwardReadNum, function(j)
+            paste0(j, " ",
+                   SangerSingleReadFReadsList[[j]]@readFeature))
+        reverseReadFeature <- sapply(1:reverseReadNum, function(j)
+            paste0(j+forwardReadNum, " ",
+                   SangerSingleReadRReadsList[[j]]@readFeature))
         SangerSingleReadFeature <- c(forwardReadFeature, reverseReadFeature)
 
         # abifRawData
-        forwardReadAbifRawData <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@abifRawData)
-        reverseReadAbifRawData <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@abifRawData)
+        forwardReadAbifRawData <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@abifRawData)
+        reverseReadAbifRawData <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@abifRawData)
         SangerSingleReadAbifRawData <- c(forwardReadAbifRawData,
                                          reverseReadAbifRawData)
 
         # QualityReport
-        forwardReadQualReport <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@QualityReport)
-        reverseReadQualReport <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@QualityReport)
+        forwardReadQualReport <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@QualityReport)
+        reverseReadQualReport <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@QualityReport)
         SangerSingleReadQualReport <- c(forwardReadQualReport,
                                         reverseReadQualReport)
 
         # primarySeqID
-        forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@primarySeqID)
-        reverseReadPrimSeqID <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@primarySeqID)
+        forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@primarySeqID)
+        reverseReadPrimSeqID <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@primarySeqID)
         SangerSingleReadPrimSeqID <- c(forwardReadPrimSeqID, reverseReadPrimSeqID)
 
         # primarySeq
-        forwardReadPrimSeq <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@primarySeq)
-        reverseReadPrimSeq <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@primarySeq)
+        forwardReadPrimSeq <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@primarySeq)
+        reverseReadPrimSeq <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@primarySeq)
         SangerSingleReadPrimSeq <- c(forwardReadPrimSeq, reverseReadPrimSeq)
 
 
         # primarySeqDF
-        forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
+        forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(j) {
             basecalls1 <- unlist(strsplit(
-                toString(SangerSingleReadFReadsList[[i]]@primarySeq), ""))
+                toString(SangerSingleReadFReadsList[[j]]@primarySeq), ""))
             aveposition <- rowMeans(
-                SangerSingleReadFReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+                SangerSingleReadFReadsList[[j]]@peakPosMatrix, na.rm=TRUE)
             basecalls1 <- basecalls1[1:length(aveposition)]
             basecalls1DF <- data.frame(
                 t(data.frame(basecalls1)), stringsAsFactors = FALSE)
@@ -122,11 +122,11 @@ alignedConsensusSetServer <- function(input, output, session) {
             return(basecalls1DF)
             }
         )
-        reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(i) {
+        reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(j) {
             basecalls1 <- unlist(strsplit(
-                toString(SangerSingleReadRReadsList[[i]]@primarySeq), ""))
+                toString(SangerSingleReadRReadsList[[j]]@primarySeq), ""))
             aveposition <- rowMeans(
-                SangerSingleReadRReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+                SangerSingleReadRReadsList[[j]]@peakPosMatrix, na.rm=TRUE)
             basecalls1 <- basecalls1[1:length(aveposition)]
             basecalls1DF <- data.frame(
                 t(data.frame(basecalls1)), stringsAsFactors = FALSE)
@@ -139,32 +139,32 @@ alignedConsensusSetServer <- function(input, output, session) {
 
 
         # secondarySeqID
-        forwardReadSecoSeqID <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@secondarySeqID)
-        reverseReadSecoSeqID <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@secondarySeqID)
+        forwardReadSecoSeqID <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@secondarySeqID)
+        reverseReadSecoSeqID <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@secondarySeqID)
         SangerSingleReadSecoSeqID <- c(forwardReadSecoSeqID, reverseReadSecoSeqID)
 
         # secondarySeq
-        forwardReadSecoSeq <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@secondarySeq)
-        reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@secondarySeq)
+        forwardReadSecoSeq <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@secondarySeq)
+        reverseReadSecoSeq <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@secondarySeq)
         SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
 
         # secondarySeq
-        forwardReadSecoSeq <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@secondarySeq)
-        reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@secondarySeq)
+        forwardReadSecoSeq <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@secondarySeq)
+        reverseReadSecoSeq <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@secondarySeq)
         SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
 
         # secondarySeqDF
-        forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
+        forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(j) {
             basecalls2 <- unlist(strsplit(
-                toString(SangerSingleReadFReadsList[[i]]@secondarySeq), ""))
+                toString(SangerSingleReadFReadsList[[j]]@secondarySeq), ""))
             aveposition <- rowMeans(
-                SangerSingleReadFReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+                SangerSingleReadFReadsList[[j]]@peakPosMatrix, na.rm=TRUE)
             basecalls2 <- basecalls2[1:length(aveposition)]
             basecalls2DF <- data.frame(
                 t(data.frame(basecalls2)), stringsAsFactors = FALSE)
@@ -173,11 +173,11 @@ alignedConsensusSetServer <- function(input, output, session) {
             return(basecalls2DF)
             }
         )
-        reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(i) {
+        reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(j) {
             basecalls2 <- unlist(strsplit(toString(
-                SangerSingleReadRReadsList[[i]]@secondarySeq), ""))
+                SangerSingleReadRReadsList[[j]]@secondarySeq), ""))
             aveposition <- rowMeans(
-                SangerSingleReadRReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+                SangerSingleReadRReadsList[[j]]@peakPosMatrix, na.rm=TRUE)
             basecalls2 <- basecalls2[1:length(aveposition)]
             basecalls2DF <- data.frame(
                 t(data.frame(basecalls2)), stringsAsFactors = FALSE)
@@ -190,24 +190,24 @@ alignedConsensusSetServer <- function(input, output, session) {
 
 
         # traceMatrix
-        forwardReadTraceMat <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@traceMatrix)
-        reverseReadTraceMat <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@traceMatrix)
+        forwardReadTraceMat <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@traceMatrix)
+        reverseReadTraceMat <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@traceMatrix)
         SangerSingleReadTraceMat <- c(forwardReadTraceMat, reverseReadTraceMat)
 
         # peakPosMatrix
-        forwardReadReadPeakPosMat <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@peakPosMatrix)
-        reverseReadReadPeakPosMat <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@peakPosMatrix)
+        forwardReadReadPeakPosMat <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@peakPosMatrix)
+        reverseReadReadPeakPosMat <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@peakPosMatrix)
         SangerSingleReadPeakPosMat <- c(forwardReadReadPeakPosMat,
                                         reverseReadReadPeakPosMat)
         # peakAmpMatrix
-        forwardReadPeakAmpMat <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@peakAmpMatrix)
-        reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadRReadsList[[i]]@peakAmpMatrix)
+        forwardReadPeakAmpMat <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@peakAmpMatrix)
+        reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@peakAmpMatrix)
         SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat, reverseReadPeakAmpMat)
         return(list(SCName = SCName,
                     SCMinReadsNum = SCMinReadsNum,
@@ -648,7 +648,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadTraceMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadTraceMat
                     SangerSingleReadPeakPosMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPeakPosMat
                     SangerSingleReadPeakAmpMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPeakAmpMat
-                    h1(paste("You've selected:", input$sidebar_menu))
 
 
 
