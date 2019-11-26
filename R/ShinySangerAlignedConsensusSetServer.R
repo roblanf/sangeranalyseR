@@ -188,11 +188,6 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### output$ID
     ############################################################################
     dynamicMenuSideBarSCSet(input, output, session, SangerCSetParam)
-    # observeEventDynamicHeaderSCSet(input, output, session, trimmedRV,
-    #                                            SangerCSetParam)
-    # output$res <- renderText({
-    #     paste("You've selected:", input$sidebar_menu)
-    # })
 
     output$aligned_consensusRead_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -389,20 +384,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                             ),
                             tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
-                                box(title = tags$p("Alignment",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           # htmlOutput("consensusAlignmentHTML"),
-                                           # sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-                                           includeHTML(browseSeqHTML)
-                                    ),
-                                ),
-                            ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
                                 column(3,
                                        valueBox(
                                            subtitle = tags$p("MinReadsNum",
@@ -492,6 +473,20 @@ alignedConsensusSetServer <- function(input, output, session) {
                             status = "success", width = 12,
                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                             fluidRow(
+                                box(title = tags$p("Alignment",
+                                                   style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    column(width = 12,
+                                           # htmlOutput("consensusAlignmentHTML"),
+                                           # sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+                                           includeHTML(browseSeqHTML)
+                                    ),
+                                ),
+                            ),
+                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            fluidRow(
                                 box(title = tags$p("Differences Dataframe",
                                                    style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -528,13 +523,14 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     collapsible = TRUE,
                                     status = "success", width = 12,
                                     column(width = 12,
-                                           dataTableOutput("secondaryPeakDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                           uiOutput("secondaryPeakDFUI"),
+                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
                                     )
                                 ),
                             ),
                             tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
-                                box(title = tags$p("Indels",
+                                box(title = tags$p("Indels Dataframe",
                                                    style = "font-size: 24px;
                                        font-weight: bold;"),
                                     collapsible = TRUE,
@@ -547,7 +543,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                             ),
                             tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
-                                box(title = tags$p("Stop Codons",
+                                box(title = tags$p("Stop Codons Dataframe",
                                                    style = "font-size: 24px;
                                        font-weight: bold;"),
                                     collapsible = TRUE,
@@ -652,9 +648,19 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         SCStopCodonsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
         if (all(dim(SCStopCodonsDF) == c(0,0))) {
-            h4("*** 'Stop Codons' data frame is empty. ***", style="font-weight: bold; font-style: italic;")
+            h4("*** 'Stop Codons' dataframe is empty. ***", style="font-weight: bold; font-style: italic;")
         } else {
             dataTableOutput("SCStopCodonsDF")
+        }
+    })
+
+    output$secondaryPeakDFUI <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
+        if (all(dim(SCDistanceMatrix) == c(0,0))) {
+            h4("*** 'Distance Matrix' dataframe is empty. ***", style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("secondaryPeakDF")
         }
     })
 
@@ -675,10 +681,6 @@ alignedConsensusSetServer <- function(input, output, session) {
         SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
         SCDistanceMatrix
     })
-
-
-
-
 
     # output$consensusAlignmentHTML<-renderUI({
     #     sidebar_menu <- tstrsplit(input$sidebar_menu, " ")

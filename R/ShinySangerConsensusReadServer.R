@@ -4,6 +4,7 @@
 consensusReadServer <- function(input, output, session) {
     # Suppress Warning
     options(warn = -1)
+
     ### ------------------------------------------------------------------------
     ### SangerConsensusRead parameters initialization.
     ### ------------------------------------------------------------------------
@@ -18,7 +19,6 @@ consensusReadServer <- function(input, output, session) {
     consenesusReadName <- SangerConsensus@consenesusReadName
     suffixForwardRegExp <- SangerConsensus@suffixForwardRegExp
     suffixReverseRegExp <- SangerConsensus@suffixReverseRegExp
-
     SCMinReadsNum <- SangerConsensus@minReadsNum
     SCMinReadLength <- SangerConsensus@minReadLength
     SCRefAminoAcidSeq <- SangerConsensus@refAminoAcidSeq
@@ -35,7 +35,6 @@ consensusReadServer <- function(input, output, session) {
     SCStopCodonsDF <- SangerConsensus@stopCodonsDF
     SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
 
-    message("Length of SCDendrogram: ", length(SCDendrogram))
 
     ### ------------------------------------------------------------------------
     ### Reads-related parameters initialization.
@@ -104,20 +103,26 @@ consensusReadServer <- function(input, output, session) {
 
     # primarySeqDF
     forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
-        basecalls1 <- unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@primarySeq), ""))
-        aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        basecalls1 <- unlist(strsplit(
+            toString(SangerConsensus@forwardReadsList[[i]]@primarySeq), ""))
+        aveposition <- rowMeans(
+            SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls1 <- basecalls1[1:length(aveposition)]
-        basecalls1DF <- data.frame(t(data.frame(basecalls1)), stringsAsFactors = FALSE)
+        basecalls1DF <- data.frame(
+            t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
         rownames(basecalls1DF) <- "Primary"
         return(basecalls1DF)
         }
     )
     reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(i) {
-        basecalls1 <- unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@primarySeq), ""))
-        aveposition <- rowMeans(SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        basecalls1 <- unlist(strsplit(
+            toString(SangerConsensus@reverseReadsList[[i]]@primarySeq), ""))
+        aveposition <- rowMeans(
+            SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls1 <- basecalls1[1:length(aveposition)]
-        basecalls1DF <- data.frame(t(data.frame(basecalls1)), stringsAsFactors = FALSE)
+        basecalls1DF <- data.frame(
+            t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
         rownames(basecalls1DF) <- "Primary "
         return(basecalls1DF)
@@ -141,20 +146,26 @@ consensusReadServer <- function(input, output, session) {
 
     # secondarySeqDF
     forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
-        basecalls2 <- unlist(strsplit(toString(SangerConsensus@forwardReadsList[[i]]@secondarySeq), ""))
-        aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        basecalls2 <- unlist(strsplit(
+            toString(SangerConsensus@forwardReadsList[[i]]@secondarySeq), ""))
+        aveposition <- rowMeans(
+            SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls2 <- basecalls2[1:length(aveposition)]
-        basecalls2DF <- data.frame(t(data.frame(basecalls2)), stringsAsFactors = FALSE)
+        basecalls2DF <- data.frame(
+            t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
         rownames(basecalls2DF) <- " Second"
         return(basecalls2DF)
         }
     )
     reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(i) {
-        basecalls2 <- unlist(strsplit(toString(SangerConsensus@reverseReadsList[[i]]@secondarySeq), ""))
-        aveposition <- rowMeans(SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        basecalls2 <- unlist(strsplit(toString(
+            SangerConsensus@reverseReadsList[[i]]@secondarySeq), ""))
+        aveposition <- rowMeans(
+            SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
         basecalls2 <- basecalls2[1:length(aveposition)]
-        basecalls2DF <- data.frame(t(data.frame(basecalls2)), stringsAsFactors = FALSE)
+        basecalls2DF <- data.frame(
+            t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
         rownames(basecalls2DF) <- " Second"
         return(basecalls2DF)
@@ -181,27 +192,32 @@ consensusReadServer <- function(input, output, session) {
         SangerConsensus@forwardReadsList[[i]]@peakAmpMatrix)
     reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
         SangerConsensus@reverseReadsList[[i]]@peakAmpMatrix)
-    SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat, reverseReadPeakAmpMat)
+    SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat,
+                                    reverseReadPeakAmpMat)
     # trimmedQS <- reactiveValues(cuffOffQuality = 0, slidingWindowSize = 0)
     trimmedRV <- reactiveValues(trimmedStart = 0, trimmedEnd = 0,
                                 remainingBP = 0, trimmedRatio = 0)
 
 
     ############################################################################
-    ### output$ID
+    ### Functions for all UI page
     ############################################################################
-    dynamicMenuSideBarSC(input, output, session, SangerSingleReadNum, SangerSingleReadFeature)
+    ### ------------------------------------------------------------------------
+    ### dynamic side menu bar
+    ### ------------------------------------------------------------------------
+    dynamicMenuSideBarSC(input, output, session,
+                         SangerSingleReadNum, SangerSingleReadFeature)
 
-    ### ------------------------------------------------------------------------
-    ### Dynamic page navigation: consensusRead_content
-    ### ------------------------------------------------------------------------
+
     output$consensusRead_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu == "Sanger Consensus Read Overview") {
+            ### ----------------------------------------------------------------
+            ### Dynamic page navigation: consensusRead content overview
+            ### ----------------------------------------------------------------
             # refAminoAcidSeq (string)
             fluidRow(
                 useShinyjs(),
-                # h1(SCconsensusRead),
                 box(title = tags$p("Input Parameters: ",
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
@@ -211,7 +227,8 @@ consensusReadServer <- function(input, output, session) {
                     fluidRow(
                         column(12,
                                column(3,
-                                      h4("Output Directory: ", style="font-weight: bold;"),
+                                      h4("Output Directory: ",
+                                         style="font-weight: bold;"),
                                ),
                                column(9,
                                       h4(shinyDirectory),
@@ -219,7 +236,8 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Parent Directory: ", style="font-weight: bold;"),
+                                      h4("Parent Directory: ",
+                                         style="font-weight: bold;"),
                                ),
                                column(9,
                                       h4(parentDirectory),
@@ -227,7 +245,8 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Consenesus Read Name: ", style="font-weight: bold;"),
+                                      h4("Consenesus Read Name: ",
+                                         style="font-weight: bold;"),
                                ),
                                column(9,
                                       h4(consenesusReadName),
@@ -235,7 +254,8 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Forward Suffix RegExp: ", style="font-weight: bold;"),
+                                      h4("Forward Suffix RegExp: ",
+                                         style="font-weight: bold;"),
                                ),
                                column(9,
                                       h4(suffixForwardRegExp),
@@ -243,7 +263,8 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Forward Read Number: ", style="font-weight: bold;"),
+                                      h4("Forward Read Number: ",
+                                         style="font-weight: bold;"),
                                ),
                                column(9,
                                       h4(forwardReadNum),
@@ -251,7 +272,8 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Reverse Suffix RegExp: ", style="font-weight: bold;"),
+                                      h4("Reverse Suffix RegExp: ",
+                                         style="font-weight: bold;"),
                                ),
                                column(9,
                                       h4(suffixReverseRegExp),
@@ -259,7 +281,8 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Reverse Read Number: ", style="font-weight: bold;"),
+                                      h4("Reverse Read Number: ",
+                                         style="font-weight: bold;"),
                                ),
                                column(9,
                                       h4(reverseReadNum),
@@ -290,20 +313,9 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: italic;"),
                             ),
                             column(width = 10,
-                                   excelOutput("geneticCodeDF", width = "100%", height = "50"),
+                                   excelOutput("geneticCodeDF",
+                                               width = "100%", height = "50"),
                                    style = "height:100%; overflow-x: scroll;"
-                            ),
-                        ),
-                    ),
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                    fluidRow(
-                        box(title = tags$p("Alignment",
-                                           style = "font-size: 24px;
-                                       font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 12,
-                                   htmlOutput("consensusAlignmentHTML"),
                             ),
                         ),
                     ),
@@ -336,13 +348,27 @@ consensusReadServer <- function(input, output, session) {
                     status = "success", width = 12,
                     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                     fluidRow(
+                        box(title = tags$p("Alignment",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   htmlOutput("consensusAlignmentHTML"),
+                            ),
+                        ),
+                    ),
+                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                    fluidRow(
                         box(title = tags$p("Differences Dataframe",
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 12,
                             column(width = 12,
-                                   dataTableOutput("differencesDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                   uiOutput("SCDifferencesDFUI"),
+                                   style = paste("height:100%; overflow-y:",
+                                                 "scroll;overflow-x: scroll;")
                             )
                         ),
                     ),
@@ -357,11 +383,13 @@ consensusReadServer <- function(input, output, session) {
                                    # plot()
                                    plotOutput("dendrogramPlot"),
                                    # dataTableOutput("differencesDF")
-                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                   style = paste("height:100%; overflow-y:",
+                                                 "scroll;overflow-x: scroll;")
                             ),
                             column(width = 12,
                                    dataTableOutput("dendrogramDF"),
-                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                   style = paste("height:100%; overflow-y:",
+                                                 "scroll;overflow-x: scroll;")
                             )
                         ),
                     ),
@@ -373,33 +401,37 @@ consensusReadServer <- function(input, output, session) {
                             collapsible = TRUE,
                             status = "success", width = 12,
                             column(width = 12,
-                                   dataTableOutput("secondaryPeakDF") , style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                   uiOutput("SCDistanceMatrixUI"),
+                                   style = paste("height:100%; overflow-y:",
+                                                 "scroll;overflow-x: scroll;")
                             )
                         ),
                     ),
                     tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                     fluidRow(
-                        box(title = tags$p("Indels",
+                        box(title = tags$p("Indels Dataframe",
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 12,
                             column(width = 12,
                                    uiOutput("SCIndelsDFUI"),
-                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                   style = paste("height:100%; overflow-y:",
+                                                 "scroll;overflow-x: scroll;")
                             )
                         ),
                     ),
                     tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                     fluidRow(
-                        box(title = tags$p("Stop Codons",
+                        box(title = tags$p("Stop Codons Dataframe",
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 12,
                             column(width = 12,
                                    uiOutput("SCStopCodonsDFUI"),
-                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                   style = paste("height:100%; overflow-y:",
+                                                 "scroll;overflow-x: scroll;")
                             )
                         )
                     ),
@@ -407,6 +439,9 @@ consensusReadServer <- function(input, output, session) {
             )
         } else {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+                ### ------------------------------------------------------------
+                ### Dynamic page navigation: Single read in consensus read
+                ### ------------------------------------------------------------
                 fluidRow(
                     useShinyjs(),
                     box(title = tags$p("Raw File: ",
@@ -437,9 +472,12 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                         ),
                         column(width = 11,
-                               excelOutput("primarySeqDF", width = "100%", height = "50"),
-                               excelOutput("secondSeqDF", width = "100%", height = "50"),
-                               style = "overflow-y: scroll; overflow-x: scroll;")
+                               excelOutput("primarySeqDF",
+                                           width = "100%", height = "50"),
+                               excelOutput("secondSeqDF",
+                                           width = "100%", height = "50"),
+                               style = paste("overflow-y: scroll;",
+                                             "overflow-x: scroll;"))
                         # ),
                     ),
                     box(title = tags$p("Quality Report: ",
@@ -455,8 +493,9 @@ consensusReadServer <- function(input, output, session) {
                                        textInput("cutoffQualityScoreText",
                                                  label = p("Change Value"),
                                                  value = toString(
-                                                     SangerSingleReadQualReport[[
-                                                         strtoi(sidebar_menu[[1]])]]@
+                                                     SangerSingleReadQualReport
+                                                     [[strtoi(
+                                                         sidebar_menu[[1]])]]@
                                                          cutoffQualityScore),
                                                  width = '90%')
                                    ),
@@ -466,9 +505,10 @@ consensusReadServer <- function(input, output, session) {
                                    tags$ul(
                                        textInput("slidingWindowSizeText",
                                                  label = p("Change Value"),
-                                                 value =
-                                                     toString(SangerSingleReadQualReport[[
-                                                         strtoi(sidebar_menu[[1]])]]@
+                                                 value = toString(
+                                                     SangerSingleReadQualReport
+                                                     [[strtoi(
+                                                         sidebar_menu[[1]])]]@
                                                              slidingWindowSize),
                                                  width = '90%')
                                    ),
@@ -494,13 +534,15 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 6,
-                            plotlyOutput("qualityTrimmingRatioPlot") %>% withSpinner()),
+                            plotlyOutput("qualityTrimmingRatioPlot") %>%
+                                withSpinner()),
                         box(title = tags$p("Cumulative Ratio Plot",
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 6,
-                            plotlyOutput("qualityQualityBasePlot") %>% withSpinner()),
+                            plotlyOutput("qualityQualityBasePlot") %>%
+                                withSpinner()),
                     ),
                     box(title = tags$p("Chromatogram: ",
                                        style = "font-size: 26px;
@@ -515,20 +557,26 @@ consensusReadServer <- function(input, output, session) {
                                                   max = 200, value = 100),
                                ),
                                column(3,
-                                      uiOutput("ChromatogramTrimmingStartPos") ,
+                                      uiOutput("ChromatogramTrimmingStartPos"),
                                ),
                                column(3,
-                                      uiOutput("ChromatogramTrimmingFinishPos") ,
+                                      uiOutput("ChromatogramTrimmingFinishPos"),
                                ),
                                column(3,
-                                      numericInput("ChromatogramSignalRatioCutoff",
-                                                   h3("Signal Ratio Cutoff"),
-                                                   value = 0.33),
-                                      checkboxInput("ChromatogramCheckShowTrimmed", "Whether show trimmed region", value = TRUE),)
+                                      numericInput(
+                                          "ChromatogramSignalRatioCutoff",
+                                          h3("Signal Ratio Cutoff"),
+                                          value = 0.33),
+                                      checkboxInput(
+                                          "ChromatogramCheckShowTrimmed",
+                                          "Whether show trimmed region",
+                                          value = TRUE),)
                         ),
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         column(width = 12,
-                               tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                               tags$hr(
+                                   style = ("border-top: 6px double #A9A9A9;")
+                               ),
                                uiOutput("chromatogramUIOutput"),
                         )
                     )
@@ -538,59 +586,19 @@ consensusReadServer <- function(input, output, session) {
     })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ############################################################################
-    ### observeEvent(input$
-    ############################################################################
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Adding dynamic rightHeader text
+    ### ------------------------------------------------------------------------
     observeEventDynamicHeaderSC(input, output, session, trimmedRV,
                               SangerSingleReadQualReport)
-    # observeEventButtonSaveSC(input, output, session, SangerConsensus)
 
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Save S4 object
+    ### ------------------------------------------------------------------------
     observeEvent(input$saveS4, {
         btn <- input$saveS4
         id <- paste0('txt', btn)
         newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ### ------------------------------------------------------------------------
         ### ConsensusRead-related parameters initialization.
         ### ------------------------------------------------------------------------
@@ -634,7 +642,7 @@ consensusReadServer <- function(input, output, session) {
             message("save SangerConsensus quality S4 object Reverse")
             }
         )
-
+        ### Keep first *****
         # # primarySeqID
         # forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(i)
         #     SangerConsensus@forwardReadsList[[i]]@primarySeqID)
@@ -733,7 +741,6 @@ consensusReadServer <- function(input, output, session) {
         # SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat, reverseReadPeakAmpMat)
         # trimmedRV <- reactiveValues(trimmedStart = 0, trimmedEnd = 0,
         #                             remainingBP = 0, trimmedRatio = 0)
-
         saveRDS(SangerConsensus, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
         showNotification(paste("New S4 object is store as:", newS4Object),
@@ -742,9 +749,131 @@ consensusReadServer <- function(input, output, session) {
         # shinyOptions(NewSangerConsensusSet = newS4)
     })
 
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Close UI
+    ### ------------------------------------------------------------------------
+    observeEvent(input$closeUI, {
+        btn <- input$closeUI
+        stopApp()
+    })
 
-    observeEventButtonClose(input, output, session)
 
+    ############################################################################
+    ### ConsensusRead (Function for Sanger Consensus Read Overview)
+    ############################################################################
+    output$geneticCodeDF <- renderExcel({
+        excelTable(data =  t(data.frame(SCGeneticCode)),
+                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+    })
+
+    output$consensusAlignmentHTML<-renderUI({
+        browseSeqHTML <-
+            file.path(shinyDirectory,
+                      paste0(A_chloroticConsensusReads@consenesusReadName,
+                             "_Alignment_BrowseSeqs.html"))
+        if (!file.exists(browseSeqHTML)) {
+            BrowseSeqs(A_chloroticConsensusReads@alignment,
+                       openURL=FALSE, htmlFile=browseSeqHTML)
+        }
+        includeHTML(
+            file.path(shinyDirectory,
+                      paste0(A_chloroticConsensusReads@consenesusReadName,
+                             "_Alignment_BrowseSeqs.html")))
+    })
+
+    output$dendrogramDF <- renderDataTable({
+        SCDendrogram[[1]]
+    })
+
+    output$dendrogramPlot <- renderPlot({
+        plot(SCDendrogram[[2]])
+    })
+
+    output$SCDifferencesDFUI <- renderUI({
+        if (all(dim(SCDifferencesDF) == c(0,0))) {
+            h4("*** 'Differences' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCDifferencesDF")
+
+        }
+    })
+
+    output$SCDistanceMatrixUI <- renderUI({
+        if (all(dim(SCDistanceMatrix) == c(0,0))) {
+            h4("*** 'Distance' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCDistanceMatrix")
+
+        }
+    })
+
+    output$SCIndelsDFUI <- renderUI({
+        if (all(dim(SCIndelsDF) == c(0,0))) {
+            h4("*** 'Indels' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCIndelsDF")
+
+        }
+    })
+
+    output$SCStopCodonsDFUI <- renderUI({
+        if (all(dim(SCStopCodonsDF) == c(0,0))) {
+            h4("*** 'Stop Codons' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCStopCodonsDF")
+        }
+    })
+
+    output$SCDifferencesDF = renderDataTable({
+        SCDifferencesDF
+    })
+
+    output$SCDistanceMatrix = renderDataTable({
+        SCDistanceMatrix
+    })
+
+    output$SCIndelsDF <- renderDataTable({
+        SCIndelsDF
+    })
+
+    output$SCStopCodonsDF <- renderDataTable({
+        SCStopCodonsDF
+    })
+
+
+    ############################################################################
+    ### SangerSingleRead (Function for singel read in consensusRead)
+    ############################################################################
+    valueBoxSCMinReadsNum(input, output, SCMinReadsNum, session)
+    valueBoxSCMinReadLength(input, output, SCMinReadLength, session)
+    valueBoxSCMinFractionCall(input, output, SCMinFractionCall, session)
+    valueBoxSCMaxFractionLost(input, output, SCMaxFractionLost, session)
+    valueBoxSCAcceptStopCodons(input, output, SCAcceptStopCodons, session)
+    valueBoxSCReadingFrame(input, output, SCReadingFrame, session)
+
+    valueBoxCutoffQualityScore (input, output, session)
+    valueBoxSlidingWindowSize (input, output, session)
+    valueBoxTrimmingStartPos (input, output, session, trimmedRV)
+    valueBoxTrimmingFinishPos (input, output, session, trimmedRV)
+
+    valueBoxChromTrimmingStartPos (input, output, session, trimmedRV)
+    valueBoxChromTrimmingFinishPos (input, output, session, trimmedRV)
+
+    valueBoxRemainingBP (input, output, session, trimmedRV)
+    valueBoxTrimmedRatio (input, output, session, trimmedRV)
+
+    qualityTrimmingRatioPlot (input, output, session, trimmedRV,
+                              SangerSingleReadQualReport,
+                              SangerSingleReadFeature)
+    qualityQualityBasePlot (input, output, session, trimmedRV,
+                            SangerSingleReadQualReport, SangerSingleReadFeature)
 
     observeEvent(input$cutoffQualityScoreText, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -829,18 +958,18 @@ consensusReadServer <- function(input, output, session) {
                       digits = 2)
         }
     })
-
-    ############################################################################
-    ### ConsensusRead (Sanger Consensus Read Overview)
-    ############################################################################
     # chromatogram
     output$chromatogramUIOutput <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
-                chromatogramRowNumAns = chromatogramRowNum(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]], strtoi(input$ChromatogramBasePerRow)) * 200
+                chromatogramRowNumAns <-
+                    chromatogramRowNum(SangerConsensusFRReadsList[[
+                        strtoi(sidebar_menu[[1]])]],
+                        strtoi(input$ChromatogramBasePerRow)) * 200
                 message("chromatogramRowNumAns: ", chromatogramRowNumAns)
-                plotOutput("chromatogram", height = chromatogramRowNumAns) %>% withSpinner()
+                plotOutput("chromatogram", height = chromatogramRowNumAns) %>%
+                    withSpinner()
             }
         }
     })
@@ -852,9 +981,13 @@ consensusReadServer <- function(input, output, session) {
                 qualityPhredScores = SangerSingleReadQualReport[[
                     strtoi(sidebar_menu[[1]])]]@qualityPhredScores
                 readLen = length(qualityPhredScores)
-                hetcalls <- makeBaseCalls(SangerConsensusFRReadsList[[strtoi(sidebar_menu[[1]])]],
-                                          ratio = as.numeric(input$ChromatogramSignalRatioCutoff))
-                chromatogram(hetcalls, width = strtoi(input$ChromatogramBasePerRow),
+                hetcalls <-
+                    makeBaseCalls(SangerConsensusFRReadsList[[
+                                                strtoi(sidebar_menu[[1]])]],
+                                  ratio = as.numeric(
+                                      input$ChromatogramSignalRatioCutoff))
+                chromatogram(hetcalls,
+                             width = strtoi(input$ChromatogramBasePerRow),
                              height = 2, trim5 = trimmedRV[["trimmedStart"]],
                              trim3 = readLen - trimmedRV[["trimmedEnd"]],
                              showtrim = (input$ChromatogramCheckShowTrimmed),
@@ -865,66 +998,8 @@ consensusReadServer <- function(input, output, session) {
 
     output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        excelTable(data = SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]],
-                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-
-    })
-    output$geneticCodeDF <- renderExcel({
-        excelTable(data =  t(data.frame(SCGeneticCode)),
-                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-    })
-
-
-    output$consensusAlignmentHTML<-renderUI({
-        browseSeqHTML <- file.path(shinyDirectory, paste0(A_chloroticConsensusReads@consenesusReadName, "_Alignment_BrowseSeqs.html"))
-        if (!file.exists(browseSeqHTML)) {
-            BrowseSeqs(A_chloroticConsensusReads@alignment, openURL=FALSE, htmlFile=browseSeqHTML)
-        }
-        includeHTML(file.path(shinyDirectory, paste0(A_chloroticConsensusReads@consenesusReadName, "_Alignment_BrowseSeqs.html")))
-    })
-
-    output$dendrogramDF <- renderDataTable({
-        SCDendrogram[[1]]
-    })
-
-    output$dendrogramPlot <- renderPlot({
-        plot(SCDendrogram[[2]])
-    })
-
-    output$SCIndelsDFUI <- renderUI({
-        if (all(dim(SCIndelsDF) == c(0,0))) {
-            h4("*** 'Indels' data frame is empty. ***", style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCIndelsDF")
-
-        }
-    })
-
-    output$SCStopCodonsDFUI <- renderUI({
-        if (all(dim(SCStopCodonsDF) == c(0,0))) {
-            h4("*** 'Stop Codons' data frame is empty. ***", style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCStopCodonsDF")
-        }
-    })
-
-    output$SCIndelsDF <- renderDataTable({
-        SCIndelsDF
-    })
-
-    output$SCStopCodonsDF <- renderDataTable({
-        SCStopCodonsDF
-    })
-
-    output$primarySeqDF <- renderExcel({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        excelTable(data = SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]],
+        excelTable(data =
+                       SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]],
                    defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
@@ -934,59 +1009,12 @@ consensusReadServer <- function(input, output, session) {
 
     output$secondSeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        excelTable(data = SangerSingleReadSecoSeqDF[[strtoi(sidebar_menu[[1]])]],
+        excelTable(data =
+                       SangerSingleReadSecoSeqDF[[strtoi(sidebar_menu[[1]])]],
                    defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-    })
-
-
-#
-#     output$primarySeqDF2 <- renderRHandsontable({
-#         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-#         rhandsontable(SangerSingleReadPrimSeqDF[[strtoi(sidebar_menu[[1]])]], rowHeaders = NULL, overflow = 'visible', width = 100, height = 100)
-#     })
-
-
-
-
-
-
-
-
-
-
-
-
-    valueBoxSCMinReadsNum(input, output, SCMinReadsNum, session)
-    valueBoxSCMinReadLength(input, output, SCMinReadLength, session)
-    valueBoxSCMinFractionCall(input, output, SCMinFractionCall, session)
-    valueBoxSCMaxFractionLost(input, output, SCMaxFractionLost, session)
-    valueBoxSCAcceptStopCodons(input, output, SCAcceptStopCodons, session)
-    valueBoxSCReadingFrame(input, output, SCReadingFrame, session)
-
-    valueBoxCutoffQualityScore (input, output, session)
-    valueBoxSlidingWindowSize (input, output, session)
-    valueBoxTrimmingStartPos (input, output, session, trimmedRV)
-    valueBoxTrimmingFinishPos (input, output, session, trimmedRV)
-
-    valueBoxChromTrimmingStartPos (input, output, session, trimmedRV)
-    valueBoxChromTrimmingFinishPos (input, output, session, trimmedRV)
-
-    valueBoxRemainingBP (input, output, session, trimmedRV)
-    valueBoxTrimmedRatio (input, output, session, trimmedRV)
-
-    qualityTrimmingRatioPlot (input, output, session, trimmedRV,
-                              SangerSingleReadQualReport,
-                              SangerSingleReadFeature)
-    qualityQualityBasePlot (input, output, session, trimmedRV,
-                            SangerSingleReadQualReport, SangerSingleReadFeature)
-    overViewDifferencesDataFrame (input, output, session, SCDifferencesDF)
-    overViewSecondaryPeakDataFrame (input, output, session, SCDistanceMatrix)
-
-    output$info <- renderText({
-        paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
     })
 }
 

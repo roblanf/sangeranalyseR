@@ -64,9 +64,5 @@ launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet, directory = 
     } else {
         stop("'", directory, "' is not valid. Please check again")
     }
-    # shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
-    # newSangerConsensusRead <- shinyApp(alignedConsensusSetUI, alignedConsensusSetServer,
-    #                                    options = SangerConsensusRead)
-    # return(newSangerConsensusRead)
 }
 

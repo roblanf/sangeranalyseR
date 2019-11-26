@@ -25,37 +25,6 @@ inside_calculate_trimming <- function(qualityBaseScore,
     return(c(trimmingStartPos, trimmingFinishPos))
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### ============================================================================
 ### Adding dynamic menu to sidebar.
 ### ============================================================================
@@ -176,19 +145,6 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
 ### ============================================================================
 ### observeEvent: Button Save S4 object
 ### ============================================================================
-observeEventButtonSaveSC <- function(input, output, session, SangerConsensus) {
-    observeEvent(input$saveS4, {
-        btn <- input$saveS4
-        id <- paste0('txt', btn)
-        newS4Object <- file.path(tempdir(), "SangerConsensus.Rda")
-        saveRDS(SangerConsensus, file=newS4Object)
-        message("New S4 object is store as: ", newS4Object)
-        showNotification(paste("New S4 object is store as:", newS4Object),
-                         type = "message", duration = 10)
-        NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
-        # shinyOptions(NewSangerConsensusSet = newS4)
-    })
-}
 
 observeEventButtonSaveSCSet <- function(input, output, session, SangerCSetParam) {
     observeEvent(input$saveS4, {
@@ -201,16 +157,6 @@ observeEventButtonSaveSCSet <- function(input, output, session, SangerCSetParam)
                          type = "message", duration = 10)
         NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
         # shinyOptions(NewSangerConsensusSet = newS4)
-    })
-}
-
-### ============================================================================
-### observeEvent: Button Close UI
-### ============================================================================
-observeEventButtonClose <- function(input, output, session) {
-    observeEvent(input$closeUI, {
-        btn <- input$closeUI
-        stopApp()
     })
 }
 
@@ -739,39 +685,7 @@ qualityQualityBasePlot <- function(input, output, session, trimmedRV,
 }
 
 
-### ============================================================================
-### differencesDataFrame
-### ============================================================================
-overViewDifferencesDataFrame <- function(input, output, session, SCDifferencesDF) {
-    output$differencesDF = renderDataTable({
-        SCDifferencesDF
-        # SCDistanceMatrix <- SangerConsensus@distanceMatrix
-        #
-        # SCDendrogram <- SangerConsensus@dendrogram
-        #
-        # SCIndelsDF <- SangerConsensus@indelsDF
-        # SCStopCodonsDF <- SangerConsensus@stopCodonsDF
-        #
-        # SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
-        # dataTableOutput("secondaryPeakDF")
 
-        # differencesDF             = "data.frame",
-        # distanceMatrix            = "matrix",
-        # dendrogram                = "list",
-        # indelsDF                  = "data.frame",
-        # stopCodonsDF              = "data.frame",
-        # secondaryPeakDF           = "data.frame"
-    })
-}
-
-### ============================================================================
-### secondaryPeakDataFrame
-### ============================================================================
-overViewSecondaryPeakDataFrame <- function(input, output, session, SCDistanceMatrix) {
-    output$secondaryPeakDF = renderDataTable({
-        SCDistanceMatrix
-    })
-}
 
 
 ### ============================================================================

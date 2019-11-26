@@ -17,7 +17,8 @@ consensusReadUI <- dashboardPage(
         sidebarMenu(
             id = "sidebar_menu",
             menuItem(text = "Consensus Read",
-                     tabName = "Sanger Consensus Read Overview", icon=icon("dashboard")),
+                     tabName = "Sanger Consensus Read Overview",
+                     icon=icon("dashboard")),
             sidebarMenuOutput("singleReadMenu")
         )
     ),
@@ -42,7 +43,8 @@ consensusReadUI <- dashboardPage(
                     ")),
         tags$script(HTML('
             $(document).ready(function() {
-            $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Sanger Consensus Read Overview </span>\');
+            $("header").find("nav").append(\'<span id="rightHeader"
+            class="myClass"> Sanger Consensus Read Overview </span>\');
             })
         ')),
         tags$head(tags$style(HTML(
@@ -57,10 +59,13 @@ consensusReadUI <- dashboardPage(
             font-weight: bold;
         }'))),
         tags$head(
-            tags$style(HTML('#closeUI{background-color:red; color:white; padding:15px; font-size: 35; font-weight: bold;}')),
-            tags$style(HTML('#saveS4{background-color:#0083FF; color:white; padding:15px; font-size: 35; font-weight: bold;}')),
+            tags$style(HTML('#closeUI{background-color:red; color:white;
+                            padding:15px; font-size: 35; font-weight: bold;}')),
+            tags$style(HTML('#saveS4{background-color:#0083FF; color:white;
+                            padding:15px; font-size: 35; font-weight: bold;}')),
             ## Overwrite .jexcel_content Height!!
-            tags$style(HTML(".jexcel_content { overflow-y: auto; height: 100% !important;}"))
+            tags$style(HTML(".jexcel_content { overflow-y: auto;
+                            height: 100% !important;}"))
         ),
         tags$style(
             HTML(".shiny-notification {
@@ -77,7 +82,8 @@ consensusReadUI <- dashboardPage(
              "
             )
         ),
-        tags$style(HTML(".sidebar-menu li a[data-value='Sanger Consensus Read Overview']
+        tags$style(HTML(".sidebar-menu li a
+                        [data-value='Sanger Consensus Read Overview']
                         { font-size: 18px; font-weight: bold }")),
         tags$style(HTML(".sidebar-menu ul li a
                         { font-size: 15px}")),
