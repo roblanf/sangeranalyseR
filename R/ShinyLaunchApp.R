@@ -12,7 +12,7 @@
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
 #'                                  cutoffQualityScore    = 20,
 #'                                  slidingWindowSize     = 5)
-#' RShiny <- launchAppConsensusRead(list(A_chloroticConsensusReads))
+#' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
 launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
     ### ------------------------------------------------------------------------
     ### Checking SangerConsensusRead input parameter is a list containing
@@ -45,8 +45,9 @@ launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
 #'                      suffixReverseRegExp   = suffixReverseRegExp,
 #'                      cutoffQualityScore    = 20,
 #'                      slidingWindowSize     = 8)
-#' RShiny <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))
-launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet, directory = NULL) {
+#' RShinyCSSet <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))
+launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet,
+                                         directory = NULL) {
     ### ------------------------------------------------------------------------
     ### Checking AlignedConsensusSet input parameter is a list containing
     ### one S4 object.
@@ -58,8 +59,10 @@ launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet, directory = 
     if (dir.exists(directory)) {
         shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
         shinyOptions(shinyDirectory = directory)
-        newSangerAlignedConsensusSet <- shinyApp(alignedConsensusSetUI, alignedConsensusSetServer,
-                                                 options = SangerAlignedConsensusSet)
+        newSangerAlignedConsensusSet <- shinyApp(alignedConsensusSetUI,
+                                                 alignedConsensusSetServer,
+                                                 options =
+                                                     SangerAlignedConsensusSet)
         return(newSangerAlignedConsensusSet)
     } else {
         stop("'", directory, "' is not valid. Please check again")

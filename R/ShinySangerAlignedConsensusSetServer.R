@@ -602,8 +602,29 @@ alignedConsensusSetServer <- function(input, output, session) {
             #     trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
         }
     })
-    observeEventButtonSaveSCSet(input, output, session, SangerCSetParam)
-    observeEventButtonClose(input, output, session)
+
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Save S4 object
+    ### ------------------------------------------------------------------------
+    observeEvent(input$saveS4, {
+        btn <- input$saveS4
+        id <- paste0('txt', btn)
+        newS4Object <- file.path(tempdir(), "SangerAlignedConsensusSet.Rda")
+        saveRDS(SangerCSetParam, file=newS4Object)
+        message("New S4 object is store as: ", newS4Object)
+        showNotification(paste("New S4 object is store as:", newS4Object),
+                         type = "message", duration = 10)
+        NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
+        # shinyOptions(NewSangerConsensusSet = newS4)
+    })
+
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Close UI
+    ### ------------------------------------------------------------------------
+    observeEvent(input$closeUI, {
+        btn <- input$closeUI
+        stopApp()
+    })
 
 
     output$geneticCodeDF <- renderExcel({
