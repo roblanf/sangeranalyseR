@@ -197,7 +197,6 @@ alignedConsensusSetServer <- function(input, output, session) {
     output$aligned_consensusRead_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
-
             h1(paste("You've selected:", input$sidebar_menu))
             box(title = tags$p("Input Parameters: ",
                                style = "font-size: 26px;
@@ -274,6 +273,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SCIndelsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCIndelsDF
                     SCStopCodonsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
                     SCSecondaryPeakDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCSecondaryPeakDF
+                    SCconsenesusReadName <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCconsenesusReadName
                     SangerConsensusForRegExp <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusForRegExp
                     SangerConsensusRevRegExp <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerConsensusRevRegExp
                     SangerSingleReadNum <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadNum
@@ -291,8 +291,14 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadPeakPosMat <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPeakPosMat
                     SangerSingleReadPeakAmpMat <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SangerSingleReadPeakAmpMat
 
-
-
+                    # BrowseSeqs_html
+                    if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
+                        dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
+                    }
+                    browseSeqHTML <- file.path(shinyDirectory, "BrowseSeqs_html", paste0(sidebar_menu[[1]], "_", SCconsenesusReadName, "_Alignment_BrowseSeqs.html"))
+                    if (!file.exists(browseSeqHTML)) {
+                        BrowseSeqs(SCAlignment, openURL=FALSE, htmlFile=browseSeqHTML)
+                    }
 
                     fluidRow(
                         useShinyjs(),
@@ -338,23 +344,25 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     ),
                                     column(width = 10,
                                            excelOutput("geneticCodeDF", width = "100%", height = "50"),
-                                           style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                           style = "height:60px; overflow-y: hidden;overflow-x: scroll;"
                                     ),
                                 ),
                             ),
                             tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                            # fluidRow(
-                            #     box(title = tags$p("GeneticCode Data Frame",
-                            #                        style = "font-size: 24px;
-                            #            font-weight: bold;"),
-                            #         collapsible = TRUE,
-                            #         status = "success", width = 12,
-                            #         column(width = 12,
-                            #                htmlOutput("consensusAlignmentHTML"),
-                            #         ),
-                            #     ),
-                            # ),
-                            # tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            fluidRow(
+                                box(title = tags$p("Alignment",
+                                                   style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    column(width = 12,
+                                           # htmlOutput("consensusAlignmentHTML"),
+                                           # sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+                                           includeHTML(browseSeqHTML)
+                                    ),
+                                ),
+                            ),
+                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 column(3,
                                        valueBox(
@@ -435,7 +443,9 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        # uiOutput("SCReadingFrame") ,
                                 ),
                             ),
+                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
                         ),
+
                     )
 
 
@@ -497,4 +507,17 @@ alignedConsensusSetServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
+    # output$consensusAlignmentHTML<-renderUI({
+    #     sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+    #     if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
+    #         dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
+    #     }
+    #     localAlignment <- SangerCSetParam[[paste0(sidebar_menu[[1]]$SCAlignment
+    #     browseSeqHTML <- file.path(shinyDirectory, "BrowseSeqs_html", paste0(sidebar_menu[[1]], "_", localAlignment, "_Alignment_BrowseSeqs.html"))
+    #     if (!file.exists(browseSeqHTML)) {
+    #         BrowseSeqs(localAlignment, openURL=FALSE, htmlFile=browseSeqHTML)
+    #     }
+    #     includeHTML(browseSeqHTML)
+    # })
 }
+

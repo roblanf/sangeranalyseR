@@ -291,7 +291,7 @@ consensusReadServer <- function(input, output, session) {
                             ),
                             column(width = 10,
                                    excelOutput("geneticCodeDF", width = "100%", height = "50"),
-                                   style = "height:100%; overflow-y: scroll;overflow-x: scroll;"
+                                   style = "height:100%; overflow-x: scroll;"
                             ),
                         ),
                     ),
