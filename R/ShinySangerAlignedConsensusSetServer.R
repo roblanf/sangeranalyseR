@@ -255,6 +255,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadPeakAmpMat = SangerSingleReadPeakAmpMat))
     })
 
+
     trimmedRV <- reactiveValues(trimmedStart = 0, trimmedEnd = 0,
                                 remainingBP = 0, trimmedRatio = 0)
 
@@ -443,7 +444,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     ),
                                     column(width = 10,
                                            excelOutput("geneticCodeDF", width = "100%", height = "50"),
-                                           style = "height:60px; overflow-y: hidden;overflow-x: scroll;"
+                                           style = "height:100%; overflow-y: hidden; overflow-x: scroll;"
                                     ),
                                 ),
                             ),
@@ -650,22 +651,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadPeakAmpMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPeakAmpMat
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     fluidRow(
                         useShinyjs(),
                         h1("consensusReadIndex: ", consensusReadIndex, "  singleReadIndex: ", singleReadIndex),
@@ -697,23 +682,11 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             ),
                             column(width = 11,
-                                   excelTable(data =
-                                                  SangerSingleReadPrimSeqDF[[singleReadIndex]],
-                                              defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                                              columnResize = FALSE, allowInsertRow = FALSE,
-                                              allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                                              allowDeleteColumn = FALSE, allowRenameColumn = FALSE),
-                                   # excelTable(data =
-                                   #                SangerSingleReadSecoSeqDF[[singleReadIndex]],
-                                   #            defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                                   #            columnResize = FALSE, allowInsertRow = FALSE,
-                                   #            allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                                   #            allowDeleteColumn = FALSE, allowRenameColumn = FALSE),
-                                   # excelOutput("primarySeqDF",
-                                   #             width = "100%", height = "50"),
-                                   # excelOutput("secondSeqDF",
-                                   #             width = "100%", height = "50"),
-                                   style = paste("overflow-y: scroll;",
+                                   excelOutput("primarySeqDF",
+                                               width = "100%", height = "50"),
+                                   excelOutput("secondSeqDF",
+                                               width = "100%", height = "50"),
+                                   style = paste("overflow-y: hidden;",
                                                  "overflow-x: scroll;"))
                             # ),
                         ),
@@ -847,6 +820,31 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
         SCDistanceMatrix
+    })
+
+    output$primarySeqDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        excelTable(data =
+                       SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+
+    })
+
+    output$secondSeqDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        excelTable(data =
+                       SangerCSetParam[[consensusReadIndex]]$SangerSingleReadSecoSeqDF[[singleReadIndex]],
+                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 }
 

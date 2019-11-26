@@ -315,7 +315,7 @@ consensusReadServer <- function(input, output, session) {
                             column(width = 10,
                                    excelOutput("geneticCodeDF",
                                                width = "100%", height = "50"),
-                                   style = "height:100%; overflow-x: scroll;"
+                                   style = "height:100%; overflow-y: hidden; overflow-x: scroll;"
                             ),
                         ),
                     ),
@@ -476,9 +476,9 @@ consensusReadServer <- function(input, output, session) {
                                            width = "100%", height = "50"),
                                excelOutput("secondSeqDF",
                                            width = "100%", height = "50"),
-                               style = paste("overflow-y: scroll;",
-                                             "overflow-x: scroll;"))
-                        # ),
+                               style = paste("overflow-y: hidden;",
+                                             "overflow-x: scroll;")
+                        )
                     ),
                     box(title = tags$p("Quality Report: ",
                                        style = "font-size: 26px;
