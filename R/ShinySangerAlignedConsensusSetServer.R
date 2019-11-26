@@ -833,42 +833,42 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 plotlyOutput("qualityQualityBasePlot") %>%
                                     withSpinner()),
                         ),
-                        # box(title = tags$p("Chromatogram: ",
-                        #                    style = "font-size: 26px;
-                        #                font-weight: bold;"),
-                        #     solidHeader = TRUE, collapsible = TRUE,
-                        #     status = "success", width = 12,
-                        #     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                        #     column(12,
-                        #            column(3,
-                        #                   sliderInput("ChromatogramBasePerRow",
-                        #                               label = h3("Slider"), min = 5,
-                        #                               max = 200, value = 100),
-                        #            ),
-                        #            column(3,
-                        #                   uiOutput("ChromatogramTrimmingStartPos"),
-                        #            ),
-                        #            column(3,
-                        #                   uiOutput("ChromatogramTrimmingFinishPos"),
-                        #            ),
-                        #            column(3,
-                        #                   numericInput(
-                        #                       "ChromatogramSignalRatioCutoff",
-                        #                       h3("Signal Ratio Cutoff"),
-                        #                       value = 0.33),
-                        #                   checkboxInput(
-                        #                       "ChromatogramCheckShowTrimmed",
-                        #                       "Whether show trimmed region",
-                        #                       value = TRUE),)
-                        #     ),
-                        #     tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        #     column(width = 12,
-                        #            tags$hr(
-                        #                style = ("border-top: 6px double #A9A9A9;")
-                        #            ),
-                        #            uiOutput("chromatogramUIOutput"),
-                        #     )
-                        # )
+                        box(title = tags$p("Chromatogram: ",
+                                           style = "font-size: 26px;
+                                       font-weight: bold;"),
+                            solidHeader = TRUE, collapsible = TRUE,
+                            status = "success", width = 12,
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            column(12,
+                                   column(3,
+                                          sliderInput("ChromatogramBasePerRow",
+                                                      label = h3("Slider"), min = 5,
+                                                      max = 200, value = 100),
+                                   ),
+                                   column(3,
+                                          uiOutput("ChromatogramTrimmingStartPos"),
+                                   ),
+                                   column(3,
+                                          uiOutput("ChromatogramTrimmingFinishPos"),
+                                   ),
+                                   column(3,
+                                          numericInput(
+                                              "ChromatogramSignalRatioCutoff",
+                                              h3("Signal Ratio Cutoff"),
+                                              value = 0.33),
+                                          checkboxInput(
+                                              "ChromatogramCheckShowTrimmed",
+                                              "Whether show trimmed region",
+                                              value = TRUE),)
+                            ),
+                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            column(width = 12,
+                                   tags$hr(
+                                       style = ("border-top: 6px double #A9A9A9;")
+                                   ),
+                                   uiOutput("chromatogramUIOutput"),
+                            )
+                        )
                     )
                 }
             }
@@ -1143,12 +1143,6 @@ alignedConsensusSetServer <- function(input, output, session) {
         colnames(PerData) <- c("Base",
                                "Trimmed Ratio",
                                "Remaining Ratio")
-        # Change font setting
-        # f <- list(
-        #     family = "Courier New, monospace",
-        #     size = 18,
-        #     color = "#7f7f7f"
-        # )
         x <- list(
             title = "Base Pair Index"
             # titlefont = f
@@ -1259,6 +1253,59 @@ alignedConsensusSetServer <- function(input, output, session) {
             )
         # add_markers(qualityPlotDf, x=~Index, y=~Score)
         # add_segments(x = trimmingStartPos, xend = trimmingFinishPos, y = 70, yend = 70, inherit = TRUE)
+    })
+
+    valueBoxChromTrimmingStartPos (input, output, session, trimmedRV)
+    valueBoxChromTrimmingFinishPos (input, output, session, trimmedRV)
+
+    # chromatogram
+    output$chromatogramUIOutput <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        if (!is.na(as.numeric(sidebar_menu[[1]])) &&
+            sidebar_menu[[2]] == "Consensus" &&
+            sidebar_menu[[3]] == "Read" &&
+            sidebar_menu[[4]] == "-" &&
+            !is.na(as.numeric(sidebar_menu[[5]])) &&
+            (sidebar_menu[[6]] == "Forward" || sidebar_menu[[6]] == "Reverse") &&
+            sidebar_menu[[7]] == "Read") {
+            chromatogramRowNumAns <-
+                chromatogramRowNum(
+                    SangerCSetParam[[consensusReadIndex]]$SangerConsensusFRReadsList
+                    [[singleReadIndex]],
+                    strtoi(input$ChromatogramBasePerRow)) * 200
+            message("chromatogramRowNumAns: ", chromatogramRowNumAns)
+            plotOutput("chromatogram", height = chromatogramRowNumAns) %>%
+                withSpinner()
+        }
+    })
+
+    output$chromatogram <- renderPlot({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        if (!is.na(as.numeric(sidebar_menu[[1]])) &&
+            sidebar_menu[[2]] == "Consensus" &&
+            sidebar_menu[[3]] == "Read" &&
+            sidebar_menu[[4]] == "-" &&
+            !is.na(as.numeric(sidebar_menu[[5]])) &&
+            (sidebar_menu[[6]] == "Forward" || sidebar_menu[[6]] == "Reverse") &&
+            sidebar_menu[[7]] == "Read") {
+            qualityPhredScores = SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
+            readLen = length(qualityPhredScores)
+            hetcalls <-
+                makeBaseCalls(SangerCSetParam[[consensusReadIndex]]$SangerConsensusFRReadsList
+                              [[singleReadIndex]],
+                    ratio = as.numeric(
+                        input$ChromatogramSignalRatioCutoff))
+            chromatogram(hetcalls,
+                         width = strtoi(input$ChromatogramBasePerRow),
+                         height = 2, trim5 = trimmedRV[["trimmedStart"]],
+                         trim3 = readLen - trimmedRV[["trimmedEnd"]],
+                         showtrim = (input$ChromatogramCheckShowTrimmed),
+                         showcalls = "both")
+        }
     })
 }
 
