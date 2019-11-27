@@ -913,8 +913,26 @@ alignedConsensusSetServer <- function(input, output, session) {
     observeEvent(input$saveS4, {
         btn <- input$saveS4
         id <- paste0('txt', btn)
-        newS4Object <- file.path(tempdir(), "SangerAlignedConsensusSet.Rda")
-        saveRDS(SangerCSetParam, file=newS4Object)
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        sapply(1:SangerConsensusSetNum, function(i) {
+            forwardReadNum <- length(SangerConsensusSet@consensusReadsList[[i]]@forwardReadsList)
+            reverseReadNum <- length(SangerConsensusSet@consensusReadsList[[i]]@reverseReadsList)
+            sapply(1:forwardReadNum, function(j) {
+                SangerConsensusSet@consensusReadsList[[i]]@forwardReadsList[[j]]@QualityReport <<-
+                    SangerCSetParam[[i]]$SangerSingleReadQualReport[[j]]
+                message("save SangerConsensus quality S4 object Forward")
+                }
+            )
+            sapply(1:reverseReadNum, function(j) {
+                SangerConsensusSet@consensusReadsList[[i]]@reverseReadsList[[j]]@QualityReport <<-
+                    SangerCSetParam[[i]]$SangerSingleReadQualReport[[forwardReadNum + j]]
+                message("save SangerConsensus quality S4 object Reverse")
+            }
+            )
+        })
+
+        newS4Object <- file.path(shinyDirectory, "SangerAlignedConsensusSet.Rda")
+        saveRDS(SangerConsensusSet, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
         showNotification(paste("New S4 object is store as:", newS4Object),
                          type = "message", duration = 10)
