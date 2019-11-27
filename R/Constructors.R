@@ -1,5 +1,5 @@
 ### ============================================================================
-### Self-defined constructor for SangerMergeReads
+### Self-defined constructor for SangerConsensusRead
 ### ============================================================================
 #' @description
 #'
@@ -7,8 +7,10 @@
 #' @param consenesusReadName .
 #' @param suffixForwardRegExp .
 #' @param suffixReverseRegExp .
-#' @param cutoffQualityScore .
-#' @param slidingWindowSize .
+#' @param TrimmingMethod .
+#' @param M1TrimmingCutoff .
+#' @param M2CutoffQualityScore .
+#' @param M2SlidingWindowSize .
 #' @param refAminoAcidSeq .
 #' @param minReadsNum .
 #' @param minReadLength .
@@ -25,17 +27,22 @@
 #' @example
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' samplesRegExp <- "ACHL"
-#' A_chloroticConsensusReads <- new("SangerConsensusRead",
-#'                                  parentDirectory     = inputFilesParentDir,
-#'                                  readsRegularExp     = samplesRegExp,
-#'                                  cutoffQualityScore  = 50L,
-#'                                  slidingWindowSize   = 8L)
+#'
+#' A_chloroticConsensusReads <-
+#'        SangerConsensusRead(parentDirectory     = inputFilesParentDir,
+#'                            readsRegularExp     =  samplesRegExp,
+#'                            TrimmingMethod         = "M1",
+#'                            M1TrimmingCutoff       = 0.0001,
+#'                            M2CutoffQualityScore   = NULL,
+#'                            M2SlidingWindowSize    = NULL)
 SangerConsensusRead <- function(parentDirectory        = character(0),
                                 consenesusReadName     = character(0),
                                 suffixForwardRegExp    = character(0),
                                 suffixReverseRegExp    = character(0),
-                                cutoffQualityScore     = 20,
-                                slidingWindowSize      = 5,
+                                TrimmingMethod         = "M1",
+                                M1TrimmingCutoff       = 0.0001,
+                                M2CutoffQualityScore   = NULL,
+                                M2SlidingWindowSize    = NULL,
                                 refAminoAcidSeq        = "",
                                 minReadsNum            = 2,
                                 minReadLength          = 20,
@@ -50,8 +57,10 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
                              consenesusReadName     = consenesusReadName,
                              suffixForwardRegExp    = suffixForwardRegExp,
                              suffixReverseRegExp    = suffixReverseRegExp,
-                             cutoffQualityScore     = cutoffQualityScore,
-                             slidingWindowSize      = slidingWindowSize,
+                             TrimmingMethod         = TrimmingMethod,
+                             M1TrimmingCutoff       = M1TrimmingCutoff,
+                             M2CutoffQualityScore   = M2CutoffQualityScore,
+                             M2SlidingWindowSize    = M2SlidingWindowSize,
                              refAminoAcidSeq        = refAminoAcidSeq,
                              minReadsNum            = minReadsNum,
                              minReadLength          = minReadLength,
@@ -73,8 +82,10 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #'
 #' @param readFeature .
 #' @param readFileName .
-#' @param cutoffQualityScore .
-#' @param slidingWindowSize .
+#' @param TrimmingMethod .
+#' @param M1TrimmingCutoff .
+#' @param M2CutoffQualityScore .
+#' @param M2SlidingWindowSize .
 #'
 #' @return SangerSingleRead
 #' @export
@@ -85,10 +96,12 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #'                                   "Allolobophora_chlorotica",
 #'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 #' A_chloroticaSingleRead <-
-#'        SangerSingleRead(readFeature         = "ForwardRead",
-#'                         readFileName        = A_chloroticaFdReadFN,
-#'                         cutoffQualityScore  = 60L,
-#'                         slidingWindowSize   = 8L)
+#'        SangerSingleRead(readFeature          = "ForwardRead",
+#'                         readFileName         = A_chloroticaFdReadFN,
+#'                         TrimmingMethod       = "M1",
+#'                         M1TrimmingCutoff     = 0.0001,
+#'                         M2CutoffQualityScore = NULL,
+#'                         M2SlidingWindowSize  = NULL)
 SangerSingleRead <- function(readFeature = character(0),
                              readFileName = character(0),
                              TrimmingMethod        = "M2",

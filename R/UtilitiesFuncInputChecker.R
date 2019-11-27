@@ -1,9 +1,9 @@
 ### ============================================================================
-### Quality related: trimming paramter prechecking
+### Quality trimming related: 'TrimmingMethod', 'M1TrimmingCutoff',
+                              'M2CutoffQualityScore', 'M2SlidingWindowSize'
 ### ============================================================================
 checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
-                                    M2CutoffQualityScore, M2SlidingWindowSize,
-                                    errors) {
+                           M2CutoffQualityScore, M2SlidingWindowSize, errors) {
     if (TrimmingMethod == "M1") {
         if (!is.numeric(M1TrimmingCutoff)) {
             msg<- paste("\n'M1TrimmingCutoff' must be numeric",
@@ -131,6 +131,17 @@ checkReadingFrame <- function(readingFrame, errors) {
     return(errors)
 }
 
+### ------------------------------------------------------------------------
+### 'parentDirectory' prechecking
+### ------------------------------------------------------------------------
+checkParentDirectory <- function(readingFrame, errors) {
+    if (!file.exists(parentDirectory)) {
+        msg <- paste("\n'", parentDirectory, "'",
+                     " parent directory does not exist.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+}
+
 # Waiting list ~~
 # refAminoAcidSeq
 # geneticCode
@@ -139,8 +150,10 @@ checkReadingFrame <- function(readingFrame, errors) {
 # processorsNum
 
 # Origin value
-# cutoffQualityScore     = 20,
-# slidingWindowSize      = 5,
+# TrimmingMethod        = "M1",
+# M1TrimmingCutoff      = 0.0001,
+# M2CutoffQualityScore  = NULL,
+# M2SlidingWindowSize   = NULL,
 # refAminoAcidSeq        = "",
 #
 # minReadsNum            = 2,

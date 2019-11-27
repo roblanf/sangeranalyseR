@@ -150,29 +150,48 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 #' QualityReport <- A_chloroticaSingleRead@QualityReport
 #' trimmingRatioPlot(QualityReport)
 #' qualityBasePlot(QualityReport)
-#' QualityReport@cutoffQualityScore
-#' QualityReport@slidingWindowSize
+#' QualityReport@TrimmingMethod
+#' QualityReport@M1TrimmingCutoff
+#' QualityReport@M2CutoffQualityScore
+#' QualityReport@M2SlidingWindowSize
 #'
-#' QualityReport <- updateQualityParam(QualityReport, 20L, 5L)
+#' QualityReport <- updateQualityParam(QualityReport, "M1", 0.0001, NULL, NULL)
 #'
 #' trimmingRatioPlot(QualityReport)
 #' qualityBasePlot(QualityReport)
-#' QualityReport@cutoffQualityScore
-#' QualityReport@slidingWindowSize
+#' qualityBasePlot(QualityReport)
+#' QualityReport@TrimmingMethod
+#' QualityReport@M1TrimmingCutoff
+#' QualityReport@M2CutoffQualityScore
+#' QualityReport@M2SlidingWindowSize
 setMethod("updateQualityParam",  "QualityReport",
           function(object,
-                   cutoffQualityScore = 20L,
-                   slidingWindowSize  = 5L){
+                   TrimmingMethod         = "M1",
+                   M1TrimmingCutoff       = 0.0001,
+                   M2CutoffQualityScore   = NULL,
+                   M2SlidingWindowSize    = NULL) {
               ### --------------------------------------------------------------
               ### Updating QualityReport quality parameters
               ### --------------------------------------------------------------
               qualityBaseScore <- object@qualityBaseScore
               trimmingPos <- inside_calculate_trimming(qualityBaseScore,
-                                                       cutoffQualityScore,
-                                                       slidingWindowSize)
-              object@cutoffQualityScore <- cutoffQualityScore
-              object@slidingWindowSize <- slidingWindowSize
-              object@trimmedStartPos <- trimmingPos[1]
-              object@trimmedFinishPos <- trimmingPos[2]
+                                                       TrimmingMethod,
+                                                       M1TrimmingCutoff,
+                                                       M2CutoffQualityScore,
+                                                       M2SlidingWindowSize)
+
+              object@TrimmingMethod <- TrimmingMethod
+              object@M1TrimmingCutoff <- M1TrimmingCutoff
+              object@M2CutoffQualityScore <- M2CutoffQualityScore
+              object@M2SlidingWindowSize <- M2SlidingWindowSize
+
+              object@rawSeqLength <- trimmingPos[1]
+              object@rawMeanQualityScore <- trimmingPos[2]
+              object@rawMinQualityScore <- trimmingPos[3]
+              object@trimmedStartPos <- trimmingPos[4]
+              object@trimmedFinishPos <- trimmingPos[5]
+              object@trimmedSeqLength <- trimmingPos[6]
+              object@trimmedMeanQualityScore <- trimmingPos[7]
+              object@trimmedMinQualityScore <- trimmingPos[8]
               return(object)
           })

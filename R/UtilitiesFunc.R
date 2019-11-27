@@ -1,6 +1,3 @@
-### ============================================================================
-### Quality related: 'cutoffQualityScore' & 'slidingWindowSize' prechecking
-### ============================================================================
 getProcessors <- function(processors) {
     sysinf <- Sys.info()
     if (!is.null(sysinf)){

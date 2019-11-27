@@ -55,19 +55,27 @@ setMethod("qualityBasePlot",  "SangerConsensusRead", function(object){
 #' load("data/A_chloroticaConsensusRead.RDdata")
 #' trimmingRatioPlot(A_chloroticaConsensusRead)
 #' qualityBasePlot(A_chloroticaConsensusRead)
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@cutoffQualityScore
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@slidingWindowSize
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@TrimmingMethod
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M1TrimmingCutoff
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2CutoffQualityScore
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2SlidingWindowSize
 #'
-#' A_chloroticaConsensusRead <- updateQualityParam(A_chloroticaConsensusRead, 20L, 5L)
+#' A_chloroticaConsensusRead <-
+#'                 updateQualityParam(A_chloroticaConsensusRead,
+#'                                    "M1", 0.0001, NULL, NULL)
 #'
 #' trimmingRatioPlot(A_chloroticaConsensusRead)
 #' qualityBasePlot(A_chloroticaConsensusRead)
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@cutoffQualityScore
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@slidingWindowSize
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@TrimmingMethod
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M1TrimmingCutoff
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2CutoffQualityScore
+#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2SlidingWindowSize
 setMethod("updateQualityParam",  "SangerConsensusRead",
           function(object,
-                   cutoffQualityScore = 20L,
-                   slidingWindowSize  = 5L){
+                   TrimmingMethod         = "M1",
+                   M1TrimmingCutoff       = 0.0001,
+                   M2CutoffQualityScore   = NULL,
+                   M2SlidingWindowSize    = NULL){
     ### ------------------------------------------------------------------------
     ### Updating forward read quality parameters
     ### ------------------------------------------------------------------------
@@ -75,15 +83,19 @@ setMethod("updateQualityParam",  "SangerConsensusRead",
     #     object@forwardReadSangerseq@QualityReport@qualityBaseScore
     object@forwardReadSangerseq <-
         updateQualityParam(object@forwardReadSangerseq,
-                           cutoffQualityScore,
-                           slidingWindowSize)
+                           TrimmingMethod,
+                           M1TrimmingCutoff,
+                           M2CutoffQualityScore,
+                           M2SlidingWindowSize)
 
     ### ------------------------------------------------------------------------
     ### Updating reverse read quality parameters
     ### ------------------------------------------------------------------------
     object@reverseReadSangerseq <-
         updateQualityParam(object@reverseReadSangerseq,
-                           cutoffQualityScore,
-                           slidingWindowSize)
+                           TrimmingMethod,
+                           M1TrimmingCutoff,
+                           M2CutoffQualityScore,
+                           M2SlidingWindowSize)
     return(object)
 })

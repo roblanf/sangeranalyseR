@@ -31,24 +31,33 @@ setMethod("qualityBasePlot",  "SangerSingleRead", function(object){
 #' load("data/A_chloroticaSingleRead.RDdata")
 #' trimmingRatioPlot(A_chloroticaSingleRead)
 #' qualityBasePlot(A_chloroticaSingleRead)
-#' A_chloroticaSingleRead@QualityReport@cutoffQualityScore
-#' A_chloroticaSingleRead@QualityReport@slidingWindowSize
+#' A_chloroticaSingleRead@QualityReport@TrimmingMethod
+#' A_chloroticaSingleRead@QualityReport@M1TrimmingCutoff
+#' A_chloroticaSingleRead@QualityReport@M2CutoffQualityScore
+#' A_chloroticaSingleRead@QualityReport@M2SlidingWindowSize
 #'
-#' A_chloroticaSingleRead <- updateQualityParam(A_chloroticaSingleRead, 20L, 5L)
+#' A_chloroticaSingleRead <- updateQualityParam(A_chloroticaSingleRead,
+#'                                              "M1", 0.0001, NULL, NULL)
 #'
 #' trimmingRatioPlot(A_chloroticaSingleRead)
 #' qualityBasePlot(A_chloroticaSingleRead)
-#' A_chloroticaSingleRead@QualityReport@cutoffQualityScore
-#' A_chloroticaSingleRead@QualityReport@slidingWindowSize
+#' A_chloroticaSingleRead@QualityReport@TrimmingMethod
+#' A_chloroticaSingleRead@QualityReport@M1TrimmingCutoff
+#' A_chloroticaSingleRead@QualityReport@M2CutoffQualityScore
+#' A_chloroticaSingleRead@QualityReport@M2SlidingWindowSize
 setMethod("updateQualityParam",  "SangerSingleRead",
           function(object,
-                   cutoffQualityScore = 20L,
-                   slidingWindowSize  = 5L){
+                   TrimmingMethod         = "M1",
+                   M1TrimmingCutoff       = 0.0001,
+                   M2CutoffQualityScore   = NULL,
+                   M2SlidingWindowSize    = NULL){
               ### --------------------------------------------------------------
               ### Updating SangerSingleRead quality parameters
               ### --------------------------------------------------------------
               object@QualityReport <- updateQualityParam(object@QualityReport,
-                                                         cutoffQualityScore,
-                                                         slidingWindowSize)
+                                                         TrimmingMethod,
+                                                         M1TrimmingCutoff,
+                                                         M2CutoffQualityScore,
+                                                         M2SlidingWindowSize)
               return(object)
           })

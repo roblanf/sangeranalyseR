@@ -124,11 +124,7 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     ### 'parentDirectory' prechecking
     ### ------------------------------------------------------------------------
-    if (!file.exists(parentDirectory)) {
-        msg <- paste("\n'", parentDirectory, "'",
-                     " parent directory does not exist.\n", sep = "")
-        errors <- c(errors, msg)
-    }
+    errors <- checkParentDirectory (readingFrame, errors)
 
     ### ------------------------------------------------------------------------
     ### 'forwardAllReads' & 'reverseAllReads' files prechecking

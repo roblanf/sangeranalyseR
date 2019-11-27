@@ -5,13 +5,15 @@
 #' consenesusReadName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' A_chloroticConsensusReads <- new("SangerConsensusRead",
-#'                                  parentDirectory       = inputFilesParentDir,
-#'                                  consenesusReadName    = consenesusReadName,
-#'                                  suffixForwardRegExp   = suffixForwardRegExp,
-#'                                  suffixReverseRegExp   = suffixReverseRegExp,
-#'                                  cutoffQualityScore    = 20,
-#'                                  slidingWindowSize     = 5)
+#' A_chloroticConsensusReads <- SangerConsensusRead(
+#'                                parentDirectory       = inputFilesParentDir,
+#'                                consenesusReadName    = consenesusReadName,
+#'                                suffixForwardRegExp   = suffixForwardRegExp,
+#'                                suffixReverseRegExp   = suffixReverseRegExp,
+#'                                TrimmingMethod        = "M1",
+#'                                M1TrimmingCutoff      = 0.0001,
+#'                                M2CutoffQualityScore  = NULL,
+#'                                M2SlidingWindowSize   = NULL)
 #' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
 launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
     ### ------------------------------------------------------------------------
@@ -39,12 +41,14 @@ launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
-#'                      parentDirectory       = inputFilesParentDir,
-#'                      suffixForwardRegExp   = suffixForwardRegExp,
-#'                      suffixReverseRegExp   = suffixReverseRegExp,
-#'                      cutoffQualityScore    = 20,
-#'                      slidingWindowSize     = 8)
+#' SangerAlignedConsensusSet <- SangerAlignedConsensusSet(
+#'                               parentDirectory       = inputFilesParentDir,
+#'                               suffixForwardRegExp   = suffixForwardRegExp,
+#'                               suffixReverseRegExp   = suffixReverseRegExp,
+#'                               TrimmingMethod        = "M1",
+#'                               M1TrimmingCutoff      = 0.0001,
+#'                               M2CutoffQualityScore  = NULL,
+#'                               M2SlidingWindowSize   = NULL)
 #' RShinyCSSet <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))
 launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet,
                                          directory = NULL) {
