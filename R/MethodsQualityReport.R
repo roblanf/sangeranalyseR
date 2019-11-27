@@ -3,30 +3,30 @@
 ### ============================================================================
 setMethod("preTrimmingRatioPlot",  "QualityReport", function(object){
     readFeature <- object@readFeature
-    trimmingStartPos = object@trimmingStartPos
-    trimmingFinishPos = object@trimmingFinishPos
+    trimmedStartPos = object@trimmedStartPos
+    trimmedFinishPos = object@trimmedFinishPos
     readLen = length(object@qualityPhredScores)
 
     stepRatio = 1 / readLen
-    trimmingStartPos / readLen
-    trimmingFinishPos / readLen
+    trimmedStartPos / readLen
+    trimmedFinishPos / readLen
 
     trimmedPer <- c()
     remainingPer <- c()
 
-    for (i in 1:trimmingStartPos) {
-        if (i != trimmingStartPos) {
+    for (i in 1:trimmedStartPos) {
+        if (i != trimmedStartPos) {
             trimmedPer <- c(trimmedPer, stepRatio)
         }
     }
 
-    for (i in trimmingStartPos:trimmingFinishPos) {
+    for (i in trimmedStartPos:trimmedFinishPos) {
         trimmedPer <- c(trimmedPer, 0)
     }
 
 
-    for (i in trimmingFinishPos:readLen) {
-        if (i != trimmingFinishPos) {
+    for (i in trimmedFinishPos:readLen) {
+        if (i != trimmedFinishPos) {
             trimmedPer <- c(trimmedPer, stepRatio)
         }
     }
@@ -68,8 +68,8 @@ setMethod("preTrimmingRatioPlot",  "QualityReport", function(object){
 ### ============================================================================
 setMethod("preQualityBasePlot",  "QualityReport", function(object){
     readFeature <- object@readFeature
-    trimmingStartPos = object@trimmingStartPos
-    trimmingFinishPos = object@trimmingFinishPos
+    trimmedStartPos = object@trimmedStartPos
+    trimmedFinishPos = object@trimmedFinishPos
     readLen = length(object@qualityPhredScores)
 
     qualityPlotDf<- data.frame(1:length(object@qualityPhredScores),
@@ -80,9 +80,9 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object){
                aes(Index, Score)) +
             geom_point() + theme_bw() +
             xlab("Base Index") + ylab("Phred Quality Score") +
-            geom_vline(xintercept = trimmingStartPos,
+            geom_vline(xintercept = trimmedStartPos,
                        color = "red", size=1) +
-            geom_vline(xintercept = trimmingFinishPos,
+            geom_vline(xintercept = trimmedFinishPos,
                        color = "red", size=1) +
             ggtitle(paste(readFeature, " Quality Trimming Percentage Plot")) +
             theme(axis.text.x = element_text(angle = 90, hjust = 1),
@@ -172,7 +172,7 @@ setMethod("updateQualityParam",  "QualityReport",
                                                        slidingWindowSize)
               object@cutoffQualityScore <- cutoffQualityScore
               object@slidingWindowSize <- slidingWindowSize
-              object@trimmingStartPos <- trimmingPos[1]
-              object@trimmingFinishPos <- trimmingPos[2]
+              object@trimmedStartPos <- trimmingPos[1]
+              object@trimmedFinishPos <- trimmingPos[2]
               return(object)
           })

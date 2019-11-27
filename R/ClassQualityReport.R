@@ -5,8 +5,8 @@
 #' @slot readFeature .
 #' @slot qualityPhredScores .
 #' @slot qualityBaseScore .
-#' @slot trimmingStartPos .
-#' @slot trimmingFinishPos .
+#' @slot trimmedStartPos .
+#' @slot trimmedFinishPos .
 #' @slot cutoffQualityScore .
 #' @slot slidingWindowSize .
 #'
@@ -35,8 +35,16 @@ setClass("QualityReport",
              readFeature             = "character",
              qualityPhredScores      = "numeric",
              qualityBaseScore        = "numeric",
-             trimmingStartPos        = "numeric",
-             trimmingFinishPos       = "numeric",
+             rawSeqLength            = "numeric",
+             trimmedSeqLength        = "numeric",
+             trimmedStartPos        = "numeric",
+             trimmedFinishPos       = "numeric",
+             rawSecondaryPeakNum     = "numeric",
+             trimmedSecondaryPeakNum = "numeric",
+             rawMeanQualityScore     = "numeric",
+             trimmedMeanQualityScore = "numeric",
+             rawMinQualityScore      = "numeric",
+             trimmedMinQualityScore  = "numeric",
              cutoffQualityScore      = "numeric",
              slidingWindowSize       = "numeric"
          ),
@@ -75,8 +83,8 @@ setMethod("initialize",
                   trimmingPos <- inside_calculate_trimming(qualityBaseScore,
                                                            cutoffQualityScore,
                                                            slidingWindowSize)
-                  trimmingStartPos <- trimmingPos[1]
-                  trimmingFinishPos <- trimmingPos[2]
+                  trimmedStartPos <- trimmingPos[1]
+                  trimmedFinishPos <- trimmingPos[2]
               } else {
                   stop(errors)
               }
@@ -84,8 +92,8 @@ setMethod("initialize",
                              readFeature         = readFeature,
                              qualityPhredScores  = qualityPhredScores,
                              qualityBaseScore    = qualityBaseScore,
-                             trimmingStartPos    = trimmingStartPos,
-                             trimmingFinishPos   = trimmingFinishPos,
+                             trimmedStartPos    = trimmedStartPos,
+                             trimmedFinishPos   = trimmedFinishPos,
                              cutoffQualityScore  = cutoffQualityScore,
                              slidingWindowSize   = slidingWindowSize)
           })

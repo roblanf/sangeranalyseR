@@ -803,10 +803,10 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        ),
                                 ),
                                 column(3,
-                                       uiOutput("trimmingStartPos") ,
+                                       uiOutput("trimmedStartPos") ,
                                 ),
                                 column(3,
-                                       uiOutput("trimmingFinishPos") ,
+                                       uiOutput("trimmedFinishPos") ,
                                 )
                             ),
                             tags$hr(style = ("border-top: 6px double #A9A9A9;")),
@@ -846,10 +846,10 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                       max = 200, value = 100),
                                    ),
                                    column(3,
-                                          uiOutput("ChromatogramTrimmingStartPos"),
+                                          uiOutput("ChromatogramtrimmedStartPos"),
                                    ),
                                    column(3,
-                                          uiOutput("ChromatogramTrimmingFinishPos"),
+                                          uiOutput("ChromatogramtrimmedFinishPos"),
                                    ),
                                    column(3,
                                           numericInput(
@@ -888,10 +888,10 @@ alignedConsensusSetServer <- function(input, output, session) {
         if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
             #     trimmedRV[["trimmedStart"]] <-
             #         SangerSingleReadQualReport[[
-            #             strtoi(sidebar_menu[[1]])]]@trimmingStartPos
+            #             strtoi(sidebar_menu[[1]])]]@trimmedStartPos
             #     trimmedRV[["trimmedEnd"]] <-
             #         SangerSingleReadQualReport[[
-            #             strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
+            #             strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
             #     qualityPhredScores = SangerSingleReadQualReport[[
             #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
             #
@@ -1028,8 +1028,8 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     valueBoxCutoffQualityScore (input, output, session)
     valueBoxSlidingWindowSize (input, output, session)
-    valueBoxTrimmingStartPos (input, output, session, trimmedRV)
-    valueBoxTrimmingFinishPos (input, output, session, trimmedRV)
+    valueBoxTrimmedStartPos (input, output, session, trimmedRV)
+    valueBoxTrimmedFinishPos (input, output, session, trimmedRV)
 
     valueBoxRemainingBP (input, output, session, trimmedRV)
     valueBoxTrimmedRatio (input, output, session, trimmedRV)
@@ -1054,10 +1054,10 @@ alignedConsensusSetServer <- function(input, output, session) {
         if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
                 cutoffQualityScore <<- strtoi(inputCutoffQualityScoreText)
-            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmingStartPos <<- trimmingPos[1]
-            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmingFinishPos <<- trimmingPos[2]
-            trimmedRV[["trimmedStart"]] <<- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmingStartPos
-            trimmedRV[["trimmedEnd"]] <<- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmingFinishPos
+            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos <<- trimmingPos[1]
+            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos <<- trimmingPos[2]
+            trimmedRV[["trimmedStart"]] <<- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos
+            trimmedRV[["trimmedEnd"]] <<- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos
             qualityPhredScores <-  SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
             readLen = length(qualityPhredScores)
             trimmedRV[["remainingBP"]] <<-
@@ -1087,10 +1087,10 @@ alignedConsensusSetServer <- function(input, output, session) {
                 strtoi(inputSlidingWindowSizeText))
         if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@slidingWindowSize <<- strtoi(inputSlidingWindowSizeText)
-            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmingStartPos <<- trimmingPos[1]
-            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmingFinishPos <<- trimmingPos[2]
-            trimmedRV[["trimmedStart"]] <<-SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmingStartPos
-            trimmedRV[["trimmedEnd"]] <<-SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmingFinishPos
+            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos <<- trimmingPos[1]
+            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos <<- trimmingPos[2]
+            trimmedRV[["trimmedStart"]] <<-SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos
+            trimmedRV[["trimmedEnd"]] <<-SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos
             qualityPhredScores = SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
             readLen = length(qualityPhredScores)
             trimmedRV[["remainingBP"]] <<-trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
@@ -1105,31 +1105,31 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
         readFeature <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadFeature[[singleReadIndex]]
-        trimmingStartPos = trimmedRV[["trimmedStart"]]
-        trimmingFinishPos = trimmedRV[["trimmedEnd"]]
+        trimmedStartPos = trimmedRV[["trimmedStart"]]
+        trimmedFinishPos = trimmedRV[["trimmedEnd"]]
         qualityPhredScores <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
         readLen = length(qualityPhredScores)
 
         stepRatio = 1 / readLen
-        trimmingStartPos / readLen
-        trimmingFinishPos / readLen
+        trimmedStartPos / readLen
+        trimmedFinishPos / readLen
 
         trimmedPer <- c()
         remainingPer <- c()
 
-        for (i in 1:trimmingStartPos) {
-            if (i != trimmingStartPos) {
+        for (i in 1:trimmedStartPos) {
+            if (i != trimmedStartPos) {
                 trimmedPer <- c(trimmedPer, stepRatio)
             }
         }
 
-        for (i in trimmingStartPos:trimmingFinishPos) {
+        for (i in trimmedStartPos:trimmedFinishPos) {
             trimmedPer <- c(trimmedPer, 0)
         }
 
 
-        for (i in trimmingFinishPos:readLen) {
-            if (i != trimmingFinishPos) {
+        for (i in trimmedFinishPos:readLen) {
+            if (i != trimmedFinishPos) {
                 trimmedPer <- c(trimmedPer, stepRatio)
             }
         }
@@ -1165,14 +1165,14 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                        x = 0.5, y = 1.1)) %>%
             add_annotations(
                 text = "Trimmed Ratio (Each BP)",
-                x = (trimmingStartPos + trimmingFinishPos) / 2,
+                x = (trimmedStartPos + trimmedFinishPos) / 2,
                 y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
                 + 0.06,
                 showarrow=FALSE
             ) %>%
             add_annotations(
                 text = "Remaining Ratio (Each BP)",
-                x = (trimmingStartPos+trimmingFinishPos) / 2,
+                x = (trimmedStartPos+trimmedFinishPos) / 2,
                 y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
                 - 0.06,
                 showarrow=FALSE
@@ -1183,8 +1183,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
         readFeature <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadFeature[[singleReadIndex]]
-        trimmingStartPos = trimmedRV[["trimmedStart"]]
-        trimmingFinishPos = trimmedRV[["trimmedEnd"]]
+        trimmedStartPos = trimmedRV[["trimmedStart"]]
+        trimmedFinishPos = trimmedRV[["trimmedEnd"]]
         qualityPhredScores <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
         readLen = length(qualityPhredScores)
 
@@ -1208,16 +1208,16 @@ alignedConsensusSetServer <- function(input, output, session) {
                                       '<sup>th</sup><br>Phred Quality Score :',
                                       Score),
                         name = 'Quality Each BP') %>%
-            add_trace(x=seq(trimmingStartPos,
-                            trimmingFinishPos,
-                            len=trimmingFinishPos-trimmingStartPos+1),
-                      y=rep(70, trimmingFinishPos-trimmingStartPos+1),
+            add_trace(x=seq(trimmedStartPos,
+                            trimmedFinishPos,
+                            len=trimmedFinishPos-trimmedStartPos+1),
+                      y=rep(70, trimmedFinishPos-trimmedStartPos+1),
                       mode="lines", hoverinfo="text",
                       text=paste("Trimmed Reads BP length:",
-                                 trimmingFinishPos-trimmingStartPos+1,
+                                 trimmedFinishPos-trimmedStartPos+1,
                                  "BPs <br>",
                                  "Trimmed Reads BP ratio:",
-                                 round((trimmingFinishPos - trimmingStartPos+1)/
+                                 round((trimmedFinishPos - trimmedStartPos+1)/
                                            readLen * 100,
                                        digits=2),
                                  "%"),
@@ -1232,31 +1232,31 @@ alignedConsensusSetServer <- function(input, output, session) {
                       line = list(width = 12),
                       name = 'Whole Read') %>%
             layout(xaxis = x, yaxis = y,
-                   shapes = list(vline(trimmingStartPos),
-                                 vline(trimmingFinishPos)),
+                   shapes = list(vline(trimmedStartPos),
+                                 vline(trimmedFinishPos)),
                    legend = list(orientation = 'h',
                                  xanchor = "center",  # use center of legend as anchor
                                  x = 0.5, y = 1.1)) %>%
-            # add_segments(x = trimmingStartPos, xend = trimmingFinishPos, y = 70, yend = 70, inherit = TRUE, width = 10, line = list(width = 8)) %>%
+            # add_segments(x = trimmedStartPos, xend = trimmedFinishPos, y = 70, yend = 70, inherit = TRUE, width = 10, line = list(width = 8)) %>%
             # add_segments(x = 0, xend = readLen, y = 75, yend = 75, inherit = TRUE, width = 4, line = list(width = 8)) %>%
             add_annotations(
                 text = "Trimming Strat <br> BP Index",
-                x = trimmingStartPos + 40,
+                x = trimmedStartPos + 40,
                 y = 15,
                 showarrow=FALSE
             ) %>%
             add_annotations(
                 text = "Trimming End <br> BP Index",
-                x = trimmingFinishPos - 40,
+                x = trimmedFinishPos - 40,
                 y = 15,
                 showarrow=FALSE
             )
         # add_markers(qualityPlotDf, x=~Index, y=~Score)
-        # add_segments(x = trimmingStartPos, xend = trimmingFinishPos, y = 70, yend = 70, inherit = TRUE)
+        # add_segments(x = trimmedStartPos, xend = trimmedFinishPos, y = 70, yend = 70, inherit = TRUE)
     })
 
-    valueBoxChromTrimmingStartPos (input, output, session, trimmedRV)
-    valueBoxChromTrimmingFinishPos (input, output, session, trimmedRV)
+    valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
+    valueBoxChromTrimmedFinishPos (input, output, session, trimmedRV)
 
     # chromatogram
     output$chromatogramUIOutput <- renderUI({

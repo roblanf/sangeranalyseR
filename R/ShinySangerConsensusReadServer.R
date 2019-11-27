@@ -514,10 +514,10 @@ consensusReadServer <- function(input, output, session) {
                                    ),
                             ),
                             column(3,
-                                   uiOutput("trimmingStartPos") ,
+                                   uiOutput("trimmedStartPos") ,
                             ),
                             column(3,
-                                   uiOutput("trimmingFinishPos") ,
+                                   uiOutput("trimmedFinishPos") ,
                             )
                         ),
                         tags$hr(style = ("border-top: 6px double #A9A9A9;")),
@@ -557,10 +557,10 @@ consensusReadServer <- function(input, output, session) {
                                                   max = 200, value = 100),
                                ),
                                column(3,
-                                      uiOutput("ChromatogramTrimmingStartPos"),
+                                      uiOutput("ChromatogramtrimmedStartPos"),
                                ),
                                column(3,
-                                      uiOutput("ChromatogramTrimmingFinishPos"),
+                                      uiOutput("ChromatogramtrimmedFinishPos"),
                                ),
                                column(3,
                                       numericInput(
@@ -860,11 +860,11 @@ consensusReadServer <- function(input, output, session) {
 
     valueBoxCutoffQualityScore (input, output, session)
     valueBoxSlidingWindowSize (input, output, session)
-    valueBoxTrimmingStartPos (input, output, session, trimmedRV)
-    valueBoxTrimmingFinishPos (input, output, session, trimmedRV)
+    valueBoxTrimmedStartPos (input, output, session, trimmedRV)
+    valueBoxTrimmedFinishPos (input, output, session, trimmedRV)
 
-    valueBoxChromTrimmingStartPos (input, output, session, trimmedRV)
-    valueBoxChromTrimmingFinishPos (input, output, session, trimmedRV)
+    valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
+    valueBoxChromTrimmedFinishPos (input, output, session, trimmedRV)
 
     valueBoxRemainingBP (input, output, session, trimmedRV)
     valueBoxTrimmedRatio (input, output, session, trimmedRV)
@@ -897,15 +897,15 @@ consensusReadServer <- function(input, output, session) {
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
                 cutoffQualityScore <<- strtoi(inputCutoffQualityScoreText)
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmingStartPos <<- trimmingPos[1]
+                trimmedStartPos <<- trimmingPos[1]
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmingFinishPos <<- trimmingPos[2]
+                trimmedFinishPos <<- trimmingPos[2]
             trimmedRV[["trimmedStart"]] <<-
                 SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmingStartPos
+                    strtoi(sidebar_menu[[1]])]]@trimmedStartPos
             trimmedRV[["trimmedEnd"]] <<-
                 SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmingFinishPos
+                    strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
             qualityPhredScores = SangerSingleReadQualReport[[
                 strtoi(sidebar_menu[[1]])]]@qualityPhredScores
             readLen = length(qualityPhredScores)
@@ -938,15 +938,15 @@ consensusReadServer <- function(input, output, session) {
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
                 slidingWindowSize <<- strtoi(inputSlidingWindowSizeText)
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmingStartPos <<- trimmingPos[1]
+                trimmedStartPos <<- trimmingPos[1]
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmingFinishPos <<- trimmingPos[2]
+                trimmedFinishPos <<- trimmingPos[2]
             trimmedRV[["trimmedStart"]] <<-
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmingStartPos
+                trimmedStartPos
             trimmedRV[["trimmedEnd"]] <<-
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmingFinishPos
+                trimmedFinishPos
             qualityPhredScores = SangerSingleReadQualReport[[
                 strtoi(sidebar_menu[[1]])]]@qualityPhredScores
             readLen = length(qualityPhredScores)
