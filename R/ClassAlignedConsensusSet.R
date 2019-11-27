@@ -22,10 +22,10 @@
 #'                      parentDirectory       = inputFilesParentDir,
 #'                      suffixForwardRegExp   = suffixForwardRegExp,
 #'                      suffixReverseRegExp   = suffixReverseRegExp,
-#'                      TrimmingMethod        = "M1",
-#'                      M1TrimmingCutoff      = 0.0001,
-#'                      M2CutoffQualityScore  = NULL,
-#'                      M2SlidingWindowSize   = NULL)
+#'                      TrimmingMethod        = "M2",
+#'                      M1TrimmingCutoff      = NULL,
+#'                      M2CutoffQualityScore  = 40,
+#'                      M2SlidingWindowSize   = 10)
 setClass("SangerAlignedConsensusSet",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
@@ -89,7 +89,7 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     ### 'parentDirectory' prechecking
     ### ------------------------------------------------------------------------
-    errors <- checkParentDirectory (readingFrame, errors)
+    errors <- checkParentDirectory (parentDirectory, errors)
 
 
     ### ------------------------------------------------------------------------

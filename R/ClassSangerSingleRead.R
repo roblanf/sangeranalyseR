@@ -19,10 +19,10 @@
 #' A_chloroticaSingleRead <- new("SangerSingleRead",
 #'                               readFeature         = "ForwardRead",
 #'                               readFileName        = A_chloroticaFdReadFN,
-#'                               TrimmingMethod        = "M1",
-#'                               M1TrimmingCutoff      = 0.0001,
-#'                               M2CutoffQualityScore  = NULL,
-#'                               M2SlidingWindowSize   = NULL)
+#'                               TrimmingMethod        = "M2",
+#'                               M1TrimmingCutoff      = NULL,
+#'                               M2CutoffQualityScore  = 40,
+#'                               M2SlidingWindowSize   = 10)
 setClass(
     "SangerSingleRead",
     ### -------------------------------------------------------------------

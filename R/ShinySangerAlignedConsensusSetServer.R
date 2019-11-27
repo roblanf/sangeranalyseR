@@ -779,26 +779,26 @@ alignedConsensusSetServer <- function(input, output, session) {
                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                             fluidRow(
                                 column(3,
-                                       uiOutput("cutoffQualityScore") ,
+                                       uiOutput("M2CutoffQualityScore") ,
                                        tags$ul(
-                                           textInput("cutoffQualityScoreText",
+                                           textInput("M2CutoffQualityScoreText",
                                                      label = p("Change Value"),
                                                      value = toString(
                                                          SangerSingleReadQualReport
                                                          [[singleReadIndex]]@
-                                                             cutoffQualityScore),
+                                                             M2CutoffQualityScore),
                                                      width = '90%')
                                        ),
                                 ),
                                 column(3,
-                                       uiOutput("slidingWindowSize") ,
+                                       uiOutput("M2SlidingWindowSize") ,
                                        tags$ul(
-                                           textInput("slidingWindowSizeText",
+                                           textInput("M2SlidingWindowSizeText",
                                                      label = p("Change Value"),
                                                      value = toString(
                                                          SangerSingleReadQualReport
                                                          [[singleReadIndex]]@
-                                                             slidingWindowSize),
+                                                             M2SlidingWindowSize),
                                                      width = '90%')
                                        ),
                                 ),
@@ -1026,34 +1026,45 @@ alignedConsensusSetServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
-    valueBoxCutoffQualityScore (input, output, session)
-    valueBoxSlidingWindowSize (input, output, session)
+    valueBoxM2CutoffQualityScore (input, output, session)
+    valueBoxM2SlidingWindowSize (input, output, session)
     valueBoxTrimmedStartPos (input, output, session, trimmedRV)
     valueBoxTrimmedFinishPos (input, output, session, trimmedRV)
 
     valueBoxRemainingBP (input, output, session, trimmedRV)
     valueBoxTrimmedRatio (input, output, session, trimmedRV)
 
-    observeEvent(input$cutoffQualityScoreText, {
+    observeEvent(input$M2CutoffQualityScoreText, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
         message("@@@singleReadIndex: ", singleReadIndex)
-        if (!is.na(strtoi(input$cutoffQualityScoreText)) &&
-            strtoi(input$cutoffQualityScoreText) > 0 &&
-            strtoi(input$cutoffQualityScoreText) <= 60 &&
-            strtoi(input$cutoffQualityScoreText) %% 1 ==0) {
-            inputCutoffQualityScoreText <- input$cutoffQualityScoreText
+        if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
+            strtoi(input$M2CutoffQualityScoreText) > 0 &&
+            strtoi(input$M2CutoffQualityScoreText) <= 60 &&
+            strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
+            inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
         } else {
-            inputCutoffQualityScoreText <- 20
+            inputM2CutoffQualityScoreText <- 20
         }
         trimmingPos <-
             inside_calculate_trimming(
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityBaseScore, strtoi(inputCutoffQualityScoreText),
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@slidingWindowSize)
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores,
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityBaseScore,
+                strtoi(inputM2CutoffQualityScoreText),
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2SlidingWindowSize)
+
+
+
+        # inside_calculate_trimming(qualityPhredScores,
+        #                           qualityBaseScore,
+        #                           M2CutoffQualityScore,
+        #                           M2SlidingWindowSize)
+
+
         if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                cutoffQualityScore <<- strtoi(inputCutoffQualityScoreText)
+                M2CutoffQualityScore <<- strtoi(inputM2CutoffQualityScoreText)
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos <<- trimmingPos[1]
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos <<- trimmingPos[2]
             trimmedRV[["trimmedStart"]] <<- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos
@@ -1069,24 +1080,48 @@ alignedConsensusSetServer <- function(input, output, session) {
         }
     })
 
-    observeEvent(input$slidingWindowSizeText, {
+    observeEvent(input$M2SlidingWindowSizeText, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        if (!is.na(strtoi(input$slidingWindowSizeText)) &&
-            strtoi(input$slidingWindowSizeText) > 0 &&
-            strtoi(input$slidingWindowSizeText) <= 20 &&
-            strtoi(input$slidingWindowSizeText) %% 1 ==0) {
-            inputSlidingWindowSizeText <- input$slidingWindowSizeText
+        if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
+            strtoi(input$M2SlidingWindowSizeText) > 0 &&
+            strtoi(input$M2SlidingWindowSizeText) <= 20 &&
+            strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
+            inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
         } else {
-            inputSlidingWindowSizeText <- 5
+            inputM2SlidingWindowSizeText <- 5
         }
         trimmingPos <-
-            inside_calculate_trimming(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityBaseScore,
-                                      SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@cutoffQualityScore,
-                strtoi(inputSlidingWindowSizeText))
+            inside_calculate_trimming(
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores,
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityBaseScore,
+                                      SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2CutoffQualityScore,
+                strtoi(inputM2SlidingWindowSizeText))
+
+
+        # inside_calculate_trimming(qualityPhredScores,
+        #                           qualityBaseScore,
+        #                           M2CutoffQualityScore,
+        #                           M2SlidingWindowSize)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         if (!is.null(trimmingPos[1]) && !is.null(trimmingPos[2])) {
-            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@slidingWindowSize <<- strtoi(inputSlidingWindowSizeText)
+            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos <<- trimmingPos[1]
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos <<- trimmingPos[2]
             trimmedRV[["trimmedStart"]] <<-SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos

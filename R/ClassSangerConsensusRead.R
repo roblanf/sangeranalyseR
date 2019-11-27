@@ -44,10 +44,10 @@
 #'                                  consenesusReadName    = consenesusReadName,
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
-#'                                  TrimmingMethod        = "M1",
-#'                                  M1TrimmingCutoff      = 0.0001,
-#'                                  M2CutoffQualityScore  = NULL,
-#'                                  M2SlidingWindowSize   = NULL)
+#'                                  TrimmingMethod        = "M2",
+#'                                  M1TrimmingCutoff      = NULL,
+#'                                  M2CutoffQualityScore  = 40,
+#'                                  M2SlidingWindowSize   = 10)
 setClass("SangerConsensusRead",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerConsensusRead'
@@ -124,7 +124,7 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     ### 'parentDirectory' prechecking
     ### ------------------------------------------------------------------------
-    errors <- checkParentDirectory (readingFrame, errors)
+    errors <- checkParentDirectory (parentDirectory, errors)
 
     ### ------------------------------------------------------------------------
     ### 'forwardAllReads' & 'reverseAllReads' files prechecking

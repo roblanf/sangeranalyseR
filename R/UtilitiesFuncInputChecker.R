@@ -1,6 +1,6 @@
 ### ============================================================================
 ### Quality trimming related: 'TrimmingMethod', 'M1TrimmingCutoff',
-                              'M2CutoffQualityScore', 'M2SlidingWindowSize'
+###                           'M2CutoffQualityScore', 'M2SlidingWindowSize'
 ### ============================================================================
 checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
                            M2CutoffQualityScore, M2SlidingWindowSize, errors) {
@@ -134,7 +134,7 @@ checkReadingFrame <- function(readingFrame, errors) {
 ### ------------------------------------------------------------------------
 ### 'parentDirectory' prechecking
 ### ------------------------------------------------------------------------
-checkParentDirectory <- function(readingFrame, errors) {
+checkParentDirectory <- function(parentDirectory, errors) {
     if (!file.exists(parentDirectory)) {
         msg <- paste("\n'", parentDirectory, "'",
                      " parent directory does not exist.\n", sep = "")

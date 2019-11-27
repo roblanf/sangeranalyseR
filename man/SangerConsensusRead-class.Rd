@@ -31,8 +31,10 @@ A_chloroticConsensusReads <- new("SangerConsensusRead",
                                  consenesusReadName    = consenesusReadName,
                                  suffixForwardRegExp   = suffixForwardRegExp,
                                  suffixReverseRegExp   = suffixReverseRegExp,
-                                 cutoffQualityScore    = 20,
-                                 slidingWindowSize     = 8)
+                                 TrimmingMethod        = "M2",
+                                 M1TrimmingCutoff      = NULL,
+                                 M2CutoffQualityScore  = 40,
+                                 M2SlidingWindowSize   = 10)
 }
 \author{
 Kuan-Hao Chao

@@ -32,6 +32,8 @@ An S4 class for quality report for a SangerSingleRead S4 object
 
 \item{\code{trimmedMinQualityScore}}{.}
 
+\item{\code{remainingRatio}}{.}
+
 \item{\code{TrimmingMethod}}{.}
 
 \item{\code{M1TrimmingCutoff}}{.}
@@ -47,10 +49,12 @@ A_chloroticaFdReadFN <- file.path(inputFilesPath,
                                   "Allolobophora_chlorotica",
                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 A_chloroticaRead <-
-       SangerSingleRead(readFeature         = "ForwardRead",
-                        readFileName        = A_chloroticaFdReadFN,
-                        M2CutoffQualityScore  = 60L,
-                        M2SlidingWindowSize   = 8L)
+       SangerSingleRead(readFeature           = "ForwardRead",
+                        readFileName          = A_chloroticaFdReadFN,
+                        TrimmingMethod        = "M2",
+                        M1TrimmingCutoff      = NULL,
+                        M2CutoffQualityScore  = 40,
+                        M2SlidingWindowSize   = 10)
 "@"(A_chloroticaRead, QualityReport)
 }
 \author{

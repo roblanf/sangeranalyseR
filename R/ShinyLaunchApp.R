@@ -10,10 +10,10 @@
 #'                                consenesusReadName    = consenesusReadName,
 #'                                suffixForwardRegExp   = suffixForwardRegExp,
 #'                                suffixReverseRegExp   = suffixReverseRegExp,
-#'                                TrimmingMethod        = "M1",
-#'                                M1TrimmingCutoff      = 0.0001,
-#'                                M2CutoffQualityScore  = NULL,
-#'                                M2SlidingWindowSize   = NULL)
+#'                                TrimmingMethod        = "M2",
+#'                                M1TrimmingCutoff      = NULL,
+#'                                M2CutoffQualityScore  = 40,
+#'                                M2SlidingWindowSize   = 10)
 #' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
 launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
     ### ------------------------------------------------------------------------

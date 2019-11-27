@@ -28,10 +28,11 @@ inside_calculate_trimming <- function(qualityPhredScores,
         trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
         trimmedMinQualityScore <- min(trimmedQualityPhredScore)
         trimmedSeqLength = trimmedFinishPos - trimmedStartPos + 1
+        remainingRatio = trimmedSeqLength / rawSeqLength
     }
     return(c(rawSeqLength, rawMeanQualityScore, rawMinQualityScore,
              trimmedStartPos, trimmedFinishPos, trimmedSeqLength,
-             trimmedMeanQualityScore, trimmedMinQualityScore))
+             trimmedMeanQualityScore, trimmedMinQualityScore, remainingRatio))
 }
 
 ### ============================================================================
@@ -85,18 +86,18 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
         if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
-            trimmedRV[["trimmedStart"]] <-
+            trimmedRV[["trimmedStartPos"]] <-
                 SangerSingleReadQualReport[[
                     strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-            trimmedRV[["trimmedEnd"]] <-
+            trimmedRV[["trimmedFinishPos"]] <-
                 SangerSingleReadQualReport[[
                     strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
             qualityPhredScores = SangerSingleReadQualReport[[
                 strtoi(sidebar_menu[[1]])]]@qualityPhredScores
 
             readLen = length(qualityPhredScores)
-            trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
-            trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
+            trimmedRV[["trimmedSeqLength"]] <- trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1
+            trimmedRV[["remainingRatio"]] <- round(((trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1) / readLen) * 100, digits = 2)
         }
     })
 }
@@ -135,18 +136,18 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
 #         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
 #         # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
 #         if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
-#         #     trimmedRV[["trimmedStart"]] <-
+#         #     trimmedRV[["trimmedStartPos"]] <-
 #         #         SangerSingleReadQualReport[[
 #         #             strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-#         #     trimmedRV[["trimmedEnd"]] <-
+#         #     trimmedRV[["trimmedFinishPos"]] <-
 #         #         SangerSingleReadQualReport[[
 #         #             strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
 #         #     qualityPhredScores = SangerSingleReadQualReport[[
 #         #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
 #         #
 #         #     readLen = length(qualityPhredScores)
-#         #     trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1
-#         #     trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedEnd"]] - trimmedRV[["trimmedStart"]] + 1) / readLen) * 100, digits = 2)
+#         #     trimmedRV[["trimmedSeqLength"]] <- trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1
+#         #     trimmedRV[["remainingRatio"]] <- round(((trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1) / readLen) * 100, digits = 2)
 #         }
 #     })
 # }
@@ -392,7 +393,7 @@ valueBoxTrimmedStartPos <- function(input, output, session, trimmedRV) {
             subtitle = tags$p("Trimming Start Pos ",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(toString(trimmedRV[["trimmedStart"]]),
+            value = tags$p(toString(trimmedRV[["trimmedStartPos"]]),
                            style = "font-size: 29px;"),
             icon = icon("check-circle", "fa-sm"),
             color = "olive", width = 12,
@@ -410,7 +411,7 @@ valueBoxTrimmedFinishPos <- function(input, output, session, trimmedRV) {
             subtitle = tags$p("Trimming End Pos ",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(toString(trimmedRV[["trimmedEnd"]]),
+            value = tags$p(toString(trimmedRV[["trimmedFinishPos"]]),
                            style = "font-size: 29px;"),
             icon = icon("times-circle", "fa-sm"),
             color = "olive", width = 12,
@@ -430,7 +431,7 @@ valueBoxChromTrimmedStartPos <- function(input, output, session, trimmedRV) {
             subtitle = tags$p("Trimming Start Pos ",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(toString(trimmedRV[["trimmedStart"]]),
+            value = tags$p(toString(trimmedRV[["trimmedStartPos"]]),
                            style = "font-size: 29px;"),
             icon = icon("check-circle", "fa-sm"),
             color = "olive", width = 12,
@@ -448,7 +449,7 @@ valueBoxChromTrimmedFinishPos <- function(input, output, session, trimmedRV) {
             subtitle = tags$p("Trimming End Pos ",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(toString(trimmedRV[["trimmedEnd"]]),
+            value = tags$p(toString(trimmedRV[["trimmedFinishPos"]]),
                            style = "font-size: 29px;"),
             icon = icon("times-circle", "fa-sm"),
             color = "olive", width = 12,
@@ -469,7 +470,7 @@ valueBoxRemainingBP <- function(input, output, session, trimmedRV) {
                    subtitle = tags$p("Remaining Read Length",
                                      style = "font-size: 15px;
                                             font-weight: bold;"),
-                   value = tags$p(paste(strtoi(trimmedRV[["remainingBP"]]), "BPs"),
+                   value = tags$p(paste(strtoi(trimmedRV[["trimmedSeqLength"]]), "BPs"),
                                   style = "font-size: 32px;"),
                    icon = icon("dna", "fa-sm"),
                    color = "olive",
@@ -490,7 +491,7 @@ valueBoxTrimmedRatio <- function(input, output, session, trimmedRV) {
                    subtitle = tags$p("Remaining Ratio",
                                      style = "font-size: 15px;
                                             font-weight: bold;"),
-                   value = tags$p(paste(trimmedRV[["trimmedRatio"]], "%"),
+                   value = tags$p(paste(trimmedRV[["remainingRatio"]], "%"),
                                   style = "font-size: 32px;"),
                    icon = icon("divide", "fa-sm"),
                    color = "olive",
@@ -510,8 +511,8 @@ qualityTrimmingRatioPlot <- function(input, output, session, trimmedRV,
     output$qualityTrimmingRatioPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readFeature <- SangerSingleReadFeature[[strtoi(sidebar_menu[[1]])]]
-        trimmedStartPos = trimmedRV[["trimmedStart"]]
-        trimmedFinishPos = trimmedRV[["trimmedEnd"]]
+        trimmedStartPos = trimmedRV[["trimmedStartPos"]]
+        trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
         qualityPhredScores = SangerSingleReadQualReport[[
             strtoi(sidebar_menu[[1]])]]@qualityPhredScores
         readLen = length(qualityPhredScores)
@@ -601,8 +602,8 @@ qualityQualityBasePlot <- function(input, output, session, trimmedRV,
     output$qualityQualityBasePlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readFeature <- SangerSingleReadFeature[[strtoi(sidebar_menu[[1]])]]
-        trimmedStartPos = trimmedRV[["trimmedStart"]]
-        trimmedFinishPos = trimmedRV[["trimmedEnd"]]
+        trimmedStartPos = trimmedRV[["trimmedStartPos"]]
+        trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
         qualityPhredScores = SangerSingleReadQualReport[[
             strtoi(sidebar_menu[[1]])]]@qualityPhredScores
         readLen = length(qualityPhredScores)

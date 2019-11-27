@@ -25,16 +25,20 @@
 #' @export
 #' @author Kuan-Hao Chao
 #' @example
-#' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-#' samplesRegExp <- "ACHL"
-#'
-#' A_chloroticConsensusReads <-
-#'        SangerConsensusRead(parentDirectory     = inputFilesParentDir,
-#'                            readsRegularExp     =  samplesRegExp,
-#'                            TrimmingMethod         = "M1",
-#'                            M1TrimmingCutoff       = 0.0001,
-#'                            M2CutoffQualityScore   = NULL,
-#'                            M2SlidingWindowSize    = NULL)
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
+#' consenesusReadName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
+#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' A_chloroticConsensusReads <- SangerConsensusRead(
+#'                                parentDirectory       = inputFilesParentDir,
+#'                                consenesusReadName    = consenesusReadName,
+#'                                suffixForwardRegExp   = suffixForwardRegExp,
+#'                                suffixReverseRegExp   = suffixReverseRegExp,
+#'                                TrimmingMethod        = "M2",
+#'                                M1TrimmingCutoff      = NULL,
+#'                                M2CutoffQualityScore  = 40,
+#'                                M2SlidingWindowSize   = 10)
 SangerConsensusRead <- function(parentDirectory        = character(0),
                                 consenesusReadName     = character(0),
                                 suffixForwardRegExp    = character(0),
@@ -92,16 +96,17 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #' @author Kuan-Hao Chao
 #' @example
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-#' A_chloroticaFdReadFN <- file.path(inputFilesPath,
-#'                                   "Allolobophora_chlorotica",
-#'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
+#' A_chloroticaFdReadFN <-
+#'             file.path(inputFilesPath,
+#'                       "Allolobophora_chlorotica",
+#'                       "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 #' A_chloroticaSingleRead <-
 #'        SangerSingleRead(readFeature          = "ForwardRead",
 #'                         readFileName         = A_chloroticaFdReadFN,
-#'                         TrimmingMethod       = "M1",
-#'                         M1TrimmingCutoff     = 0.0001,
-#'                         M2CutoffQualityScore = NULL,
-#'                         M2SlidingWindowSize  = NULL)
+#'                         TrimmingMethod        = "M2",
+#'                         M1TrimmingCutoff      = NULL,
+#'                         M2CutoffQualityScore  = 40,
+#'                         M2SlidingWindowSize   = 10)
 SangerSingleRead <- function(readFeature = character(0),
                              readFileName = character(0),
                              TrimmingMethod        = "M2",

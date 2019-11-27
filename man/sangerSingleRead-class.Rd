@@ -6,8 +6,9 @@
 \title{SangerSingleRead}
 \usage{
 SangerSingleRead(readFeature = character(0),
-  readFileName = character(0), cutoffQualityScore = 20L,
-  slidingWindowSize = 5L)
+  readFileName = character(0), TrimmingMethod = "M2",
+  M1TrimmingCutoff = NULL, M2CutoffQualityScore = 40,
+  M2SlidingWindowSize = 10)
 }
 \description{
 An S4 class extending sangerseq S4 class
@@ -26,8 +27,10 @@ A_chloroticaFdReadFN <- file.path(inputFilesPath,
 A_chloroticaSingleRead <- new("SangerSingleRead",
                               readFeature         = "ForwardRead",
                               readFileName        = A_chloroticaFdReadFN,
-                              cutoffQualityScore  = 60,
-                              slidingWindowSize   = 8)
+                              TrimmingMethod        = "M2",
+                              M1TrimmingCutoff      = NULL,
+                              M2CutoffQualityScore  = 40,
+                              M2SlidingWindowSize   = 10)
 }
 \author{
 Kuan-Hao Chao

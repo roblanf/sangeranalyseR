@@ -13,6 +13,7 @@
 #' @slot trimmedMeanQualityScore .
 #' @slot rawMinQualityScore .
 #' @slot trimmedMinQualityScore .
+#' @slot remainingRatio .
 #' @slot TrimmingMethod .
 #' @slot M1TrimmingCutoff .
 #' @slot M2CutoffQualityScore .
@@ -55,6 +56,7 @@ setClass("QualityReport",
              trimmedMeanQualityScore = "numeric",
              rawMinQualityScore      = "numeric",
              trimmedMinQualityScore  = "numeric",
+             remainingRatio         = "numeric",
              TrimmingMethod          = "character",
              M1TrimmingCutoff        = "numericORNULL",
              M2CutoffQualityScore    = "numericORNULL",
@@ -129,6 +131,7 @@ setMethod("initialize",
                   trimmedSeqLength <- trimmingPos[6]
                   trimmedMeanQualityScore <- trimmingPos[7]
                   trimmedMinQualityScore <- trimmingPos[8]
+                  remainingRatio <- trimmingPos[9]
               } else {
                   stop(errors)
               }
@@ -144,6 +147,7 @@ setMethod("initialize",
                              trimmedMeanQualityScore = trimmedMeanQualityScore,
                              rawMinQualityScore      = rawMinQualityScore,
                              trimmedMinQualityScore  = trimmedMinQualityScore,
+                             remainingRatio         = remainingRatio,
                              TrimmingMethod          = TrimmingMethod,
                              M1TrimmingCutoff        = M1TrimmingCutoff,
                              M2CutoffQualityScore    = M2CutoffQualityScore,
