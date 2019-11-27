@@ -41,14 +41,14 @@ launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' SangerAlignedConsensusSet <- SangerAlignedConsensusSet(
+#' SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
 #'                               parentDirectory       = inputFilesParentDir,
 #'                               suffixForwardRegExp   = suffixForwardRegExp,
 #'                               suffixReverseRegExp   = suffixReverseRegExp,
-#'                               TrimmingMethod        = "M1",
-#'                               M1TrimmingCutoff      = 0.0001,
-#'                               M2CutoffQualityScore  = NULL,
-#'                               M2SlidingWindowSize   = NULL)
+#'                               TrimmingMethod        = "M2",
+#'                               M1TrimmingCutoff      = NULL,
+#'                               M2CutoffQualityScore  = 40,
+#'                               M2SlidingWindowSize   = 10)
 #' RShinyCSSet <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))
 launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet,
                                          directory = NULL) {
