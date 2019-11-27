@@ -136,7 +136,8 @@ alignedConsensusSetServer <- function(input, output, session) {
             return(basecalls1DF)
             }
         )
-        SangerSingleReadPrimSeqDF <- c(forwardReadPrimSeqDF, reverseReadPrimSeqDF)
+        SangerSingleReadPrimSeqDF <- c(forwardReadPrimSeqDF,
+                                       reverseReadPrimSeqDF)
 
 
         # secondarySeqID
@@ -333,7 +334,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                     ),
                 )
             )
-
         } else {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
                 if (sidebar_menu[[2]] == "Sanger" &&
@@ -391,25 +391,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadNum <-
                         SangerCSetParam[[consensusReadIndex]]$
                         SangerSingleReadNum
-
-                    # BrowseSeqs_html
-                    if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
-                        dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
-                    }
-                    browseSeqHTML <-
-                        file.path(shinyDirectory, "BrowseSeqs_html",
-                                  paste0(sidebar_menu[[1]], "_",
-                                         SCconsenesusReadName,
-                                         "_Alignment_BrowseSeqs.html"))
-                    if (!file.exists(browseSeqHTML)) {
-                        BrowseSeqs(SCAlignment,
-                                   openURL=FALSE, htmlFile=browseSeqHTML)
-                    }
-
                     fluidRow(
                         useShinyjs(),
-                        # h1(SCconsensusRead),
-                        h1(paste("You've selected:", input$sidebar_menu)),
                         box(title = tags$p("Input Parameters: ",
                                            style = "font-size: 26px;
                                        font-weight: bold;"),
@@ -548,8 +531,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                             font-weight: bold;"),
                                            value =
                                                tags$p(
-                                                   as.numeric(SCMinFractionCall),
-                                                   style = "font-size: 29px;"),
+                                                  as.numeric(SCMinFractionCall),
+                                                  style = "font-size: 29px;"),
                                            icon = icon("cut", "fa-sm"),
                                            color = "olive",
                                            width = 12,
@@ -563,8 +546,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                             font-weight: bold;"),
                                            value =
                                                tags$p(
-                                                   as.numeric(SCMaxFractionLost),
-                                                   style = "font-size: 29px;"),
+                                                  as.numeric(SCMaxFractionLost),
+                                                  style = "font-size: 29px;"),
                                            icon = icon("cut", "fa-sm"),
                                            color = "olive",
                                            width = 12,
@@ -609,7 +592,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 4px hidden #A9A9A9;")),
                             fluidRow(
                                 box(title = tags$p("Alignment",
                                                    style = "font-size: 24px;
@@ -617,11 +601,12 @@ alignedConsensusSetServer <- function(input, output, session) {
                                     collapsible = TRUE,
                                     status = "success", width = 12,
                                     column(width = 12,
-                                           includeHTML(browseSeqHTML)
+                                           htmlOutput("consensusAlignmentHTML"),
                                     ),
                                 ),
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 box(title = tags$p("Differences Dataframe",
                                                    style = "font-size: 24px;
@@ -713,34 +698,72 @@ alignedConsensusSetServer <- function(input, output, session) {
                            sidebar_menu[[3]] == "Read" &&
                            sidebar_menu[[4]] == "-" &&
                            !is.na(as.numeric(sidebar_menu[[5]])) &&
-                           (sidebar_menu[[6]] == "Forward" || sidebar_menu[[6]] == "Reverse") &&
+                           (sidebar_menu[[6]] == "Forward" ||
+                            sidebar_menu[[6]] == "Reverse") &&
                            sidebar_menu[[7]] == "Read") {
                     consensusReadIndex <- strtoi(sidebar_menu[[1]])
                     singleReadIndex <- strtoi(sidebar_menu[[5]])
-                    SangerConsensusFRReadsList <- SangerCSetParam[[consensusReadIndex]]$SangerConsensusFRReadsList
-                    SangerSingleReadBFN <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadBFN
-                    SangerSingleReadAFN <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadAFN
-                    SangerSingleReadFeature <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadFeature
-                    SangerSingleReadAbifRawData <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadAbifRawData
-                    SangerSingleReadQualReport <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport
-                    SangerSingleReadPrimSeqID <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPrimSeqID
-                    SangerSingleReadPrimSeq <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPrimSeq
-                    forwardReadPrimSeqDF <- SangerCSetParam[[consensusReadIndex]]$forwardReadPrimSeqDF
-                    reverseReadPrimSeqDF <- SangerCSetParam[[consensusReadIndex]]$reverseReadPrimSeqDF
-                    SangerSingleReadPrimSeqDF <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPrimSeqDF
-                    SangerSingleReadSecoSeqID <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadSecoSeqID
-                    SangerSingleReadSecoSeq <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadSecoSeq
-                    forwardReadSecoSeqDF <- SangerCSetParam[[consensusReadIndex]]$forwardReadPrimSeqDF
-                    reverseReadSecoSeqDF <- SangerCSetParam[[consensusReadIndex]]$reverseReadSecoSeqDF
-                    SangerSingleReadSecoSeqDF <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadSecoSeqDF
-                    SangerSingleReadTraceMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadTraceMat
-                    SangerSingleReadPeakPosMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPeakPosMat
-                    SangerSingleReadPeakAmpMat <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPeakAmpMat
+                    SangerConsensusFRReadsList <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerConsensusFRReadsList
+                    SangerSingleReadBFN <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadBFN
+                    SangerSingleReadAFN <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadAFN
+                    SangerSingleReadFeature <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadFeature
+                    SangerSingleReadAbifRawData <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadAbifRawData
+                    SangerSingleReadQualReport <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadQualReport
+                    SangerSingleReadPrimSeqID <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadPrimSeqID
+                    SangerSingleReadPrimSeq <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadPrimSeq
+                    forwardReadPrimSeqDF <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            forwardReadPrimSeqDF
+                    reverseReadPrimSeqDF <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            reverseReadPrimSeqDF
+                    SangerSingleReadPrimSeqDF <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadPrimSeqDF
+                    SangerSingleReadSecoSeqID <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadSecoSeqID
+                    SangerSingleReadSecoSeq <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadSecoSeq
+                    forwardReadSecoSeqDF <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            forwardReadPrimSeqDF
+                    reverseReadSecoSeqDF <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            reverseReadSecoSeqDF
+                    SangerSingleReadSecoSeqDF <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadSecoSeqDF
+                    SangerSingleReadTraceMat <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                        SangerSingleReadTraceMat
+                    SangerSingleReadPeakPosMat <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                            SangerSingleReadPeakPosMat
+                    SangerSingleReadPeakAmpMat <-
+                        SangerCSetParam[[consensusReadIndex]]$
+                        SangerSingleReadPeakAmpMat
 
 
                     fluidRow(
                         useShinyjs(),
-                        h1("consensusReadIndex: ", consensusReadIndex, "  singleReadIndex: ", singleReadIndex),
                         box(title = tags$p("Raw File: ",
                                            style = "font-size: 26px;
                                          font-weight: bold;"),
@@ -757,7 +780,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 4px hidden #A9A9A9;")),
                             column(width = 1,
                                    tags$p("Primary",
                                           style = "font-size: 15px;
@@ -782,30 +806,33 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 4px hidden #A9A9A9;")),
                             fluidRow(
                                 column(3,
                                        uiOutput("M2CutoffQualityScore") ,
                                        tags$ul(
-                                           textInput("M2CutoffQualityScoreText",
-                                                     label = p("Change Value"),
-                                                     value = toString(
-                                                         SangerSingleReadQualReport
-                                                         [[singleReadIndex]]@
-                                                             M2CutoffQualityScore),
-                                                     width = '90%')
+                                           textInput(
+                                               "M2CutoffQualityScoreText",
+                                               label = p("Change Value"),
+                                               value = toString(
+                                                   SangerSingleReadQualReport
+                                                   [[singleReadIndex]]@
+                                                       M2CutoffQualityScore),
+                                               width = '90%')
                                        ),
                                 ),
                                 column(3,
                                        uiOutput("M2SlidingWindowSize") ,
                                        tags$ul(
-                                           textInput("M2SlidingWindowSizeText",
-                                                     label = p("Change Value"),
-                                                     value = toString(
-                                                         SangerSingleReadQualReport
-                                                         [[singleReadIndex]]@
-                                                             M2SlidingWindowSize),
-                                                     width = '90%')
+                                           textInput(
+                                               "M2SlidingWindowSizeText",
+                                               label = p("Change Value"),
+                                               value = toString(
+                                                   SangerSingleReadQualReport
+                                                   [[singleReadIndex]]@
+                                                       M2SlidingWindowSize),
+                                               width = '90%')
                                        ),
                                 ),
                                 column(3,
@@ -815,7 +842,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        uiOutput("trimmedFinishPos") ,
                                 )
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 column(6,
                                        uiOutput("trimmedRatio")
@@ -844,18 +872,22 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 4px hidden #A9A9A9;")),
                             column(12,
                                    column(3,
-                                          sliderInput("ChromatogramBasePerRow",
-                                                      label = h3("Slider"), min = 5,
-                                                      max = 200, value = 100),
+                                          sliderInput(
+                                              "ChromatogramBasePerRow",
+                                              label = h3("Slider"), min = 5,
+                                              max = 200, value = 100),
                                    ),
                                    column(3,
-                                          uiOutput("ChromatogramtrimmedStartPos"),
+                                          uiOutput(
+                                              "ChromatogramtrimmedStartPos"),
                                    ),
                                    column(3,
-                                          uiOutput("ChromatogramtrimmedFinishPos"),
+                                          uiOutput(
+                                              "ChromatogramtrimmedFinishPos"),
                                    ),
                                    column(3,
                                           numericInput(
@@ -867,10 +899,11 @@ alignedConsensusSetServer <- function(input, output, session) {
                                               "Whether show trimmed region",
                                               value = TRUE),)
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             column(width = 12,
                                    tags$hr(
-                                       style = ("border-top: 6px double #A9A9A9;")
+                                       style=("border-top:6px double #A9A9A9;")
                                    ),
                                    uiOutput("chromatogramUIOutput"),
                             )
@@ -911,31 +944,35 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### observeEvent: Button Save S4 object
     ### ------------------------------------------------------------------------
     observeEvent(input$saveS4, {
-        btn <- input$saveS4
-        id <- paste0('txt', btn)
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        newS4Object <- file.path(shinyDirectory,
+                                 "SangerAlignedConsensusSet.Rda")
+        showNotification(paste("New S4 object is store as:", newS4Object),
+                         type = "message", duration = 10)
         sapply(1:SangerConsensusSetNum, function(i) {
-            forwardReadNum <- length(SangerConsensusSet@consensusReadsList[[i]]@forwardReadsList)
-            reverseReadNum <- length(SangerConsensusSet@consensusReadsList[[i]]@reverseReadsList)
+            forwardReadNum <-
+                length(SangerConsensusSet@
+                           consensusReadsList[[i]]@forwardReadsList)
+            reverseReadNum <-
+                length(SangerConsensusSet@
+                           consensusReadsList[[i]]@reverseReadsList)
             sapply(1:forwardReadNum, function(j) {
-                SangerConsensusSet@consensusReadsList[[i]]@forwardReadsList[[j]]@QualityReport <<-
+                SangerConsensusSet@consensusReadsList[[i]]@
+                    forwardReadsList[[j]]@QualityReport <<-
                     SangerCSetParam[[i]]$SangerSingleReadQualReport[[j]]
                 message("save SangerConsensus quality S4 object Forward")
                 }
             )
             sapply(1:reverseReadNum, function(j) {
-                SangerConsensusSet@consensusReadsList[[i]]@reverseReadsList[[j]]@QualityReport <<-
-                    SangerCSetParam[[i]]$SangerSingleReadQualReport[[forwardReadNum + j]]
+                SangerConsensusSet@consensusReadsList[[i]]@
+                    reverseReadsList[[j]]@QualityReport <<-
+                    SangerCSetParam[[i]]$
+                    SangerSingleReadQualReport[[forwardReadNum + j]]
                 message("save SangerConsensus quality S4 object Reverse")
             }
             )
         })
-
-        newS4Object <- file.path(shinyDirectory, "SangerAlignedConsensusSet.Rda")
         saveRDS(SangerConsensusSet, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
-        showNotification(paste("New S4 object is store as:", newS4Object),
-                         type = "message", duration = 10)
         NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
         # shinyOptions(NewSangerConsensusSet = newS4)
     })
@@ -951,7 +988,8 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     output$geneticCodeDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCGeneticCode <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCGeneticCode
+        SCGeneticCode <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCGeneticCode
         excelTable(data =  t(data.frame(SCGeneticCode)),
                    defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
@@ -961,27 +999,32 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     output$differencesDF = renderDataTable({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCDifferencesDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDifferencesDF
+        SCDifferencesDF <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDifferencesDF
         SCDifferencesDF
     })
 
     output$dendrogramDF <- renderDataTable({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCDendrogram <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDendrogram
+        SCDendrogram <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDendrogram
         SCDendrogram[[1]]
     })
 
     output$dendrogramPlot <- renderPlot({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCDendrogram <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDendrogram
+        SCDendrogram <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDendrogram
         plot(SCDendrogram[[2]])
     })
 
     output$SCIndelsDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCIndelsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCIndelsDF
+        SCIndelsDF <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCIndelsDF
         if (all(dim(SCIndelsDF) == c(0,0))) {
-            h4("*** 'Indels' data frame is empty. ***", style="font-weight: bold; font-style: italic;")
+            h4("*** 'Indels' data frame is empty. ***",
+               style="font-weight: bold; font-style: italic;")
         } else {
             dataTableOutput("SCIndelsDF")
         }
@@ -989,9 +1032,11 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     output$SCStopCodonsDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCStopCodonsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
+        SCStopCodonsDF <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
         if (all(dim(SCStopCodonsDF) == c(0,0))) {
-            h4("*** 'Stop Codons' dataframe is empty. ***", style="font-weight: bold; font-style: italic;")
+            h4("*** 'Stop Codons' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
         } else {
             dataTableOutput("SCStopCodonsDF")
         }
@@ -999,9 +1044,11 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     output$secondaryPeakDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
+        SCDistanceMatrix <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
         if (all(dim(SCDistanceMatrix) == c(0,0))) {
-            h4("*** 'Distance Matrix' dataframe is empty. ***", style="font-weight: bold; font-style: italic;")
+            h4("*** 'Distance Matrix' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
         } else {
             dataTableOutput("secondaryPeakDF")
         }
@@ -1015,13 +1062,15 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     output$SCStopCodonsDF <- renderDataTable({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCStopCodonsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
+        SCStopCodonsDF <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCStopCodonsDF
         SCStopCodonsDF
     })
 
     output$secondaryPeakDF = renderDataTable({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
+        SCDistanceMatrix <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
         SCDistanceMatrix
     })
 
@@ -1029,8 +1078,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        excelTable(data =
-                       SangerCSetParam[[consensusReadIndex]]$SangerSingleReadPrimSeqDF[[singleReadIndex]],
+        excelTable(data =SangerCSetParam[[consensusReadIndex]]$
+                       SangerSingleReadPrimSeqDF[[singleReadIndex]],
                    defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
@@ -1043,7 +1092,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
         excelTable(data =
-                       SangerCSetParam[[consensusReadIndex]]$SangerSingleReadSecoSeqDF[[singleReadIndex]],
+                       SangerCSetParam[[consensusReadIndex]]$
+                       SangerSingleReadSecoSeqDF[[singleReadIndex]],
                    defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
@@ -1054,7 +1104,6 @@ alignedConsensusSetServer <- function(input, output, session) {
     valueBoxM2SlidingWindowSize (input, output, session)
     valueBoxTrimmedStartPos (input, output, session, trimmedRV)
     valueBoxTrimmedFinishPos (input, output, session, trimmedRV)
-
     valueBoxRemainingBP (input, output, session, trimmedRV)
     valueBoxTrimmedRatio (input, output, session, trimmedRV)
 
@@ -1071,21 +1120,6 @@ alignedConsensusSetServer <- function(input, output, session) {
             inputM2CutoffQualityScoreText <- 20
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         trimmingPos <-
             inside_calculate_trimming(
                 SangerCSetParam[[consensusReadIndex]]$
@@ -1095,7 +1129,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     qualityBaseScore,
                 strtoi(inputM2CutoffQualityScoreText),
-
                 SangerCSetParam[[consensusReadIndex]]$
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     M2SlidingWindowSize)
@@ -1152,7 +1185,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                 SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
             trimmedRV[["rawMeanQualityScore"]] <<-
                 SangerCSetParam[[consensusReadIndex]]$
-                SangerSingleReadQualReport[[singleReadIndex]]@rawMeanQualityScore
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMeanQualityScore
             trimmedRV[["rawMinQualityScore"]] <<-
                 SangerCSetParam[[consensusReadIndex]]$
                 SangerSingleReadQualReport[[singleReadIndex]]@rawMinQualityScore
@@ -1167,13 +1201,16 @@ alignedConsensusSetServer <- function(input, output, session) {
                 SangerSingleReadQualReport[[singleReadIndex]]@trimmedSeqLength
             trimmedRV[["trimmedMeanQualityScore"]] <<-
                 SangerCSetParam[[consensusReadIndex]]$
-                SangerSingleReadQualReport[[singleReadIndex]]@trimmedMeanQualityScore
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMeanQualityScore
             trimmedRV[["trimmedMinQualityScore"]] <<-
                 SangerCSetParam[[consensusReadIndex]]$
-                SangerSingleReadQualReport[[singleReadIndex]]@trimmedMinQualityScore
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMinQualityScore
             trimmedRV[["remainingRatio"]] <<-
                 round(SangerCSetParam[[consensusReadIndex]]$
-                          SangerSingleReadQualReport[[singleReadIndex]]@remainingRatio * 100, 2)
+                          SangerSingleReadQualReport[[singleReadIndex]]@
+                          remainingRatio * 100, 2)
         }
     })
 
@@ -1254,7 +1291,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                 SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
             trimmedRV[["rawMeanQualityScore"]] <<-
                 SangerCSetParam[[consensusReadIndex]]$
-                SangerSingleReadQualReport[[singleReadIndex]]@rawMeanQualityScore
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMeanQualityScore
             trimmedRV[["rawMinQualityScore"]] <<-
                 SangerCSetParam[[consensusReadIndex]]$
                 SangerSingleReadQualReport[[singleReadIndex]]@rawMinQualityScore
@@ -1269,23 +1307,29 @@ alignedConsensusSetServer <- function(input, output, session) {
                 SangerSingleReadQualReport[[singleReadIndex]]@trimmedSeqLength
             trimmedRV[["trimmedMeanQualityScore"]] <<-
                 SangerCSetParam[[consensusReadIndex]]$
-                SangerSingleReadQualReport[[singleReadIndex]]@trimmedMeanQualityScore
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMeanQualityScore
             trimmedRV[["trimmedMinQualityScore"]] <<-
                 SangerCSetParam[[consensusReadIndex]]$
-                SangerSingleReadQualReport[[singleReadIndex]]@trimmedMinQualityScore
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMinQualityScore
             trimmedRV[["remainingRatio"]] <<-
                 round(SangerCSetParam[[consensusReadIndex]]$
-                          SangerSingleReadQualReport[[singleReadIndex]]@remainingRatio * 100, 2)
+                          SangerSingleReadQualReport[[singleReadIndex]]@
+                          remainingRatio * 100, 2)
         }
     })
     output$qualityTrimmingRatioPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        readFeature <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadFeature[[singleReadIndex]]
+        readFeature <- SangerCSetParam[[consensusReadIndex]]$
+            SangerSingleReadFeature[[singleReadIndex]]
         trimmedStartPos = trimmedRV[["trimmedStartPos"]]
         trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
-        qualityPhredScores <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
+        qualityPhredScores <-
+            SangerCSetParam[[consensusReadIndex]]$
+            SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
         readLen = length(qualityPhredScores)
 
         stepRatio = 1 / readLen
@@ -1338,9 +1382,11 @@ alignedConsensusSetServer <- function(input, output, session) {
                 text = ~paste("BP Index : ",
                               Base, '<sup>th</sup><br>Read Ratio :',
                               round(value*100, digits = 2), '%')) %>%
-            layout(xaxis = x, yaxis = y, legend = list(orientation = 'h',
-                                                       xanchor = "center",  # use center of legend as anchor
-                                                       x = 0.5, y = 1.1)) %>%
+            layout(xaxis = x,
+                   yaxis = y,
+                   legend = list(orientation = 'h',
+                                 xanchor = "center",  # use center of legend as anchor
+                                 x = 0.5, y = 1.1)) %>%
             add_annotations(
                 text = "Trimmed Ratio (Each BP)",
                 x = (trimmedStartPos + trimmedFinishPos) / 2,
@@ -1360,10 +1406,14 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        readFeature <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadFeature[[singleReadIndex]]
+        readFeature <-
+            SangerCSetParam[[consensusReadIndex]]$
+            SangerSingleReadFeature[[singleReadIndex]]
         trimmedStartPos = trimmedRV[["trimmedStartPos"]]
         trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
-        qualityPhredScores <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
+        qualityPhredScores <-
+            SangerCSetParam[[consensusReadIndex]]$
+            SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
         readLen = length(qualityPhredScores)
 
         qualityPlotDf<- data.frame(1:length(qualityPhredScores),
@@ -1395,7 +1445,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                  trimmedFinishPos-trimmedStartPos+1,
                                  "BPs <br>",
                                  "Trimmed Reads BP ratio:",
-                                 round((trimmedFinishPos - trimmedStartPos+1)/
+                                 round((trimmedFinishPos - trimmedStartPos+1) /
                                            readLen * 100,
                                        digits=2),
                                  "%"),
@@ -1413,10 +1463,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                    shapes = list(vline(trimmedStartPos),
                                  vline(trimmedFinishPos)),
                    legend = list(orientation = 'h',
-                                 xanchor = "center",  # use center of legend as anchor
+                                 xanchor = "center",
                                  x = 0.5, y = 1.1)) %>%
-            # add_segments(x = trimmedStartPos, xend = trimmedFinishPos, y = 70, yend = 70, inherit = TRUE, width = 10, line = list(width = 8)) %>%
-            # add_segments(x = 0, xend = readLen, y = 75, yend = 75, inherit = TRUE, width = 4, line = list(width = 8)) %>%
             add_annotations(
                 text = "Trimming Strat <br> BP Index",
                 x = trimmedStartPos + 40,
@@ -1429,8 +1477,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                 y = 15,
                 showarrow=FALSE
             )
-        # add_markers(qualityPlotDf, x=~Index, y=~Score)
-        # add_segments(x = trimmedStartPos, xend = trimmedFinishPos, y = 70, yend = 70, inherit = TRUE)
     })
 
     valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
@@ -1446,12 +1492,13 @@ alignedConsensusSetServer <- function(input, output, session) {
             sidebar_menu[[3]] == "Read" &&
             sidebar_menu[[4]] == "-" &&
             !is.na(as.numeric(sidebar_menu[[5]])) &&
-            (sidebar_menu[[6]] == "Forward" || sidebar_menu[[6]] == "Reverse") &&
+            (sidebar_menu[[6]] == "Forward" ||
+             sidebar_menu[[6]] == "Reverse") &&
             sidebar_menu[[7]] == "Read") {
             chromatogramRowNumAns <-
                 chromatogramRowNum(
-                    SangerCSetParam[[consensusReadIndex]]$SangerConsensusFRReadsList
-                    [[singleReadIndex]],
+                    SangerCSetParam[[consensusReadIndex]]$
+                        SangerConsensusFRReadsList[[singleReadIndex]],
                     strtoi(input$ChromatogramBasePerRow)) * 200
             message("chromatogramRowNumAns: ", chromatogramRowNumAns)
             plotOutput("chromatogram", height = chromatogramRowNumAns) %>%
@@ -1470,10 +1517,13 @@ alignedConsensusSetServer <- function(input, output, session) {
             !is.na(as.numeric(sidebar_menu[[5]])) &&
             (sidebar_menu[[6]] == "Forward" || sidebar_menu[[6]] == "Reverse") &&
             sidebar_menu[[7]] == "Read") {
-            rawSeqLength = SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
+            rawSeqLength =
+                SangerCSetParam[[consensusReadIndex]]$
+                SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
             hetcalls <-
-                makeBaseCalls(SangerCSetParam[[consensusReadIndex]]$SangerConsensusFRReadsList
-                              [[singleReadIndex]],
+                makeBaseCalls(
+                    SangerCSetParam[[consensusReadIndex]]$
+                        SangerConsensusFRReadsList[[singleReadIndex]],
                     ratio = as.numeric(
                         input$ChromatogramSignalRatioCutoff))
             chromatogram(hetcalls,
@@ -1483,6 +1533,30 @@ alignedConsensusSetServer <- function(input, output, session) {
                          showtrim = (input$ChromatogramCheckShowTrimmed),
                          showcalls = "both")
         }
+    })
+
+
+    output$consensusAlignmentHTML<-renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        SCconsenesusReadName <-
+            SangerCSetParam[[consensusReadIndex]]$SCconsenesusReadName
+        SCAlignment <-
+            SangerCSetParam[[consensusReadIndex]]$SCAlignment
+        browseSeqHTML <-
+            file.path(shinyDirectory, "BrowseSeqs_html",
+                      paste0(sidebar_menu[[1]], "_",
+                             SCconsenesusReadName,
+                             "_Alignment_BrowseSeqs.html"))
+        if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
+            dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
+        }
+        if (!file.exists(browseSeqHTML)) {
+            BrowseSeqs(SCAlignment,
+                       openURL=FALSE, htmlFile=browseSeqHTML)
+        }
+        includeHTML(browseSeqHTML)
     })
 }
 

@@ -603,9 +603,9 @@ consensusReadServer <- function(input, output, session) {
     ### observeEvent: Button Save S4 object
     ### ------------------------------------------------------------------------
     observeEvent(input$saveS4, {
-        btn <- input$saveS4
-        id <- paste0('txt', btn)
         newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
+        showNotification(paste("New S4 object is store as:", newS4Object),
+                         type = "message", duration = 10)
         ### ------------------------------------------------------------------------
         ### ConsensusRead-related parameters initialization.
         ### ------------------------------------------------------------------------
@@ -750,8 +750,6 @@ consensusReadServer <- function(input, output, session) {
         #                             remainingBP = 0, trimmedRatio = 0)
         saveRDS(SangerConsensus, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
-        showNotification(paste("New S4 object is store as:", newS4Object),
-                         type = "message", duration = 10)
         NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
         # shinyOptions(NewSangerConsensusSet = newS4)
     })
