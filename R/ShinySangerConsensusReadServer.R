@@ -196,7 +196,8 @@ consensusReadServer <- function(input, output, session) {
                                     reverseReadPeakAmpMat)
     # trimmedQS <- reactiveValues(cuffOffQuality = 0, M2SlidingWindowSize = 0)
 
-    trimmedRV <- reactiveValues(rawSeqLength = 0,
+    trimmedRV <- reactiveValues(trimmingMethod = "",
+                                rawSeqLength = 0,
                                 rawMeanQualityScore = 0,
                                 rawMinQualityScore = 0,
                                 trimmedStartPos = 0,
@@ -449,6 +450,24 @@ consensusReadServer <- function(input, output, session) {
                 ### ------------------------------------------------------------
                 ### Dynamic page navigation: Single read in consensus read
                 ### ------------------------------------------------------------
+                trimmedRV[["trimmingMethod"]] <<-
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 fluidRow(
                     useShinyjs(),
                     box(title = tags$p("Raw File: ",
@@ -1125,13 +1144,18 @@ consensusReadServer <- function(input, output, session) {
 
     output$QualityTrimmingMethodTabBox <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        if (trimmedRV[["trimmingMethod"]] == "M1") {
+            trimmingMethodLocal ="Method 1"
+        } else if (trimmedRV[["trimmingMethod"]] == "M2") {
+            trimmingMethodLocal ="Method 2"
+        }
         tabBox(
             title = tags$p("Trimming Methods Selection",
                            style = "font-size: 24px;
                            font-weight: bold;"),
             id = "trimmingMethodSelet",
             width = "12", height = "255px",
-            selected = "Method 2",
+            selected = trimmingMethodLocal,
             tabPanel("Method 1",
                      column(3,
                             uiOutput("M2CutoffQualityScore") ,
