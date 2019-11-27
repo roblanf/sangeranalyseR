@@ -1,32 +1,32 @@
 inside_calculate_trimming <- function(qualityPhredScores,
                                       qualityBaseScore,
-                                      cutoffQualityScore,
-                                      slidingWindowSize) {
+                                      M2CutoffQualityScore,
+                                      M2SlidingWindowSize) {
     rawSeqLength <- length(qualityBaseScore)
     rawMeanQualityScore <- mean(qualityPhredScores)
     rawMinQualityScore <- min(qualityPhredScores)
-    qualityPbCutoff <- 10** (cutoffQualityScore / (-10.0))
+    qualityPbCutoff <- 10** (M2CutoffQualityScore / (-10.0))
     remainingIndex <- c()
-    if (slidingWindowSize > 20 || slidingWindowSize < 0 ||
-        slidingWindowSize%%1!=0 ||
-        cutoffQualityScore > 60 || cutoffQualityScore < 0 ||
-        cutoffQualityScore%%1!=0) {
+    if (M2SlidingWindowSize > 20 || M2SlidingWindowSize < 0 ||
+        M2SlidingWindowSize%%1!=0 ||
+        M2CutoffQualityScore > 60 || M2CutoffQualityScore < 0 ||
+        M2CutoffQualityScore%%1!=0) {
         trimmedStartPos = NULL
         trimmedFinishPos = NULL
     } else {
-        for (i in 1:(rawSeqLength-slidingWindowSize+1)) {
+        for (i in 1:(rawSeqLength-M2SlidingWindowSize+1)) {
             meanSLidingWindow <-
-                mean(qualityBaseScore[i:(i+slidingWindowSize-1)])
+                mean(qualityBaseScore[i:(i+M2SlidingWindowSize-1)])
             if (meanSLidingWindow < qualityPbCutoff) {
                 remainingIndex <- c(remainingIndex, i)
-                # or ==> i + floor(slidingWindowSize/3)
+                # or ==> i + floor(M2SlidingWindowSize/3)
             }
         }
         trimmedStartPos = remainingIndex[1]
         trimmedFinishPos = remainingIndex[length(remainingIndex)]
-        trimmedQualityBaseScore <- qualityBaseScore[trimmedStartPos:trimmedFinishPos]
-        trimmedMeanQualityScore <- mean(trimmedQualityBaseScore)
-        trimmedMinQualityScore <- min(trimmedQualityBaseScore)
+        trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
+        trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
+        trimmedMinQualityScore <- min(trimmedQualityPhredScore)
         trimmedSeqLength = trimmedFinishPos - trimmedStartPos + 1
     }
     return(c(rawSeqLength, rawMeanQualityScore, rawMinQualityScore,
@@ -287,33 +287,33 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
     })
 }
 
-# trimmedQS <- reactiveValues(cuffOffQuality = 0, slidingWindowSize = 0)
+# trimmedQS <- reactiveValues(cuffOffQuality = 0, M2SlidingWindowSize = 0)
 
 
 ################################################################################
 ### Each Read
 ################################################################################
 ### ============================================================================
-### valueBox: Change cutoffQualityScore
+### valueBox: Change M2CutoffQualityScore
 ### ============================================================================
-valueBoxCutoffQualityScore <- function(input, output, session) {
-    output$cutoffQualityScore <- renderUI({
+valueBoxM2CutoffQualityScore <- function(input, output, session) {
+    output$M2CutoffQualityScore <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         # trimmedQS[["cuffOffQuality"]],
-        # trimmedQS[["slidingWindowSize"]])
-        if (!is.na(strtoi(input$cutoffQualityScoreText)) &&
-            strtoi(input$cutoffQualityScoreText) > 0 &&
-            strtoi(input$cutoffQualityScoreText) <= 60 &&
-            strtoi(input$cutoffQualityScoreText) %% 1 ==0) {
-            inputCutoffQualityScoreText <- input$cutoffQualityScoreText
+        # trimmedQS[["M2SlidingWindowSize"]])
+        if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
+            strtoi(input$M2CutoffQualityScoreText) > 0 &&
+            strtoi(input$M2CutoffQualityScoreText) <= 60 &&
+            strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
+            inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
         } else {
-            inputCutoffQualityScoreText <- 20
+            inputM2CutoffQualityScoreText <- 20
         }
         valueBox(
             subtitle = tags$p("Cut Off Quality Score",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(inputCutoffQualityScoreText),
+            value = tags$p(strtoi(inputM2CutoffQualityScoreText),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -323,25 +323,25 @@ valueBoxCutoffQualityScore <- function(input, output, session) {
 }
 
 ### ============================================================================
-### valueBox: Change slidingWindowSize
+### valueBox: Change M2SlidingWindowSize
 ### ============================================================================
-valueBoxSlidingWindowSize <- function(input, output, session) {
-    output$slidingWindowSize <- renderUI({
+valueBoxM2SlidingWindowSize <- function(input, output, session) {
+    output$M2SlidingWindowSize <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (!is.na(strtoi(input$slidingWindowSizeText)) &&
-            strtoi(input$slidingWindowSizeText) > 0 &&
-            strtoi(input$slidingWindowSizeText) <= 20 &&
-            strtoi(input$slidingWindowSizeText) %% 1 ==0) {
-            inputSlidingWindowSizeText <- input$slidingWindowSizeText
+        if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
+            strtoi(input$M2SlidingWindowSizeText) > 0 &&
+            strtoi(input$M2SlidingWindowSizeText) <= 20 &&
+            strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
+            inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
         } else {
-            inputSlidingWindowSizeText <- 5
+            inputM2SlidingWindowSizeText <- 5
         }
         valueBox(
-            # strtoi(input$cutoffQualityScoreText
+            # strtoi(input$M2CutoffQualityScoreText
             subtitle = tags$p("Sliding Window Size ",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(inputSlidingWindowSizeText),
+            value = tags$p(strtoi(inputM2SlidingWindowSizeText),
                            style = "font-size: 29px;"),
             icon = icon("expand", "fa-sm"),
             color = "olive", width = 12,

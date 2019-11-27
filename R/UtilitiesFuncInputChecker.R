@@ -1,25 +1,71 @@
 ### ============================================================================
-### Quality related: 'cutoffQualityScore' & 'slidingWindowSize' prechecking
+### Quality related: trimming paramter prechecking
 ### ============================================================================
-checkCutoffQualityScore <- function(cutoffQualityScore, errors) {
-    if (cutoffQualityScore > 60 || cutoffQualityScore < 0 ||
-        cutoffQualityScore%%1!=0) {
-        msg <- paste("\nYour input 'cutoffQualityScore' is: ",
-                     cutoffQualityScore, "is invalid.",
-                     "'cutoffQualityScore' should",
-                     "be between 0 and 60.\n", sep = "")
-        errors <- c(errors, msg)
-    }
-    return(errors)
-}
-
-checkSlidingWindowSize <- function(slidingWindowSize, errors) {
-    if (slidingWindowSize > 20 || slidingWindowSize < 0 ||
-        slidingWindowSize%%1!=0) {
-        msg <- paste("\nYour input 'slidingWindowSize' is: ",
-                     slidingWindowSize, "is invalid.",
-                     "'slidingWindowSize' should",
-                     "be between 0 and 20.\n", sep = "")
+checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
+                                    M2CutoffQualityScore, M2SlidingWindowSize,
+                                    errors) {
+    if (TrimmingMethod == "M1") {
+        if (!is.numeric(M1TrimmingCutoff)) {
+            msg<- paste("\n'M1TrimmingCutoff' must be numeric",
+                        "(You choose M1).\n")
+            errors <- c(errors, msg)
+        } else {
+            # Ristriction about M1TrimmingCutoff !
+            # if (M2CutoffQualityScore > 60 || M2CutoffQualityScore < 0 ||
+            #     M2CutoffQualityScore%%1!=0) {
+            #     msg <- paste("\n'Your input M2CutoffQualityScore is: ",
+            #                  M2CutoffQualityScore, "' is invalid.",
+            #                  "'M2CutoffQualityScore' should",
+            #                  "be between 0 and 60.\n", sep = "")
+            #     errors <- c(errors, msg)
+            # }
+        }
+        if (!is.null(M2CutoffQualityScore)) {
+            msg<- paste("\n'M2CutoffQualityScore' must be null",
+                        "(You choose M1).\n")
+            errors <- c(errors, msg)
+        }
+        if (!is.null(M2SlidingWindowSize)) {
+            msg<- paste("\n'M2SlidingWindowSize' must be null",
+                        "(You choose M1).\n")
+            errors <- c(errors, msg)
+        }
+    } else if (TrimmingMethod == "M2") {
+        if (!is.null(M1TrimmingCutoff)) {
+            msg<- paste("\n'M1TrimmingCutoff' must be null",
+                        "(You choose M2).\n")
+            errors <- c(errors, msg)
+        }
+        if (!is.numeric(M2CutoffQualityScore)) {
+            msg<- paste("\n'M2CutoffQualityScore' must be numeric",
+                        "(You choose M2).\n")
+            errors <- c(errors, msg)
+        } else {
+            if (M2CutoffQualityScore > 60 || M2CutoffQualityScore < 0 ||
+                M2CutoffQualityScore%%1!=0) {
+                msg <- paste("\n'Your input M2CutoffQualityScore is: ",
+                             M2CutoffQualityScore, "' is invalid.",
+                             "'M2CutoffQualityScore' should",
+                             "be between 0 and 60.\n", sep = "")
+                errors <- c(errors, msg)
+            }
+        }
+        if (!is.numeric(M2SlidingWindowSize)) {
+            msg<- paste("\n'M2SlidingWindowSize' must be numeric",
+                        "(You choose M2).\n")
+            errors <- c(errors, msg)
+        } else {
+            if (M2SlidingWindowSize > 20 || M2SlidingWindowSize < 0 ||
+                M2SlidingWindowSize%%1!=0) {
+                msg <- paste("\n'Your input M2SlidingWindowSize is: ",
+                             M2SlidingWindowSize, "' is invalid.",
+                             "'M2SlidingWindowSize' should",
+                             "be between 0 and 20.\n", sep = "")
+                errors <- c(errors, msg)
+            }
+        }
+    } else {
+        msg <- paste("\n'TrimmingMethod' must be 'M1' or 'M2'.\n")
         errors <- c(errors, msg)
     }
     return(errors)

@@ -56,11 +56,13 @@ setClass("QualityReport",
              rawMinQualityScore      = "numeric",
              trimmedMinQualityScore  = "numeric",
              TrimmingMethod          = "character",
-             M1TrimmingCutoff        = "numeric",
-             M2CutoffQualityScore    = "numeric",
-             M2SlidingWindowSize     = "numeric"
+             M1TrimmingCutoff        = "numericORNULL",
+             M2CutoffQualityScore    = "numericORNULL",
+             M2SlidingWindowSize     = "numericORNULL"
          ),
 )
+
+setClassUnion("numericORNULL", c("numeric", "NULL"))
 
 ### ============================================================================
 ### Overwrite initialize for QualityReport (New constructor)
@@ -88,45 +90,14 @@ setMethod("initialize",
                   errors <- c(errors, msg)
               }
 
-              ### ----------------------------------------------------------
+              ### --------------------------------------------------------------
               ### Input parameter prechecking for TrimmingMethod.
-              ### ----------------------------------------------------------
-              if (TrimmingMethod == "M1") {
-                  if (!is.numeric(M1TrimmingCutoff)) {
-                      msg<- paste("\n'M1TrimmingCutoff' must be numeric",
-                                  "(You choose M1).\n")
-                      errors <- c(errors, msg)
-                  }
-                  if (!is.null(M2CutoffQualityScore)) {
-                      msg<- paste("\n'M2CutoffQualityScore' must be null",
-                                  "(You choose M1).\n")
-                      errors <- c(errors, msg)
-                  }
-                  if (!is.null(M2SlidingWindowSize)) {
-                      msg<- paste("\n'M2SlidingWindowSize' must be null",
-                                  "(You choose M1).\n")
-                      errors <- c(errors, msg)
-                  }
-              } else if (TrimmingMethod == "M2") {
-                  if (!is.null(M1TrimmingCutoff)) {
-                      msg<- paste("\n'M1TrimmingCutoff' must be null",
-                                  "(You choose M2).\n")
-                      errors <- c(errors, msg)
-                  }
-                  if (!is.numeric(M2CutoffQualityScore)) {
-                      msg<- paste("\n'M2CutoffQualityScore' must be numeric",
-                                  "(You choose M2).\n")
-                      errors <- c(errors, msg)
-                  }
-                  if (!is.numeric(M2SlidingWindowSize)) {
-                      msg<- paste("\n'M2SlidingWindowSize' must be numeric",
-                                  "(You choose M2).\n")
-                      errors <- c(errors, msg)
-                  }
-              } else {
-                  msg <- paste("\n'TrimmingMethod' must be 'M1' or 'M2'.\n")
-                  errors <- c(errors, msg)
-              }
+              ### --------------------------------------------------------------
+              errors <- checkTrimParam(TrimmingMethod,
+                                       M1TrimmingCutoff,
+                                       M2CutoffQualityScore,
+                                       M2SlidingWindowSize,
+                                       errors)
 
               if (length(errors) == 0) {
                   ### ----------------------------------------------------------
@@ -144,22 +115,12 @@ setMethod("initialize",
                   if (TrimmingMethod == "M1") {
 
                   } else if (TrimmingMethod == "M2") {
-                      trimmingPos <- inside_calculate_trimming(qualityPhredScores,
-                                                               qualityBaseScore,
-                                                               M2CutoffQualityScore,
-                                                               M2SlidingWindowSize)
+                      trimmingPos <-
+                          inside_calculate_trimming(qualityPhredScores,
+                                                    qualityBaseScore,
+                                                    M2CutoffQualityScore,
+                                                    M2SlidingWindowSize)
                   }
-
-                  # rawSeqLength <- length(qualityPhredScores)
-                  # trimmedSeqLength <- trimmedFinishPos - trimmedStartPos + 1
-                  # rawMeanQualityScore     = "numeric",
-                  # trimmedMeanQualityScore = "numeric",
-                  # rawMinQualityScore      = "numeric",
-                  # trimmedMinQualityScore  = "numeric",
-
-                  # rawSecondaryPeakNum     = "numeric",
-                  # trimmedSecondaryPeakNum = "numeric",
-
                   rawSeqLength <- trimmingPos[1]
                   rawMeanQualityScore <- trimmingPos[2]
                   rawMinQualityScore <- trimmingPos[3]

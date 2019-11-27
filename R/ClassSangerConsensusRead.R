@@ -44,8 +44,10 @@
 #'                                  consenesusReadName    = consenesusReadName,
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
-#'                                  cutoffQualityScore    = 20,
-#'                                  slidingWindowSize     = 8)
+#'                                  TrimmingMethod        = "M1",
+#'                                  M1TrimmingCutoff      = 0.0001,
+#'                                  M2CutoffQualityScore  = NULL,
+#'                                  M2SlidingWindowSize   = NULL)
 setClass("SangerConsensusRead",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerConsensusRead'
@@ -86,8 +88,10 @@ setMethod("initialize",
                    consenesusReadName     = consenesusReadName,
                    suffixForwardRegExp    = suffixForwardRegExp,
                    suffixReverseRegExp    = suffixReverseRegExp,
-                   cutoffQualityScore     = 20,
-                   slidingWindowSize      = 5,
+                   TrimmingMethod        = "M1",
+                   M1TrimmingCutoff      = 0.0001,
+                   M2CutoffQualityScore  = NULL,
+                   M2SlidingWindowSize   = NULL,
                    refAminoAcidSeq        = "",
                    minReadsNum            = 2,
                    minReadLength          = 20,
@@ -102,8 +106,14 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     errors <- character()
 
-    errors <- checkCutoffQualityScore(cutoffQualityScore, errors)
-    errors <- checkSlidingWindowSize(slidingWindowSize, errors)
+    ### --------------------------------------------------------------
+    ### Input parameter prechecking for TrimmingMethod.
+    ### --------------------------------------------------------------
+    errors <- checkTrimParam(TrimmingMethod,
+                             M1TrimmingCutoff,
+                             M2CutoffQualityScore,
+                             M2SlidingWindowSize,
+                             errors)
     errors <- checkMinReadsNum(minReadsNum, errors)
     errors <- checkMinReadLength(minReadLength, errors)
     errors <- checkMinFractionCall(minFractionCall, errors)
@@ -164,10 +174,13 @@ setMethod("initialize",
         # sapply to create SangerSingleRead list.
         forwardReadsList <- sapply(forwardAllReads[[1]], SangerSingleRead,
                                    readFeature = "Forward Read",
-                                   cutoffQualityScore, slidingWindowSize)
+                                   TrimmingMethod, M1TrimmingCutoff,
+                                   M2CutoffQualityScore, M2SlidingWindowSize)
+
         reverseReadsList <- sapply(reverseAllReads[[1]], SangerSingleRead,
                                    readFeature = "Reverse Read",
-                                   cutoffQualityScore, slidingWindowSize)
+                                   TrimmingMethod, M1TrimmingCutoff,
+                                   M2CutoffQualityScore, M2SlidingWindowSize)
 
         ### --------------------------------------------------------------------
         ### forward & reverse character reads list string creation

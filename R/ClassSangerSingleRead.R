@@ -19,8 +19,10 @@
 #' A_chloroticaSingleRead <- new("SangerSingleRead",
 #'                               readFeature         = "ForwardRead",
 #'                               readFileName        = A_chloroticaFdReadFN,
-#'                               cutoffQualityScore  = 60,
-#'                               slidingWindowSize   = 8)
+#'                               TrimmingMethod        = "M1",
+#'                               M1TrimmingCutoff      = 0.0001,
+#'                               M2CutoffQualityScore  = NULL,
+#'                               M2SlidingWindowSize   = NULL)
 setClass(
     "SangerSingleRead",
     ### -------------------------------------------------------------------
@@ -70,8 +72,16 @@ setMethod("initialize",
                                " foward read file does not exist.\n", sep = "")
                   errors <- c(errors, msg)
               }
-              # errors <- checkCutoffQualityScore(cutoffQualityScore, errors)
-              # errors <- checkSlidingWindowSize(slidingWindowSize, errors)
+
+              ### --------------------------------------------------------------
+              ### Input parameter prechecking for TrimmingMethod.
+              ### --------------------------------------------------------------
+              errors <- checkTrimParam(TrimmingMethod,
+                                       M1TrimmingCutoff,
+                                       M2CutoffQualityScore,
+                                       M2SlidingWindowSize,
+                                       errors)
+
 
               # if (cutoffQualityScore > 60 || cutoffQualityScore < 0 ||
               #     cutoffQualityScore%%1!=0) {
@@ -90,6 +100,7 @@ setMethod("initialize",
               #                  "be between 0 and 20.\n", sep = "")
               #     errors <- c(errors, msg)
               # }
+
               ### --------------------------------------------------------------
               ### Prechecking success. Start to create 'SangerSingleRead'
               ### --------------------------------------------------------------

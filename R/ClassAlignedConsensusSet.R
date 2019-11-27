@@ -22,8 +22,10 @@
 #'                      parentDirectory       = inputFilesParentDir,
 #'                      suffixForwardRegExp   = suffixForwardRegExp,
 #'                      suffixReverseRegExp   = suffixReverseRegExp,
-#'                      cutoffQualityScore    = 20,
-#'                      slidingWindowSize     = 8)
+#'                      TrimmingMethod        = "M1",
+#'                      M1TrimmingCutoff      = 0.0001,
+#'                      M2CutoffQualityScore  = NULL,
+#'                      M2SlidingWindowSize   = NULL)
 setClass("SangerAlignedConsensusSet",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
@@ -50,8 +52,10 @@ setMethod("initialize",
                    parentDirectory        = parentDirectory,
                    suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
                    suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
-                   cutoffQualityScore     = 20,
-                   slidingWindowSize      = 5,
+                   TrimmingMethod        = "M1",
+                   M1TrimmingCutoff      = 0.0001,
+                   M2CutoffQualityScore  = NULL,
+                   M2SlidingWindowSize   = NULL,
                    refAminoAcidSeq        = "",
                    minReadsNum            = 2,
                    minReadLength          = 20,
@@ -66,14 +70,21 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     errors <- character()
 
-    # errors <- checkCutoffQualityScore(cutoffQualityScore, errors)
-    # errors <- checkSlidingWindowSize(slidingWindowSize, errors)
-    # errors <- checkMinReadsNum(minReadsNum, errors)
-    # errors <- checkMinReadLength(minReadLength, errors)
-    # errors <- checkMinFractionCall(minFractionCall, errors)
-    # errors <- checkMaxFractionLost(maxFractionLost, errors)
-    # errors <- checkReadingFrame(readingFrame, errors)
-    # errors <- checkGeneticCode(geneticCode, errors)
+
+    ### --------------------------------------------------------------
+    ### Input parameter prechecking for TrimmingMethod.
+    ### --------------------------------------------------------------
+    errors <- checkTrimParam(TrimmingMethod,
+                             M1TrimmingCutoff,
+                             M2CutoffQualityScore,
+                             M2SlidingWindowSize,
+                             errors)
+    errors <- checkMinReadsNum(minReadsNum, errors)
+    errors <- checkMinReadLength(minReadLength, errors)
+    errors <- checkMinFractionCall(minFractionCall, errors)
+    errors <- checkMaxFractionLost(maxFractionLost, errors)
+    errors <- checkReadingFrame(readingFrame, errors)
+    errors <- checkGeneticCode(geneticCode, errors)
 
     ### ------------------------------------------------------------------------
     ### 'parentDirectory' prechecking
@@ -105,7 +116,8 @@ setMethod("initialize",
     SangerConsensusReadList <- sapply(consensusReadsName, function(eachConsRead) {
         SangerConsensusRead(parentDirectory, eachConsRead,
                             suffixForwardRegExp, suffixReverseRegExp,
-                            cutoffQualityScore, slidingWindowSize,
+                            TrimmingMethod, M1TrimmingCutoff,
+                            M2CutoffQualityScore, M2SlidingWindowSize,
                             refAminoAcidSeq, minReadsNum, minReadLength,
                             minFractionCall, maxFractionLost, geneticCode,
                             acceptStopCodons, readingFrame, processorsNum)

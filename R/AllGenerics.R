@@ -36,8 +36,10 @@ setGeneric("qualityBasePlot", function(object) {
 ### ============================================================================
 #' @export
 setGeneric("updateQualityParam", function(object,
-                                          cutoffQualityScore = 20L,
-                                          slidingWindowSize  = 5L) {
+                                          TrimmingMethod        = "M1",
+                                          M1TrimmingCutoff      = 0.0001,
+                                          M2CutoffQualityScore  = NULL,
+                                          M2SlidingWindowSize   = NULL) {
     standardGeneric("updateQualityParam")
 })
 
