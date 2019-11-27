@@ -16,13 +16,29 @@ An S4 class for quality report for a SangerSingleRead S4 object
 
 \item{\code{qualityBaseScore}}{.}
 
-\item{\code{trimmingStartPos}}{.}
+\item{\code{rawSeqLength}}{.}
 
-\item{\code{trimmingFinishPos}}{.}
+\item{\code{trimmedSeqLength}}{.}
 
-\item{\code{cutoffQualityScore}}{.}
+\item{\code{trimmedStartPos}}{.}
 
-\item{\code{slidingWindowSize}}{.}
+\item{\code{trimmedFinishPos}}{.}
+
+\item{\code{rawMeanQualityScore}}{.}
+
+\item{\code{trimmedMeanQualityScore}}{.}
+
+\item{\code{rawMinQualityScore}}{.}
+
+\item{\code{trimmedMinQualityScore}}{.}
+
+\item{\code{TrimmingMethod}}{.}
+
+\item{\code{M1TrimmingCutoff}}{.}
+
+\item{\code{M2CutoffQualityScore}}{.}
+
+\item{\code{M2SlidingWindowSize}}{.}
 }}
 
 \examples{
@@ -33,8 +49,8 @@ A_chloroticaFdReadFN <- file.path(inputFilesPath,
 A_chloroticaRead <-
        SangerSingleRead(readFeature         = "ForwardRead",
                         readFileName        = A_chloroticaFdReadFN,
-                        cutoffQualityScore  = 60L,
-                        slidingWindowSize   = 8L)
+                        M2CutoffQualityScore  = 60L,
+                        M2SlidingWindowSize   = 8L)
 "@"(A_chloroticaRead, QualityReport)
 }
 \author{

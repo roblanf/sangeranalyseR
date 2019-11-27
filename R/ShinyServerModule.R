@@ -1,7 +1,10 @@
-inside_calculate_trimming <- function(qualityBaseScore,
+inside_calculate_trimming <- function(qualityPhredScores,
+                                      qualityBaseScore,
                                       cutoffQualityScore,
                                       slidingWindowSize) {
-    readLen <- length(qualityBaseScore)
+    rawSeqLength <- length(qualityBaseScore)
+    rawMeanQualityScore <- mean(qualityPhredScores)
+    rawMinQualityScore <- min(qualityPhredScores)
     qualityPbCutoff <- 10** (cutoffQualityScore / (-10.0))
     remainingIndex <- c()
     if (slidingWindowSize > 20 || slidingWindowSize < 0 ||
@@ -11,7 +14,7 @@ inside_calculate_trimming <- function(qualityBaseScore,
         trimmedStartPos = NULL
         trimmedFinishPos = NULL
     } else {
-        for (i in 1:(readLen-slidingWindowSize+1)) {
+        for (i in 1:(rawSeqLength-slidingWindowSize+1)) {
             meanSLidingWindow <-
                 mean(qualityBaseScore[i:(i+slidingWindowSize-1)])
             if (meanSLidingWindow < qualityPbCutoff) {
@@ -21,8 +24,14 @@ inside_calculate_trimming <- function(qualityBaseScore,
         }
         trimmedStartPos = remainingIndex[1]
         trimmedFinishPos = remainingIndex[length(remainingIndex)]
+        trimmedQualityBaseScore <- qualityBaseScore[trimmedStartPos:trimmedFinishPos]
+        trimmedMeanQualityScore <- mean(trimmedQualityBaseScore)
+        trimmedMinQualityScore <- min(trimmedQualityBaseScore)
+        trimmedSeqLength = trimmedFinishPos - trimmedStartPos + 1
     }
-    return(c(trimmedStartPos, trimmedFinishPos))
+    return(c(rawSeqLength, rawMeanQualityScore, rawMinQualityScore,
+             trimmedStartPos, trimmedFinishPos, trimmedSeqLength,
+             trimmedMeanQualityScore, trimmedMinQualityScore))
 }
 
 ### ============================================================================

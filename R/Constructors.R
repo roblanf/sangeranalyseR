@@ -91,12 +91,16 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #'                         slidingWindowSize   = 8L)
 SangerSingleRead <- function(readFeature = character(0),
                              readFileName = character(0),
-                             cutoffQualityScore   = 20L,
-                             slidingWindowSize    = 5L) {
+                             TrimmingMethod        = "M2",
+                             M1TrimmingCutoff      = NULL,
+                             M2CutoffQualityScore  = 40,
+                             M2SlidingWindowSize   = 10) {
     newSingleReads <- new("SangerSingleRead",
-                          readFeature         = readFeature,
-                          readFileName        = readFileName,
-                          cutoffQualityScore  = cutoffQualityScore,
-                          slidingWindowSize   = slidingWindowSize)
+                          readFeature          = readFeature,
+                          readFileName         = readFileName,
+                          TrimmingMethod       = TrimmingMethod,
+                          M1TrimmingCutoff     = M1TrimmingCutoff,
+                          M2CutoffQualityScore = M2CutoffQualityScore,
+                          M2SlidingWindowSize  = M2SlidingWindowSize)
     return(newSingleReads)
 }

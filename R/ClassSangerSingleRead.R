@@ -41,19 +41,21 @@ setClass(
 setMethod("initialize",
           "SangerSingleRead",
           function(.Object, ...,
-                   readFeature         = character(0),
-                   readFileName        = character(0),
-                   primarySeqID        = primarySeqID,
-                   primarySeq          = primarySeq,
-                   secondarySeqID      = secondarySeqID,
-                   secondarySeq        = secondarySeq,
-                   traceMatrix         = traceMatrix,
-                   peakPosMatrix       = peakPosMatrix,
-                   peakAmpMatrix       = peakAmpMatrix,
-                   abifRawData         = abifRawData,
-                   QualityReport       = QualityReport,
-                   cutoffQualityScore  = 20,
-                   slidingWindowSize   = 5) {
+                   readFeature          = character(0),
+                   readFileName         = character(0),
+                   primarySeqID         = primarySeqID,
+                   primarySeq           = primarySeq,
+                   secondarySeqID       = secondarySeqID,
+                   secondarySeq         = secondarySeq,
+                   traceMatrix          = traceMatrix,
+                   peakPosMatrix        = peakPosMatrix,
+                   peakAmpMatrix        = peakAmpMatrix,
+                   abifRawData          = abifRawData,
+                   QualityReport        = QualityReport,
+                   TrimmingMethod       = "M1",
+                   M1TrimmingCutoff     = 0.0001,
+                   M2CutoffQualityScore = NULL,
+                   M2SlidingWindowSize  = NULL) {
               ### --------------------------------------------------------------
               ### Input parameter prechecking
               ### --------------------------------------------------------------
@@ -68,26 +70,26 @@ setMethod("initialize",
                                " foward read file does not exist.\n", sep = "")
                   errors <- c(errors, msg)
               }
-              errors <- checkCutoffQualityScore(cutoffQualityScore, errors)
-              errors <- checkSlidingWindowSize(slidingWindowSize, errors)
+              # errors <- checkCutoffQualityScore(cutoffQualityScore, errors)
+              # errors <- checkSlidingWindowSize(slidingWindowSize, errors)
 
-              if (cutoffQualityScore > 60 || cutoffQualityScore < 0 ||
-                  cutoffQualityScore%%1!=0) {
-                  msg <- paste("\n'Your input cutoffQualityScore is: ",
-                               cutoffQualityScore, "' is invalid.",
-                               "'cutoffQualityScore' should",
-                               "be between 0 and 60.\n", sep = "")
-                  errors <- c(errors, msg)
-              }
-
-              if (slidingWindowSize > 20 || slidingWindowSize < 0 ||
-                  slidingWindowSize%%1!=0) {
-                  msg <- paste("\n'Your input slidingWindowSize is: ",
-                               slidingWindowSize, "' is invalid.",
-                               "'slidingWindowSize' should",
-                               "be between 0 and 20.\n", sep = "")
-                  errors <- c(errors, msg)
-              }
+              # if (cutoffQualityScore > 60 || cutoffQualityScore < 0 ||
+              #     cutoffQualityScore%%1!=0) {
+              #     msg <- paste("\n'Your input cutoffQualityScore is: ",
+              #                  cutoffQualityScore, "' is invalid.",
+              #                  "'cutoffQualityScore' should",
+              #                  "be between 0 and 60.\n", sep = "")
+              #     errors <- c(errors, msg)
+              # }
+              #
+              # if (slidingWindowSize > 20 || slidingWindowSize < 0 ||
+              #     slidingWindowSize%%1!=0) {
+              #     msg <- paste("\n'Your input slidingWindowSize is: ",
+              #                  slidingWindowSize, "' is invalid.",
+              #                  "'slidingWindowSize' should",
+              #                  "be between 0 and 20.\n", sep = "")
+              #     errors <- c(errors, msg)
+              # }
               ### --------------------------------------------------------------
               ### Prechecking success. Start to create 'SangerSingleRead'
               ### --------------------------------------------------------------
@@ -106,16 +108,14 @@ setMethod("initialize",
                   peakPosMatrix       = readSangerseq@peakPosMatrix
                   peakAmpMatrix       = readSangerseq@peakAmpMatrix
                   abifRawData         = readRawAbif
-                  message("Before calling QualityReport")
                   QualityReport <- new("QualityReport",
                                        readFeature = readFeature,
                                        qualityPhredScores =
                                            readRawAbif@data$PCON.2,
-                                       cutoffQualityScore = cutoffQualityScore,
-                                       slidingWindowSize = slidingWindowSize)
-                  message("After calling QualityReport")
-                  cutoffQualityScore <- cutoffQualityScore
-                  slidingWindowSize <- slidingWindowSize
+                                       TrimmingMethod = TrimmingMethod,
+                                       M1TrimmingCutoff = M1TrimmingCutoff,
+                                       M2CutoffQualityScore = M2CutoffQualityScore,
+                                       M2SlidingWindowSize = M2SlidingWindowSize)
               } else {
                   stop(errors)
               }
