@@ -196,8 +196,7 @@ consensusReadServer <- function(input, output, session) {
                                     reverseReadPeakAmpMat)
     # trimmedQS <- reactiveValues(cuffOffQuality = 0, M2SlidingWindowSize = 0)
 
-    trimmedRV <- reactiveValues(trimmingMethod = "",
-                                rawSeqLength = 0,
+    trimmedRV <- reactiveValues(rawSeqLength = 0,
                                 rawMeanQualityScore = 0,
                                 rawMinQualityScore = 0,
                                 trimmedStartPos = 0,
@@ -205,7 +204,12 @@ consensusReadServer <- function(input, output, session) {
                                 trimmedSeqLength = 0,
                                 trimmedMeanQualityScore = 0,
                                 trimmedMinQualityScore = 0,
-                                remainingRatio = 0)
+                                remainingRatio = 0,
+                                TrimmingMethod = "",
+                                M1TrimmingCutoff = NULL,
+                                M2CutoffQualityScore =  NULL,
+                                M2SlidingWindowSize = NULL
+                                )
 
     ############################################################################
     ### Functions for all UI page
@@ -450,9 +454,18 @@ consensusReadServer <- function(input, output, session) {
                 ### ------------------------------------------------------------
                 ### Dynamic page navigation: Single read in consensus read
                 ### ------------------------------------------------------------
-                trimmedRV[["trimmingMethod"]] <<-
+                trimmedRV[["TrimmingMethod"]] <<-
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod
 
+                message("First TrimmingMethod: ", trimmedRV[["TrimmingMethod"]])
+                trimmedRV[["M1TrimmingCutoff"]] <<-
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff
+
+                trimmedRV[["M2CutoffQualityScore"]] <<-
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore
+
+                trimmedRV[["M2SlidingWindowSize"]] <<-
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2SlidingWindowSize
 
 
 
@@ -1144,10 +1157,12 @@ consensusReadServer <- function(input, output, session) {
 
     output$QualityTrimmingMethodTabBox <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (trimmedRV[["trimmingMethod"]] == "M1") {
+        if (trimmedRV[["TrimmingMethod"]] == "M1") {
             trimmingMethodLocal ="Method 1"
-        } else if (trimmedRV[["trimmingMethod"]] == "M2") {
+        } else if (trimmedRV[["TrimmingMethod"]] == "M2") {
             trimmingMethodLocal ="Method 2"
+        } else {
+            trimmingMethodLocal = ""
         }
         tabBox(
             title = tags$p("Trimming Methods Selection",
@@ -1157,6 +1172,31 @@ consensusReadServer <- function(input, output, session) {
             width = "12", height = "255px",
             selected = trimmingMethodLocal,
             tabPanel("Method 1",
+
+                     # trimmedRV[["M1TrimmingCutoff"]] <<- 0.0001,
+                     # SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff <<- trimmedRV[["M1TrimmingCutoff"]],
+                     #
+                     # trimmedRV[["M2CutoffQualityScore"]] <<- NULL,
+                     # SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore <<- trimmedRV[["M2CutoffQualityScore"]],
+                     #
+                     # trimmedRV[["M2SlidingWindowSize"]] <<- NULL,
+                     # SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2SlidingWindowSize <<- trimmedRV[["M2SlidingWindowSize"]],
+
+                     message("Inside Method 1 !!!"),
+
+
+            ),
+            tabPanel("Method 2",
+                     # trimmedRV[["M1TrimmingCutoff"]] <<- NULL,
+                     # SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff <<- trimmedRV[["M1TrimmingCutoff"]],
+                     #
+                     # trimmedRV[["M2CutoffQualityScore"]] <<- 20,
+                     # SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore <<- trimmedRV[["M2CutoffQualityScore"]],
+                     #
+                     # trimmedRV[["M2SlidingWindowSize"]] <<- 50,
+                     # SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2SlidingWindowSize <<- trimmedRV[["M2SlidingWindowSize"]],
+
+                     message("Inside Method 2 !!!"),
                      column(3,
                             uiOutput("M2CutoffQualityScore") ,
                             tags$ul(
@@ -1183,9 +1223,6 @@ consensusReadServer <- function(input, output, session) {
                                           width = '90%')
                             ),
                      ),
-            ),
-            tabPanel("Method 2",
-
             )
         )
     })
