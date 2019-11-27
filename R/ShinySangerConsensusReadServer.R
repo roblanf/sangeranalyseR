@@ -494,36 +494,40 @@ consensusReadServer <- function(input, output, session) {
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                         fluidRow(
-                            column(3,
-                                   uiOutput("M2CutoffQualityScore") ,
-                                   tags$ul(
-                                       textInput("M2CutoffQualityScoreText",
-                                                 label = p("Change Value"),
-                                                 value = toString(
-                                                     SangerSingleReadQualReport
-                                                     [[strtoi(
-                                                         sidebar_menu[[1]])]]@
-                                                         M2CutoffQualityScore),
-                                                 width = '90%')
-                                   ),
-                            ),
-                            column(3,
-                                   uiOutput("M2SlidingWindowSize") ,
-                                   tags$ul(
-                                       textInput("M2SlidingWindowSizeText",
-                                                 label = p("Change Value"),
-                                                 value = toString(
-                                                     SangerSingleReadQualReport
-                                                     [[strtoi(
-                                                         sidebar_menu[[1]])]]@
-                                                             M2SlidingWindowSize),
-                                                 width = '90%')
-                                   ),
-                            ),
-                            column(3,
+                            uiOutput("QualityTrimmingMethodTabBox") ,
+                        ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                        fluidRow(
+                            column(6,
                                    uiOutput("trimmedStartPos") ,
                             ),
-                            column(3,
+                            column(6,
                                    uiOutput("trimmedFinishPos") ,
                             )
                         ),
@@ -1114,5 +1118,57 @@ consensusReadServer <- function(input, output, session) {
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
+
+
+
+
+
+    output$QualityTrimmingMethodTabBox <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        tabBox(
+            title = tags$p("Trimming Methods Selection",
+                           style = "font-size: 24px;
+                           font-weight: bold;"),
+            id = "trimmingMethodSelet",
+            width = "12", height = "255px",
+            selected = "Method 2",
+            tabPanel("Method 1",
+                     column(3,
+                            uiOutput("M2CutoffQualityScore") ,
+                            tags$ul(
+                                textInput("M2CutoffQualityScoreText",
+                                          label = p("Change Value"),
+                                          value = toString(
+                                              SangerSingleReadQualReport
+                                              [[strtoi(
+                                                  sidebar_menu[[1]])]]@
+                                                  M2CutoffQualityScore),
+                                          width = '90%')
+                            ),
+                     ),
+                     column(3,
+                            uiOutput("M2SlidingWindowSize") ,
+                            tags$ul(
+                                textInput("M2SlidingWindowSizeText",
+                                          label = p("Change Value"),
+                                          value = toString(
+                                              SangerSingleReadQualReport
+                                              [[strtoi(
+                                                  sidebar_menu[[1]])]]@
+                                                  M2SlidingWindowSize),
+                                          width = '90%')
+                            ),
+                     ),
+            ),
+            tabPanel("Method 2",
+
+            )
+        )
+    })
+
+
+
+
+
 }
 
