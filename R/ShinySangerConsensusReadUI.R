@@ -66,7 +66,7 @@ consensusReadUI <- dashboardPage(
             ## Overwrite .jexcel_content Height!!
             tags$style(HTML(".jexcel_content { overflow-y: auto;
                             height: 100% !important;}")),
-            tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 20px;
+            tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 15px;
                                  font-weight: bold;
                                  }"))
         ),
