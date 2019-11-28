@@ -668,35 +668,46 @@ consensusReadServer <- function(input, output, session) {
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                        column(12,
-                               column(3,
-                                      sliderInput("ChromatogramBasePerRow",
-                                                  label = h3("Slider"), min = 5,
-                                                  max = 200, value = 100),
-                               ),
-                               column(3,
-                                      uiOutput("ChromatogramtrimmedStartPos"),
-                               ),
-                               column(3,
-                                      uiOutput("ChromatogramtrimmedFinishPos"),
-                               ),
-                               column(3,
-                                      numericInput(
-                                          "ChromatogramSignalRatioCutoff",
-                                          h3("Signal Ratio Cutoff"),
-                                          value = 0.33),
-                                      checkboxInput(
-                                          "ChromatogramCheckShowTrimmed",
-                                          "Whether show trimmed region",
-                                          value = TRUE),)
+
+                        box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+                                                   "Chromatogram Input"),
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(12,
+                                   column(3,
+                                          sliderInput("ChromatogramBasePerRow",
+                                                      label = h3("Slider"), min = 5,
+                                                      max = 200, value = 100),
+                                   ),
+                                   column(3,
+                                          uiOutput("ChromatogramtrimmedStartPos"),
+                                   ),
+                                   column(3,
+                                          uiOutput("ChromatogramtrimmedFinishPos"),
+                                   ),
+                                   column(3,
+                                          numericInput(
+                                              "ChromatogramSignalRatioCutoff",
+                                              h3("Signal Ratio Cutoff"),
+                                              value = 0.33),
+                                          checkboxInput(
+                                              "ChromatogramCheckShowTrimmed",
+                                              "Whether show trimmed region",
+                                              value = TRUE),)
+                            ),
                         ),
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        column(width = 12,
-                               tags$hr(
-                                   style = ("border-top: 6px double #A9A9A9;")
-                               ),
-                               uiOutput("chromatogramUIOutput"),
-                        )
+                        box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+                                                   "Chromatogram Output"),
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 12,
+                                   uiOutput("chromatogramUIOutput"),
+                            )
+                        ),
                     )
                 )
             }
