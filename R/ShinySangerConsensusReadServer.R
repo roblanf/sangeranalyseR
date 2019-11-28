@@ -1051,6 +1051,7 @@ consensusReadServer <- function(input, output, session) {
 
 
 
+
     observeEvent(input$M1TrimmingCutoffText, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
@@ -1060,81 +1061,82 @@ consensusReadServer <- function(input, output, session) {
         } else {
             inputM1TrimmingCutoffText <- 0.0001
         }
-        # trimmingPos <-
-        #     M2inside_calculate_trimming(
-        #         SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #             qualityPhredScores,
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore,
-        #         strtoi(inputM2SlidingWindowSizeText))
-        # rawSeqLength <- trimmingPos[1]
-        # rawMeanQualityScore <- trimmingPos[2]
-        # rawMinQualityScore <- trimmingPos[3]
-        # trimmedStartPos <- trimmingPos[4]
-        # trimmedFinishPos <- trimmingPos[5]
-        # trimmedSeqLength <- trimmingPos[6]
-        # trimmedMeanQualityScore <- trimmingPos[7]
-        # trimmedMinQualityScore <- trimmingPos[8]
-        # remainingRatio <- trimmingPos[9]
+        if (SangerSingleReadQualReport[[
+            strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M1") {
+            trimmingPos <-
+                M1inside_calculate_trimming(
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        qualityPhredScores,
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
+                    as.numeric(inputM1TrimmingCutoffText))
+            rawSeqLength <- trimmingPos[1]
+            rawMeanQualityScore <- trimmingPos[2]
+            rawMinQualityScore <- trimmingPos[3]
+            trimmedStartPos <- trimmingPos[4]
+            trimmedFinishPos <- trimmingPos[5]
+            trimmedSeqLength <- trimmingPos[6]
+            trimmedMeanQualityScore <- trimmingPos[7]
+            trimmedMinQualityScore <- trimmingPos[8]
+            remainingRatio <- trimmingPos[9]
 
-        # if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-        #     !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-        #     !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-        #     !is.null(trimmedMeanQualityScore) &&
-        #     !is.null(trimmedMinQualityScore)) {
-        #
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
-        #
-        #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #         rawSeqLength <<- rawSeqLength
-        #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #         rawMeanQualityScore <<- rawMeanQualityScore
-        #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #         rawMinQualityScore <<- rawMinQualityScore
-        #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #         trimmedStartPos <<- trimmedStartPos
-        #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #         trimmedFinishPos <<- trimmedFinishPos
-        #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #         trimmedSeqLength <<- trimmedSeqLength
-        #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #         trimmedMeanQualityScore <<- trimmedMeanQualityScore
-        #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #         trimmedMinQualityScore <<- trimmedMinQualityScore
-        #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-        #         remainingRatio <<- remainingRatio
-        #
-        #     trimmedRV[["rawSeqLength"]] <<-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@rawSeqLength
-        #     trimmedRV[["rawMeanQualityScore"]] <<-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
-        #     trimmedRV[["rawMinQualityScore"]] <<-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
-        #     trimmedRV[["trimmedStartPos"]] <<-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-        #     trimmedRV[["trimmedFinishPos"]] <<-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
-        #     trimmedRV[["trimmedSeqLength"]] <<-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
-        #     trimmedRV[["trimmedMeanQualityScore"]] <<-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
-        #     trimmedRV[["trimmedMinQualityScore"]] <<-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
-        #     trimmedRV[["remainingRatio"]] <<-
-        #         round(SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
-        # }
+            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
+                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
+                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
+                !is.null(trimmedMeanQualityScore) &&
+                !is.null(trimmedMinQualityScore)) {
+
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
+
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    rawSeqLength <<- rawSeqLength
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    rawMeanQualityScore <<- rawMeanQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    rawMinQualityScore <<- rawMinQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedStartPos <<- trimmedStartPos
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedFinishPos <<- trimmedFinishPos
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedSeqLength <<- trimmedSeqLength
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedMinQualityScore <<- trimmedMinQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    remainingRatio <<- remainingRatio
+
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
+            }
+        }
     })
 
 
@@ -1150,80 +1152,83 @@ consensusReadServer <- function(input, output, session) {
         } else {
             inputM2CutoffQualityScoreText <- 20
         }
-        trimmingPos <-
-            M2inside_calculate_trimming(
+        if (SangerSingleReadQualReport[[
+            strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M2") {
+            trimmingPos <-
+                M2inside_calculate_trimming(
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        qualityPhredScores,
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        qualityBaseScore,
+                    strtoi(inputM2CutoffQualityScoreText),
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        M2SlidingWindowSize)
+
+            rawSeqLength <- trimmingPos[1]
+            rawMeanQualityScore <- trimmingPos[2]
+            rawMinQualityScore <- trimmingPos[3]
+            trimmedStartPos <- trimmingPos[4]
+            trimmedFinishPos <- trimmingPos[5]
+            trimmedSeqLength <- trimmingPos[6]
+            trimmedMeanQualityScore <- trimmingPos[7]
+            trimmedMinQualityScore <- trimmingPos[8]
+            remainingRatio <- trimmingPos[9]
+
+            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
+                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
+                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
+                !is.null(trimmedMeanQualityScore) &&
+                !is.null(trimmedMinQualityScore)) {
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    qualityPhredScores,
+                    M2CutoffQualityScore <<- strtoi(inputM2CutoffQualityScoreText)
+
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    qualityBaseScore,
-                strtoi(inputM2CutoffQualityScoreText),
+                    rawSeqLength <<- rawSeqLength
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    M2SlidingWindowSize)
+                    rawMeanQualityScore <<- rawMeanQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    rawMinQualityScore <<- rawMinQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedStartPos <<- trimmedStartPos
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedFinishPos <<- trimmedFinishPos
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedSeqLength <<- trimmedSeqLength
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedMinQualityScore <<- trimmedMinQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    remainingRatio <<- remainingRatio
 
-        rawSeqLength <- trimmingPos[1]
-        rawMeanQualityScore <- trimmingPos[2]
-        rawMinQualityScore <- trimmingPos[3]
-        trimmedStartPos <- trimmingPos[4]
-        trimmedFinishPos <- trimmingPos[5]
-        trimmedSeqLength <- trimmingPos[6]
-        trimmedMeanQualityScore <- trimmingPos[7]
-        trimmedMinQualityScore <- trimmingPos[8]
-        remainingRatio <- trimmingPos[9]
-
-        if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-            !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-            !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-            !is.null(trimmedMeanQualityScore) &&
-            !is.null(trimmedMinQualityScore)) {
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                M2CutoffQualityScore <<- strtoi(inputM2CutoffQualityScoreText)
-
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                rawSeqLength <<- rawSeqLength
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                rawMeanQualityScore <<- rawMeanQualityScore
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                rawMinQualityScore <<- rawMinQualityScore
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedStartPos <<- trimmedStartPos
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedFinishPos <<- trimmedFinishPos
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedSeqLength <<- trimmedSeqLength
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedMeanQualityScore <<- trimmedMeanQualityScore
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedMinQualityScore <<- trimmedMinQualityScore
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                remainingRatio <<- remainingRatio
-
-            trimmedRV[["rawSeqLength"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@rawSeqLength
-            trimmedRV[["rawMeanQualityScore"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
-            trimmedRV[["rawMinQualityScore"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
-            trimmedRV[["trimmedStartPos"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-            trimmedRV[["trimmedFinishPos"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
-            trimmedRV[["trimmedSeqLength"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
-            trimmedRV[["trimmedMeanQualityScore"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
-            trimmedRV[["trimmedMinQualityScore"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
-            trimmedRV[["remainingRatio"]] <<-
-                round(SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
+            }
         }
     })
 
@@ -1238,80 +1243,83 @@ consensusReadServer <- function(input, output, session) {
         } else {
             inputM2SlidingWindowSizeText <- 5
         }
-        trimmingPos <-
-            M2inside_calculate_trimming(
+        if (SangerSingleReadQualReport[[
+            strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M2") {
+            trimmingPos <-
+                M2inside_calculate_trimming(
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        qualityPhredScores,
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore,
+                    strtoi(inputM2SlidingWindowSizeText))
+            rawSeqLength <- trimmingPos[1]
+            rawMeanQualityScore <- trimmingPos[2]
+            rawMinQualityScore <- trimmingPos[3]
+            trimmedStartPos <- trimmingPos[4]
+            trimmedFinishPos <- trimmingPos[5]
+            trimmedSeqLength <- trimmingPos[6]
+            trimmedMeanQualityScore <- trimmingPos[7]
+            trimmedMinQualityScore <- trimmingPos[8]
+            remainingRatio <- trimmingPos[9]
+
+            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
+                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
+                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
+                !is.null(trimmedMeanQualityScore) &&
+                !is.null(trimmedMinQualityScore)) {
+
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    qualityPhredScores,
-                SangerSingleReadQualReport[[
-                strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore,
-                strtoi(inputM2SlidingWindowSizeText))
-        rawSeqLength <- trimmingPos[1]
-        rawMeanQualityScore <- trimmingPos[2]
-        rawMinQualityScore <- trimmingPos[3]
-        trimmedStartPos <- trimmingPos[4]
-        trimmedFinishPos <- trimmingPos[5]
-        trimmedSeqLength <- trimmingPos[6]
-        trimmedMeanQualityScore <- trimmingPos[7]
-        trimmedMinQualityScore <- trimmingPos[8]
-        remainingRatio <- trimmingPos[9]
+                    M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
 
-        if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-            !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-            !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-            !is.null(trimmedMeanQualityScore) &&
-            !is.null(trimmedMinQualityScore)) {
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    rawSeqLength <<- rawSeqLength
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    rawMeanQualityScore <<- rawMeanQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    rawMinQualityScore <<- rawMinQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedStartPos <<- trimmedStartPos
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedFinishPos <<- trimmedFinishPos
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedSeqLength <<- trimmedSeqLength
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    trimmedMinQualityScore <<- trimmedMinQualityScore
+                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                    remainingRatio <<- remainingRatio
 
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
-
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                rawSeqLength <<- rawSeqLength
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                rawMeanQualityScore <<- rawMeanQualityScore
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                rawMinQualityScore <<- rawMinQualityScore
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedStartPos <<- trimmedStartPos
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedFinishPos <<- trimmedFinishPos
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedSeqLength <<- trimmedSeqLength
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedMeanQualityScore <<- trimmedMeanQualityScore
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                trimmedMinQualityScore <<- trimmedMinQualityScore
-            SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                remainingRatio <<- remainingRatio
-
-            trimmedRV[["rawSeqLength"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@rawSeqLength
-            trimmedRV[["rawMeanQualityScore"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
-            trimmedRV[["rawMinQualityScore"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
-            trimmedRV[["trimmedStartPos"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-            trimmedRV[["trimmedFinishPos"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
-            trimmedRV[["trimmedSeqLength"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
-            trimmedRV[["trimmedMeanQualityScore"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
-            trimmedRV[["trimmedMinQualityScore"]] <<-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
-            trimmedRV[["remainingRatio"]] <<-
-                round(SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerSingleReadQualReport[[
+                        strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
+            }
         }
     })
     # chromatogram
@@ -1389,6 +1397,88 @@ consensusReadServer <- function(input, output, session) {
                 if (is.null(SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff)) {
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff <<-  0.0001
                 }
+                if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
+                    as.numeric(input$M1TrimmingCutoffText) > 0 &&
+                    as.numeric(input$M1TrimmingCutoffText) <= 1) {
+                    inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
+                } else {
+                    inputM1TrimmingCutoffText <- 0.0001
+                }
+                trimmingPos <-
+                    M1inside_calculate_trimming(
+                        SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                            qualityPhredScores,
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff)
+                rawSeqLength <- trimmingPos[1]
+                rawMeanQualityScore <- trimmingPos[2]
+                rawMinQualityScore <- trimmingPos[3]
+                trimmedStartPos <- trimmingPos[4]
+                trimmedFinishPos <- trimmingPos[5]
+                trimmedSeqLength <- trimmingPos[6]
+                trimmedMeanQualityScore <- trimmingPos[7]
+                trimmedMinQualityScore <- trimmingPos[8]
+                remainingRatio <- trimmingPos[9]
+
+                if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
+                    !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
+                    !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
+                    !is.null(trimmedMeanQualityScore) &&
+                    !is.null(trimmedMinQualityScore)) {
+
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
+
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        rawSeqLength <<- rawSeqLength
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        rawMeanQualityScore <<- rawMeanQualityScore
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        rawMinQualityScore <<- rawMinQualityScore
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedStartPos <<- trimmedStartPos
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedFinishPos <<- trimmedFinishPos
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedSeqLength <<- trimmedSeqLength
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedMinQualityScore <<- trimmedMinQualityScore
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        remainingRatio <<- remainingRatio
+
+                    trimmedRV[["rawSeqLength"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@rawSeqLength
+                    trimmedRV[["rawMeanQualityScore"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
+                    trimmedRV[["rawMinQualityScore"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
+                    trimmedRV[["trimmedStartPos"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedStartPos
+                    trimmedRV[["trimmedFinishPos"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
+                    trimmedRV[["trimmedSeqLength"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
+                    trimmedRV[["trimmedMeanQualityScore"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
+                    trimmedRV[["trimmedMinQualityScore"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
+                    trimmedRV[["remainingRatio"]] <<-
+                        round(SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
+                }
+
                 fluidRow(
                     column(6,
                            uiOutput("M1TrimmingCutoff") ,
@@ -1414,6 +1504,100 @@ consensusReadServer <- function(input, output, session) {
                 }
                 if (is.null(SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2SlidingWindowSize )) {
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2SlidingWindowSize <<-  5
+                }
+                if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
+                    strtoi(input$M2CutoffQualityScoreText) > 0 &&
+                    strtoi(input$M2CutoffQualityScoreText) <= 60 &&
+                    strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
+                    inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
+                } else {
+                    inputM2CutoffQualityScoreText <- 20
+                }
+                if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
+                    strtoi(input$M2SlidingWindowSizeText) > 0 &&
+                    strtoi(input$M2SlidingWindowSizeText) <= 20 &&
+                    strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
+                    inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
+                } else {
+                    inputM2SlidingWindowSizeText <- 5
+                }
+                trimmingPos <-
+                    M2inside_calculate_trimming(
+                        SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                            qualityPhredScores,
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore,
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@M2SlidingWindowSize)
+                rawSeqLength <- trimmingPos[1]
+                rawMeanQualityScore <- trimmingPos[2]
+                rawMinQualityScore <- trimmingPos[3]
+                trimmedStartPos <- trimmingPos[4]
+                trimmedFinishPos <- trimmingPos[5]
+                trimmedSeqLength <- trimmingPos[6]
+                trimmedMeanQualityScore <- trimmingPos[7]
+                trimmedMinQualityScore <- trimmingPos[8]
+                remainingRatio <- trimmingPos[9]
+
+                if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
+                    !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
+                    !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
+                    !is.null(trimmedMeanQualityScore) &&
+                    !is.null(trimmedMinQualityScore)) {
+
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
+
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        rawSeqLength <<- rawSeqLength
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        rawMeanQualityScore <<- rawMeanQualityScore
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        rawMinQualityScore <<- rawMinQualityScore
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedStartPos <<- trimmedStartPos
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedFinishPos <<- trimmedFinishPos
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedSeqLength <<- trimmedSeqLength
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        trimmedMinQualityScore <<- trimmedMinQualityScore
+                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
+                        remainingRatio <<- remainingRatio
+
+                    trimmedRV[["rawSeqLength"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@rawSeqLength
+                    trimmedRV[["rawMeanQualityScore"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
+                    trimmedRV[["rawMinQualityScore"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
+                    trimmedRV[["trimmedStartPos"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedStartPos
+                    trimmedRV[["trimmedFinishPos"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
+                    trimmedRV[["trimmedSeqLength"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
+                    trimmedRV[["trimmedMeanQualityScore"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
+                    trimmedRV[["trimmedMinQualityScore"]] <<-
+                        SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
+                    trimmedRV[["remainingRatio"]] <<-
+                        round(SangerSingleReadQualReport[[
+                            strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
                 }
                 fluidRow(
                     column(6,

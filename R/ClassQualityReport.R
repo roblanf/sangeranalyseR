@@ -115,13 +115,16 @@ setMethod("initialize",
                   qualityBaseScore <- 10** (qualityPhredScores / (-10.0))
 
                   if (TrimmingMethod == "M1") {
-
+                      trimmingPos <-
+                          M1inside_calculate_trimming(qualityPhredScores,
+                                                      qualityBaseScore,
+                                                      M1TrimmingCutoff)
                   } else if (TrimmingMethod == "M2") {
                       trimmingPos <-
-                          inside_calculate_trimming(qualityPhredScores,
-                                                    qualityBaseScore,
-                                                    M2CutoffQualityScore,
-                                                    M2SlidingWindowSize)
+                          M2inside_calculate_trimming(qualityPhredScores,
+                                                      qualityBaseScore,
+                                                      M2CutoffQualityScore,
+                                                      M2SlidingWindowSize)
                   }
                   rawSeqLength <- trimmingPos[1]
                   rawMeanQualityScore <- trimmingPos[2]

@@ -4,10 +4,9 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
     rawSeqLength <- length(qualityBaseScore)
     rawMeanQualityScore <- mean(qualityPhredScores)
     rawMinQualityScore <- min(qualityPhredScores)
-
-    start = FALSE # flag for starting position of trimmed sequence
-    trimmedStartPos = 0 # init start index
-    qualityBaseScoreCutOff = M1TrimmingCutoff - qualityBaseScore=
+    start = FALSE
+    trimmedStartPos = 0
+    qualityBaseScoreCutOff = M1TrimmingCutoff - qualityBaseScore
     ### ------------------------------------------------------------------------
     ### calculate cummulative score
     ### if cumulative value < 0, set it to 0
@@ -21,27 +20,25 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
         trimmedStartPos = 1
         start = TRUE
     }
-
     cummul_score = c(score)
-
+    ### ------------------------------------------------------------------------
+    ### trimmedStartPos = value when cummulative score is first > 0
+    ### ------------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
+    ### trimmedFinishPos = index of highest cummulative score,
+    ### marking the end of sequence segment with highest cummulative score
+    ### ------------------------------------------------------------------------
     for(i in 2:length(qualityBaseScoreCutOff)){
         score = cummul_score[length(cummul_score)] + qualityBaseScoreCutOff[i]
-        if(score <= 0){
+        if (score <= 0) {
             cummul_score = c(cummul_score, 0)
         }else{
             cummul_score = c(cummul_score, score)
             if(start == FALSE){
-                ### ------------------------------------------------------------
-                ### trimmedStartPos = value when cummulative score is first > 0
-                ### ------------------------------------------------------------
                 trimmedStartPos = i
                 start = TRUE
             }
         }
-        ### --------------------------------------------------------------------
-        ### trimmedFinishPos = index of highest cummulative score,
-        ### marking the end of sequence segment with highest cummulative score
-        ### --------------------------------------------------------------------
         trimmedFinishPos = which.max(cummul_score)
     }
     ### ------------------------------------------------------------------------
