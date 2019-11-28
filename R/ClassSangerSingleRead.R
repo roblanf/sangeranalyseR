@@ -100,6 +100,12 @@ setMethod("initialize",
                   peakPosMatrix       = readSangerseq@peakPosMatrix
                   peakAmpMatrix       = readSangerseq@peakAmpMatrix
                   abifRawData         = readRawAbif
+
+                  ### ----------------------------------------------------------
+                  ### Definition of 'PCON.1' & 'PCON.2'
+                  ##### PCON.1: char => Per-base quality values (edited)
+                  ##### PCON.2: char => Per-base quality values
+                  ### ----------------------------------------------------------
                   QualityReport <- new("QualityReport",
                                        readFeature = readFeature,
                                        qualityPhredScores =

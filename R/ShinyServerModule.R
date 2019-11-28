@@ -1,4 +1,66 @@
-inside_calculate_trimming <- function(qualityPhredScores,
+M1inside_calculate_trimming <- function(qualityPhredScores,
+                                        qualityBaseScore,
+                                        M1TrimmingCutoff) {
+    rawSeqLength <- length(qualityBaseScore)
+    rawMeanQualityScore <- mean(qualityPhredScores)
+    rawMinQualityScore <- min(qualityPhredScores)
+
+    start = FALSE # flag for starting position of trimmed sequence
+    trimmedStartPos = 0 # init start index
+    qualityBaseScoreCutOff = M1TrimmingCutoff - qualityBaseScore=
+    ### ------------------------------------------------------------------------
+    ### calculate cummulative score
+    ### if cumulative value < 0, set it to 0
+    ### the BioPython implementation always trims the first base,
+    ### this implementation does not.
+    ### ------------------------------------------------------------------------
+    score = qualityBaseScoreCutOff[1]
+    if(score < 0){
+        score = 0
+    }else{
+        trimmedStartPos = 1
+        start = TRUE
+    }
+
+    cummul_score = c(score)
+
+    for(i in 2:length(qualityBaseScoreCutOff)){
+        score = cummul_score[length(cummul_score)] + qualityBaseScoreCutOff[i]
+        if(score <= 0){
+            cummul_score = c(cummul_score, 0)
+        }else{
+            cummul_score = c(cummul_score, score)
+            if(start == FALSE){
+                ### ------------------------------------------------------------
+                ### trimmedStartPos = value when cummulative score is first > 0
+                ### ------------------------------------------------------------
+                trimmedStartPos = i
+                start = TRUE
+            }
+        }
+        ### --------------------------------------------------------------------
+        ### trimmedFinishPos = index of highest cummulative score,
+        ### marking the end of sequence segment with highest cummulative score
+        ### --------------------------------------------------------------------
+        trimmedFinishPos = which.max(cummul_score)
+    }
+    ### ------------------------------------------------------------------------
+    ### fix an edge case, where all scores are worse than the cutoff
+    ### in this case you wouldn't want to keep any bases at all
+    ### ------------------------------------------------------------------------
+    if(sum(cummul_score)==0){trimmedFinishPos = 0}
+    trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
+    trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
+    trimmedMinQualityScore <- min(trimmedQualityPhredScore)
+    trimmedSeqLength = trimmedFinishPos - trimmedStartPos + 1
+    remainingRatio = trimmedSeqLength / rawSeqLength
+
+    return(c(rawSeqLength, rawMeanQualityScore, rawMinQualityScore,
+             trimmedStartPos, trimmedFinishPos, trimmedSeqLength,
+             trimmedMeanQualityScore, trimmedMinQualityScore, remainingRatio))
+}
+
+M2inside_calculate_trimming <- function(qualityPhredScores,
                                       qualityBaseScore,
                                       M2CutoffQualityScore,
                                       M2SlidingWindowSize) {

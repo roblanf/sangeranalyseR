@@ -1121,7 +1121,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         }
 
         trimmingPos <-
-            inside_calculate_trimming(
+            M2inside_calculate_trimming(
                 SangerCSetParam[[consensusReadIndex]]$
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     qualityPhredScores,
@@ -1227,7 +1227,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             inputM2SlidingWindowSizeText <- 5
         }
         trimmingPos <-
-            inside_calculate_trimming(
+            M2inside_calculate_trimming(
                 SangerCSetParam[[consensusReadIndex]]$
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     qualityPhredScores,

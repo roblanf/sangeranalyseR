@@ -1061,7 +1061,7 @@ consensusReadServer <- function(input, output, session) {
             inputM1TrimmingCutoffText <- 0.0001
         }
         # trimmingPos <-
-        #     inside_calculate_trimming(
+        #     M2inside_calculate_trimming(
         #         SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
         #             qualityPhredScores,
         #         SangerSingleReadQualReport[[
@@ -1151,7 +1151,7 @@ consensusReadServer <- function(input, output, session) {
             inputM2CutoffQualityScoreText <- 20
         }
         trimmingPos <-
-            inside_calculate_trimming(
+            M2inside_calculate_trimming(
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
                     qualityPhredScores,
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
@@ -1239,7 +1239,7 @@ consensusReadServer <- function(input, output, session) {
             inputM2SlidingWindowSizeText <- 5
         }
         trimmingPos <-
-            inside_calculate_trimming(
+            M2inside_calculate_trimming(
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
                     qualityPhredScores,
                 SangerSingleReadQualReport[[
