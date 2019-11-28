@@ -60,7 +60,10 @@ alignedConsensusSetUI <- dashboardPage(
             tags$style(HTML('#saveS4{background-color:#0083FF; color:white; padding:15px; font-size: 35; font-weight: bold;}')),
             ## Overwrite .jexcel_content Height!!
             tags$style(HTML(".jexcel_content { overflow-y: auto;
-                            height: 100% !important;}"))
+                            height: 100% !important;}")),
+            tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 15px;
+                                 font-weight: bold;
+                                 }"))
         ),
         tags$style(
             HTML(".shiny-notification {

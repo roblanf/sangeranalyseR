@@ -762,6 +762,17 @@ alignedConsensusSetServer <- function(input, output, session) {
                         SangerSingleReadPeakAmpMat
 
 
+
+
+
+
+
+
+
+
+
+
+
                     fluidRow(
                         useShinyjs(),
                         box(title = tags$p("Raw File: ",
@@ -780,8 +791,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(
-                                style = ("border-top: 4px hidden #A9A9A9;")),
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                             column(width = 1,
                                    tags$p("Primary",
                                           style = "font-size: 15px;
@@ -806,109 +816,320 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(
-                                style = ("border-top: 4px hidden #A9A9A9;")),
-                            fluidRow(
-                                column(3,
-                                       uiOutput("M2CutoffQualityScore") ,
-                                       tags$ul(
-                                           textInput(
-                                               "M2CutoffQualityScoreText",
-                                               label = p("Change Value"),
-                                               value = toString(
-                                                   SangerSingleReadQualReport
-                                                   [[singleReadIndex]]@
-                                                       M2CutoffQualityScore),
-                                               width = '90%')
-                                       ),
-                                ),
-                                column(3,
-                                       uiOutput("M2SlidingWindowSize") ,
-                                       tags$ul(
-                                           textInput(
-                                               "M2SlidingWindowSizeText",
-                                               label = p("Change Value"),
-                                               value = toString(
-                                                   SangerSingleReadQualReport
-                                                   [[singleReadIndex]]@
-                                                       M2SlidingWindowSize),
-                                               width = '90%')
-                                       ),
-                                ),
-                                column(3,
-                                       uiOutput("trimmedStartPos") ,
-                                ),
-                                column(3,
-                                       uiOutput("trimmedFinishPos") ,
-                                )
-                            ),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                column(6,
-                                       uiOutput("trimmedRatio")
-                                ),
-                                column(6,
-                                       uiOutput("remainingBP")
-                                )
-                            ),
-                            box(title = tags$p("Cumulative Ratio Plot",
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+                                                       "Trimming Parameters Input"),
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
                                 collapsible = TRUE,
-                                status = "success", width = 6,
-                                plotlyOutput("qualityTrimmingRatioPlot") %>%
-                                    withSpinner()),
-                            box(title = tags$p("Cumulative Ratio Plot",
+                                status = "success", width = 12,
+
+                                fluidRow(
+                                    column(width = 5,
+                                           column(width = 1,
+                                           ),
+                                           column(width = 11,
+                                                  selectInput("TrimmingMethodSelection", label = h4("Select Your Trimming Method"),
+                                                              choices = list("Method 1" = "M1", "Method 2" = "M2"),
+                                                              selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod,
+                                                              width = "100%"),
+                                                  column(width = 12,
+                                                         column(width = 2,
+                                                                shiny::icon("mouse-pointer"),
+                                                         ),
+                                                         column(width = 10,
+                                                                textOutput("TrimmingMethodSelectionOutput"),
+                                                         ),
+                                                  ),
+                                           ),
+                                    ),
+                                    column(width = 7,
+                                           uiOutput("TrimmingMethodUI") ,
+                                    ),
+                                ),
+                            ),
+                            box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+                                                       "Trimmed Result Output"),
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
                                 collapsible = TRUE,
-                                status = "success", width = 6,
-                                plotlyOutput("qualityQualityBasePlot") %>%
-                                    withSpinner()),
+                                status = "success", width = 12,
+                                fluidRow(
+                                    box(title = tags$p("Before Trimming",
+                                                       style = "font-size: 21px;
+                                       font-weight: bold;"),
+                                        collapsible = TRUE,
+                                        status = "success", width = 12,
+                                        column(width = 12,
+                                               column(4,
+                                                      uiOutput("rawSeqLength") ,
+                                               ),
+                                               column(4,
+                                                      uiOutput("rawMeanQualityScore") ,
+                                               ),
+                                               column(4,
+                                                      uiOutput("rawMinQualityScore") ,
+                                               ),
+                                        ),
+                                    ),
+                                ),
+                                fluidRow(
+                                    box(title = tags$p("After Trimming",
+                                                       style = "font-size: 21px;
+                                       font-weight: bold;"),
+                                        collapsible = TRUE,
+                                        status = "success", width = 12,
+                                        column(width = 12,
+                                               column(4,
+                                                      uiOutput("trimmedSeqLength") ,
+                                               ),
+                                               column(4,
+                                                      uiOutput("trimmedMeanQualityScore") ,
+                                               ),
+                                               column(4,
+                                                      uiOutput("trimmedMinQualityScore") ,
+                                               ),
+                                        ),
+
+                                        column(width = 12,
+                                               column(4,
+                                                      uiOutput("trimmedStartPos") ,
+                                               ),
+                                               column(4,
+                                                      uiOutput("trimmedFinishPos") ,
+                                               ),
+                                               column(4,
+                                                      uiOutput("remainingRatio") ,
+                                               )
+                                        ),
+                                    ),
+                                ),
+                                tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                                fluidRow(
+                                    box(title = tags$p("Cumulative Ratio Plot",
+                                                       style = "font-size: 21px;
+                                       font-weight: bold;"),
+                                        collapsible = TRUE,
+                                        status = "success", width = 12,
+                                        plotlyOutput("qualityTrimmingRatioPlot") %>%
+                                            withSpinner()),
+                                    box(title = tags$p("Cumulative Ratio Plot",
+                                                       style = "font-size: 21px;
+                                       font-weight: bold;"),
+                                        collapsible = TRUE,
+                                        status = "success", width = 12,
+                                        plotlyOutput("qualityQualityBasePlot") %>%
+                                            withSpinner()),
+                                ),
+                            ),
                         ),
                         box(title = tags$p("Chromatogram: ",
                                            style = "font-size: 26px;
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(
-                                style = ("border-top: 4px hidden #A9A9A9;")),
-                            column(12,
-                                   column(3,
-                                          sliderInput(
-                                              "ChromatogramBasePerRow",
-                                              label = h3("Slider"), min = 5,
-                                              max = 200, value = 100),
-                                   ),
-                                   column(3,
-                                          uiOutput(
-                                              "ChromatogramtrimmedStartPos"),
-                                   ),
-                                   column(3,
-                                          uiOutput(
-                                              "ChromatogramtrimmedFinishPos"),
-                                   ),
-                                   column(3,
-                                          numericInput(
-                                              "ChromatogramSignalRatioCutoff",
-                                              h3("Signal Ratio Cutoff"),
-                                              value = 0.33),
-                                          checkboxInput(
-                                              "ChromatogramCheckShowTrimmed",
-                                              "Whether show trimmed region",
-                                              value = TRUE),)
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+
+                            box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+                                                       "Chromatogram Input"),
+                                               style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(12,
+                                       column(3,
+                                              sliderInput("ChromatogramBasePerRow",
+                                                          label = h3("Slider"), min = 5,
+                                                          max = 200, value = 100),
+                                       ),
+                                       column(3,
+                                              uiOutput("ChromatogramtrimmedStartPos"),
+                                       ),
+                                       column(3,
+                                              uiOutput("ChromatogramtrimmedFinishPos"),
+                                       ),
+                                       column(3,
+                                              numericInput(
+                                                  "ChromatogramSignalRatioCutoff",
+                                                  h3("Signal Ratio Cutoff"),
+                                                  value = 0.33),
+                                              checkboxInput(
+                                                  "ChromatogramCheckShowTrimmed",
+                                                  "Whether show trimmed region",
+                                                  value = TRUE),)
+                                ),
                             ),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
-                            column(width = 12,
-                                   tags$hr(
-                                       style=("border-top:6px double #A9A9A9;")
-                                   ),
-                                   uiOutput("chromatogramUIOutput"),
-                            )
+                            box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+                                                       "Chromatogram Output"),
+                                               style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       uiOutput("chromatogramUIOutput"),
+                                )
+                            ),
                         )
                     )
+
+
+
+
+
+
+
+
+
+
+
+
+                    # fluidRow(
+                    #     useShinyjs(),
+                    #     box(title = tags$p("Raw File: ",
+                    #                        style = "font-size: 26px;
+                    #                      font-weight: bold;"),
+                    #         solidHeader = TRUE,
+                    #         status = "success", width = 12,
+                    #         h1(paste0(
+                    #             SangerSingleReadBFN[[singleReadIndex]])),
+                    #         tags$h5(paste("( full path:",
+                    #                       SangerSingleReadAFN[[
+                    #                           singleReadIndex]],
+                    #                       ")"), style = "font-style:italic")),
+                    #     box(title = tags$p("Primary & Secondary Peaks: ",
+                    #                        style = "font-size: 26px;
+                    #                    font-weight: bold;"),
+                    #         solidHeader = TRUE, collapsible = TRUE,
+                    #         status = "success", width = 12,
+                    #         tags$hr(
+                    #             style = ("border-top: 4px hidden #A9A9A9;")),
+                    #         column(width = 1,
+                    #                tags$p("Primary",
+                    #                       style = "font-size: 15px;
+                    #                    font-weight: bold;"),
+                    #                tags$br(),
+                    #                tags$br(),
+                    #                tags$p("Second",
+                    #                       style = "font-size: 15px;
+                    #                    font-weight: bold;"),
+                    #         ),
+                    #         column(width = 11,
+                    #                excelOutput("primarySeqDF",
+                    #                            width = "100%", height = "50"),
+                    #                excelOutput("secondSeqDF",
+                    #                            width = "100%", height = "50"),
+                    #                style = paste("overflow-y: hidden;",
+                    #                              "overflow-x: scroll;")
+                    #         )
+                    #     ),
+                    #     box(title = tags$p("Quality Report: ",
+                    #                        style = "font-size: 26px;
+                    #                    font-weight: bold;"),
+                    #         solidHeader = TRUE, collapsible = TRUE,
+                    #         status = "success", width = 12,
+                    #         tags$hr(
+                    #             style = ("border-top: 4px hidden #A9A9A9;")),
+                    #         fluidRow(
+                    #             column(3,
+                    #                    uiOutput("M2CutoffQualityScore") ,
+                    #                    tags$ul(
+                    #                        textInput(
+                    #                            "M2CutoffQualityScoreText",
+                    #                            label = p("Change Value"),
+                    #                            value = toString(
+                    #                                SangerSingleReadQualReport
+                    #                                [[singleReadIndex]]@
+                    #                                    M2CutoffQualityScore),
+                    #                            width = '90%')
+                    #                    ),
+                    #             ),
+                    #             column(3,
+                    #                    uiOutput("M2SlidingWindowSize") ,
+                    #                    tags$ul(
+                    #                        textInput(
+                    #                            "M2SlidingWindowSizeText",
+                    #                            label = p("Change Value"),
+                    #                            value = toString(
+                    #                                SangerSingleReadQualReport
+                    #                                [[singleReadIndex]]@
+                    #                                    M2SlidingWindowSize),
+                    #                            width = '90%')
+                    #                    ),
+                    #             ),
+                    #             column(3,
+                    #                    uiOutput("trimmedStartPos") ,
+                    #             ),
+                    #             column(3,
+                    #                    uiOutput("trimmedFinishPos") ,
+                    #             )
+                    #         ),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #         fluidRow(
+                    #             column(6,
+                    #                    uiOutput("trimmedRatio")
+                    #             ),
+                    #             column(6,
+                    #                    uiOutput("remainingBP")
+                    #             )
+                    #         ),
+                    #         box(title = tags$p("Cumulative Ratio Plot",
+                    #                            style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #             collapsible = TRUE,
+                    #             status = "success", width = 6,
+                    #             plotlyOutput("qualityTrimmingRatioPlot") %>%
+                    #                 withSpinner()),
+                    #         box(title = tags$p("Cumulative Ratio Plot",
+                    #                            style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #             collapsible = TRUE,
+                    #             status = "success", width = 6,
+                    #             plotlyOutput("qualityQualityBasePlot") %>%
+                    #                 withSpinner()),
+                    #     ),
+                    #     box(title = tags$p("Chromatogram: ",
+                    #                        style = "font-size: 26px;
+                    #                    font-weight: bold;"),
+                    #         solidHeader = TRUE, collapsible = TRUE,
+                    #         status = "success", width = 12,
+                    #         tags$hr(
+                    #             style = ("border-top: 4px hidden #A9A9A9;")),
+                    #         column(12,
+                    #                column(3,
+                    #                       sliderInput(
+                    #                           "ChromatogramBasePerRow",
+                    #                           label = h3("Slider"), min = 5,
+                    #                           max = 200, value = 100),
+                    #                ),
+                    #                column(3,
+                    #                       uiOutput(
+                    #                           "ChromatogramtrimmedStartPos"),
+                    #                ),
+                    #                column(3,
+                    #                       uiOutput(
+                    #                           "ChromatogramtrimmedFinishPos"),
+                    #                ),
+                    #                column(3,
+                    #                       numericInput(
+                    #                           "ChromatogramSignalRatioCutoff",
+                    #                           h3("Signal Ratio Cutoff"),
+                    #                           value = 0.33),
+                    #                       checkboxInput(
+                    #                           "ChromatogramCheckShowTrimmed",
+                    #                           "Whether show trimmed region",
+                    #                           value = TRUE),)
+                    #         ),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #         column(width = 12,
+                    #                tags$hr(
+                    #                    style=("border-top:6px double #A9A9A9;")
+                    #                ),
+                    #                uiOutput("chromatogramUIOutput"),
+                    #         )
+                    #     )
+                    # )
                 }
             }
         }
@@ -925,18 +1146,6 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
         if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
-            #     trimmedRV[["trimmedStartPos"]] <-
-            #         SangerSingleReadQualReport[[
-            #             strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-            #     trimmedRV[["trimmedFinishPos"]] <-
-            #         SangerSingleReadQualReport[[
-            #             strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
-            #     qualityPhredScores = SangerSingleReadQualReport[[
-            #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
-            #
-            #     readLen = length(qualityPhredScores)
-            #     trimmedRV[["remainingBP"]] <- trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1
-            #     trimmedRV[["trimmedRatio"]] <- round(((trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1) / readLen) * 100, digits = 2)
         }
     })
 
@@ -1100,12 +1309,346 @@ alignedConsensusSetServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
-    valueBoxM2CutoffQualityScore (input, output, session)
+
+
+
+
+    ##### Need Fix Here
+    # valueBoxM1TrimmingCutoff(input, output, session, SangerSingleReadQualReport)
+    output$M1TrimmingCutoff <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        message("input$M1TrimmingCutoffText: ", input$M1TrimmingCutoffText)
+        if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
+            as.numeric(input$M1TrimmingCutoffText) > 0 &&
+            as.numeric(input$M1TrimmingCutoffText) <= 1) {
+            inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
+        } else {
+            inputM1TrimmingCutoffText <- 0.0001
+        }
+        if (SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
+            # message("&&&& Dynamic M1")
+            trimmingPos <-
+                M1inside_calculate_trimming(
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        qualityPhredScores,
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityBaseScore,
+                    as.numeric(inputM1TrimmingCutoffText))
+            rawSeqLength <- trimmingPos[1]
+            rawMeanQualityScore <- trimmingPos[2]
+            rawMinQualityScore <- trimmingPos[3]
+            trimmedStartPos <- trimmingPos[4]
+            trimmedFinishPos <- trimmingPos[5]
+            trimmedSeqLength <- trimmingPos[6]
+            trimmedMeanQualityScore <- trimmingPos[7]
+            trimmedMinQualityScore <- trimmingPos[8]
+            remainingRatio <- trimmingPos[9]
+
+            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
+                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
+                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
+                !is.null(trimmedMeanQualityScore) &&
+                !is.null(trimmedMinQualityScore)) {
+
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
+
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawSeqLength <<- rawSeqLength
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawMeanQualityScore <<- rawMeanQualityScore
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawMinQualityScore <<- rawMinQualityScore
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedStartPos <<- trimmedStartPos
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedFinishPos <<- trimmedFinishPos
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedSeqLength <<- trimmedSeqLength
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedMinQualityScore <<- trimmedMinQualityScore
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                    remainingRatio <<- remainingRatio
+
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@remainingRatio * 100, 2)
+            }
+        }
+        valueBox(
+            subtitle = tags$p("Cut Off Log Score",
+                              style = "font-size: 15px;
+                                       font-weight: bold;"),
+            value = tags$p(as.numeric(inputM1TrimmingCutoffText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 10,
+        )
+    })
+
+    ##### Need Fix Here
+    # valueBoxM2CutoffQualityScore (input, output, session, SangerSingleReadQualReport)
+    output$M2CutoffQualityScore <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
+            strtoi(input$M2CutoffQualityScoreText) > 0 &&
+            strtoi(input$M2CutoffQualityScoreText) <= 60 &&
+            strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
+            inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
+        } else {
+            inputM2CutoffQualityScoreText <- 20
+        }
+        if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
+            strtoi(input$M2SlidingWindowSizeText) > 0 &&
+            strtoi(input$M2SlidingWindowSizeText) <= 20 &&
+            strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
+            inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
+        } else {
+            inputM2SlidingWindowSizeText <- 5
+        }
+
+
+
+        if (SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M2") {
+            # message("&&&& Dynamic M2")
+            if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
+                strtoi(input$M2CutoffQualityScoreText) > 0 &&
+                strtoi(input$M2CutoffQualityScoreText) <= 60 &&
+                strtoi(input$M2CutoffQualityScoreText) %% 1 ==0 &&
+                !is.na(strtoi(input$M2SlidingWindowSizeText)) &&
+                strtoi(input$M2SlidingWindowSizeText) > 0 &&
+                strtoi(input$M2SlidingWindowSizeText) <= 20 &&
+                strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
+                trimmingPos <- M2inside_calculate_trimming(
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                            qualityPhredScores,
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityBaseScore,
+                        strtoi(inputM2CutoffQualityScoreText),
+                        strtoi(inputM2SlidingWindowSizeText))
+                rawSeqLength <- trimmingPos[1]
+                rawMeanQualityScore <- trimmingPos[2]
+                rawMinQualityScore <- trimmingPos[3]
+                trimmedStartPos <- trimmingPos[4]
+                trimmedFinishPos <- trimmingPos[5]
+                trimmedSeqLength <- trimmingPos[6]
+                trimmedMeanQualityScore <- trimmingPos[7]
+                trimmedMinQualityScore <- trimmingPos[8]
+                remainingRatio <- trimmingPos[9]
+
+                if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
+                    !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
+                    !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
+                    !is.null(trimmedMeanQualityScore) &&
+                    !is.null(trimmedMinQualityScore)) {
+
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        M2CutoffQualityScore <<- as.numeric(inputM2CutoffQualityScoreText)
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
+
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        rawSeqLength <<- rawSeqLength
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        rawMeanQualityScore <<- rawMeanQualityScore
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        rawMinQualityScore <<- rawMinQualityScore
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        trimmedStartPos <<- trimmedStartPos
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        trimmedFinishPos <<- trimmedFinishPos
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        trimmedSeqLength <<- trimmedSeqLength
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        trimmedMinQualityScore <<- trimmedMinQualityScore
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                        remainingRatio <<- remainingRatio
+
+                    trimmedRV[["rawSeqLength"]] <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
+                    trimmedRV[["rawMeanQualityScore"]] <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawMeanQualityScore
+                    trimmedRV[["rawMinQualityScore"]] <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawMinQualityScore
+                    trimmedRV[["trimmedStartPos"]] <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos
+                    trimmedRV[["trimmedFinishPos"]] <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos
+                    trimmedRV[["trimmedSeqLength"]] <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedSeqLength
+                    trimmedRV[["trimmedMeanQualityScore"]] <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedMeanQualityScore
+                    trimmedRV[["trimmedMinQualityScore"]] <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedMinQualityScore
+                    trimmedRV[["remainingRatio"]] <<-
+                        round(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@remainingRatio * 100, 2)
+                }
+            }
+        }
+        valueBox(
+            subtitle = tags$p("Cut Off Quality Score",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(inputM2CutoffQualityScoreText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 10,
+        )
+    })
+
+
     valueBoxM2SlidingWindowSize (input, output, session)
+
+    valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
+    valueBoxChromTrimmedFinishPos (input, output, session, trimmedRV)
+
+    valueBoxRawSeqLength (input, output, session, trimmedRV)
+    valueBoxRawMeanQualityScore (input, output, session, trimmedRV)
+    valueBoxRawMinQualityScore (input, output, session, trimmedRV)
     valueBoxTrimmedStartPos (input, output, session, trimmedRV)
     valueBoxTrimmedFinishPos (input, output, session, trimmedRV)
-    valueBoxRemainingBP (input, output, session, trimmedRV)
-    valueBoxTrimmedRatio (input, output, session, trimmedRV)
+    valueBoxTrimmedSeqLength (input, output, session, trimmedRV)
+    valueBoxTrimmedMeanQualityScore (input, output, session, trimmedRV)
+    valueBoxTrimmedMinQualityScore (input, output, session, trimmedRV)
+    valueBoxRemainingRatio (input, output, session, trimmedRV)
+
+
+
+
+
+
+
+
+
+
+
+    observeEvent(input$M1TrimmingCutoffText, {
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
+            as.numeric(input$M1TrimmingCutoffText) > 0 &&
+            as.numeric(input$M1TrimmingCutoffText) <= 1) {
+            inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
+        } else {
+            inputM1TrimmingCutoffText <- 0.0003
+        }
+        if (SangerCSetParam[[consensusReadIndex]]$
+            SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
+            trimmingPos <-
+                M1inside_calculate_trimming(
+                    SangerCSetParam[[consensusReadIndex]]$
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                        qualityPhredScores,
+                    SangerCSetParam[[consensusReadIndex]]$
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                        qualityBaseScore,
+                    as.numeric(inputM1TrimmingCutoffText))
+            rawSeqLength <- trimmingPos[1]
+            rawMeanQualityScore <- trimmingPos[2]
+            rawMinQualityScore <- trimmingPos[3]
+            trimmedStartPos <- trimmingPos[4]
+            trimmedFinishPos <- trimmingPos[5]
+            trimmedSeqLength <- trimmingPos[6]
+            trimmedMeanQualityScore <- trimmingPos[7]
+            trimmedMinQualityScore <- trimmingPos[8]
+            remainingRatio <- trimmingPos[9]
+
+            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
+                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
+                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
+                !is.null(trimmedMeanQualityScore) &&
+                !is.null(trimmedMinQualityScore)) {
+
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    M1TrimmingCutoff <<- strtoi(inputM1TrimmingCutoffText)
+
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawSeqLength <<- rawSeqLength
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawMeanQualityScore <<- rawMeanQualityScore
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawMinQualityScore <<- rawMinQualityScore
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedStartPos <<- trimmedStartPos
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedFinishPos <<- trimmedFinishPos
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedSeqLength <<- trimmedSeqLength
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedMinQualityScore <<- trimmedMinQualityScore
+                SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    remainingRatio <<- remainingRatio
+
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerCSetParam[[consensusReadIndex]]$
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerCSetParam[[consensusReadIndex]]$
+                              SangerSingleReadQualReport[[singleReadIndex]]@
+                              remainingRatio * 100, 2)
+            }
+        }
+    })
 
     observeEvent(input$M2CutoffQualityScoreText, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -1319,6 +1862,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                           remainingRatio * 100, 2)
         }
     })
+
+
     output$qualityTrimmingRatioPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
@@ -1557,6 +2102,93 @@ alignedConsensusSetServer <- function(input, output, session) {
                        openURL=FALSE, htmlFile=browseSeqHTML)
         }
         includeHTML(browseSeqHTML)
+    })
+
+
+
+
+
+    output$TrimmingMethodUI <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        if (!is.null(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]])) {
+            if (input$TrimmingMethodSelection == "M1") {
+                trimmingMethodLocal ="Method 1"
+                message("Inside Method 1!!")
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod <<- "M1"
+                if (is.null(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M1TrimmingCutoff)) {
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M1TrimmingCutoff <<-  0.0001
+                }
+
+
+                fluidRow(
+                    column(6,
+                           uiOutput("M1TrimmingCutoff") ,
+                           tags$ul(
+                               textInput("M1TrimmingCutoffText",
+                                         label = p("Change Value"),
+                                         value = toString(
+                                             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                                                 M1TrimmingCutoff),
+                                         width = '70%')
+                           ),
+                    ),
+                )
+
+
+
+
+
+
+            } else if (input$TrimmingMethodSelection == "M2") {
+                trimmingMethodLocal ="Method 2"
+                message("Inside Method 2!!")
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod <<- "M2"
+                if (is.null(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2CutoffQualityScore)) {
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2CutoffQualityScore <<-  20
+                }
+                if (is.null(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2SlidingWindowSize )) {
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2SlidingWindowSize <<-  5
+                }
+
+                fluidRow(
+                    column(6,
+                           uiOutput("M2CutoffQualityScore") ,
+                           tags$ul(
+                               textInput("M2CutoffQualityScoreText",
+                                         label = p("Change Value"),
+                                         value = toString(
+                                             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                                                 M2CutoffQualityScore),
+                                         width = '70%')
+                           ),
+                    ),
+                    column(6,
+                           uiOutput("M2SlidingWindowSize") ,
+                           tags$ul(
+                               textInput("M2SlidingWindowSizeText",
+                                         label = p("Change Value"),
+                                         value = toString(
+                                             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
+                                                 M2SlidingWindowSize),
+                                         width = '70%')
+                           ),
+                    ),
+                )
+
+
+            }
+        }
+    })
+    output$TrimmingMethodSelectionOutput <- renderText({
+        # tags$p(paste("You currently select '", input$TrimmingMethodSelection, "'"),
+        #        style = "font-size: 15px; font-weight: bold;")
+        if (input$TrimmingMethodSelection == "M1") {
+            "Logarithmic Scale Trimming"
+        } else if (input$TrimmingMethodSelection == "M2") {
+            "Logarithmic Scale Sliding Window Trimming"
+        }
     })
 }
 

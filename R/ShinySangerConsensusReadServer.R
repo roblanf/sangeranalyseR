@@ -985,9 +985,12 @@ consensusReadServer <- function(input, output, session) {
     valueBoxSCAcceptStopCodons(input, output, SCAcceptStopCodons, session)
     valueBoxSCReadingFrame(input, output, SCReadingFrame, session)
 
+
+    ##### Need Fix Here
     # valueBoxM1TrimmingCutoff(input, output, session, SangerSingleReadQualReport)
     output$M1TrimmingCutoff <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        message("input$M1TrimmingCutoffText: ", input$M1TrimmingCutoffText)
         if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
             as.numeric(input$M1TrimmingCutoffText) > 0 &&
             as.numeric(input$M1TrimmingCutoffText) <= 1) {
@@ -995,8 +998,7 @@ consensusReadServer <- function(input, output, session) {
         } else {
             inputM1TrimmingCutoffText <- 0.0001
         }
-
-        if (input$TrimmingMethodSelection == "M1") {
+        if (SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M1") {
             # message("&&&& Dynamic M1")
             trimmingPos <-
                 M1inside_calculate_trimming(
@@ -1072,20 +1074,6 @@ consensusReadServer <- function(input, output, session) {
                         strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         valueBox(
             subtitle = tags$p("Cut Off Log Score",
                               style = "font-size: 15px;
@@ -1097,6 +1085,8 @@ consensusReadServer <- function(input, output, session) {
             width = 10,
         )
     })
+
+    ##### Need Fix Here
     # valueBoxM2CutoffQualityScore (input, output, session, SangerSingleReadQualReport)
     output$M2CutoffQualityScore <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -1121,7 +1111,7 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-        if (input$TrimmingMethodSelection == "M2") {
+        if (SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M2") {
             # message("&&&& Dynamic M2")
             if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
                 strtoi(input$M2CutoffQualityScoreText) > 0 &&
@@ -1156,7 +1146,7 @@ consensusReadServer <- function(input, output, session) {
                     !is.null(trimmedMinQualityScore)) {
 
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        M1TrimmingCutoff <<- as.numeric(inputM2CutoffQualityScoreText)
+                        M2CutoffQualityScore <<- as.numeric(inputM2CutoffQualityScoreText)
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
                         M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
 
@@ -1209,11 +1199,6 @@ consensusReadServer <- function(input, output, session) {
                 }
             }
         }
-
-
-
-
-
         valueBox(
             subtitle = tags$p("Cut Off Quality Score",
                               style = "font-size: 15px;
@@ -1225,6 +1210,7 @@ consensusReadServer <- function(input, output, session) {
             width = 10,
         )
     })
+
 
     valueBoxM2SlidingWindowSize (input, output, session)
 
@@ -1298,7 +1284,7 @@ consensusReadServer <- function(input, output, session) {
             as.numeric(input$M1TrimmingCutoffText) <= 1) {
             inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
         } else {
-            inputM1TrimmingCutoffText <- 0.0001
+            inputM1TrimmingCutoffText <- 0.0003
         }
         if (SangerSingleReadQualReport[[
             strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M1") {
@@ -1629,6 +1615,7 @@ consensusReadServer <- function(input, output, session) {
             if (input$TrimmingMethodSelection == "M1") {
                 trimmingMethodLocal ="Method 1"
                 message("Inside Method 1!!")
+                message("SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff: ", SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff)
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod <<- "M1"
                 if (is.null(SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff)) {
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff <<-  0.0001
@@ -1659,6 +1646,7 @@ consensusReadServer <- function(input, output, session) {
             } else if (input$TrimmingMethodSelection == "M2") {
                 trimmingMethodLocal ="Method 2"
                 message("Inside Method 2!!")
+                message("SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff: ", SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff)
                 SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod <<- "M2"
                 if (is.null(SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore)) {
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore <<-  20
