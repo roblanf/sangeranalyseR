@@ -989,11 +989,10 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
             as.numeric(input$M1TrimmingCutoffText) > 0 &&
-            as.numeric(input$M1TrimmingCutoffText) <= 20 &&
-            as.numeric(input$M1TrimmingCutoffText) %% 1 ==0) {
-            inputM1TrimmingCutoffTextText <- input$M1TrimmingCutoffText
+            as.numeric(input$M1TrimmingCutoffText) <= 1) {
+            inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
         } else {
-            inputM1TrimmingCutoffTextText <- 5
+            inputM1TrimmingCutoffText <- 0.0001
         }
         # trimmingPos <-
         #     inside_calculate_trimming(
@@ -1021,7 +1020,7 @@ consensusReadServer <- function(input, output, session) {
         #     !is.null(trimmedMinQualityScore)) {
         #
             SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffTextText)
+                M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
         #
         #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
         #         rawSeqLength <<- rawSeqLength
