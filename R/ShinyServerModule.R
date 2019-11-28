@@ -297,6 +297,32 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
 ### ============================================================================
 ### valueBox: Change M2CutoffQualityScore
 ### ============================================================================
+valueBoxM1TrimmingCutoff <- function(input, output, session) {
+    output$M1TrimmingCutoff <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
+            as.numeric(input$M1TrimmingCutoffText) > 0 &&
+            as.numeric(input$M1TrimmingCutoffText) <= 1) {
+            inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
+        } else {
+            inputM1TrimmingCutoffText <- 0.0001
+        }
+        valueBox(
+            subtitle = tags$p("Cut Off Log Score",
+                              style = "font-size: 15px;
+                                       font-weight: bold;"),
+            value = tags$p(as.numeric(inputM1TrimmingCutoffText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 10,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: Change M2CutoffQualityScore
+### ============================================================================
 valueBoxM2CutoffQualityScore <- function(input, output, session) {
     output$M2CutoffQualityScore <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
