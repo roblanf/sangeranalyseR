@@ -416,10 +416,61 @@ valueBoxM2SlidingWindowSize <- function(input, output, session) {
 
 
 
+### ============================================================================
+### valueBox: Change rawSeqLength
+### ============================================================================
+valueBoxRawSeqLength <- function(input, output, session, trimmedRV) {
+    output$rawSeqLength <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        valueBox(
+            subtitle = tags$p("Raw Seqence Len ",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(toString(trimmedRV[["rawSeqLength"]]),
+                           style = "font-size: 29px;"),
+            icon = icon("check-circle", "fa-sm"),
+            color = "olive", width = 12,
+        )
+    })
+}
 
 
+### ============================================================================
+### valueBox: Change rawMeanQualityScore
+### ============================================================================
+valueBoxRawMeanQualityScore <- function(input, output, session, trimmedRV) {
+    output$rawMeanQualityScore <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        valueBox(
+            subtitle = tags$p("Raw Mean Quality Score ",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(toString(round(trimmedRV[["rawMeanQualityScore"]], 2)),
+                           style = "font-size: 29px;"),
+            icon = icon("check-circle", "fa-sm"),
+            color = "olive", width = 12,
+        )
+    })
+}
 
 
+### ============================================================================
+### valueBox: Change rawMinQualityScore
+### ============================================================================
+valueBoxRawMinQualityScore <- function(input, output, session, trimmedRV) {
+    output$rawMinQualityScore <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        valueBox(
+            subtitle = tags$p("Raw Min Quality Score ",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(toString(trimmedRV[["rawMinQualityScore"]]),
+                           style = "font-size: 29px;"),
+            icon = icon("check-circle", "fa-sm"),
+            color = "olive", width = 12,
+        )
+    })
+}
 
 
 ### ============================================================================
@@ -454,6 +505,79 @@ valueBoxTrimmedFinishPos <- function(input, output, session, trimmedRV) {
                            style = "font-size: 29px;"),
             icon = icon("times-circle", "fa-sm"),
             color = "olive", width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: Change trimmedSeqLength
+### ============================================================================
+valueBoxTrimmedSeqLength <- function(input, output, session, trimmedRV) {
+    output$trimmedSeqLength <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        valueBox(
+            subtitle = tags$p("Trimmed Seqence Length ",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(toString(trimmedRV[["trimmedSeqLength"]]),
+                           style = "font-size: 29px;"),
+            icon = icon("check-circle", "fa-sm"),
+            color = "olive", width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: Change trimmedMeanQualityScore
+### ============================================================================
+valueBoxTrimmedMeanQualityScore <- function(input, output, session, trimmedRV) {
+    output$trimmedMeanQualityScore <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        valueBox(
+            subtitle = tags$p("Trimmed Mean Quality Score ",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(toString(round(trimmedRV[["trimmedMeanQualityScore"]], 2)),
+                           style = "font-size: 29px;"),
+            icon = icon("check-circle", "fa-sm"),
+            color = "olive", width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: Change trimmedMinQualityScore
+### ============================================================================
+valueBoxTrimmedMinQualityScore <- function(input, output, session, trimmedRV) {
+    output$trimmedMinQualityScore <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        valueBox(
+            subtitle = tags$p("Trimmed Min Quality Score ",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(toString(trimmedRV[["trimmedMinQualityScore"]]),
+                           style = "font-size: 29px;"),
+            icon = icon("check-circle", "fa-sm"),
+            color = "olive", width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: Change remainingRatio
+### ============================================================================
+valueBoxRemainingRatio <- function(input, output, session, trimmedRV) {
+    output$remainingRatio <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        valueBox(
+            subtitle = tags$p("Remaining Ratio",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(paste(trimmedRV[["remainingRatio"]], "%"),
+                           style = "font-size: 32px;"),
+            icon = icon("divide", "fa-sm"),
+            color = "olive",
+            width = 12,
         )
     })
 }
@@ -497,48 +621,6 @@ valueBoxChromTrimmedFinishPos <- function(input, output, session, trimmedRV) {
 }
 
 
-
-### ============================================================================
-### valueBox: Change remainingBP
-### ============================================================================
-valueBoxRemainingBP <- function(input, output, session, trimmedRV) {
-    output$remainingBP <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        column(8,
-               valueBox(
-                   subtitle = tags$p("Remaining Read Length",
-                                     style = "font-size: 15px;
-                                            font-weight: bold;"),
-                   value = tags$p(paste(strtoi(trimmedRV[["trimmedSeqLength"]]), "BPs"),
-                                  style = "font-size: 32px;"),
-                   icon = icon("dna", "fa-sm"),
-                   color = "olive",
-                   width = 12,
-               ),
-        )
-    })
-}
-
-### ============================================================================
-### valueBox: Change trimmedRatio
-### ============================================================================
-valueBoxTrimmedRatio <- function(input, output, session, trimmedRV) {
-    output$trimmedRatio <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        column(8,
-               valueBox(
-                   subtitle = tags$p("Remaining Ratio",
-                                     style = "font-size: 15px;
-                                            font-weight: bold;"),
-                   value = tags$p(paste(trimmedRV[["remainingRatio"]], "%"),
-                                  style = "font-size: 32px;"),
-                   icon = icon("divide", "fa-sm"),
-                   color = "olive",
-                   width = 12,
-               ),
-        )
-    })
-}
 
 
 ### ============================================================================

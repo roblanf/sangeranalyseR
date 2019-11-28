@@ -204,12 +204,7 @@ consensusReadServer <- function(input, output, session) {
                                 trimmedSeqLength = 0,
                                 trimmedMeanQualityScore = 0,
                                 trimmedMinQualityScore = 0,
-                                remainingRatio = 0,
-                                TrimmingMethod = "",
-                                M1TrimmingCutoff = NULL,
-                                M2CutoffQualityScore =  NULL,
-                                M2SlidingWindowSize = NULL
-                                )
+                                remainingRatio = 0)
 
     ############################################################################
     ### Functions for all UI page
@@ -528,28 +523,36 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-                        box(title = tags$p("Trimming Parameters Input",
+                        box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+                                                   "Trimming Parameters Input"),
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 12,
 
                             fluidRow(
-                               column(width = 5,
-                                   selectInput("TrimmingMethodSelection", label = h4("Trimming Method"),
-                                               choices = list("Method 1" = "M1", "Method 2" = "M2"),
-                                               selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod,
-                                               width = "100%"),
-                                   column(width = 12,
-                                       textOutput("TrimmingMethodSelectionOutput"),
-                                   ),
-
-                               ),
-                               column(width = 7,
-                                   uiOutput("TrimmingMethodUI") ,
-                               ),
+                                column(width = 5,
+                                       column(width = 1,
+                                       ),
+                                       column(width = 11,
+                                              selectInput("TrimmingMethodSelection", label = h4("Select Your Trimming Method"),
+                                                          choices = list("Method 1" = "M1", "Method 2" = "M2"),
+                                                          selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod,
+                                                          width = "100%"),
+                                              column(width = 12,
+                                                     column(width = 2,
+                                                            shiny::icon("mouse-pointer"),
+                                                     ),
+                                                     column(width = 10,
+                                                            textOutput("TrimmingMethodSelectionOutput"),
+                                                     ),
+                                              ),
+                                       ),
+                                ),
+                                column(width = 7,
+                                       uiOutput("TrimmingMethodUI") ,
+                                ),
                             ),
-
                         ),
 
 
@@ -580,38 +583,84 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        fluidRow(
-                            column(6,
-                                   uiOutput("trimmedStartPos") ,
-                            ),
-                            column(6,
-                                   uiOutput("trimmedFinishPos") ,
-                            )
-                        ),
-                        tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                        fluidRow(
-                            column(6,
-                                   uiOutput("trimmedRatio")
-                            ),
-                            column(6,
-                                   uiOutput("remainingBP")
-                            )
-                        ),
-                        box(title = tags$p("Cumulative Ratio Plot",
+
+
+
+
+                        box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+                                                   "Trimmed Result Output"),
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
                             collapsible = TRUE,
-                            status = "success", width = 6,
-                            plotlyOutput("qualityTrimmingRatioPlot") %>%
-                                withSpinner()),
-                        box(title = tags$p("Cumulative Ratio Plot",
-                                           style = "font-size: 24px;
+                            status = "success", width = 12,
+                            fluidRow(
+                                box(title = tags$p("Before Trimming",
+                                                   style = "font-size: 21px;
                                        font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 6,
-                            plotlyOutput("qualityQualityBasePlot") %>%
-                                withSpinner()),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    column(width = 12,
+                                           column(4,
+                                                  uiOutput("rawSeqLength") ,
+                                           ),
+                                           column(4,
+                                                  uiOutput("rawMeanQualityScore") ,
+                                           ),
+                                           column(4,
+                                                  uiOutput("rawMinQualityScore") ,
+                                           ),
+                                    ),
+                                ),
+                            ),
+                            fluidRow(
+                                box(title = tags$p("After Trimming",
+                                                   style = "font-size: 21px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    column(width = 12,
+                                           column(4,
+                                                  uiOutput("trimmedSeqLength") ,
+                                           ),
+                                           column(4,
+                                                  uiOutput("trimmedMeanQualityScore") ,
+                                           ),
+                                           column(4,
+                                                  uiOutput("trimmedMinQualityScore") ,
+                                           ),
+                                    ),
+
+                                    column(width = 12,
+                                           column(4,
+                                                  uiOutput("trimmedStartPos") ,
+                                           ),
+                                           column(4,
+                                                  uiOutput("trimmedFinishPos") ,
+                                           ),
+                                           column(4,
+                                                  uiOutput("remainingRatio") ,
+                                           )
+                                    ),
+                                ),
+                            ),
+                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            fluidRow(
+                                box(title = tags$p("Cumulative Ratio Plot",
+                                                   style = "font-size: 21px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    plotlyOutput("qualityTrimmingRatioPlot") %>%
+                                        withSpinner()),
+                                box(title = tags$p("Cumulative Ratio Plot",
+                                                   style = "font-size: 21px;
+                                       font-weight: bold;"),
+                                    collapsible = TRUE,
+                                    status = "success", width = 12,
+                                    plotlyOutput("qualityQualityBasePlot") %>%
+                                        withSpinner()),
+                            ),
+                        ),
                     ),
                     box(title = tags$p("Chromatogram: ",
                                        style = "font-size: 26px;
@@ -928,14 +977,20 @@ consensusReadServer <- function(input, output, session) {
     valueBoxM1TrimmingCutoff(input, output, session)
     valueBoxM2CutoffQualityScore (input, output, session)
     valueBoxM2SlidingWindowSize (input, output, session)
-    valueBoxTrimmedStartPos (input, output, session, trimmedRV)
-    valueBoxTrimmedFinishPos (input, output, session, trimmedRV)
 
     valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
     valueBoxChromTrimmedFinishPos (input, output, session, trimmedRV)
 
-    valueBoxRemainingBP (input, output, session, trimmedRV)
-    valueBoxTrimmedRatio (input, output, session, trimmedRV)
+    valueBoxRawSeqLength (input, output, session, trimmedRV)
+    valueBoxRawMeanQualityScore (input, output, session, trimmedRV)
+    valueBoxRawMinQualityScore (input, output, session, trimmedRV)
+    valueBoxTrimmedStartPos (input, output, session, trimmedRV)
+    valueBoxTrimmedFinishPos (input, output, session, trimmedRV)
+    valueBoxTrimmedSeqLength (input, output, session, trimmedRV)
+    valueBoxTrimmedMeanQualityScore (input, output, session, trimmedRV)
+    valueBoxTrimmedMinQualityScore (input, output, session, trimmedRV)
+    valueBoxRemainingRatio (input, output, session, trimmedRV)
+
 
     qualityTrimmingRatioPlot (input, output, session, trimmedRV,
                               SangerSingleReadQualReport,
