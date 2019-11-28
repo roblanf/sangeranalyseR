@@ -65,7 +65,10 @@ consensusReadUI <- dashboardPage(
                             padding:15px; font-size: 35; font-weight: bold;}')),
             ## Overwrite .jexcel_content Height!!
             tags$style(HTML(".jexcel_content { overflow-y: auto;
-                            height: 100% !important;}"))
+                            height: 100% !important;}")),
+            tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 20px;
+                                 font-weight: bold;
+                                 }"))
         ),
         tags$style(
             HTML(".shiny-notification {

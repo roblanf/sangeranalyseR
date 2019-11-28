@@ -318,7 +318,7 @@ valueBoxM2CutoffQualityScore <- function(input, output, session) {
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
-            width = 12,
+            width = 10,
         )
     })
 }
@@ -345,10 +345,23 @@ valueBoxM2SlidingWindowSize <- function(input, output, session) {
             value = tags$p(strtoi(inputM2SlidingWindowSizeText),
                            style = "font-size: 29px;"),
             icon = icon("expand", "fa-sm"),
-            color = "olive", width = 12,
+            color = "olive", width = 10,
         )
     })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

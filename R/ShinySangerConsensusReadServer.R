@@ -525,12 +525,39 @@ consensusReadServer <- function(input, output, session) {
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                        selectInput("TrimmingMethodSelection", label = h3("Trimming Method"),
-                                    choices = list("Method 1" = "M1", "Method 2" = "M2"),
-                                    selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod),
-                        hr(),
-                        fluidRow(column(3, verbatimTextOutput("value"))),
-                        uiOutput("TrimmingMethodUI") ,
+
+
+
+                        box(title = tags$p("Trimming Parameters Input",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+
+                            fluidRow(
+                               column(width = 4,
+                                   selectInput("TrimmingMethodSelection", label = h4("Trimming Method"),
+                                               choices = list("Method 1" = "M1", "Method 2" = "M2"),
+                                               selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod,
+                                               width = "100%"),
+                                   column(width = 2,
+
+                                   ),
+                                   column(width = 10,
+                                       textOutput("TrimmingMethodSelectionOutput"),
+                                   ),
+
+                               ),
+                               column(width = 1),
+                               column(width = 7,
+                                   uiOutput("TrimmingMethodUI") ,
+                               ),
+                            ),
+
+                        ),
+
+
+
 
 
 
@@ -1206,7 +1233,7 @@ consensusReadServer <- function(input, output, session) {
             # SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2SlidingWindowSize <- 5
 
             fluidRow(
-                column(3,
+                column(6,
                        uiOutput("M2CutoffQualityScore") ,
                        tags$ul(
                            textInput("M2CutoffQualityScoreText",
@@ -1216,10 +1243,10 @@ consensusReadServer <- function(input, output, session) {
                                          [[strtoi(
                                              sidebar_menu[[1]])]]@
                                              M2CutoffQualityScore),
-                                     width = '90%')
+                                     width = '70%')
                        ),
                 ),
-                column(3,
+                column(6,
                        uiOutput("M2SlidingWindowSize") ,
                        tags$ul(
                            textInput("M2SlidingWindowSizeText",
@@ -1229,7 +1256,7 @@ consensusReadServer <- function(input, output, session) {
                                          [[strtoi(
                                              sidebar_menu[[1]])]]@
                                              M2SlidingWindowSize),
-                                     width = '90%')
+                                     width = '70%')
                        ),
                 ),
             )
@@ -1272,11 +1299,15 @@ consensusReadServer <- function(input, output, session) {
         # )
     })
 
+    output$TrimmingMethodSelectionOutput <- renderText({
+        # tags$p(paste("You currently select '", input$TrimmingMethodSelection, "'"),
+        #        style = "font-size: 15px; font-weight: bold;")
+        if (input$TrimmingMethodSelection == "M1") {
+            "Second Method"
+        } else if (input$TrimmingMethodSelection == "M2") {
+            "Sliding Window Trimming"
 
-
-    output$value <- renderPrint({ input$TrimmingMethodSelection })
-
-
-
+        }
+    })
 }
 
