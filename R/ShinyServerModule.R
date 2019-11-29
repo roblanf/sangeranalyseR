@@ -353,6 +353,60 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
 ################################################################################
 ### Each Read
 ################################################################################
+### ============================================================================
+### valueBox: Change M1TrimmingCutoff
+### ============================================================================
+valueBoxM1TrimmingCutoff <- function(input, output, session) {
+    output$M1TrimmingCutoff <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
+            as.numeric(input$M1TrimmingCutoffText) > 0 &&
+            as.numeric(input$M1TrimmingCutoffText) <= 1) {
+            inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
+        } else {
+            inputM1TrimmingCutoffText <- 0.0001
+        }
+        valueBox(
+            subtitle = tags$p("Cut Off Log Score",
+                              style = "font-size: 15px;
+                                       font-weight: bold;"),
+            value = tags$p(as.numeric(inputM1TrimmingCutoffText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 10,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: Change M2CutoffQualityScore
+### ============================================================================
+valueBoxM2CutoffQualityScore <- function(input, output, session) {
+    output$M2CutoffQualityScore <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
+            strtoi(input$M2CutoffQualityScoreText) > 0 &&
+            strtoi(input$M2CutoffQualityScoreText) <= 60 &&
+            strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
+            inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
+        } else {
+            inputM2CutoffQualityScoreText <- 20
+        }
+        valueBox(
+            subtitle = tags$p("Cut Off Quality Score",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(inputM2CutoffQualityScoreText),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 10,
+        )
+    })
+}
 
 ### ============================================================================
 ### valueBox: Change M2SlidingWindowSize

@@ -92,8 +92,12 @@ consensusReadUI <- dashboardPage(
                         { font-size: 15px}")),
 
         # tags$style(HTML(".nav-tabs {background-color: #006747;}")),
-        tags$style(HTML(".nav-tabs-custom .nav-tabs li.active:hover a, .nav-tabs-custom .nav-tabs li.active a {background-color: transparent;border-color: transparent;}")),
-        tags$style(HTML(".nav-tabs-custom .nav-tabs li.active {border-top-color: #5cb85c;}")),
+        tags$style(HTML(".nav-tabs-custom .nav-tabs li.active:hover a,
+                        .nav-tabs-custom .nav-tabs li.active a
+                        {background-color: transparent;
+                        border-color: transparent;}")),
+        tags$style(HTML(".nav-tabs-custom .nav-tabs li.active
+                        {border-top-color: #5cb85c;}")),
 
         uiOutput("consensusRead_content"),
         tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),
