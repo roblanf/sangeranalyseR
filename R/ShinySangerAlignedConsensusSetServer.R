@@ -1328,7 +1328,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             inputM1TrimmingCutoffText <- 0.0001
         }
         if (SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
-            # message("&&&& Dynamic M1")
+            message("&&&& Dynamic M1")
             trimmingPos <-
                 M1inside_calculate_trimming(
                     SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
@@ -1427,11 +1427,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         } else {
             inputM2SlidingWindowSizeText <- 5
         }
-
-
-
         if (SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M2") {
-            # message("&&&& Dynamic M2")
+            message("&&&& Dynamic M2")
             if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
                 strtoi(input$M2CutoffQualityScoreText) > 0 &&
                 strtoi(input$M2CutoffQualityScoreText) <= 60 &&

@@ -523,7 +523,7 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-                        box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+                        box(title = tags$p(tagList(icon("arrow-circle-right"),
                                                    "Trimming Parameters Input"),
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -531,63 +531,23 @@ consensusReadServer <- function(input, output, session) {
                             status = "success", width = 12,
 
                             fluidRow(
-                                column(width = 5,
-                                       column(width = 1,
-                                       ),
+                                column(width = 12,
                                        column(width = 11,
-                                              selectInput("TrimmingMethodSelection", label = h4("Select Your Trimming Method"),
-                                                          choices = list("Method 1" = "M1", "Method 2" = "M2"),
-                                                          selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod,
-                                                          width = "100%"),
+                                              # selectInput("TrimmingMethodSelection", label = h4("Select Your Trimming Method"),
+                                              #             choices = list("Method 1" = "M1", "Method 2" = "M2"),
+                                              #             selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod,
+                                              #             width = "100%"),
                                               column(width = 12,
-                                                     column(width = 2,
-                                                            shiny::icon("mouse-pointer"),
-                                                     ),
-                                                     column(width = 10,
-                                                            textOutput("TrimmingMethodSelectionOutput"),
-                                                     ),
+                                                     uiOutput("TrimmingMethodSelectionOutput"),
                                               ),
                                        ),
                                 ),
-                                column(width = 7,
+                                column(width = 12,
                                        uiOutput("TrimmingMethodUI") ,
                                 ),
                             ),
                         ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+                        box(title = tags$p(tagList(icon("arrow-circle-left"),
                                                    "Trimmed Result Output"),
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -669,7 +629,7 @@ consensusReadServer <- function(input, output, session) {
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
 
-                        box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+                        box(title = tags$p(tagList(icon("arrow-circle-right"),
                                                    "Chromatogram Input"),
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -698,7 +658,7 @@ consensusReadServer <- function(input, output, session) {
                                               value = TRUE),)
                             ),
                         ),
-                        box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+                        box(title = tags$p(tagList(icon("arrow-circle-left"),
                                                    "Chromatogram Output"),
                                            style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -1612,22 +1572,18 @@ consensusReadServer <- function(input, output, session) {
     output$TrimmingMethodUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (!is.null(SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]])) {
-            if (input$TrimmingMethodSelection == "M1") {
+            if (SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M1") {
                 trimmingMethodLocal ="Method 1"
                 message("Inside Method 1!!")
-                message("SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff: ", SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff)
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod <<- "M1"
                 if (is.null(SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff)) {
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff <<-  0.0001
                 }
-
-
                 fluidRow(
                     column(6,
                            uiOutput("M1TrimmingCutoff") ,
                            tags$ul(
                                textInput("M1TrimmingCutoffText",
-                                         label = p("Change Value"),
+                                         label = p("Input Value"),
                                          value = toString(
                                              SangerSingleReadQualReport
                                              [[strtoi(
@@ -1643,11 +1599,9 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-            } else if (input$TrimmingMethodSelection == "M2") {
+            } else if (SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M2") {
                 trimmingMethodLocal ="Method 2"
                 message("Inside Method 2!!")
-                message("SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff: ", SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff)
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod <<- "M2"
                 if (is.null(SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore)) {
                     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore <<-  20
                 }
@@ -1660,7 +1614,7 @@ consensusReadServer <- function(input, output, session) {
                            uiOutput("M2CutoffQualityScore") ,
                            tags$ul(
                                textInput("M2CutoffQualityScoreText",
-                                         label = p("Change Value"),
+                                         label = p("Input Value"),
                                          value = toString(
                                              SangerSingleReadQualReport
                                              [[strtoi(
@@ -1673,7 +1627,7 @@ consensusReadServer <- function(input, output, session) {
                            uiOutput("M2SlidingWindowSize") ,
                            tags$ul(
                                textInput("M2SlidingWindowSizeText",
-                                         label = p("Change Value"),
+                                         label = p("Input Value"),
                                          value = toString(
                                              SangerSingleReadQualReport
                                              [[strtoi(
@@ -1689,13 +1643,17 @@ consensusReadServer <- function(input, output, session) {
         }
     })
 
-    output$TrimmingMethodSelectionOutput <- renderText({
+    output$TrimmingMethodSelectionOutput <- renderUI({
         # tags$p(paste("You currently select '", input$TrimmingMethodSelection, "'"),
         #        style = "font-size: 15px; font-weight: bold;")
-        if (input$TrimmingMethodSelection == "M1") {
-            "Logarithmic Scale Trimming"
-        } else if (input$TrimmingMethodSelection == "M2") {
-            "Logarithmic Scale Sliding Window Trimming"
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        if (SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M1") {
+            tagList(icon("check-circle"),
+                    "Your trimming method selection : 'Logarithmic Scale Trimming'")
+        } else if (SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M2") {
+            tagList(icon("check-circle"),
+                    "Your trimming method selection : 'Logarithmic Scale Sliding Window Trimming'")
+            # "Your trimming method selection : 'Logarithmic Scale Sliding Window Trimming'"
         }
     })
 }
