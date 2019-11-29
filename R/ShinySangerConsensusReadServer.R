@@ -103,7 +103,6 @@ consensusReadServer <- function(input, output, session) {
         return(PhredScoreDF)
         }
     )
-
     reverseQualityScoreDF <- lapply(1:reverseReadNum, function(i) {
         PhredScore <- reverseReadQualReport[[i]]@qualityPhredScores
         PhredScoreDF <- data.frame(

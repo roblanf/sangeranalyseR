@@ -214,31 +214,8 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
 ### ============================================================================
 ### valueBox: SCMinReadsNum
 ### ============================================================================
-
-
-# SCRefAminoAcidSeq <- SangerConsensus@refAminoAcidSeq
-# SCGeneticCode <- SangerConsensus@geneticCode
-# SCAlignment<- SangerConsensus@alignment
-# SCDifferencesDF<- SangerConsensus@differencesDF
-# SCDistanceMatrix <- SangerConsensus@distanceMatrix
-# SCDendrogram <- SangerConsensus@dendrogram
-# SCIndelsDF <- SangerConsensus@indelsDF
-# SCStopCodonsDF <- SangerConsensus@stopCodonsDF
-# SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
-# SangerConsensusForRegExp <- SangerConsensus@consenesusReadName
-# SangerConsensusForRegExp <- SangerConsensus@suffixForwardRegExp
-# SangerConsensusRevRegExp <- SangerConsensus@suffixReverseRegExp
-
-
-
-
-
-
-
-
 valueBoxSCMinReadsNum <- function(input, output, SCMinReadsNum, session) {
     output$SCMinReadsNum <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MinReadsNum",
                               style = "font-size: 15px;
@@ -257,7 +234,6 @@ valueBoxSCMinReadsNum <- function(input, output, SCMinReadsNum, session) {
 ### ============================================================================
 valueBoxSCMinReadLength <- function(input, output, SCMinReadLength, session) {
     output$SCMinReadLength <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MinReadLength",
                               style = "font-size: 15px;
@@ -276,7 +252,6 @@ valueBoxSCMinReadLength <- function(input, output, SCMinReadLength, session) {
 ### ============================================================================
 valueBoxSCMinFractionCall <- function(input, output, SCMinFractionCall, session) {
     output$SCMinFractionCall <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MinFractionCall",
                               style = "font-size: 15px;
@@ -295,7 +270,6 @@ valueBoxSCMinFractionCall <- function(input, output, SCMinFractionCall, session)
 ### ============================================================================
 valueBoxSCMaxFractionLost <- function(input, output, SCMaxFractionLost, session) {
     output$SCMaxFractionLost <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("MaxFractionLost",
                               style = "font-size: 15px;
@@ -314,7 +288,6 @@ valueBoxSCMaxFractionLost <- function(input, output, SCMaxFractionLost, session)
 ### ============================================================================
 valueBoxSCAcceptStopCodons <- function(input, output, SCAcceptStopCodons, session) {
     output$SCAcceptStopCodons <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("AcceptStopCodons",
                               style = "font-size: 15px;
@@ -333,7 +306,6 @@ valueBoxSCAcceptStopCodons <- function(input, output, SCAcceptStopCodons, sessio
 ### ============================================================================
 valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
     output$SCReadingFrame <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("ReadingFrame",
                               style = "font-size: 15px;
@@ -346,6 +318,177 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
         )
     })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### ============================================================================
+### valueBox: SCMinReadsNum
+### ============================================================================
+valueBoxSCMinReadsNumCSSet <- function(input, output, session) {
+    output$SCMinReadsNum <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        SCMinReadsNum <-
+            SangerCSetParam[[consensusReadIndex]]$SCMinReadsNum
+        valueBox(
+            subtitle = tags$p("MinReadsNum",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(SCMinReadsNum),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: SCMinReadLength
+### ============================================================================
+valueBoxSCMinReadLengthCSSet <- function(input, output, session) {
+    output$SCMinReadLength <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        SCMinReadLength <-
+            SangerCSetParam[[consensusReadIndex]]$SCMinReadLength
+        valueBox(
+            subtitle = tags$p("MinReadLength",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(SCMinReadLength),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: SCMinFractionCall
+### ============================================================================
+valueBoxSCMinFractionCallCSSet <- function(input, output, session) {
+    output$SCMinFractionCall <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        SCMinFractionCall <-
+            SangerCSetParam[[consensusReadIndex]]$SCMinFractionCall
+        valueBox(
+            subtitle = tags$p("MinFractionCall",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(as.numeric(SCMinFractionCall),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: SCMaxFractionLost
+### ============================================================================
+valueBoxSCMaxFractionLostCSSet <- function(input, output, session) {
+    output$SCMaxFractionLost <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        SCMaxFractionLost <-
+            SangerCSetParam[[consensusReadIndex]]$SCMaxFractionLost
+        valueBox(
+            subtitle = tags$p("MaxFractionLost",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(as.numeric(SCMaxFractionLost),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: SCAcceptStopCodons
+### ============================================================================
+valueBoxSCAcceptStopCodonsCSSet <- function(input, output, session) {
+    output$SCAcceptStopCodons <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        SCAcceptStopCodons <-
+            SangerCSetParam[[consensusReadIndex]]$SCAcceptStopCodons
+        valueBox(
+            subtitle = tags$p("AcceptStopCodons",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(SCAcceptStopCodons,
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox: SCReadingFrame
+### ============================================================================
+valueBoxSCReadingFrameCSSet <- function(input, output, session) {
+    output$SCReadingFrame <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        SCReadingFrame <-
+            SangerCSetParam[[consensusReadIndex]]$SCReadingFrame
+        valueBox(
+            subtitle = tags$p("ReadingFrame",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(SCReadingFrame),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # trimmedQS <- reactiveValues(cuffOffQuality = 0, M2SlidingWindowSize = 0)
 
@@ -887,74 +1030,3 @@ vline <- function(x = 0, color = "red") {
         line = list(color = color)
     )
 }
-
-
-
-trimmingNewSaving <- function(input, output, session, singleReadIndex, trimmingPos,
-                              SangerSingleReadQualReport, trimmedRV) {
-    message("@@@ Inside trimmingNewSaving singleReadIndex: ", singleReadIndex)
-    rawSeqLength <- trimmingPos[1]
-    rawMeanQualityScore <- trimmingPos[2]
-    rawMinQualityScore <- trimmingPos[3]
-    trimmedStartPos <- trimmingPos[4]
-    trimmedFinishPos <- trimmingPos[5]
-    trimmedSeqLength <- trimmingPos[6]
-    trimmedMeanQualityScore <- trimmingPos[7]
-    trimmedMinQualityScore <- trimmingPos[8]
-    remainingRatio <- trimmingPos[9]
-
-    if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-        !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-        !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-        !is.null(trimmedMeanQualityScore) &&
-        !is.null(trimmedMinQualityScore)) {
-        SangerSingleReadQualReport[[singleReadIndex]]@
-            rawSeqLength <- rawSeqLength
-        SangerSingleReadQualReport[[singleReadIndex]]@
-            rawMeanQualityScore <- rawMeanQualityScore
-        SangerSingleReadQualReport[[singleReadIndex]]@
-            rawMinQualityScore <- rawMinQualityScore
-        SangerSingleReadQualReport[[singleReadIndex]]@
-            trimmedStartPos <- trimmedStartPos
-        SangerSingleReadQualReport[[singleReadIndex]]@
-            trimmedFinishPos <- trimmedFinishPos
-        SangerSingleReadQualReport[[singleReadIndex]]@
-            trimmedSeqLength <- trimmedSeqLength
-        SangerSingleReadQualReport[[singleReadIndex]]@
-            trimmedMeanQualityScore <- trimmedMeanQualityScore
-        SangerSingleReadQualReport[[singleReadIndex]]@
-            trimmedMinQualityScore <- trimmedMinQualityScore
-        SangerSingleReadQualReport[[singleReadIndex]]@
-            remainingRatio <- remainingRatio
-
-        trimmedRV[["rawSeqLength"]] <-
-            SangerSingleReadQualReport[[
-                singleReadIndex]]@rawSeqLength
-        trimmedRV[["rawMeanQualityScore"]] <-
-            SangerSingleReadQualReport[[
-                singleReadIndex]]@rawMeanQualityScore
-        trimmedRV[["rawMinQualityScore"]] <-
-            SangerSingleReadQualReport[[
-                singleReadIndex]]@rawMinQualityScore
-        trimmedRV[["trimmedStartPos"]] <-
-            SangerSingleReadQualReport[[
-                singleReadIndex]]@trimmedStartPos
-        trimmedRV[["trimmedFinishPos"]] <-
-            SangerSingleReadQualReport[[
-                singleReadIndex]]@trimmedFinishPos
-        trimmedRV[["trimmedSeqLength"]] <-
-            SangerSingleReadQualReport[[
-                singleReadIndex]]@trimmedSeqLength
-        trimmedRV[["trimmedMeanQualityScore"]] <-
-            SangerSingleReadQualReport[[
-                singleReadIndex]]@trimmedMeanQualityScore
-        trimmedRV[["trimmedMinQualityScore"]] <-
-            SangerSingleReadQualReport[[
-                singleReadIndex]]@trimmedMinQualityScore
-        trimmedRV[["remainingRatio"]] <-
-            round(SangerSingleReadQualReport[[
-                singleReadIndex]]@remainingRatio * 100, 2)
-    }
-    return (c(SangerSingleReadQualReport, trimmedRV))
-}
-

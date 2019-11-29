@@ -39,7 +39,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         SCIndelsDF <- SangerCSetList[[i]]@indelsDF
         SCStopCodonsDF <- SangerCSetList[[i]]@stopCodonsDF
         SCSecondaryPeakDF <- SangerCSetList[[i]]@secondaryPeakDF
-        SCconsenesusReadName <- SangerCSetList[[i]]@consenesusReadName
+        SCConsenesusReadName <- SangerCSetList[[i]]@consenesusReadName
         SangerConsensusForRegExp <- SangerCSetList[[i]]@suffixForwardRegExp
         SangerConsensusRevRegExp <- SangerCSetList[[i]]@suffixReverseRegExp
 
@@ -92,6 +92,26 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerSingleReadRReadsList[[j]]@QualityReport)
         SangerSingleReadQualReport <- c(forwardReadQualReport,
                                         reverseReadQualReport)
+        # Quality Score Dataframe
+        forwardQualityScoreDF <- lapply(1:forwardReadNum, function(j) {
+            PhredScore <- forwardReadQualReport[[j]]@qualityPhredScores
+            PhredScoreDF <- data.frame(
+                t(data.frame(PhredScore)), stringsAsFactors = FALSE)
+            colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+            rownames(PhredScoreDF) <- NULL
+            return(PhredScoreDF)
+            }
+        )
+        reverseQualityScoreDF <- lapply(1:reverseReadNum, function(j) {
+            PhredScore <- reverseReadQualReport[[j]]@qualityPhredScores
+            PhredScoreDF <- data.frame(
+                t(data.frame(PhredScore)), stringsAsFactors = FALSE)
+            colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+            rownames(PhredScoreDF) <- NULL
+            return(PhredScoreDF)
+            }
+        )
+        SangerSingleReadQSDF <- c(forwardQualityScoreDF, reverseQualityScoreDF)
 
         # primarySeqID
         forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(j)
@@ -119,7 +139,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             basecalls1DF <- data.frame(
                 t(data.frame(basecalls1)), stringsAsFactors = FALSE)
             colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-            rownames(basecalls1DF) <- "Primary"
+            rownames(basecalls1DF) <- NULL
             return(basecalls1DF)
             }
         )
@@ -132,7 +152,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             basecalls1DF <- data.frame(
                 t(data.frame(basecalls1)), stringsAsFactors = FALSE)
             colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-            rownames(basecalls1DF) <- "Primary "
+            rownames(basecalls1DF) <- NULL
             return(basecalls1DF)
             }
         )
@@ -172,7 +192,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             basecalls2DF <- data.frame(
                 t(data.frame(basecalls2)), stringsAsFactors = FALSE)
             colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-            rownames(basecalls2DF) <- " Second"
+            rownames(basecalls2DF) <- NULL
             return(basecalls2DF)
             }
         )
@@ -185,13 +205,41 @@ alignedConsensusSetServer <- function(input, output, session) {
             basecalls2DF <- data.frame(
                 t(data.frame(basecalls2)), stringsAsFactors = FALSE)
             colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-            rownames(basecalls2DF) <- " Second"
+            rownames(basecalls2DF) <- NULL
             return(basecalls2DF)
             }
         )
         SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF,
                                        reverseReadSecoSeqDF)
 
+        # primaryAASeq
+        forwardReadPrimAASeq <- sapply(1:forwardReadNum, function(j)
+            SangerSingleReadFReadsList[[j]]@primaryAASeq)
+        reverseReadPrimAASeq <- sapply(1:reverseReadNum, function(j)
+            SangerSingleReadRReadsList[[j]]@primaryAASeq)
+        SangerSingleReadPrimAASeq <- c(forwardReadPrimAASeq, reverseReadPrimAASeq)
+
+        # primaryAASeqDF
+        forwardReadPrimAASeqDF <- lapply(1:forwardReadNum, function(j) {
+            AAString <- SangerSingleReadFReadsList[[j]]@primaryAASeq
+            AAStringDF <- data.frame(
+                t(data.frame(AAString)), stringsAsFactors = FALSE)
+            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+            rownames(AAStringDF) <- NULL
+            return(AAStringDF)
+            }
+        )
+        reverseReadPrimAASeqDF <- lapply(1:reverseReadNum, function(j) {
+            AAString <- SangerSingleReadRReadsList[[j]]@primaryAASeq
+            AAStringDF <- data.frame(
+                t(data.frame(AAString)), stringsAsFactors = FALSE)
+            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+            rownames(AAStringDF) <- NULL
+            return(AAStringDF)
+            }
+        )
+        SangerSingleReadPrimAASeqDF <- c(forwardReadPrimAASeqDF,
+                                         reverseReadPrimAASeqDF)
 
         # traceMatrix
         forwardReadTraceMat <- sapply(1:forwardReadNum, function(j)
@@ -232,7 +280,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SCIndelsDF = SCIndelsDF,
                     SCStopCodonsDF = SCStopCodonsDF,
                     SCSecondaryPeakDF = SCSecondaryPeakDF,
-                    SCconsenesusReadName = SCconsenesusReadName,
+                    SCConsenesusReadName = SCConsenesusReadName,
                     SangerConsensusForRegExp = SangerConsensusForRegExp,
                     SangerConsensusRevRegExp = SangerConsensusRevRegExp,
                     SangerSingleReadFReadsList = SangerSingleReadFReadsList,
@@ -255,6 +303,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadSecoSeq = SangerSingleReadSecoSeq,
                     forwardReadSecoSeqDF = forwardReadSecoSeqDF,
                     reverseReadSecoSeqDF = reverseReadSecoSeqDF,
+                    SangerSingleReadPrimAASeqDF = SangerSingleReadPrimAASeqDF,
+                    SangerSingleReadQSDF = SangerSingleReadQSDF,
                     SangerSingleReadSecoSeqDF = SangerSingleReadSecoSeqDF,
                     SangerSingleReadTraceMat = SangerSingleReadTraceMat,
                     SangerSingleReadPeakPosMat = SangerSingleReadPeakPosMat,
@@ -375,72 +425,136 @@ alignedConsensusSetServer <- function(input, output, session) {
                         SangerCSetParam[[consensusReadIndex]]$SCStopCodonsDF
                     SCSecondaryPeakDF <-
                         SangerCSetParam[[consensusReadIndex]]$SCSecondaryPeakDF
-                    SCconsenesusReadName <-
+                    SCConsenesusReadName <-
                         SangerCSetParam[[consensusReadIndex]]$
-                        SCconsenesusReadName
+                        SCConsenesusReadName
                     SangerConsensusForRegExp <-
                         SangerCSetParam[[consensusReadIndex]]$
                         SangerConsensusForRegExp
                     SangerConsensusRevRegExp <-
                         SangerCSetParam[[consensusReadIndex]]$
                         SangerConsensusRevRegExp
-                    SangerSingleforwardReadNum <-
+                    forwardReadNum <-
                         SangerCSetParam[[consensusReadIndex]]$forwardReadNum
-                    SangerSinglereverseReadNum <-
+                    reverseReadNum <-
                         SangerCSetParam[[consensusReadIndex]]$reverseReadNum
                     SangerSingleReadNum <-
                         SangerCSetParam[[consensusReadIndex]]$
                         SangerSingleReadNum
+                    SCTrimmingMethod <- SangerCSetParam[[consensusReadIndex]]$SangerSingleReadFReadsList[[1]]@
+                        QualityReport@TrimmingMethod
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    if (SCTrimmingMethod == "M1") {
+                        SCTrimmingMethodName = "Method 1: 'Logarithmic Scale Trimming'"
+                    } else if (SCTrimmingMethod == "M2") {
+                        SCTrimmingMethodName = "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
+                    }
+
+
+
+
+
+
+
+
+
+
                     fluidRow(
                         useShinyjs(),
-                        box(title = tags$p("Input Parameters: ",
+                        box(title = tags$p(tagList(icon("dot-circle"),
+                                                   "Basic Information: "),
                                            style = "font-size: 26px;
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(
-                                style = ("border-top: 0.2px hidden #A9A9A9;")),
+                            tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
                             fluidRow(
                                 column(12,
                                        column(3,
-                                              h4("Consenesus Read Number: ",
-                                                 style="font-weight: bold;"),
+                                              tags$p(tagList(icon("caret-right"),
+                                                             "Output Directory: "),
+                                                     style = "font-size: 20px;
+                                       font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(SCName),
+                                              h4(shinyDirectory),
                                        )
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Consenesus Read Name: ",
-                                                 style="font-weight: bold;"),
+                                              tags$p(tagList(icon("caret-right"),
+                                                             "Raw ABI Parent Directory: "),
+                                                     style = "font-size: 20px;
+                                       font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(SCconsenesusReadName),
+                                              h4(SangerCSetParentDir),
                                        )
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Forward Suffix RegExp: ",
-                                                 style="font-weight: bold;"),
+                                              tags$p(tagList(icon("caret-right"),
+                                                             "Consenesus Read Name: "),
+                                                     style = "font-size: 20px;
+                                       font-weight: bold;"),
+                                       ),
+                                       column(9,
+                                              h4(SCConsenesusReadName),
+                                       )
+                                ),
+                                column(12,
+                                       column(3,
+                                              tags$p(tagList(icon("caret-right"),
+                                                             "Trimming Method: "),
+                                                     style = "font-size: 20px;
+                                       font-weight: bold;"),
+                                       ),
+                                       column(9,
+                                              h4(SCTrimmingMethodName),
+                                       )
+                                ),
+                                column(12,
+                                       column(3,
+                                              tags$p(tagList(icon("caret-right"),
+                                                             "Forward Suffix RegExp: "),
+                                                     style = "font-size: 20px;
+                                       font-weight: bold;"),
                                        ),
                                        column(9,
                                               h4(SangerCSetSuffixForwardRegExp),
                                        )
+
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Forward Read Number: ",
-                                                 style="font-weight: bold;"),
+                                              tags$p(tagList(icon("caret-right"),
+                                                             "Forward Read Number: "),
+                                                     style = "font-size: 20px;
+                                       font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(SangerSingleforwardReadNum),
+                                              h4(forwardReadNum),
                                        )
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Reverse Suffix RegExp: ",
-                                                 style="font-weight: bold;"),
+                                              tags$p(tagList(icon("caret-right"),
+                                                             "Reverse Suffix RegExp: "),
+                                                     style = "font-size: 20px;
+                                       font-weight: bold;"),
                                        ),
                                        column(9,
                                               h4(SangerCSetSuffixReverseRegExp),
@@ -448,11 +562,13 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                                 column(12,
                                        column(3,
-                                              h4("Reverse Read Number: ",
-                                                 style="font-weight: bold;"),
+                                              tags$p(tagList(icon("caret-right"),
+                                                             "Reverse Read Number: "),
+                                                     style = "font-size: 20px;
+                                       font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(SangerSinglereverseReadNum),
+                                              h4(reverseReadNum),
                                        )
                                 ),
                             ),
@@ -461,239 +577,444 @@ alignedConsensusSetServer <- function(input, output, session) {
                             ################################################
                             # If it is null
                             # h1(SCRefAminoAcidSeq),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Genetic Code Data Frame",
-                                                   style = "font-size: 24px;
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            box(title = tags$p("Consensus Read Parameters",
+                                               style = "font-size: 24px;
                                        font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 2,
-                                           tags$p("Tri-nucleotide:",
-                                                  style = "font-size: 15px;
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(3,
+                                       uiOutput("SCMinReadsNum") ,
+                                ),
+                                column(3,
+                                       uiOutput("SCMinReadLength")  ,
+                                ),
+                                column(3,
+                                       uiOutput("SCMinFractionCall") ,
+                                ),
+                                column(3,
+                                       uiOutput("SCMaxFractionLost") ,
+                                ),
+                                column(3,
+                                       uiOutput("SCAcceptStopCodons") ,
+                                ),
+                                column(3,
+                                       uiOutput("SCReadingFrame") ,
+                                ),
+                            ),
+                            box(title = tags$p("Genetic Code Data Frame",
+                                               style = "font-size: 24px;
                                        font-weight: bold;"),
-                                           tags$p("Amino Acid : ",
-                                                  style = "font-size: 15px;
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 2,
+                                       tags$p("Tri-nucleotide:",
+                                              style = "font-size: 15px;
                                        font-weight: bold;"),
-                                           tags$p("('*' : stop codon) ",
-                                                  style = "font-size: 12px;
+                                       tags$p("Amino Acid : ",
+                                              style = "font-size: 15px;
+                                       font-weight: bold;"),
+                                       tags$p("('*' : stop codon) ",
+                                              style = "font-size: 12px;
                                        font-weight: italic;"),
-                                    ),
-                                    column(width = 10,
-                                           excelOutput("geneticCodeDF",
-                                                       width = "100%",
-                                                       height = "50"),
-                                           style = paste("height:100%;",
-                                                         "overflow-y: hidden;",
-                                                         "overflow-x: scroll;")
-                                    ),
+                                ),
+                                column(width = 10,
+                                       excelOutput("geneticCodeDF",
+                                                   width = "100%", height = "50"),
+                                       style = paste("height:100%; ",
+                                                     "overflow-y: hidden;",
+                                                     "overflow-x: scroll;")
                                 ),
                             ),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                column(3,
-                                       valueBox(
-                                           subtitle =
-                                               tags$p("MinReadsNum",
-                                                      style = "font-size: 15px;
-                                                      font-weight: bold;"),
-                                           value =
-                                               tags$p(strtoi(SCMinReadsNum),
-                                                     style ="font-size: 29px;"),
-                                           icon = icon("cut", "fa-sm"),
-                                           color = "olive",
-                                           width = 12,
-                                       )
-                                       # uiOutput("SCMinReadsNum") ,
-                                ),
-                                column(3,
-                                       valueBox(
-                                           subtitle =
-                                               tags$p("MinReadLength",
-                                                      style = "font-size: 15px;
-                                            font-weight: bold;"),
-                                           value =
-                                               tags$p(strtoi(SCMinReadLength),
-                                                      style="font-size: 29px;"),
-                                           icon = icon("cut", "fa-sm"),
-                                           color = "olive",
-                                           width = 12,
-                                       ),
-                                       # uiOutput("SCMinReadLength")  ,
-                                ),
-                                column(3,
-                                       valueBox(
-                                           subtitle =
-                                               tags$p("MinFractionCall",
-                                                      style = "font-size: 15px;
-                                            font-weight: bold;"),
-                                           value =
-                                               tags$p(
-                                                  as.numeric(SCMinFractionCall),
-                                                  style = "font-size: 29px;"),
-                                           icon = icon("cut", "fa-sm"),
-                                           color = "olive",
-                                           width = 12,
-                                       ),
-                                ),
-                                column(3,
-                                       valueBox(
-                                           subtitle =
-                                               tags$p("MaxFractionLost",
-                                                      style = "font-size: 15px;
-                                            font-weight: bold;"),
-                                           value =
-                                               tags$p(
-                                                  as.numeric(SCMaxFractionLost),
-                                                  style = "font-size: 29px;"),
-                                           icon = icon("cut", "fa-sm"),
-                                           color = "olive",
-                                           width = 12,
-                                       ),
-                                ),
-                                column(3,
-                                       valueBox(
-                                           subtitle =
-                                               tags$p("AcceptStopCodons",
-                                                      style = "font-size: 15px;
-                                            font-weight: bold;"),
-                                           value =
-                                               tags$p(SCAcceptStopCodons,
-                                                      style="font-size: 29px;"),
-                                           icon = icon("cut", "fa-sm"),
-                                           color = "olive",
-                                           width = 12,
-                                       ),
-                                       # uiOutput("SCAcceptStopCodons") ,
-                                ),
-                                column(3,
-                                       valueBox(
-                                           subtitle =
-                                               tags$p("ReadingFrame",
-                                                      style = "font-size: 15px;
-                                                      font-weight: bold;"),
-                                           value =
-                                               tags$p(strtoi(SCReadingFrame),
-                                                      style="font-size: 29px;"),
-                                           icon = icon("cut", "fa-sm"),
-                                           color = "olive",
-                                           width = 12,
-                                       ),
-                                ),
-                            ),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
                         ),
 
-                        box(title = tags$p("Results: ",
+                        box(title = tags$p(tagList(icon("dot-circle"),
+                                                   "Consensus Read Results: "),
                                            style = "font-size: 26px;
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
-                            tags$hr(
-                                style = ("border-top: 4px hidden #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Alignment",
-                                                   style = "font-size: 24px;
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            box(title = tags$p("Alignment",
+                                               style = "font-size: 24px;
                                        font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           htmlOutput("consensusAlignmentHTML"),
-                                    ),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       htmlOutput("consensusAlignmentHTML"),
                                 ),
                             ),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Differences Dataframe",
-                                                   style = "font-size: 24px;
+                            box(title = tags$p("Differences Dataframe",
+                                               style = "font-size: 24px;
                                        font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           dataTableOutput("differencesDF") ,
-                                           style = paste0("height:100%;",
-                                                          "overflow-y:scroll;",
-                                                          "overflow-x: scroll;")
-                                    )
-                                ),
-                            ),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Dendrogram",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           # plot()
-                                           plotOutput("dendrogramPlot"),
-                                           style = paste0("height:100%;",
-                                                          "overflow-y:scroll;",
-                                                          "overflow-x: scroll;")
-                                    ),
-                                    column(width = 12,
-                                           dataTableOutput("dendrogramDF"),
-                                           style = paste0("height:100%;",
-                                                          "overflow-y:scroll;",
-                                                          "overflow-x: scroll;")
-                                    )
-                                ),
-                            ),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Secondary Peak Dataframe",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           uiOutput("secondaryPeakDFUI"),
-                                           style = paste0("height:100%;",
-                                                          "overflow-y:scroll;",
-                                                          "overflow-x: scroll;")
-                                    )
-                                ),
-                            ),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Indels Dataframe",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           uiOutput("SCIndelsDFUI"),
-                                           style = paste0("height:100%;",
-                                                          "overflow-y:scroll;",
-                                                          "overflow-x: scroll;")
-                                    )
-                                ),
-                            ),
-                            tags$hr(
-                                style = ("border-top: 6px double #A9A9A9;")),
-                            fluidRow(
-                                box(title = tags$p("Stop Codons Dataframe",
-                                                   style = "font-size: 24px;
-                                       font-weight: bold;"),
-                                    collapsible = TRUE,
-                                    status = "success", width = 12,
-                                    column(width = 12,
-                                           uiOutput("SCStopCodonsDFUI"),
-                                           style = paste0("height:100%;",
-                                                          "overflow-y:scroll;",
-                                                          "overflow-x: scroll;")
-                                    )
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       uiOutput("SCDifferencesDFUI"),
+                                       style = paste("height:100%; overflow-y:",
+                                                     "scroll;overflow-x: scroll;")
                                 )
                             ),
+                            box(title = tags$p("Dendrogram",
+                                               style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       # plot()
+                                       plotOutput("dendrogramPlot"),
+                                       # dataTableOutput("differencesDF")
+                                       style = paste("height:100%; overflow-y:",
+                                                     "scroll;overflow-x: scroll;")
+                                ),
+                                column(width = 12,
+                                       dataTableOutput("dendrogramDF"),
+                                       style = paste("height:100%; overflow-y:",
+                                                     "scroll;overflow-x: scroll;")
+                                )
+                            ),
+                            box(title = tags$p("Secondary Peak Dataframe",
+                                               style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       uiOutput("SCDistanceMatrixUI"),
+                                       style = paste("height:100%; overflow-y:",
+                                                     "scroll;overflow-x: scroll;")
+                                )
+                            ),
+                            box(title = tags$p("Indels Dataframe",
+                                               style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       uiOutput("SCIndelsDFUI"),
+                                       style = paste("height:100%; overflow-y:",
+                                                     "scroll;overflow-x: scroll;")
+                                )
+                            ),
+                            box(title = tags$p("Stop Codons Dataframe",
+                                               style = "font-size: 24px;
+                                       font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       uiOutput("SCStopCodonsDFUI"),
+                                       style = paste("height:100%; overflow-y:",
+                                                     "scroll;overflow-x: scroll;")
+                                )
+                            )
                         ),
                     )
+
+
+
+
+                    # fluidRow(
+                    #     useShinyjs(),
+                    #     box(title = tags$p("Input Parameters: ",
+                    #                        style = "font-size: 26px;
+                    #                    font-weight: bold;"),
+                    #         solidHeader = TRUE, collapsible = TRUE,
+                    #         status = "success", width = 12,
+                    #         tags$hr(
+                    #             style = ("border-top: 0.2px hidden #A9A9A9;")),
+                    #         fluidRow(
+                    #             column(12,
+                    #                    column(3,
+                    #                           h4("Consenesus Read Number: ",
+                    #                              style="font-weight: bold;"),
+                    #                    ),
+                    #                    column(9,
+                    #                           h4(SCName),
+                    #                    )
+                    #             ),
+                    #             column(12,
+                    #                    column(3,
+                    #                           h4("Consenesus Read Name: ",
+                    #                              style="font-weight: bold;"),
+                    #                    ),
+                    #                    column(9,
+                    #                           h4(SCConsenesusReadName),
+                    #                    )
+                    #             ),
+                    #             column(12,
+                    #                    column(3,
+                    #                           h4("Forward Suffix RegExp: ",
+                    #                              style="font-weight: bold;"),
+                    #                    ),
+                    #                    column(9,
+                    #                           h4(SangerCSetSuffixForwardRegExp),
+                    #                    )
+                    #             ),
+                    #             column(12,
+                    #                    column(3,
+                    #                           h4("Forward Read Number: ",
+                    #                              style="font-weight: bold;"),
+                    #                    ),
+                    #                    column(9,
+                    #                           h4(SangerSingleforwardReadNum),
+                    #                    )
+                    #             ),
+                    #             column(12,
+                    #                    column(3,
+                    #                           h4("Reverse Suffix RegExp: ",
+                    #                              style="font-weight: bold;"),
+                    #                    ),
+                    #                    column(9,
+                    #                           h4(SangerCSetSuffixReverseRegExp),
+                    #                    )
+                    #             ),
+                    #             column(12,
+                    #                    column(3,
+                    #                           h4("Reverse Read Number: ",
+                    #                              style="font-weight: bold;"),
+                    #                    ),
+                    #                    column(9,
+                    #                           h4(SangerSinglereverseReadNum),
+                    #                    )
+                    #             ),
+                    #         ),
+                    #         ################################################
+                    #         #### Add this after having reference sample ####
+                    #         ################################################
+                    #         # If it is null
+                    #         # h1(SCRefAminoAcidSeq),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #         fluidRow(
+                    #             box(title = tags$p("Genetic Code Data Frame",
+                    #                                style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #                 collapsible = TRUE,
+                    #                 status = "success", width = 12,
+                    #                 column(width = 2,
+                    #                        tags$p("Tri-nucleotide:",
+                    #                               style = "font-size: 15px;
+                    #                    font-weight: bold;"),
+                    #                        tags$p("Amino Acid : ",
+                    #                               style = "font-size: 15px;
+                    #                    font-weight: bold;"),
+                    #                        tags$p("('*' : stop codon) ",
+                    #                               style = "font-size: 12px;
+                    #                    font-weight: italic;"),
+                    #                 ),
+                    #                 column(width = 10,
+                    #                        excelOutput("geneticCodeDF",
+                    #                                    width = "100%",
+                    #                                    height = "50"),
+                    #                        style = paste("height:100%;",
+                    #                                      "overflow-y: hidden;",
+                    #                                      "overflow-x: scroll;")
+                    #                 ),
+                    #             ),
+                    #         ),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #         fluidRow(
+                    #             column(3,
+                    #                    valueBox(
+                    #                        subtitle =
+                    #                            tags$p("MinReadsNum",
+                    #                                   style = "font-size: 15px;
+                    #                                   font-weight: bold;"),
+                    #                        value =
+                    #                            tags$p(strtoi(SCMinReadsNum),
+                    #                                  style ="font-size: 29px;"),
+                    #                        icon = icon("cut", "fa-sm"),
+                    #                        color = "olive",
+                    #                        width = 12,
+                    #                    )
+                    #                    # uiOutput("SCMinReadsNum") ,
+                    #             ),
+                    #             column(3,
+                    #                    valueBox(
+                    #                        subtitle =
+                    #                            tags$p("MinReadLength",
+                    #                                   style = "font-size: 15px;
+                    #                         font-weight: bold;"),
+                    #                        value =
+                    #                            tags$p(strtoi(SCMinReadLength),
+                    #                                   style="font-size: 29px;"),
+                    #                        icon = icon("cut", "fa-sm"),
+                    #                        color = "olive",
+                    #                        width = 12,
+                    #                    ),
+                    #                    # uiOutput("SCMinReadLength")  ,
+                    #             ),
+                    #             column(3,
+                    #                    valueBox(
+                    #                        subtitle =
+                    #                            tags$p("MinFractionCall",
+                    #                                   style = "font-size: 15px;
+                    #                         font-weight: bold;"),
+                    #                        value =
+                    #                            tags$p(
+                    #                               as.numeric(SCMinFractionCall),
+                    #                               style = "font-size: 29px;"),
+                    #                        icon = icon("cut", "fa-sm"),
+                    #                        color = "olive",
+                    #                        width = 12,
+                    #                    ),
+                    #             ),
+                    #             column(3,
+                    #                    valueBox(
+                    #                        subtitle =
+                    #                            tags$p("MaxFractionLost",
+                    #                                   style = "font-size: 15px;
+                    #                         font-weight: bold;"),
+                    #                        value =
+                    #                            tags$p(
+                    #                               as.numeric(SCMaxFractionLost),
+                    #                               style = "font-size: 29px;"),
+                    #                        icon = icon("cut", "fa-sm"),
+                    #                        color = "olive",
+                    #                        width = 12,
+                    #                    ),
+                    #             ),
+                    #             column(3,
+                    #                    valueBox(
+                    #                        subtitle =
+                    #                            tags$p("AcceptStopCodons",
+                    #                                   style = "font-size: 15px;
+                    #                         font-weight: bold;"),
+                    #                        value =
+                    #                            tags$p(SCAcceptStopCodons,
+                    #                                   style="font-size: 29px;"),
+                    #                        icon = icon("cut", "fa-sm"),
+                    #                        color = "olive",
+                    #                        width = 12,
+                    #                    ),
+                    #                    # uiOutput("SCAcceptStopCodons") ,
+                    #             ),
+                    #             column(3,
+                    #                    valueBox(
+                    #                        subtitle =
+                    #                            tags$p("ReadingFrame",
+                    #                                   style = "font-size: 15px;
+                    #                                   font-weight: bold;"),
+                    #                        value =
+                    #                            tags$p(strtoi(SCReadingFrame),
+                    #                                   style="font-size: 29px;"),
+                    #                        icon = icon("cut", "fa-sm"),
+                    #                        color = "olive",
+                    #                        width = 12,
+                    #                    ),
+                    #             ),
+                    #         ),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #     ),
+                    #
+                    #     box(title = tags$p("Results: ",
+                    #                        style = "font-size: 26px;
+                    #                    font-weight: bold;"),
+                    #         solidHeader = TRUE, collapsible = TRUE,
+                    #         status = "success", width = 12,
+                    #         tags$hr(
+                    #             style = ("border-top: 4px hidden #A9A9A9;")),
+                    #         fluidRow(
+                    #             box(title = tags$p("Alignment",
+                    #                                style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #                 collapsible = TRUE,
+                    #                 status = "success", width = 12,
+                    #                 column(width = 12,
+                    #                        htmlOutput("consensusAlignmentHTML"),
+                    #                 ),
+                    #             ),
+                    #         ),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #         fluidRow(
+                    #             box(title = tags$p("Differences Dataframe",
+                    #                                style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #                 collapsible = TRUE,
+                    #                 status = "success", width = 12,
+                    #                 column(width = 12,
+                    #                        dataTableOutput("differencesDF") ,
+                    #                        style = paste0("height:100%;",
+                    #                                       "overflow-y:scroll;",
+                    #                                       "overflow-x: scroll;")
+                    #                 )
+                    #             ),
+                    #         ),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #         fluidRow(
+                    #             box(title = tags$p("Dendrogram",
+                    #                                style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #                 collapsible = TRUE,
+                    #                 status = "success", width = 12,
+                    #                 column(width = 12,
+                    #                        # plot()
+                    #                        plotOutput("dendrogramPlot"),
+                    #                        style = paste0("height:100%;",
+                    #                                       "overflow-y:scroll;",
+                    #                                       "overflow-x: scroll;")
+                    #                 ),
+                    #                 column(width = 12,
+                    #                        dataTableOutput("dendrogramDF"),
+                    #                        style = paste0("height:100%;",
+                    #                                       "overflow-y:scroll;",
+                    #                                       "overflow-x: scroll;")
+                    #                 )
+                    #             ),
+                    #         ),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #         fluidRow(
+                    #             box(title = tags$p("Secondary Peak Dataframe",
+                    #                                style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #                 collapsible = TRUE,
+                    #                 status = "success", width = 12,
+                    #                 column(width = 12,
+                    #                        uiOutput("secondaryPeakDFUI"),
+                    #                        style = paste0("height:100%;",
+                    #                                       "overflow-y:scroll;",
+                    #                                       "overflow-x: scroll;")
+                    #                 )
+                    #             ),
+                    #         ),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #         fluidRow(
+                    #             box(title = tags$p("Indels Dataframe",
+                    #                                style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #                 collapsible = TRUE,
+                    #                 status = "success", width = 12,
+                    #                 column(width = 12,
+                    #                        uiOutput("SCIndelsDFUI"),
+                    #                        style = paste0("height:100%;",
+                    #                                       "overflow-y:scroll;",
+                    #                                       "overflow-x: scroll;")
+                    #                 )
+                    #             ),
+                    #         ),
+                    #         tags$hr(
+                    #             style = ("border-top: 6px double #A9A9A9;")),
+                    #         fluidRow(
+                    #             box(title = tags$p("Stop Codons Dataframe",
+                    #                                style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #                 collapsible = TRUE,
+                    #                 status = "success", width = 12,
+                    #                 column(width = 12,
+                    #                        uiOutput("SCStopCodonsDFUI"),
+                    #                        style = paste0("height:100%;",
+                    #                                       "overflow-y:scroll;",
+                    #                                       "overflow-x: scroll;")
+                    #                 )
+                    #             )
+                    #         ),
+                    #     ),
+                    # )
                 } else if (sidebar_menu[[2]] == "Consensus" &&
                            sidebar_menu[[3]] == "Read" &&
                            sidebar_menu[[4]] == "-" &&
@@ -751,31 +1072,16 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadSecoSeqDF <-
                         SangerCSetParam[[consensusReadIndex]]$
                             SangerSingleReadSecoSeqDF
-                    SangerSingleReadTraceMat <-
+                    SangerSingleReadPrimAASeqDF <-
                         SangerCSetParam[[consensusReadIndex]]$
-                        SangerSingleReadTraceMat
-                    SangerSingleReadPeakPosMat <-
+                        SangerSingleReadPrimAASeqDF
+                    SangerSingleReadQSDF <-
                         SangerCSetParam[[consensusReadIndex]]$
-                            SangerSingleReadPeakPosMat
-                    SangerSingleReadPeakAmpMat <-
-                        SangerCSetParam[[consensusReadIndex]]$
-                        SangerSingleReadPeakAmpMat
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        SangerSingleReadQSDF
                     fluidRow(
                         useShinyjs(),
-                        box(title = tags$p("Raw File: ",
+                        box(title = tags$p(tagList(icon("dot-circle"),
+                                                   "Raw File: "),
                                            style = "font-size: 26px;
                                          font-weight: bold;"),
                             solidHeader = TRUE,
@@ -786,38 +1092,55 @@ alignedConsensusSetServer <- function(input, output, session) {
                                           SangerSingleReadAFN[[
                                               singleReadIndex]],
                                           ")"), style = "font-style:italic")),
-                        box(title = tags$p("Primary & Secondary Peaks: ",
+                        box(title = tags$p(tagList(icon("dot-circle"),
+                                                   "Primary & Secondary Sequences: "),
                                            style = "font-size: 26px;
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                            column(width = 1,
-                                   tags$p("Primary",
+                            column(width = 2,
+                                   tags$p("Primary Sequence",
                                           style = "font-size: 15px;
                                        font-weight: bold;"),
                                    tags$br(),
                                    tags$br(),
-                                   tags$p("Second",
+                                   tags$p("Primary AA Sequence",
+                                          style = "font-size: 15px;
+                                       font-weight: bold;"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p("Secondary Sequence",
+                                          style = "font-size: 15px;
+                                       font-weight: bold;"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p("Quality Phred Score",
                                           style = "font-size: 15px;
                                        font-weight: bold;"),
                             ),
-                            column(width = 11,
+                            column(width = 10,
                                    excelOutput("primarySeqDF",
+                                               width = "100%", height = "50"),
+                                   excelOutput("PrimAASeqDF",
                                                width = "100%", height = "50"),
                                    excelOutput("secondSeqDF",
                                                width = "100%", height = "50"),
+                                   excelOutput("qualityScoreDF",
+                                               width = "100%", height = "50"),
+
                                    style = paste("overflow-y: hidden;",
                                                  "overflow-x: scroll;")
                             )
                         ),
-                        box(title = tags$p("Quality Report: ",
+                        box(title = tags$p(tagList(icon("dot-circle"),
+                                                   "Quality Report: "),
                                            style = "font-size: 26px;
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                            box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+                            box(title = tags$p(tagList(icon("arrow-circle-right"),
                                                        "Trimming Parameters Input"),
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -825,30 +1148,15 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 status = "success", width = 12,
 
                                 fluidRow(
-                                    column(width = 5,
-                                           column(width = 1,
-                                           ),
-                                           column(width = 11,
-                                                  selectInput("TrimmingMethodSelection", label = h4("Select Your Trimming Method"),
-                                                              choices = list("Method 1" = "M1", "Method 2" = "M2"),
-                                                              selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod,
-                                                              width = "100%"),
-                                                  column(width = 12,
-                                                         column(width = 2,
-                                                                shiny::icon("mouse-pointer"),
-                                                         ),
-                                                         column(width = 10,
-                                                                textOutput("TrimmingMethodSelectionOutput"),
-                                                         ),
-                                                  ),
-                                           ),
-                                    ),
-                                    column(width = 7,
-                                           uiOutput("TrimmingMethodUI") ,
+                                    column(width = 12,
+                                           uiOutput("TrimmingMethodSelectionOutput"),
                                     ),
                                 ),
+                                column(width = 12,
+                                       uiOutput("TrimmingMethodUI"),
+                                ),
                             ),
-                            box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+                            box(title = tags$p(tagList(icon("arrow-circle-left"),
                                                        "Trimmed Result Output"),
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -865,10 +1173,10 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                       uiOutput("rawSeqLength") ,
                                                ),
                                                column(4,
-                                                      uiOutput("rawMeanQualityScore") ,
+                                                      uiOutput("rawMeanQualityScore"),
                                                ),
                                                column(4,
-                                                      uiOutput("rawMinQualityScore") ,
+                                                      uiOutput("rawMinQualityScore"),
                                                ),
                                         ),
                                     ),
@@ -881,13 +1189,13 @@ alignedConsensusSetServer <- function(input, output, session) {
                                         status = "success", width = 12,
                                         column(width = 12,
                                                column(4,
-                                                      uiOutput("trimmedSeqLength") ,
+                                                      uiOutput("trimmedSeqLength"),
                                                ),
                                                column(4,
-                                                      uiOutput("trimmedMeanQualityScore") ,
+                                                      uiOutput("trimmedMeanQualityScore"),
                                                ),
                                                column(4,
-                                                      uiOutput("trimmedMinQualityScore") ,
+                                                      uiOutput("trimmedMinQualityScore"),
                                                ),
                                         ),
 
@@ -904,7 +1212,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                         ),
                                     ),
                                 ),
-                                tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                                tags$hr(
+                                    style = ("border-top: 6px double #A9A9A9;")),
                                 fluidRow(
                                     box(title = tags$p("Cumulative Ratio Plot",
                                                        style = "font-size: 21px;
@@ -923,14 +1232,15 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                             ),
                         ),
-                        box(title = tags$p("Chromatogram: ",
+                        box(title = tags$p(tagList(icon("dot-circle"),
+                                                   "Chromatogram: "),
                                            style = "font-size: 26px;
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
 
-                            box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+                            box(title = tags$p(tagList(icon("arrow-circle-right"),
                                                        "Chromatogram Input"),
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -959,7 +1269,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                   value = TRUE),)
                                 ),
                             ),
-                            box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+                            box(title = tags$p(tagList(icon("arrow-circle-left"),
                                                        "Chromatogram Output"),
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -978,158 +1288,205 @@ alignedConsensusSetServer <- function(input, output, session) {
 
 
 
-
-
-
-
-
-                    # fluidRow(
-                    #     useShinyjs(),
-                    #     box(title = tags$p("Raw File: ",
-                    #                        style = "font-size: 26px;
-                    #                      font-weight: bold;"),
-                    #         solidHeader = TRUE,
-                    #         status = "success", width = 12,
-                    #         h1(paste0(
-                    #             SangerSingleReadBFN[[singleReadIndex]])),
-                    #         tags$h5(paste("( full path:",
-                    #                       SangerSingleReadAFN[[
-                    #                           singleReadIndex]],
-                    #                       ")"), style = "font-style:italic")),
-                    #     box(title = tags$p("Primary & Secondary Peaks: ",
-                    #                        style = "font-size: 26px;
-                    #                    font-weight: bold;"),
-                    #         solidHeader = TRUE, collapsible = TRUE,
-                    #         status = "success", width = 12,
-                    #         tags$hr(
-                    #             style = ("border-top: 4px hidden #A9A9A9;")),
-                    #         column(width = 1,
-                    #                tags$p("Primary",
-                    #                       style = "font-size: 15px;
-                    #                    font-weight: bold;"),
-                    #                tags$br(),
-                    #                tags$br(),
-                    #                tags$p("Second",
-                    #                       style = "font-size: 15px;
-                    #                    font-weight: bold;"),
-                    #         ),
-                    #         column(width = 11,
-                    #                excelOutput("primarySeqDF",
-                    #                            width = "100%", height = "50"),
-                    #                excelOutput("secondSeqDF",
-                    #                            width = "100%", height = "50"),
-                    #                style = paste("overflow-y: hidden;",
-                    #                              "overflow-x: scroll;")
-                    #         )
-                    #     ),
-                    #     box(title = tags$p("Quality Report: ",
-                    #                        style = "font-size: 26px;
-                    #                    font-weight: bold;"),
-                    #         solidHeader = TRUE, collapsible = TRUE,
-                    #         status = "success", width = 12,
-                    #         tags$hr(
-                    #             style = ("border-top: 4px hidden #A9A9A9;")),
-                    #         fluidRow(
-                    #             column(3,
-                    #                    uiOutput("M2CutoffQualityScore") ,
-                    #                    tags$ul(
-                    #                        textInput(
-                    #                            "M2CutoffQualityScoreText",
-                    #                            label = p("Change Value"),
-                    #                            value = toString(
-                    #                                SangerSingleReadQualReport
-                    #                                [[singleReadIndex]]@
-                    #                                    M2CutoffQualityScore),
-                    #                            width = '90%')
-                    #                    ),
-                    #             ),
-                    #             column(3,
-                    #                    uiOutput("M2SlidingWindowSize") ,
-                    #                    tags$ul(
-                    #                        textInput(
-                    #                            "M2SlidingWindowSizeText",
-                    #                            label = p("Change Value"),
-                    #                            value = toString(
-                    #                                SangerSingleReadQualReport
-                    #                                [[singleReadIndex]]@
-                    #                                    M2SlidingWindowSize),
-                    #                            width = '90%')
-                    #                    ),
-                    #             ),
-                    #             column(3,
-                    #                    uiOutput("trimmedStartPos") ,
-                    #             ),
-                    #             column(3,
-                    #                    uiOutput("trimmedFinishPos") ,
-                    #             )
-                    #         ),
-                    #         tags$hr(
-                    #             style = ("border-top: 6px double #A9A9A9;")),
-                    #         fluidRow(
-                    #             column(6,
-                    #                    uiOutput("trimmedRatio")
-                    #             ),
-                    #             column(6,
-                    #                    uiOutput("remainingBP")
-                    #             )
-                    #         ),
-                    #         box(title = tags$p("Cumulative Ratio Plot",
-                    #                            style = "font-size: 24px;
-                    #                    font-weight: bold;"),
-                    #             collapsible = TRUE,
-                    #             status = "success", width = 6,
-                    #             plotlyOutput("qualityTrimmingRatioPlot") %>%
-                    #                 withSpinner()),
-                    #         box(title = tags$p("Cumulative Ratio Plot",
-                    #                            style = "font-size: 24px;
-                    #                    font-weight: bold;"),
-                    #             collapsible = TRUE,
-                    #             status = "success", width = 6,
-                    #             plotlyOutput("qualityQualityBasePlot") %>%
-                    #                 withSpinner()),
-                    #     ),
-                    #     box(title = tags$p("Chromatogram: ",
-                    #                        style = "font-size: 26px;
-                    #                    font-weight: bold;"),
-                    #         solidHeader = TRUE, collapsible = TRUE,
-                    #         status = "success", width = 12,
-                    #         tags$hr(
-                    #             style = ("border-top: 4px hidden #A9A9A9;")),
-                    #         column(12,
-                    #                column(3,
-                    #                       sliderInput(
-                    #                           "ChromatogramBasePerRow",
-                    #                           label = h3("Slider"), min = 5,
-                    #                           max = 200, value = 100),
-                    #                ),
-                    #                column(3,
-                    #                       uiOutput(
-                    #                           "ChromatogramtrimmedStartPos"),
-                    #                ),
-                    #                column(3,
-                    #                       uiOutput(
-                    #                           "ChromatogramtrimmedFinishPos"),
-                    #                ),
-                    #                column(3,
-                    #                       numericInput(
-                    #                           "ChromatogramSignalRatioCutoff",
-                    #                           h3("Signal Ratio Cutoff"),
-                    #                           value = 0.33),
-                    #                       checkboxInput(
-                    #                           "ChromatogramCheckShowTrimmed",
-                    #                           "Whether show trimmed region",
-                    #                           value = TRUE),)
-                    #         ),
-                    #         tags$hr(
-                    #             style = ("border-top: 6px double #A9A9A9;")),
-                    #         column(width = 12,
-                    #                tags$hr(
-                    #                    style=("border-top:6px double #A9A9A9;")
-                    #                ),
-                    #                uiOutput("chromatogramUIOutput"),
-                    #         )
-                    #     )
-                    # )
+#
+#                     fluidRow(
+#                         useShinyjs(),
+#                         box(title = tags$p("Raw File: ",
+#                                            style = "font-size: 26px;
+#                                          font-weight: bold;"),
+#                             solidHeader = TRUE,
+#                             status = "success", width = 12,
+#                             h1(paste0(
+#                                 SangerSingleReadBFN[[singleReadIndex]])),
+#                             tags$h5(paste("( full path:",
+#                                           SangerSingleReadAFN[[
+#                                               singleReadIndex]],
+#                                           ")"), style = "font-style:italic")),
+#                         box(title = tags$p("Primary & Secondary Peaks: ",
+#                                            style = "font-size: 26px;
+#                                        font-weight: bold;"),
+#                             solidHeader = TRUE, collapsible = TRUE,
+#                             status = "success", width = 12,
+#                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+#                             column(width = 1,
+#                                    tags$p("Primary",
+#                                           style = "font-size: 15px;
+#                                        font-weight: bold;"),
+#                                    tags$br(),
+#                                    tags$br(),
+#                                    tags$p("Second",
+#                                           style = "font-size: 15px;
+#                                        font-weight: bold;"),
+#                             ),
+#                             column(width = 11,
+#                                    excelOutput("primarySeqDF",
+#                                                width = "100%", height = "50"),
+#                                    excelOutput("secondSeqDF",
+#                                                width = "100%", height = "50"),
+#                                    style = paste("overflow-y: hidden;",
+#                                                  "overflow-x: scroll;")
+#                             )
+#                         ),
+#                         box(title = tags$p("Quality Report: ",
+#                                            style = "font-size: 26px;
+#                                        font-weight: bold;"),
+#                             solidHeader = TRUE, collapsible = TRUE,
+#                             status = "success", width = 12,
+#                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+#                             box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+#                                                        "Trimming Parameters Input"),
+#                                                style = "font-size: 24px;
+#                                        font-weight: bold;"),
+#                                 collapsible = TRUE,
+#                                 status = "success", width = 12,
+#
+#                                 fluidRow(
+#                                     column(width = 5,
+#                                            column(width = 1,
+#                                            ),
+#                                            column(width = 11,
+#                                                   selectInput("TrimmingMethodSelection", label = h4("Select Your Trimming Method"),
+#                                                               choices = list("Method 1" = "M1", "Method 2" = "M2"),
+#                                                               selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod,
+#                                                               width = "100%"),
+#                                                   column(width = 12,
+#                                                          column(width = 2,
+#                                                                 shiny::icon("mouse-pointer"),
+#                                                          ),
+#                                                          column(width = 10,
+#                                                                 textOutput("TrimmingMethodSelectionOutput"),
+#                                                          ),
+#                                                   ),
+#                                            ),
+#                                     ),
+#                                     column(width = 7,
+#                                            uiOutput("TrimmingMethodUI") ,
+#                                     ),
+#                                 ),
+#                             ),
+#                             box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+#                                                        "Trimmed Result Output"),
+#                                                style = "font-size: 24px;
+#                                        font-weight: bold;"),
+#                                 collapsible = TRUE,
+#                                 status = "success", width = 12,
+#                                 fluidRow(
+#                                     box(title = tags$p("Before Trimming",
+#                                                        style = "font-size: 21px;
+#                                        font-weight: bold;"),
+#                                         collapsible = TRUE,
+#                                         status = "success", width = 12,
+#                                         column(width = 12,
+#                                                column(4,
+#                                                       uiOutput("rawSeqLength") ,
+#                                                ),
+#                                                column(4,
+#                                                       uiOutput("rawMeanQualityScore") ,
+#                                                ),
+#                                                column(4,
+#                                                       uiOutput("rawMinQualityScore") ,
+#                                                ),
+#                                         ),
+#                                     ),
+#                                 ),
+#                                 fluidRow(
+#                                     box(title = tags$p("After Trimming",
+#                                                        style = "font-size: 21px;
+#                                        font-weight: bold;"),
+#                                         collapsible = TRUE,
+#                                         status = "success", width = 12,
+#                                         column(width = 12,
+#                                                column(4,
+#                                                       uiOutput("trimmedSeqLength") ,
+#                                                ),
+#                                                column(4,
+#                                                       uiOutput("trimmedMeanQualityScore") ,
+#                                                ),
+#                                                column(4,
+#                                                       uiOutput("trimmedMinQualityScore") ,
+#                                                ),
+#                                         ),
+#
+#                                         column(width = 12,
+#                                                column(4,
+#                                                       uiOutput("trimmedStartPos") ,
+#                                                ),
+#                                                column(4,
+#                                                       uiOutput("trimmedFinishPos") ,
+#                                                ),
+#                                                column(4,
+#                                                       uiOutput("remainingRatio") ,
+#                                                )
+#                                         ),
+#                                     ),
+#                                 ),
+#                                 tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+#                                 fluidRow(
+#                                     box(title = tags$p("Cumulative Ratio Plot",
+#                                                        style = "font-size: 21px;
+#                                        font-weight: bold;"),
+#                                         collapsible = TRUE,
+#                                         status = "success", width = 12,
+#                                         plotlyOutput("qualityTrimmingRatioPlot") %>%
+#                                             withSpinner()),
+#                                     box(title = tags$p("Cumulative Ratio Plot",
+#                                                        style = "font-size: 21px;
+#                                        font-weight: bold;"),
+#                                         collapsible = TRUE,
+#                                         status = "success", width = 12,
+#                                         plotlyOutput("qualityQualityBasePlot") %>%
+#                                             withSpinner()),
+#                                 ),
+#                             ),
+#                         ),
+#                         box(title = tags$p("Chromatogram: ",
+#                                            style = "font-size: 26px;
+#                                        font-weight: bold;"),
+#                             solidHeader = TRUE, collapsible = TRUE,
+#                             status = "success", width = 12,
+#                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+#
+#                             box(title = tags$p(tagList(shiny::icon("arrow-circle-right"),
+#                                                        "Chromatogram Input"),
+#                                                style = "font-size: 24px;
+#                                        font-weight: bold;"),
+#                                 collapsible = TRUE,
+#                                 status = "success", width = 12,
+#                                 column(12,
+#                                        column(3,
+#                                               sliderInput("ChromatogramBasePerRow",
+#                                                           label = h3("Slider"), min = 5,
+#                                                           max = 200, value = 100),
+#                                        ),
+#                                        column(3,
+#                                               uiOutput("ChromatogramtrimmedStartPos"),
+#                                        ),
+#                                        column(3,
+#                                               uiOutput("ChromatogramtrimmedFinishPos"),
+#                                        ),
+#                                        column(3,
+#                                               numericInput(
+#                                                   "ChromatogramSignalRatioCutoff",
+#                                                   h3("Signal Ratio Cutoff"),
+#                                                   value = 0.33),
+#                                               checkboxInput(
+#                                                   "ChromatogramCheckShowTrimmed",
+#                                                   "Whether show trimmed region",
+#                                                   value = TRUE),)
+#                                 ),
+#                             ),
+#                             box(title = tags$p(tagList(shiny::icon("arrow-circle-left"),
+#                                                        "Chromatogram Output"),
+#                                                style = "font-size: 24px;
+#                                        font-weight: bold;"),
+#                                 collapsible = TRUE,
+#                                 status = "success", width = 12,
+#                                 column(width = 12,
+#                                        uiOutput("chromatogramUIOutput"),
+#                                 )
+#                             ),
+#                         )
+#                     )
                 }
             }
         }
@@ -1293,7 +1650,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-
     })
 
     output$secondSeqDF <- renderExcel({
@@ -1309,214 +1665,169 @@ alignedConsensusSetServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
-
-
-
-
-    ##### Need Fix Here
-    # valueBoxM1TrimmingCutoff(input, output, session, SangerSingleReadQualReport)
-    output$M1TrimmingCutoff <- renderUI({
+    output$qualityScoreDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        message("input$M1TrimmingCutoffText: ", input$M1TrimmingCutoffText)
-        if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
-            as.numeric(input$M1TrimmingCutoffText) > 0 &&
-            as.numeric(input$M1TrimmingCutoffText) <= 1) {
-            inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
-        } else {
-            inputM1TrimmingCutoffText <- 0.0001
-        }
-        if (SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
-            message("&&&& Dynamic M1")
-            trimmingPos <-
-                M1inside_calculate_trimming(
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        qualityPhredScores,
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityBaseScore,
-                    as.numeric(inputM1TrimmingCutoffText))
-            rawSeqLength <- trimmingPos[1]
-            rawMeanQualityScore <- trimmingPos[2]
-            rawMinQualityScore <- trimmingPos[3]
-            trimmedStartPos <- trimmingPos[4]
-            trimmedFinishPos <- trimmingPos[5]
-            trimmedSeqLength <- trimmingPos[6]
-            trimmedMeanQualityScore <- trimmingPos[7]
-            trimmedMinQualityScore <- trimmingPos[8]
-            remainingRatio <- trimmingPos[9]
-
-            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-                !is.null(trimmedMeanQualityScore) &&
-                !is.null(trimmedMinQualityScore)) {
-
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
-
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawSeqLength <<- rawSeqLength
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMeanQualityScore <<- rawMeanQualityScore
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMinQualityScore <<- rawMinQualityScore
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedStartPos <<- trimmedStartPos
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedFinishPos <<- trimmedFinishPos
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedSeqLength <<- trimmedSeqLength
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMinQualityScore <<- trimmedMinQualityScore
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                    remainingRatio <<- remainingRatio
-
-                trimmedRV[["rawSeqLength"]] <<-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
-                trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawMeanQualityScore
-                trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawMinQualityScore
-                trimmedRV[["trimmedStartPos"]] <<-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos
-                trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos
-                trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedSeqLength
-                trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedMeanQualityScore
-                trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedMinQualityScore
-                trimmedRV[["remainingRatio"]] <<-
-                    round(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@remainingRatio * 100, 2)
-            }
-        }
-        valueBox(
-            subtitle = tags$p("Cut Off Log Score",
-                              style = "font-size: 15px;
-                                       font-weight: bold;"),
-            value = tags$p(as.numeric(inputM1TrimmingCutoffText),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 10,
-        )
+        excelTable(data =
+                       SangerCSetParam[[consensusReadIndex]]$
+                       SangerSingleReadQSDF[[singleReadIndex]],
+                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
-    ##### Need Fix Here
-    # valueBoxM2CutoffQualityScore (input, output, session, SangerSingleReadQualReport)
-    output$M2CutoffQualityScore <- renderUI({
+    output$PrimAASeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
-            strtoi(input$M2CutoffQualityScoreText) > 0 &&
-            strtoi(input$M2CutoffQualityScoreText) <= 60 &&
-            strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
-            inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
-        } else {
-            inputM2CutoffQualityScoreText <- 20
-        }
-        if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
-            strtoi(input$M2SlidingWindowSizeText) > 0 &&
-            strtoi(input$M2SlidingWindowSizeText) <= 20 &&
-            strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
-            inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
-        } else {
-            inputM2SlidingWindowSizeText <- 5
-        }
-        if (SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M2") {
-            message("&&&& Dynamic M2")
-            if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
-                strtoi(input$M2CutoffQualityScoreText) > 0 &&
-                strtoi(input$M2CutoffQualityScoreText) <= 60 &&
-                strtoi(input$M2CutoffQualityScoreText) %% 1 ==0 &&
-                !is.na(strtoi(input$M2SlidingWindowSizeText)) &&
-                strtoi(input$M2SlidingWindowSizeText) > 0 &&
-                strtoi(input$M2SlidingWindowSizeText) <= 20 &&
-                strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
-                trimmingPos <- M2inside_calculate_trimming(
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                            qualityPhredScores,
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@qualityBaseScore,
-                        strtoi(inputM2CutoffQualityScoreText),
-                        strtoi(inputM2SlidingWindowSizeText))
-                rawSeqLength <- trimmingPos[1]
-                rawMeanQualityScore <- trimmingPos[2]
-                rawMinQualityScore <- trimmingPos[3]
-                trimmedStartPos <- trimmingPos[4]
-                trimmedFinishPos <- trimmingPos[5]
-                trimmedSeqLength <- trimmingPos[6]
-                trimmedMeanQualityScore <- trimmingPos[7]
-                trimmedMinQualityScore <- trimmingPos[8]
-                remainingRatio <- trimmingPos[9]
-
-                if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-                    !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-                    !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-                    !is.null(trimmedMeanQualityScore) &&
-                    !is.null(trimmedMinQualityScore)) {
-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        M2CutoffQualityScore <<- as.numeric(inputM2CutoffQualityScoreText)
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
-
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        rawSeqLength <<- rawSeqLength
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        rawMeanQualityScore <<- rawMeanQualityScore
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        rawMinQualityScore <<- rawMinQualityScore
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        trimmedStartPos <<- trimmedStartPos
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        trimmedFinishPos <<- trimmedFinishPos
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        trimmedSeqLength <<- trimmedSeqLength
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        trimmedMeanQualityScore <<- trimmedMeanQualityScore
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        trimmedMinQualityScore <<- trimmedMinQualityScore
-                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@
-                        remainingRatio <<- remainingRatio
-
-                    trimmedRV[["rawSeqLength"]] <<-
-                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
-                    trimmedRV[["rawMeanQualityScore"]] <<-
-                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawMeanQualityScore
-                    trimmedRV[["rawMinQualityScore"]] <<-
-                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@rawMinQualityScore
-                    trimmedRV[["trimmedStartPos"]] <<-
-                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedStartPos
-                    trimmedRV[["trimmedFinishPos"]] <<-
-                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedFinishPos
-                    trimmedRV[["trimmedSeqLength"]] <<-
-                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedSeqLength
-                    trimmedRV[["trimmedMeanQualityScore"]] <<-
-                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedMeanQualityScore
-                    trimmedRV[["trimmedMinQualityScore"]] <<-
-                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@trimmedMinQualityScore
-                    trimmedRV[["remainingRatio"]] <<-
-                        round(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@remainingRatio * 100, 2)
-                }
-            }
-        }
-        valueBox(
-            subtitle = tags$p("Cut Off Quality Score",
-                              style = "font-size: 15px;
-                                            font-weight: bold;"),
-            value = tags$p(strtoi(inputM2CutoffQualityScoreText),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 10,
-        )
+        excelTable(data =
+                       SangerCSetParam[[consensusReadIndex]]$
+                       SangerSingleReadPrimAASeqDF[[singleReadIndex]],
+                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
 
+
+
+
+
+
+
+
+           #                    valueBox(
+           #                        subtitle =
+           #                            tags$p("MinReadsNum",
+           #                                   style = "font-size: 15px;
+           #                                   font-weight: bold;"),
+           #                        value =
+           #                            tags$p(strtoi(SCMinReadsNum),
+           #                                  style ="font-size: 29px;"),
+           #                        icon = icon("cut", "fa-sm"),
+           #                        color = "olive",
+           #                        width = 12,
+           #                    )
+           #                    # uiOutput("SCMinReadsNum") ,
+           #             ),
+           #             column(3,
+           #                    valueBox(
+           #                        subtitle =
+           #                            tags$p("MinReadLength",
+           #                                   style = "font-size: 15px;
+           #                         font-weight: bold;"),
+           #                        value =
+           #                            tags$p(strtoi(SCMinReadLength),
+           #                                   style="font-size: 29px;"),
+           #                        icon = icon("cut", "fa-sm"),
+           #                        color = "olive",
+           #                        width = 12,
+           #                    ),
+           #                    # uiOutput("SCMinReadLength")  ,
+           #             ),
+           #             column(3,
+           #                    valueBox(
+           #                        subtitle =
+           #                            tags$p("MinFractionCall",
+           #                                   style = "font-size: 15px;
+           #                         font-weight: bold;"),
+           #                        value =
+           #                            tags$p(
+           #                               as.numeric(SCMinFractionCall),
+           #                               style = "font-size: 29px;"),
+           #                        icon = icon("cut", "fa-sm"),
+           #                        color = "olive",
+           #                        width = 12,
+           #                    ),
+           #             ),
+           #             column(3,
+           #                    valueBox(
+           #                        subtitle =
+           #                            tags$p("MaxFractionLost",
+           #                                   style = "font-size: 15px;
+           #                         font-weight: bold;"),
+           #                        value =
+           #                            tags$p(
+           #                               as.numeric(SCMaxFractionLost),
+           #                               style = "font-size: 29px;"),
+           #                        icon = icon("cut", "fa-sm"),
+           #                        color = "olive",
+           #                        width = 12,
+           #                    ),
+           #             ),
+           #             column(3,
+           #                    valueBox(
+           #                        subtitle =
+           #                            tags$p("AcceptStopCodons",
+           #                                   style = "font-size: 15px;
+           #                         font-weight: bold;"),
+           #                        value =
+           #                            tags$p(SCAcceptStopCodons,
+           #                                   style="font-size: 29px;"),
+           #                        icon = icon("cut", "fa-sm"),
+           #                        color = "olive",
+           #                        width = 12,
+           #                    ),
+           #                    # uiOutput("SCAcceptStopCodons") ,
+           #             ),
+           #             column(3,
+           #                    valueBox(
+           #                        subtitle =
+           #                            tags$p("ReadingFrame",
+           #                                   style = "font-size: 15px;
+           #                                   font-weight: bold;"),
+           #                        value =
+           #                            tags$p(strtoi(SCReadingFrame),
+           #                                   style="font-size: 29px;"),
+           #                        icon = icon("cut", "fa-sm"),
+           #                        color = "olive",
+           #                        width = 12,
+           #                    ),
+           #             ),
+           #         ),
+
+
+
+
+    # valueBoxSCMinReadsNum(input, output, SCMinReadsNum, session)
+    # valueBoxSCMinReadLength(input, output, SCMinReadLength, session)
+    # valueBoxSCMinFractionCall(input, output, SCMinFractionCall, session)
+    # valueBoxSCMaxFractionLost(input, output, SCMaxFractionLost, session)
+    # valueBoxSCAcceptStopCodons(input, output, SCAcceptStopCodons, session)
+    # valueBoxSCReadingFrame(input, output, SCReadingFrame, session)
+
+
+
+
+    valueBoxSCMinReadsNumCSSet (input, output, session)
+    valueBoxSCMinReadLengthCSSet (input, output, session)
+    valueBoxSCMinFractionCallCSSet (input, output, session)
+    valueBoxSCMaxFractionLostCSSet (input, output, session)
+    valueBoxSCAcceptStopCodonsCSSet (input, output, session)
+    valueBoxSCReadingFrameCSSet (input, output, session)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    valueBoxM1TrimmingCutoff (input, output, session)
+    valueBoxM2CutoffQualityScore (input, output, session)
     valueBoxM2SlidingWindowSize (input, output, session)
 
     valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
@@ -1531,14 +1842,6 @@ alignedConsensusSetServer <- function(input, output, session) {
     valueBoxTrimmedMeanQualityScore (input, output, session, trimmedRV)
     valueBoxTrimmedMinQualityScore (input, output, session, trimmedRV)
     valueBoxRemainingRatio (input, output, session, trimmedRV)
-
-
-
-
-
-
-
-
 
 
 
@@ -1944,6 +2247,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                 showarrow=FALSE
             )
     })
+
     output$qualityQualityBasePlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
@@ -2082,14 +2386,14 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        SCconsenesusReadName <-
-            SangerCSetParam[[consensusReadIndex]]$SCconsenesusReadName
+        SCConsenesusReadName <-
+            SangerCSetParam[[consensusReadIndex]]$SCConsenesusReadName
         SCAlignment <-
             SangerCSetParam[[consensusReadIndex]]$SCAlignment
         browseSeqHTML <-
             file.path(shinyDirectory, "BrowseSeqs_html",
                       paste0(sidebar_menu[[1]], "_",
-                             SCconsenesusReadName,
+                             SCConsenesusReadName,
                              "_Alignment_BrowseSeqs.html"))
         if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
             dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
@@ -2111,14 +2415,10 @@ alignedConsensusSetServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[5]])
         if (!is.null(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]])) {
             if (input$TrimmingMethodSelection == "M1") {
-                trimmingMethodLocal ="Method 1"
-                message("Inside Method 1!!")
                 SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod <<- "M1"
                 if (is.null(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M1TrimmingCutoff)) {
                     SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M1TrimmingCutoff <<-  0.0001
                 }
-
-
                 fluidRow(
                     column(6,
                            uiOutput("M1TrimmingCutoff") ,
@@ -2132,15 +2432,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                            ),
                     ),
                 )
-
-
-
-
-
-
             } else if (input$TrimmingMethodSelection == "M2") {
-                trimmingMethodLocal ="Method 2"
-                message("Inside Method 2!!")
                 SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod <<- "M2"
                 if (is.null(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2CutoffQualityScore)) {
                     SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2CutoffQualityScore <<-  20
@@ -2148,7 +2440,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                 if (is.null(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2SlidingWindowSize )) {
                     SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@M2SlidingWindowSize <<-  5
                 }
-
                 fluidRow(
                     column(6,
                            uiOutput("M2CutoffQualityScore") ,
@@ -2173,20 +2464,19 @@ alignedConsensusSetServer <- function(input, output, session) {
                            ),
                     ),
                 )
-
-
             }
         }
     })
 
     output$TrimmingMethodSelectionOutput <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.null(SangerSingleReadQualReport[[singleReadIndex]])) {
-            if (SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        if (!is.null(SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]])) {
+            if (SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection : 'Logarithmic Scale Trimming'")
-            } else if (SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M2") {
+            } else if (SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M2") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection : 'Logarithmic Scale Sliding Window Trimming'")
             }
