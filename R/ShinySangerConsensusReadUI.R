@@ -28,7 +28,7 @@ consensusReadUI <- dashboardPage(
     dashboardBody(
         useShinyjs(debug = TRUE),
         ### --------------------------------------------------------------------
-        ### Box style changing
+        ### Main Box style changing
         ### --------------------------------------------------------------------
         tags$style(HTML("
                     .box.box-solid.box-success>.box-header {
@@ -41,6 +41,9 @@ consensusReadUI <- dashboardPage(
                     background:#f3ffe6
                     }
                     ")),
+        ### --------------------------------------------------------------------
+        ### Second layer Box style changing
+        ### --------------------------------------------------------------------
         tags$style(HTML("
                     .box.box-success{
                     border-bottom-color:#f4faf0;
@@ -49,12 +52,17 @@ consensusReadUI <- dashboardPage(
                     background:#f4faf0
                     }
                     ")),
+
+        ### --------------------------------------------------------------------
+        ### Right navigation bar style changing
+        ### --------------------------------------------------------------------
         tags$script(HTML('
             $(document).ready(function() {
             $("header").find("nav").append(\'<span id="rightHeader"
             class="myClass"> Sanger Consensus Read Overview </span>\');
             })
         ')),
+
         tags$head(tags$style(HTML(
             '.myClass {
             font-size: 25px;
@@ -66,18 +74,34 @@ consensusReadUI <- dashboardPage(
             color: white;
             font-weight: bold;
         }'))),
+
         tags$head(
+            ### ----------------------------------------------------------------
+            ### Close button style changing
+            ### ----------------------------------------------------------------
             tags$style(HTML('#closeUI{background-color:red; color:white;
                             padding:15px; font-size: 35; font-weight: bold;}')),
+            ### ----------------------------------------------------------------
+            ### Save button style changing
+            ### ----------------------------------------------------------------
             tags$style(HTML('#saveS4{background-color:#0083FF; color:white;
                             padding:15px; font-size: 35; font-weight: bold;}')),
-            ## Overwrite .jexcel_content Height!!
+            ### ----------------------------------------------------------------
+            ### Overwrite .jexcel_content Height!!
+            ### ----------------------------------------------------------------
             tags$style(HTML(".jexcel_content { overflow-y: auto;
                             height: 100% !important;}")),
+            ### ----------------------------------------------------------------
+            ### Trimming method selection text style changing
+            ### ----------------------------------------------------------------
             tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 18px;
                                  margin-bottom: 30px;
                                  }"))
         ),
+
+        ### --------------------------------------------------------------------
+        ### Pop-up notification style changing
+        ### --------------------------------------------------------------------
         tags$style(
             HTML(".shiny-notification {
              color: white;
@@ -93,6 +117,10 @@ consensusReadUI <- dashboardPage(
              "
             )
         ),
+
+        ### --------------------------------------------------------------------
+        ### Pop-up notification style changing
+        ### --------------------------------------------------------------------
         tags$style(HTML(".sidebar-menu li a
                         [data-value='Sanger Consensus Read Overview']
                         { font-size: 18px; font-weight: bold }")),

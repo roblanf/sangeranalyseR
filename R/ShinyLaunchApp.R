@@ -45,10 +45,10 @@ launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
 #'                               parentDirectory       = inputFilesParentDir,
 #'                               suffixForwardRegExp   = suffixForwardRegExp,
 #'                               suffixReverseRegExp   = suffixReverseRegExp,
-#'                               TrimmingMethod        = "M1",
-#'                               M1TrimmingCutoff      = 0.001,
-#'                               M2CutoffQualityScore  = NULL,
-#'                               M2SlidingWindowSize   = NULL)
+#'                               TrimmingMethod        = "M2",
+#'                               M1TrimmingCutoff      = NULL,
+#'                               M2CutoffQualityScore  = 40,
+#'                               M2SlidingWindowSize   = 5)
 #' RShinyCSSet <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))
 launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet,
                                          directory = NULL) {

@@ -26,7 +26,7 @@ alignedConsensusSetUI <- dashboardPage(
     dashboardBody(
         useShinyjs(debug = TRUE),
         ### --------------------------------------------------------------------
-        ### Box style changing
+        ### Main Box style changing
         ### --------------------------------------------------------------------
         tags$style(HTML("
                     .box.box-solid.box-success>.box-header {
@@ -39,11 +39,27 @@ alignedConsensusSetUI <- dashboardPage(
                     background:#f3ffe6
                     }
                     ")),
+        ### --------------------------------------------------------------------
+        ### Second layer Box style changing
+        ### --------------------------------------------------------------------
+        tags$style(HTML("
+                    .box.box-success{
+                    border-bottom-color:#f4faf0;
+                    border-left-color:#f4faf0;
+                    border-right-color:#f4faf0;
+                    background:#f4faf0
+                    }
+                    ")),
+
+        ### --------------------------------------------------------------------
+        ### Right navigation bar style changing
+        ### --------------------------------------------------------------------
         tags$script(HTML('
             $(document).ready(function() {
             $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Sanger Aligned Consensus Set Overview </span>\');
             })
         ')),
+
         tags$head(tags$style(HTML(
             '.myClass {
             font-size: 25px;
@@ -55,16 +71,33 @@ alignedConsensusSetUI <- dashboardPage(
             color: white;
             font-weight: bold;
         }'))),
+
         tags$head(
-            tags$style(HTML('#closeUI{background-color:red; color:white; padding:15px; font-size: 35; font-weight: bold;}')),
-            tags$style(HTML('#saveS4{background-color:#0083FF; color:white; padding:15px; font-size: 35; font-weight: bold;}')),
-            ## Overwrite .jexcel_content Height!!
+            ### ----------------------------------------------------------------
+            ### Close button style changing
+            ### ----------------------------------------------------------------
+            tags$style(HTML('#closeUI{background-color:red; color:white;
+                            padding:15px; font-size: 35; font-weight: bold;}')),
+            ### ----------------------------------------------------------------
+            ### Save button style changing
+            ### ----------------------------------------------------------------
+            tags$style(HTML('#saveS4{background-color:#0083FF; color:white;
+                            padding:15px; font-size: 35; font-weight: bold;}')),
+            ### ----------------------------------------------------------------
+            ### Overwrite .jexcel_content Height!!
+            ### ----------------------------------------------------------------
             tags$style(HTML(".jexcel_content { overflow-y: auto;
                             height: 100% !important;}")),
-            tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 15px;
-                                 font-weight: bold;
+            ### ----------------------------------------------------------------
+            ### Trimming method selection text style changing
+            ### ----------------------------------------------------------------
+            tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 18px;
+                                 margin-bottom: 30px;
                                  }"))
         ),
+        ### --------------------------------------------------------------------
+        ### Pop-up notification style changing
+        ### --------------------------------------------------------------------
         tags$style(
             HTML(".shiny-notification {
              color: white;
@@ -80,6 +113,24 @@ alignedConsensusSetUI <- dashboardPage(
              "
             )
         ),
+
+        ### --------------------------------------------------------------------
+        ### Pop-up notification style changing
+        ### --------------------------------------------------------------------
+        tags$style(HTML(".sidebar-menu li a
+                        [data-value='Sanger Consensus Read Overview']
+                        { font-size: 18px; font-weight: bold }")),
+        tags$style(HTML(".sidebar-menu ul li a
+                        { font-size: 15px}")),
+
+        tags$style(HTML(".nav-tabs-custom .nav-tabs li.active:hover a,
+                        .nav-tabs-custom .nav-tabs li.active a
+                        {background-color: transparent;
+                        border-color: transparent;}")),
+        tags$style(HTML(".nav-tabs-custom .nav-tabs li.active
+                        {border-top-color: #5cb85c;}")),
+
+
         tags$style(HTML(".sidebar-menu li a[data-value='Sanger Aligned Consensus Set Overview']
                         { font-size: 18px; font-weight: bold }")),
         tags$style(HTML(".sidebar-menu ul li a
