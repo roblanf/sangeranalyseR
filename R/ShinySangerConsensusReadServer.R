@@ -93,6 +93,28 @@ consensusReadServer <- function(input, output, session) {
     SangerSingleReadQualReport <- c(forwardReadQualReport,
                                     reverseReadQualReport)
 
+    # Quality Score Dataframe
+    forwardQualityScoreDF <- lapply(1:forwardReadNum, function(i) {
+        PhredScore <- forwardReadQualReport[[i]]@qualityPhredScores
+        PhredScoreDF <- data.frame(
+            t(data.frame(PhredScore)), stringsAsFactors = FALSE)
+        colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+        rownames(PhredScoreDF) <- "End"
+        return(PhredScoreDF)
+        }
+    )
+
+    reverseQualityScoreDF <- lapply(1:reverseReadNum, function(i) {
+        PhredScore <- reverseReadQualReport[[i]]@qualityPhredScores
+        PhredScoreDF <- data.frame(
+            t(data.frame(PhredScore)), stringsAsFactors = FALSE)
+        colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+        rownames(PhredScoreDF) <- "End"
+        return(PhredScoreDF)
+        }
+    )
+    SangerSingleReadQSDF <- c(forwardQualityScoreDF, reverseQualityScoreDF)
+
     # primarySeqID
     forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@primarySeqID)
@@ -118,7 +140,7 @@ consensusReadServer <- function(input, output, session) {
         basecalls1DF <- data.frame(
             t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-        rownames(basecalls1DF) <- "Primary"
+        rownames(basecalls1DF) <- "End"
         return(basecalls1DF)
         }
     )
@@ -131,7 +153,7 @@ consensusReadServer <- function(input, output, session) {
         basecalls1DF <- data.frame(
             t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-        rownames(basecalls1DF) <- "Primary "
+        rownames(basecalls1DF) <- "End"
         return(basecalls1DF)
         }
     )
@@ -161,7 +183,7 @@ consensusReadServer <- function(input, output, session) {
         basecalls2DF <- data.frame(
             t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-        rownames(basecalls2DF) <- " Second"
+        rownames(basecalls2DF) <- " End"
         return(basecalls2DF)
         }
     )
@@ -174,7 +196,7 @@ consensusReadServer <- function(input, output, session) {
         basecalls2DF <- data.frame(
             t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-        rownames(basecalls2DF) <- " Second"
+        rownames(basecalls2DF) <- " End"
         return(basecalls2DF)
         }
     )
@@ -488,21 +510,47 @@ consensusReadServer <- function(input, output, session) {
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                        column(width = 1,
-                               tags$p("Primary",
+                        column(width = 2,
+                               tags$p("Primary Sequence",
                                       style = "font-size: 15px;
                                        font-weight: bold;"),
                                tags$br(),
                                tags$br(),
-                               tags$p("Second",
+                               tags$p("Secondary Sequence",
+                                      style = "font-size: 15px;
+                                       font-weight: bold;"),
+                               tags$br(),
+                               tags$br(),
+                               tags$p("Quality Phred Score",
                                       style = "font-size: 15px;
                                        font-weight: bold;"),
                         ),
-                        column(width = 11,
+                        column(width = 10,
                                excelOutput("primarySeqDF",
                                            width = "100%", height = "50"),
                                excelOutput("secondSeqDF",
                                            width = "100%", height = "50"),
+                               excelOutput("qualityScoreDF",
+                                           width = "100%", height = "50"),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                style = paste("overflow-y: hidden;",
                                              "overflow-x: scroll;")
                         )
@@ -820,6 +868,17 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         excelTable(data =
                        SangerSingleReadSecoSeqDF[[singleReadIndex]],
+                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+    })
+
+    output$qualityScoreDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        excelTable(data =
+                       SangerSingleReadQSDF[[singleReadIndex]],
                    defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
