@@ -353,251 +353,6 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
 ################################################################################
 ### Each Read
 ################################################################################
-### ============================================================================
-### valueBox: Change M2CutoffQualityScore
-### ============================================================================
-valueBoxM1TrimmingCutoff <- function(input, output, session, SangerSingleReadQualReport) {
-    output$M1TrimmingCutoff <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
-            as.numeric(input$M1TrimmingCutoffText) > 0 &&
-            as.numeric(input$M1TrimmingCutoffText) <= 1) {
-            inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
-        } else {
-            inputM1TrimmingCutoffText <- 0.0001
-        }
-
-
-        if (input$TrimmingMethodSelection == "M1") {
-            # message("&&&& Dynamic M1")
-            inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
-            trimmingPos <-
-                M1inside_calculate_trimming(
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        qualityPhredScores,
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
-                    inputM1TrimmingCutoffText)
-            rawSeqLength <- trimmingPos[1]
-            rawMeanQualityScore <- trimmingPos[2]
-            rawMinQualityScore <- trimmingPos[3]
-            trimmedStartPos <- trimmingPos[4]
-            trimmedFinishPos <- trimmingPos[5]
-            trimmedSeqLength <- trimmingPos[6]
-            trimmedMeanQualityScore <- trimmingPos[7]
-            trimmedMinQualityScore <- trimmingPos[8]
-            remainingRatio <- trimmingPos[9]
-
-            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-                !is.null(trimmedMeanQualityScore) &&
-                !is.null(trimmedMinQualityScore)) {
-
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
-
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    rawSeqLength <<- rawSeqLength
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    rawMeanQualityScore <<- rawMeanQualityScore
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    rawMinQualityScore <<- rawMinQualityScore
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmedStartPos <<- trimmedStartPos
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmedFinishPos <<- trimmedFinishPos
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmedSeqLength <<- trimmedSeqLength
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    trimmedMinQualityScore <<- trimmedMinQualityScore
-                SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                    remainingRatio <<- remainingRatio
-
-                trimmedRV[["rawSeqLength"]] <<-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@rawSeqLength
-                trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
-                trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
-                trimmedRV[["trimmedStartPos"]] <<-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-                trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
-                trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
-                trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
-                trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
-                trimmedRV[["remainingRatio"]] <<-
-                    round(SangerSingleReadQualReport[[
-                        strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        valueBox(
-            subtitle = tags$p("Cut Off Log Score",
-                              style = "font-size: 15px;
-                                       font-weight: bold;"),
-            value = tags$p(as.numeric(inputM1TrimmingCutoffText),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 10,
-        )
-    })
-}
-
-### ============================================================================
-### valueBox: Change M2CutoffQualityScore
-### ============================================================================
-valueBoxM2CutoffQualityScore <- function(input, output, session, SangerSingleReadQualReport) {
-    output$M2CutoffQualityScore <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        # trimmedQS[["cuffOffQuality"]],
-        # trimmedQS[["M2SlidingWindowSize"]])
-        if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
-            strtoi(input$M2CutoffQualityScoreText) > 0 &&
-            strtoi(input$M2CutoffQualityScoreText) <= 60 &&
-            strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
-            inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
-        } else {
-            inputM2CutoffQualityScoreText <- 20
-        }
-
-
-
-        if (input$TrimmingMethodSelection == "M2") {
-            # message("&&&& Dynamic M2")
-            if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
-                strtoi(input$M2CutoffQualityScoreText) > 0 &&
-                strtoi(input$M2CutoffQualityScoreText) <= 60 &&
-                strtoi(input$M2CutoffQualityScoreText) %% 1 ==0 &&
-                !is.na(strtoi(input$M2SlidingWindowSizeText)) &&
-                strtoi(input$M2SlidingWindowSizeText) > 0 &&
-                strtoi(input$M2SlidingWindowSizeText) <= 20 &&
-                strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
-                inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
-                inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
-                trimmingPos <-
-                    M2inside_calculate_trimming(
-                        SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                            qualityPhredScores,
-                        SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@qualityBaseScore,
-                        inputM2CutoffQualityScoreText,
-                        inputM2SlidingWindowSizeText)
-                rawSeqLength <- trimmingPos[1]
-                rawMeanQualityScore <- trimmingPos[2]
-                rawMinQualityScore <- trimmingPos[3]
-                trimmedStartPos <- trimmingPos[4]
-                trimmedFinishPos <- trimmingPos[5]
-                trimmedSeqLength <- trimmingPos[6]
-                trimmedMeanQualityScore <- trimmingPos[7]
-                trimmedMinQualityScore <- trimmingPos[8]
-                remainingRatio <- trimmingPos[9]
-
-                if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-                    !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-                    !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-                    !is.null(trimmedMeanQualityScore) &&
-                    !is.null(trimmedMinQualityScore)) {
-
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        M1TrimmingCutoff <<- as.numeric(inputM2CutoffQualityScoreText)
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
-
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        rawSeqLength <<- rawSeqLength
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        rawMeanQualityScore <<- rawMeanQualityScore
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        rawMinQualityScore <<- rawMinQualityScore
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        trimmedStartPos <<- trimmedStartPos
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        trimmedFinishPos <<- trimmedFinishPos
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        trimmedSeqLength <<- trimmedSeqLength
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        trimmedMeanQualityScore <<- trimmedMeanQualityScore
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        trimmedMinQualityScore <<- trimmedMinQualityScore
-                    SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@
-                        remainingRatio <<- remainingRatio
-
-                    trimmedRV[["rawSeqLength"]] <<-
-                        SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@rawSeqLength
-                    trimmedRV[["rawMeanQualityScore"]] <<-
-                        SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@rawMeanQualityScore
-                    trimmedRV[["rawMinQualityScore"]] <<-
-                        SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@rawMinQualityScore
-                    trimmedRV[["trimmedStartPos"]] <<-
-                        SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-                    trimmedRV[["trimmedFinishPos"]] <<-
-                        SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
-                    trimmedRV[["trimmedSeqLength"]] <<-
-                        SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@trimmedSeqLength
-                    trimmedRV[["trimmedMeanQualityScore"]] <<-
-                        SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@trimmedMeanQualityScore
-                    trimmedRV[["trimmedMinQualityScore"]] <<-
-                        SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@trimmedMinQualityScore
-                    trimmedRV[["remainingRatio"]] <<-
-                        round(SangerSingleReadQualReport[[
-                            strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
-                }
-            }
-        }
-
-
-
-
-
-        valueBox(
-            subtitle = tags$p("Cut Off Quality Score",
-                              style = "font-size: 15px;
-                                            font-weight: bold;"),
-            value = tags$p(strtoi(inputM2CutoffQualityScoreText),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 10,
-        )
-    })
-}
 
 ### ============================================================================
 ### valueBox: Change M2SlidingWindowSize
@@ -1077,5 +832,75 @@ vline <- function(x = 0, color = "red") {
         x1 = x,
         line = list(color = color)
     )
+}
+
+
+
+trimmingNewSaving <- function(input, output, session, singleReadIndex, trimmingPos,
+                              SangerSingleReadQualReport, trimmedRV) {
+    message("@@@ Inside trimmingNewSaving singleReadIndex: ", singleReadIndex)
+    rawSeqLength <- trimmingPos[1]
+    rawMeanQualityScore <- trimmingPos[2]
+    rawMinQualityScore <- trimmingPos[3]
+    trimmedStartPos <- trimmingPos[4]
+    trimmedFinishPos <- trimmingPos[5]
+    trimmedSeqLength <- trimmingPos[6]
+    trimmedMeanQualityScore <- trimmingPos[7]
+    trimmedMinQualityScore <- trimmingPos[8]
+    remainingRatio <- trimmingPos[9]
+
+    if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
+        !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
+        !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
+        !is.null(trimmedMeanQualityScore) &&
+        !is.null(trimmedMinQualityScore)) {
+        SangerSingleReadQualReport[[singleReadIndex]]@
+            rawSeqLength <- rawSeqLength
+        SangerSingleReadQualReport[[singleReadIndex]]@
+            rawMeanQualityScore <- rawMeanQualityScore
+        SangerSingleReadQualReport[[singleReadIndex]]@
+            rawMinQualityScore <- rawMinQualityScore
+        SangerSingleReadQualReport[[singleReadIndex]]@
+            trimmedStartPos <- trimmedStartPos
+        SangerSingleReadQualReport[[singleReadIndex]]@
+            trimmedFinishPos <- trimmedFinishPos
+        SangerSingleReadQualReport[[singleReadIndex]]@
+            trimmedSeqLength <- trimmedSeqLength
+        SangerSingleReadQualReport[[singleReadIndex]]@
+            trimmedMeanQualityScore <- trimmedMeanQualityScore
+        SangerSingleReadQualReport[[singleReadIndex]]@
+            trimmedMinQualityScore <- trimmedMinQualityScore
+        SangerSingleReadQualReport[[singleReadIndex]]@
+            remainingRatio <- remainingRatio
+
+        trimmedRV[["rawSeqLength"]] <-
+            SangerSingleReadQualReport[[
+                singleReadIndex]]@rawSeqLength
+        trimmedRV[["rawMeanQualityScore"]] <-
+            SangerSingleReadQualReport[[
+                singleReadIndex]]@rawMeanQualityScore
+        trimmedRV[["rawMinQualityScore"]] <-
+            SangerSingleReadQualReport[[
+                singleReadIndex]]@rawMinQualityScore
+        trimmedRV[["trimmedStartPos"]] <-
+            SangerSingleReadQualReport[[
+                singleReadIndex]]@trimmedStartPos
+        trimmedRV[["trimmedFinishPos"]] <-
+            SangerSingleReadQualReport[[
+                singleReadIndex]]@trimmedFinishPos
+        trimmedRV[["trimmedSeqLength"]] <-
+            SangerSingleReadQualReport[[
+                singleReadIndex]]@trimmedSeqLength
+        trimmedRV[["trimmedMeanQualityScore"]] <-
+            SangerSingleReadQualReport[[
+                singleReadIndex]]@trimmedMeanQualityScore
+        trimmedRV[["trimmedMinQualityScore"]] <-
+            SangerSingleReadQualReport[[
+                singleReadIndex]]@trimmedMinQualityScore
+        trimmedRV[["remainingRatio"]] <-
+            round(SangerSingleReadQualReport[[
+                singleReadIndex]]@remainingRatio * 100, 2)
+    }
+    return (c(SangerSingleReadQualReport, trimmedRV))
 }
 
