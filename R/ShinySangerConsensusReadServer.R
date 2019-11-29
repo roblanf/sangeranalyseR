@@ -233,7 +233,7 @@ consensusReadServer <- function(input, output, session) {
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p(tagList(icon("dot-circle"),
-                                           "Input Parameters: "),
+                                           "Basic Information: "),
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
@@ -334,35 +334,12 @@ consensusReadServer <- function(input, output, session) {
                     ################################################
                     # If it is null
                     # h1(SCRefAminoAcidSeq),
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                    fluidRow(
-                        box(title = tags$p("Genetic Code Data Frame",
-                                           style = "font-size: 24px;
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    box(title = tags$p("Consensus Read Parameters",
+                                       style = "font-size: 24px;
                                        font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 2,
-                                   tags$p("Tri-nucleotide:",
-                                          style = "font-size: 15px;
-                                       font-weight: bold;"),
-                                   tags$p("Amino Acid : ",
-                                          style = "font-size: 15px;
-                                       font-weight: bold;"),
-                                   tags$p("('*' : stop codon) ",
-                                          style = "font-size: 12px;
-                                       font-weight: italic;"),
-                            ),
-                            column(width = 10,
-                                   excelOutput("geneticCodeDF",
-                                               width = "100%", height = "50"),
-                                   style = paste("height:100%; ",
-                                                 "overflow-y: hidden;",
-                                                 "overflow-x: scroll;")
-                            ),
-                        ),
-                    ),
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                    fluidRow(
+                        collapsible = TRUE,
+                        status = "success", width = 12,
                         column(3,
                                uiOutput("SCMinReadsNum") ,
                         ),
@@ -382,103 +359,110 @@ consensusReadServer <- function(input, output, session) {
                                uiOutput("SCReadingFrame") ,
                         ),
                     ),
+                    box(title = tags$p("Genetic Code Data Frame",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 2,
+                               tags$p("Tri-nucleotide:",
+                                      style = "font-size: 15px;
+                                       font-weight: bold;"),
+                               tags$p("Amino Acid : ",
+                                      style = "font-size: 15px;
+                                       font-weight: bold;"),
+                               tags$p("('*' : stop codon) ",
+                                      style = "font-size: 12px;
+                                       font-weight: italic;"),
+                        ),
+                        column(width = 10,
+                               excelOutput("geneticCodeDF",
+                                           width = "100%", height = "50"),
+                               style = paste("height:100%; ",
+                                             "overflow-y: hidden;",
+                                             "overflow-x: scroll;")
+                        ),
+                    ),
                 ),
 
                 box(title = tags$p(tagList(icon("dot-circle"),
-                                           "Results: "),
+                                           "Consensus Read Results: "),
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
                     status = "success", width = 12,
                     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                    fluidRow(
-                        box(title = tags$p("Alignment",
-                                           style = "font-size: 24px;
+                    box(title = tags$p("Alignment",
+                                       style = "font-size: 24px;
                                        font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 12,
-                                   htmlOutput("consensusAlignmentHTML"),
-                            ),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               htmlOutput("consensusAlignmentHTML"),
                         ),
                     ),
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                    fluidRow(
-                        box(title = tags$p("Differences Dataframe",
-                                           style = "font-size: 24px;
+                    box(title = tags$p("Differences Dataframe",
+                                       style = "font-size: 24px;
                                        font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 12,
-                                   uiOutput("SCDifferencesDFUI"),
-                                   style = paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                            )
-                        ),
-                    ),
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                    fluidRow(
-                        box(title = tags$p("Dendrogram",
-                                           style = "font-size: 24px;
-                                       font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 12,
-                                   # plot()
-                                   plotOutput("dendrogramPlot"),
-                                   # dataTableOutput("differencesDF")
-                                   style = paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                            ),
-                            column(width = 12,
-                                   dataTableOutput("dendrogramDF"),
-                                   style = paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                            )
-                        ),
-                    ),
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                    fluidRow(
-                        box(title = tags$p("Secondary Peak Dataframe",
-                                           style = "font-size: 24px;
-                                       font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 12,
-                                   uiOutput("SCDistanceMatrixUI"),
-                                   style = paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                            )
-                        ),
-                    ),
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                    fluidRow(
-                        box(title = tags$p("Indels Dataframe",
-                                           style = "font-size: 24px;
-                                       font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 12,
-                                   uiOutput("SCIndelsDFUI"),
-                                   style = paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                            )
-                        ),
-                    ),
-                    tags$hr(style = ("border-top: 6px double #A9A9A9;")),
-                    fluidRow(
-                        box(title = tags$p("Stop Codons Dataframe",
-                                           style = "font-size: 24px;
-                                       font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(width = 12,
-                                   uiOutput("SCStopCodonsDFUI"),
-                                   style = paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                            )
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCDifferencesDFUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
                         )
                     ),
+                    box(title = tags$p("Dendrogram",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               # plot()
+                               plotOutput("dendrogramPlot"),
+                               # dataTableOutput("differencesDF")
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        ),
+                        column(width = 12,
+                               dataTableOutput("dendrogramDF"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Secondary Peak Dataframe",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCDistanceMatrixUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Indels Dataframe",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCIndelsDFUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Stop Codons Dataframe",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCStopCodonsDFUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    )
                 ),
             )
         } else {
@@ -530,7 +514,6 @@ consensusReadServer <- function(input, output, session) {
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-
                         box(title = tags$p(tagList(icon("arrow-circle-right"),
                                                    "Trimming Parameters Input"),
                                            style = "font-size: 24px;
@@ -1265,12 +1248,14 @@ consensusReadServer <- function(input, output, session) {
     output$TrimmingMethodSelectionOutput <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        if (SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
-            tagList(icon("check-circle"),
-                    "Your trimming method selection : 'Logarithmic Scale Trimming'")
-        } else if (SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M2") {
-            tagList(icon("check-circle"),
-                    "Your trimming method selection : 'Logarithmic Scale Sliding Window Trimming'")
+        if (!is.null(SangerSingleReadQualReport[[singleReadIndex]])) {
+            if (SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
+                tagList(icon("check-circle"),
+                        "Your trimming method selection : 'Logarithmic Scale Trimming'")
+            } else if (SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M2") {
+                tagList(icon("check-circle"),
+                        "Your trimming method selection : 'Logarithmic Scale Sliding Window Trimming'")
+            }
         }
     })
 }

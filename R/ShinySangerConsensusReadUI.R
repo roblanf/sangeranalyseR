@@ -41,6 +41,14 @@ consensusReadUI <- dashboardPage(
                     background:#f3ffe6
                     }
                     ")),
+        tags$style(HTML("
+                    .box.box-success{
+                    border-bottom-color:#f4faf0;
+                    border-left-color:#f4faf0;
+                    border-right-color:#f4faf0;
+                    background:#f4faf0
+                    }
+                    ")),
         tags$script(HTML('
             $(document).ready(function() {
             $("header").find("nav").append(\'<span id="rightHeader"
@@ -91,7 +99,6 @@ consensusReadUI <- dashboardPage(
         tags$style(HTML(".sidebar-menu ul li a
                         { font-size: 15px}")),
 
-        # tags$style(HTML(".nav-tabs {background-color: #006747;}")),
         tags$style(HTML(".nav-tabs-custom .nav-tabs li.active:hover a,
                         .nav-tabs-custom .nav-tabs li.active a
                         {background-color: transparent;
