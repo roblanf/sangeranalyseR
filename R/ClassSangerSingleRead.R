@@ -3,6 +3,12 @@
 #' @description  An S4 class extending sangerseq S4 class
 #'
 #' @slot readFeature .
+#' @slot readFeature .
+#' @slot readFileName .
+#' @slot abifRawData .
+#' @slot QualityReport .
+#' @slot primaryAASeq .
+#' @geneticCode .
 #'
 #' @name SangerSingleRead-class
 #'
