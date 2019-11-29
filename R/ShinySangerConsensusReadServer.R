@@ -958,7 +958,7 @@ consensusReadServer <- function(input, output, session) {
             as.numeric(input$M1TrimmingCutoffText) <= 1) {
             inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
         } else {
-            inputM1TrimmingCutoffText <- 0.0003
+            inputM1TrimmingCutoffText <- 0.0001
         }
         if (SangerSingleReadQualReport[[
             strtoi(sidebar_menu[[1]])]]@TrimmingMethod == "M1") {
