@@ -64,8 +64,6 @@ setClass("QualityReport",
          ),
 )
 
-setClassUnion("numericORNULL", c("numeric", "NULL"))
-
 ### ============================================================================
 ### Overwrite initialize for QualityReport (New constructor)
 ### ============================================================================

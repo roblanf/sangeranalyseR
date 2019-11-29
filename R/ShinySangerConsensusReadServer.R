@@ -99,7 +99,7 @@ consensusReadServer <- function(input, output, session) {
         PhredScoreDF <- data.frame(
             t(data.frame(PhredScore)), stringsAsFactors = FALSE)
         colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
-        rownames(PhredScoreDF) <- "End"
+        rownames(PhredScoreDF) <- NULL
         return(PhredScoreDF)
         }
     )
@@ -109,7 +109,7 @@ consensusReadServer <- function(input, output, session) {
         PhredScoreDF <- data.frame(
             t(data.frame(PhredScore)), stringsAsFactors = FALSE)
         colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
-        rownames(PhredScoreDF) <- "End"
+        rownames(PhredScoreDF) <- NULL
         return(PhredScoreDF)
         }
     )
@@ -140,7 +140,7 @@ consensusReadServer <- function(input, output, session) {
         basecalls1DF <- data.frame(
             t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-        rownames(basecalls1DF) <- "End"
+        rownames(basecalls1DF) <- NULL
         return(basecalls1DF)
         }
     )
@@ -153,7 +153,7 @@ consensusReadServer <- function(input, output, session) {
         basecalls1DF <- data.frame(
             t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-        rownames(basecalls1DF) <- "End"
+        rownames(basecalls1DF) <- NULL
         return(basecalls1DF)
         }
     )
@@ -183,7 +183,7 @@ consensusReadServer <- function(input, output, session) {
         basecalls2DF <- data.frame(
             t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-        rownames(basecalls2DF) <- " End"
+        rownames(basecalls2DF) <- NULL
         return(basecalls2DF)
         }
     )
@@ -196,11 +196,40 @@ consensusReadServer <- function(input, output, session) {
         basecalls2DF <- data.frame(
             t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-        rownames(basecalls2DF) <- " End"
+        rownames(basecalls2DF) <- NULL
         return(basecalls2DF)
         }
     )
     SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
+
+    # primaryAASeq
+    forwardReadPrimAASeq <- sapply(1:forwardReadNum, function(i)
+        SangerConsensus@forwardReadsList[[i]]@primaryAASeq)
+    reverseReadPrimAASeq <- sapply(1:reverseReadNum, function(i)
+        SangerConsensus@reverseReadsList[[i]]@primaryAASeq)
+    SangerSingleReadPrimAASeq <- c(forwardReadPrimAASeq, reverseReadPrimAASeq)
+
+    # primaryAASeqDF
+    forwardReadPrimAASeqDF <- lapply(1:forwardReadNum, function(i) {
+        AAString <- SangerConsensus@forwardReadsList[[i]]@primaryAASeq
+        AAStringDF <- data.frame(
+            t(data.frame(AAString)), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        return(AAStringDF)
+        }
+    )
+    reverseReadPrimAASeqDF <- lapply(1:reverseReadNum, function(i) {
+        AAString <- SangerConsensus@reverseReadsList[[i]]@primaryAASeq
+        AAStringDF <- data.frame(
+            t(data.frame(AAString)), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        return(AAStringDF)
+        }
+    )
+    SangerSingleReadPrimAASeqDF <- c(forwardReadPrimAASeqDF,
+                                     reverseReadPrimAASeqDF)
 
     # traceMatrix
     forwardReadTraceMat <- sapply(1:forwardReadNum, function(i)
@@ -504,7 +533,7 @@ consensusReadServer <- function(input, output, session) {
                                           strtoi(sidebar_menu[[1]])]],
                                       ")"), style = "font-style:italic")),
                     box(title = tags$p(tagList(icon("dot-circle"),
-                                               "Primary & Secondary Peaks: "),
+                                               "Primary & Secondary Sequences: "),
                                        style = "font-size: 26px;
                                        font-weight: bold;"),
                         solidHeader = TRUE, collapsible = TRUE,
@@ -512,6 +541,11 @@ consensusReadServer <- function(input, output, session) {
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                         column(width = 2,
                                tags$p("Primary Sequence",
+                                      style = "font-size: 15px;
+                                       font-weight: bold;"),
+                               tags$br(),
+                               tags$br(),
+                               tags$p("Primary AA Sequence",
                                       style = "font-size: 15px;
                                        font-weight: bold;"),
                                tags$br(),
@@ -528,28 +562,12 @@ consensusReadServer <- function(input, output, session) {
                         column(width = 10,
                                excelOutput("primarySeqDF",
                                            width = "100%", height = "50"),
+                               excelOutput("PrimAASeqDF",
+                                           width = "100%", height = "50"),
                                excelOutput("secondSeqDF",
                                            width = "100%", height = "50"),
                                excelOutput("qualityScoreDF",
                                            width = "100%", height = "50"),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                                style = paste("overflow-y: hidden;",
                                              "overflow-x: scroll;")
@@ -880,6 +898,17 @@ consensusReadServer <- function(input, output, session) {
         excelTable(data =
                        SangerSingleReadQSDF[[singleReadIndex]],
                    defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+    })
+
+    output$PrimAASeqDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        excelTable(data =
+                       SangerSingleReadPrimAASeqDF[[singleReadIndex]],
+                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)

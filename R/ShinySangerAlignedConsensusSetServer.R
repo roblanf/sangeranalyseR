@@ -2178,13 +2178,18 @@ alignedConsensusSetServer <- function(input, output, session) {
             }
         }
     })
-    output$TrimmingMethodSelectionOutput <- renderText({
-        # tags$p(paste("You currently select '", input$TrimmingMethodSelection, "'"),
-        #        style = "font-size: 15px; font-weight: bold;")
-        if (input$TrimmingMethodSelection == "M1") {
-            "Logarithmic Scale Trimming"
-        } else if (input$TrimmingMethodSelection == "M2") {
-            "Logarithmic Scale Sliding Window Trimming"
+
+    output$TrimmingMethodSelectionOutput <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.null(SangerSingleReadQualReport[[singleReadIndex]])) {
+            if (SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
+                tagList(icon("check-circle"),
+                        "Your trimming method selection : 'Logarithmic Scale Trimming'")
+            } else if (SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M2") {
+                tagList(icon("check-circle"),
+                        "Your trimming method selection : 'Logarithmic Scale Sliding Window Trimming'")
+            }
         }
     })
 }

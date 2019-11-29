@@ -44,3 +44,5 @@ setGeneric("updateQualityParam", function(object,
 })
 
 
+#' @export
+setClassUnion("numericORNULL", c("numeric", "NULL"))

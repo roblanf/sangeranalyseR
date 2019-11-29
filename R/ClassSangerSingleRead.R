@@ -17,8 +17,8 @@
 #'                                   "Allolobophora_chlorotica",
 #'                                   "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
 #' A_chloroticaSingleRead <- new("SangerSingleRead",
-#'                               readFeature         = "ForwardRead",
-#'                               readFileName        = A_chloroticaFdReadFN,
+#'                               readFeature           = "ForwardRead",
+#'                               readFileName          = A_chloroticaFdReadFN,
 #'                               TrimmingMethod        = "M2",
 #'                               M1TrimmingCutoff      = NULL,
 #'                               M2CutoffQualityScore  = 40,
@@ -33,7 +33,9 @@ setClass(
     slots=c(readFeature         = "character",
             readFileName        = "character",
             abifRawData         = "abif",
-            QualityReport       = "QualityReport")
+            QualityReport       = "QualityReport",
+            primaryAASeq        = "AAString",
+            geneticCode         = "character")
 ) -> SangerSingleRead
 
 
@@ -45,6 +47,7 @@ setMethod("initialize",
           function(.Object, ...,
                    readFeature          = character(0),
                    readFileName         = character(0),
+                   geneticCode          = GENETIC_CODE,
                    primarySeqID         = primarySeqID,
                    primarySeq           = primarySeq,
                    secondarySeqID       = secondarySeqID,
@@ -94,6 +97,10 @@ setMethod("initialize",
 
                   primarySeqID        = readSangerseq@primarySeqID
                   primarySeq          = readSangerseq@primarySeq
+                  primaryAASeq        = suppressWarnings(translate(primarySeq,
+                                                  genetic.code = geneticCode,
+                                                  no.init.codon=TRUE,
+                                                  if.fuzzy.codon="solve"))
                   secondarySeqID      = readSangerseq@secondarySeqID
                   secondarySeq        = readSangerseq@secondarySeq
                   traceMatrix         = readSangerseq@traceMatrix
@@ -120,10 +127,12 @@ setMethod("initialize",
               callNextMethod(.Object, ...,
                              readFeature         = readFeature,
                              readFileName        = readFileName,
+                             geneticCode         = geneticCode,
                              primarySeqID        = primarySeqID,
                              primarySeq          = primarySeq,
                              secondarySeqID      = secondarySeqID,
                              secondarySeq        = secondarySeq,
+                             primaryAASeq        = primaryAASeq,
                              traceMatrix         = traceMatrix,
                              peakPosMatrix       = peakPosMatrix,
                              peakAmpMatrix       = peakAmpMatrix,
