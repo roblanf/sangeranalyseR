@@ -20,22 +20,22 @@ checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
             #     errors <- c(errors, msg)
             # }
         }
-        # if (!is.null(M2CutoffQualityScore)) {
-        #     msg<- paste("\n'M2CutoffQualityScore' must be null",
-        #                 "(You choose M1).\n")
-        #     errors <- c(errors, msg)
-        # }
-        # if (!is.null(M2SlidingWindowSize)) {
-        #     msg<- paste("\n'M2SlidingWindowSize' must be null",
-        #                 "(You choose M1).\n")
-        #     errors <- c(errors, msg)
-        # }
+        if (!is.null(M2CutoffQualityScore)) {
+            msg<- paste("\n'M2CutoffQualityScore' must be null",
+                        "(You choose M1).\n")
+            errors <- c(errors, msg)
+        }
+        if (!is.null(M2SlidingWindowSize)) {
+            msg<- paste("\n'M2SlidingWindowSize' must be null",
+                        "(You choose M1).\n")
+            errors <- c(errors, msg)
+        }
     } else if (TrimmingMethod == "M2") {
-        # if (!is.null(M1TrimmingCutoff)) {
-        #     msg<- paste("\n'M1TrimmingCutoff' must be null",
-        #                 "(You choose M2).\n")
-        #     errors <- c(errors, msg)
-        # }
+        if (!is.null(M1TrimmingCutoff)) {
+            msg<- paste("\n'M1TrimmingCutoff' must be null",
+                        "(You choose M2).\n")
+            errors <- c(errors, msg)
+        }
         if (!is.numeric(M2CutoffQualityScore)) {
             msg<- paste("\n'M2CutoffQualityScore' must be numeric",
                         "(You choose M2).\n")

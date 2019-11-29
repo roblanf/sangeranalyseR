@@ -34,7 +34,14 @@ consensusReadServer <- function(input, output, session) {
     SCIndelsDF <- SangerConsensus@indelsDF
     SCStopCodonsDF <- SangerConsensus@stopCodonsDF
     SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
-
+    SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
+    SCTrimmingMethod <- SangerConsensus@forwardReadsList[[1]]@
+        QualityReport@TrimmingMethod
+    if (SCTrimmingMethod == "M1") {
+        SCTrimmingMethodName = "Method 1: 'Logarithmic Scale Trimming'"
+    } else if (SCTrimmingMethod == "M2") {
+        SCTrimmingMethodName = "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
+    }
 
     ### ------------------------------------------------------------------------
     ### Reads-related parameters initialization.
@@ -225,7 +232,8 @@ consensusReadServer <- function(input, output, session) {
             # refAminoAcidSeq (string)
             fluidRow(
                 useShinyjs(),
-                box(title = tags$p("Input Parameters: ",
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Input Parameters: "),
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
@@ -234,8 +242,10 @@ consensusReadServer <- function(input, output, session) {
                     fluidRow(
                         column(12,
                                column(3,
-                                      h4("Output Directory: ",
-                                         style="font-weight: bold;"),
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Output Directory: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
                                ),
                                column(9,
                                       h4(shinyDirectory),
@@ -243,8 +253,10 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Raw ABI Parent Directory: ",
-                                         style="font-weight: bold;"),
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Raw ABI Parent Directory: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
                                ),
                                column(9,
                                       h4(parentDirectory),
@@ -252,8 +264,10 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Consenesus Read Name: ",
-                                         style="font-weight: bold;"),
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Consenesus Read Name: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
                                ),
                                column(9,
                                       h4(consenesusReadName),
@@ -261,8 +275,21 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Forward Suffix RegExp: ",
-                                         style="font-weight: bold;"),
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Trimming Method: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SCTrimmingMethodName),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Forward Suffix RegExp: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
                                ),
                                column(9,
                                       h4(suffixForwardRegExp),
@@ -270,8 +297,10 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Forward Read Number: ",
-                                         style="font-weight: bold;"),
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Forward Read Number: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
                                ),
                                column(9,
                                       h4(forwardReadNum),
@@ -279,8 +308,10 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Reverse Suffix RegExp: ",
-                                         style="font-weight: bold;"),
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Reverse Suffix RegExp: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
                                ),
                                column(9,
                                       h4(suffixReverseRegExp),
@@ -288,8 +319,10 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         column(12,
                                column(3,
-                                      h4("Reverse Read Number: ",
-                                         style="font-weight: bold;"),
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Reverse Read Number: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
                                ),
                                column(9,
                                       h4(reverseReadNum),
@@ -322,7 +355,9 @@ consensusReadServer <- function(input, output, session) {
                             column(width = 10,
                                    excelOutput("geneticCodeDF",
                                                width = "100%", height = "50"),
-                                   style = "height:100%; overflow-y: hidden; overflow-x: scroll;"
+                                   style = paste("height:100%; ",
+                                                 "overflow-y: hidden;",
+                                                 "overflow-x: scroll;")
                             ),
                         ),
                     ),
@@ -348,7 +383,9 @@ consensusReadServer <- function(input, output, session) {
                         ),
                     ),
                 ),
-                box(title = tags$p("Results: ",
+
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Results: "),
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
@@ -446,40 +483,10 @@ consensusReadServer <- function(input, output, session) {
             )
         } else {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
-                message("First sidebar_menu[[1]]", sidebar_menu[[1]])
-                ### ------------------------------------------------------------
-                ### Dynamic page navigation: Single read in consensus read
-                ### ------------------------------------------------------------
-                # trimmedRV[["TrimmingMethod"]] <<-
-                #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod
-                #
-                # message("Front, Initial page: ", trimmedRV[["TrimmingMethod"]])
-                #
-                # trimmedRV[["M1TrimmingCutoff"]] <<-
-                #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M1TrimmingCutoff
-                #
-                # trimmedRV[["M2CutoffQualityScore"]] <<-
-                #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2CutoffQualityScore
-                #
-                # trimmedRV[["M2SlidingWindowSize"]] <<-
-                #     SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@M2SlidingWindowSize
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 fluidRow(
                     useShinyjs(),
-                    box(title = tags$p("Raw File: ",
+                    box(title = tags$p(tagList(icon("dot-circle"),
+                                               "Raw File: "),
                                        style = "font-size: 26px;
                                          font-weight: bold;"),
                         solidHeader = TRUE,
@@ -490,7 +497,8 @@ consensusReadServer <- function(input, output, session) {
                                       SangerSingleReadAFN[[
                                           strtoi(sidebar_menu[[1]])]],
                                       ")"), style = "font-style:italic")),
-                    box(title = tags$p("Primary & Secondary Peaks: ",
+                    box(title = tags$p(tagList(icon("dot-circle"),
+                                               "Primary & Secondary Peaks: "),
                                        style = "font-size: 26px;
                                        font-weight: bold;"),
                         solidHeader = TRUE, collapsible = TRUE,
@@ -515,7 +523,8 @@ consensusReadServer <- function(input, output, session) {
                                              "overflow-x: scroll;")
                         )
                     ),
-                    box(title = tags$p("Quality Report: ",
+                    box(title = tags$p(tagList(icon("dot-circle"),
+                                               "Quality Report: "),
                                        style = "font-size: 26px;
                                        font-weight: bold;"),
                         solidHeader = TRUE, collapsible = TRUE,
@@ -531,21 +540,13 @@ consensusReadServer <- function(input, output, session) {
 
                             fluidRow(
                                 column(width = 12,
-                                       column(width = 11,
-                                              # selectInput("TrimmingMethodSelection", label = h4("Select Your Trimming Method"),
-                                              #             choices = list("Method 1" = "M1", "Method 2" = "M2"),
-                                              #             selected = SangerSingleReadQualReport[[strtoi(sidebar_menu[[1]])]]@TrimmingMethod,
-                                              #             width = "100%"),
-                                              column(width = 12,
-                                                     uiOutput("TrimmingMethodSelectionOutput"),
-                                              ),
-                                       ),
+                                      uiOutput("TrimmingMethodSelectionOutput"),
+                                    ),
                                 ),
                                 column(width = 12,
-                                       uiOutput("TrimmingMethodUI") ,
+                                       uiOutput("TrimmingMethodUI"),
                                 ),
                             ),
-                        ),
                         box(title = tags$p(tagList(icon("arrow-circle-left"),
                                                    "Trimmed Result Output"),
                                            style = "font-size: 24px;
@@ -563,10 +564,10 @@ consensusReadServer <- function(input, output, session) {
                                                   uiOutput("rawSeqLength") ,
                                            ),
                                            column(4,
-                                                  uiOutput("rawMeanQualityScore") ,
+                                                  uiOutput("rawMeanQualityScore"),
                                            ),
                                            column(4,
-                                                  uiOutput("rawMinQualityScore") ,
+                                                  uiOutput("rawMinQualityScore"),
                                            ),
                                     ),
                                 ),
@@ -579,13 +580,13 @@ consensusReadServer <- function(input, output, session) {
                                     status = "success", width = 12,
                                     column(width = 12,
                                            column(4,
-                                                  uiOutput("trimmedSeqLength") ,
+                                                  uiOutput("trimmedSeqLength"),
                                            ),
                                            column(4,
-                                                  uiOutput("trimmedMeanQualityScore") ,
+                                                  uiOutput("trimmedMeanQualityScore"),
                                            ),
                                            column(4,
-                                                  uiOutput("trimmedMinQualityScore") ,
+                                                  uiOutput("trimmedMinQualityScore"),
                                            ),
                                     ),
 
@@ -602,7 +603,8 @@ consensusReadServer <- function(input, output, session) {
                                     ),
                                 ),
                             ),
-                            tags$hr(style = ("border-top: 6px double #A9A9A9;")),
+                            tags$hr(
+                                style = ("border-top: 6px double #A9A9A9;")),
                             fluidRow(
                                 box(title = tags$p("Cumulative Ratio Plot",
                                                    style = "font-size: 21px;
@@ -621,7 +623,8 @@ consensusReadServer <- function(input, output, session) {
                             ),
                         ),
                     ),
-                    box(title = tags$p("Chromatogram: ",
+                    box(title = tags$p(tagList(icon("dot-circle"),
+                                               "Chromatogram: "),
                                        style = "font-size: 26px;
                                        font-weight: bold;"),
                         solidHeader = TRUE, collapsible = TRUE,
