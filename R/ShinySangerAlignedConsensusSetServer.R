@@ -623,7 +623,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        htmlOutput("consensusAlignmentHTML"),
                                 ),
                             ),
-                            box(title = tags$p("Differences Dataframe",
+                            box(title = tags$p("Differences Data frame",
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
                                 collapsible = TRUE,
@@ -652,7 +652,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                      "scroll;overflow-x: scroll;")
                                 )
                             ),
-                            box(title = tags$p("Secondary Peak Dataframe",
+                            box(title = tags$p("Distance Data frame",
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
                                 collapsible = TRUE,
@@ -663,7 +663,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                      "scroll;overflow-x: scroll;")
                                 )
                             ),
-                            box(title = tags$p("Indels Dataframe",
+                            box(title = tags$p("Indels Data frame",
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
                                 collapsible = TRUE,
@@ -674,7 +674,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                      "scroll;overflow-x: scroll;")
                                 )
                             ),
-                            box(title = tags$p("Stop Codons Dataframe",
+                            box(title = tags$p("Stop Codons Data frame",
                                                style = "font-size: 24px;
                                        font-weight: bold;"),
                                 collapsible = TRUE,
@@ -1050,6 +1050,33 @@ alignedConsensusSetServer <- function(input, output, session) {
         plot(SCDendrogram[[2]])
     })
 
+
+    output$SCDifferencesDFUI <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCDifferencesDF <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDifferencesDF
+        if (all(dim(SCDifferencesDF) == c(0,0))) {
+            h4("*** 'Differences' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCDifferencesDF")
+
+        }
+    })
+
+    output$SCDistanceMatrixUI <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCDistanceMatrix <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
+        if (all(dim(SCDistanceMatrix) == c(0,0))) {
+            h4("*** 'Distance' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCDistanceMatrix")
+
+        }
+    })
+
     output$SCIndelsDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         SCIndelsDF <-
@@ -1076,16 +1103,26 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     output$secondaryPeakDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        SCDistanceMatrix <-
-            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
-        if (all(dim(SCDistanceMatrix) == c(0,0))) {
+        secondaryPeakDF <-
+            SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$secondaryPeakDF
+        if (all(dim(secondaryPeakDF) == c(0,0))) {
             h4("*** 'Distance Matrix' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
             dataTableOutput("secondaryPeakDF")
         }
     })
+    output$SCDifferencesDF = renderDataTable({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCDifferencesDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDifferencesDF
+        SCDifferencesDF
+    })
 
+    output$SCDistanceMatrix = renderDataTable({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        SCDistanceMatrix <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCDistanceMatrix
+        SCDistanceMatrix
+    })
     output$SCIndelsDF <- renderDataTable({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         SCIndelsDF <- SangerCSetParam[[strtoi(sidebar_menu[[1]])]]$SCIndelsDF

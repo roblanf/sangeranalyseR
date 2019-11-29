@@ -451,7 +451,7 @@ consensusReadServer <- function(input, output, session) {
                                htmlOutput("consensusAlignmentHTML"),
                         ),
                     ),
-                    box(title = tags$p("Differences Dataframe",
+                    box(title = tags$p("Differences Data frame",
                                        style = "font-size: 24px;
                                        font-weight: bold;"),
                         collapsible = TRUE,
@@ -480,7 +480,7 @@ consensusReadServer <- function(input, output, session) {
                                              "scroll;overflow-x: scroll;")
                         )
                     ),
-                    box(title = tags$p("Secondary Peak Dataframe",
+                    box(title = tags$p("Distance Data frame",
                                        style = "font-size: 24px;
                                        font-weight: bold;"),
                         collapsible = TRUE,
@@ -491,7 +491,7 @@ consensusReadServer <- function(input, output, session) {
                                              "scroll;overflow-x: scroll;")
                         )
                     ),
-                    box(title = tags$p("Indels Dataframe",
+                    box(title = tags$p("Indels Data frame",
                                        style = "font-size: 24px;
                                        font-weight: bold;"),
                         collapsible = TRUE,
@@ -502,7 +502,7 @@ consensusReadServer <- function(input, output, session) {
                                              "scroll;overflow-x: scroll;")
                         )
                     ),
-                    box(title = tags$p("Stop Codons Dataframe",
+                    box(title = tags$p("Stop Codons Data frame",
                                        style = "font-size: 24px;
                                        font-weight: bold;"),
                         collapsible = TRUE,
