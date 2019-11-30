@@ -17,6 +17,16 @@ An S4 class extending sangerseq S4 class
 
 \describe{
 \item{\code{readFeature}}{.}
+
+\item{\code{readFeature}}{.}
+
+\item{\code{readFileName}}{.}
+
+\item{\code{abifRawData}}{.}
+
+\item{\code{QualityReport}}{.}
+
+\item{\code{primaryAASeq}}{.}
 }}
 
 \examples{

@@ -102,11 +102,28 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
     ### --------------------------------------------------------------------
     ### forward & reverse character reads list string creation
     ### --------------------------------------------------------------------
+
+    trimmedStartPos <- forwardReadsList[[1]]@QualityReport@trimmedStartPos
+    trimmedFinishPos <- forwardReadsList[[1]]@QualityReport@trimmedFinishPos
+    primaryDNA <- as.character(primarySeq(forwardReadsList[[1]]))[1]
+    substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+
+
     fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
-        as.character(primarySeq(forwardRead))
+        trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
+        trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
+        primaryDNA <- as.character(primarySeq(forwardRead))
+        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+        # Without trimming
+        # as.character(primarySeq(forwardRead))
     })
     rRDNAStringSet <- sapply(reverseReadsList, function(reverseRead) {
-        as.character(reverseComplement(primarySeq(reverseRead)))
+        trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
+        trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
+        primaryDNA <- as.character(primarySeq(reverseRead))
+        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+        # Without trimming
+        # as.character(primarySeq(reverseRead))
     })
 
     ### --------------------------------------------------------------------
