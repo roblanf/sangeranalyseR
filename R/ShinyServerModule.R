@@ -1009,6 +1009,9 @@ qualityTrimmingRatioPlot <- function(input, output, session, trimmedRV,
                                      SangerSingleReadFeature) {
     output$qualityTrimmingRatioPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        if ((strtoi(sidebar_menu[[1]]))) {
+
+        }
         readFeature <- SangerSingleReadFeature[[strtoi(sidebar_menu[[1]])]]
         trimmedStartPos = trimmedRV[["trimmedStartPos"]]
         trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]

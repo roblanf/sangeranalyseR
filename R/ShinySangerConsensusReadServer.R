@@ -15,26 +15,6 @@ consensusReadServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### ConsensusRead-related parameters initialization.
     ### ------------------------------------------------------------------------
-    parentDirectory <- SangerConsensus@parentDirectory
-    consenesusReadName <- SangerConsensus@consenesusReadName
-    suffixForwardRegExp <- SangerConsensus@suffixForwardRegExp
-    suffixReverseRegExp <- SangerConsensus@suffixReverseRegExp
-    SCMinReadsNum <- SangerConsensus@minReadsNum
-    SCMinReadLength <- SangerConsensus@minReadLength
-    SCRefAminoAcidSeq <- SangerConsensus@refAminoAcidSeq
-    SCMinFractionCall <- SangerConsensus@minFractionCall
-    SCMaxFractionLost <- SangerConsensus@maxFractionLost
-    SCGeneticCode <- SangerConsensus@geneticCode
-    SCAcceptStopCodons <- SangerConsensus@acceptStopCodons
-    SCReadingFrame <- SangerConsensus@readingFrame
-    SCAlignment<- SangerConsensus@alignment
-    SCDifferencesDF<- SangerConsensus@differencesDF
-    SCDistanceMatrix <- SangerConsensus@distanceMatrix
-    SCDendrogram <- SangerConsensus@dendrogram
-    SCIndelsDF <- SangerConsensus@indelsDF
-    SCStopCodonsDF <- SangerConsensus@stopCodonsDF
-    SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
-    SCSecondaryPeakDF <- SangerConsensus@secondaryPeakDF
     SCTrimmingMethod <- SangerConsensus@forwardReadsList[[1]]@
         QualityReport@TrimmingMethod
     if (SCTrimmingMethod == "M1") {
@@ -263,6 +243,17 @@ consensusReadServer <- function(input, output, session) {
                                 trimmedMinQualityScore = 0,
                                 remainingRatio = 0)
 
+    consensusParam <- reactiveValues(
+        consensusRead = NULL,
+        differencesDF = NULL,
+        alignment = NULL,
+        distanceMatrix = NULL,
+        dendrogram = NULL,
+        indelsDF = NULL,
+        stopCodonsDF = NULL,
+        secondaryPeakDF = NULL
+    )
+
     ############################################################################
     ### Functions for all UI page
     ############################################################################
@@ -302,6 +293,35 @@ consensusReadServer <- function(input, output, session) {
             SangerConsensus@stopCodonsDF <<- CSResult$stopsDf
             SangerConsensus@secondaryPeakDF <<- CSResult$spDf
 
+            consensusParam[["consensusRead"]] <<- SangerConsensus@consensusRead
+            consensusParam[["differencesDF"]] <<- SangerConsensus@differencesDF
+            consensusParam[["alignment"]] <<- SangerConsensus@alignment
+            consensusParam[["distanceMatrix"]] <<- SangerConsensus@distanceMatrix
+            consensusParam[["dendrogram"]] <<- SangerConsensus@dendrogram
+            consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
+            consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
+            consensusParam[["secondaryPeakDF"]] <<- SangerConsensus@secondaryPeakDF
+
+
+            message("SangerConsensus@forwardReadsList[[1]]@QualityReport@trimmedSeqLength: ",
+                    SangerConsensus@forwardReadsList[[1]]@QualityReport@trimmedSeqLength)
+
+
+            message("SangerConsensus@consensusRead: ",
+                    nchar(as.character(SangerConsensus@consensusRead)))
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -335,7 +355,7 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(parentDirectory),
+                                      h4(SangerConsensus@parentDirectory),
                                )
                         ),
                         column(12,
@@ -346,7 +366,7 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(consenesusReadName),
+                                      h4(SangerConsensus@consenesusReadName),
                                )
                         ),
                         column(12,
@@ -368,7 +388,7 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(suffixForwardRegExp),
+                                      h4(SangerConsensus@suffixForwardRegExp),
                                )
                         ),
                         column(12,
@@ -390,7 +410,7 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(suffixReverseRegExp),
+                                      h4(SangerConsensus@suffixReverseRegExp),
                                )
                         ),
                         column(12,
@@ -409,7 +429,6 @@ consensusReadServer <- function(input, output, session) {
                     #### Add this after having reference sample ####
                     ################################################
                     # If it is null
-                    # h1(SCRefAminoAcidSeq),
                     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                     box(title = tags$p("Consensus Read Parameters",
                                        style = "font-size: 24px;
@@ -468,7 +487,6 @@ consensusReadServer <- function(input, output, session) {
                     solidHeader = TRUE, collapsible = TRUE,
                     status = "success", width = 12,
                     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-
 
 
 
@@ -804,6 +822,24 @@ consensusReadServer <- function(input, output, session) {
             message("save SangerConsensus quality S4 object Reverse")
             }
         )
+        # upR <- updateSCQualityReport (SangerConsensus, SangerSingleReadQualReport)
+        #
+        # SangerConsensus <<- upR$SangerConsensus
+        # SangerSingleReadQualReport <<- upR$SangerSingleReadQualReport
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         saveRDS(SangerConsensus, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
         NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
@@ -822,48 +858,31 @@ consensusReadServer <- function(input, output, session) {
     ### ConsensusRead (Function for Sanger Consensus Read Overview)
     ############################################################################
     output$geneticCodeDF <- renderExcel({
-        excelTable(data =  t(data.frame(SCGeneticCode)),
+        message("Indise geneticCodeDF")
+        excelTable(data =  t(data.frame(SangerConsensus@geneticCode)),
                    defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
+
+    # consensusParam[["consensusRead"]] <<- SangerConsensus@consensusRead
+    # consensusParam[["differencesDF"]] <<- SangerConsensus@differencesDF
+    # consensusParam[["alignment"]] <<- SangerConsensus@alignment
+    # consensusParam[["distanceMatrix"]] <<- SangerConsensus@distanceMatrix
+    # consensusParam[["dendrogram"]] <<- SangerConsensus@dendrogram
+    # consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
+    # consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
+    # consensusParam[["secondaryPeakDF"]] <<- SangerConsensus@secondaryPeakDF
+
     output$consensusAlignmentHTML <- renderUI({
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        message("Indise consensusAlignmentHTML")
         browseSeqHTML <-
             file.path(shinyDirectory,
                       paste0(SangerConsensus@consenesusReadName,
                              "_Alignment_BrowseSeqs.html"))
-        BrowseSeqs(SangerConsensus@alignment,
+        BrowseSeqs(consensusParam[["alignment"]],
                    openURL=FALSE, htmlFile=browseSeqHTML)
         includeHTML(
             file.path(shinyDirectory,
@@ -872,15 +891,18 @@ consensusReadServer <- function(input, output, session) {
     })
 
     output$dendrogramDF <- renderDataTable({
-        SCDendrogram[[1]]
+        message("Indise dendrogramDF")
+        consensusParam[["dendrogram"]][[1]]
     })
 
     output$dendrogramPlot <- renderPlot({
-        plot(SCDendrogram[[2]])
+        message("Indise dendrogramPlot")
+        plot(consensusParam[["dendrogram"]][[2]])
     })
 
     output$SCDifferencesDFUI <- renderUI({
-        if (all(dim(SCDifferencesDF) == c(0,0))) {
+        message("Indise SCDifferencesDFUI")
+        if (all(dim(consensusParam[["differencesDF"]]) == c(0,0))) {
             h4("*** 'Differences' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
@@ -890,7 +912,8 @@ consensusReadServer <- function(input, output, session) {
     })
 
     output$SCDistanceMatrixUI <- renderUI({
-        if (all(dim(SCDistanceMatrix) == c(0,0))) {
+        message("Indise SCDistanceMatrixUI")
+        if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
             h4("*** 'Distance' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
@@ -900,7 +923,9 @@ consensusReadServer <- function(input, output, session) {
     })
 
     output$SCIndelsDFUI <- renderUI({
-        if (all(dim(SCIndelsDF) == c(0,0))) {
+        message("Indise SCIndelsDFUI")
+
+        if (all(dim(consensusParam[["indelsDF"]]) == c(0,0))) {
             h4("*** 'Indels' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
@@ -910,7 +935,8 @@ consensusReadServer <- function(input, output, session) {
     })
 
     output$SCStopCodonsDFUI <- renderUI({
-        if (all(dim(SCStopCodonsDF) == c(0,0))) {
+        message("Indise SCStopCodonsDFUI")
+        if (all(dim(consensusParam[["stopCodonsDF"]]) == c(0,0))) {
             h4("*** 'Stop Codons' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
@@ -919,19 +945,23 @@ consensusReadServer <- function(input, output, session) {
     })
 
     output$SCDifferencesDF = renderDataTable({
-        SCDifferencesDF
+        message("Indise SCDifferencesDF")
+        consensusParam[["differencesDF"]]
     })
 
     output$SCDistanceMatrix = renderDataTable({
-        SCDistanceMatrix
+        message("Indise SCDistanceMatrix")
+        consensusParam[["distanceMatrix"]]
     })
 
     output$SCIndelsDF <- renderDataTable({
-        SCIndelsDF
+        message("Indise SCIndelsDF")
+        consensusParam[["indelsDF"]]
     })
 
     output$SCStopCodonsDF <- renderDataTable({
-        SCStopCodonsDF
+        message("Indise SCStopCodonsDF")
+        consensusParam[["stopCodonsDF"]]
     })
 
 
@@ -989,12 +1019,12 @@ consensusReadServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### Quality trimming related (value box)
     ### ------------------------------------------------------------------------
-    valueBoxSCMinReadsNum(input, output, SCMinReadsNum, session)
-    valueBoxSCMinReadLength(input, output, SCMinReadLength, session)
-    valueBoxSCMinFractionCall(input, output, SCMinFractionCall, session)
-    valueBoxSCMaxFractionLost(input, output, SCMaxFractionLost, session)
-    valueBoxSCAcceptStopCodons(input, output, SCAcceptStopCodons, session)
-    valueBoxSCReadingFrame(input, output, SCReadingFrame, session)
+    valueBoxSCMinReadsNum(input, output, SangerConsensus@minReadsNum, session)
+    valueBoxSCMinReadLength(input, output, SangerConsensus@minReadLength, session)
+    valueBoxSCMinFractionCall(input, output, SangerConsensus@minFractionCall, session)
+    valueBoxSCMaxFractionLost(input, output, SangerConsensus@maxFractionLost, session)
+    valueBoxSCAcceptStopCodons(input, output, SangerConsensus@acceptStopCodons, session)
+    valueBoxSCReadingFrame(input, output, SangerConsensus@readingFrame, session)
 
     valueBoxM1TrimmingCutoff (input, output, session)
     valueBoxM2CutoffQualityScore (input, output, session)
@@ -1107,6 +1137,36 @@ consensusReadServer <- function(input, output, session) {
                 trimmedRV[["remainingRatio"]] <<-
                     round(SangerSingleReadQualReport[[
                         strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
+
+
+                # Read number
+                forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+                reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+                SangerSingleReadNum <- forwardReadNum + reverseReadNum
+
+                sapply(1:forwardReadNum, function(i) {
+                    SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
+                        SangerSingleReadQualReport[[i]]
+                    message("save SangerConsensus quality S4 object Forward")
+                }
+                )
+                sapply(1:reverseReadNum, function(i) {
+                    SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
+                        SangerSingleReadQualReport[[forwardReadNum + i]]
+                    message("save SangerConsensus quality S4 object Reverse")
+                }
+                )
+
+
+
+
+                # upR <- updateSCQualityReport (SangerConsensus, SangerSingleReadQualReport)
+                #
+                # SangerConsensus <<- upR$SangerConsensus
+                # SangerSingleReadQualReport <<- upR$SangerSingleReadQualReport
+
+
+
             }
         }
     })
@@ -1199,6 +1259,29 @@ consensusReadServer <- function(input, output, session) {
                 trimmedRV[["remainingRatio"]] <<-
                     round(SangerSingleReadQualReport[[
                         strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
+
+                # Read number
+                forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+                reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+                SangerSingleReadNum <- forwardReadNum + reverseReadNum
+
+                sapply(1:forwardReadNum, function(i) {
+                    SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
+                        SangerSingleReadQualReport[[i]]
+                    message("save SangerConsensus quality S4 object Forward")
+                }
+                )
+                sapply(1:reverseReadNum, function(i) {
+                    SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
+                        SangerSingleReadQualReport[[forwardReadNum + i]]
+                    message("save SangerConsensus quality S4 object Reverse")
+                }
+                )
+                #
+                # upR <- updateSCQualityReport (SangerConsensus, SangerSingleReadQualReport)
+                #
+                # SangerConsensus <<- upR$SangerConsensus
+                # SangerSingleReadQualReport <<- upR$SangerSingleReadQualReport
             }
         }
     })
@@ -1293,6 +1376,29 @@ consensusReadServer <- function(input, output, session) {
                 trimmedRV[["remainingRatio"]] <<-
                     round(SangerSingleReadQualReport[[
                         strtoi(sidebar_menu[[1]])]]@remainingRatio * 100, 2)
+
+                # Read number
+                forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+                reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+                SangerSingleReadNum <- forwardReadNum + reverseReadNum
+
+                sapply(1:forwardReadNum, function(i) {
+                    SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
+                        SangerSingleReadQualReport[[i]]
+                    message("save SangerConsensus quality S4 object Forward")
+                }
+                )
+                sapply(1:reverseReadNum, function(i) {
+                    SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
+                        SangerSingleReadQualReport[[forwardReadNum + i]]
+                    message("save SangerConsensus quality S4 object Reverse")
+                }
+                )
+                #
+                # upR <- updateSCQualityReport (SangerConsensus, SangerSingleReadQualReport)
+                #
+                # SangerConsensus <<- upR$SangerConsensus
+                # SangerSingleReadQualReport <<- upR$SangerSingleReadQualReport
             }
         }
     })
@@ -1419,4 +1525,28 @@ consensusReadServer <- function(input, output, session) {
         }
     })
 }
+
+
+#
+# updateSCQualityReport <- function(SangerConsensus, SangerSingleReadQualReport) {
+#     # Read number
+#     forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+#     reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+#     SangerSingleReadNum <- forwardReadNum + reverseReadNum
+#
+#     sapply(1:forwardReadNum, function(i) {
+#         SangerConsensus@forwardReadsList[[i]]@QualityReport <-
+#             SangerSingleReadQualReport[[i]]
+#         message("save SangerConsensus quality S4 object Forward")
+#         }
+#     )
+#     sapply(1:reverseReadNum, function(i) {
+#         SangerConsensus@reverseReadsList[[i]]@QualityReport <-
+#             SangerSingleReadQualReport[[forwardReadNum + i]]
+#         message("save SangerConsensus quality S4 object Reverse")
+#         }
+#     )
+#     return(list("SangerConsensus" = SangerConsensus,
+#                 "SangerSingleReadQualReport" = SangerSingleReadQualReport))
+# }
 
