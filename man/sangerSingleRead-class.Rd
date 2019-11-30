@@ -26,6 +26,8 @@ An S4 class extending sangerseq S4 class
 
 \item{\code{QualityReport}}{.}
 
+\item{\code{ChromatogramParam}}{.}
+
 \item{\code{primaryAASeq}}{.}
 }}
 
@@ -40,7 +42,10 @@ A_chloroticaSingleRead <- new("SangerSingleRead",
                               TrimmingMethod        = "M2",
                               M1TrimmingCutoff      = NULL,
                               M2CutoffQualityScore  = 40,
-                              M2SlidingWindowSize   = 10)
+                              M2SlidingWindowSize   = 10,
+                              baseNumPerRow         = 100,
+                              signalRatioCutoff     = 0.33,
+                              showTrimmed           = TRUE)
 }
 \author{
 Kuan-Hao Chao

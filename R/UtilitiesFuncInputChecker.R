@@ -131,15 +131,49 @@ checkReadingFrame <- function(readingFrame, errors) {
     return(errors)
 }
 
-### ------------------------------------------------------------------------
+### ============================================================================
 ### 'parentDirectory' prechecking
-### ------------------------------------------------------------------------
+### ============================================================================
 checkParentDirectory <- function(parentDirectory, errors) {
     if (!file.exists(parentDirectory)) {
         msg <- paste("\n'", parentDirectory, "'",
                      " parent directory does not exist.\n", sep = "")
         errors <- c(errors, msg)
     }
+}
+
+### ============================================================================
+### 'baseNumPerRow', 'signalRatioCutoff', 'showTrimmed' prechecking
+### ============================================================================
+checkBaseNumPerRow <- function(baseNumPerRow, errors) {
+    if (baseNumPerRow%%1!=0) {
+        msg <- paste("\n'baseNumPerRow' must be integer.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    if (baseNumPerRow < 0 || baseNumPerRow > 200) {
+        msg <- paste("\n'baseNumPerRow' must be between 0 and 200.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
+
+checkSignalRatioCutoff <- function(signalRatioCutoff, errors) {
+    if (signalRatioCutoff < 0 || signalRatioCutoff > 1) {
+        msg <- paste("\n'signalRatioCutoff' must be between 0 and 1.\n",
+                     sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
+checkShowTrimmed <- function(showTrimmed, errors) {
+    if (!is.logical(showTrimmed)) {
+        msg <- paste("\n'showTrimmed' must be between TRUE and FALSE.\n",
+                     sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
 }
 
 # Waiting list ~~

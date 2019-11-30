@@ -7,6 +7,7 @@
 #' @slot readFileName .
 #' @slot abifRawData .
 #' @slot QualityReport .
+#' @slot ChromatogramParam .
 #' @slot primaryAASeq .
 #' @geneticCode .
 #'
@@ -28,7 +29,10 @@
 #'                               TrimmingMethod        = "M2",
 #'                               M1TrimmingCutoff      = NULL,
 #'                               M2CutoffQualityScore  = 40,
-#'                               M2SlidingWindowSize   = 10)
+#'                               M2SlidingWindowSize   = 10,
+#'                               baseNumPerRow         = 100,
+#'                               signalRatioCutoff     = 0.33,
+#'                               showTrimmed           = TRUE)
 setClass(
     "SangerSingleRead",
     ### -------------------------------------------------------------------
@@ -40,6 +44,7 @@ setClass(
             readFileName        = "character",
             abifRawData         = "abif",
             QualityReport       = "QualityReport",
+            ChromatogramParam   = "ChromatogramParam",
             primaryAASeq        = "AAString",
             geneticCode         = "character")
 ) -> SangerSingleRead
@@ -62,11 +67,13 @@ setMethod("initialize",
                    peakPosMatrix        = peakPosMatrix,
                    peakAmpMatrix        = peakAmpMatrix,
                    abifRawData          = abifRawData,
-                   QualityReport        = QualityReport,
                    TrimmingMethod       = "M1",
                    M1TrimmingCutoff     = 0.0001,
                    M2CutoffQualityScore = NULL,
-                   M2SlidingWindowSize  = NULL) {
+                   M2SlidingWindowSize  = NULL,
+                   baseNumPerRow        = 100,
+                   signalRatioCutoff    = 0.33,
+                   showTrimmed          = TRUE) {
               ### --------------------------------------------------------------
               ### Input parameter prechecking
               ### --------------------------------------------------------------
@@ -127,6 +134,10 @@ setMethod("initialize",
                                        M1TrimmingCutoff = M1TrimmingCutoff,
                                        M2CutoffQualityScore = M2CutoffQualityScore,
                                        M2SlidingWindowSize = M2SlidingWindowSize)
+                  ChromatogramParam <- new("ChromatogramParam",
+                                           baseNumPerRow      = baseNumPerRow,
+                                           signalRatioCutoff  = signalRatioCutoff,
+                                           showTrimmed        = showTrimmed)
               } else {
                   stop(errors)
               }
@@ -143,5 +154,6 @@ setMethod("initialize",
                              peakPosMatrix       = peakPosMatrix,
                              peakAmpMatrix       = peakAmpMatrix,
                              abifRawData         = abifRawData,
-                             QualityReport       = QualityReport)
+                             QualityReport       = QualityReport,
+                             ChromatogramParam   = ChromatogramParam)
           })

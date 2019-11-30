@@ -34,7 +34,10 @@ A_chloroticConsensusReads <- new("SangerConsensusRead",
                                  TrimmingMethod        = "M2",
                                  M1TrimmingCutoff      = NULL,
                                  M2CutoffQualityScore  = 40,
-                                 M2SlidingWindowSize   = 10)
+                                 M2SlidingWindowSize   = 10,
+                                 baseNumPerRow         = 100,
+                                 signalRatioCutoff     = 0.33,
+                                 showTrimmed           = TRUE)
 }
 \author{
 Kuan-Hao Chao

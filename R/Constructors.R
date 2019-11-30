@@ -11,6 +11,9 @@
 #' @param M1TrimmingCutoff .
 #' @param M2CutoffQualityScore .
 #' @param M2SlidingWindowSize .
+#' @param baseNumPerRow .
+#' @param signalRatioCutoff .
+#' @param showTrimmed .
 #' @param refAminoAcidSeq .
 #' @param minReadsNum .
 #' @param minReadLength .
@@ -47,6 +50,9 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
                                 M1TrimmingCutoff       = 0.0001,
                                 M2CutoffQualityScore   = NULL,
                                 M2SlidingWindowSize    = NULL,
+                                baseNumPerRow         = 100,
+                                signalRatioCutoff     = 0.33,
+                                showTrimmed           = TRUE,
                                 refAminoAcidSeq        = "",
                                 minReadsNum            = 2,
                                 minReadLength          = 20,
@@ -65,6 +71,9 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
                              M1TrimmingCutoff       = M1TrimmingCutoff,
                              M2CutoffQualityScore   = M2CutoffQualityScore,
                              M2SlidingWindowSize    = M2SlidingWindowSize,
+                             baseNumPerRow        = baseNumPerRow,
+                             signalRatioCutoff    = signalRatioCutoff,
+                             showTrimmed          = showTrimmed,
                              refAminoAcidSeq        = refAminoAcidSeq,
                              minReadsNum            = minReadsNum,
                              minReadLength          = minReadLength,
@@ -90,6 +99,9 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #' @param M1TrimmingCutoff .
 #' @param M2CutoffQualityScore .
 #' @param M2SlidingWindowSize .
+#' @param baseNumPerRow .
+#' @param signalRatioCutoff .
+#' @param showTrimmed .
 #'
 #' @return SangerSingleRead
 #' @export
@@ -112,13 +124,19 @@ SangerSingleRead <- function(readFeature = character(0),
                              TrimmingMethod        = "M2",
                              M1TrimmingCutoff      = NULL,
                              M2CutoffQualityScore  = 40,
-                             M2SlidingWindowSize   = 10) {
+                             M2SlidingWindowSize   = 10,
+                             baseNumPerRow         = 100,
+                             signalRatioCutoff     = 0.33,
+                             showTrimmed           = TRUE) {
     newSingleReads <- new("SangerSingleRead",
                           readFeature          = readFeature,
                           readFileName         = readFileName,
                           TrimmingMethod       = TrimmingMethod,
                           M1TrimmingCutoff     = M1TrimmingCutoff,
                           M2CutoffQualityScore = M2CutoffQualityScore,
-                          M2SlidingWindowSize  = M2SlidingWindowSize)
+                          M2SlidingWindowSize  = M2SlidingWindowSize,
+                          baseNumPerRow        = baseNumPerRow,
+                          signalRatioCutoff    = signalRatioCutoff,
+                          showTrimmed          = showTrimmed)
     return(newSingleReads)
 }

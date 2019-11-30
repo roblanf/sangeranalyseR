@@ -713,20 +713,22 @@ consensusReadServer <- function(input, output, session) {
                                                       value = 100),
                                    ),
                                    column(3,
+                                            numericInput(
+                                                "ChromatogramSignalRatioCutoff",
+                                                h3("Signal Ratio Cutoff"),
+                                                value = 0.33),
+                                            checkboxInput(
+                                                "ChromatogramCheckShowTrimmed",
+                                                "Whether show trimmed region",
+                                                value = TRUE)
+                                   ),
+                                   column(3,
                                           uiOutput("ChromatogramtrimmedStartPos"),
                                    ),
                                    column(3,
                                           uiOutput("ChromatogramtrimmedFinishPos"),
-                                   ),
-                                   column(3,
-                                          numericInput(
-                                              "ChromatogramSignalRatioCutoff",
-                                              h3("Signal Ratio Cutoff"),
-                                              value = 0.33),
-                                          checkboxInput(
-                                              "ChromatogramCheckShowTrimmed",
-                                              "Whether show trimmed region",
-                                              value = TRUE),)
+                                   )
+
                             ),
                         ),
                         box(title = tags$p(tagList(icon("arrow-circle-left"),

@@ -47,7 +47,10 @@
 #'                                  TrimmingMethod        = "M2",
 #'                                  M1TrimmingCutoff      = NULL,
 #'                                  M2CutoffQualityScore  = 40,
-#'                                  M2SlidingWindowSize   = 10)
+#'                                  M2SlidingWindowSize   = 10,
+#'                                  baseNumPerRow         = 100,
+#'                                  signalRatioCutoff     = 0.33,
+#'                                  showTrimmed           = TRUE)
 setClass("SangerConsensusRead",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerConsensusRead'
@@ -92,6 +95,9 @@ setMethod("initialize",
                    M1TrimmingCutoff      = 0.0001,
                    M2CutoffQualityScore  = NULL,
                    M2SlidingWindowSize   = NULL,
+                   baseNumPerRow         = 100,
+                   signalRatioCutoff     = 0.33,
+                   showTrimmed           = TRUE,
                    refAminoAcidSeq        = "",
                    minReadsNum            = 2,
                    minReadLength          = 20,
@@ -168,15 +174,26 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     if (length(errors) == 0) {
         # sapply to create SangerSingleRead list.
+
         forwardReadsList <- sapply(forwardAllReads[[1]], SangerSingleRead,
                                    readFeature = "Forward Read",
-                                   TrimmingMethod, M1TrimmingCutoff,
-                                   M2CutoffQualityScore, M2SlidingWindowSize)
+                                   TrimmingMethod = TrimmingMethod,
+                                   M1TrimmingCutoff = M1TrimmingCutoff,
+                                   M2CutoffQualityScore = M2CutoffQualityScore,
+                                   M2SlidingWindowSize = M2SlidingWindowSize,
+                                   baseNumPerRow = baseNumPerRow,
+                                   signalRatioCutoff = signalRatioCutoff,
+                                   showTrimmed = showTrimmed)
 
         reverseReadsList <- sapply(reverseAllReads[[1]], SangerSingleRead,
                                    readFeature = "Reverse Read",
-                                   TrimmingMethod, M1TrimmingCutoff,
-                                   M2CutoffQualityScore, M2SlidingWindowSize)
+                                   TrimmingMethod = TrimmingMethod,
+                                   M1TrimmingCutoff = M1TrimmingCutoff,
+                                   M2CutoffQualityScore = M2CutoffQualityScore,
+                                   M2SlidingWindowSize = M2SlidingWindowSize,
+                                   baseNumPerRow = baseNumPerRow,
+                                   signalRatioCutoff = signalRatioCutoff,
+                                   showTrimmed = showTrimmed)
 
         CSResult<-
             calculateConsensusRead (forwardReadsList, reverseReadsList,

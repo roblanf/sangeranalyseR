@@ -38,6 +38,7 @@ Collate:
     'ClassSangerSingleRead.R'
     'ClassAlignedConsensusSet.R'
     'ClassBaseCall.R'
+    'ClassChromatogramParam.R'
     'ClassSangerConsensusRead.R'
     'Constructors.R'
     'LoadMessage.R'
