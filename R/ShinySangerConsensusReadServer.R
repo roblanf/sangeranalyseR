@@ -557,6 +557,34 @@ consensusReadServer <- function(input, output, session) {
                 ChromatogramParam[["showTrimmed"]] <<-
                     SangerSingleReadChromatogramParam[[singleReadIndex]]@showTrimmed
 
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerSingleReadQualReport[[singleReadIndex]]@
+                              remainingRatio * 100, 2)
+
                 fluidRow(
                     useShinyjs(),
                     box(title = tags$p(tagList(icon("dot-circle"),
@@ -725,27 +753,6 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 12,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                            # ChromatogramParam <- reactiveValues(baseNumPerRow     = 0,
-                            #                                     signalRatioCutoff = 0,
-                            #                                     showTrimmed       = TRUE)
                             column(12,
                                    column(3,
                                           sliderInput("ChromatogramBasePerRow",
@@ -773,27 +780,6 @@ consensusReadServer <- function(input, output, session) {
 
                             ),
                         ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         box(title = tags$p(tagList(icon("arrow-circle-left"),
                                                    "Chromatogram Output"),
                                            style = "font-size: 24px;
@@ -836,12 +822,16 @@ consensusReadServer <- function(input, output, session) {
         sapply(1:forwardReadNum, function(i) {
             SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
                 SangerSingleReadQualReport[[i]]
-            # message("save SangerConsensus quality S4 object Forward")
+            SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
+                SangerSingleReadChromatogramParam[[singleReadIndex]]
+            message("save SangerConsensus quality S4 object Forward")
         })
         sapply(1:reverseReadNum, function(i) {
             SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
                 SangerSingleReadQualReport[[forwardReadNum + i]]
-            # message("save SangerConsensus quality S4 object Reverse")
+            SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
+                SangerSingleReadChromatogramParam[[singleReadIndex]]
+            message("save SangerConsensus quality S4 object Reverse")
         })
         saveRDS(SangerConsensus, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
@@ -1135,12 +1125,10 @@ consensusReadServer <- function(input, output, session) {
                 sapply(1:forwardReadNum, function(i) {
                     SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
                         SangerSingleReadQualReport[[i]]
-                    message("save SangerConsensus quality S4 object Forward")
                 })
                 sapply(1:reverseReadNum, function(i) {
                     SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
                         SangerSingleReadQualReport[[forwardReadNum + i]]
-                    message("save SangerConsensus quality S4 object Reverse")
                 })
             }
         }
@@ -1245,12 +1233,10 @@ consensusReadServer <- function(input, output, session) {
                 sapply(1:forwardReadNum, function(i) {
                     SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
                         SangerSingleReadQualReport[[i]]
-                    message("save SangerConsensus quality S4 object Forward")
                 })
                 sapply(1:reverseReadNum, function(i) {
                     SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
                         SangerSingleReadQualReport[[forwardReadNum + i]]
-                    message("save SangerConsensus quality S4 object Reverse")
                 })
             }
         }
@@ -1356,12 +1342,10 @@ consensusReadServer <- function(input, output, session) {
                 sapply(1:forwardReadNum, function(i) {
                     SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
                         SangerSingleReadQualReport[[i]]
-                    message("save SangerConsensus quality S4 object Forward")
                 })
                 sapply(1:reverseReadNum, function(i) {
                     SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
                         SangerSingleReadQualReport[[forwardReadNum + i]]
-                    message("save SangerConsensus quality S4 object Reverse")
                 })
             }
         }
@@ -1376,13 +1360,6 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
-
-
-                # ChromatogramParam <- reactiveValues(baseNumPerRow     = 0,
-                #                                     signalRatioCutoff = 0,
-                #                                     showTrimmed       = TRUE)
-
-
                 chromatogramRowNumAns <-
                     chromatogramRowNum(
                         SangerConsensusFRReadsList[[singleReadIndex]],
@@ -1399,25 +1376,6 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 ### ------------------------------------------------------------
                 ### Update ChromatogramBasePerRow
                 ### ------------------------------------------------------------
@@ -1438,24 +1396,11 @@ consensusReadServer <- function(input, output, session) {
                 sapply(1:forwardReadNum, function(i) {
                     SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
                         SangerSingleReadChromatogramParam[[singleReadIndex]]
-                    message("save SangerConsensus quality S4 object Forward")
                 })
                 sapply(1:reverseReadNum, function(i) {
                     SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
                         SangerSingleReadChromatogramParam[[singleReadIndex]]
-                    message("save SangerConsensus quality S4 object Reverse")
                 })
-
-
-
-
-
-
-
-
-
-
-
 
                 rawSeqLength <-
                     SangerSingleReadQualReport[[singleReadIndex]]@
