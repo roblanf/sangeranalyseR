@@ -108,15 +108,20 @@ setMethod("initialize",
                                                     parentDirFiles)]
 
     # Find possible consensus Name for forward and reverse reads
-    forwardConsensusName <- unlist(str_split(forwardSelectInputFiles, suffixForwardRegExp, n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
-    reverseConsensusName <- unlist(str_split(reverseSelectInputFiles, suffixReverseRegExp, n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+    forwardConsensusName <-
+        unlist(str_split(forwardSelectInputFiles, suffixForwardRegExp,
+                         n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+    reverseConsensusName <-
+        unlist(str_split(reverseSelectInputFiles, suffixReverseRegExp,
+                         n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
 
     consensusReadsName <- union(forwardConsensusName, reverseConsensusName)
     consensusReadsNumber <- length(consensusReadsName)
 
     # Create consensusReads for all list of consensusReadsNumber
 
-    SangerConsensusReadList <- sapply(consensusReadsName, function(eachConsRead) {
+    SangerConsensusReadList <- sapply(consensusReadsName,
+                                      function(eachConsRead) {
         SangerConsensusRead(parentDirectory, eachConsRead,
                             suffixForwardRegExp, suffixReverseRegExp,
                             TrimmingMethod, M1TrimmingCutoff,

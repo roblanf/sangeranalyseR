@@ -135,9 +135,9 @@ setMethod("initialize",
                                        M2CutoffQualityScore = M2CutoffQualityScore,
                                        M2SlidingWindowSize = M2SlidingWindowSize)
                   ChromatogramParam <- new("ChromatogramParam",
-                                           baseNumPerRow      = baseNumPerRow,
-                                           signalRatioCutoff  = signalRatioCutoff,
-                                           showTrimmed        = showTrimmed)
+                                           baseNumPerRow     = baseNumPerRow,
+                                           signalRatioCutoff = signalRatioCutoff,
+                                           showTrimmed       = showTrimmed)
               } else {
                   stop(errors)
               }

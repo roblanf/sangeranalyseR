@@ -95,6 +95,14 @@ consensusReadServer <- function(input, output, session) {
     })
     SangerSingleReadQSDF <- c(forwardQualityScoreDF, reverseQualityScoreDF)
 
+    # ChromatogramParam
+    forwardReadChromatogramParam <- sapply(1:forwardReadNum, function(i)
+        SangerConsensus@forwardReadsList[[i]]@ChromatogramParam)
+    reverseReadChromatogramParam <- sapply(1:reverseReadNum, function(i)
+        SangerConsensus@reverseReadsList[[i]]@ChromatogramParam)
+    SangerSingleReadChromatogramParam <- c(forwardReadChromatogramParam,
+                                           reverseReadChromatogramParam)
+
     # primarySeqID
     forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@primarySeqID)
@@ -238,6 +246,10 @@ consensusReadServer <- function(input, output, session) {
                                 trimmedMinQualityScore  = 0,
                                 remainingRatio          = 0)
 
+    ChromatogramParam <- reactiveValues(baseNumPerRow     = 0,
+                                        signalRatioCutoff = 0,
+                                        showTrimmed       = TRUE)
+
     consensusParam <- reactiveValues(consensusRead   = NULL,
                                      differencesDF   = NULL,
                                      alignment       = NULL,
@@ -245,8 +257,7 @@ consensusReadServer <- function(input, output, session) {
                                      dendrogram      = NULL,
                                      indelsDF        = NULL,
                                      stopCodonsDF    = NULL,
-                                     secondaryPeakDF = NULL
-    )
+                                     secondaryPeakDF = NULL)
 
     ############################################################################
     ### Functions for all UI page
@@ -536,6 +547,16 @@ consensusReadServer <- function(input, output, session) {
             )
         } else {
             if (!is.na(strtoi(singleReadIndex))) {
+                ### ------------------------------------------------------------
+                ### First assign the ChromatogramParam parameter
+                ### ------------------------------------------------------------
+                ChromatogramParam[["baseNumPerRow"]] <<-
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@baseNumPerRow
+                ChromatogramParam[["signalRatioCutoff"]] <<-
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@signalRatioCutoff
+                ChromatogramParam[["showTrimmed"]] <<-
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@showTrimmed
+
                 fluidRow(
                     useShinyjs(),
                     box(title = tags$p(tagList(icon("dot-circle"),
@@ -704,23 +725,44 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 12,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            # ChromatogramParam <- reactiveValues(baseNumPerRow     = 0,
+                            #                                     signalRatioCutoff = 0,
+                            #                                     showTrimmed       = TRUE)
                             column(12,
                                    column(3,
                                           sliderInput("ChromatogramBasePerRow",
                                                       label = h3("Slider"),
                                                       min = 5,
                                                       max = 200,
-                                                      value = 100),
+                                                      value = ChromatogramParam[["baseNumPerRow"]]),
                                    ),
                                    column(3,
                                             numericInput(
                                                 "ChromatogramSignalRatioCutoff",
                                                 h3("Signal Ratio Cutoff"),
-                                                value = 0.33),
+                                                value = ChromatogramParam[["signalRatioCutoff"]]),
                                             checkboxInput(
                                                 "ChromatogramCheckShowTrimmed",
                                                 "Whether show trimmed region",
-                                                value = TRUE)
+                                                value = ChromatogramParam[["showTrimmed"]])
                                    ),
                                    column(3,
                                           uiOutput("ChromatogramtrimmedStartPos"),
@@ -731,6 +773,27 @@ consensusReadServer <- function(input, output, session) {
 
                             ),
                         ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         box(title = tags$p(tagList(icon("arrow-circle-left"),
                                                    "Chromatogram Output"),
                                            style = "font-size: 24px;
@@ -1313,6 +1376,13 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+
+
+                # ChromatogramParam <- reactiveValues(baseNumPerRow     = 0,
+                #                                     signalRatioCutoff = 0,
+                #                                     showTrimmed       = TRUE)
+
+
                 chromatogramRowNumAns <-
                     chromatogramRowNum(
                         SangerConsensusFRReadsList[[singleReadIndex]],
@@ -1329,6 +1399,64 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                ### ------------------------------------------------------------
+                ### Update ChromatogramBasePerRow
+                ### ------------------------------------------------------------
+                SangerSingleReadChromatogramParam[[singleReadIndex]]@baseNumPerRow <<-
+                    input$ChromatogramBasePerRow
+                SangerSingleReadChromatogramParam[[singleReadIndex]]@signalRatioCutoff <<-
+                    input$ChromatogramSignalRatioCutoff
+                SangerSingleReadChromatogramParam[[singleReadIndex]]@showTrimmed <<-
+                    input$ChromatogramCheckShowTrimmed
+
+                ### ------------------------------------------------------------
+                ### Save SangerConsensus quality S4 object
+                ### ------------------------------------------------------------
+                forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+                reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+                SangerSingleReadNum <- forwardReadNum + reverseReadNum
+
+                sapply(1:forwardReadNum, function(i) {
+                    SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
+                        SangerSingleReadChromatogramParam[[singleReadIndex]]
+                    message("save SangerConsensus quality S4 object Forward")
+                })
+                sapply(1:reverseReadNum, function(i) {
+                    SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
+                        SangerSingleReadChromatogramParam[[singleReadIndex]]
+                    message("save SangerConsensus quality S4 object Reverse")
+                })
+
+
+
+
+
+
+
+
+
+
+
+
                 rawSeqLength <-
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     rawSeqLength

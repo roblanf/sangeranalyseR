@@ -14,9 +14,9 @@
 #'                                  M1TrimmingCutoff      = NULL,
 #'                                  M2CutoffQualityScore  = 40,
 #'                                  M2SlidingWindowSize   = 10,
-#'                                  baseNumPerRow         = 100,
-#'                                  signalRatioCutoff     = 0.33,
-#'                                  showTrimmed           = TRUE)
+#'                                  baseNumPerRow         = 80,
+#'                                  signalRatioCutoff     = 0.23,
+#'                                  showTrimmed           = FALSE)
 #' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
 launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
     ### ------------------------------------------------------------------------
