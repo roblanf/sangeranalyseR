@@ -280,6 +280,32 @@ consensusReadServer <- function(input, output, session) {
             ### Dynamic page navigation: consensusRead content overview
             ### ----------------------------------------------------------------
             # refAminoAcidSeq (string)
+            ### --------------------------------------------------------------------
+            ### First re-calculate consensus read & Update global variable
+            ### --------------------------------------------------------------------
+            CSResult<-
+                calculateConsensusRead (SangerConsensus@forwardReadsList,
+                                        SangerConsensus@reverseReadsList,
+                                        SangerConsensus@refAminoAcidSeq,
+                                        SangerConsensus@minFractionCall,
+                                        SangerConsensus@maxFractionLost,
+                                        SangerConsensus@geneticCode,
+                                        SangerConsensus@acceptStopCodons,
+                                        SangerConsensus@readingFrame)
+
+            SangerConsensus@consensusRead <<- CSResult$consensusGapfree
+            SangerConsensus@differencesDF <<- CSResult$diffsDf
+            SangerConsensus@alignment <<- CSResult$aln2
+            SangerConsensus@distanceMatrix <<- CSResult$dist
+            SangerConsensus@dendrogram <<- CSResult$dend
+            SangerConsensus@indelsDF <<- CSResult$indels
+            SangerConsensus@stopCodonsDF <<- CSResult$stopsDf
+            SangerConsensus@secondaryPeakDF <<- CSResult$spDf
+
+
+
+
+
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p(tagList(icon("dot-circle"),
@@ -442,6 +468,15 @@ consensusReadServer <- function(input, output, session) {
                     solidHeader = TRUE, collapsible = TRUE,
                     status = "success", width = 12,
                     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+
+
+
+
+
+
+
+
+
                     box(title = tags$p("Alignment",
                                        style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -451,6 +486,17 @@ consensusReadServer <- function(input, output, session) {
                                htmlOutput("consensusAlignmentHTML"),
                         ),
                     ),
+
+
+
+
+
+
+
+
+
+
+
                     box(title = tags$p("Differences Data frame",
                                        style = "font-size: 24px;
                                        font-weight: bold;"),
@@ -783,18 +829,45 @@ consensusReadServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
-    output$consensusAlignmentHTML<-renderUI({
+    output$consensusAlignmentHTML <- renderUI({
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         browseSeqHTML <-
             file.path(shinyDirectory,
-                      paste0(A_chloroticConsensusReads@consenesusReadName,
+                      paste0(SangerConsensus@consenesusReadName,
                              "_Alignment_BrowseSeqs.html"))
-        if (!file.exists(browseSeqHTML)) {
-            BrowseSeqs(A_chloroticConsensusReads@alignment,
-                       openURL=FALSE, htmlFile=browseSeqHTML)
-        }
+        BrowseSeqs(SangerConsensus@alignment,
+                   openURL=FALSE, htmlFile=browseSeqHTML)
         includeHTML(
             file.path(shinyDirectory,
-                      paste0(A_chloroticConsensusReads@consenesusReadName,
+                      paste0(SangerConsensus@consenesusReadName,
                              "_Alignment_BrowseSeqs.html")))
     })
 

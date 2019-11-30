@@ -181,10 +181,10 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
     ### --------------------------------------------------------------------
     ### Reads with stop codons elimination
     ### --------------------------------------------------------------------
+    ### ----------------------------------------------------------------
+    ### Remove reads with stop codons
+    ### ----------------------------------------------------------------
     if (!acceptStopCodons) {
-        ### ----------------------------------------------------------------
-        ### Remove reads with stop codons
-        ### ----------------------------------------------------------------
         print("Removing reads with stop codons")
         if(refAminoAcidSeq == ""){ # otherwise we already did it above
             stops =
@@ -1206,3 +1206,4 @@ vline <- function(x = 0, color = "red") {
         line = list(color = color)
     )
 }
+
