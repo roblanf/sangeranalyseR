@@ -519,7 +519,7 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
 ### ============================================================================
 ### valueBox: SCMinReadsNum
 ### ============================================================================
-valueBoxSCMinReadsNumCSSet <- function(input, output, session) {
+valueBoxSCMinReadsNumCSSet <- function(input, output, SangerCSetParam, session) {
     output$SCMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
@@ -541,7 +541,7 @@ valueBoxSCMinReadsNumCSSet <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCMinReadLength
 ### ============================================================================
-valueBoxSCMinReadLengthCSSet <- function(input, output, session) {
+valueBoxSCMinReadLengthCSSet <- function(input, output, SangerCSetParam, session) {
     output$SCMinReadLength <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
@@ -563,7 +563,7 @@ valueBoxSCMinReadLengthCSSet <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCMinFractionCall
 ### ============================================================================
-valueBoxSCMinFractionCallCSSet <- function(input, output, session) {
+valueBoxSCMinFractionCallCSSet <- function(input, output, SangerCSetParam, session) {
     output$SCMinFractionCall <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
@@ -585,7 +585,7 @@ valueBoxSCMinFractionCallCSSet <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCMaxFractionLost
 ### ============================================================================
-valueBoxSCMaxFractionLostCSSet <- function(input, output, session) {
+valueBoxSCMaxFractionLostCSSet <- function(input, output, SangerCSetParam, session) {
     output$SCMaxFractionLost <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
@@ -607,7 +607,7 @@ valueBoxSCMaxFractionLostCSSet <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCAcceptStopCodons
 ### ============================================================================
-valueBoxSCAcceptStopCodonsCSSet <- function(input, output, session) {
+valueBoxSCAcceptStopCodonsCSSet <- function(input, output, SangerCSetParam, session) {
     output$SCAcceptStopCodons <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
@@ -629,7 +629,7 @@ valueBoxSCAcceptStopCodonsCSSet <- function(input, output, session) {
 ### ============================================================================
 ### valueBox: SCReadingFrame
 ### ============================================================================
-valueBoxSCReadingFrameCSSet <- function(input, output, session) {
+valueBoxSCReadingFrameCSSet <- function(input, output, SangerCSetParam, session) {
     output$SCReadingFrame <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])

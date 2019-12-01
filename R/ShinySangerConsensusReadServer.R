@@ -880,6 +880,9 @@ consensusReadServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
+    ### ------------------------------------------------------------------------
+    ### Alignment
+    ### ------------------------------------------------------------------------
     output$consensusAlignmentHTML <- renderUI({
         browseSeqHTML <-
             file.path(shinyDirectory,
@@ -893,14 +896,9 @@ consensusReadServer <- function(input, output, session) {
                              "_Alignment_BrowseSeqs.html")))
     })
 
-    output$dendrogramDF <- renderDataTable({
-        consensusParam[["dendrogram"]][[1]]
-    })
-
-    output$dendrogramPlot <- renderPlot({
-        plot(consensusParam[["dendrogram"]][[2]])
-    })
-
+    ### ------------------------------------------------------------------------
+    ### Difference
+    ### ------------------------------------------------------------------------
     output$SCDifferencesDFUI <- renderUI({
         if (all(dim(consensusParam[["differencesDF"]]) == c(0,0))) {
             h4("*** 'Differences' dataframe is empty. ***",
@@ -910,7 +908,23 @@ consensusReadServer <- function(input, output, session) {
 
         }
     })
+    output$SCDifferencesDF = renderDataTable({
+        consensusParam[["differencesDF"]]
+    })
 
+    ### ------------------------------------------------------------------------
+    ### dendrogram
+    ### ------------------------------------------------------------------------
+    output$dendrogramPlot <- renderPlot({
+        plot(consensusParam[["dendrogram"]][[2]])
+    })
+    output$dendrogramDF <- renderDataTable({
+        consensusParam[["dendrogram"]][[1]]
+    })
+
+    ### ------------------------------------------------------------------------
+    ### Distance
+    ### ------------------------------------------------------------------------
     output$SCDistanceMatrixPlotUI <- renderUI({
         if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
             h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
@@ -919,7 +933,13 @@ consensusReadServer <- function(input, output, session) {
             plotlyOutput("SCDistanceMatrixPlot")
         }
     })
-
+    output$SCDistanceMatrixPlot <- renderPlotly({
+        plot_ly(x = SangerSingleReadBFN,
+                y = SangerSingleReadBFN,
+                z = consensusParam[["distanceMatrix"]],
+                colors = colorRamp(c("white", "#32a852")),
+                type = "heatmap")
+    })
     output$SCDistanceMatrixUI <- renderUI({
         if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
             h4("*** 'Distance' dataframe is empty. ***",
@@ -928,7 +948,14 @@ consensusReadServer <- function(input, output, session) {
             dataTableOutput("SCDistanceMatrix")
         }
     })
+    output$SCDistanceMatrix = renderDataTable({
+        consensusParam[["distanceMatrix"]]
+    })
 
+
+    ### ------------------------------------------------------------------------
+    ### Indels
+    ### ------------------------------------------------------------------------
     output$SCIndelsDFUI <- renderUI({
         if (all(dim(consensusParam[["indelsDF"]]) == c(0,0))) {
             h4("*** 'Indels' dataframe is empty. ***",
@@ -938,7 +965,13 @@ consensusReadServer <- function(input, output, session) {
 
         }
     })
+    output$SCIndelsDF <- renderDataTable({
+        consensusParam[["indelsDF"]]
+    })
 
+    ### ------------------------------------------------------------------------
+    ### StopCodons
+    ### ------------------------------------------------------------------------
     output$SCStopCodonsDFUI <- renderUI({
         if (all(dim(consensusParam[["stopCodonsDF"]]) == c(0,0))) {
             h4("*** 'Stop Codons' dataframe is empty. ***",
@@ -947,27 +980,6 @@ consensusReadServer <- function(input, output, session) {
             dataTableOutput("SCStopCodonsDF")
         }
     })
-
-    output$SCDifferencesDF = renderDataTable({
-        consensusParam[["differencesDF"]]
-    })
-
-    output$SCDistanceMatrixPlot <- renderPlotly({
-        plot_ly(x = SangerSingleReadBFN,
-                y = SangerSingleReadBFN,
-                z = consensusParam[["distanceMatrix"]],
-                colors = colorRamp(c("white", "#32a852")),
-                type = "heatmap")
-    })
-
-    output$SCDistanceMatrix = renderDataTable({
-        consensusParam[["distanceMatrix"]]
-    })
-
-    output$SCIndelsDF <- renderDataTable({
-        consensusParam[["indelsDF"]]
-    })
-
     output$SCStopCodonsDF <- renderDataTable({
         consensusParam[["stopCodonsDF"]]
     })
