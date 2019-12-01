@@ -104,13 +104,6 @@ M2inside_calculate_trimming <- function(qualityPhredScores,
             trimmedSeqLength = trimmedFinishPos - trimmedStartPos + 1
             remainingRatio = trimmedSeqLength / rawSeqLength
         }
-        message("trimmedStartPos: ", trimmedStartPos)
-        message("trimmedFinishPos: ", trimmedFinishPos)
-        message("trimmedQualityPhredScore: ", trimmedQualityPhredScore)
-        message("trimmedMeanQualityScore: ", trimmedMeanQualityScore)
-        message("trimmedMinQualityScore: ", trimmedMinQualityScore)
-        message("trimmedSeqLength: ", trimmedSeqLength)
-        message("remainingRatio: ", remainingRatio)
     }
     return(list("rawSeqLength" = rawSeqLength,
                 "rawMeanQualityScore" = rawMeanQualityScore,
@@ -348,7 +341,6 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
         html("rightHeader", menuItem)
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
         if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
             trimmedRV[["trimmedStartPos"]] <-
                 SangerSingleReadQualReport[[
@@ -524,25 +516,6 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
     })
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### ============================================================================
 ### valueBox: SCMinReadsNum
 ### ============================================================================
@@ -675,29 +648,6 @@ valueBoxSCReadingFrameCSSet <- function(input, output, session) {
     })
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# trimmedQS <- reactiveValues(cuffOffQuality = 0, M2SlidingWindowSize = 0)
-
-
 ################################################################################
 ### Each Read
 ################################################################################
@@ -783,46 +733,6 @@ valueBoxM2SlidingWindowSize <- function(input, output, session) {
     })
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### ============================================================================
 ### valueBox: Change rawSeqLength
 ### ============================================================================
@@ -840,7 +750,6 @@ valueBoxRawSeqLength <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
 
 ### ============================================================================
 ### valueBox: Change rawMeanQualityScore
@@ -860,7 +769,6 @@ valueBoxRawMeanQualityScore <- function(input, output, session, trimmedRV) {
     })
 }
 
-
 ### ============================================================================
 ### valueBox: Change rawMinQualityScore
 ### ============================================================================
@@ -878,7 +786,6 @@ valueBoxRawMinQualityScore <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
 
 ### ============================================================================
 ### valueBox: Change trimmedStartPos
@@ -989,8 +896,6 @@ valueBoxRemainingRatio <- function(input, output, session, trimmedRV) {
     })
 }
 
-
-
 ### ============================================================================
 ### valueBox: Change trimmedStartPos
 ### ============================================================================
@@ -1026,9 +931,6 @@ valueBoxChromTrimmedFinishPos <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-
-
 
 ### ============================================================================
 ### qualityTrimmingRatioPlot
@@ -1208,10 +1110,6 @@ qualityQualityBasePlot <- function(input, output, session, trimmedRV,
     })
 }
 
-
-
-
-
 ### ============================================================================
 ### chromatogram row number counting
 ### ============================================================================
@@ -1222,32 +1120,8 @@ chromatogramRowNum <- function(width, rawLength, trimmedLength, showTrimmed) {
     } else {
         numplots = ceiling(trimmedLength / width)
     }
-    # traces <- obj@traceMatrix
-    # basecalls1 <- unlist(strsplit(toString(obj@primarySeq), ""))
-    # aveposition <- rowMeans(obj@peakPosMatrix, na.rm=TRUE)
-    # basecalls1 <- basecalls1[1:length(aveposition)]
-    # valuesperbase <- nrow(traces)/length(basecalls1)
-    # tracewidth <- width*valuesperbase
-    # breaks <- seq(1,nrow(traces), by=tracewidth)
-    # numplots <- length(breaks)
-    # return(numplots)
 }
 
-
-### ============================================================================
-### chromatogram row number counting
-### ============================================================================
-# chromatogramRowNum <- function(obj, width) {
-#     traces <- obj@traceMatrix
-#     basecalls1 <- unlist(strsplit(toString(obj@primarySeq), ""))
-#     aveposition <- rowMeans(obj@peakPosMatrix, na.rm=TRUE)
-#     basecalls1 <- basecalls1[1:length(aveposition)]
-#     valuesperbase <- nrow(traces)/length(basecalls1)
-#     tracewidth <- width*valuesperbase
-#     breaks <- seq(1,nrow(traces), by=tracewidth)
-#     numplots <- length(breaks)
-#     return(numplots)
-# }
 
 vline <- function(x = 0, color = "red") {
     list(

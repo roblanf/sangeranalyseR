@@ -499,11 +499,13 @@ consensusReadServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               # plot()
                                plotOutput("dendrogramPlot"),
-                               # dataTableOutput("differencesDF")
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
+                        ),
+                        column(width = 12,
+                               tags$hr(
+                                   style = ("border-top: 4px hidden #A9A9A9;")),
                         ),
                         column(width = 12,
                                dataTableOutput("dendrogramDF"),
@@ -511,11 +513,21 @@ consensusReadServer <- function(input, output, session) {
                                              "scroll;overflow-x: scroll;")
                         )
                     ),
-                    box(title = tags$p("Distance Data frame",
+                    box(title = tags$p("Samples Distance",
                                        style = "font-size: 24px;
                                        font-weight: bold;"),
                         collapsible = TRUE,
                         status = "success", width = 12,
+                        column(width = 12,
+                               # plot()
+                               uiOutput("SCDistanceMatrixPlotUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        ),
+                        column(width = 12,
+                               tags$hr(
+                                   style = ("border-top: 4px hidden #A9A9A9;")),
+                        ),
                         column(width = 12,
                                uiOutput("SCDistanceMatrixUI"),
                                style = paste("height:100%; overflow-y:",
@@ -553,13 +565,17 @@ consensusReadServer <- function(input, output, session) {
                 ### ------------------------------------------------------------
                 singleReadIndex <- strtoi(sidebar_menu[[1]])
                 ChromatogramParam[["baseNumPerRow"]] <<-
-                    SangerSingleReadChromatogramParam[[singleReadIndex]]@baseNumPerRow
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@
+                    baseNumPerRow
                 ChromatogramParam[["heightPerRow"]] <<-
-                    SangerSingleReadChromatogramParam[[singleReadIndex]]@heightPerRow
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@
+                    heightPerRow
                 ChromatogramParam[["signalRatioCutoff"]] <<-
-                    SangerSingleReadChromatogramParam[[singleReadIndex]]@signalRatioCutoff
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@
+                    signalRatioCutoff
                 ChromatogramParam[["showTrimmed"]] <<-
-                    SangerSingleReadChromatogramParam[[singleReadIndex]]@showTrimmed
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@
+                    showTrimmed
 
                 trimmedRV[["rawSeqLength"]] <<-
                     SangerSingleReadQualReport[[singleReadIndex]]@
@@ -757,37 +773,34 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 12,
-                            column(12,
-                                   column(3,
-                                          sliderInput("ChromatogramBasePerRow",
-                                                      label = h4("Base Number Per Row"),
-                                                      min = 5,
-                                                      max = 200,
-                                                      value = ChromatogramParam[["baseNumPerRow"]]),
-                                          sliderInput("ChromatogramHeightPerRow",
-                                                      label = h4("Height Per Row"),
-                                                      min = 50,
-                                                      max = 600,
-                                                      value = ChromatogramParam[["heightPerRow"]]),
-                                   ),
-                                   column(3,
-                                            numericInput(
-                                                "ChromatogramSignalRatioCutoff",
-                                                h3("Signal Ratio Cutoff"),
-                                                value = ChromatogramParam[["signalRatioCutoff"]]),
-                                            checkboxInput(
-                                                "ChromatogramCheckShowTrimmed",
-                                                "Whether show trimmed region",
-                                                value = ChromatogramParam[["showTrimmed"]])
-                                   ),
-                                   column(3,
-                                          uiOutput("ChromatogramtrimmedStartPos"),
-                                   ),
-                                   column(3,
-                                          uiOutput("ChromatogramtrimmedFinishPos"),
-                                   )
-
+                            column(3,
+                                   sliderInput("ChromatogramBasePerRow",
+                                               label = h4("Base Number Per Row"),
+                                               min = 5,
+                                               max = 200,
+                                               value = ChromatogramParam[["baseNumPerRow"]]),
+                                   sliderInput("ChromatogramHeightPerRow",
+                                               label = h4("Height Per Row"),
+                                               min = 50,
+                                               max = 600,
+                                               value =ChromatogramParam[["heightPerRow"]]),
                             ),
+                            column(3,
+                                   numericInput(
+                                       "ChromatogramSignalRatioCutoff",
+                                       h3("Signal Ratio Cutoff"),
+                                       value = ChromatogramParam[["signalRatioCutoff"]]),
+                                   checkboxInput(
+                                       "ChromatogramCheckShowTrimmed",
+                                       "Whether show trimmed region",
+                                       value = ChromatogramParam[["showTrimmed"]])
+                            ),
+                            column(3,
+                                   uiOutput("ChromatogramtrimmedStartPos"),
+                            ),
+                            column(3,
+                                   uiOutput("ChromatogramtrimmedFinishPos"),
+                            )
                         ),
                         box(title = tags$p(tagList(icon("arrow-circle-left"),
                                                    "Chromatogram Output"),
@@ -898,13 +911,21 @@ consensusReadServer <- function(input, output, session) {
         }
     })
 
+    output$SCDistanceMatrixPlotUI <- renderUI({
+        if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
+            h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            plotlyOutput("SCDistanceMatrixPlot")
+        }
+    })
+
     output$SCDistanceMatrixUI <- renderUI({
         if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
             h4("*** 'Distance' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
             dataTableOutput("SCDistanceMatrix")
-
         }
     })
 
@@ -929,6 +950,14 @@ consensusReadServer <- function(input, output, session) {
 
     output$SCDifferencesDF = renderDataTable({
         consensusParam[["differencesDF"]]
+    })
+
+    output$SCDistanceMatrixPlot <- renderPlotly({
+        plot_ly(x = SangerSingleReadBFN,
+                y = SangerSingleReadBFN,
+                z = consensusParam[["distanceMatrix"]],
+                colors = colorRamp(c("white", "#32a852")),
+                type = "heatmap")
     })
 
     output$SCDistanceMatrix = renderDataTable({
@@ -1341,7 +1370,6 @@ consensusReadServer <- function(input, output, session) {
     })
 
 
-
     # chromatogram
     ### ------------------------------------------------------------------------
     ### chromatogram related feature
@@ -1353,13 +1381,14 @@ consensusReadServer <- function(input, output, session) {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
                 trimmedRV[["trimmedSeqLength"]]
                 chromatogramRowNumAns <-
-                    chromatogramRowNum (strtoi(input$ChromatogramBasePerRow),
-                                        SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength,
-                                        SangerSingleReadQualReport[[singleReadIndex]]@trimmedSeqLength,
-                                        input$ChromatogramCheckShowTrimmed) * strtoi(input$ChromatogramHeightPerRow)
-
-
-                message("chromatogramRowNumAns: ", chromatogramRowNumAns)
+                    chromatogramRowNum (
+                        strtoi(input$ChromatogramBasePerRow),
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                            rawSeqLength,
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                            trimmedSeqLength,
+                        input$ChromatogramCheckShowTrimmed) *
+                    strtoi(input$ChromatogramHeightPerRow)
                 plotOutput("chromatogram", height = chromatogramRowNumAns)
             }
         }
@@ -1367,54 +1396,20 @@ consensusReadServer <- function(input, output, session) {
 
     output$chromatogram <- renderPlot({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
-                singleReadIndex <- strtoi(sidebar_menu[[1]])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 ### ------------------------------------------------------------
                 ### Update ChromatogramBasePerRow
                 ### ------------------------------------------------------------
-                SangerSingleReadChromatogramParam[[singleReadIndex]]@baseNumPerRow <<-
-                    input$ChromatogramBasePerRow
-                SangerSingleReadChromatogramParam[[singleReadIndex]]@heightPerRow <<-
-                    input$ChromatogramHeightPerRow
-                SangerSingleReadChromatogramParam[[singleReadIndex]]@signalRatioCutoff <<-
-                    input$ChromatogramSignalRatioCutoff
-                SangerSingleReadChromatogramParam[[singleReadIndex]]@showTrimmed <<-
-                    input$ChromatogramCheckShowTrimmed
-                message("****Start ploting chromatogram !!")
-                message("****Update SangerSingleReadChromatogramParam !!")
-                message("****Check each input value: !!")
-                message("     ****input$ChromatogramBasePerRow: ", input$baseNumPerRow)
-                message("     ****input$ChromatogramHeightPerRow: ", input$ChromatogramHeightPerRow)
-                message("     ****input$ChromatogramSignalRatioCutoff: ", input$ChromatogramSignalRatioCutoff)
-                message("     ****input$ChromatogramCheckShowTrimmed: ", input$ChromatogramCheckShowTrimmed)
-
+                SangerSingleReadChromatogramParam[[singleReadIndex]]@
+                    baseNumPerRow <<- input$ChromatogramBasePerRow
+                SangerSingleReadChromatogramParam[[singleReadIndex]]@
+                    heightPerRow <<- input$ChromatogramHeightPerRow
+                SangerSingleReadChromatogramParam[[singleReadIndex]]@
+                    signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
+                SangerSingleReadChromatogramParam[[singleReadIndex]]@
+                    showTrimmed <<- input$ChromatogramCheckShowTrimmed
 
                 ### ------------------------------------------------------------
                 ### Save SangerConsensus quality S4 object
@@ -1422,25 +1417,14 @@ consensusReadServer <- function(input, output, session) {
                 forwardReadNum <- length((SangerConsensus)@forwardReadsList)
                 reverseReadNum <- length((SangerConsensus)@reverseReadsList)
                 SangerSingleReadNum <- forwardReadNum + reverseReadNum
-
-                message("****After saving SangerConsensus !!")
-                message("****Check saving value: !!")
                 sapply(1:forwardReadNum, function(i) {
                     SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
                         SangerSingleReadChromatogramParam[[singleReadIndex]]
-                    message("     ****SangerSingleReadChromatogramParam (baseNumPerRow): ", SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@baseNumPerRow)
-                    message("     ****SangerSingleReadChromatogramParam (heightPerRow): ", SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@heightPerRow)
-                    message("     ****SangerSingleReadChromatogramParam (signalRatioCutoff): ", SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@signalRatioCutoff)
-                    message("     ****SangerSingleReadChromatogramParam (showTrimmed): ", SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@showTrimmed)
                 })
                 sapply(1:reverseReadNum, function(i) {
                     SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
                         SangerSingleReadChromatogramParam[[singleReadIndex]]
                 })
-
-
-
-
 
                 rawSeqLength <-
                     SangerSingleReadQualReport[[singleReadIndex]]@
