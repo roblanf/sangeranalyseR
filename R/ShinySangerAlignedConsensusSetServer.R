@@ -267,6 +267,27 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadSecoSeqDF = SangerSingleReadSecoSeqDF))
     })
 
+
+    consensusParamSet <- reactiveValues(consensusReadSet      = NULL,
+                                        consenesusReadNameSet = NULL,
+                                        differencesDFSet      = NULL,
+                                        alignmentSet          = NULL,
+                                        distanceMatrixSet     = NULL,
+                                        dendrogramSet         = NULL,
+                                        indelsDFSet           = NULL,
+                                        stopCodonsDFSet       = NULL,
+                                        secondaryPeakDFSet    = NULL)
+
+    consensusParam <- reactiveValues(consensusRead      = NULL,
+                                     consenesusReadName = NULL,
+                                     differencesDF      = NULL,
+                                     alignment          = NULL,
+                                     distanceMatrix     = NULL,
+                                     dendrogram         = NULL,
+                                     indelsDF           = NULL,
+                                     stopCodonsDF       = NULL,
+                                     secondaryPeakDF    = NULL)
+
     trimmedRV <- reactiveValues(rawSeqLength = 0,
                                 rawMeanQualityScore = 0,
                                 rawMinQualityScore = 0,
@@ -282,15 +303,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                                         signalRatioCutoff = 0,
                                         showTrimmed       = TRUE)
 
-    consensusParam <- reactiveValues(consensusRead      = NULL,
-                                     consenesusReadName = NULL,
-                                     differencesDF      = NULL,
-                                     alignment          = NULL,
-                                     distanceMatrix     = NULL,
-                                     dendrogram         = NULL,
-                                     indelsDF           = NULL,
-                                     stopCodonsDF       = NULL,
-                                     secondaryPeakDF    = NULL)
 
     ############################################################################
     ### output$ID
@@ -300,60 +312,184 @@ alignedConsensusSetServer <- function(input, output, session) {
     output$aligned_consensusRead_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
-            h1(paste("You've selected:", input$sidebar_menu))
-            box(title = tags$p("Input Parameters: ",
-                               style = "font-size: 26px;
+            SCTrimmingMethod <- SangerCSetParam[[1]]$SangerSingleReadFReadsList[[1]]@
+                QualityReport@TrimmingMethod
+
+            if (SCTrimmingMethod == "M1") {
+                SCTrimmingMethodName = "Method 1: 'Logarithmic Scale Trimming'"
+            } else if (SCTrimmingMethod == "M2") {
+                SCTrimmingMethodName = "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
+            }
+
+            fluidRow(
+                useShinyjs(),
+                box(title = tags$p("Input Parameters: ",
+                                   style = "font-size: 26px;
                                        font-weight: bold;"),
-                solidHeader = TRUE, collapsible = TRUE,
-                status = "success", width = 12,
-                tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
-                fluidRow(
-                    column(12,
-                           column(3,
-                                  h4("Output Directory: ",
-                                     style="font-weight: bold;"),
-                           ),
-                           column(9,
-                                  h4(shinyDirectory),
-                           )
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
+                    fluidRow(
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Output Directory: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(shinyDirectory),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Raw ABI Parent Directory: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerConsensusSet@parentDirectory),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Trimming Method: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SCTrimmingMethodName),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Forward Suffix RegExp: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerConsensusSet@suffixForwardRegExp),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Reverse Suffix RegExp: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerConsensusSet@suffixReverseRegExp),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Consensus Read Number: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerConsensusSetNum),
+                               )
+                        ),
                     ),
-                    column(12,
-                           column(3,
-                                  h4("Raw ABI Parent Directory: ",
-                                     style="font-weight: bold;"),
-                           ),
-                           column(9,
-                                  h4(SangerConsensusSet@parentDirectory),
-                           )
+                ),
+
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Consensus Readset Results: "),
+                                   style = "font-size: 26px;
+                                       font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    box(title = tags$p("Consensus Reads Alignment",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               htmlOutput("consensusSetAlignmentHTML"),
+                        ),
                     ),
-                    column(12,
-                           column(3,
-                                  h4("Forward Suffix RegExp: ",
-                                     style="font-weight: bold;"),
-                           ),
-                           column(9,
-                                  h4(SangerConsensusSet@suffixForwardRegExp),
-                           )
+                    box(title = tags$p("Consensus Reads Differences Data frame",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCSetDifferencesDFUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
                     ),
-                    column(12,
-                           column(3,
-                                  h4("Reverse Suffix RegExp: ",
-                                     style="font-weight: bold;"),
-                           ),
-                           column(9,
-                                  h4(SangerConsensusSet@suffixReverseRegExp),
-                           )
+                    box(title = tags$p("Consensus Reads Dendrogram",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               plotOutput("SCSetdendrogramPlot"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        ),
+                        column(width = 12,
+                               tags$hr(
+                                   style = ("border-top: 4px hidden #A9A9A9;")),
+                        ),
+                        column(width = 12,
+                               dataTableOutput("SCSetdendrogramDF"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
                     ),
-                    column(12,
-                           column(3,
-                                  h4("Consensus Read Number: ",
-                                     style="font-weight: bold;"),
-                           ),
-                           column(9,
-                                  h4(SangerConsensusSetNum),
-                           )
+                    box(title = tags$p("Consensus Reads Samples Distance",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               # plot()
+                               uiOutput("SCSetDistanceMatrixPlotUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        ),
+                        column(width = 12,
+                               tags$hr(
+                                   style = ("border-top: 4px hidden #A9A9A9;")),
+                        ),
+                        column(width = 12,
+                               uiOutput("SCSetDistanceMatrixUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
                     ),
-                )
+                    box(title = tags$p("Consensus Reads Indels Data frame",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCSetIndelsDFUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Consensus Reads Stop Codons Data frame",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCSetStopCodonsDFUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    )
+                ),
             )
         } else {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
@@ -496,20 +632,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        ),
                                        column(9,
                                               h4(consensusParam[["consenesusReadName"]]),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                        )
                                 ),
                                 column(12,
@@ -998,7 +1120,9 @@ alignedConsensusSetServer <- function(input, output, session) {
 
 
 
-
+    ############################################################################
+    ### All other features (dynamic header / button save / button close)
+    ############################################################################
     observeEvent(input$sidebar_menu, {
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
         html("rightHeader", menuItem)
@@ -1059,6 +1183,153 @@ alignedConsensusSetServer <- function(input, output, session) {
         stopApp()
     })
 
+
+
+
+
+
+
+
+    ############################################################################
+    ### ConsensusReadSet (Function for Sanger Consensus Read Set Overview)
+    ############################################################################
+    ### ------------------------------------------------------------------------
+    ### Alignment
+    ### ------------------------------------------------------------------------
+    output$consensusSetAlignmentHTML<-renderUI({
+        SCSetAlignment <- SangerConsensusSet@SCalignment
+        browseSeqHTML <-
+            file.path(shinyDirectory, "Consensus_Readset_Alignment_BrowseSeqs.html")
+        if (!file.exists(browseSeqHTML)) {
+            BrowseSeqs(SCSetAlignment,
+                       openURL=FALSE, htmlFile=browseSeqHTML)
+        }
+        includeHTML(browseSeqHTML)
+    })
+
+    ### ------------------------------------------------------------------------
+    ### difference
+    ### ------------------------------------------------------------------------
+    output$SCSetDifferencesDFUI <- renderUI({
+        consensusParamSet[["differencesDFSet"]] <<- SangerConsensusSet@SCdifferencesDF
+        if (all(dim(consensusParamSet[["differencesDFSet"]]) == c(0,0))) {
+            h4("*** 'Differences' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCSetDifferencesDF")
+        }
+    })
+    output$SCSetDifferencesDF = renderDataTable({
+        consensusParamSet[["differencesDFSet"]]
+    })
+
+    ### ------------------------------------------------------------------------
+    ### dendrogram
+    ### ------------------------------------------------------------------------
+    output$SCSetdendrogramPlot <- renderPlot({
+        consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
+        plot(consensusParamSet[["dendrogramSet"]][[2]])
+    })
+    output$SCSetdendrogramDF <- renderDataTable({
+        consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
+        consensusParamSet[["dendrogramSet"]][[1]]
+    })
+
+    ### ------------------------------------------------------------------------
+    ### distance
+    ### ------------------------------------------------------------------------
+    output$SCSetDistanceMatrixPlotUI <- renderUI({
+        consensusParamSet[["distanceMatrixSet"]] <<- SangerConsensusSet@SCdistanceMatrix
+        if (all(dim(consensusParamSet[["distanceMatrixSet"]]) == c(0,0))) {
+            h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            plotlyOutput("SCSetDistanceMatrixPlot")
+        }
+    })
+
+    output$SCSetDistanceMatrixPlot <- renderPlotly({
+        plot_ly(x = c(),
+                y = c(),
+                z = consensusParamSet[["distanceMatrixSet"]],
+                colors = colorRamp(c("white", "#32a852")),
+                type = "heatmap")
+    })
+    output$SCSetDistanceMatrixUI <- renderUI({
+        consensusParamSet[["distanceMatrixSet"]] <<- SangerConsensusSet@SCdistanceMatrix
+        if (all(dim(consensusParamSet[["distanceMatrixSet"]]) == c(0,0))) {
+            h4("*** 'Distance' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCSetDistanceMatrix")
+        }
+    })
+    output$SCSetDistanceMatrix = renderDataTable({
+        consensusParamSet[["distanceMatrixSet"]]
+    })
+
+    ### ------------------------------------------------------------------------
+    ### SCIndelsDF
+    ### ------------------------------------------------------------------------
+    output$SCSetIndelsDFUI <- renderUI({
+        consensusParamSet[["indelsDFSet"]] <<- SangerConsensusSet@SCindelsDF
+        if (all(dim(consensusParamSet[["indelsDFSet"]] ) == c(0,0))) {
+            h4("*** 'Indels' data frame is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCSetIndelsDF")
+        }
+    })
+    output$SCSetIndelsDF <- renderDataTable({
+        consensusParamSet[["indelsDFSet"]]
+    })
+
+    ### ------------------------------------------------------------------------
+    ### SCStopCodons
+    ### ------------------------------------------------------------------------
+    output$SCSetStopCodonsDFUI <- renderUI({
+        consensusParamSet[["stopCodonsDFSet"]] <<- SangerConsensusSet@SCstopCodonsDF
+        if (all(dim(consensusParamSet[["stopCodonsDFSet"]]) == c(0,0))) {
+            h4("*** 'Stop Codons' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCSetStopCodonsDF")
+        }
+    })
+    output$SCSetStopCodonsDF <- renderDataTable({
+        consensusParamSet[["stopCodonsDFSet"]]
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ############################################################################
+    ### ConsensusRead (Function for Sanger Consensus Read Overview)
+    ############################################################################
     ### ------------------------------------------------------------------------
     ### genetic code
     ### ------------------------------------------------------------------------
@@ -1232,6 +1503,10 @@ alignedConsensusSetServer <- function(input, output, session) {
     #     secondaryPeak
     # })
 
+
+    ############################################################################
+    ### SangerSingleRead (Function for singel read in consensusRead)
+    ############################################################################
     output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
@@ -1670,7 +1945,6 @@ alignedConsensusSetServer <- function(input, output, session) {
             }
         }
     })
-
 
     output$qualityTrimmingRatioPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")

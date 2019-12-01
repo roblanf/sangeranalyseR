@@ -10,7 +10,29 @@ An S4 class for storing multiple single consensus reads to
 \section{Slots}{
 
 \describe{
-\item{\code{consensusReadsList}}{}
+\item{\code{parentDirectory}}{.}
+
+\item{\code{suffixForwardRegExp}}{.}
+
+\item{\code{suffixReverseRegExp}}{.}
+
+\item{\code{consensusReadsList}}{.}
+
+\item{\code{SCconsensusRead}}{.}
+
+\item{\code{SCalignment}}{.}
+
+\item{\code{SCdifferencesDF}}{.}
+
+\item{\code{SCdistanceMatrix}}{.}
+
+\item{\code{SCdendrogram}}{.}
+
+\item{\code{SCindelsDF}}{.}
+
+\item{\code{SCstopCodonsDF}}{.}
+
+\item{\code{SCsecondaryPeakDF}}{.}
 }}
 
 \examples{
@@ -27,6 +49,7 @@ SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
                      M2CutoffQualityScore  = 40,
                      M2SlidingWindowSize   = 10,
                      baseNumPerRow         = 100,
+                     heightPerRow          = 200,
                      signalRatioCutoff     = 0.33,
                      showTrimmed           = TRUE)
 }

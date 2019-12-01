@@ -12,6 +12,8 @@ An S4 class for chromatogram parameter
 \describe{
 \item{\code{baseNumPerRow}}{.}
 
+\item{\code{heightPerRow}}{.}
+
 \item{\code{signalRatioCutoff}}{.}
 
 \item{\code{showTrimmed}}{.}
@@ -20,6 +22,7 @@ An S4 class for chromatogram parameter
 \examples{
 Chromatogram <- new("ChromatogramParam",
                      baseNumPerRow      = 100,
+                     heightPerRow       = 200,
                      signalRatioCutoff  = 0.33,
                      showTrimmed        = TRUE)
 }
