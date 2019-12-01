@@ -1215,6 +1215,7 @@ qualityQualityBasePlot <- function(input, output, session, trimmedRV,
 ### ============================================================================
 ### chromatogram row number counting
 ### ============================================================================
+# chromatogramRowNum <- function(obj, width) {
 chromatogramRowNum <- function(width, rawLength, trimmedLength, showTrimmed) {
     if (showTrimmed) {
         numplots = ceiling(rawLength / width)
@@ -1229,9 +1230,24 @@ chromatogramRowNum <- function(width, rawLength, trimmedLength, showTrimmed) {
     # tracewidth <- width*valuesperbase
     # breaks <- seq(1,nrow(traces), by=tracewidth)
     # numplots <- length(breaks)
-    return(numplots)
+    # return(numplots)
 }
 
+
+### ============================================================================
+### chromatogram row number counting
+### ============================================================================
+# chromatogramRowNum <- function(obj, width) {
+#     traces <- obj@traceMatrix
+#     basecalls1 <- unlist(strsplit(toString(obj@primarySeq), ""))
+#     aveposition <- rowMeans(obj@peakPosMatrix, na.rm=TRUE)
+#     basecalls1 <- basecalls1[1:length(aveposition)]
+#     valuesperbase <- nrow(traces)/length(basecalls1)
+#     tracewidth <- width*valuesperbase
+#     breaks <- seq(1,nrow(traces), by=tracewidth)
+#     numplots <- length(breaks)
+#     return(numplots)
+# }
 
 vline <- function(x = 0, color = "red") {
     list(
