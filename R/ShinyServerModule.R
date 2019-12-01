@@ -243,8 +243,6 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
     }
     names(aln) = paste(1:length(aln), "Read",
                        basename(names(aln)), sep="_")
-
-    print("Calling consensus sequence")
     consensus = ConsensusSequence(aln,
                                   minInformation = minFractionCall,
                                   includeTerminalGaps = TRUE,
@@ -254,7 +252,6 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
                                   ambiguity = TRUE
     )[[1]]
 
-    print("Calculating differences between reads and consensus")
     diffs = mclapply(aln, nPairwiseDiffs,
                      subject = consensus, mc.cores = processorsNum)
     diffs = do.call(rbind, diffs)
@@ -519,12 +516,12 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
 ### ============================================================================
 ### valueBox: SCMinReadsNum
 ### ============================================================================
-valueBoxSCMinReadsNumCSSet <- function(input, output, SangerCSetParam, session) {
+valueBoxSCMinReadsNumCSSet <- function(input, output, SangerConsensusSet, session) {
     output$SCMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        SCMinReadsNum <-
-            SangerCSetParam[[consensusReadIndex]]$SCMinReadsNum
+
+        SCMinReadsNum <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@minReadsNum
         valueBox(
             subtitle = tags$p("MinReadsNum",
                               style = "font-size: 15px;
@@ -541,12 +538,11 @@ valueBoxSCMinReadsNumCSSet <- function(input, output, SangerCSetParam, session) 
 ### ============================================================================
 ### valueBox: SCMinReadLength
 ### ============================================================================
-valueBoxSCMinReadLengthCSSet <- function(input, output, SangerCSetParam, session) {
+valueBoxSCMinReadLengthCSSet <- function(input, output, SangerConsensusSet, session) {
     output$SCMinReadLength <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        SCMinReadLength <-
-            SangerCSetParam[[consensusReadIndex]]$SCMinReadLength
+        SCMinReadLength <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@minReadLength
         valueBox(
             subtitle = tags$p("MinReadLength",
                               style = "font-size: 15px;
@@ -563,12 +559,11 @@ valueBoxSCMinReadLengthCSSet <- function(input, output, SangerCSetParam, session
 ### ============================================================================
 ### valueBox: SCMinFractionCall
 ### ============================================================================
-valueBoxSCMinFractionCallCSSet <- function(input, output, SangerCSetParam, session) {
+valueBoxSCMinFractionCallCSSet <- function(input, output, SangerConsensusSet, session) {
     output$SCMinFractionCall <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        SCMinFractionCall <-
-            SangerCSetParam[[consensusReadIndex]]$SCMinFractionCall
+        SCMinFractionCall <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@minFractionCall
         valueBox(
             subtitle = tags$p("MinFractionCall",
                               style = "font-size: 15px;
@@ -585,12 +580,11 @@ valueBoxSCMinFractionCallCSSet <- function(input, output, SangerCSetParam, sessi
 ### ============================================================================
 ### valueBox: SCMaxFractionLost
 ### ============================================================================
-valueBoxSCMaxFractionLostCSSet <- function(input, output, SangerCSetParam, session) {
+valueBoxSCMaxFractionLostCSSet <- function(input, output, SangerConsensusSet, session) {
     output$SCMaxFractionLost <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        SCMaxFractionLost <-
-            SangerCSetParam[[consensusReadIndex]]$SCMaxFractionLost
+        SCMaxFractionLost <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@maxFractionLost
         valueBox(
             subtitle = tags$p("MaxFractionLost",
                               style = "font-size: 15px;
@@ -607,12 +601,11 @@ valueBoxSCMaxFractionLostCSSet <- function(input, output, SangerCSetParam, sessi
 ### ============================================================================
 ### valueBox: SCAcceptStopCodons
 ### ============================================================================
-valueBoxSCAcceptStopCodonsCSSet <- function(input, output, SangerCSetParam, session) {
+valueBoxSCAcceptStopCodonsCSSet <- function(input, output, SangerConsensusSet, session) {
     output$SCAcceptStopCodons <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        SCAcceptStopCodons <-
-            SangerCSetParam[[consensusReadIndex]]$SCAcceptStopCodons
+        SCAcceptStopCodons <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@acceptStopCodons
         valueBox(
             subtitle = tags$p("AcceptStopCodons",
                               style = "font-size: 15px;
@@ -629,12 +622,11 @@ valueBoxSCAcceptStopCodonsCSSet <- function(input, output, SangerCSetParam, sess
 ### ============================================================================
 ### valueBox: SCReadingFrame
 ### ============================================================================
-valueBoxSCReadingFrameCSSet <- function(input, output, SangerCSetParam, session) {
+valueBoxSCReadingFrameCSSet <- function(input, output, SangerConsensusSet, session) {
     output$SCReadingFrame <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        SCReadingFrame <-
-            SangerCSetParam[[consensusReadIndex]]$SCReadingFrame
+        SCReadingFrame <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@readingFrame
         valueBox(
             subtitle = tags$p("ReadingFrame",
                               style = "font-size: 15px;

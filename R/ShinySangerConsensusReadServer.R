@@ -59,13 +59,13 @@ consensusReadServer <- function(input, output, session) {
                SangerConsensus@reverseReadsList[[i]]@readFeature))
     SangerSingleReadFeature <- c(forwardReadFeature, reverseReadFeature)
 
-    # abifRawData
-    forwardReadAbifRawData <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@abifRawData)
-    reverseReadAbifRawData <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@abifRawData)
-    SangerSingleReadAbifRawData <- c(forwardReadAbifRawData,
-                                     reverseReadAbifRawData)
+    # # abifRawData
+    # forwardReadAbifRawData <- sapply(1:forwardReadNum, function(i)
+    #     SangerConsensus@forwardReadsList[[i]]@abifRawData)
+    # reverseReadAbifRawData <- sapply(1:reverseReadNum, function(i)
+    #     SangerConsensus@reverseReadsList[[i]]@abifRawData)
+    # SangerSingleReadAbifRawData <- c(forwardReadAbifRawData,
+    #                                  reverseReadAbifRawData)
 
     # QualityReport
     forwardReadQualReport <- sapply(1:forwardReadNum, function(i)
@@ -103,20 +103,19 @@ consensusReadServer <- function(input, output, session) {
     SangerSingleReadChromatogramParam <- c(forwardReadChromatogramParam,
                                            reverseReadChromatogramParam)
 
-    # primarySeqID
-    forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@primarySeqID)
-    reverseReadPrimSeqID <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@primarySeqID)
-    SangerSingleReadPrimSeqID <- c(forwardReadPrimSeqID, reverseReadPrimSeqID)
+    # # primarySeqID
+    # forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(i)
+    #     SangerConsensus@forwardReadsList[[i]]@primarySeqID)
+    # reverseReadPrimSeqID <- sapply(1:reverseReadNum, function(i)
+    #     SangerConsensus@reverseReadsList[[i]]@primarySeqID)
+    # SangerSingleReadPrimSeqID <- c(forwardReadPrimSeqID, reverseReadPrimSeqID)
 
-    # primarySeq
-    forwardReadPrimSeq <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@primarySeq)
-    reverseReadPrimSeq <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@primarySeq)
-    SangerSingleReadPrimSeq <- c(forwardReadPrimSeq, reverseReadPrimSeq)
-    # SangerSingleReadPrimSeqChara <- as.character(SangerSingleReadPrimSeq)
+    # # primarySeq
+    # forwardReadPrimSeq <- sapply(1:forwardReadNum, function(i)
+    #     SangerConsensus@forwardReadsList[[i]]@primarySeq)
+    # reverseReadPrimSeq <- sapply(1:reverseReadNum, function(i)
+    #     SangerConsensus@reverseReadsList[[i]]@primarySeq)
+    # SangerSingleReadPrimSeq <- c(forwardReadPrimSeq, reverseReadPrimSeq)
 
     # primarySeqDF
     forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
@@ -145,19 +144,19 @@ consensusReadServer <- function(input, output, session) {
     })
     SangerSingleReadPrimSeqDF <- c(forwardReadPrimSeqDF, reverseReadPrimSeqDF)
 
-    # secondarySeqID
-    forwardReadSecoSeqID <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@secondarySeqID)
-    reverseReadSecoSeqID <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@secondarySeqID)
-    SangerSingleReadSecoSeqID <- c(forwardReadSecoSeqID, reverseReadSecoSeqID)
+    # # secondarySeqID
+    # forwardReadSecoSeqID <- sapply(1:forwardReadNum, function(i)
+    #     SangerConsensus@forwardReadsList[[i]]@secondarySeqID)
+    # reverseReadSecoSeqID <- sapply(1:reverseReadNum, function(i)
+    #     SangerConsensus@reverseReadsList[[i]]@secondarySeqID)
+    # SangerSingleReadSecoSeqID <- c(forwardReadSecoSeqID, reverseReadSecoSeqID)
 
-    # secondarySeq
-    forwardReadSecoSeq <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@secondarySeq)
-    reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@secondarySeq)
-    SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
+    # # secondarySeq
+    # forwardReadSecoSeq <- sapply(1:forwardReadNum, function(i)
+    #     SangerConsensus@forwardReadsList[[i]]@secondarySeq)
+    # reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
+    #     SangerConsensus@reverseReadsList[[i]]@secondarySeq)
+    # SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
 
     # secondarySeqDF
     forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
@@ -186,12 +185,12 @@ consensusReadServer <- function(input, output, session) {
     })
     SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
 
-    # primaryAASeq
-    forwardReadPrimAASeq <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@primaryAASeq)
-    reverseReadPrimAASeq <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@primaryAASeq)
-    SangerSingleReadPrimAASeq <- c(forwardReadPrimAASeq, reverseReadPrimAASeq)
+    # # primaryAASeq
+    # forwardReadPrimAASeq <- sapply(1:forwardReadNum, function(i)
+    #     SangerConsensus@forwardReadsList[[i]]@primaryAASeq)
+    # reverseReadPrimAASeq <- sapply(1:reverseReadNum, function(i)
+    #     SangerConsensus@reverseReadsList[[i]]@primaryAASeq)
+    # SangerSingleReadPrimAASeq <- c(forwardReadPrimAASeq, reverseReadPrimAASeq)
 
     # primaryAASeqDF
     forwardReadPrimAASeqDF <- lapply(1:forwardReadNum, function(i) {
@@ -213,28 +212,27 @@ consensusReadServer <- function(input, output, session) {
     SangerSingleReadPrimAASeqDF <- c(forwardReadPrimAASeqDF,
                                      reverseReadPrimAASeqDF)
 
-    # traceMatrix
-    forwardReadTraceMat <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@traceMatrix)
-    reverseReadTraceMat <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@traceMatrix)
-    SangerSingleReadTraceMat <- c(forwardReadTraceMat, reverseReadTraceMat)
-
-    # peakPosMatrix
-    forwardReadReadPeakPosMat <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@peakPosMatrix)
-    reverseReadReadPeakPosMat <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@peakPosMatrix)
-    SangerSingleReadPeakPosMat <- c(forwardReadReadPeakPosMat,
-                                    reverseReadReadPeakPosMat)
-    # peakAmpMatrix
-    forwardReadPeakAmpMat <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@peakAmpMatrix)
-    reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@peakAmpMatrix)
-    SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat,
-                                    reverseReadPeakAmpMat)
-    # trimmedQS <- reactiveValues(cuffOffQuality = 0, M2SlidingWindowSize = 0)
+    # # traceMatrix
+    # forwardReadTraceMat <- sapply(1:forwardReadNum, function(i)
+    #     SangerConsensus@forwardReadsList[[i]]@traceMatrix)
+    # reverseReadTraceMat <- sapply(1:reverseReadNum, function(i)
+    #     SangerConsensus@reverseReadsList[[i]]@traceMatrix)
+    # SangerSingleReadTraceMat <- c(forwardReadTraceMat, reverseReadTraceMat)
+    #
+    # # peakPosMatrix
+    # forwardReadReadPeakPosMat <- sapply(1:forwardReadNum, function(i)
+    #     SangerConsensus@forwardReadsList[[i]]@peakPosMatrix)
+    # reverseReadReadPeakPosMat <- sapply(1:reverseReadNum, function(i)
+    #     SangerConsensus@reverseReadsList[[i]]@peakPosMatrix)
+    # SangerSingleReadPeakPosMat <- c(forwardReadReadPeakPosMat,
+    #                                 reverseReadReadPeakPosMat)
+    # # peakAmpMatrix
+    # forwardReadPeakAmpMat <- sapply(1:forwardReadNum, function(i)
+    #     SangerConsensus@forwardReadsList[[i]]@peakAmpMatrix)
+    # reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
+    #     SangerConsensus@reverseReadsList[[i]]@peakAmpMatrix)
+    # SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat,
+    #                                 reverseReadPeakAmpMat)
 
     trimmedRV <- reactiveValues(rawSeqLength            = 0,
                                 rawMeanQualityScore     = 0,
