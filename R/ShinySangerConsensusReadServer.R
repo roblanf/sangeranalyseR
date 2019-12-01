@@ -1163,15 +1163,23 @@ consensusReadServer <- function(input, output, session) {
             forwardReadNum <- length((SangerConsensus)@forwardReadsList)
             reverseReadNum <- length((SangerConsensus)@reverseReadsList)
             SangerSingleReadNum <- forwardReadNum + reverseReadNum
-
-            sapply(1:forwardReadNum, function(i) {
-                SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
-                    SangerSingleReadQualReport[[i]]
-            })
-            sapply(1:reverseReadNum, function(i) {
-                SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
-                    SangerSingleReadQualReport[[forwardReadNum + i]]
-            })
+            if (singleReadIndex <= forwardReadNum) {
+                # This is forward list
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]
+            } else {
+                # This is reverse list
+                SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]
+            }
+            # sapply(1:forwardReadNum, function(i) {
+            #     SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
+            #         SangerSingleReadQualReport[[i]]
+            # })
+            # sapply(1:reverseReadNum, function(i) {
+            #     SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
+            #         SangerSingleReadQualReport[[forwardReadNum + i]]
+            # })
         }
     })
 
@@ -1265,15 +1273,23 @@ consensusReadServer <- function(input, output, session) {
             forwardReadNum <- length((SangerConsensus)@forwardReadsList)
             reverseReadNum <- length((SangerConsensus)@reverseReadsList)
             SangerSingleReadNum <- forwardReadNum + reverseReadNum
-
-            sapply(1:forwardReadNum, function(i) {
-                SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
-                    SangerSingleReadQualReport[[i]]
-            })
-            sapply(1:reverseReadNum, function(i) {
-                SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
-                    SangerSingleReadQualReport[[forwardReadNum + i]]
-            })
+            if (singleReadIndex <= forwardReadNum) {
+                # This is forward list
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]
+            } else {
+                # This is reverse list
+                SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]
+            }
+            # sapply(1:forwardReadNum, function(i) {
+            #     SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
+            #         SangerSingleReadQualReport[[i]]
+            # })
+            # sapply(1:reverseReadNum, function(i) {
+            #     SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
+            #         SangerSingleReadQualReport[[forwardReadNum + i]]
+            # })
         }
     })
 
@@ -1367,15 +1383,23 @@ consensusReadServer <- function(input, output, session) {
             forwardReadNum <- length((SangerConsensus)@forwardReadsList)
             reverseReadNum <- length((SangerConsensus)@reverseReadsList)
             SangerSingleReadNum <- forwardReadNum + reverseReadNum
-
-            sapply(1:forwardReadNum, function(i) {
-                SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
-                    SangerSingleReadQualReport[[i]]
-            })
-            sapply(1:reverseReadNum, function(i) {
-                SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
-                    SangerSingleReadQualReport[[forwardReadNum + i]]
-            })
+            if (singleReadIndex <= forwardReadNum) {
+                # This is forward list
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]
+            } else {
+                # This is reverse list
+                SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]
+            }
+            # sapply(1:forwardReadNum, function(i) {
+            #     SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
+            #         SangerSingleReadQualReport[[i]]
+            # })
+            # sapply(1:reverseReadNum, function(i) {
+            #     SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
+            #         SangerSingleReadQualReport[[forwardReadNum + i]]
+            # })
         }
     })
 
@@ -1427,14 +1451,24 @@ consensusReadServer <- function(input, output, session) {
                 forwardReadNum <- length((SangerConsensus)@forwardReadsList)
                 reverseReadNum <- length((SangerConsensus)@reverseReadsList)
                 SangerSingleReadNum <- forwardReadNum + reverseReadNum
-                sapply(1:forwardReadNum, function(i) {
-                    SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
+
+                if (singleReadIndex <= forwardReadNum) {
+                    # This is forward list
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam <<-
                         SangerSingleReadChromatogramParam[[singleReadIndex]]
-                })
-                sapply(1:reverseReadNum, function(i) {
-                    SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
+                } else {
+                    # This is reverse list
+                    SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@ChromatogramParam <<-
                         SangerSingleReadChromatogramParam[[singleReadIndex]]
-                })
+                }
+                # sapply(1:forwardReadNum, function(i) {
+                #     SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
+                #         SangerSingleReadChromatogramParam[[singleReadIndex]]
+                # })
+                # sapply(1:reverseReadNum, function(i) {
+                #     SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
+                #         SangerSingleReadChromatogramParam[[singleReadIndex]]
+                # })
 
                 rawSeqLength <-
                     SangerSingleReadQualReport[[singleReadIndex]]@
@@ -1452,7 +1486,7 @@ consensusReadServer <- function(input, output, session) {
                                  trimmedRV[["trimmedFinishPos"]],
                              showtrim = (input$ChromatogramCheckShowTrimmed),
                              showcalls = "both")
-            }
+                }
 
             }
     })
