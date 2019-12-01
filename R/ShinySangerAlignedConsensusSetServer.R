@@ -1855,9 +1855,6 @@ alignedConsensusSetServer <- function(input, output, session) {
             (sidebar_menu[[6]] == "Forward" || sidebar_menu[[6]] == "Reverse") &&
             sidebar_menu[[7]] == "Read") {
 
-
-
-
             ### ------------------------------------------------------------
             ### Update ChromatogramBasePerRow
             ### ------------------------------------------------------------
@@ -1870,25 +1867,22 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
                 showTrimmed <<- input$ChromatogramCheckShowTrimmed
 
-
             ### ------------------------------------------------------------
             ### Save SangerConsensus quality S4 object
             ### ------------------------------------------------------------
             forwardReadNum <- length(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList)
             reverseReadNum <- length(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList)
             SangerSingleReadNum <- forwardReadNum + reverseReadNum
-            sapply(1:forwardReadNum, function(i) {
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList[[i]]@ChromatogramParam <<-
+
+            if (singleReadIndex <= forwardReadNum) {
+                # This is forward list
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList[[singleReadIndex]]@ChromatogramParam <<-
                     SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]
-
-            })
-            sapply(1:reverseReadNum, function(i) {
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList[[i]]@ChromatogramParam <<-
+            } else {
+                # This is reverse list
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList[[singleReadIndex - forwardReadNum]]@ChromatogramParam <<-
                     SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]
-            })
-
-
-
+            }
 
             rawSeqLength =
                 SangerCSetParam[[consensusReadIndex]]$
@@ -1907,6 +1901,10 @@ alignedConsensusSetServer <- function(input, output, session) {
                          showcalls = "both")
         }
     })
+
+
+
+
 
 
 
