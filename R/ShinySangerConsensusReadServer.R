@@ -550,6 +550,7 @@ consensusReadServer <- function(input, output, session) {
                 ### ------------------------------------------------------------
                 ### First assign the ChromatogramParam parameter
                 ### ------------------------------------------------------------
+                singleReadIndex <- strtoi(sidebar_menu[[1]])
                 ChromatogramParam[["baseNumPerRow"]] <<-
                     SangerSingleReadChromatogramParam[[singleReadIndex]]@baseNumPerRow
                 ChromatogramParam[["signalRatioCutoff"]] <<-
@@ -823,14 +824,14 @@ consensusReadServer <- function(input, output, session) {
             SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
                 SangerSingleReadQualReport[[i]]
             SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
-                SangerSingleReadChromatogramParam[[singleReadIndex]]
+                SangerSingleReadChromatogramParam[[i]]
             message("save SangerConsensus quality S4 object Forward")
         })
         sapply(1:reverseReadNum, function(i) {
             SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
                 SangerSingleReadQualReport[[forwardReadNum + i]]
             SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
-                SangerSingleReadChromatogramParam[[singleReadIndex]]
+                SangerSingleReadChromatogramParam[[i]]
             message("save SangerConsensus quality S4 object Reverse")
         })
         saveRDS(SangerConsensus, file=newS4Object)
@@ -1168,11 +1169,21 @@ consensusReadServer <- function(input, output, session) {
             trimmedMeanQualityScore <- trimmingPos[7]
             trimmedMinQualityScore <- trimmingPos[8]
             remainingRatio <- trimmingPos[9]
+            message("Inside here!!")
+            message("trimmedStartPos: ", trimmedStartPos)
+            message("trimmedFinishPos: ", trimmedFinishPos)
+            message("rawMeanQualityScore: ", rawMeanQualityScore)
+            message("rawMinQualityScore: ", rawMinQualityScore)
+            message("trimmedMeanQualityScore: ", trimmedMeanQualityScore)
+            message("trimmedMinQualityScore: ", trimmedMinQualityScore)
+            message("trimmedSeqLength: ", trimmedSeqLength)
+            message("remainingRatio: ", remainingRatio)
             if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
                 !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
                 !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
                 !is.null(trimmedMeanQualityScore) &&
-                !is.null(trimmedMinQualityScore)) {
+                !is.null(trimmedMinQualityScore) &&
+                !is.null(remainingRatio)) {
                 SangerSingleReadQualReport[[singleReadIndex]]@
                     M2CutoffQualityScore <<-
                     strtoi(inputM2CutoffQualityScoreText)
@@ -1281,7 +1292,8 @@ consensusReadServer <- function(input, output, session) {
                 !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
                 !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
                 !is.null(trimmedMeanQualityScore) &&
-                !is.null(trimmedMinQualityScore)) {
+                !is.null(trimmedMinQualityScore) &&
+                !is.null(remainingRatio)) {
 
                 SangerSingleReadQualReport[[singleReadIndex]]@
                     M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
@@ -1360,13 +1372,16 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
-                chromatogramRowNumAns <-
-                    chromatogramRowNum(
-                        SangerConsensusFRReadsList[[singleReadIndex]],
-                        strtoi(input$ChromatogramBasePerRow)) * 200
-                message("chromatogramRowNumAns: ", chromatogramRowNumAns)
-                plotOutput("chromatogram", height = chromatogramRowNumAns) %>%
-                    withSpinner()
+                if (!is.na(input$ChromatogramBasePerRow) &&
+                    !is.null(input$ChromatogramBasePerRow)) {
+                    chromatogramRowNumAns <-
+                        chromatogramRowNum(
+                            SangerConsensusFRReadsList[[singleReadIndex]],
+                            strtoi(input$ChromatogramBasePerRow)) * 200
+                    message("chromatogramRowNumAns: ", chromatogramRowNumAns)
+                    plotOutput("chromatogram", height = chromatogramRowNumAns) %>%
+                        withSpinner()
+                }
             }
         }
     })
@@ -1376,48 +1391,55 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (input$sidebar_menu != "Sanger Consensus Read Overview") {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
-                ### ------------------------------------------------------------
-                ### Update ChromatogramBasePerRow
-                ### ------------------------------------------------------------
-                SangerSingleReadChromatogramParam[[singleReadIndex]]@baseNumPerRow <<-
-                    input$ChromatogramBasePerRow
-                SangerSingleReadChromatogramParam[[singleReadIndex]]@signalRatioCutoff <<-
-                    input$ChromatogramSignalRatioCutoff
-                SangerSingleReadChromatogramParam[[singleReadIndex]]@showTrimmed <<-
-                    input$ChromatogramCheckShowTrimmed
+                if (!is.na(input$ChromatogramBasePerRow) &&
+                    !is.null(input$ChromatogramBasePerRow) &&
+                    !is.na(input$ChromatogramSignalRatioCutoff) &&
+                    !is.null(input$ChromatogramSignalRatioCutoff) &&
+                    !is.na(input$ChromatogramCheckShowTrimmed) &&
+                    !is.null(input$ChromatogramCheckShowTrimmed)) {
+                    ### ------------------------------------------------------------
+                    ### Update ChromatogramBasePerRow
+                    ### ------------------------------------------------------------
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@baseNumPerRow <<-
+                        input$ChromatogramBasePerRow
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@signalRatioCutoff <<-
+                        input$ChromatogramSignalRatioCutoff
+                    SangerSingleReadChromatogramParam[[singleReadIndex]]@showTrimmed <<-
+                        input$ChromatogramCheckShowTrimmed
 
-                ### ------------------------------------------------------------
-                ### Save SangerConsensus quality S4 object
-                ### ------------------------------------------------------------
-                forwardReadNum <- length((SangerConsensus)@forwardReadsList)
-                reverseReadNum <- length((SangerConsensus)@reverseReadsList)
-                SangerSingleReadNum <- forwardReadNum + reverseReadNum
+                    ### ------------------------------------------------------------
+                    ### Save SangerConsensus quality S4 object
+                    ### ------------------------------------------------------------
+                    forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+                    reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+                    SangerSingleReadNum <- forwardReadNum + reverseReadNum
 
-                sapply(1:forwardReadNum, function(i) {
-                    SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
-                        SangerSingleReadChromatogramParam[[singleReadIndex]]
-                })
-                sapply(1:reverseReadNum, function(i) {
-                    SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
-                        SangerSingleReadChromatogramParam[[singleReadIndex]]
-                })
+                    sapply(1:forwardReadNum, function(i) {
+                        SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
+                            SangerSingleReadChromatogramParam[[singleReadIndex]]
+                    })
+                    sapply(1:reverseReadNum, function(i) {
+                        SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
+                            SangerSingleReadChromatogramParam[[singleReadIndex]]
+                    })
 
-                rawSeqLength <-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawSeqLength
+                    rawSeqLength <-
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                        rawSeqLength
 
-                hetcalls <-
-                    makeBaseCalls(SangerConsensusFRReadsList[[
-                        singleReadIndex]],
-                                  ratio = as.numeric(
-                                      input$ChromatogramSignalRatioCutoff))
-                chromatogram(hetcalls,
-                             width = strtoi(input$ChromatogramBasePerRow),
-                             height = 2, trim5 = trimmedRV[["trimmedStartPos"]],
-                             trim3 = rawSeqLength -
-                                 trimmedRV[["trimmedFinishPos"]],
-                             showtrim = (input$ChromatogramCheckShowTrimmed),
-                             showcalls = "both")
+                    hetcalls <-
+                        makeBaseCalls(SangerConsensusFRReadsList[[
+                            singleReadIndex]],
+                            ratio = as.numeric(
+                                input$ChromatogramSignalRatioCutoff))
+                    chromatogram(hetcalls,
+                                 width = strtoi(input$ChromatogramBasePerRow),
+                                 height = 2, trim5 = trimmedRV[["trimmedStartPos"]],
+                                 trim3 = rawSeqLength -
+                                     trimmedRV[["trimmedFinishPos"]],
+                                 showtrim = (input$ChromatogramCheckShowTrimmed),
+                                 showcalls = "both")
+                }
             }
         }
     })

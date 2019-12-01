@@ -83,11 +83,26 @@ M2inside_calculate_trimming <- function(qualityPhredScores,
         }
         trimmedStartPos = remainingIndex[1]
         trimmedFinishPos = remainingIndex[length(remainingIndex)]
-        trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
-        trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
-        trimmedMinQualityScore <- min(trimmedQualityPhredScore)
-        trimmedSeqLength = trimmedFinishPos - trimmedStartPos + 1
-        remainingRatio = trimmedSeqLength / rawSeqLength
+        if (is.null(trimmedStartPos) || is.null(trimmedFinishPos)) {
+            trimmedQualityPhredScore <- NULL
+            trimmedMeanQualityScore <- NULL
+            trimmedMinQualityScore <- NULL
+            trimmedSeqLength = 0
+            remainingRatio = 0
+        } else {
+            trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
+            trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
+            trimmedMinQualityScore <- min(trimmedQualityPhredScore)
+            trimmedSeqLength = trimmedFinishPos - trimmedStartPos + 1
+            remainingRatio = trimmedSeqLength / rawSeqLength
+        }
+        message("trimmedStartPos: ", trimmedStartPos)
+        message("trimmedFinishPos: ", trimmedFinishPos)
+        message("trimmedQualityPhredScore: ", trimmedQualityPhredScore)
+        message("trimmedMeanQualityScore: ", trimmedMeanQualityScore)
+        message("trimmedMinQualityScore: ", trimmedMinQualityScore)
+        message("trimmedSeqLength: ", trimmedSeqLength)
+        message("remainingRatio: ", remainingRatio)
     }
     return(c(rawSeqLength, rawMeanQualityScore, rawMinQualityScore,
              trimmedStartPos, trimmedFinishPos, trimmedSeqLength,
