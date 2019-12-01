@@ -31,6 +31,7 @@
 #'                               M2CutoffQualityScore  = 40,
 #'                               M2SlidingWindowSize   = 10,
 #'                               baseNumPerRow         = 100,
+#'                               heightPerRow          = 200,
 #'                               signalRatioCutoff     = 0.33,
 #'                               showTrimmed           = TRUE)
 setClass(
@@ -72,6 +73,7 @@ setMethod("initialize",
                    M2CutoffQualityScore = NULL,
                    M2SlidingWindowSize  = NULL,
                    baseNumPerRow        = 100,
+                   heightPerRow         = 200,
                    signalRatioCutoff    = 0.33,
                    showTrimmed          = TRUE) {
               ### --------------------------------------------------------------
@@ -136,6 +138,7 @@ setMethod("initialize",
                                        M2SlidingWindowSize = M2SlidingWindowSize)
                   ChromatogramParam <- new("ChromatogramParam",
                                            baseNumPerRow     = baseNumPerRow,
+                                           heightPerRow      = heightPerRow,
                                            signalRatioCutoff = signalRatioCutoff,
                                            showTrimmed       = showTrimmed)
               } else {

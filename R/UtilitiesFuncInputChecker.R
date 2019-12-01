@@ -157,6 +157,18 @@ checkBaseNumPerRow <- function(baseNumPerRow, errors) {
     return(errors)
 }
 
+checkHeightPerRow <- function(heightPerRow, errors) {
+    if (heightPerRow%%1!=0) {
+        msg <- paste("\n'heightPerRow' must be integer.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    if (heightPerRow < 50 || heightPerRow > 600) {
+        msg <- paste("\n'heightPerRow' must be between 0 and 200.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
 
 checkSignalRatioCutoff <- function(signalRatioCutoff, errors) {
     if (signalRatioCutoff < 0 || signalRatioCutoff > 1) {

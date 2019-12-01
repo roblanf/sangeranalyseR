@@ -49,6 +49,7 @@
 #'                                  M2CutoffQualityScore  = 40,
 #'                                  M2SlidingWindowSize   = 10,
 #'                                  baseNumPerRow         = 100,
+#'                                  heightPerRow          = 200,
 #'                                  signalRatioCutoff     = 0.33,
 #'                                  showTrimmed           = TRUE)
 setClass("SangerConsensusRead",
@@ -96,6 +97,7 @@ setMethod("initialize",
                    M2CutoffQualityScore  = NULL,
                    M2SlidingWindowSize   = NULL,
                    baseNumPerRow         = 100,
+                   heightPerRow          = 200,
                    signalRatioCutoff     = 0.33,
                    showTrimmed           = TRUE,
                    refAminoAcidSeq        = "",
@@ -182,6 +184,7 @@ setMethod("initialize",
                                    M2CutoffQualityScore = M2CutoffQualityScore,
                                    M2SlidingWindowSize = M2SlidingWindowSize,
                                    baseNumPerRow = baseNumPerRow,
+                                   heightPerRow = heightPerRow,
                                    signalRatioCutoff = signalRatioCutoff,
                                    showTrimmed = showTrimmed)
 
@@ -192,6 +195,7 @@ setMethod("initialize",
                                    M2CutoffQualityScore = M2CutoffQualityScore,
                                    M2SlidingWindowSize = M2SlidingWindowSize,
                                    baseNumPerRow = baseNumPerRow,
+                                   heightPerRow = heightPerRow,
                                    signalRatioCutoff = signalRatioCutoff,
                                    showTrimmed = showTrimmed)
 

@@ -3,6 +3,7 @@
 #' @description  An S4 class for chromatogram parameter
 #'
 #' @slot baseNumPerRow .
+#' @slot heightPerRow .
 #' @slot signalRatioCutoff .
 #' @slot showTrimmed .
 #'
@@ -15,6 +16,7 @@
 #' @examples
 #' Chromatogram <- new("ChromatogramParam",
 #'                      baseNumPerRow      = 100,
+#'                      heightPerRow       = 200,
 #'                      signalRatioCutoff  = 0.33,
 #'                      showTrimmed        = TRUE)
 setClass("ChromatogramParam",
@@ -23,6 +25,7 @@ setClass("ChromatogramParam",
          ### -------------------------------------------------------------------
          representation(
              baseNumPerRow     = "numeric",
+             heightPerRow      = "numeric",
              signalRatioCutoff = "numeric",
              showTrimmed       = "logical"
          ),
@@ -36,6 +39,7 @@ setMethod("initialize",
           "ChromatogramParam",
           function(.Object, ...,
                    baseNumPerRow     = 100,
+                   heightPerRow      = 200,
                    signalRatioCutoff = 0.33,
                    showTrimmed       = TRUE) {
               ### --------------------------------------------------------------
@@ -43,6 +47,7 @@ setMethod("initialize",
               ### --------------------------------------------------------------
               errors <- character()
               errors <- checkBaseNumPerRow (baseNumPerRow, errors)
+              errors <- checkHeightPerRow (baseNumPerRow, errors)
               errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
               errors <- checkShowTrimmed (showTrimmed, errors)
               if (length(errors) == 0) {
@@ -54,7 +59,7 @@ setMethod("initialize",
               }
               callNextMethod(.Object, ...,
                              baseNumPerRow     = baseNumPerRow,
+                             heightPerRow      = heightPerRow,
                              signalRatioCutoff = signalRatioCutoff,
                              showTrimmed       = showTrimmed)
           })
-

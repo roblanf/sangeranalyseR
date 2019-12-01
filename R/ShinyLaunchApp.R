@@ -15,6 +15,7 @@
 #'                                  M2CutoffQualityScore  = 40,
 #'                                  M2SlidingWindowSize   = 10,
 #'                                  baseNumPerRow         = 80,
+#'                                  heightPerRow          = 200,
 #'                                  signalRatioCutoff     = 0.23,
 #'                                  showTrimmed           = FALSE)
 #' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
@@ -53,6 +54,7 @@ launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
 #'                                  M2CutoffQualityScore  = 40,
 #'                                  M2SlidingWindowSize   = 10,
 #'                                  baseNumPerRow         = 100,
+#'                                  heightPerRow          = 200,
 #'                                  signalRatioCutoff     = 0.33,
 #'                                  showTrimmed           = TRUE)
 #' RShinyCSSet <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))

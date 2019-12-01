@@ -12,6 +12,7 @@
 #' @param M2CutoffQualityScore .
 #' @param M2SlidingWindowSize .
 #' @param baseNumPerRow .
+#' @param heightPerRow .
 #' @param signalRatioCutoff .
 #' @param showTrimmed .
 #' @param refAminoAcidSeq .
@@ -41,7 +42,11 @@
 #'                                TrimmingMethod        = "M2",
 #'                                M1TrimmingCutoff      = NULL,
 #'                                M2CutoffQualityScore  = 40,
-#'                                M2SlidingWindowSize   = 10)
+#'                                M2SlidingWindowSize   = 10,
+#'                                baseNumPerRow         = 100,
+#'                                heightPerRow          = 200,
+#'                                signalRatioCutoff     = 0.33,
+#'                                showTrimmed           = TRUE)
 SangerConsensusRead <- function(parentDirectory        = character(0),
                                 consenesusReadName     = character(0),
                                 suffixForwardRegExp    = character(0),
@@ -50,9 +55,10 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
                                 M1TrimmingCutoff       = 0.0001,
                                 M2CutoffQualityScore   = NULL,
                                 M2SlidingWindowSize    = NULL,
-                                baseNumPerRow         = 100,
-                                signalRatioCutoff     = 0.33,
-                                showTrimmed           = TRUE,
+                                baseNumPerRow          = 100,
+                                heightPerRow           = 200,
+                                signalRatioCutoff      = 0.33,
+                                showTrimmed            = TRUE,
                                 refAminoAcidSeq        = "",
                                 minReadsNum            = 2,
                                 minReadLength          = 20,
@@ -71,9 +77,10 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
                              M1TrimmingCutoff       = M1TrimmingCutoff,
                              M2CutoffQualityScore   = M2CutoffQualityScore,
                              M2SlidingWindowSize    = M2SlidingWindowSize,
-                             baseNumPerRow        = baseNumPerRow,
-                             signalRatioCutoff    = signalRatioCutoff,
-                             showTrimmed          = showTrimmed,
+                             baseNumPerRow          = baseNumPerRow,
+                             heightPerRow           = heightPerRow,
+                             signalRatioCutoff      = signalRatioCutoff,
+                             showTrimmed            = showTrimmed,
                              refAminoAcidSeq        = refAminoAcidSeq,
                              minReadsNum            = minReadsNum,
                              minReadLength          = minReadLength,
@@ -100,6 +107,7 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #' @param M2CutoffQualityScore .
 #' @param M2SlidingWindowSize .
 #' @param baseNumPerRow .
+#' @param heightPerRow .
 #' @param signalRatioCutoff .
 #' @param showTrimmed .
 #'
@@ -113,12 +121,16 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #'                       "Allolobophora_chlorotica",
 #'                       "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 #' A_chloroticaSingleRead <-
-#'        SangerSingleRead(readFeature          = "ForwardRead",
-#'                         readFileName         = A_chloroticaFdReadFN,
+#'        SangerSingleRead(readFeature           = "ForwardRead",
+#'                         readFileName          = A_chloroticaFdReadFN,
 #'                         TrimmingMethod        = "M2",
 #'                         M1TrimmingCutoff      = NULL,
 #'                         M2CutoffQualityScore  = 40,
-#'                         M2SlidingWindowSize   = 10)
+#'                         M2SlidingWindowSize   = 10,
+#'                         baseNumPerRow         = 100,
+#'                         heightPerRow          = 200,
+#'                         signalRatioCutoff     = 0.33,
+#'                         showTrimmed           = TRUE)
 SangerSingleRead <- function(readFeature = character(0),
                              readFileName = character(0),
                              TrimmingMethod        = "M2",
@@ -126,6 +138,7 @@ SangerSingleRead <- function(readFeature = character(0),
                              M2CutoffQualityScore  = 40,
                              M2SlidingWindowSize   = 10,
                              baseNumPerRow         = 100,
+                             heightPerRow          = 200,
                              signalRatioCutoff     = 0.33,
                              showTrimmed           = TRUE) {
     newSingleReads <- new("SangerSingleRead",
@@ -136,6 +149,7 @@ SangerSingleRead <- function(readFeature = character(0),
                           M2CutoffQualityScore = M2CutoffQualityScore,
                           M2SlidingWindowSize  = M2SlidingWindowSize,
                           baseNumPerRow        = baseNumPerRow,
+                          heightPerRow         = heightPerRow,
                           signalRatioCutoff    = signalRatioCutoff,
                           showTrimmed          = showTrimmed)
     return(newSingleReads)

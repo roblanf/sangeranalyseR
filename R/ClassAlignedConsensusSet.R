@@ -27,6 +27,7 @@
 #'                      M2CutoffQualityScore  = 40,
 #'                      M2SlidingWindowSize   = 10,
 #'                      baseNumPerRow         = 100,
+#'                      heightPerRow          = 200,
 #'                      signalRatioCutoff     = 0.33,
 #'                      showTrimmed           = TRUE)
 setClass("SangerAlignedConsensusSet",
@@ -60,6 +61,7 @@ setMethod("initialize",
                    M2CutoffQualityScore   = NULL,
                    M2SlidingWindowSize    = NULL,
                    baseNumPerRow          = 100,
+                   heightPerRow           = 200,
                    signalRatioCutoff      = 0.33,
                    showTrimmed            = TRUE,
                    refAminoAcidSeq        = "",
@@ -126,10 +128,11 @@ setMethod("initialize",
                             suffixForwardRegExp, suffixReverseRegExp,
                             TrimmingMethod, M1TrimmingCutoff,
                             M2CutoffQualityScore, M2SlidingWindowSize,
-                            baseNumPerRow,signalRatioCutoff, showTrimmed,
-                            refAminoAcidSeq, minReadsNum, minReadLength,
-                            minFractionCall, maxFractionLost, geneticCode,
-                            acceptStopCodons, readingFrame, processorsNum)
+                            baseNumPerRow, heightPerRow, signalRatioCutoff,
+                            showTrimmed, refAminoAcidSeq, minReadsNum,
+                            minReadLength, minFractionCall, maxFractionLost,
+                            geneticCode, acceptStopCodons,
+                            readingFrame, processorsNum)
     })
 
     if (length(errors) == 0) {
