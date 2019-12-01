@@ -1357,10 +1357,52 @@ consensusReadServer <- function(input, output, session) {
             if (!is.na(as.numeric(sidebar_menu[[1]]))) {
                 if (!is.na(input$ChromatogramBasePerRow) &&
                     !is.null(input$ChromatogramBasePerRow)) {
-                    chromatogramRowNumAns <-
-                        chromatogramRowNum(
-                            SangerConsensusFRReadsList[[singleReadIndex]],
-                            strtoi(input$ChromatogramBasePerRow)) * 200
+                    # chromatogramRowNumAns <-
+                    #     chromatogramRowNum(
+                    #         SangerConsensusFRReadsList[[singleReadIndex]],
+                    #         strtoi(input$ChromatogramBasePerRow),
+                    #         input$ChromatogramCheckShowTrimmed) * 200
+
+                    # trimmedRV[["trimmedSeqLength"]]
+                    # trimmedRV[["trimmedStartPos"]]
+                    # trimmedRV[["trimmedFinishPos"]]
+                    chromatogramRowNumAns <- chromatogramRowNum (strtoi(input$ChromatogramBasePerRow),
+                                        SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength,
+                                        SangerSingleReadQualReport[[singleReadIndex]]@trimmedSeqLength,
+                                        input$ChromatogramCheckShowTrimmed) * 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     message("chromatogramRowNumAns: ", chromatogramRowNumAns)
                     plotOutput("chromatogram", height = chromatogramRowNumAns) %>%
                         withSpinner()
@@ -1415,13 +1457,50 @@ consensusReadServer <- function(input, output, session) {
                             singleReadIndex]],
                             ratio = as.numeric(
                                 input$ChromatogramSignalRatioCutoff))
-                    chromatogram(hetcalls,
-                                 width = strtoi(input$ChromatogramBasePerRow),
-                                 height = 2, trim5 = trimmedRV[["trimmedStartPos"]],
-                                 trim3 = rawSeqLength -
-                                     trimmedRV[["trimmedFinishPos"]],
-                                 showtrim = (input$ChromatogramCheckShowTrimmed),
-                                 showcalls = "both")
+
+
+
+                    if (trimmedRV[["trimmedSeqLength"]] == 0 &&
+                        !isTRUE(input$ChromatogramCheckShowTrimmed)) {
+                        h3("Trimmed read length is zero. Please tick
+                           'Whether show trimmed region' to show the plot.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    } else {
+                        chromatogram(hetcalls,
+                                     width = strtoi(input$ChromatogramBasePerRow),
+                                     height = 2, trim5 = trimmedRV[["trimmedStartPos"]],
+                                     trim3 = rawSeqLength -
+                                         trimmedRV[["trimmedFinishPos"]],
+                                     showtrim = (input$ChromatogramCheckShowTrimmed),
+                                     showcalls = "both")
+                    }
                 }
             }
         }
