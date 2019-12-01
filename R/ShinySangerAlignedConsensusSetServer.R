@@ -1197,13 +1197,11 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### Alignment
     ### ------------------------------------------------------------------------
     output$consensusSetAlignmentHTML<-renderUI({
-        SCSetAlignment <- SangerConsensusSet@SCalignment
+        consensusParamSet[["alignmentSet"]] <- SangerConsensusSet@SCalignment
         browseSeqHTML <-
             file.path(shinyDirectory, "Consensus_Readset_Alignment_BrowseSeqs.html")
-        if (!file.exists(browseSeqHTML)) {
-            BrowseSeqs(SCSetAlignment,
-                       openURL=FALSE, htmlFile=browseSeqHTML)
-        }
+        BrowseSeqs(consensusParamSet[["alignmentSet"]] ,
+                   openURL=FALSE, htmlFile=browseSeqHTML)
         includeHTML(browseSeqHTML)
     })
 
@@ -1301,32 +1299,6 @@ alignedConsensusSetServer <- function(input, output, session) {
     })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ############################################################################
     ### ConsensusRead (Function for Sanger Consensus Read Overview)
     ############################################################################
@@ -1345,6 +1317,28 @@ alignedConsensusSetServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ### ------------------------------------------------------------------------
     ### Alignment
     ### ------------------------------------------------------------------------
@@ -1354,7 +1348,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[5]])
 
         consensusParam[["consenesusReadName"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consenesusReadName
-        SCAlignment <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment
+        consensusParam[["alignment"]] <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment
 
         browseSeqHTML <-
             file.path(shinyDirectory, "BrowseSeqs_html",
@@ -1364,10 +1358,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
             dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
         }
-        if (!file.exists(browseSeqHTML)) {
-            BrowseSeqs(SCAlignment,
-                       openURL=FALSE, htmlFile=browseSeqHTML)
-        }
+        BrowseSeqs(consensusParam[["alignment"]],
+                   openURL=FALSE, htmlFile=browseSeqHTML)
         includeHTML(browseSeqHTML)
     })
 
