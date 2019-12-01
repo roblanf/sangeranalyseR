@@ -1051,87 +1051,80 @@ consensusReadServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]@
                         qualityBaseScore,
                     as.numeric(inputM1TrimmingCutoffText))
-            rawSeqLength <- trimmingPos[1]
-            rawMeanQualityScore <- trimmingPos[2]
-            rawMinQualityScore <- trimmingPos[3]
-            trimmedStartPos <- trimmingPos[4]
-            trimmedFinishPos <- trimmingPos[5]
-            trimmedSeqLength <- trimmingPos[6]
-            trimmedMeanQualityScore <- trimmingPos[7]
-            trimmedMinQualityScore <- trimmingPos[8]
-            remainingRatio <- trimmingPos[9]
+            rawSeqLength <- trimmingPos[["rawSeqLength"]]
+            rawMeanQualityScore <- trimmingPos[["rawMeanQualityScore"]]
+            rawMinQualityScore <- trimmingPos[["rawMinQualityScore"]]
+            trimmedStartPos <- trimmingPos[["trimmedStartPos"]]
+            trimmedFinishPos <- trimmingPos[["trimmedFinishPos"]]
+            trimmedSeqLength <- trimmingPos[["trimmedSeqLength"]]
+            trimmedMeanQualityScore <- trimmingPos[["trimmedMeanQualityScore"]]
+            trimmedMinQualityScore <- trimmingPos[["trimmedMinQualityScore"]]
+            remainingRatio <- trimmingPos[["remainingRatio"]]
 
-            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-                !is.null(trimmedMeanQualityScore) &&
-                !is.null(trimmedMinQualityScore)) {
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
 
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawSeqLength <<- rawSeqLength
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMeanQualityScore <<- rawMeanQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMinQualityScore <<- rawMinQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedStartPos <<- trimmedStartPos
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedFinishPos <<- trimmedFinishPos
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedSeqLength <<- trimmedSeqLength
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMeanQualityScore <<- trimmedMeanQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMinQualityScore <<- trimmedMinQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                remainingRatio <<- remainingRatio
 
+            trimmedRV[["rawSeqLength"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawSeqLength <<- rawSeqLength
+                rawSeqLength
+            trimmedRV[["rawMeanQualityScore"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMeanQualityScore <<- rawMeanQualityScore
+                rawMeanQualityScore
+            trimmedRV[["rawMinQualityScore"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMinQualityScore <<- rawMinQualityScore
+                rawMinQualityScore
+            trimmedRV[["trimmedStartPos"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedStartPos <<- trimmedStartPos
+                trimmedStartPos
+            trimmedRV[["trimmedFinishPos"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedFinishPos <<- trimmedFinishPos
+                trimmedFinishPos
+            trimmedRV[["trimmedSeqLength"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedSeqLength <<- trimmedSeqLength
+                trimmedSeqLength
+            trimmedRV[["trimmedMeanQualityScore"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                trimmedMeanQualityScore
+            trimmedRV[["trimmedMinQualityScore"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMinQualityScore <<- trimmedMinQualityScore
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    remainingRatio <<- remainingRatio
+                trimmedMinQualityScore
+            trimmedRV[["remainingRatio"]] <<-
+                round(SangerSingleReadQualReport[[singleReadIndex]]@
+                          remainingRatio * 100, 2)
+            ### ------------------------------------------------------------
+            ### Save SangerConsensus quality S4 object
+            ### ------------------------------------------------------------
+            forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+            reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+            SangerSingleReadNum <- forwardReadNum + reverseReadNum
 
-                trimmedRV[["rawSeqLength"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawSeqLength
-                trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMeanQualityScore
-                trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMinQualityScore
-                trimmedRV[["trimmedStartPos"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedStartPos
-                trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedFinishPos
-                trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedSeqLength
-                trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMeanQualityScore
-                trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMinQualityScore
-                trimmedRV[["remainingRatio"]] <<-
-                    round(SangerSingleReadQualReport[[singleReadIndex]]@
-                              remainingRatio * 100, 2)
-                ### ------------------------------------------------------------
-                ### Save SangerConsensus quality S4 object
-                ### ------------------------------------------------------------
-                forwardReadNum <- length((SangerConsensus)@forwardReadsList)
-                reverseReadNum <- length((SangerConsensus)@reverseReadsList)
-                SangerSingleReadNum <- forwardReadNum + reverseReadNum
-
-                sapply(1:forwardReadNum, function(i) {
-                    SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
-                        SangerSingleReadQualReport[[i]]
-                })
-                sapply(1:reverseReadNum, function(i) {
-                    SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
-                        SangerSingleReadQualReport[[forwardReadNum + i]]
-                })
-            }
+            sapply(1:forwardReadNum, function(i) {
+                SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
+                    SangerSingleReadQualReport[[i]]
+            })
+            sapply(1:reverseReadNum, function(i) {
+                SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
+                    SangerSingleReadQualReport[[forwardReadNum + i]]
+            })
         }
     })
 
@@ -1160,96 +1153,87 @@ consensusReadServer <- function(input, output, session) {
                     strtoi(inputM2CutoffQualityScoreText),
                     SangerSingleReadQualReport[[singleReadIndex]]@
                         M2SlidingWindowSize)
-            rawSeqLength <- trimmingPos[1]
-            rawMeanQualityScore <- trimmingPos[2]
-            rawMinQualityScore <- trimmingPos[3]
-            trimmedStartPos <- trimmingPos[4]
-            trimmedFinishPos <- trimmingPos[5]
-            trimmedSeqLength <- trimmingPos[6]
-            trimmedMeanQualityScore <- trimmingPos[7]
-            trimmedMinQualityScore <- trimmingPos[8]
-            remainingRatio <- trimmingPos[9]
-            message("Inside here!!")
+            rawSeqLength <- trimmingPos[["rawSeqLength"]]
+            rawMeanQualityScore <- trimmingPos[["rawMeanQualityScore"]]
+            rawMinQualityScore <- trimmingPos[["rawMinQualityScore"]]
+            trimmedStartPos <- trimmingPos[["trimmedStartPos"]]
+            trimmedFinishPos <- trimmingPos[["trimmedFinishPos"]]
+            trimmedSeqLength <- trimmingPos[["trimmedSeqLength"]]
+            trimmedMeanQualityScore <- trimmingPos[["trimmedMeanQualityScore"]]
+            trimmedMinQualityScore <- trimmingPos[["trimmedMinQualityScore"]]
+            remainingRatio <- trimmingPos[["remainingRatio"]]
+            message("@@@@@@@@Inside here!!")
             message("trimmedStartPos: ", trimmedStartPos)
             message("trimmedFinishPos: ", trimmedFinishPos)
-            message("rawMeanQualityScore: ", rawMeanQualityScore)
-            message("rawMinQualityScore: ", rawMinQualityScore)
             message("trimmedMeanQualityScore: ", trimmedMeanQualityScore)
             message("trimmedMinQualityScore: ", trimmedMinQualityScore)
             message("trimmedSeqLength: ", trimmedSeqLength)
             message("remainingRatio: ", remainingRatio)
-            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-                !is.null(trimmedMeanQualityScore) &&
-                !is.null(trimmedMinQualityScore) &&
-                !is.null(remainingRatio)) {
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    M2CutoffQualityScore <<-
-                    strtoi(inputM2CutoffQualityScoreText)
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                M2CutoffQualityScore <<-
+                strtoi(inputM2CutoffQualityScoreText)
 
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawSeqLength <<- rawSeqLength
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMeanQualityScore <<- rawMeanQualityScore
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMinQualityScore <<- rawMinQualityScore
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedStartPos <<- trimmedStartPos
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedFinishPos <<- trimmedFinishPos
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedSeqLength <<- trimmedSeqLength
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMinQualityScore <<- trimmedMinQualityScore
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    remainingRatio <<- remainingRatio
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawSeqLength <<- rawSeqLength
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMeanQualityScore <<- rawMeanQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMinQualityScore <<- rawMinQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedStartPos <<- trimmedStartPos
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedFinishPos <<- trimmedFinishPos
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedSeqLength <<- trimmedSeqLength
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMeanQualityScore <<- trimmedMeanQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMinQualityScore <<- trimmedMinQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                remainingRatio <<- remainingRatio
 
-                trimmedRV[["rawSeqLength"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawSeqLength
-                trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMeanQualityScore
-                trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMinQualityScore
-                trimmedRV[["trimmedStartPos"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedStartPos
-                trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedFinishPos
-                trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedSeqLength
-                trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMeanQualityScore
-                trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMinQualityScore
-                trimmedRV[["remainingRatio"]] <<-
-                    round(SangerSingleReadQualReport[[singleReadIndex]]@
-                              remainingRatio * 100, 2)
-                ### ------------------------------------------------------------
-                ### Save SangerConsensus quality S4 object
-                ### ------------------------------------------------------------
-                forwardReadNum <- length((SangerConsensus)@forwardReadsList)
-                reverseReadNum <- length((SangerConsensus)@reverseReadsList)
-                SangerSingleReadNum <- forwardReadNum + reverseReadNum
+            trimmedRV[["rawSeqLength"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                rawSeqLength
+            trimmedRV[["rawMeanQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMeanQualityScore
+            trimmedRV[["rawMinQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMinQualityScore
+            trimmedRV[["trimmedStartPos"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedStartPos
+            trimmedRV[["trimmedFinishPos"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedFinishPos
+            trimmedRV[["trimmedSeqLength"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedSeqLength
+            trimmedRV[["trimmedMeanQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMeanQualityScore
+            trimmedRV[["trimmedMinQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMinQualityScore
+            trimmedRV[["remainingRatio"]] <<-
+                round(SangerSingleReadQualReport[[singleReadIndex]]@
+                          remainingRatio * 100, 2)
+            ### ------------------------------------------------------------
+            ### Save SangerConsensus quality S4 object
+            ### ------------------------------------------------------------
+            forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+            reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+            SangerSingleReadNum <- forwardReadNum + reverseReadNum
 
-                sapply(1:forwardReadNum, function(i) {
-                    SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
-                        SangerSingleReadQualReport[[i]]
-                })
-                sapply(1:reverseReadNum, function(i) {
-                    SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
-                        SangerSingleReadQualReport[[forwardReadNum + i]]
-                })
-            }
+            sapply(1:forwardReadNum, function(i) {
+                SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
+                    SangerSingleReadQualReport[[i]]
+            })
+            sapply(1:reverseReadNum, function(i) {
+                SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
+                    SangerSingleReadQualReport[[forwardReadNum + i]]
+            })
         }
     })
 
@@ -1278,88 +1262,87 @@ consensusReadServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]@
                         M2CutoffQualityScore,
                     strtoi(inputM2SlidingWindowSizeText))
-            rawSeqLength <- trimmingPos[1]
-            rawMeanQualityScore <- trimmingPos[2]
-            rawMinQualityScore <- trimmingPos[3]
-            trimmedStartPos <- trimmingPos[4]
-            trimmedFinishPos <- trimmingPos[5]
-            trimmedSeqLength <- trimmingPos[6]
-            trimmedMeanQualityScore <- trimmingPos[7]
-            trimmedMinQualityScore <- trimmingPos[8]
-            remainingRatio <- trimmingPos[9]
+            rawSeqLength <- trimmingPos[["rawSeqLength"]]
+            rawMeanQualityScore <- trimmingPos[["rawMeanQualityScore"]]
+            rawMinQualityScore <- trimmingPos[["rawMinQualityScore"]]
+            trimmedStartPos <- trimmingPos[["trimmedStartPos"]]
+            trimmedFinishPos <- trimmingPos[["trimmedFinishPos"]]
+            trimmedSeqLength <- trimmingPos[["trimmedSeqLength"]]
+            trimmedMeanQualityScore <- trimmingPos[["trimmedMeanQualityScore"]]
+            trimmedMinQualityScore <- trimmingPos[["trimmedMinQualityScore"]]
+            remainingRatio <- trimmingPos[["remainingRatio"]]
+            message("@@@@@@@@Inside here!!")
+            message("trimmedStartPos: ", trimmedStartPos)
+            message("trimmedFinishPos: ", trimmedFinishPos)
+            message("trimmedMeanQualityScore: ", trimmedMeanQualityScore)
+            message("trimmedMinQualityScore: ", trimmedMinQualityScore)
+            message("trimmedSeqLength: ", trimmedSeqLength)
+            message("remainingRatio: ", remainingRatio)
 
-            if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
-                !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
-                !is.null(trimmedFinishPos) && !is.null(trimmedSeqLength) &&
-                !is.null(trimmedMeanQualityScore) &&
-                !is.null(trimmedMinQualityScore) &&
-                !is.null(remainingRatio)) {
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
 
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawSeqLength <<- rawSeqLength
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMeanQualityScore <<- rawMeanQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMinQualityScore <<- rawMinQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedStartPos <<- trimmedStartPos
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedFinishPos <<- trimmedFinishPos
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedSeqLength <<- trimmedSeqLength
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMeanQualityScore <<- trimmedMeanQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMinQualityScore <<- trimmedMinQualityScore
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                remainingRatio <<- remainingRatio
 
+            trimmedRV[["rawSeqLength"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawSeqLength <<- rawSeqLength
+                rawSeqLength
+            trimmedRV[["rawMeanQualityScore"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMeanQualityScore <<- rawMeanQualityScore
+                rawMeanQualityScore
+            trimmedRV[["rawMinQualityScore"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMinQualityScore <<- rawMinQualityScore
+                rawMinQualityScore
+            trimmedRV[["trimmedStartPos"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedStartPos <<- trimmedStartPos
+                trimmedStartPos
+            trimmedRV[["trimmedFinishPos"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedFinishPos <<- trimmedFinishPos
+                trimmedFinishPos
+            trimmedRV[["trimmedSeqLength"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedSeqLength <<- trimmedSeqLength
+                trimmedSeqLength
+            trimmedRV[["trimmedMeanQualityScore"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMeanQualityScore <<- trimmedMeanQualityScore
+                trimmedMeanQualityScore
+            trimmedRV[["trimmedMinQualityScore"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMinQualityScore <<- trimmedMinQualityScore
-                SangerSingleReadQualReport[[singleReadIndex]]@
-                    remainingRatio <<- remainingRatio
+                trimmedMinQualityScore
+            trimmedRV[["remainingRatio"]] <<-
+                round(SangerSingleReadQualReport[[singleReadIndex]]@
+                          remainingRatio * 100, 2)
+            ### ------------------------------------------------------------
+            ### Save SangerConsensus quality S4 object
+            ### ------------------------------------------------------------
+            forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+            reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+            SangerSingleReadNum <- forwardReadNum + reverseReadNum
 
-                trimmedRV[["rawSeqLength"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawSeqLength
-                trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMeanQualityScore
-                trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    rawMinQualityScore
-                trimmedRV[["trimmedStartPos"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedStartPos
-                trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedFinishPos
-                trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedSeqLength
-                trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMeanQualityScore
-                trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerSingleReadQualReport[[singleReadIndex]]@
-                    trimmedMinQualityScore
-                trimmedRV[["remainingRatio"]] <<-
-                    round(SangerSingleReadQualReport[[singleReadIndex]]@
-                              remainingRatio * 100, 2)
-                ### ------------------------------------------------------------
-                ### Save SangerConsensus quality S4 object
-                ### ------------------------------------------------------------
-                forwardReadNum <- length((SangerConsensus)@forwardReadsList)
-                reverseReadNum <- length((SangerConsensus)@reverseReadsList)
-                SangerSingleReadNum <- forwardReadNum + reverseReadNum
-
-                sapply(1:forwardReadNum, function(i) {
-                    SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
-                        SangerSingleReadQualReport[[i]]
-                })
-                sapply(1:reverseReadNum, function(i) {
-                    SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
-                        SangerSingleReadQualReport[[forwardReadNum + i]]
-                })
-            }
+            sapply(1:forwardReadNum, function(i) {
+                SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
+                    SangerSingleReadQualReport[[i]]
+            })
+            sapply(1:reverseReadNum, function(i) {
+                SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
+                    SangerSingleReadQualReport[[forwardReadNum + i]]
+            })
         }
     })
 

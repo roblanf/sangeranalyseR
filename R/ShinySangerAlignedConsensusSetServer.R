@@ -1244,15 +1244,15 @@ alignedConsensusSetServer <- function(input, output, session) {
                         SangerSingleReadQualReport[[singleReadIndex]]@
                         qualityBaseScore,
                     as.numeric(inputM1TrimmingCutoffText))
-            rawSeqLength <- trimmingPos[1]
-            rawMeanQualityScore <- trimmingPos[2]
-            rawMinQualityScore <- trimmingPos[3]
-            trimmedStartPos <- trimmingPos[4]
-            trimmedFinishPos <- trimmingPos[5]
-            trimmedSeqLength <- trimmingPos[6]
-            trimmedMeanQualityScore <- trimmingPos[7]
-            trimmedMinQualityScore <- trimmingPos[8]
-            remainingRatio <- trimmingPos[9]
+            rawSeqLength <- trimmingPos[["rawSeqLength"]]
+            rawMeanQualityScore <- trimmingPos[["rawMeanQualityScore"]]
+            rawMinQualityScore <- trimmingPos[["rawMinQualityScore"]]
+            trimmedStartPos <- trimmingPos[["trimmedStartPos"]]
+            trimmedFinishPos <- trimmingPos[["trimmedFinishPos"]]
+            trimmedSeqLength <- trimmingPos[["trimmedSeqLength"]]
+            trimmedMeanQualityScore <- trimmingPos[["trimmedMeanQualityScore"]]
+            trimmedMinQualityScore <- trimmingPos[["trimmedMinQualityScore"]]
+            remainingRatio <- trimmingPos[["remainingRatio"]]
 
             if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
                 !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
@@ -1353,15 +1353,15 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     M2SlidingWindowSize)
 
-        rawSeqLength <- trimmingPos[1]
-        rawMeanQualityScore <- trimmingPos[2]
-        rawMinQualityScore <- trimmingPos[3]
-        trimmedStartPos <- trimmingPos[4]
-        trimmedFinishPos <- trimmingPos[5]
-        trimmedSeqLength <- trimmingPos[6]
-        trimmedMeanQualityScore <- trimmingPos[7]
-        trimmedMinQualityScore <- trimmingPos[8]
-        remainingRatio <- trimmingPos[9]
+        rawSeqLength <- trimmingPos[["rawSeqLength"]]
+        rawMeanQualityScore <- trimmingPos[["rawMeanQualityScore"]]
+        rawMinQualityScore <- trimmingPos[["rawMinQualityScore"]]
+        trimmedStartPos <- trimmingPos[["trimmedStartPos"]]
+        trimmedFinishPos <- trimmingPos[["trimmedFinishPos"]]
+        trimmedSeqLength <- trimmingPos[["trimmedSeqLength"]]
+        trimmedMeanQualityScore <- trimmingPos[["trimmedMeanQualityScore"]]
+        trimmedMinQualityScore <- trimmingPos[["trimmedMinQualityScore"]]
+        remainingRatio <- trimmingPos[["remainingRatio"]]
 
         if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
             !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
@@ -1458,15 +1458,15 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     M2CutoffQualityScore,
                 strtoi(inputM2SlidingWindowSizeText))
-        rawSeqLength <- trimmingPos[1]
-        rawMeanQualityScore <- trimmingPos[2]
-        rawMinQualityScore <- trimmingPos[3]
-        trimmedStartPos <- trimmingPos[4]
-        trimmedFinishPos <- trimmingPos[5]
-        trimmedSeqLength <- trimmingPos[6]
-        trimmedMeanQualityScore <- trimmingPos[7]
-        trimmedMinQualityScore <- trimmingPos[8]
-        remainingRatio <- trimmingPos[9]
+        rawSeqLength <- trimmingPos[["rawSeqLength"]]
+        rawMeanQualityScore <- trimmingPos[["rawMeanQualityScore"]]
+        rawMinQualityScore <- trimmingPos[["rawMinQualityScore"]]
+        trimmedStartPos <- trimmingPos[["trimmedStartPos"]]
+        trimmedFinishPos <- trimmingPos[["trimmedFinishPos"]]
+        trimmedSeqLength <- trimmingPos[["trimmedSeqLength"]]
+        trimmedMeanQualityScore <- trimmingPos[["trimmedMeanQualityScore"]]
+        trimmedMinQualityScore <- trimmingPos[["trimmedMinQualityScore"]]
+        remainingRatio <- trimmingPos[["remainingRatio"]]
 
         if (!is.null(rawSeqLength) && !is.null(rawMeanQualityScore) &&
             !is.null(rawMinQualityScore ) && !is.null(trimmedStartPos) &&
