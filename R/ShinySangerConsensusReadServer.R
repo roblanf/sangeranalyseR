@@ -1172,14 +1172,6 @@ consensusReadServer <- function(input, output, session) {
                 SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
                     SangerSingleReadQualReport[[singleReadIndex]]
             }
-            # sapply(1:forwardReadNum, function(i) {
-            #     SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
-            #         SangerSingleReadQualReport[[i]]
-            # })
-            # sapply(1:reverseReadNum, function(i) {
-            #     SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
-            #         SangerSingleReadQualReport[[forwardReadNum + i]]
-            # })
         }
     })
 
@@ -1282,14 +1274,6 @@ consensusReadServer <- function(input, output, session) {
                 SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
                     SangerSingleReadQualReport[[singleReadIndex]]
             }
-            # sapply(1:forwardReadNum, function(i) {
-            #     SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
-            #         SangerSingleReadQualReport[[i]]
-            # })
-            # sapply(1:reverseReadNum, function(i) {
-            #     SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
-            #         SangerSingleReadQualReport[[forwardReadNum + i]]
-            # })
         }
     })
 
@@ -1392,14 +1376,6 @@ consensusReadServer <- function(input, output, session) {
                 SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
                     SangerSingleReadQualReport[[singleReadIndex]]
             }
-            # sapply(1:forwardReadNum, function(i) {
-            #     SangerConsensus@forwardReadsList[[i]]@QualityReport <<-
-            #         SangerSingleReadQualReport[[i]]
-            # })
-            # sapply(1:reverseReadNum, function(i) {
-            #     SangerConsensus@reverseReadsList[[i]]@QualityReport <<-
-            #         SangerSingleReadQualReport[[forwardReadNum + i]]
-            # })
         }
     })
 

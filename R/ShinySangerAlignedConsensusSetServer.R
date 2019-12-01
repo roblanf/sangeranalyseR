@@ -1023,25 +1023,31 @@ alignedConsensusSetServer <- function(input, output, session) {
             reverseReadNum <-
                 length(SangerConsensusSet@
                            consensusReadsList[[i]]@reverseReadsList)
+
             sapply(1:forwardReadNum, function(j) {
                 SangerConsensusSet@consensusReadsList[[i]]@
                     forwardReadsList[[j]]@QualityReport <<-
                     SangerCSetParam[[i]]$SangerSingleReadQualReport[[j]]
+                SangerConsensusSet@consensusReadsList[[i]]@
+                    forwardReadsList[[j]]@ChromatogramParam <<-
+                    SangerCSetParam[[i]]$SangerSingleReadChromatogramParam[[j]]
                 message("save SangerConsensus quality S4 object Forward")
-                }
-            )
+                })
             sapply(1:reverseReadNum, function(j) {
                 SangerConsensusSet@consensusReadsList[[i]]@
                     reverseReadsList[[j]]@QualityReport <<-
                     SangerCSetParam[[i]]$
                     SangerSingleReadQualReport[[forwardReadNum + j]]
+                SangerConsensusSet@consensusReadsList[[i]]@
+                    reverseReadsList[[j]]@ChromatogramParam <<-
+                    SangerCSetParam[[i]]$
+                    SangerSingleReadChromatogramParam[[forwardReadNum+j]]
                 message("save SangerConsensus quality S4 object Reverse")
-            }
-            )
+            })
         })
         saveRDS(SangerConsensusSet, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
-        NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
+        NEW_SANGER_ALIGNED_CONSENSUS_READ_SET <<- readRDS(file=newS4Object)
         # shinyOptions(NewSangerConsensusSet = newS4)
     })
 
@@ -1077,10 +1083,6 @@ alignedConsensusSetServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[5]])
 
         consensusParam[["consenesusReadName"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consenesusReadName
-
-
-
-
         SCAlignment <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment
 
         browseSeqHTML <-
@@ -1132,7 +1134,6 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusParam[["dendrogram"]][[1]]
     })
 
-
     ### ------------------------------------------------------------------------
     ### distance
     ### ------------------------------------------------------------------------
@@ -1147,20 +1148,6 @@ alignedConsensusSetServer <- function(input, output, session) {
             plotlyOutput("SCDistanceMatrixPlot")
         }
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     output$SCDistanceMatrixPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -1296,8 +1283,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
-
-
     valueBoxSCMinReadsNumCSSet (input, output, SangerConsensusSet, session)
     valueBoxSCMinReadLengthCSSet (input, output, SangerConsensusSet, session)
     valueBoxSCMinFractionCallCSSet (input, output, SangerConsensusSet, session)
@@ -1321,7 +1306,6 @@ alignedConsensusSetServer <- function(input, output, session) {
     valueBoxTrimmedMeanQualityScore (input, output, session, trimmedRV)
     valueBoxTrimmedMinQualityScore (input, output, session, trimmedRV)
     valueBoxRemainingRatio (input, output, session, trimmedRV)
-
 
 
     observeEvent(input$M1TrimmingCutoffText, {
@@ -1425,6 +1409,21 @@ alignedConsensusSetServer <- function(input, output, session) {
                     round(SangerCSetParam[[consensusReadIndex]]$
                               SangerSingleReadQualReport[[singleReadIndex]]@
                               remainingRatio * 100, 2)
+                ### ------------------------------------------------------------
+                ### Save SangerConsensus quality S4 object
+                ### ------------------------------------------------------------
+                forwardReadNum <- length(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList)
+                reverseReadNum <- length(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList)
+                SangerSingleReadNum <- forwardReadNum + reverseReadNum
+                if (singleReadIndex <= forwardReadNum) {
+                    # This is forward list
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList[[singleReadIndex]]@QualityReport <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]
+                } else {
+                    # This is reverse list
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
+                        SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]
+                }
             }
         }
     })
@@ -1533,6 +1532,21 @@ alignedConsensusSetServer <- function(input, output, session) {
                 round(SangerCSetParam[[consensusReadIndex]]$
                           SangerSingleReadQualReport[[singleReadIndex]]@
                           remainingRatio * 100, 2)
+            ### ------------------------------------------------------------
+            ### Save SangerConsensus quality S4 object
+            ### ------------------------------------------------------------
+            forwardReadNum <- length(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList)
+            reverseReadNum <- length(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList)
+            SangerSingleReadNum <- forwardReadNum + reverseReadNum
+            if (singleReadIndex <= forwardReadNum) {
+                # This is forward list
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList[[singleReadIndex]]@QualityReport <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]
+            } else {
+                # This is reverse list
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]
+            }
         }
     })
 
@@ -1639,6 +1653,21 @@ alignedConsensusSetServer <- function(input, output, session) {
                 round(SangerCSetParam[[consensusReadIndex]]$
                           SangerSingleReadQualReport[[singleReadIndex]]@
                           remainingRatio * 100, 2)
+            ### ------------------------------------------------------------
+            ### Save SangerConsensus quality S4 object
+            ### ------------------------------------------------------------
+            forwardReadNum <- length(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList)
+            reverseReadNum <- length(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList)
+            SangerSingleReadNum <- forwardReadNum + reverseReadNum
+            if (singleReadIndex <= forwardReadNum) {
+                # This is forward list
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList[[singleReadIndex]]@QualityReport <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]
+            } else {
+                # This is reverse list
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
+                    SangerCSetParam[[consensusReadIndex]]$SangerSingleReadQualReport[[singleReadIndex]]
+            }
         }
     })
 
@@ -1820,11 +1849,6 @@ alignedConsensusSetServer <- function(input, output, session) {
             (sidebar_menu[[6]] == "Forward" ||
              sidebar_menu[[6]] == "Reverse") &&
             sidebar_menu[[7]] == "Read") {
-            # chromatogramRowNumAns <-
-            #     chromatogramRowNum(
-            #         SangerCSetParam[[consensusReadIndex]]$
-            #             SangerConsensusFRReadsList[[singleReadIndex]],
-            #         strtoi(input$ChromatogramBasePerRow)) * 200
             trimmedRV[["trimmedSeqLength"]]
             rawSeqLength =
                 SangerCSetParam[[consensusReadIndex]]$
@@ -1866,7 +1890,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                 signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
                 showTrimmed <<- input$ChromatogramCheckShowTrimmed
-
             ### ------------------------------------------------------------
             ### Save SangerConsensus quality S4 object
             ### ------------------------------------------------------------
@@ -1901,16 +1924,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                          showcalls = "both")
         }
     })
-
-
-
-
-
-
-
-
-
-
 
     output$TrimmingMethodUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
