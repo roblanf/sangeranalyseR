@@ -113,22 +113,6 @@ setMethod("initialize",
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
     errors <- character()
-
-    ### --------------------------------------------------------------
-    ### Input parameter prechecking for TrimmingMethod.
-    ### --------------------------------------------------------------
-    errors <- checkTrimParam(TrimmingMethod,
-                             M1TrimmingCutoff,
-                             M2CutoffQualityScore,
-                             M2SlidingWindowSize,
-                             errors)
-    errors <- checkMinReadsNum(minReadsNum, errors)
-    errors <- checkMinReadLength(minReadLength, errors)
-    errors <- checkMinFractionCall(minFractionCall, errors)
-    errors <- checkMaxFractionLost(maxFractionLost, errors)
-    errors <- checkReadingFrame(readingFrame, errors)
-    errors <- checkGeneticCode(geneticCode, errors)
-
     ### ------------------------------------------------------------------------
     ### 'parentDirectory' prechecking
     ### ------------------------------------------------------------------------
@@ -138,20 +122,34 @@ setMethod("initialize",
     ### 'forwardAllReads' & 'reverseAllReads' files prechecking
     ### ------------------------------------------------------------------------
     parentDirFiles <- list.files(parentDirectory)
-    consensusSubGroupFiles <- parentDirFiles[grepl(consenesusReadName,
-                                                    parentDirFiles, fixed=TRUE)]
-    forwardSelectInputFiles <- consensusSubGroupFiles[grepl(suffixForwardRegExp,
-                                                    consensusSubGroupFiles)]
-    reverseSelectInputFiles <- consensusSubGroupFiles[grepl(suffixReverseRegExp,
-                                                    consensusSubGroupFiles)]
+    consensusSubGroupFiles <-
+        parentDirFiles[grepl(consenesusReadName,
+                             parentDirFiles, fixed=TRUE)]
+    forwardSelectInputFiles <-
+        consensusSubGroupFiles[grepl(suffixForwardRegExp,
+                                     consensusSubGroupFiles)]
+    reverseSelectInputFiles <-
+        consensusSubGroupFiles[grepl(suffixReverseRegExp,
+                                     consensusSubGroupFiles)]
     forwardAllReads <- lapply(parentDirectory, file.path,
                               forwardSelectInputFiles)
     reverseAllReads <- lapply(parentDirectory, file.path,
                               reverseSelectInputFiles)
 
+    ### ------------------------------------------------------------------------
+    ### 'forwardNumber' + 'reverseNumber' number > 2
+    ### ------------------------------------------------------------------------
     forwardNumber <- length(forwardAllReads[[1]])
     reverseNumber <- length(reverseAllReads[[1]])
-    # sapply to check all forwardAllReads files are exist.
+    if ((forwardNumber + reverseNumber) < 2) {
+        msg <- paste("\n'Number of total reads has to be more than two.",
+                     sep = "")
+        errors <- c(errors, msg)
+    }
+
+    ### ------------------------------------------------------------------------
+    ### 'forwardAllReads'  files prechecking (must exist)
+    ### ------------------------------------------------------------------------
     forwardAllErrorMsg <- sapply(c(forwardAllReads[[1]]), function(filePath) {
         if (!file.exists(filePath)) {
             msg <- paste("\n'", filePath, "' forward read file does ",
@@ -160,6 +158,11 @@ setMethod("initialize",
         }
         return()
     })
+    errors <- c(errors, unlist(forwardAllErrorMsg), use.names = FALSE)
+
+    ### ------------------------------------------------------------------------
+    ### 'reverseAllReads'  files prechecking (must exist)
+    ### ------------------------------------------------------------------------
     reverseAllErrorMsg <- sapply(c(reverseAllReads[[1]]), function(filePath) {
         if (!file.exists(filePath)) {
             msg <- paste("\n'", filePath, "'",
@@ -168,8 +171,40 @@ setMethod("initialize",
         }
         return()
     })
-    errors <- c(errors, unlist(forwardAllErrorMsg), use.names = FALSE)
     errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
+
+    ### ------------------------------------------------------------------------
+    ### Input parameter prechecking for TrimmingMethod.
+    ### ------------------------------------------------------------------------
+    errors <- checkTrimParam(TrimmingMethod,
+                             M1TrimmingCutoff,
+                             M2CutoffQualityScore,
+                             M2SlidingWindowSize,
+                             errors)
+
+    ##### ----------------------------------------------------------------------
+    ##### Input parameter prechecking for ChromatogramParam
+    ##### ----------------------------------------------------------------------
+    errors <- checkBaseNumPerRow (baseNumPerRow, errors)
+    errors <- checkHeightPerRow (baseNumPerRow, errors)
+    errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
+    errors <- checkShowTrimmed (showTrimmed, errors)
+
+    ##### ----------------------------------------------------------------------
+    ##### Input parameter prechecking for ConsensusRead parameter
+    ##### ----------------------------------------------------------------------
+    errors <- checkMinReadsNum(minReadsNum, errors)
+    errors <- checkMinReadLength(minReadLength, errors)
+    errors <- checkMinFractionCall(minFractionCall, errors)
+    errors <- checkMaxFractionLost(maxFractionLost, errors)
+    errors <- checkGeneticCode(geneticCode, errors)
+    errors <- checkAcceptStopCodons(acceptStopCodons, errors)
+    errors <- checkReadingFrame(readingFrame, errors)
+
+    ##### ----------------------------------------------------------------------
+    ##### Input parameter prechecking for processorsNum
+    ##### ----------------------------------------------------------------------
+    errors <- checkProcessorsNum(processorsNum, errors)
 
     ### ------------------------------------------------------------------------
     ### Prechecking success. Start to create multiple reads.
@@ -203,7 +238,8 @@ setMethod("initialize",
             calculateConsensusRead (forwardReadsList, reverseReadsList,
                                     refAminoAcidSeq, minFractionCall,
                                     maxFractionLost, geneticCode,
-                                    acceptStopCodons, readingFrame)
+                                    acceptStopCodons, readingFrame,
+                                    processorsNum)
 
         consensusGapfree <- CSResult$consensusGapfree
         diffsDf <- CSResult$diffsDf

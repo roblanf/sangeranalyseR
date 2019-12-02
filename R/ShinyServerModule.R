@@ -120,7 +120,8 @@ M2inside_calculate_trimming <- function(qualityPhredScores,
 calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
                                    refAminoAcidSeq, minFractionCall,
                                    maxFractionLost, geneticCode,
-                                   acceptStopCodons, readingFrame) {
+                                   acceptStopCodons, readingFrame,
+                                   processorsNum) {
     ### --------------------------------------------------------------------
     ### forward & reverse character reads list string creation
     ### --------------------------------------------------------------------

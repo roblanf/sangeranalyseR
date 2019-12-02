@@ -1,9 +1,26 @@
+checkAcceptStopCodons <- function(acceptStopCodons, errors) {
+    if (!is.logical(acceptStopCodons)) {
+        msg <- paste("\n'acceptStopCodons' must be 'TRUE' or 'FALSE'\n",
+                     sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
+checkProcessorsNum <- function(processorsNum, errors) {
+    if (!(processorsNum %% 1 == 0)) {
+        msg <- paste("\n'processorsNum' must be integer.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
 ### ============================================================================
 ### QualityReport related: 'readFeature', 'qualityPhredScores'
 ### ============================================================================
 checkReadFeature <- function(readFeature, errors) {
     if (readFeature != "Forward Read" && readFeature != "Reverse Read") {
-        msg <- paste("\n''readFeature' have to be
+        msg <- paste("\n'readFeature' must be
                      'Forward Read' or 'Reverse Read'\n", sep = "")
         errors <- c(errors, msg)
     }
@@ -18,7 +35,7 @@ checkQualityPhredScores <- function(qualityPhredScores, errors) {
     }
     if (!all(qualityPhredScores%%1 == 0)) {
         msg <- paste("\nAll elements in 'qualityPhredScores' vector
-                               have to be integer.\n")
+                               must be integer.\n")
         errors <- c(errors, msg)
     }
     return(errors)
@@ -103,7 +120,7 @@ checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
 ### ============================================================================
 checkMinReadsNum <- function(minReadsNum, errors) {
     if (minReadsNum%%1!=0) {
-        msg <- paste("\n''minReadsNum' have to be integer.\n", sep = "")
+        msg <- paste("\n'minReadsNum' must be integer.\n", sep = "")
         errors <- c(errors, msg)
     }
     return(errors)
@@ -111,7 +128,7 @@ checkMinReadsNum <- function(minReadsNum, errors) {
 
 checkMinReadLength <- function(minReadLength, errors) {
     if (minReadLength%%1!=0) {
-        msg <- paste("\n'minReadLength' have to be integer.\n", sep = "")
+        msg <- paste("\n'minReadLength' must be integer.\n", sep = "")
         errors <- c(errors, msg)
     }
     return(errors)
@@ -121,7 +138,7 @@ checkMinReadLength <- function(minReadLength, errors) {
 
 checkMinFractionCall <- function(minFractionCall, errors) {
     if (minFractionCall > 1 || minFractionCall < 0) {
-        msg <- paste("\n'minFractionCall' have to be between 0 and 1.\n",
+        msg <- paste("\n'minFractionCall' must be between 0 and 1.\n",
                      sep = "")
         errors <- c(errors, msg)
     }
@@ -130,7 +147,7 @@ checkMinFractionCall <- function(minFractionCall, errors) {
 
 checkMaxFractionLost <- function(maxFractionLost, errors) {
     if (maxFractionLost > 1 || maxFractionLost < 0) {
-        msg <- paste("\n'maxFractionLost' have to be between 0 and 1.\n",
+        msg <- paste("\n'maxFractionLost' must be between 0 and 1.\n",
                      sep = "")
         errors <- c(errors, msg)
     }

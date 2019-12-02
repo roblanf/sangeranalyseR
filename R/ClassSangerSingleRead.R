@@ -70,14 +70,6 @@ setMethod("initialize",
                    readFeature          = character(0),
                    readFileName         = character(0),
                    geneticCode          = GENETIC_CODE,
-                   primarySeqID         = primarySeqID,
-                   primarySeq           = primarySeq,
-                   secondarySeqID       = secondarySeqID,
-                   secondarySeq         = secondarySeq,
-                   traceMatrix          = traceMatrix,
-                   peakPosMatrix        = peakPosMatrix,
-                   peakAmpMatrix        = peakAmpMatrix,
-                   abifRawData          = abifRawData,
                    TrimmingMethod       = "M1",
                    M1TrimmingCutoff     = 0.0001,
                    M2CutoffQualityScore = NULL,
@@ -92,6 +84,7 @@ setMethod("initialize",
               errors <- character()
               errors <- checkReadFeature (readFeature, errors)
               errors <- checkReadFileName (readFileName, errors)
+              errors <- checkGeneticCode(geneticCode, errors)
 
               ##### ------------------------------------------------------------
               ##### Input parameter prechecking for TrimmingMethod.
@@ -145,7 +138,6 @@ setMethod("initialize",
                   ##### PCON.2: char => Per-base quality values
                   ### ----------------------------------------------------------
                   QualityReport <- new("QualityReport",
-                                       readFeature = readFeature,
                                        qualityPhredScores =
                                            readRawAbif@data$PCON.2,
                                        TrimmingMethod = TrimmingMethod,

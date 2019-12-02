@@ -38,7 +38,7 @@ A_chloroticaFdReadFN <- file.path(inputFilesPath,
                                   "Allolobophora_chlorotica",
                                   "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
 A_chloroticaSingleRead <- new("SangerSingleRead",
-                              readFeature           = "ForwardRead",
+                              readFeature           = "Forward Read",
                               readFileName          = A_chloroticaFdReadFN,
                               TrimmingMethod        = "M2",
                               M1TrimmingCutoff      = NULL,
