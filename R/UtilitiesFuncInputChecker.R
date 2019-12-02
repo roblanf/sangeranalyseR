@@ -15,6 +15,18 @@ checkProcessorsNum <- function(processorsNum, errors) {
     return(errors)
 }
 
+
+
+
+checkReadFileName <- function(readFileName, errors) {
+    if (!file.exists(readFileName)) {
+        cat ("readFileName", readFileName)
+        msg <- paste("\n'", readFileName, "'",
+                     " foward read file does not exist.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+}
+
 ### ============================================================================
 ### QualityReport related: 'readFeature', 'qualityPhredScores'
 ### ============================================================================

@@ -19,3 +19,7 @@
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom ggdendro ggdendrogram
 #' @importFrom ape BIONJ
+
+
+#' @export
+setOldClass("phylo")

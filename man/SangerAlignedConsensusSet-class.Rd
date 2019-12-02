@@ -12,27 +12,21 @@ An S4 class for storing multiple single consensus reads to
 \describe{
 \item{\code{parentDirectory}}{.}
 
-\item{\code{suffixForwardRegExp}}{.}
-
 \item{\code{suffixReverseRegExp}}{.}
+
+\item{\code{minFractionCallSCSet}}{.}
+
+\item{\code{maxFractionLostSCSet}}{.}
+
+\item{\code{refAminoAcidSeq}}{.}
 
 \item{\code{consensusReadsList}}{.}
 
-\item{\code{SCconsensusRead}}{.}
+\item{\code{consensusReadSCSet}}{.}
 
-\item{\code{SCalignment}}{.}
+\item{\code{alignmentSCSet}}{.}
 
-\item{\code{SCdifferencesDF}}{.}
-
-\item{\code{SCdistanceMatrix}}{.}
-
-\item{\code{SCdendrogram}}{.}
-
-\item{\code{SCindelsDF}}{.}
-
-\item{\code{SCstopCodonsDF}}{.}
-
-\item{\code{SCsecondaryPeakDF}}{.}
+\item{\code{alignmentTreeSCSet}}{.}
 }}
 
 \examples{
@@ -41,17 +35,18 @@ inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
-                     parentDirectory       = inputFilesParentDir,
-                     suffixForwardRegExp   = suffixForwardRegExp,
-                     suffixReverseRegExp   = suffixReverseRegExp,
-                     TrimmingMethod        = "M2",
-                     M1TrimmingCutoff      = NULL,
-                     M2CutoffQualityScore  = 40,
-                     M2SlidingWindowSize   = 10,
-                     baseNumPerRow         = 100,
-                     heightPerRow          = 200,
-                     signalRatioCutoff     = 0.33,
-                     showTrimmed           = TRUE)
+                               parentDirectory       = inputFilesParentDir,
+                               suffixForwardRegExp   = suffixForwardRegExp,
+                               suffixReverseRegExp   = suffixReverseRegExp,
+                               refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                               TrimmingMethod        = "M2",
+                               M1TrimmingCutoff      = NULL,
+                               M2CutoffQualityScore  = 40,
+                               M2SlidingWindowSize   = 10,
+                               baseNumPerRow         = 100,
+                               heightPerRow          = 200,
+                               signalRatioCutoff     = 0.33,
+                               showTrimmed           = TRUE)
 }
 \author{
 Kuan-Hao Chao
