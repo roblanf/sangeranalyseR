@@ -432,7 +432,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               plotlyOutput("SCSetdendrogramPlot"),
+                               plotOutput("SCSetdendrogramPlot"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         ),
@@ -1270,16 +1270,9 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### dendrogram
     ### ------------------------------------------------------------------------
-    output$SCSetdendrogramPlot <- renderPlotly({
+    output$SCSetdendrogramPlot <- renderPlot({
         consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
-        # plot(consensusParamSet[["dendrogramSet"]][[2]])
-        # p <- ggdendrogram(consensusParamSet[["dendrogramSet"]][[2]], rotate = TRUE)
-        # p <- ggplotly(p)
-        # dhc <- as.dendrogram(A_chloroticConsensusReads@dendrogram[[2]])
-        # plot_dendro(as.dendrogram(consensusParamSet[["dendrogramSet"]][[2]]))
-        hc <- hclust(dist(consensusParamSet[["dendrogramSet"]][[1]]), "ave")
-        dend1 <- as.dendrogram(hc)
-        plot_dendro(dend1, height = "100%", width="100%")
+        ggdendrogram(consensusParamSet[["dendrogramSet"]][[2]], rotate = TRUE)
     })
     output$SCSetdendrogramDF <- renderDataTable({
         consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
