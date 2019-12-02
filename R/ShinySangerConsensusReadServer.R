@@ -281,6 +281,7 @@ consensusReadServer <- function(input, output, session) {
             ### ----------------------------------------------------------------
             ### First re-calculate consensus read & Update global variable
             ### ----------------------------------------------------------------
+            message("Start recalculating consensus read")
             CSResult<-
                 calculateConsensusRead (SangerConsensus@forwardReadsList,
                                         SangerConsensus@reverseReadsList,
@@ -310,6 +311,16 @@ consensusReadServer <- function(input, output, session) {
             consensusParam[["secondaryPeakDF"]] <<-
                 SangerConsensus@secondaryPeakDF
 
+            message("consenesusReadName: ", consensusParam[["consensusRead"]])
+            message("differencesDF: ", consensusParam[["differencesDF"]])
+            message("alignment: ", consensusParam[["alignment"]])
+            message("distanceMatrix: ", consensusParam[["distanceMatrix"]])
+            message("dendrogram: ", consensusParam[["dendrogram"]])
+            message("indelsDF: ", consensusParam[["indelsDF"]])
+            message("stopCodonsDF: ", consensusParam[["stopCodonsDF"]])
+            message("secondaryPeakDF: ", consensusParam[["secondaryPeakDF"]])
+
+            message("Finish recalculating consensus read")
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p(tagList(icon("dot-circle"),

@@ -20,7 +20,7 @@
 #'                                  showTrimmed           = FALSE)
 #' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
 launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
-    ### ------------------------------------------------------------------------
+    ### -------------------------------------------------------------------ㄥ-----
     ### Checking SangerConsensusRead input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------

@@ -24,7 +24,7 @@
 #'                                   "Allolobophora_chlorotica",
 #'                                   "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
 #' A_chloroticaSingleRead <- new("SangerSingleRead",
-#'                               readFeature           = "ForwardRead",
+#'                               readFeature           = "Forward Read",
 #'                               readFileName          = A_chloroticaFdReadFN,
 #'                               TrimmingMethod        = "M2",
 #'                               M1TrimmingCutoff      = NULL,
@@ -111,13 +111,18 @@ setMethod("initialize",
                   readSangerseq = sangerseq(readRawAbif)
 
                   primarySeqID        = readSangerseq@primarySeqID
-                  primarySeq          = readSangerseq@primarySeq
+                  secondarySeqID      = readSangerseq@secondarySeqID
+                  if (readFeature == "Forward Read") {
+                      primarySeq = readSangerseq@primarySeq
+                      secondarySeq        = readSangerseq@secondarySeq
+                  } else if (readFeature == "Reverse Read") {
+                      primarySeq = reverseComplement(readSangerseq@primarySeq)
+                      secondarySeq = reverseComplement(readSangerseq@secondarySeq)
+                  }
                   primaryAASeq        = suppressWarnings(translate(primarySeq,
                                                   genetic.code = geneticCode,
                                                   no.init.codon=TRUE,
                                                   if.fuzzy.codon="solve"))
-                  secondarySeqID      = readSangerseq@secondarySeqID
-                  secondarySeq        = readSangerseq@secondarySeq
                   traceMatrix         = readSangerseq@traceMatrix
                   peakPosMatrix       = readSangerseq@peakPosMatrix
                   peakAmpMatrix       = readSangerseq@peakAmpMatrix
