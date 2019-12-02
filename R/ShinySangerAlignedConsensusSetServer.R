@@ -744,6 +744,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                      "overflow-y: hidden;",
                                                      "overflow-x: scroll;")
                                 ),
+                                uiOutput("SCrefAminoAcidSeq") ,
                             ),
                         ),
 
@@ -1363,6 +1364,18 @@ alignedConsensusSetServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
+    output$SCrefAminoAcidSeqDF <- renderExcel({
+        refAminoAcidSeqVec <-
+            strsplit(SangerConsensusSet@consensusReadsList[[1]]@
+                         refAminoAcidSeq, "")[[1]]
+        names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
+        excelTable(data =
+                       t(data.frame(refAminoAcidSeqVec)),
+                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+    })
 
 
 
@@ -1378,12 +1391,42 @@ alignedConsensusSetServer <- function(input, output, session) {
 
 
 
-
-
-
-
-
-
+    ### ------------------------------------------------------------------------
+    ### refAminoAcidSeq
+    ### ------------------------------------------------------------------------
+    output$SCrefAminoAcidSeq <- renderUI({
+        if (SangerConsensusSet@consensusReadsList[[1]]@refAminoAcidSeq == "") {
+            box(title = tags$p("Reference Amino Acids Sequence",
+                               style = "font-size: 24px;
+                                    font-weight: bold;"),
+                collapsible = TRUE,
+                status = "success", width = 12,
+                column(width = 1),
+                column(width = 11,
+                       h4("Reference Amino Acid Sequence is not provided."))
+            )
+        } else {
+            box(title = tags$p("Reference Amino Acids Sequence",
+                               style = "font-size: 24px;
+                                    font-weight: bold;"),
+                collapsible = TRUE,
+                status = "success", width = 12,
+                column(width = 2,
+                       tags$br(),
+                       tags$p("AA Sequence:",
+                              style = "font-size: 15px;
+                                       font-weight: bold;"),
+                ),
+                column(width = 10,
+                       excelOutput("SCrefAminoAcidSeqDF",
+                                   width = "100%", height = "50"),
+                       style = paste("height:100%; ",
+                                     "overflow-y: hidden;",
+                                     "overflow-x: scroll;")
+                ),
+            )
+        }
+    })
 
     ### ------------------------------------------------------------------------
     ### Alignment
