@@ -3,17 +3,14 @@
 #' @description  An S4 class for storing multiple single consensus reads to
 #'
 #' @slot parentDirectory .
-#' @slot suffixForwardRegExp .
+#' @slot suffixForwardRegExp.
 #' @slot suffixReverseRegExp .
+#' @slot minFractionCallSCSet .
+#' @slot maxFractionLostSCSet .
+#' @slot refAminoAcidSeq .
 #' @slot consensusReadsList .
-#' @slot SCconsensusRead .
-#' @slot SCalignment .
-#' @slot SCdifferencesDF .
-#' @slot SCdistanceMatrix .
-#' @slot SCdendrogram .
-#' @slot SCindelsDF .
-#' @slot SCstopCodonsDF .
-#' @slot SCsecondaryPeakDF .
+#' @slot consensusReadSCSet .
+#' @slot alignmentSCSet .
 #'
 #' @name SangerAlignedConsensusSet-class
 #'
@@ -31,6 +28,7 @@
 #'                                parentDirectory       = inputFilesParentDir,
 #'                                suffixForwardRegExp   = suffixForwardRegExp,
 #'                                suffixReverseRegExp   = suffixReverseRegExp,
+#'                                refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                                TrimmingMethod        = "M2",
 #'                                M1TrimmingCutoff      = NULL,
 #'                                M2CutoffQualityScore  = 40,
@@ -52,15 +50,12 @@ setClass("SangerAlignedConsensusSet",
              parentDirectory             = "character",
              suffixForwardRegExp         = "character",
              suffixReverseRegExp         = "character",
+             minFractionCallSCSet        = "numeric",
+             maxFractionLostSCSet        = "numeric",
+             refAminoAcidSeq             = "character",
              consensusReadsList          = "list",
-             SCconsensusRead             = "DNAString",
-             SCalignment                 = "DNAStringSet",
-             SCdifferencesDF             = "data.frame",
-             SCdistanceMatrix            = "matrix",
-             SCdendrogram                = "list",
-             SCindelsDF                  = "data.frame",
-             SCstopCodonsDF              = "data.frame",
-             SCsecondaryPeakDF           = "data.frame"
+             consensusReadSCSet          = "DNAString",
+             alignmentSCSet              = "DNAStringSet"
              ),
 )
 
@@ -89,6 +84,8 @@ setMethod("initialize",
                    geneticCode            = GENETIC_CODE,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
+                   minFractionCallSCSet   = 0.5,
+                   maxFractionLostSCSet   = 0.5,
                    processorsNum          = 1) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
@@ -135,7 +132,7 @@ setMethod("initialize",
 
     if (length(errors) == 0) {
         ### --------------------------------------------------------------------
-        ### 'forwardAllReads' & 'reverseAllReads' files prechecking
+        ### Automatically finding consensus read name by forward&reverse suffix
         ### --------------------------------------------------------------------
         parentDirFiles <- list.files(parentDirectory)
         forwardSelectInputFiles <- parentDirFiles[grepl(suffixForwardRegExp,
@@ -155,7 +152,9 @@ setMethod("initialize",
         consensusReadsNumber <- length(consensusReadsName)
 
         # Create consensusReads for all list of consensusReadsNumber
-
+        ### --------------------------------------------------------------------
+        ### Creating each SangerConsensusRead (store as SangerConsensusReadList)
+        ### --------------------------------------------------------------------
         SangerConsensusReadList <-
             sapply(consensusReadsName,
                    function(eachConsRead) {
@@ -171,155 +170,69 @@ setMethod("initialize",
                            readingFrame, processorsNum)
                    })
 
-        message("Filtering readsets with < ", minReadsNum, " reads...")
-
-        # sapply(consensusReadsName, function(eachCSName) {
-        #     eachCSName
-        #
-        #     grepl(suffixForwardRegExp,
-        #           parentDirFiles)
-        # })
-        #
-        # SangerConsensusReadList
-
-
-        # calculateConsensusRead (forwardReadsList, reverseReadsList,
-        #                         refAminoAcidSeq, minFractionCall,
-        #                         maxFractionLost, geneticCode,
-        #                         acceptStopCodons, readingFrame)
-
-        SangerConsensusReadDNAList <- sapply(SangerConsensusReadList, function(SangerConsensusRead) {
-            as.character(SangerConsensusRead@consensusRead)
-        })
+        ### --------------------------------------------------------------------
+        ### Creating SangerConsensusReadList DNAStringSet
+        ### --------------------------------------------------------------------
+        SangerConsensusReadDNAList <-
+            sapply(SangerConsensusReadList, function(SangerConsensusRead) {
+                as.character(SangerConsensusRead@consensusRead)
+            })
 
         SangerConsensusReadDNASet <- DNAStringSet(SangerConsensusReadDNAList)
 
         ### --------------------------------------------------------------------
-        ### DNAStringSet storing forward & reverse reads ! (Origin)
+        ### Aligning consensus reads
         ### --------------------------------------------------------------------
-
-        if(length(SangerConsensusReadDNASet) < 2) {
-            error <- paste("\n'Valid abif files should be more than 2.\n",
-                           sep = "")
-            stop(error)
-        }
-        processorsNum <- getProcessors(processorsNum)
-
-        ### --------------------------------------------------------------------
-        ### Amino acid reference sequence CorrectFrameshifts correction
-        ### --------------------------------------------------------------------
-        if (refAminoAcidSeq != "") {
-            message("Correcting frameshifts in reads using amino acid",
-                    "reference sequence")
-            # My test refAminoAcidSeq data
-            # no_N_string <- str_replace_all(SangerConsensusReadDNASet[1], "N", "T")
-            # example.dna <- DNAStringSet(c(`IGHV1-18*01`=no_N_string))
-            # refAminoAcidSeq <- translate(example.dna)
-            # Verbose should be FALSE, but I get error when calling it
-            corrected =
-                CorrectFrameshifts(myXStringSet = SangerConsensusReadDNASet,
-                                   myAAStringSet = AAStringSet(refAminoAcidSeq),
-                                   geneticCode = geneticCode,
-                                   type = 'both',
-                                   processors = processorsNum)
-            SangerConsensusReadDNASet = corrected$sequences
-            indels = getIndelDf(corrected$indels)
-            stops = as.numeric(unlist(mclapply(SangerConsensusReadDNASet, countStopSodons,
-                                               readingFrame, geneticCode,
-                                               mc.cores = processorsNum)))
-            stopsDf = data.frame("read" = names(SangerConsensusReadDNASet),
-                                 "stop.codons" = stops)
-            SangerConsensusReadDNASetLen = unlist(lapply(SangerConsensusReadDNASet, function(x) length(x)))
-            SangerConsensusReadDNASet = SangerConsensusReadDNASet[which(SangerConsensusReadDNASetLen>0)]
-        } else {
-            indels = data.frame()
-            stopsDf = data.frame()
-        }
-        if(length(SangerConsensusReadDNASet) < 2) {
-            error <- paste("\n'After running 'CorrectFrameshifts' function, ",
-                           "forward and reverse reads should be more than 2.\n",
-                           sep = "")
-            stop(error)
-        }
-
-        ### --------------------------------------------------------------------
-        ### Reads with stop codons elimination
-        ### --------------------------------------------------------------------
-        ### ----------------------------------------------------------------
-        ### Remove reads with stop codons
-        ### ----------------------------------------------------------------
-        if (!acceptStopCodons) {
-            print("Removing reads with stop codons")
-            if(refAminoAcidSeq == ""){ # otherwise we already did it above
-                stops =
-                    as.numeric(unlist(mclapply(SangerConsensusReadDNASet,
-                                               countStopSodons,
-                                               readingFrame, geneticCode,
-                                               mc.cores = processorsNum)))
-                stopsDf = data.frame("read" = names(SangerConsensusReadDNASet),
-                                     "stopCodons" = stops)
+        if(length(SangerConsensusReadDNASet) > 1) {
+            message("Aligning consensus reads ... ")
+            if(!is.null(refAminoAcidSeq)){
+                aln = AlignTranslation(SangerConsensusReadDNASet,
+                                       geneticCode = geneticCode,
+                                       processors = processorsNum,
+                                       verbose = FALSE)
+            }else{
+                aln = AlignSeqs(SangerConsensusReadDNASet,
+                                processors = processorsNum,
+                                verbose = FALSE)
             }
-            old_length = length(SangerConsensusReadDNASet)
-            SangerConsensusReadDNASet = SangerConsensusReadDNASet[which(stops==0)]
-            # Modify
-            message(old_length - length(SangerConsensusReadDNASet),
-                    "reads with stop codons removed")
-        }
+            # Getting a new consensus read
+            consensus = ConsensusSequence(aln,
+                                          minInformation = minFractionCallSCSet,
+                                          includeTerminalGaps = TRUE,
+                                          ignoreNonBases = TRUE,
+                                          threshold = maxFractionLostSCSet,
+                                          noConsensusChar = "-",
+                                          ambiguity = TRUE
+            )[[1]]
+            # add consensus to alignment
+            aln = c(aln, DNAStringSet(consensus))
 
-        if(length(SangerConsensusReadDNASet) < 2) {
-            error <- paste("\n'After removing reads with stop codons, ",
-                           "forward and reverse reads should be more than 2.\n",
-                           sep = "")
-            stop(error)
-        }
+            ### ----------------------------------------------------------------
+            ### Making a rough NJ tree. Labels are rows in the summary df
+            ### ----------------------------------------------------------------
+            neat.labels = match(names(aln),
+                                as.character(names(SangerConsensusReadDNASet))
+            )
+            aln2 = aln
+            names(aln2) = neat.labels
+            aln.bin = as.DNAbin(aln2)
+            aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
 
-        ### --------------------------------------------------------------------
-        ### Start aligning reads
-        ### --------------------------------------------------------------------
-        if (refAminoAcidSeq != "") {
-            aln = AlignTranslation(SangerConsensusReadDNASet, geneticCode = geneticCode,
-                                   processors = processorsNum, verbose = FALSE)
+            ### ----------------------------------------------------------------
+            ### Making a rough NJ tree. Labels are rows in the summary df
+            ###    (If tree cannot be created ==> NULL)
+            ### ----------------------------------------------------------------
+            aln.tree = NULL
+            try({
+                aln.tree = bionjs(aln.dist)
+                # deal with -ve branches
+                # This is not necessarily accurate, but it is good enough to judge seuqences using the tree
+                aln.tree$edge.length[which(aln.tree$edge.length<0)] = abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])            },
+                silent = TRUE
+            )
         } else {
-            aln = AlignSeqs(SangerConsensusReadDNASet,
-                            processors = processorsNum, verbose = FALSE)
-        }
-        names(aln) = paste(1:length(aln), "Read",
-                           basename(names(aln)), sep="_")
-        consensus = ConsensusSequence(aln,
-                                      minInformation = minFractionCall,
-                                      includeTerminalGaps = TRUE,
-                                      ignoreNonBases = TRUE,
-                                      threshold = maxFractionLost,
-                                      noConsensusChar = "-",
-                                      ambiguity = TRUE
-        )[[1]]
-
-        diffs = mclapply(aln, nPairwiseDiffs,
-                         subject = consensus, mc.cores = processorsNum)
-        diffs = do.call(rbind, diffs)
-        diffsDf = data.frame("name" = names(aln),
-                             "pairwise.diffs.to.consensus" = diffs[,1],
-                             "unused.chars" = diffs[,2])
-        rownames(diffsDf) = NULL
-
-        # get a dendrogram
-        dist = DistanceMatrix(aln, correction = "Jukes-Cantor",
-                              penalizeGapLetterMatches = FALSE,
-                              processors = processorsNum, verbose = FALSE)
-        dend = IdClusters(dist, type = "both",
-                          showPlot = FALSE,
-                          processors = processorsNum, verbose = FALSE)
-
-        # add consensus to alignment
-        aln2 = c(aln, DNAStringSet(consensus))
-        names(aln2)[length(aln2)] = "Consensus"
-        # strip gaps from consensus (must be an easier way!!)
-        consensusGapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
-
-        # count columns in the alignment with >1 coincident secondary peaks
-        spDf = countCoincidentSp(aln, processors = processorsNum)
-        if (is.null(spDf)) {
-            spDf = data.frame()
+            aln = NULL
+            aln.tree = NULL
         }
     } else {
         stop(errors)
@@ -329,13 +242,10 @@ setMethod("initialize",
                    suffixForwardRegExp       = suffixForwardRegExp,
                    suffixReverseRegExp       = suffixReverseRegExp,
                    consensusReadsList        = SangerConsensusReadList,
-                   SCconsensusRead           = consensusGapfree,
-                   SCdifferencesDF           = diffsDf,
-                   SCalignment               = aln2,
-                   SCdistanceMatrix          = dist,
-                   SCdendrogram              = dend,
-                   SCindelsDF                = indels,
-                   SCstopCodonsDF            = stopsDf,
-                   SCsecondaryPeakDF         = spDf)
+                   consensusReadSCSet        = consensus,
+                   alignmentSCSet            = aln,
+                   alignmentTreeSCSet        = aln.tree,
+                   minFractionCallSCSet      = minFractionCallSCSet,
+                   maxFractionLostSCSet      = maxFractionLostSCSet)
 })
 
