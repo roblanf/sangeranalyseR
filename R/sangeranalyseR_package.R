@@ -18,3 +18,4 @@
 #' @importFrom excelR
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom ggdendro ggdendrogram
+#' @importFrom ape BIONJ
