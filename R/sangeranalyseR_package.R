@@ -17,3 +17,4 @@
 #' @importFrom zeallot
 #' @importFrom excelR
 #' @importFrom shinycssloaders withSpinner
+#' @importFrom ggdendro ggdendrogram

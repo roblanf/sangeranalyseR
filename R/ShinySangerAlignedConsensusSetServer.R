@@ -432,7 +432,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               plotOutput("SCSetdendrogramPlot"),
+                               plotlyOutput("SCSetdendrogramPlot"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         ),
@@ -1221,12 +1221,65 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusParamSet[["differencesDFSet"]]
     })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ### ------------------------------------------------------------------------
     ### dendrogram
     ### ------------------------------------------------------------------------
-    output$SCSetdendrogramPlot <- renderPlot({
+    output$SCSetdendrogramPlot <- renderPlotly({
         consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
-        plot(consensusParamSet[["dendrogramSet"]][[2]])
+        # plot(consensusParamSet[["dendrogramSet"]][[2]])
+        # p <- ggdendrogram(consensusParamSet[["dendrogramSet"]][[2]], rotate = TRUE)
+        # p <- ggplotly(p)
+        # dhc <- as.dendrogram(A_chloroticConsensusReads@dendrogram[[2]])
+        # plot_dendro(as.dendrogram(consensusParamSet[["dendrogramSet"]][[2]]))
+        hc <- hclust(dist(consensusParamSet[["dendrogramSet"]][[1]]), "ave")
+        dend1 <- as.dendrogram(hc)
+        plot_dendro(dend1, height = "100%", width="100%")
     })
     output$SCSetdendrogramDF <- renderDataTable({
         consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
@@ -1389,6 +1442,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         consensusParam[["dendrogram"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@dendrogram
         plot(consensusParam[["dendrogram"]][[2]])
+        ggdendrogram(consensusParam[["dendrogram"]][[2]], rotate = TRUE)
     })
     output$dendrogramDF <- renderDataTable({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")

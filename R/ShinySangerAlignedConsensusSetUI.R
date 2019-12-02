@@ -93,7 +93,12 @@ alignedConsensusSetUI <- dashboardPage(
             ### ----------------------------------------------------------------
             tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 18px;
                                  margin-bottom: 30px;
-                                 }"))
+                                 }")),
+            tags$style(HTML("#main-svg{height: 100% ! important;
+                                 }")),
+            tags$style(HTML("#svg-container{height: 100% ! important;
+                                 width: 100% ! important;
+                                 }")),
         ),
         ### --------------------------------------------------------------------
         ### Pop-up notification style changing

@@ -925,7 +925,8 @@ consensusReadServer <- function(input, output, session) {
     ### dendrogram
     ### ------------------------------------------------------------------------
     output$dendrogramPlot <- renderPlot({
-        plot(consensusParam[["dendrogram"]][[2]])
+        # plot(consensusParam[["dendrogram"]][[2]])
+        ggdendrogram(consensusParam[["dendrogram"]][[2]], rotate = TRUE)
     })
     output$dendrogramDF <- renderDataTable({
         consensusParam[["dendrogram"]][[1]]
