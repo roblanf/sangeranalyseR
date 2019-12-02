@@ -2,7 +2,6 @@
 #'
 #' @description  An S4 class for quality report for a SangerSingleRead S4 object
 #'
-#' @slot readFeature .
 #' @slot qualityPhredScores .
 #' @slot qualityBaseScore .
 #' @slot rawSeqLength .
@@ -28,10 +27,10 @@
 #' @examples
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFdReadFN <- file.path(inputFilesPath,
-#'                                   "Allolobophora_chlorotica",
-#'                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
+#'                              "Allolobophora_chlorotica",
+#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 #' A_chloroticaRead <-
-#'        SangerSingleRead(readFeature           = "ForwardRead",
+#'        SangerSingleRead(readFeature           = "Forward Read",
 #'                         readFileName          = A_chloroticaFdReadFN,
 #'                         TrimmingMethod        = "M2",
 #'                         M1TrimmingCutoff      = NULL,
@@ -43,7 +42,10 @@ setClass("QualityReport",
          ### Input type of each variable
          ### -------------------------------------------------------------------
          representation(
-             readFeature             = "character",
+             TrimmingMethod          = "character",
+             M1TrimmingCutoff        = "numericORNULL",
+             M2CutoffQualityScore    = "numericORNULL",
+             M2SlidingWindowSize     = "numericORNULL",
              qualityPhredScores      = "numeric",
              qualityBaseScore        = "numeric",
              rawSeqLength            = "numeric",
@@ -56,11 +58,7 @@ setClass("QualityReport",
              trimmedMeanQualityScore = "numeric",
              rawMinQualityScore      = "numeric",
              trimmedMinQualityScore  = "numeric",
-             remainingRatio         = "numeric",
-             TrimmingMethod          = "character",
-             M1TrimmingCutoff        = "numericORNULL",
-             M2CutoffQualityScore    = "numericORNULL",
-             M2SlidingWindowSize     = "numericORNULL"
+             remainingRatio         = "numeric"
          ),
 )
 
@@ -70,7 +68,6 @@ setClass("QualityReport",
 setMethod("initialize",
           "QualityReport",
           function(.Object, ...,
-                   readFeature           = character(0),
                    qualityPhredScores    = numeric(0),
                    TrimmingMethod        = "M1",
                    M1TrimmingCutoff      = 0.0001,
@@ -80,44 +77,41 @@ setMethod("initialize",
               ### Input parameter prechecking
               ### --------------------------------------------------------------
               errors <- character()
-              if (identical(readFeature, character(0))) {
-                  msg <- paste("\nYou must assign value to 'readFeature'\n")
-                  errors <- c(errors, msg)
-              }
+              errors <- checkQualityPhredScores (qualityPhredScores, errors)
 
-              if (length(qualityPhredScores) == 0) {
-                  msg <- paste("\n'qualityPhredScores' size cannot be zero.\n")
-                  errors <- c(errors, msg)
-              }
-
-              ### --------------------------------------------------------------
-              ### Input parameter prechecking for TrimmingMethod.
-              ### --------------------------------------------------------------
+              ##### ------------------------------------------------------------
+              ##### Input parameter prechecking for TrimmingMethod.
+              ##### ------------------------------------------------------------
               errors <- checkTrimParam(TrimmingMethod,
                                        M1TrimmingCutoff,
                                        M2CutoffQualityScore,
                                        M2SlidingWindowSize,
                                        errors)
-
               if (length(errors) == 0) {
                   ### ----------------------------------------------------------
                   ### Prechecking success.
                   ### ----------------------------------------------------------
 
-                  ### ----------------------------------------------------------
-                  ### Quality Trimming (Using slideing window VERSION 1)
-                  ### ----------------------------------------------------------
+
                   # calculate base score
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
                   qualityBaseScore <- 10** (qualityPhredScores / (-10.0))
 
                   if (TrimmingMethod == "M1") {
+                      ### ------------------------------------------------------
+                      ### Quality Trimming (Using Logarithmic Scale
+                      ###                   Sliding Window Trimming METHOD 1)
+                      ### ------------------------------------------------------
                       trimmingPos <-
                           M1inside_calculate_trimming(qualityPhredScores,
                                                       qualityBaseScore,
                                                       M1TrimmingCutoff)
                   } else if (TrimmingMethod == "M2") {
+                      ### ------------------------------------------------------
+                      ### Quality Trimming (Using Logarithmic
+                      ###                   Scale Trimming  METHOD 2)
+                      ### ------------------------------------------------------
                       trimmingPos <-
                           M2inside_calculate_trimming(qualityPhredScores,
                                                       qualityBaseScore,
@@ -130,14 +124,15 @@ setMethod("initialize",
                   trimmedStartPos <- trimmingPos[["trimmedStartPos"]]
                   trimmedFinishPos <- trimmingPos[["trimmedFinishPos"]]
                   trimmedSeqLength <- trimmingPos[["trimmedSeqLength"]]
-                  trimmedMeanQualityScore <- trimmingPos[["trimmedMeanQualityScore"]]
-                  trimmedMinQualityScore <- trimmingPos[["trimmedMinQualityScore"]]
+                  trimmedMeanQualityScore <-
+                      trimmingPos[["trimmedMeanQualityScore"]]
+                  trimmedMinQualityScore <-
+                      trimmingPos[["trimmedMinQualityScore"]]
                   remainingRatio <- trimmingPos[["remainingRatio"]]
               } else {
                   stop(errors)
               }
               callNextMethod(.Object, ...,
-                             readFeature             = readFeature,
                              qualityPhredScores      = qualityPhredScores,
                              qualityBaseScore        = qualityBaseScore,
                              rawSeqLength            = rawSeqLength,

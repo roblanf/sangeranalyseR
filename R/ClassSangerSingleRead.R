@@ -51,6 +51,16 @@ setClass(
 ) -> SangerSingleRead
 
 
+
+
+checkReadFileName <- function(readFileName, errors) {
+    if (!file.exists(readFileName)) {
+        cat ("readFileName", readFileName)
+        msg <- paste("\n'", readFileName, "'",
+                     " foward read file does not exist.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+}
 ### ============================================================================
 ### Overwrite initialize for SangerSingleRead (New constructor)
 ### ============================================================================
@@ -80,44 +90,45 @@ setMethod("initialize",
               ### Input parameter prechecking
               ### --------------------------------------------------------------
               errors <- character()
-              if (identical(readFeature, character(0))) {
-                  msg <- paste("\nYou must assign value to 'readFeature'\n")
-                  errors <- c(errors, msg)
-              }
-              if (!file.exists(readFileName)) {
-                  cat ("readFileName", readFileName)
-                  msg <- paste("\n'", readFileName, "'",
-                               " foward read file does not exist.\n", sep = "")
-                  errors <- c(errors, msg)
-              }
+              errors <- checkReadFeature (readFeature, errors)
+              errors <- checkReadFileName (readFileName, errors)
 
-              ### --------------------------------------------------------------
-              ### Input parameter prechecking for TrimmingMethod.
-              ### --------------------------------------------------------------
+              ##### ------------------------------------------------------------
+              ##### Input parameter prechecking for TrimmingMethod.
+              ##### ------------------------------------------------------------
               errors <- checkTrimParam(TrimmingMethod,
                                        M1TrimmingCutoff,
                                        M2CutoffQualityScore,
                                        M2SlidingWindowSize,
                                        errors)
 
+              ##### ------------------------------------------------------------
+              ##### Input parameter prechecking for ChromatogramParam
+              ##### ------------------------------------------------------------
+              errors <- checkBaseNumPerRow (baseNumPerRow, errors)
+              errors <- checkHeightPerRow (baseNumPerRow, errors)
+              errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
+              errors <- checkShowTrimmed (showTrimmed, errors)
+
               ### --------------------------------------------------------------
               ### Prechecking success. Start to create 'SangerSingleRead'
               ### --------------------------------------------------------------
               if (length(errors) == 0) {
                   message(readFeature, " read: Creating abif & sangerseq ...")
-                  message("    Creating ", readFeature , " raw abif ...")
+                  message("    * Creating ", readFeature , " raw abif ...")
                   readRawAbif = read.abif(readFileName)
-                  message("    Creating ", readFeature , " raw sangerseq ...")
+                  message("    * Creating ", readFeature , " raw sangerseq ...")
                   readSangerseq = sangerseq(readRawAbif)
-
                   primarySeqID        = readSangerseq@primarySeqID
                   secondarySeqID      = readSangerseq@secondarySeqID
                   if (readFeature == "Forward Read") {
                       primarySeq = readSangerseq@primarySeq
-                      secondarySeq        = readSangerseq@secondarySeq
+                      secondarySeq = readSangerseq@secondarySeq
                   } else if (readFeature == "Reverse Read") {
-                      primarySeq = reverseComplement(readSangerseq@primarySeq)
-                      secondarySeq = reverseComplement(readSangerseq@secondarySeq)
+                      primarySeq = reverseComplement(
+                          readSangerseq@primarySeq)
+                      secondarySeq = reverseComplement(
+                          readSangerseq@secondarySeq)
                   }
                   primaryAASeq        = suppressWarnings(translate(primarySeq,
                                                   genetic.code = geneticCode,

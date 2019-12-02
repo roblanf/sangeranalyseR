@@ -1,4 +1,30 @@
 ### ============================================================================
+### QualityReport related: 'readFeature', 'qualityPhredScores'
+### ============================================================================
+checkReadFeature <- function(readFeature, errors) {
+    if (readFeature != "Forward Read" && readFeature != "Reverse Read") {
+        msg <- paste("\n''readFeature' have to be
+                     'Forward Read' or 'Reverse Read'\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
+checkQualityPhredScores <- function(qualityPhredScores, errors) {
+    if (length(qualityPhredScores) == 0) {
+        msg <- paste("\n'qualityPhredScores'
+                               length cannot be zero.\n")
+        errors <- c(errors, msg)
+    }
+    if (!all(qualityPhredScores%%1 == 0)) {
+        msg <- paste("\nAll elements in 'qualityPhredScores' vector
+                               have to be integer.\n")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
+### ============================================================================
 ### Quality trimming related: 'TrimmingMethod', 'M1TrimmingCutoff',
 ###                           'M2CutoffQualityScore', 'M2SlidingWindowSize'
 ### ============================================================================
