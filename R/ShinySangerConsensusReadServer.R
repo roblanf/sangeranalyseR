@@ -1544,14 +1544,6 @@ consensusReadServer <- function(input, output, session) {
                     SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@ChromatogramParam <<-
                         SangerSingleReadChromatogramParam[[singleReadIndex]]
                 }
-                # sapply(1:forwardReadNum, function(i) {
-                #     SangerConsensus@forwardReadsList[[i]]@ChromatogramParam <<-
-                #         SangerSingleReadChromatogramParam[[singleReadIndex]]
-                # })
-                # sapply(1:reverseReadNum, function(i) {
-                #     SangerConsensus@reverseReadsList[[i]]@ChromatogramParam <<-
-                #         SangerSingleReadChromatogramParam[[singleReadIndex]]
-                # })
 
                 rawSeqLength <-
                     SangerSingleReadQualReport[[singleReadIndex]]@
