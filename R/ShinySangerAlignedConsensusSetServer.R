@@ -1370,26 +1370,26 @@ alignedConsensusSetServer <- function(input, output, session) {
     output$consensusAlignmentHTML<-renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        if (!is.na(consensusReadIndex)) {
+            consensusParam[["consenesusReadName"]] <<-
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@consenesusReadName
+            consensusParam[["alignment"]] <-
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@alignment
 
-        consensusParam[["consenesusReadName"]] <<-
-            SangerConsensusSet@
-            consensusReadsList[[consensusReadIndex]]@consenesusReadName
-        consensusParam[["alignment"]] <-
-            SangerConsensusSet@
-            consensusReadsList[[consensusReadIndex]]@alignment
-
-        browseSeqHTML <-
-            file.path(shinyDirectory, "BrowseSeqs_html",
-                      paste0(sidebar_menu[[1]], "_",
-                             consensusParam[["consenesusReadName"]],
-                             "_Alignment_BrowseSeqs.html"))
-        if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
-            dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
+            browseSeqHTML <-
+                file.path(shinyDirectory, "BrowseSeqs_html",
+                          paste0(sidebar_menu[[1]], "_",
+                                 consensusParam[["consenesusReadName"]],
+                                 "_Alignment_BrowseSeqs.html"))
+            if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
+                dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
+            }
+            BrowseSeqs(consensusParam[["alignment"]],
+                       openURL=FALSE, htmlFile=browseSeqHTML)
+            includeHTML(browseSeqHTML)
         }
-        BrowseSeqs(consensusParam[["alignment"]],
-                   openURL=FALSE, htmlFile=browseSeqHTML)
-        includeHTML(browseSeqHTML)
     })
 
     ### ------------------------------------------------------------------------
@@ -1398,14 +1398,16 @@ alignedConsensusSetServer <- function(input, output, session) {
     output$SCDifferencesDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        consensusParam[["differencesDF"]] <<-
-            SangerConsensusSet@
-            consensusReadsList[[consensusReadIndex]]@differencesDF
-        if (all(dim(consensusParam[["differencesDF"]]) == c(0,0))) {
-            h4("*** 'Differences' dataframe is empty. ***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCDifferencesDF")
+        if (!is.na(consensusReadIndex)) {
+            consensusParam[["differencesDF"]] <<-
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@differencesDF
+            if (all(dim(consensusParam[["differencesDF"]]) == c(0,0))) {
+                h4("*** 'Differences' dataframe is empty. ***",
+                   style="font-weight: bold; font-style: italic;")
+            } else {
+                dataTableOutput("SCDifferencesDF")
+            }
         }
     })
     output$SCDifferencesDF = renderDataTable({
@@ -1418,17 +1420,23 @@ alignedConsensusSetServer <- function(input, output, session) {
     output$dendrogramPlot <- renderPlot({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        consensusParam[["dendrogram"]] <<-
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@dendrogram
-        plot(consensusParam[["dendrogram"]][[2]])
-        ggdendrogram(consensusParam[["dendrogram"]][[2]], rotate = TRUE)
+        if (!is.na(consensusReadIndex)) {
+            consensusParam[["dendrogram"]] <<-
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@dendrogram
+            plot(consensusParam[["dendrogram"]][[2]])
+            ggdendrogram(consensusParam[["dendrogram"]][[2]], rotate = TRUE)
+        }
     })
     output$dendrogramDF <- renderDataTable({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        consensusParam[["dendrogram"]] <<-
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@dendrogram
-        consensusParam[["dendrogram"]][[1]]
+        if (!is.na(consensusReadIndex)) {
+            consensusParam[["dendrogram"]] <<-
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@dendrogram
+            consensusParam[["dendrogram"]][[1]]
+        }
     })
 
     ### ------------------------------------------------------------------------
@@ -1437,39 +1445,47 @@ alignedConsensusSetServer <- function(input, output, session) {
     output$SCDistanceMatrixPlotUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        consensusParam[["distanceMatrix"]] <<-
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@distanceMatrix
-        if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
-            h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            plotlyOutput("SCDistanceMatrixPlot")
+        if (!is.na(consensusReadIndex)) {
+            consensusParam[["distanceMatrix"]] <<-
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@distanceMatrix
+            if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
+                h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
+                   style="font-weight: bold; font-style: italic;")
+            } else {
+                plotlyOutput("SCDistanceMatrixPlot")
+            }
         }
     })
 
     output$SCDistanceMatrixPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        SangerSingleReadBFN <-
-            SangerCSetParam[[consensusReadIndex]]$SangerSingleReadBFN
-        suppressPlotlyMessage(
-            plot_ly(x = SangerSingleReadBFN,
-                    y = SangerSingleReadBFN,
-                    z = consensusParam[["distanceMatrix"]],
-                    colors = colorRamp(c("white", "#32a852")),
-                    type = "heatmap")
-        )
+        if (!is.na(consensusReadIndex)) {
+            SangerSingleReadBFN <-
+                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadBFN
+            suppressPlotlyMessage(
+                plot_ly(x = SangerSingleReadBFN,
+                        y = SangerSingleReadBFN,
+                        z = consensusParam[["distanceMatrix"]],
+                        colors = colorRamp(c("white", "#32a852")),
+                        type = "heatmap")
+            )
+        }
     })
     output$SCDistanceMatrixUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        consensusParam[["distanceMatrix"]] <<-
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@distanceMatrix
-        if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
-            h4("*** 'Distance' dataframe is empty. ***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCDistanceMatrix")
+        if (!is.na(consensusReadIndex)) {
+            consensusParam[["distanceMatrix"]] <<-
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@distanceMatrix
+            if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
+                h4("*** 'Distance' dataframe is empty. ***",
+                   style="font-weight: bold; font-style: italic;")
+            } else {
+                dataTableOutput("SCDistanceMatrix")
+            }
         }
     })
     output$SCDistanceMatrix = renderDataTable({
@@ -1482,13 +1498,15 @@ alignedConsensusSetServer <- function(input, output, session) {
     output$SCIndelsDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        consensusParam[["indelsDF"]] <<-
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF
-        if (all(dim(consensusParam[["indelsDF"]] ) == c(0,0))) {
-            h4("*** 'Indels' data frame is empty. ***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCIndelsDF")
+        if (!is.na(consensusReadIndex)) {
+            consensusParam[["indelsDF"]] <<-
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF
+            if (all(dim(consensusParam[["indelsDF"]] ) == c(0,0))) {
+                h4("*** 'Indels' data frame is empty. ***",
+                   style="font-weight: bold; font-style: italic;")
+            } else {
+                dataTableOutput("SCIndelsDF")
+            }
         }
     })
     output$SCIndelsDF <- renderDataTable({
@@ -1501,13 +1519,16 @@ alignedConsensusSetServer <- function(input, output, session) {
     output$SCStopCodonsDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        consensusParam[["stopCodonsDF"]] <<-
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@stopCodonsDF
-        if (all(dim(consensusParam[["stopCodonsDF"]]) == c(0,0))) {
-            h4("*** 'Stop Codons' dataframe is empty. ***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCStopCodonsDF")
+        if (!is.na(consensusReadIndex)) {
+            consensusParam[["stopCodonsDF"]] <<-
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@stopCodonsDF
+            if (all(dim(consensusParam[["stopCodonsDF"]]) == c(0,0))) {
+                h4("*** 'Stop Codons' dataframe is empty. ***",
+                   style="font-weight: bold; font-style: italic;")
+            } else {
+                dataTableOutput("SCStopCodonsDF")
+            }
         }
     })
     output$SCStopCodonsDF <- renderDataTable({
