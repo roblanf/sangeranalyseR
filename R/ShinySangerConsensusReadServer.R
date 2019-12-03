@@ -583,36 +583,6 @@ consensusReadServer <- function(input, output, session) {
                     M2SlidingWindowSize
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 trimmedRV[["rawSeqLength"]] <<-
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     rawSeqLength
@@ -709,7 +679,6 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                             collapsible = TRUE,
                             status = "success", width = 12,
-
                             fluidRow(
                                 column(width = 12,
                                       uiOutput("TrimmingMethodSelectionOutput"),

@@ -98,9 +98,9 @@ consensusReadUI <- dashboardPage(
                                  margin-bottom: 30px;
                                  }")),
 
-
-
-
+            ### ----------------------------------------------------------------
+            ### Suppress error message in Shiny app
+            ### ----------------------------------------------------------------
             tags$style(type="text/css",
                        ".shiny-output-error { visibility: hidden; }",
                        ".shiny-output-error:before { visibility: hidden; }"

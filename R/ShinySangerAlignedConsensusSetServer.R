@@ -1240,19 +1240,6 @@ alignedConsensusSetServer <- function(input, output, session) {
         ### ------------------------------------------------------------
         ### Update ChromatogramBasePerRow
         ### ------------------------------------------------------------
-        message("&&&&&&& Before: ")
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-            baseNumPerRow: ", SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-                    baseNumPerRow)
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-            heightPerRow: ", SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-                    heightPerRow)
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-            signalRatioCutoff: ", SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-                    signalRatioCutoff)
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-            showTrimmed: ", SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-                    showTrimmed)
         SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
             baseNumPerRow <<- input$ChromatogramBasePerRow
         SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
@@ -1262,19 +1249,6 @@ alignedConsensusSetServer <- function(input, output, session) {
         SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
             showTrimmed <<- input$ChromatogramCheckShowTrimmed
 
-        message("&&&&&&& After: ")
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-            baseNumPerRow: ", SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-                    baseNumPerRow)
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-            heightPerRow: ", SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-                    heightPerRow)
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-            signalRatioCutoff: ", SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-                    signalRatioCutoff)
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-            showTrimmed: ", SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
-                    showTrimmed)
         ### ------------------------------------------------------------
         ### Save SangerConsensus quality S4 object
         ### ------------------------------------------------------------
@@ -1292,14 +1266,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                 SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]
         }
 
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@baseNumPerRow: ",
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@baseNumPerRow)
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@heightPerRow: ",
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@heightPerRow)
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@signalRatioCutoff: ",
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@signalRatioCutoff)
-        message("SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@showTrimmed: ",
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@showTrimmed)
         ChromatogramParam[["baseNumPerRow"]] <<-
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
             baseNumPerRow
@@ -1313,8 +1279,6 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadChromatogramParam[[singleReadIndex]]@
             showTrimmed
     })
-
-
 
 
     ############################################################################

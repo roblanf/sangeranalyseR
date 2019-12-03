@@ -131,7 +131,6 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
     trimmedStartPos <- forwardReadsList[[1]]@QualityReport@trimmedStartPos
     trimmedFinishPos <- forwardReadsList[[1]]@QualityReport@trimmedFinishPos
     primaryDNA <- as.character(primarySeq(forwardReadsList[[1]]))[1]
-    substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
 
 
     fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
@@ -139,16 +138,12 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
         trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
         primaryDNA <- as.character(primarySeq(forwardRead))
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
-        # Without trimming
-        # as.character(primarySeq(forwardRead))
     })
     rRDNAStringSet <- sapply(reverseReadsList, function(reverseRead) {
         trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
         trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
         primaryDNA <- as.character(primarySeq(reverseRead))
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
-        # Without trimming
-        # as.character(primarySeq(reverseRead))
     })
 
     ### --------------------------------------------------------------------
