@@ -1,0 +1,2 @@
+plot(SangerAlignedConsensusSet@alignmentTreeSCSet)
+

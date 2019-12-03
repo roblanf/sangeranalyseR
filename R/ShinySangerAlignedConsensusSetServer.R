@@ -265,6 +265,7 @@ alignedConsensusSetServer <- function(input, output, session) {
     })
 
 
+
     consensusParamSet <- reactiveValues(consensusReadSCSet  = NULL,
                                         alignmentSCSet      = NULL,
                                         alignmentTreeSCSet  = NULL)
@@ -451,17 +452,17 @@ alignedConsensusSetServer <- function(input, output, session) {
                                htmlOutput("consensusSetAlignmentHTML"),
                         ),
                     ),
-                    # box(title = tags$p("Consensus Reads Differences Data frame",
-                    #                    style = "font-size: 24px;
-                    #                    font-weight: bold;"),
-                    #     collapsible = TRUE,
-                    #     status = "success", width = 12,
-                    #     column(width = 12,
-                    #            uiOutput("SCSetDifferencesDFUI"),
-                    #            style = paste("height:100%; overflow-y:",
-                    #                          "scroll;overflow-x: scroll;")
-                    #     )
-                    # ),
+                    box(title = tags$p("Consensus Reads Tree",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               plotOutput("SCSetConsensusReadTreePlot"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    ),
                     # box(title = tags$p("Consensus Reads Dendrogram",
                     #                    style = "font-size: 24px;
                     #                    font-weight: bold;"),
@@ -1416,21 +1417,43 @@ alignedConsensusSetServer <- function(input, output, session) {
         includeHTML(browseSeqHTML)
     })
 
-    # ### ------------------------------------------------------------------------
-    # ### difference
-    # ### ------------------------------------------------------------------------
-    # output$SCSetDifferencesDFUI <- renderUI({
-    #     consensusParamSet[["differencesDFSet"]] <<- SangerConsensusSet@SCdifferencesDF
-    #     if (all(dim(consensusParamSet[["differencesDFSet"]]) == c(0,0))) {
-    #         h4("*** 'Differences' dataframe is empty. ***",
-    #            style="font-weight: bold; font-style: italic;")
-    #     } else {
-    #         dataTableOutput("SCSetDifferencesDF")
-    #     }
-    # })
-    # output$SCSetDifferencesDF = renderDataTable({
-    #     consensusParamSet[["differencesDFSet"]]
-    # })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ### ------------------------------------------------------------------------
+    ### Consensus Reads Tree
+    ### ------------------------------------------------------------------------
+    output$SCSetConsensusReadTreePlot <- renderPlot({
+        consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
+        plot(consensusParamSet[["alignmentTreeSCSet"]])
+    })
 
 
     ### ------------------------------------------------------------------------
