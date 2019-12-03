@@ -548,6 +548,29 @@ alignedConsensusSetServer <- function(input, output, session) {
                         SCTrimmingMethodName = "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
                     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    consensusParam[["consenesusReadName"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consenesusReadName
                     consensusParam[["consensusRead"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consensusRead
                     consensusParam[["differencesDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@differencesDF
                     consensusParam[["alignment"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment
@@ -1204,8 +1227,8 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### observeEvent: Button Consensus read re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
-        message("@@@@@@@ Reactive button clicked !!!")
-        message("Start recalculating consensus read")
+        message("######## Reactive button clicked !!!")
+        message("######## Start recalculating consensus read (SCSet")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         CSResult<-
@@ -1225,7 +1248,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                                         consensusReadsList[[consensusReadIndex]]@acceptStopCodons,
                                     SangerConsensusSet@
                                         consensusReadsList[[consensusReadIndex]]@readingFrame)
-
         SangerConsensusSet@
             consensusReadsList[[consensusReadIndex]]@consensusRead <<- CSResult$consensusGapfree
         SangerConsensusSet@
@@ -1254,9 +1276,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusParam[["indelsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF
         consensusParam[["stopCodonsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@stopCodonsDF
         consensusParam[["secondaryPeakDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@secondaryPeakDF
-
-
-        message("Finish recalculating consensus read")
+        message("######## Finish recalculation")
     })
 
 
@@ -1288,8 +1308,8 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### observeEvent: Button Consensus read re-calculating (SCSet) UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButtonSCSet, {
-        message("@@@@@@@ Reactive button clicked !!!")
-        message("Start recalculating consensus read")
+        message("######## Reactive button clicked !!!")
+        message("######## Start recalculating consensus read (SC)")
         CSSetResult <-
             alignConsensusReads (SangerConsensusSet@consensusReadsList,
                                  SangerConsensusSet@geneticCode,
@@ -1309,9 +1329,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
 
 
-        message("Finish recalculating consensus read")
-        # session$sendCustomMessage(type = 'testmessage',
-        #                           message = 'Thank you for clicking')
+        message("######## Finish recalculation consensus read")
     })
 
 
@@ -1542,11 +1560,13 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$geneticCodeDF <- renderExcel({
         SCGeneticCode <- SangerConsensusSet@geneticCode
-        excelTable(data =  t(data.frame(SCGeneticCode)),
-                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =  t(data.frame(SCGeneticCode)),
+                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
 
@@ -1606,12 +1626,14 @@ alignedConsensusSetServer <- function(input, output, session) {
         refAminoAcidSeqVec <-
             strsplit(SangerConsensusSet@refAminoAcidSeq, "")[[1]]
         names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
-        excelTable(data =
-                       t(data.frame(refAminoAcidSeqVec)),
-                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =
+                           t(data.frame(refAminoAcidSeqVec)),
+                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     ### ------------------------------------------------------------------------
@@ -1693,11 +1715,13 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         SangerSingleReadBFN <-
             SangerCSetParam[[consensusReadIndex]]$SangerSingleReadBFN
-        plot_ly(x = SangerSingleReadBFN,
-                y = SangerSingleReadBFN,
-                z = consensusParam[["distanceMatrix"]],
-                colors = colorRamp(c("white", "#32a852")),
-                type = "heatmap")
+        suppressPlotlyMessage(
+            plot_ly(x = SangerSingleReadBFN,
+                    y = SangerSingleReadBFN,
+                    z = consensusParam[["distanceMatrix"]],
+                    colors = colorRamp(c("white", "#32a852")),
+                    type = "heatmap")
+        )
     })
     output$SCDistanceMatrixUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -1779,51 +1803,59 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        excelTable(data =SangerCSetParam[[consensusReadIndex]]$
-                       SangerSingleReadPrimSeqDF[[singleReadIndex]],
-                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =SangerCSetParam[[consensusReadIndex]]$
+                           SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                       defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     output$secondSeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        excelTable(data =
-                       SangerCSetParam[[consensusReadIndex]]$
-                       SangerSingleReadSecoSeqDF[[singleReadIndex]],
-                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =
+                           SangerCSetParam[[consensusReadIndex]]$
+                           SangerSingleReadSecoSeqDF[[singleReadIndex]],
+                       defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     output$qualityScoreDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        excelTable(data =
-                       SangerCSetParam[[consensusReadIndex]]$
-                       SangerSingleReadQSDF[[singleReadIndex]],
-                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =
+                           SangerCSetParam[[consensusReadIndex]]$
+                           SangerSingleReadQSDF[[singleReadIndex]],
+                       defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     output$PrimAASeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        excelTable(data =
-                       SangerCSetParam[[consensusReadIndex]]$
-                       SangerSingleReadPrimAASeqDF[[singleReadIndex]],
-                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =
+                           SangerCSetParam[[consensusReadIndex]]$
+                           SangerSingleReadPrimAASeqDF[[singleReadIndex]],
+                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     valueBoxSCMinReadsNumCSSet (input, output, SangerConsensusSet, session)
@@ -2269,33 +2301,34 @@ alignedConsensusSetServer <- function(input, output, session) {
             # titlefont = f
         )
         PerDataPlot <- melt(PerData, id.vars = c("Base"))
-        plot_ly(data=PerDataPlot,
-                x=~Base,
-                y=~value,
-                mode="markers",
-                color = ~variable,
-                text = ~paste("BP Index : ",
-                              Base, '<sup>th</sup><br>Read Ratio :',
-                              round(value*100, digits = 2), '%')) %>%
-            layout(xaxis = x,
-                   yaxis = y,
-                   legend = list(orientation = 'h',
-                                 xanchor = "center",  # use center of legend as anchor
-                                 x = 0.5, y = 1.1)) %>%
-            add_annotations(
-                text = "Trimmed Ratio (Each BP)",
-                x = (trimmedStartPos + trimmedFinishPos) / 2,
-                y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
-                + 0.06,
-                showarrow=FALSE
-            ) %>%
-            add_annotations(
-                text = "Remaining Ratio (Each BP)",
-                x = (trimmedStartPos+trimmedFinishPos) / 2,
-                y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
-                - 0.06,
-                showarrow=FALSE
-            )
+        suppressPlotlyMessage(
+            plot_ly(data=PerDataPlot,
+                    x=~Base,
+                    y=~value,
+                    mode="markers",
+                    color = ~variable,
+                    text = ~paste("BP Index : ",
+                                  Base, '<sup>th</sup><br>Read Ratio :',
+                                  round(value*100, digits = 2), '%')) %>%
+                layout(xaxis = x,
+                       yaxis = y,
+                       legend = list(orientation = 'h',
+                                     xanchor = "center",  # use center of legend as anchor
+                                     x = 0.5, y = 1.1)) %>%
+                add_annotations(
+                    text = "Trimmed Ratio (Each BP)",
+                    x = (trimmedStartPos + trimmedFinishPos) / 2,
+                    y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
+                    + 0.06,
+                    showarrow=FALSE
+                ) %>%
+                add_annotations(
+                    text = "Remaining Ratio (Each BP)",
+                    x = (trimmedStartPos+trimmedFinishPos) / 2,
+                    y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
+                    - 0.06,
+                    showarrow=FALSE
+                ))
     })
 
     output$qualityQualityBasePlot <- renderPlotly({
@@ -2323,56 +2356,56 @@ alignedConsensusSetServer <- function(input, output, session) {
             title = "Phred Quality Score"
             # titlefont = f
         )
-
-        plot_ly(data=qualityPlotDf,
-                x=~Index) %>%
-            add_markers(y=~Score,
-                        text = ~paste("BP Index : ",
-                                      Index,
-                                      '<sup>th</sup><br>Phred Quality Score :',
-                                      Score),
-                        name = 'Quality Each BP') %>%
-            add_trace(x=seq(trimmedStartPos,
-                            trimmedFinishPos,
-                            len=trimmedFinishPos-trimmedStartPos+1),
-                      y=rep(70, trimmedFinishPos-trimmedStartPos+1),
-                      mode="lines", hoverinfo="text",
-                      text=paste("Trimmed Reads BP length:",
-                                 trimmedFinishPos-trimmedStartPos+1,
-                                 "BPs <br>",
-                                 "Trimmed Reads BP ratio:",
-                                 round((trimmedFinishPos - trimmedStartPos+1) /
-                                           readLen * 100,
-                                       digits=2),
-                                 "%"),
-                      line = list(width = 12),
-                      name = 'Trimmed Read') %>%
-            add_trace(x=seq(0,readLen,len=readLen),
-                      y=rep(80, readLen), mode="lines", hoverinfo="text",
-                      text=paste("Whole Reads BP length:",
-                                 readLen,
-                                 "BPs <br>",
-                                 "Trimmed Reads BP ratio: 100 %"),
-                      line = list(width = 12),
-                      name = 'Whole Read') %>%
-            layout(xaxis = x, yaxis = y,
-                   shapes = list(vline(trimmedStartPos),
-                                 vline(trimmedFinishPos)),
-                   legend = list(orientation = 'h',
-                                 xanchor = "center",
-                                 x = 0.5, y = 1.1)) %>%
-            add_annotations(
-                text = "Trimming Strat <br> BP Index",
-                x = trimmedStartPos + 40,
-                y = 15,
-                showarrow=FALSE
-            ) %>%
-            add_annotations(
-                text = "Trimming End <br> BP Index",
-                x = trimmedFinishPos - 40,
-                y = 15,
-                showarrow=FALSE
-            )
+        suppressPlotlyMessage(
+            plot_ly(data=qualityPlotDf,
+                    x=~Index) %>%
+                add_markers(y=~Score,
+                            text = ~paste("BP Index : ",
+                                          Index,
+                                          '<sup>th</sup><br>Phred Quality Score :',
+                                          Score),
+                            name = 'Quality Each BP') %>%
+                add_trace(x=seq(trimmedStartPos,
+                                trimmedFinishPos,
+                                len=trimmedFinishPos-trimmedStartPos+1),
+                          y=rep(70, trimmedFinishPos-trimmedStartPos+1),
+                          mode="lines", hoverinfo="text",
+                          text=paste("Trimmed Reads BP length:",
+                                     trimmedFinishPos-trimmedStartPos+1,
+                                     "BPs <br>",
+                                     "Trimmed Reads BP ratio:",
+                                     round((trimmedFinishPos - trimmedStartPos+1) /
+                                               readLen * 100,
+                                           digits=2),
+                                     "%"),
+                          line = list(width = 12),
+                          name = 'Trimmed Read') %>%
+                add_trace(x=seq(0,readLen,len=readLen),
+                          y=rep(80, readLen), mode="lines", hoverinfo="text",
+                          text=paste("Whole Reads BP length:",
+                                     readLen,
+                                     "BPs <br>",
+                                     "Trimmed Reads BP ratio: 100 %"),
+                          line = list(width = 12),
+                          name = 'Whole Read') %>%
+                layout(xaxis = x, yaxis = y,
+                       shapes = list(vline(trimmedStartPos),
+                                     vline(trimmedFinishPos)),
+                       legend = list(orientation = 'h',
+                                     xanchor = "center",
+                                     x = 0.5, y = 1.1)) %>%
+                add_annotations(
+                    text = "Trimming Strat <br> BP Index",
+                    x = trimmedStartPos + 40,
+                    y = 15,
+                    showarrow=FALSE
+                ) %>%
+                add_annotations(
+                    text = "Trimming End <br> BP Index",
+                    x = trimmedFinishPos - 40,
+                    y = 15,
+                    showarrow=FALSE
+                ))
     })
 
     valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)

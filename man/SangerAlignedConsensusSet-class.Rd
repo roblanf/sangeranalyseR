@@ -18,6 +18,8 @@ An S4 class for storing multiple single consensus reads to
 
 \item{\code{maxFractionLostSCSet}}{.}
 
+\item{\code{geneticCode}}{.}
+
 \item{\code{refAminoAcidSeq}}{.}
 
 \item{\code{consensusReadsList}}{.}

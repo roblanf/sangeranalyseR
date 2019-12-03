@@ -1061,31 +1061,32 @@ qualityTrimmingRatioPlot <- function(input, output, session, trimmedRV,
                 # titlefont = f
             )
             PerDataPlot <- melt(PerData, id.vars = c("Base"))
-            plot_ly(data=PerDataPlot,
-                    x=~Base,
-                    y=~value,
-                    mode="markers",
-                    color = ~variable,
-                    text = ~paste("BP Index : ",
-                                  Base, '<sup>th</sup><br>Read Ratio :',
-                                  round(value*100, digits = 2), '%')) %>%
-                layout(xaxis = x, yaxis = y, legend = list(orientation = 'h',
-                                                           xanchor = "center",  # use center of legend as anchor
-                                                           x = 0.5, y = 1.1)) %>%
-                add_annotations(
-                    text = "Trimmed Ratio (Each BP)",
-                    x = (trimmedStartPos + trimmedFinishPos) / 2,
-                    y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
-                    + 0.06,
-                    showarrow=FALSE
-                ) %>%
-                add_annotations(
-                    text = "Remaining Ratio (Each BP)",
-                    x = (trimmedStartPos+trimmedFinishPos) / 2,
-                    y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
-                    - 0.06,
-                    showarrow=FALSE
-                )
+            suppressPlotlyMessage(
+                plot_ly(data=PerDataPlot,
+                        x=~Base,
+                        y=~value,
+                        mode="markers",
+                        color = ~variable,
+                        text = ~paste("BP Index : ",
+                                      Base, '<sup>th</sup><br>Read Ratio :',
+                                      round(value*100, digits = 2), '%')) %>%
+                    layout(xaxis = x, yaxis = y, legend = list(orientation = 'h',
+                                                               xanchor = "center",  # use center of legend as anchor
+                                                               x = 0.5, y = 1.1)) %>%
+                    add_annotations(
+                        text = "Trimmed Ratio (Each BP)",
+                        x = (trimmedStartPos + trimmedFinishPos) / 2,
+                        y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
+                        + 0.06,
+                        showarrow=FALSE
+                    ) %>%
+                    add_annotations(
+                        text = "Remaining Ratio (Each BP)",
+                        x = (trimmedStartPos+trimmedFinishPos) / 2,
+                        y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
+                        - 0.06,
+                        showarrow=FALSE
+                    ))
         }
     })
 }
@@ -1118,58 +1119,58 @@ qualityQualityBasePlot <- function(input, output, session, trimmedRV,
                 title = "Phred Quality Score"
                 # titlefont = f
             )
-
-            plot_ly(data=qualityPlotDf,
-                    x=~Index) %>%
-                add_markers(y=~Score,
-                            text = ~paste("BP Index : ",
-                                          Index,
-                                          '<sup>th</sup><br>Phred Quality Score :',
-                                          Score),
-                            name = 'Quality Each BP') %>%
-                add_trace(x=seq(trimmedStartPos,
-                                trimmedFinishPos,
-                                len=trimmedFinishPos-trimmedStartPos+1),
-                          y=rep(70, trimmedFinishPos-trimmedStartPos+1),
-                          mode="lines", hoverinfo="text",
-                          text=paste("Trimmed Reads BP length:",
-                                     trimmedFinishPos-trimmedStartPos+1,
-                                     "BPs <br>",
-                                     "Trimmed Reads BP ratio:",
-                                     round((trimmedFinishPos - trimmedStartPos+1)/
-                                               readLen * 100,
-                                           digits=2),
-                                     "%"),
-                          line = list(width = 12),
-                          name = 'Trimmed Read') %>%
-                add_trace(x=seq(0,readLen,len=readLen),
-                          y=rep(80, readLen), mode="lines", hoverinfo="text",
-                          text=paste("Whole Reads BP length:",
-                                     readLen,
-                                     "BPs <br>",
-                                     "Trimmed Reads BP ratio: 100 %"),
-                          line = list(width = 12),
-                          name = 'Whole Read') %>%
-                layout(xaxis = x, yaxis = y,
-                       shapes = list(vline(trimmedStartPos),
-                                     vline(trimmedFinishPos)),
-                       legend = list(orientation = 'h',
-                                     xanchor = "center",  # use center of legend as anchor
-                                     x = 0.5, y = 1.1)) %>%
-                # add_segments(x = trimmedStartPos, xend = trimmedFinishPos, y = 70, yend = 70, inherit = TRUE, width = 10, line = list(width = 8)) %>%
-                # add_segments(x = 0, xend = readLen, y = 75, yend = 75, inherit = TRUE, width = 4, line = list(width = 8)) %>%
-                add_annotations(
-                    text = "Trimming Strat <br> BP Index",
-                    x = trimmedStartPos + 40,
-                    y = 15,
-                    showarrow=FALSE
-                ) %>%
-                add_annotations(
-                    text = "Trimming End <br> BP Index",
-                    x = trimmedFinishPos - 40,
-                    y = 15,
-                    showarrow=FALSE
-                )
+            suppressPlotlyMessage(
+                plot_ly(data=qualityPlotDf,
+                        x=~Index) %>%
+                    add_markers(y=~Score,
+                                text = ~paste("BP Index : ",
+                                              Index,
+                                              '<sup>th</sup><br>Phred Quality Score :',
+                                              Score),
+                                name = 'Quality Each BP') %>%
+                    add_trace(x=seq(trimmedStartPos,
+                                    trimmedFinishPos,
+                                    len=trimmedFinishPos-trimmedStartPos+1),
+                              y=rep(70, trimmedFinishPos-trimmedStartPos+1),
+                              mode="lines", hoverinfo="text",
+                              text=paste("Trimmed Reads BP length:",
+                                         trimmedFinishPos-trimmedStartPos+1,
+                                         "BPs <br>",
+                                         "Trimmed Reads BP ratio:",
+                                         round((trimmedFinishPos - trimmedStartPos+1)/
+                                                   readLen * 100,
+                                               digits=2),
+                                         "%"),
+                              line = list(width = 12),
+                              name = 'Trimmed Read') %>%
+                    add_trace(x=seq(0,readLen,len=readLen),
+                              y=rep(80, readLen), mode="lines", hoverinfo="text",
+                              text=paste("Whole Reads BP length:",
+                                         readLen,
+                                         "BPs <br>",
+                                         "Trimmed Reads BP ratio: 100 %"),
+                              line = list(width = 12),
+                              name = 'Whole Read') %>%
+                    layout(xaxis = x, yaxis = y,
+                           shapes = list(vline(trimmedStartPos),
+                                         vline(trimmedFinishPos)),
+                           legend = list(orientation = 'h',
+                                         xanchor = "center",  # use center of legend as anchor
+                                         x = 0.5, y = 1.1)) %>%
+                    # add_segments(x = trimmedStartPos, xend = trimmedFinishPos, y = 70, yend = 70, inherit = TRUE, width = 10, line = list(width = 8)) %>%
+                    # add_segments(x = 0, xend = readLen, y = 75, yend = 75, inherit = TRUE, width = 4, line = list(width = 8)) %>%
+                    add_annotations(
+                        text = "Trimming Strat <br> BP Index",
+                        x = trimmedStartPos + 40,
+                        y = 15,
+                        showarrow=FALSE
+                    ) %>%
+                    add_annotations(
+                        text = "Trimming End <br> BP Index",
+                        x = trimmedFinishPos - 40,
+                        y = 15,
+                        showarrow=FALSE
+                    ))
         }
     })
 }

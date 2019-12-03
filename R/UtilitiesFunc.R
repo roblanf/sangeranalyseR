@@ -101,3 +101,6 @@ countStopSodons <- function(sequence, readingFrame = 1, geneticCode = GENETIC_CO
     return(as.numeric(stops))
 }
 
+suppressPlotlyMessage <- function(p) {
+    suppressMessages(plotly_build(p))
+}

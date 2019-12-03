@@ -1,3 +1,6 @@
+#' @export
+setOldClass("phylo")
+
 #' @title SangerAlignedConsensusSet
 #'
 #' @description  An S4 class for storing multiple single consensus reads to

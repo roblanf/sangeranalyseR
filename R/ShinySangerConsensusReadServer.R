@@ -884,8 +884,8 @@ consensusReadServer <- function(input, output, session) {
     ### observeEvent: Button Consensus read re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
-        message("@@@@@@@ Reactive button clicked !!!")
-        message("Start recalculating consensus read")
+        message("######## Reactive button clicked !!!")
+        message("######## Start recalculating consensus read (SC")
         CSResult<-
             calculateConsensusRead (SangerConsensus@forwardReadsList,
                                     SangerConsensus@reverseReadsList,
@@ -923,10 +923,7 @@ consensusReadServer <- function(input, output, session) {
         message("indelsDF: ", consensusParam[["indelsDF"]])
         message("stopCodonsDF: ", consensusParam[["stopCodonsDF"]])
         message("secondaryPeakDF: ", consensusParam[["secondaryPeakDF"]])
-
-        message("Finish recalculating consensus read")
-        # session$sendCustomMessage(type = 'testmessage',
-        #                           message = 'Thank you for clicking')
+        message("######## Finish recalculation")
     })
 
 
@@ -983,22 +980,26 @@ consensusReadServer <- function(input, output, session) {
     ### ConsensusRead (Function for Sanger Consensus Read Overview)
     ############################################################################
     output$geneticCodeDF <- renderExcel({
-        excelTable(data =  t(data.frame(SangerConsensus@geneticCode)),
-                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =  t(data.frame(SangerConsensus@geneticCode)),
+                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     output$SCrefAminoAcidSeqDF <- renderExcel({
         refAminoAcidSeqVec <- strsplit(SangerConsensus@refAminoAcidSeq, "")[[1]]
         names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
-        excelTable(data =
-                       t(data.frame(refAminoAcidSeqVec)),
-                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =
+                           t(data.frame(refAminoAcidSeqVec)),
+                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
 
@@ -1191,46 +1192,53 @@ consensusReadServer <- function(input, output, session) {
     output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        excelTable(data =
-                       SangerSingleReadPrimSeqDF[[singleReadIndex]],
-                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-
+        suppressMessages(
+            excelTable(data =
+                           SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                       defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     output$secondSeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        excelTable(data =
-                       SangerSingleReadSecoSeqDF[[singleReadIndex]],
-                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =
+                           SangerSingleReadSecoSeqDF[[singleReadIndex]],
+                       defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     output$qualityScoreDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        excelTable(data =
-                       SangerSingleReadQSDF[[singleReadIndex]],
-                   defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =
+                           SangerSingleReadQSDF[[singleReadIndex]],
+                       defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     output$PrimAASeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        excelTable(data =
-                       SangerSingleReadPrimAASeqDF[[singleReadIndex]],
-                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        suppressMessages(
+            excelTable(data =
+                           SangerSingleReadPrimAASeqDF[[singleReadIndex]],
+                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
     })
 
     ### ------------------------------------------------------------------------

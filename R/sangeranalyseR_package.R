@@ -22,5 +22,3 @@
 #' @importFrom shinyWidgets actionBttn
 
 
-#' @export
-setOldClass("phylo")
