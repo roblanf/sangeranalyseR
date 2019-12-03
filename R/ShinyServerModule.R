@@ -592,7 +592,6 @@ valueBoxSCMinReadsNumCSSet <- function(input, output, SangerConsensusSet, sessio
     output$SCMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
-
         SCMinReadsNum <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@minReadsNum
         valueBox(
             subtitle = tags$p("MinReadsNum",

@@ -59,14 +59,6 @@ consensusReadServer <- function(input, output, session) {
                SangerConsensus@reverseReadsList[[i]]@readFeature))
     SangerSingleReadFeature <- c(forwardReadFeature, reverseReadFeature)
 
-    # # abifRawData
-    # forwardReadAbifRawData <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@abifRawData)
-    # reverseReadAbifRawData <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@abifRawData)
-    # SangerSingleReadAbifRawData <- c(forwardReadAbifRawData,
-    #                                  reverseReadAbifRawData)
-
     # QualityReport
     forwardReadQualReport <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@QualityReport)
@@ -103,20 +95,6 @@ consensusReadServer <- function(input, output, session) {
     SangerSingleReadChromatogramParam <- c(forwardReadChromatogramParam,
                                            reverseReadChromatogramParam)
 
-    # # primarySeqID
-    # forwardReadPrimSeqID <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@primarySeqID)
-    # reverseReadPrimSeqID <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@primarySeqID)
-    # SangerSingleReadPrimSeqID <- c(forwardReadPrimSeqID, reverseReadPrimSeqID)
-
-    # # primarySeq
-    # forwardReadPrimSeq <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@primarySeq)
-    # reverseReadPrimSeq <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@primarySeq)
-    # SangerSingleReadPrimSeq <- c(forwardReadPrimSeq, reverseReadPrimSeq)
-
     # primarySeqDF
     forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
         basecalls1 <- unlist(strsplit(
@@ -143,20 +121,6 @@ consensusReadServer <- function(input, output, session) {
         return(basecalls1DF)
     })
     SangerSingleReadPrimSeqDF <- c(forwardReadPrimSeqDF, reverseReadPrimSeqDF)
-
-    # # secondarySeqID
-    # forwardReadSecoSeqID <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@secondarySeqID)
-    # reverseReadSecoSeqID <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@secondarySeqID)
-    # SangerSingleReadSecoSeqID <- c(forwardReadSecoSeqID, reverseReadSecoSeqID)
-
-    # # secondarySeq
-    # forwardReadSecoSeq <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@secondarySeq)
-    # reverseReadSecoSeq <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@secondarySeq)
-    # SangerSingleReadSecoSeq <- c(forwardReadSecoSeq, reverseReadSecoSeq)
 
     # secondarySeqDF
     forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
@@ -185,13 +149,6 @@ consensusReadServer <- function(input, output, session) {
     })
     SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
 
-    # # primaryAASeq
-    # forwardReadPrimAASeq <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@primaryAASeq)
-    # reverseReadPrimAASeq <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@primaryAASeq)
-    # SangerSingleReadPrimAASeq <- c(forwardReadPrimAASeq, reverseReadPrimAASeq)
-
     # primaryAASeqDF
     forwardReadPrimAASeqDF <- lapply(1:forwardReadNum, function(i) {
         AAString <- SangerConsensus@forwardReadsList[[i]]@primaryAASeq
@@ -211,28 +168,6 @@ consensusReadServer <- function(input, output, session) {
     })
     SangerSingleReadPrimAASeqDF <- c(forwardReadPrimAASeqDF,
                                      reverseReadPrimAASeqDF)
-
-    # # traceMatrix
-    # forwardReadTraceMat <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@traceMatrix)
-    # reverseReadTraceMat <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@traceMatrix)
-    # SangerSingleReadTraceMat <- c(forwardReadTraceMat, reverseReadTraceMat)
-    #
-    # # peakPosMatrix
-    # forwardReadReadPeakPosMat <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@peakPosMatrix)
-    # reverseReadReadPeakPosMat <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@peakPosMatrix)
-    # SangerSingleReadPeakPosMat <- c(forwardReadReadPeakPosMat,
-    #                                 reverseReadReadPeakPosMat)
-    # # peakAmpMatrix
-    # forwardReadPeakAmpMat <- sapply(1:forwardReadNum, function(i)
-    #     SangerConsensus@forwardReadsList[[i]]@peakAmpMatrix)
-    # reverseReadPeakAmpMat <- sapply(1:reverseReadNum, function(i)
-    #     SangerConsensus@reverseReadsList[[i]]@peakAmpMatrix)
-    # SangerSingleReadPeakAmpMat <- c(forwardReadPeakAmpMat,
-    #                                 reverseReadPeakAmpMat)
 
     trimmedRV <- reactiveValues(rawSeqLength            = 0,
                                 rawMeanQualityScore     = 0,
@@ -280,12 +215,12 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (input$sidebar_menu == "Sanger Consensus Read Overview") {
+            message(">>>>>>>> Inside '", input$sidebar_menu, "'")
             ### ----------------------------------------------------------------
             ### Dynamic page navigation: consensusRead content overview
             ### ----------------------------------------------------------------
-            # refAminoAcidSeq (string)
             ### ----------------------------------------------------------------
-            ### First re-calculate consensus read & Update global variable
+            ### 1. Re-calculate consensus read & Update global variable
             ### ----------------------------------------------------------------
             consensusParam[["consensusRead"]] <<- SangerConsensus@consensusRead
             consensusParam[["differencesDF"]] <<- SangerConsensus@differencesDF
@@ -314,7 +249,8 @@ consensusReadServer <- function(input, output, session) {
                                           block = TRUE, size = "lg")
                         ),
                         column(12,
-                               tags$hr(style = ("border-top: 2px hidden #A9A9A9;")),
+                               tags$hr(
+                                   style = ("border-top: 2px hidden #A9A9A9;")),
                         ),
                         column(12,
                                column(3,
@@ -558,6 +494,7 @@ consensusReadServer <- function(input, output, session) {
                 ### ------------------------------------------------------------
                 ### First assign the ChromatogramParam parameter
                 ### ------------------------------------------------------------
+                message(">>>>>>>> Inside '", input$sidebar_menu, "'")
                 singleReadIndex <- strtoi(sidebar_menu[[1]])
                 ChromatogramParam[["baseNumPerRow"]] <<-
                     SangerSingleReadChromatogramParam[[singleReadIndex]]@
@@ -780,7 +717,7 @@ consensusReadServer <- function(input, output, session) {
                             status = "success", width = 12,
                             column(3,
                                    sliderInput("ChromatogramBasePerRow",
-                                               label = h4("Base Number Per Row"),
+                                               label =h4("Base Number Per Row"),
                                                min = 5,
                                                max = 200,
                                                value = ChromatogramParam[["baseNumPerRow"]]),
@@ -788,10 +725,12 @@ consensusReadServer <- function(input, output, session) {
                                                label = h4("Height Per Row"),
                                                min = 50,
                                                max = 600,
-                                               value =ChromatogramParam[["heightPerRow"]]),
+                                               value = ChromatogramParam[["heightPerRow"]]),
                             ),
                             column(3,
-                                   tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                                   tags$hr(
+                                       style =
+                                           ("border-top: 4px hidden #A9A9A9;")),
                                    numericInput(
                                        "ChromatogramSignalRatioCutoff",
                                        h3("Signal Ratio Cutoff"),
@@ -799,10 +738,12 @@ consensusReadServer <- function(input, output, session) {
                                    checkboxInput(
                                        "ChromatogramCheckShowTrimmed",
                                        "Whether show trimmed region",
-                                       value = ChromatogramParam[["showTrimmed"]])
+                                       value =
+                                           ChromatogramParam[["showTrimmed"]])
                             ),
                             column(3,
-                                   tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                                   tags$hr(
+                                      style=("border-top: 4px hidden #A9A9A9;")),
                                    uiOutput("ChromatogramtrimmedStartPos"),
                             ),
                             column(3,
@@ -914,15 +855,6 @@ consensusReadServer <- function(input, output, session) {
         consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
         consensusParam[["secondaryPeakDF"]] <<-
             SangerConsensus@secondaryPeakDF
-
-        message("consenesusReadName: ", consensusParam[["consensusRead"]])
-        message("differencesDF: ", consensusParam[["differencesDF"]])
-        message("alignment: ", consensusParam[["alignment"]])
-        message("distanceMatrix: ", consensusParam[["distanceMatrix"]])
-        message("dendrogram: ", consensusParam[["dendrogram"]])
-        message("indelsDF: ", consensusParam[["indelsDF"]])
-        message("stopCodonsDF: ", consensusParam[["stopCodonsDF"]])
-        message("secondaryPeakDF: ", consensusParam[["secondaryPeakDF"]])
         message("######## Finish recalculation")
     })
 
@@ -954,11 +886,13 @@ consensusReadServer <- function(input, output, session) {
 
         if (singleReadIndex <= forwardReadNum) {
             # This is forward list
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam <<-
+            SangerConsensus@
+                forwardReadsList[[singleReadIndex]]@ChromatogramParam <<-
                 SangerSingleReadChromatogramParam[[singleReadIndex]]
         } else {
             # This is reverse list
-            SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@ChromatogramParam <<-
+            SangerConsensus@reverseReadsList[[singleReadIndex-forwardReadNum]]@
+                ChromatogramParam <<-
                 SangerSingleReadChromatogramParam[[singleReadIndex]]
         }
         ChromatogramParam[["baseNumPerRow"]] <<-
@@ -1001,30 +935,6 @@ consensusReadServer <- function(input, output, session) {
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
         )
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     ### ------------------------------------------------------------------------
     ### refAminoAcidSeq
@@ -1361,11 +1271,15 @@ consensusReadServer <- function(input, output, session) {
             SangerSingleReadNum <- forwardReadNum + reverseReadNum
             if (singleReadIndex <= forwardReadNum) {
                 # This is forward list
-                SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport <<-
+                SangerConsensus@
+                    forwardReadsList[[singleReadIndex]]@
+                    QualityReport <<-
                     SangerSingleReadQualReport[[singleReadIndex]]
             } else {
                 # This is reverse list
-                SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
+                SangerConsensus@
+                    reverseReadsList[[singleReadIndex-forwardReadNum]]@
+                    QualityReport <<-
                     SangerSingleReadQualReport[[singleReadIndex]]
             }
         }
@@ -1470,11 +1384,15 @@ consensusReadServer <- function(input, output, session) {
             SangerSingleReadNum <- forwardReadNum + reverseReadNum
             if (singleReadIndex <= forwardReadNum) {
                 # This is forward list
-                SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport <<-
+                SangerConsensus@
+                    forwardReadsList[[singleReadIndex]]@
+                    QualityReport <<-
                     SangerSingleReadQualReport[[singleReadIndex]]
             } else {
                 # This is reverse list
-                SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
+                SangerConsensus@
+                    reverseReadsList[[singleReadIndex-forwardReadNum]]@
+                    QualityReport <<-
                     SangerSingleReadQualReport[[singleReadIndex]]
             }
         }
@@ -1583,70 +1501,14 @@ consensusReadServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]
             } else {
                 # This is reverse list
-                SangerConsensus@reverseReadsList[[singleReadIndex - forwardReadNum]]@QualityReport <<-
+                SangerConsensus@
+                    reverseReadsList[[singleReadIndex-forwardReadNum]]@
+                    QualityReport <<-
                     SangerSingleReadQualReport[[singleReadIndex]]
             }
         }
     })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # ChromatogramParam <- reactiveValues(baseNumPerRow     = 0,
-    #                                     heightPerRow      = 0,
-    #                                     signalRatioCutoff = 0,
-    #                                     showTrimmed       = TRUE)
-
-    # chromatogram
     ### ------------------------------------------------------------------------
     ### chromatogram related feature
     ### ------------------------------------------------------------------------
@@ -1686,8 +1548,10 @@ consensusReadServer <- function(input, output, session) {
                         ratio = as.numeric(
                             ChromatogramParam[["signalRatioCutoff"]]))
                     chromatogram(hetcalls,
-                                 width = strtoi(ChromatogramParam[["baseNumPerRow"]]),
-                                 height = 2, trim5 = trimmedRV[["trimmedStartPos"]],
+                                 width = strtoi(
+                                     ChromatogramParam[["baseNumPerRow"]]),
+                                 height = 2,
+                                 trim5 = trimmedRV[["trimmedStartPos"]],
                                  trim3 = rawSeqLength -
                                      trimmedRV[["trimmedFinishPos"]],
                                  showtrim = (ChromatogramParam[["showTrimmed"]]),
