@@ -1542,59 +1542,71 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        suppressMessages(
-            excelTable(data =SangerCSetParam[[consensusReadIndex]]$
-                           SangerSingleReadPrimSeqDF[[singleReadIndex]],
-                       defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                       columnResize = FALSE, allowInsertRow = FALSE,
-                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-        )
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            suppressMessages(
+                excelTable(data =SangerCSetParam[[consensusReadIndex]]$
+                               SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                           defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+            )
+        }
     })
 
     output$secondSeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        suppressMessages(
-            excelTable(data =
-                           SangerCSetParam[[consensusReadIndex]]$
-                           SangerSingleReadSecoSeqDF[[singleReadIndex]],
-                       defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                       columnResize = FALSE, allowInsertRow = FALSE,
-                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-        )
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            suppressMessages(
+                excelTable(data =
+                               SangerCSetParam[[consensusReadIndex]]$
+                               SangerSingleReadSecoSeqDF[[singleReadIndex]],
+                           defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+            )
+        }
     })
 
     output$qualityScoreDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        suppressMessages(
-            excelTable(data =
-                           SangerCSetParam[[consensusReadIndex]]$
-                           SangerSingleReadQSDF[[singleReadIndex]],
-                       defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
-                       columnResize = FALSE, allowInsertRow = FALSE,
-                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-        )
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            suppressMessages(
+                excelTable(data =
+                               SangerCSetParam[[consensusReadIndex]]$
+                               SangerSingleReadQSDF[[singleReadIndex]],
+                           defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+            )
+        }
     })
 
     output$PrimAASeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        suppressMessages(
-            excelTable(data =
-                           SangerCSetParam[[consensusReadIndex]]$
-                           SangerSingleReadPrimAASeqDF[[singleReadIndex]],
-                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
-                       columnResize = FALSE, allowInsertRow = FALSE,
-                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-        )
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            suppressMessages(
+                excelTable(data =
+                               SangerCSetParam[[consensusReadIndex]]$
+                               SangerSingleReadPrimAASeqDF[[singleReadIndex]],
+                           defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+            )
+        }
     })
 
     valueBoxSCMinReadsNumCSSet (input, output, SangerConsensusSet, session)

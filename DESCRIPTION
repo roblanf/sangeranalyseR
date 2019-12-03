@@ -33,7 +33,8 @@ Depends:
     ggdendro,
     shinyWidgets
 RoxygenNote: 6.1.1
-Suggests: testthat
+VignetteBuilder: knitr
+Suggests: BiocStyle, knitr, rmarkdown, testthat
 Collate: 
     'AllGenerics.R'
     'ClassQualityReport.R'

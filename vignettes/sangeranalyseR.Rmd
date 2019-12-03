@@ -1,0 +1,65 @@
+---
+title: "sangeranalyseR"
+author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  BiocStyle::html_document:
+    highlight: pygments
+    toc: true
+    toc_depth: 3
+    fig_caption: yes
+#bibliography: bibliography.bib
+fontsize: 14pt
+vignette: >
+  %\VignetteIndexEntry{sangeranalyseR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+  %\VignettePackage{sangeranalyseR}
+---
+```{r style, echo=FALSE, results="asis", message=FALSE}
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+# Introduction
+
+## Design Overview
+### S4 Classes
+### Shiny UI
+
+## System Requirement
+
+
+# S4 Classes
+## SangerSingleRead
+### Inputs Definition
+### Slots Definition
+#### QualityReport
+#### ChromatogramParam
+### Example
+
+## SangerConsensusRead
+### Inputs Definition
+### Slots Definition
+### Example
+
+## AlignedConsensusSet
+### Inputs Definition
+### Slots Definition
+### Example
+
+# Shiny App
+## ShinySangerConsensusRead
+### Example
+
+## ShinySangerAlignedConsensusSet
+### Example
+
+# Conclusion
+
+# Session Information
+
+# Reference
