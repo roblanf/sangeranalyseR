@@ -96,7 +96,15 @@ consensusReadUI <- dashboardPage(
             ### ----------------------------------------------------------------
             tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 18px;
                                  margin-bottom: 30px;
-                                 }"))
+                                 }")),
+
+
+
+
+            tags$style(type="text/css",
+                       ".shiny-output-error { visibility: hidden; }",
+                       ".shiny-output-error:before { visibility: hidden; }"
+            )
         ),
 
         ### --------------------------------------------------------------------
