@@ -736,14 +736,14 @@ consensusReadServer <- function(input, output, session) {
                                     collapsible = TRUE,
                                     status = "success", width = 12,
                                     plotlyOutput("qualityTrimmingRatioPlot") %>%
-                                        withSpinner()),
+                                        addSpinner(spin = "circle", color = "#eb4034")),
                                 box(title = tags$p("Cumulative Ratio Plot",
                                                    style = "font-size: 21px;
                                        font-weight: bold;"),
                                     collapsible = TRUE,
                                     status = "success", width = 12,
                                     plotlyOutput("qualityQualityBasePlot") %>%
-                                        withSpinner()),
+                                        addSpinner(spin = "circle", color = "#eb4034")),
                             ),
                         ),
                     ),
@@ -859,6 +859,10 @@ consensusReadServer <- function(input, output, session) {
         btn <- input$closeUI
         stopApp()
     })
+
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Consensus read re-calculating UI
+    ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
         message("@@@@@@@ Reactive button clicked !!!")
         message("Start recalculating consensus read")
@@ -905,6 +909,9 @@ consensusReadServer <- function(input, output, session) {
         #                           message = 'Thank you for clicking')
     })
 
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
+    ### ------------------------------------------------------------------------
     observeEvent(input$saveChromatogramParam, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
@@ -1611,10 +1618,8 @@ consensusReadServer <- function(input, output, session) {
                             trimmedSeqLength,
                         ChromatogramParam[["showTrimmed"]]) *
                     strtoi(ChromatogramParam[["heightPerRow"]])
-                try(
-                    plotOutput("chromatogram", height = chromatogramRowNumAns),
-                    silent = TRUE
-                )
+                    plotOutput("chromatogram", height = chromatogramRowNumAns) %>%
+                        addSpinner(spin = "circle", color = "#eb4034")
             }
         }
     })
