@@ -244,6 +244,10 @@ consensusReadServer <- function(input, output, session) {
                                 trimmedMinQualityScore  = 0,
                                 remainingRatio          = 0)
 
+    trimmedParam <- reactiveValues(M1TrimmingCutoff     = 0,
+                                   M2CutoffQualityScore = 0,
+                                   M2SlidingWindowSize  = 0)
+
     ChromatogramParam <- reactiveValues(baseNumPerRow     = 0,
                                         heightPerRow      = 0,
                                         signalRatioCutoff = 0,
@@ -565,6 +569,47 @@ consensusReadServer <- function(input, output, session) {
                     SangerSingleReadChromatogramParam[[singleReadIndex]]@
                     showTrimmed
 
+                trimmedParam[["M1TrimmingCutoff"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    M1TrimmingCutoff
+                trimmedParam[["M2CutoffQualityScore"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    M2CutoffQualityScore
+                trimmedParam[["M2SlidingWindowSize"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    M2SlidingWindowSize
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 trimmedRV[["rawSeqLength"]] <<-
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     rawSeqLength
@@ -736,14 +781,14 @@ consensusReadServer <- function(input, output, session) {
                                     collapsible = TRUE,
                                     status = "success", width = 12,
                                     plotlyOutput("qualityTrimmingRatioPlot") %>%
-                                        addSpinner(spin = "circle", color = "#eb4034")),
+                                        withSpinner()),
                                 box(title = tags$p("Cumulative Ratio Plot",
                                                    style = "font-size: 21px;
                                        font-weight: bold;"),
                                     collapsible = TRUE,
                                     status = "success", width = 12,
                                     plotlyOutput("qualityQualityBasePlot") %>%
-                                        addSpinner(spin = "circle", color = "#eb4034")),
+                                        withSpinner()),
                             ),
                         ),
                     ),
@@ -774,6 +819,7 @@ consensusReadServer <- function(input, output, session) {
                                                value =ChromatogramParam[["heightPerRow"]]),
                             ),
                             column(3,
+                                   tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                                    numericInput(
                                        "ChromatogramSignalRatioCutoff",
                                        h3("Signal Ratio Cutoff"),
@@ -784,9 +830,11 @@ consensusReadServer <- function(input, output, session) {
                                        value = ChromatogramParam[["showTrimmed"]])
                             ),
                             column(3,
+                                   tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                                    uiOutput("ChromatogramtrimmedStartPos"),
                             ),
                             column(3,
+                                   tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                                    uiOutput("ChromatogramtrimmedFinishPos"),
                             ),
                             actionBttn("saveChromatogramParam",
@@ -908,6 +956,7 @@ consensusReadServer <- function(input, output, session) {
         # session$sendCustomMessage(type = 'testmessage',
         #                           message = 'Thank you for clicking')
     })
+
 
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
@@ -1293,6 +1342,10 @@ consensusReadServer <- function(input, output, session) {
             SangerSingleReadQualReport[[singleReadIndex]]@
                 remainingRatio <<- remainingRatio
 
+            trimmedParam[["M1TrimmingCutoff"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                M1TrimmingCutoff
+
             trimmedRV[["rawSeqLength"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
                 rawSeqLength
@@ -1395,6 +1448,13 @@ consensusReadServer <- function(input, output, session) {
             SangerSingleReadQualReport[[singleReadIndex]]@
                 remainingRatio <<- remainingRatio
 
+            trimmedParam[["M2CutoffQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                M2CutoffQualityScore
+            trimmedParam[["M2SlidingWindowSize"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                M2SlidingWindowSize
+
             trimmedRV[["rawSeqLength"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
                 rawSeqLength
@@ -1496,6 +1556,13 @@ consensusReadServer <- function(input, output, session) {
                 trimmedMinQualityScore <<- trimmedMinQualityScore
             SangerSingleReadQualReport[[singleReadIndex]]@
                 remainingRatio <<- remainingRatio
+
+            trimmedParam[["M2CutoffQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                M2CutoffQualityScore
+            trimmedParam[["M2SlidingWindowSize"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                M2SlidingWindowSize
 
             trimmedRV[["rawSeqLength"]] <<-
                 SangerSingleReadQualReport[[singleReadIndex]]@
@@ -1618,8 +1685,8 @@ consensusReadServer <- function(input, output, session) {
                             trimmedSeqLength,
                         ChromatogramParam[["showTrimmed"]]) *
                     strtoi(ChromatogramParam[["heightPerRow"]])
-                    plotOutput("chromatogram", height = chromatogramRowNumAns) %>%
-                        addSpinner(spin = "circle", color = "#eb4034")
+                    plotOutput("chromatogram", height = chromatogramRowNumAns)
+                        # addSpinner(spin = "circle", color = "#eb4034")
             }
         }
     })
@@ -1672,9 +1739,7 @@ consensusReadServer <- function(input, output, session) {
                                textInput("M1TrimmingCutoffText",
                                          label = p("Input Value"),
                                          value = toString(
-                                             SangerSingleReadQualReport
-                                             [[singleReadIndex]]@
-                                                 M1TrimmingCutoff),
+                                             trimmedParam[["M1TrimmingCutoff"]]),
                                          width = '70%')
                            ),
                     ),
@@ -1692,6 +1757,7 @@ consensusReadServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]@
                         M2SlidingWindowSize <<-  5
                 }
+
                 fluidRow(
                     column(6,
                            uiOutput("M2CutoffQualityScore") ,
@@ -1699,9 +1765,7 @@ consensusReadServer <- function(input, output, session) {
                                textInput("M2CutoffQualityScoreText",
                                          label = p("Input Value"),
                                          value = toString(
-                                             SangerSingleReadQualReport
-                                             [[singleReadIndex]]@
-                                                 M2CutoffQualityScore),
+                                             trimmedParam[["M2CutoffQualityScore"]]),
                                          width = '70%')
                            ),
                     ),
@@ -1711,9 +1775,7 @@ consensusReadServer <- function(input, output, session) {
                                textInput("M2SlidingWindowSizeText",
                                          label = p("Input Value"),
                                          value = toString(
-                                             SangerSingleReadQualReport
-                                             [[singleReadIndex]]@
-                                                 M2SlidingWindowSize),
+                                             trimmedParam[["M2SlidingWindowSize"]]),
                                          width = '70%')
                            ),
                     ),
