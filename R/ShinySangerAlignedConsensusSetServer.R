@@ -13,15 +13,12 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     SangerConsensusSetNum <- length(SangerConsensusSet@consensusReadsList)
 
-    # SCRefAminoAcidSeq <- SangerConsensusSet@consensusReadsList[[i]]@refAminoAcidSeq
-
 
     SangerCSetParam <- lapply(1:SangerConsensusSetNum, function(i) {
         ### --------------------------------------------------------------------
         ### ConsensusRead-related parameters initialization.
         ### --------------------------------------------------------------------
         # readFeature
-        # SCRefAminoAcidSeq <- SangerConsensusSet@consensusReadsList[[i]]@refAminoAcidSeq
         SCName <- paste0(i, " Consensus Read")
 
         # Forward & reverse reads list
@@ -268,15 +265,9 @@ alignedConsensusSetServer <- function(input, output, session) {
     })
 
 
-    consensusParamSet <- reactiveValues(consensusReadSet      = NULL,
-                                        consenesusReadNameSet = NULL,
-                                        differencesDFSet      = NULL,
-                                        alignmentSet          = NULL,
-                                        distanceMatrixSet     = NULL,
-                                        dendrogramSet         = NULL,
-                                        indelsDFSet           = NULL,
-                                        stopCodonsDFSet       = NULL,
-                                        secondaryPeakDFSet    = NULL)
+    consensusParamSet <- reactiveValues(consensusReadSCSet  = NULL,
+                                        alignmentSCSet      = NULL,
+                                        alignmentTreeSCSet  = NULL)
 
     consensusParam <- reactiveValues(consensusRead      = NULL,
                                      consenesusReadName = NULL,
@@ -325,6 +316,11 @@ alignedConsensusSetServer <- function(input, output, session) {
                 SCTrimmingMethodName = "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
             }
 
+
+            consensusParamSet[["consensusReadSCSet"]] <<- SangerConsensusSet@consensusReadSCSet
+            consensusParamSet[["alignmentSCSet"]] <<- SangerConsensusSet@alignmentSCSet
+            consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
+
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p("Input Parameters: ",
@@ -334,6 +330,16 @@ alignedConsensusSetServer <- function(input, output, session) {
                     status = "success", width = 12,
                     tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
                     fluidRow(
+                        column(width = 12,
+                               actionBttn("recalculateButtonSCSet",
+                                          "Re-calculate consensus read (read set)",
+                                          icon = icon("calculator"),
+                                          style = "simple", color = "danger",
+                                          block = TRUE, size = "lg")
+                        ),
+                        column(12,
+                               tags$hr(style = ("border-top: 2px hidden #A9A9A9;"))
+                        ),
                         column(12,
                                column(3,
                                       tags$p(tagList(icon("caret-right"),
@@ -400,8 +406,34 @@ alignedConsensusSetServer <- function(input, output, session) {
                                       h4(SangerConsensusSetNum),
                                )
                         ),
+                        box(title = tags$p("Genetic Code Data Frame",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(width = 2,
+                                   tags$p("Tri-nucleotide:",
+                                          style = "font-size: 15px;
+                                       font-weight: bold;"),
+                                   tags$p("Amino Acid : ",
+                                          style = "font-size: 15px;
+                                       font-weight: bold;"),
+                                   tags$p("('*' : stop codon) ",
+                                          style = "font-size: 12px;
+                                       font-weight: italic;"),
+                            ),
+                            column(width = 10,
+                                   excelOutput("geneticCodeDF",
+                                               width = "100%", height = "50"),
+                                   style = paste("height:100%; ",
+                                                 "overflow-y: hidden;",
+                                                 "overflow-x: scroll;")
+                            ),
+                        ),
+                        uiOutput("SCrefAminoAcidSeq") ,
                     ),
                 ),
+
 
                 box(title = tags$p(tagList(icon("dot-circle"),
                                            "Consensus Readset Results: "),
@@ -419,80 +451,80 @@ alignedConsensusSetServer <- function(input, output, session) {
                                htmlOutput("consensusSetAlignmentHTML"),
                         ),
                     ),
-                    box(title = tags$p("Consensus Reads Differences Data frame",
-                                       style = "font-size: 24px;
-                                       font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               uiOutput("SCSetDifferencesDFUI"),
-                               style = paste("height:100%; overflow-y:",
-                                             "scroll;overflow-x: scroll;")
-                        )
-                    ),
-                    box(title = tags$p("Consensus Reads Dendrogram",
-                                       style = "font-size: 24px;
-                                       font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               plotOutput("SCSetdendrogramPlot"),
-                               style = paste("height:100%; overflow-y:",
-                                             "scroll;overflow-x: scroll;")
-                        ),
-                        column(width = 12,
-                               tags$hr(
-                                   style = ("border-top: 4px hidden #A9A9A9;")),
-                        ),
-                        column(width = 12,
-                               dataTableOutput("SCSetdendrogramDF"),
-                               style = paste("height:100%; overflow-y:",
-                                             "scroll;overflow-x: scroll;")
-                        )
-                    ),
-                    box(title = tags$p("Consensus Reads Samples Distance",
-                                       style = "font-size: 24px;
-                                       font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               # plot()
-                               uiOutput("SCSetDistanceMatrixPlotUI"),
-                               style = paste("height:100%; overflow-y:",
-                                             "scroll;overflow-x: scroll;")
-                        ),
-                        column(width = 12,
-                               tags$hr(
-                                   style = ("border-top: 4px hidden #A9A9A9;")),
-                        ),
-                        column(width = 12,
-                               uiOutput("SCSetDistanceMatrixUI"),
-                               style = paste("height:100%; overflow-y:",
-                                             "scroll;overflow-x: scroll;")
-                        )
-                    ),
-                    box(title = tags$p("Consensus Reads Indels Data frame",
-                                       style = "font-size: 24px;
-                                       font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               uiOutput("SCSetIndelsDFUI"),
-                               style = paste("height:100%; overflow-y:",
-                                             "scroll;overflow-x: scroll;")
-                        )
-                    ),
-                    box(title = tags$p("Consensus Reads Stop Codons Data frame",
-                                       style = "font-size: 24px;
-                                       font-weight: bold;"),
-                        collapsible = TRUE,
-                        status = "success", width = 12,
-                        column(width = 12,
-                               uiOutput("SCSetStopCodonsDFUI"),
-                               style = paste("height:100%; overflow-y:",
-                                             "scroll;overflow-x: scroll;")
-                        )
-                    )
+                    # box(title = tags$p("Consensus Reads Differences Data frame",
+                    #                    style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #     collapsible = TRUE,
+                    #     status = "success", width = 12,
+                    #     column(width = 12,
+                    #            uiOutput("SCSetDifferencesDFUI"),
+                    #            style = paste("height:100%; overflow-y:",
+                    #                          "scroll;overflow-x: scroll;")
+                    #     )
+                    # ),
+                    # box(title = tags$p("Consensus Reads Dendrogram",
+                    #                    style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #     collapsible = TRUE,
+                    #     status = "success", width = 12,
+                    #     column(width = 12,
+                    #            plotOutput("SCSetdendrogramPlot"),
+                    #            style = paste("height:100%; overflow-y:",
+                    #                          "scroll;overflow-x: scroll;")
+                    #     ),
+                    #     column(width = 12,
+                    #            tags$hr(
+                    #                style = ("border-top: 4px hidden #A9A9A9;")),
+                    #     ),
+                    #     column(width = 12,
+                    #            dataTableOutput("SCSetdendrogramDF"),
+                    #            style = paste("height:100%; overflow-y:",
+                    #                          "scroll;overflow-x: scroll;")
+                    #     )
+                    # ),
+                    # box(title = tags$p("Consensus Reads Samples Distance",
+                    #                    style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #     collapsible = TRUE,
+                    #     status = "success", width = 12,
+                    #     column(width = 12,
+                    #            # plot()
+                    #            uiOutput("SCSetDistanceMatrixPlotUI"),
+                    #            style = paste("height:100%; overflow-y:",
+                    #                          "scroll;overflow-x: scroll;")
+                    #     ),
+                    #     column(width = 12,
+                    #            tags$hr(
+                    #                style = ("border-top: 4px hidden #A9A9A9;")),
+                    #     ),
+                    #     column(width = 12,
+                    #            uiOutput("SCSetDistanceMatrixUI"),
+                    #            style = paste("height:100%; overflow-y:",
+                    #                          "scroll;overflow-x: scroll;")
+                    #     )
+                    # ),
+                    # box(title = tags$p("Consensus Reads Indels Data frame",
+                    #                    style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #     collapsible = TRUE,
+                    #     status = "success", width = 12,
+                    #     column(width = 12,
+                    #            uiOutput("SCSetIndelsDFUI"),
+                    #            style = paste("height:100%; overflow-y:",
+                    #                          "scroll;overflow-x: scroll;")
+                    #     )
+                    # ),
+                    # box(title = tags$p("Consensus Reads Stop Codons Data frame",
+                    #                    style = "font-size: 24px;
+                    #                    font-weight: bold;"),
+                    #     collapsible = TRUE,
+                    #     status = "success", width = 12,
+                    #     column(width = 12,
+                    #            uiOutput("SCSetStopCodonsDFUI"),
+                    #            style = paste("height:100%; overflow-y:",
+                    #                          "scroll;overflow-x: scroll;")
+                    #     )
+                    # )
                 ),
             )
         } else {
@@ -502,8 +534,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                     sidebar_menu[[4]] == "Read" &&
                     sidebar_menu[[5]] == "Overview") {
                     consensusReadIndex <- strtoi(sidebar_menu[[1]])
-                    # SCRefAminoAcidSeq <-
-                    #     SangerCSetParam[[consensusReadIndex]]$SCRefAminoAcidSeq
                     forwardReadNum <-
                         SangerCSetParam[[consensusReadIndex]]$forwardReadNum
                     reverseReadNum <-
@@ -516,6 +546,15 @@ alignedConsensusSetServer <- function(input, output, session) {
                     } else if (SCTrimmingMethod == "M2") {
                         SCTrimmingMethodName = "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
                     }
+
+                    consensusParam[["consensusRead"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consensusRead
+                    consensusParam[["differencesDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@differencesDF
+                    consensusParam[["alignment"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment
+                    consensusParam[["distanceMatrix"]] <<-SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@distanceMatrix
+                    consensusParam[["dendrogram"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@dendrogram
+                    consensusParam[["indelsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF
+                    consensusParam[["stopCodonsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@stopCodonsDF
+                    consensusParam[["secondaryPeakDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@secondaryPeakDF
 
                     fluidRow(
                         useShinyjs(),
@@ -630,8 +669,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                             ################################################
                             #### Add this after having reference sample ####
                             ################################################
-                            # If it is null
-                            # h1(SCRefAminoAcidSeq),
                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                             box(title = tags$p("Consensus Read Parameters",
                                                style = "font-size: 24px;
@@ -680,8 +717,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                      "overflow-y: hidden;",
                                                      "overflow-x: scroll;")
                                 ),
-                                uiOutput("SCrefAminoAcidSeq") ,
                             ),
+                            uiOutput("SCrefAminoAcidSeq") ,
                         ),
 
                         box(title = tags$p(tagList(icon("dot-circle"),
@@ -1218,17 +1255,67 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusParam[["secondaryPeakDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@secondaryPeakDF
 
 
-        message("consenesusReadName: ", consensusParam[["consensusRead"]])
-        message("differencesDF: ", consensusParam[["differencesDF"]])
-        message("alignment: ", consensusParam[["alignment"]])
-        message("distanceMatrix: ", consensusParam[["distanceMatrix"]])
-        message("dendrogram: ", consensusParam[["dendrogram"]])
-        message("indelsDF: ", consensusParam[["indelsDF"]])
-        message("stopCodonsDF: ", consensusParam[["stopCodonsDF"]])
-        message("secondaryPeakDF: ", consensusParam[["secondaryPeakDF"]])
-
         message("Finish recalculating consensus read")
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Consensus read re-calculating (SCSet) UI
+    ### ------------------------------------------------------------------------
+    observeEvent(input$recalculateButtonSCSet, {
+        message("@@@@@@@ Reactive button clicked !!!")
+        message("Start recalculating consensus read")
+        CSSetResult <-
+            alignConsensusReads (SangerConsensusSet@consensusReadsList,
+                                 SangerConsensusSet@geneticCode,
+                                 SangerConsensusSet@refAminoAcidSeq,
+                                 SangerConsensusSet@minFractionCallSCSet,
+                                 SangerConsensusSet@maxFractionLostSCSet,
+                                 1)
+
+
+        SangerConsensusSet@consensusReadSCSet <<- CSSetResult$consensus
+        SangerConsensusSet@alignmentSCSet <<- CSSetResult$aln
+        SangerConsensusSet@alignmentTreeSCSet <<- CSSetResult$aln.tree
+
+
+        consensusParamSet[["consensusReadSCSet"]] <<- SangerConsensusSet@consensusReadSCSet
+        consensusParamSet[["alignmentSCSet"]] <<- SangerConsensusSet@alignmentSCSet
+        consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
+
+
+        message("Finish recalculating consensus read")
+        # session$sendCustomMessage(type = 'testmessage',
+        #                           message = 'Thank you for clicking')
+    })
+
+
+
+
 
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
@@ -1281,6 +1368,39 @@ alignedConsensusSetServer <- function(input, output, session) {
     })
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # consensusParamSet <- reactiveValues(consensusReadSCSet  = NULL,
+    #                                     alignmentSCSet      = NULL,
+    #                                     alignmentTreeSCSet  = NULL)
+
     ############################################################################
     ### ConsensusReadSet (Function for Sanger Consensus Read Set Overview)
     ############################################################################
@@ -1288,107 +1408,107 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### Alignment
     ### ------------------------------------------------------------------------
     output$consensusSetAlignmentHTML<-renderUI({
-        consensusParamSet[["alignmentSet"]] <- SangerConsensusSet@SCalignment
+        consensusParamSet[["alignmentSCSet"]] <- SangerConsensusSet@alignmentSCSet
         browseSeqHTML <-
             file.path(shinyDirectory, "Consensus_Readset_Alignment_BrowseSeqs.html")
-        BrowseSeqs(consensusParamSet[["alignmentSet"]] ,
+        BrowseSeqs(consensusParamSet[["alignmentSCSet"]] ,
                    openURL=FALSE, htmlFile=browseSeqHTML)
         includeHTML(browseSeqHTML)
     })
 
-    ### ------------------------------------------------------------------------
-    ### difference
-    ### ------------------------------------------------------------------------
-    output$SCSetDifferencesDFUI <- renderUI({
-        consensusParamSet[["differencesDFSet"]] <<- SangerConsensusSet@SCdifferencesDF
-        if (all(dim(consensusParamSet[["differencesDFSet"]]) == c(0,0))) {
-            h4("*** 'Differences' dataframe is empty. ***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCSetDifferencesDF")
-        }
-    })
-    output$SCSetDifferencesDF = renderDataTable({
-        consensusParamSet[["differencesDFSet"]]
-    })
+    # ### ------------------------------------------------------------------------
+    # ### difference
+    # ### ------------------------------------------------------------------------
+    # output$SCSetDifferencesDFUI <- renderUI({
+    #     consensusParamSet[["differencesDFSet"]] <<- SangerConsensusSet@SCdifferencesDF
+    #     if (all(dim(consensusParamSet[["differencesDFSet"]]) == c(0,0))) {
+    #         h4("*** 'Differences' dataframe is empty. ***",
+    #            style="font-weight: bold; font-style: italic;")
+    #     } else {
+    #         dataTableOutput("SCSetDifferencesDF")
+    #     }
+    # })
+    # output$SCSetDifferencesDF = renderDataTable({
+    #     consensusParamSet[["differencesDFSet"]]
+    # })
 
 
     ### ------------------------------------------------------------------------
     ### dendrogram
     ### ------------------------------------------------------------------------
-    output$SCSetdendrogramPlot <- renderPlot({
-        consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
-        ggdendrogram(consensusParamSet[["dendrogramSet"]][[2]], rotate = TRUE)
-    })
-    output$SCSetdendrogramDF <- renderDataTable({
-        consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
-        consensusParamSet[["dendrogramSet"]][[1]]
-    })
+    # output$SCSetdendrogramPlot <- renderPlot({
+    #     consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
+    #     ggdendrogram(consensusParamSet[["dendrogramSet"]][[2]], rotate = TRUE)
+    # })
+    # output$SCSetdendrogramDF <- renderDataTable({
+    #     consensusParamSet[["dendrogramSet"]] <<- SangerConsensusSet@SCdendrogram
+    #     consensusParamSet[["dendrogramSet"]][[1]]
+    # })
 
     ### ------------------------------------------------------------------------
     ### distance
     ### ------------------------------------------------------------------------
-    output$SCSetDistanceMatrixPlotUI <- renderUI({
-        consensusParamSet[["distanceMatrixSet"]] <<- SangerConsensusSet@SCdistanceMatrix
-        if (all(dim(consensusParamSet[["distanceMatrixSet"]]) == c(0,0))) {
-            h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            plotlyOutput("SCSetDistanceMatrixPlot")
-        }
-    })
+    # output$SCSetDistanceMatrixPlotUI <- renderUI({
+    #     consensusParamSet[["distanceMatrixSet"]] <<- SangerConsensusSet@SCdistanceMatrix
+    #     if (all(dim(consensusParamSet[["distanceMatrixSet"]]) == c(0,0))) {
+    #         h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
+    #            style="font-weight: bold; font-style: italic;")
+    #     } else {
+    #         plotlyOutput("SCSetDistanceMatrixPlot")
+    #     }
+    # })
 
-    output$SCSetDistanceMatrixPlot <- renderPlotly({
-        plot_ly(x = c(),
-                y = c(),
-                z = consensusParamSet[["distanceMatrixSet"]],
-                colors = colorRamp(c("white", "#32a852")),
-                type = "heatmap")
-    })
-    output$SCSetDistanceMatrixUI <- renderUI({
-        consensusParamSet[["distanceMatrixSet"]] <<- SangerConsensusSet@SCdistanceMatrix
-        if (all(dim(consensusParamSet[["distanceMatrixSet"]]) == c(0,0))) {
-            h4("*** 'Distance' dataframe is empty. ***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCSetDistanceMatrix")
-        }
-    })
-    output$SCSetDistanceMatrix = renderDataTable({
-        consensusParamSet[["distanceMatrixSet"]]
-    })
+    # output$SCSetDistanceMatrixPlot <- renderPlotly({
+    #     plot_ly(x = c(),
+    #             y = c(),
+    #             z = consensusParamSet[["distanceMatrixSet"]],
+    #             colors = colorRamp(c("white", "#32a852")),
+    #             type = "heatmap")
+    # })
+    # output$SCSetDistanceMatrixUI <- renderUI({
+    #     consensusParamSet[["distanceMatrixSet"]] <<- SangerConsensusSet@SCdistanceMatrix
+    #     if (all(dim(consensusParamSet[["distanceMatrixSet"]]) == c(0,0))) {
+    #         h4("*** 'Distance' dataframe is empty. ***",
+    #            style="font-weight: bold; font-style: italic;")
+    #     } else {
+    #         dataTableOutput("SCSetDistanceMatrix")
+    #     }
+    # })
+    # output$SCSetDistanceMatrix = renderDataTable({
+    #     consensusParamSet[["distanceMatrixSet"]]
+    # })
 
-    ### ------------------------------------------------------------------------
-    ### SCIndelsDF
-    ### ------------------------------------------------------------------------
-    output$SCSetIndelsDFUI <- renderUI({
-        consensusParamSet[["indelsDFSet"]] <<- SangerConsensusSet@SCindelsDF
-        if (all(dim(consensusParamSet[["indelsDFSet"]] ) == c(0,0))) {
-            h4("*** 'Indels' data frame is empty. ***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCSetIndelsDF")
-        }
-    })
-    output$SCSetIndelsDF <- renderDataTable({
-        consensusParamSet[["indelsDFSet"]]
-    })
-
-    ### ------------------------------------------------------------------------
-    ### SCStopCodons
-    ### ------------------------------------------------------------------------
-    output$SCSetStopCodonsDFUI <- renderUI({
-        consensusParamSet[["stopCodonsDFSet"]] <<- SangerConsensusSet@SCstopCodonsDF
-        if (all(dim(consensusParamSet[["stopCodonsDFSet"]]) == c(0,0))) {
-            h4("*** 'Stop Codons' dataframe is empty. ***",
-               style="font-weight: bold; font-style: italic;")
-        } else {
-            dataTableOutput("SCSetStopCodonsDF")
-        }
-    })
-    output$SCSetStopCodonsDF <- renderDataTable({
-        consensusParamSet[["stopCodonsDFSet"]]
-    })
+    # ### ------------------------------------------------------------------------
+    # ### SCIndelsDF
+    # ### ------------------------------------------------------------------------
+    # output$SCSetIndelsDFUI <- renderUI({
+    #     consensusParamSet[["indelsDFSet"]] <<- SangerConsensusSet@SCindelsDF
+    #     if (all(dim(consensusParamSet[["indelsDFSet"]] ) == c(0,0))) {
+    #         h4("*** 'Indels' data frame is empty. ***",
+    #            style="font-weight: bold; font-style: italic;")
+    #     } else {
+    #         dataTableOutput("SCSetIndelsDF")
+    #     }
+    # })
+    # output$SCSetIndelsDF <- renderDataTable({
+    #     consensusParamSet[["indelsDFSet"]]
+    # })
+    #
+    # ### ------------------------------------------------------------------------
+    # ### SCStopCodons
+    # ### ------------------------------------------------------------------------
+    # output$SCSetStopCodonsDFUI <- renderUI({
+    #     consensusParamSet[["stopCodonsDFSet"]] <<- SangerConsensusSet@SCstopCodonsDF
+    #     if (all(dim(consensusParamSet[["stopCodonsDFSet"]]) == c(0,0))) {
+    #         h4("*** 'Stop Codons' dataframe is empty. ***",
+    #            style="font-weight: bold; font-style: italic;")
+    #     } else {
+    #         dataTableOutput("SCSetStopCodonsDF")
+    #     }
+    # })
+    # output$SCSetStopCodonsDF <- renderDataTable({
+    #     consensusParamSet[["stopCodonsDFSet"]]
+    # })
 
 
     ############################################################################
@@ -1398,10 +1518,7 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### genetic code
     ### ------------------------------------------------------------------------
     output$geneticCodeDF <- renderExcel({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        singleReadIndex <- strtoi(sidebar_menu[[5]])
-        SCGeneticCode <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@geneticCode
+        SCGeneticCode <- SangerConsensusSet@geneticCode
         excelTable(data =  t(data.frame(SCGeneticCode)),
                    defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
@@ -1409,18 +1526,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
-    output$SCrefAminoAcidSeqDF <- renderExcel({
-        refAminoAcidSeqVec <-
-            strsplit(SangerConsensusSet@consensusReadsList[[1]]@
-                         refAminoAcidSeq, "")[[1]]
-        names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
-        excelTable(data =
-                       t(data.frame(refAminoAcidSeqVec)),
-                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
-                   columnResize = FALSE, allowInsertRow = FALSE,
-                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
-    })
+
 
 
 
@@ -1440,7 +1546,7 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### refAminoAcidSeq
     ### ------------------------------------------------------------------------
     output$SCrefAminoAcidSeq <- renderUI({
-        if (SangerConsensusSet@consensusReadsList[[1]]@refAminoAcidSeq == "") {
+        if (SangerConsensusSet@refAminoAcidSeq == "") {
             box(title = tags$p("Reference Amino Acids Sequence",
                                style = "font-size: 24px;
                                     font-weight: bold;"),
@@ -1471,6 +1577,18 @@ alignedConsensusSetServer <- function(input, output, session) {
                 ),
             )
         }
+    })
+
+    output$SCrefAminoAcidSeqDF <- renderExcel({
+        refAminoAcidSeqVec <-
+            strsplit(SangerConsensusSet@refAminoAcidSeq, "")[[1]]
+        names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
+        excelTable(data =
+                       t(data.frame(refAminoAcidSeqVec)),
+                   defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     })
 
     ### ------------------------------------------------------------------------

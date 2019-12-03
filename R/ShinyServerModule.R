@@ -358,8 +358,8 @@ alignConsensusReads <- function(SangerConsensusReadList,
         aln.tree = NULL
     }
     return(list("consensus" = consensus,
-                "aln" = aln,
-                "aln.tree" = aln.tree))
+                "aln"       = aln,
+                "aln.tree"  = aln.tree))
 }
 ### ============================================================================
 ### Adding dynamic menu to sidebar.

@@ -7,6 +7,7 @@
 #' @slot suffixReverseRegExp .
 #' @slot minFractionCallSCSet .
 #' @slot maxFractionLostSCSet .
+#' @slot geneticCode .
 #' @slot refAminoAcidSeq .
 #' @slot consensusReadsList .
 #' @slot consensusReadSCSet .
@@ -53,6 +54,7 @@ setClass("SangerAlignedConsensusSet",
              suffixReverseRegExp         = "character",
              minFractionCallSCSet        = "numeric",
              maxFractionLostSCSet        = "numeric",
+             geneticCode                 = "character",
              refAminoAcidSeq             = "character",
              consensusReadsList          = "list",
              consensusReadSCSet          = "DNAString",
@@ -190,10 +192,12 @@ setMethod("initialize",
                    consensusReadsList        = SangerConsensusReadList,
                    minFractionCallSCSet      = minFractionCallSCSet,
                    maxFractionLostSCSet      = maxFractionLostSCSet,
+                   geneticCode               = geneticCode,
                    consensusReadSCSet        = consensus,
+                   refAminoAcidSeq           = refAminoAcidSeq,
                    alignmentSCSet            = aln,
                    alignmentTreeSCSet        = aln.tree
-)
+                   )
 })
 
 
