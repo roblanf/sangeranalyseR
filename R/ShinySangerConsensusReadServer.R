@@ -281,26 +281,6 @@ consensusReadServer <- function(input, output, session) {
             ### ----------------------------------------------------------------
             ### First re-calculate consensus read & Update global variable
             ### ----------------------------------------------------------------
-            message("Start recalculating consensus read")
-            CSResult<-
-                calculateConsensusRead (SangerConsensus@forwardReadsList,
-                                        SangerConsensus@reverseReadsList,
-                                        SangerConsensus@refAminoAcidSeq,
-                                        SangerConsensus@minFractionCall,
-                                        SangerConsensus@maxFractionLost,
-                                        SangerConsensus@geneticCode,
-                                        SangerConsensus@acceptStopCodons,
-                                        SangerConsensus@readingFrame)
-
-            SangerConsensus@consensusRead <<- CSResult$consensusGapfree
-            SangerConsensus@differencesDF <<- CSResult$diffsDf
-            SangerConsensus@alignment <<- CSResult$aln2
-            SangerConsensus@distanceMatrix <<- CSResult$dist
-            SangerConsensus@dendrogram <<- CSResult$dend
-            SangerConsensus@indelsDF <<- CSResult$indels
-            SangerConsensus@stopCodonsDF <<- CSResult$stopsDf
-            SangerConsensus@secondaryPeakDF <<- CSResult$spDf
-
             consensusParam[["consensusRead"]] <<- SangerConsensus@consensusRead
             consensusParam[["differencesDF"]] <<- SangerConsensus@differencesDF
             consensusParam[["alignment"]] <<- SangerConsensus@alignment
@@ -310,17 +290,6 @@ consensusReadServer <- function(input, output, session) {
             consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
             consensusParam[["secondaryPeakDF"]] <<-
                 SangerConsensus@secondaryPeakDF
-
-            message("consenesusReadName: ", consensusParam[["consensusRead"]])
-            message("differencesDF: ", consensusParam[["differencesDF"]])
-            message("alignment: ", consensusParam[["alignment"]])
-            message("distanceMatrix: ", consensusParam[["distanceMatrix"]])
-            message("dendrogram: ", consensusParam[["dendrogram"]])
-            message("indelsDF: ", consensusParam[["indelsDF"]])
-            message("stopCodonsDF: ", consensusParam[["stopCodonsDF"]])
-            message("secondaryPeakDF: ", consensusParam[["secondaryPeakDF"]])
-
-            message("Finish recalculating consensus read")
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p(tagList(icon("dot-circle"),
@@ -329,8 +298,17 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
                     status = "success", width = 12,
-                    tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
+                    tags$hr(style = ("border-top: 2px hidden #A9A9A9;")),
                     fluidRow(
+                        column(width = 12,
+                               actionBttn("recalculateButton",
+                                          "Re-calculate consensus read",
+                                          style = "simple", color = "success",
+                                          block = TRUE, size = "lg")
+                        ),
+                        column(12,
+                               tags$hr(style = ("border-top: 2px hidden #A9A9A9;")),
+                        ),
                         column(12,
                                column(3,
                                       tags$p(tagList(icon("caret-right"),
@@ -877,7 +855,51 @@ consensusReadServer <- function(input, output, session) {
         btn <- input$closeUI
         stopApp()
     })
+    observeEvent(input$recalculateButton, {
+        message("@@@@@@@ Reactive button clicked !!!")
+        message("Start recalculating consensus read")
+        CSResult<-
+            calculateConsensusRead (SangerConsensus@forwardReadsList,
+                                    SangerConsensus@reverseReadsList,
+                                    SangerConsensus@refAminoAcidSeq,
+                                    SangerConsensus@minFractionCall,
+                                    SangerConsensus@maxFractionLost,
+                                    SangerConsensus@geneticCode,
+                                    SangerConsensus@acceptStopCodons,
+                                    SangerConsensus@readingFrame)
 
+        SangerConsensus@consensusRead <<- CSResult$consensusGapfree
+        SangerConsensus@differencesDF <<- CSResult$diffsDf
+        SangerConsensus@alignment <<- CSResult$aln2
+        SangerConsensus@distanceMatrix <<- CSResult$dist
+        SangerConsensus@dendrogram <<- CSResult$dend
+        SangerConsensus@indelsDF <<- CSResult$indels
+        SangerConsensus@stopCodonsDF <<- CSResult$stopsDf
+        SangerConsensus@secondaryPeakDF <<- CSResult$spDf
+
+        consensusParam[["consensusRead"]] <<- SangerConsensus@consensusRead
+        consensusParam[["differencesDF"]] <<- SangerConsensus@differencesDF
+        consensusParam[["alignment"]] <<- SangerConsensus@alignment
+        consensusParam[["distanceMatrix"]] <<-SangerConsensus@distanceMatrix
+        consensusParam[["dendrogram"]] <<- SangerConsensus@dendrogram
+        consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
+        consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
+        consensusParam[["secondaryPeakDF"]] <<-
+            SangerConsensus@secondaryPeakDF
+
+        message("consenesusReadName: ", consensusParam[["consensusRead"]])
+        message("differencesDF: ", consensusParam[["differencesDF"]])
+        message("alignment: ", consensusParam[["alignment"]])
+        message("distanceMatrix: ", consensusParam[["distanceMatrix"]])
+        message("dendrogram: ", consensusParam[["dendrogram"]])
+        message("indelsDF: ", consensusParam[["indelsDF"]])
+        message("stopCodonsDF: ", consensusParam[["stopCodonsDF"]])
+        message("secondaryPeakDF: ", consensusParam[["secondaryPeakDF"]])
+
+        message("Finish recalculating consensus read")
+        # session$sendCustomMessage(type = 'testmessage',
+        #                           message = 'Thank you for clicking')
+    })
 
     ############################################################################
     ### ConsensusRead (Function for Sanger Consensus Read Overview)

@@ -30,7 +30,8 @@ Depends:
     rhandsontable,
     excelR,
     shinycssloaders,
-    ggdendro
+    ggdendro,
+    shinyWidgets
 RoxygenNote: 6.1.1
 Suggests: testthat
 Collate: 

@@ -325,9 +325,7 @@ alignConsensusReads <- function(SangerConsensusReadList,
                             verbose = FALSE)
         }
 
-        ### ----------------------------------------------------------------
-        ### Making a rough NJ tree. Labels are rows in the summary df
-        ### ----------------------------------------------------------------
+        # Making a rough NJ tree. Labels are rows in the summary df
         neat.labels = match(names(aln),
                             as.character(names(SangerConsensusReadDNASet))
         )
@@ -339,10 +337,8 @@ alignConsensusReads <- function(SangerConsensusReadList,
 
         aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
 
-        ### ----------------------------------------------------------------
-        ### Making a rough NJ tree. Labels are rows in the summary df
-        ###    (If tree cannot be created ==> NULL)
-        ### ----------------------------------------------------------------
+        # Making a rough NJ tree. Labels are rows in the summary df
+        #    (If tree cannot be created ==> NULL)
         aln.tree = NULL
         try({
             aln.tree = bionjs(aln.dist)
@@ -353,10 +349,7 @@ alignConsensusReads <- function(SangerConsensusReadList,
             silent = TRUE
         )
 
-        ### ----------------------------------------------------------------
-        ### Get consensus read and add to alignment result
-        ### ----------------------------------------------------------------
-        # Getting a new consensus read
+        # Get consensus read and add to alignment result
         consensus = ConsensusSequence(aln,
                                       minInformation = minFractionCallSCSet,
                                       includeTerminalGaps = TRUE,

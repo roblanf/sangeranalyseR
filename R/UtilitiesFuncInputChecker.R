@@ -1,23 +1,3 @@
-checkAcceptStopCodons <- function(acceptStopCodons, errors) {
-    if (!is.logical(acceptStopCodons)) {
-        msg <- paste("\n'acceptStopCodons' must be 'TRUE' or 'FALSE'\n",
-                     sep = "")
-        errors <- c(errors, msg)
-    }
-    return(errors)
-}
-
-checkProcessorsNum <- function(processorsNum, errors) {
-    if (!(processorsNum %% 1 == 0)) {
-        msg <- paste("\n'processorsNum' must be integer.\n", sep = "")
-        errors <- c(errors, msg)
-    }
-    return(errors)
-}
-
-
-
-
 checkReadFileName <- function(readFileName, errors) {
     if (!file.exists(readFileName)) {
         cat ("readFileName", readFileName)
@@ -186,6 +166,23 @@ checkReadingFrame <- function(readingFrame, errors) {
     return(errors)
 }
 
+checkAcceptStopCodons <- function(acceptStopCodons, errors) {
+    if (!is.logical(acceptStopCodons)) {
+        msg <- paste("\n'acceptStopCodons' must be 'TRUE' or 'FALSE'\n",
+                     sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
+checkProcessorsNum <- function(processorsNum, errors) {
+    if (!(processorsNum %% 1 == 0)) {
+        msg <- paste("\n'processorsNum' must be integer.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
 ### ============================================================================
 ### 'parentDirectory' prechecking
 ### ============================================================================
@@ -243,28 +240,3 @@ checkShowTrimmed <- function(showTrimmed, errors) {
     return(errors)
 }
 
-# Waiting list ~~
-# refAminoAcidSeq
-# geneticCode
-# acceptStopCodons
-# readingFrame
-# processorsNum
-
-# Origin value
-# TrimmingMethod        = "M1",
-# M1TrimmingCutoff      = 0.0001,
-# M2CutoffQualityScore  = NULL,
-# M2SlidingWindowSize   = NULL,
-# refAminoAcidSeq        = "",
-#
-# minReadsNum            = 2,
-# minReadLength          = 20,
-#
-# minFractionCall        = 0.5,
-# maxFractionLost        = 0.5,
-#
-# geneticCode            = GENETIC_CODE,
-# acceptStopCodons       = TRUE,
-#
-# readingFrame           = 1,
-# processorsNum          = 1
