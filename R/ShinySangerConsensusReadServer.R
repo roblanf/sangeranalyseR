@@ -244,6 +244,15 @@ consensusReadServer <- function(input, output, session) {
                                 trimmedMinQualityScore  = 0,
                                 remainingRatio          = 0)
 
+    consensusParam <- reactiveValues(consensusRead   = NULL,
+                                     differencesDF   = NULL,
+                                     alignment       = NULL,
+                                     distanceMatrix  = NULL,
+                                     dendrogram      = NULL,
+                                     indelsDF        = NULL,
+                                     stopCodonsDF    = NULL,
+                                     secondaryPeakDF = NULL)
+
     trimmedParam <- reactiveValues(M1TrimmingCutoff     = 0,
                                    M2CutoffQualityScore = 0,
                                    M2SlidingWindowSize  = 0)
@@ -253,14 +262,7 @@ consensusReadServer <- function(input, output, session) {
                                         signalRatioCutoff = 0,
                                         showTrimmed       = TRUE)
 
-    consensusParam <- reactiveValues(consensusRead   = NULL,
-                                     differencesDF   = NULL,
-                                     alignment       = NULL,
-                                     distanceMatrix  = NULL,
-                                     dendrogram      = NULL,
-                                     indelsDF        = NULL,
-                                     stopCodonsDF    = NULL,
-                                     secondaryPeakDF = NULL)
+
 
     ############################################################################
     ### Functions for all UI page
