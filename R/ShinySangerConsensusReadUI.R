@@ -136,7 +136,7 @@ consensusReadUI <- dashboardPage(
                         { font-size: 15px}")),
 
         tags$style(HTML(".nav-tabs-custom .nav-tabs li.active:hover a,
-                        .nav-tabs-custom .nav-tabs li.active a
+                        .nav-tabs-custom .savenav-tabs li.active a
                         {background-color: transparent;
                         border-color: transparent;}")),
         tags$style(HTML(".nav-tabs-custom .nav-tabs li.active

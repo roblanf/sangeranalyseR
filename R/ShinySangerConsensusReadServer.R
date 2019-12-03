@@ -299,7 +299,7 @@ consensusReadServer <- function(input, output, session) {
                 box(title = tags$p(tagList(icon("dot-circle"),
                                            "Basic Information: "),
                                    style = "font-size: 26px;
-                                       font-weight: bold;"),
+                                   font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
                     status = "success", width = 12,
                     tags$hr(style = ("border-top: 2px hidden #A9A9A9;")),
@@ -307,7 +307,8 @@ consensusReadServer <- function(input, output, session) {
                         column(width = 12,
                                actionBttn("recalculateButton",
                                           "Re-calculate consensus read",
-                                          style = "simple", color = "success",
+                                          icon = icon("calculator"),
+                                          style = "simple", color = "danger",
                                           block = TRUE, size = "lg")
                         ),
                         column(12,
