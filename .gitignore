@@ -20,3 +20,7 @@
 .Rhistory
 
 .Rbuildignore
+
+.DS_Store
+
+*/.DS_Store
