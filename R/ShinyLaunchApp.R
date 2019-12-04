@@ -2,12 +2,12 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' consenesusReadName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
+#' consensusReadName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' A_chloroticConsensusReads <- SangerConsensusRead(
 #'                                  parentDirectory       = inputFilesParentDir,
-#'                                  consenesusReadName    = consenesusReadName,
+#'                                  consensusReadName    = consensusReadName,
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
 #'                                  refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",

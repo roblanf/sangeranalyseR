@@ -282,7 +282,7 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerConsensus@consenesusReadName),
+                                      h4(SangerConsensus@consensusReadName),
                                )
                         ),
                         column(12,
@@ -978,13 +978,13 @@ consensusReadServer <- function(input, output, session) {
     output$consensusAlignmentHTML <- renderUI({
         browseSeqHTML <-
             file.path(shinyDirectory,
-                      paste0(SangerConsensus@consenesusReadName,
+                      paste0(SangerConsensus@consensusReadName,
                              "_Alignment_BrowseSeqs.html"))
         BrowseSeqs(consensusParam[["alignment"]],
                    openURL=FALSE, htmlFile=browseSeqHTML)
         includeHTML(
             file.path(shinyDirectory,
-                      paste0(SangerConsensus@consenesusReadName,
+                      paste0(SangerConsensus@consensusReadName,
                              "_Alignment_BrowseSeqs.html")))
     })
 

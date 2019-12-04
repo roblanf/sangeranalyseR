@@ -203,7 +203,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                         alignmentTreeSCSet  = NULL)
 
     consensusParam <- reactiveValues(consensusRead      = NULL,
-                                     consenesusReadName = NULL,
+                                     consensusReadName = NULL,
                                      differencesDF      = NULL,
                                      alignment          = NULL,
                                      distanceMatrix     = NULL,
@@ -425,9 +425,9 @@ alignedConsensusSetServer <- function(input, output, session) {
                         SCTrimmingMethodName =
                             "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
                     }
-                    consensusParam[["consenesusReadName"]] <<-
+                    consensusParam[["consensusReadName"]] <<-
                         SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@consenesusReadName
+                        consensusReadsList[[consensusReadIndex]]@consensusReadName
                     consensusParam[["consensusRead"]] <<-
                         SangerConsensusSet@
                         consensusReadsList[[consensusReadIndex]]@consensusRead
@@ -510,7 +510,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(consensusParam[["consenesusReadName"]]),
+                                              h4(consensusParam[["consensusReadName"]]),
                                        )
                                 ),
                                 column(12,
@@ -1149,9 +1149,9 @@ alignedConsensusSetServer <- function(input, output, session) {
             CSResult$spDf
 
 
-        consensusParam[["consenesusReadName"]] <<-
+        consensusParam[["consensusReadName"]] <<-
             SangerConsensusSet@
-            consensusReadsList[[consensusReadIndex]]@consenesusReadName
+            consensusReadsList[[consensusReadIndex]]@consensusReadName
         consensusParam[["consensusRead"]] <<-
             SangerConsensusSet@
             consensusReadsList[[consensusReadIndex]]@consensusRead
@@ -1371,9 +1371,9 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(consensusReadIndex)) {
-            consensusParam[["consenesusReadName"]] <<-
+            consensusParam[["consensusReadName"]] <<-
                 SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@consenesusReadName
+                consensusReadsList[[consensusReadIndex]]@consensusReadName
             consensusParam[["alignment"]] <-
                 SangerConsensusSet@
                 consensusReadsList[[consensusReadIndex]]@alignment
@@ -1381,7 +1381,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             browseSeqHTML <-
                 file.path(shinyDirectory, "BrowseSeqs_html",
                           paste0(sidebar_menu[[1]], "_",
-                                 consensusParam[["consenesusReadName"]],
+                                 consensusParam[["consensusReadName"]],
                                  "_Alignment_BrowseSeqs.html"))
             if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
                 dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))

@@ -4,7 +4,7 @@
 #'  consensus read
 #'
 #' @slot parentDirectory
-#' @slot consenesusReadName .
+#' @slot consensusReadName .
 #' @slot suffixForwardRegExp .
 #' @slot suffixReverseRegExp .
 #' @slot forwardReadsList
@@ -36,12 +36,12 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' consenesusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+#' consensusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' A_chloroticConsensusReads <- new("SangerConsensusRead",
 #'                                  parentDirectory       = inputFilesParentDir,
-#'                                  consenesusReadName    = consenesusReadName,
+#'                                  consensusReadName    = consensusReadName,
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
 #'                                  refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -59,7 +59,7 @@ setClass("SangerConsensusRead",
          ### -------------------------------------------------------------------
          representation(
              parentDirectory           = "character",
-             consenesusReadName        = "character",
+             consensusReadName        = "character",
              suffixForwardRegExp       = "character",
              suffixReverseRegExp       = "character",
              forwardReadsList          = "list",
@@ -90,7 +90,7 @@ setMethod("initialize",
           "SangerConsensusRead",
           function(.Object, ...,
                    parentDirectory        = parentDirectory,
-                   consenesusReadName     = consenesusReadName,
+                   consensusReadName     = consensusReadName,
                    suffixForwardRegExp    = suffixForwardRegExp,
                    suffixReverseRegExp    = suffixReverseRegExp,
                    TrimmingMethod        = "M1",
@@ -124,7 +124,7 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     parentDirFiles <- list.files(parentDirectory)
     consensusSubGroupFiles <-
-        parentDirFiles[grepl(consenesusReadName,
+        parentDirFiles[grepl(consensusReadName,
                              parentDirFiles, fixed=TRUE)]
     forwardSelectInputFiles <-
         consensusSubGroupFiles[grepl(suffixForwardRegExp,
@@ -255,7 +255,7 @@ setMethod("initialize",
     }
     callNextMethod(.Object, ...,
                    parentDirectory        = parentDirectory,
-                   consenesusReadName     = consenesusReadName,
+                   consensusReadName     = consensusReadName,
                    suffixForwardRegExp    = suffixForwardRegExp,
                    suffixReverseRegExp    = suffixReverseRegExp,
                    forwardReadsList       = forwardReadsList,
