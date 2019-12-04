@@ -9,7 +9,7 @@
 #' @slot QualityReport .
 #' @slot ChromatogramParam .
 #' @slot primaryAASeq .
-#' @geneticCode .
+#' @slot geneticCode .
 #'
 #' @name SangerSingleRead-class
 #'
@@ -26,6 +26,7 @@
 #' A_chloroticaSingleRead <- new("SangerSingleRead",
 #'                               readFeature           = "Forward Read",
 #'                               readFileName          = A_chloroticaFdReadFN,
+#'                               geneticCode           = GENETIC_CODE,
 #'                               TrimmingMethod        = "M2",
 #'                               M1TrimmingCutoff      = NULL,
 #'                               M2CutoffQualityScore  = 40,
@@ -74,7 +75,7 @@ setMethod("initialize",
               errors <- character()
               errors <- checkReadFeature (readFeature, errors)
               errors <- checkReadFileName (readFileName, errors)
-              errors <- checkGeneticCode(geneticCode, errors)
+              errors <- checkGeneticCode (geneticCode, errors)
 
               ##### ------------------------------------------------------------
               ##### Input parameter prechecking for TrimmingMethod.
