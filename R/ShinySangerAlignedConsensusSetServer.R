@@ -197,10 +197,9 @@ alignedConsensusSetServer <- function(input, output, session) {
     })
 
 
-
-    consensusParamSet <- reactiveValues(consensusReadSCSet  = NULL,
-                                        alignmentSCSet      = NULL,
-                                        alignmentTreeSCSet  = NULL)
+    consensusParamSet <- reactiveValues(consensusReadSCSet  = SangerConsensusSet@consensusReadSCSet,
+                                        alignmentSCSet      = SangerConsensusSet@alignmentSCSet,
+                                        alignmentTreeSCSet  = SangerConsensusSet@alignmentTreeSCSet)
 
     consensusParam <- reactiveValues(consensusRead      = NULL,
                                      consensusReadName = NULL,
@@ -249,12 +248,12 @@ alignedConsensusSetServer <- function(input, output, session) {
                 SCTrimmingMethodName =
                     "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
             }
-            consensusParamSet[["consensusReadSCSet"]] <<-
-                SangerConsensusSet@consensusReadSCSet
-            consensusParamSet[["alignmentSCSet"]] <<-
-                SangerConsensusSet@alignmentSCSet
-            consensusParamSet[["alignmentTreeSCSet"]] <<-
-                SangerConsensusSet@alignmentTreeSCSet
+            # consensusParamSet[["consensusReadSCSet"]] <<-
+            #     SangerConsensusSet@consensusReadSCSet
+            # consensusParamSet[["alignmentSCSet"]] <<-
+            #     SangerConsensusSet@alignmentSCSet
+            # consensusParamSet[["alignmentTreeSCSet"]] <<-
+            #     SangerConsensusSet@alignmentTreeSCSet
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p("Input Parameters: ",
@@ -2021,163 +2020,169 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        readFeature <- SangerCSetParam[[consensusReadIndex]]$
-            SangerSingleReadFeature[[singleReadIndex]]
-        trimmedStartPos = trimmedRV[["trimmedStartPos"]]
-        trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
-        qualityPhredScores <-
-            SangerCSetParam[[consensusReadIndex]]$
-            SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
-        readLen = length(qualityPhredScores)
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            readFeature <- SangerCSetParam[[consensusReadIndex]]$
+                SangerSingleReadFeature[[singleReadIndex]]
+            trimmedStartPos = trimmedRV[["trimmedStartPos"]]
+            trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
+            qualityPhredScores <-
+                SangerCSetParam[[consensusReadIndex]]$
+                SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
+            readLen = length(qualityPhredScores)
 
-        stepRatio = 1 / readLen
-        trimmedStartPos / readLen
-        trimmedFinishPos / readLen
+            stepRatio = 1 / readLen
+            trimmedStartPos / readLen
+            trimmedFinishPos / readLen
 
-        trimmedPer <- c()
-        remainingPer <- c()
+            trimmedPer <- c()
+            remainingPer <- c()
 
-        for (i in 1:trimmedStartPos) {
-            if (i != trimmedStartPos) {
-                trimmedPer <- c(trimmedPer, stepRatio)
+            for (i in 1:trimmedStartPos) {
+                if (i != trimmedStartPos) {
+                    trimmedPer <- c(trimmedPer, stepRatio)
+                }
             }
-        }
 
-        for (i in trimmedStartPos:trimmedFinishPos) {
-            trimmedPer <- c(trimmedPer, 0)
-        }
-
-
-        for (i in trimmedFinishPos:readLen) {
-            if (i != trimmedFinishPos) {
-                trimmedPer <- c(trimmedPer, stepRatio)
+            for (i in trimmedStartPos:trimmedFinishPos) {
+                trimmedPer <- c(trimmedPer, 0)
             }
+
+
+            for (i in trimmedFinishPos:readLen) {
+                if (i != trimmedFinishPos) {
+                    trimmedPer <- c(trimmedPer, stepRatio)
+                }
+            }
+
+            trimmedPer <- cumsum(trimmedPer)
+            remainingPer = 1 - trimmedPer
+
+            PerData <- data.frame(1:length(trimmedPer),
+                                  trimmedPer, remainingPer)
+
+            colnames(PerData) <- c("Base",
+                                   "Trimmed Ratio",
+                                   "Remaining Ratio")
+            x <- list(
+                title = "Base Pair Index"
+                # titlefont = f
+            )
+            y <- list(
+                title = "Read Ratio"
+                # titlefont = f
+            )
+            PerDataPlot <- melt(PerData, id.vars = c("Base"))
+            suppressPlotlyMessage(
+                plot_ly(data=PerDataPlot,
+                        x=~Base,
+                        y=~value,
+                        mode="markers",
+                        color = ~variable,
+                        text = ~paste("BP Index : ",
+                                      Base, '<sup>th</sup><br>Read Ratio :',
+                                      round(value*100, digits = 2), '%')) %>%
+                    layout(xaxis = x,
+                           yaxis = y,
+                           legend = list(orientation = 'h',
+                                         xanchor = "center",
+                                         x = 0.5, y = 1.1)) %>%
+                    add_annotations(
+                        text = "Trimmed Ratio (Each BP)",
+                        x = (trimmedStartPos + trimmedFinishPos) / 2,
+                        y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
+                        + 0.06,
+                        showarrow=FALSE
+                    ) %>%
+                    add_annotations(
+                        text = "Remaining Ratio (Each BP)",
+                        x = (trimmedStartPos+trimmedFinishPos) / 2,
+                        y = ((remainingPer[1]+remainingPer[length(remainingPer)])/2)
+                        - 0.06,
+                        showarrow=FALSE
+                    ))
         }
-
-        trimmedPer <- cumsum(trimmedPer)
-        remainingPer = 1 - trimmedPer
-
-        PerData <- data.frame(1:length(trimmedPer),
-                              trimmedPer, remainingPer)
-
-        colnames(PerData) <- c("Base",
-                               "Trimmed Ratio",
-                               "Remaining Ratio")
-        x <- list(
-            title = "Base Pair Index"
-            # titlefont = f
-        )
-        y <- list(
-            title = "Read Ratio"
-            # titlefont = f
-        )
-        PerDataPlot <- melt(PerData, id.vars = c("Base"))
-        suppressPlotlyMessage(
-            plot_ly(data=PerDataPlot,
-                    x=~Base,
-                    y=~value,
-                    mode="markers",
-                    color = ~variable,
-                    text = ~paste("BP Index : ",
-                                  Base, '<sup>th</sup><br>Read Ratio :',
-                                  round(value*100, digits = 2), '%')) %>%
-                layout(xaxis = x,
-                       yaxis = y,
-                       legend = list(orientation = 'h',
-                                     xanchor = "center",
-                                     x = 0.5, y = 1.1)) %>%
-                add_annotations(
-                    text = "Trimmed Ratio (Each BP)",
-                    x = (trimmedStartPos + trimmedFinishPos) / 2,
-                    y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
-                    + 0.06,
-                    showarrow=FALSE
-                ) %>%
-                add_annotations(
-                    text = "Remaining Ratio (Each BP)",
-                    x = (trimmedStartPos+trimmedFinishPos) / 2,
-                    y = ((remainingPer[1]+remainingPer[length(remainingPer)])/2)
-                    - 0.06,
-                    showarrow=FALSE
-                ))
     })
 
     output$qualityQualityBasePlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        readFeature <-
-            SangerCSetParam[[consensusReadIndex]]$
-            SangerSingleReadFeature[[singleReadIndex]]
-        trimmedStartPos = trimmedRV[["trimmedStartPos"]]
-        trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
-        qualityPhredScores <-
-            SangerCSetParam[[consensusReadIndex]]$
-            SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
-        readLen = length(qualityPhredScores)
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            readFeature <-
+                SangerCSetParam[[consensusReadIndex]]$
+                SangerSingleReadFeature[[singleReadIndex]]
+            trimmedStartPos = trimmedRV[["trimmedStartPos"]]
+            trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
+            qualityPhredScores <-
+                SangerCSetParam[[consensusReadIndex]]$
+                SangerSingleReadQualReport[[singleReadIndex]]@qualityPhredScores
+            readLen = length(qualityPhredScores)
 
-        qualityPlotDf<- data.frame(1:length(qualityPhredScores),
-                                   qualityPhredScores)
-        colnames(qualityPlotDf) <- c("Index", "Score")
-        x <- list(
-            title = "Base Pair Index"
-            # titlefont = f
-        )
-        y <- list(
-            title = "Phred Quality Score"
-            # titlefont = f
-        )
-        suppressPlotlyMessage(
-            plot_ly(data=qualityPlotDf,
-                    x=~Index) %>%
-                add_markers(y=~Score,
-                            text =
-                                ~paste("BP Index : ",
-                                       Index,
-                                       '<sup>th</sup><br>Phred Quality Score :',
-                                       Score),
-                            name = 'Quality Each BP') %>%
-                add_trace(x=seq(trimmedStartPos,
-                                trimmedFinishPos,
-                                len=trimmedFinishPos-trimmedStartPos+1),
-                          y=rep(70, trimmedFinishPos-trimmedStartPos+1),
-                          mode="lines", hoverinfo="text",
-                          text=paste("Trimmed Reads BP length:",
-                                     trimmedFinishPos-trimmedStartPos+1,
-                                     "BPs <br>",
-                                     "Trimmed Reads BP ratio:",
-                                     round((trimmedFinishPos-trimmedStartPos+1)/
-                                               readLen * 100,
-                                           digits=2),
-                                     "%"),
-                          line = list(width = 12),
-                          name = 'Trimmed Read') %>%
-                add_trace(x=seq(0,readLen,len=readLen),
-                          y=rep(80, readLen), mode="lines", hoverinfo="text",
-                          text=paste("Whole Reads BP length:",
-                                     readLen,
-                                     "BPs <br>",
-                                     "Trimmed Reads BP ratio: 100 %"),
-                          line = list(width = 12),
-                          name = 'Whole Read') %>%
-                layout(xaxis = x, yaxis = y,
-                       shapes = list(vline(trimmedStartPos),
-                                     vline(trimmedFinishPos)),
-                       legend = list(orientation = 'h',
-                                     xanchor = "center",
-                                     x = 0.5, y = 1.1)) %>%
-                add_annotations(
-                    text = "Trimming Strat <br> BP Index",
-                    x = trimmedStartPos + 40,
-                    y = 15,
-                    showarrow=FALSE
-                ) %>%
-                add_annotations(
-                    text = "Trimming End <br> BP Index",
-                    x = trimmedFinishPos - 40,
-                    y = 15,
-                    showarrow=FALSE
-                ))
+            qualityPlotDf<- data.frame(1:length(qualityPhredScores),
+                                       qualityPhredScores)
+            colnames(qualityPlotDf) <- c("Index", "Score")
+            x <- list(
+                title = "Base Pair Index"
+                # titlefont = f
+            )
+            y <- list(
+                title = "Phred Quality Score"
+                # titlefont = f
+            )
+            suppressPlotlyMessage(
+                plot_ly(data=qualityPlotDf,
+                        x=~Index) %>%
+                    add_markers(y=~Score,
+                                text =
+                                    ~paste("BP Index : ",
+                                           Index,
+                                           '<sup>th</sup><br>Phred Quality Score :',
+                                           Score),
+                                name = 'Quality Each BP') %>%
+                    add_trace(x=seq(trimmedStartPos,
+                                    trimmedFinishPos,
+                                    len=trimmedFinishPos-trimmedStartPos+1),
+                              y=rep(70, trimmedFinishPos-trimmedStartPos+1),
+                              mode="lines", hoverinfo="text",
+                              text=paste("Trimmed Reads BP length:",
+                                         trimmedFinishPos-trimmedStartPos+1,
+                                         "BPs <br>",
+                                         "Trimmed Reads BP ratio:",
+                                         round((trimmedFinishPos-trimmedStartPos+1)/
+                                                   readLen * 100,
+                                               digits=2),
+                                         "%"),
+                              line = list(width = 12),
+                              name = 'Trimmed Read') %>%
+                    add_trace(x=seq(0,readLen,len=readLen),
+                              y=rep(80, readLen), mode="lines", hoverinfo="text",
+                              text=paste("Whole Reads BP length:",
+                                         readLen,
+                                         "BPs <br>",
+                                         "Trimmed Reads BP ratio: 100 %"),
+                              line = list(width = 12),
+                              name = 'Whole Read') %>%
+                    layout(xaxis = x, yaxis = y,
+                           shapes = list(vline(trimmedStartPos),
+                                         vline(trimmedFinishPos)),
+                           legend = list(orientation = 'h',
+                                         xanchor = "center",
+                                         x = 0.5, y = 1.1)) %>%
+                    add_annotations(
+                        text = "Trimming Strat <br> BP Index",
+                        x = trimmedStartPos + 40,
+                        y = 15,
+                        showarrow=FALSE
+                    ) %>%
+                    add_annotations(
+                        text = "Trimming End <br> BP Index",
+                        x = trimmedFinishPos - 40,
+                        y = 15,
+                        showarrow=FALSE
+                    ))
+        }
     })
 
     valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
@@ -2188,11 +2193,11 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        if (!is.na(as.numeric(sidebar_menu[[1]])) &&
+        if (!is.na(consensusReadIndex) &&
             sidebar_menu[[2]] == "Consensus" &&
             sidebar_menu[[3]] == "Read" &&
             sidebar_menu[[4]] == "-" &&
-            !is.na(as.numeric(sidebar_menu[[5]])) &&
+            !is.na(singleReadIndex) &&
             (sidebar_menu[[6]] == "Forward" ||
              sidebar_menu[[6]] == "Reverse") &&
             sidebar_menu[[7]] == "Read") {
@@ -2217,11 +2222,11 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        if (!is.na(as.numeric(sidebar_menu[[1]])) &&
+        if (!is.na(consensusReadIndex) &&
             sidebar_menu[[2]] == "Consensus" &&
             sidebar_menu[[3]] == "Read" &&
             sidebar_menu[[4]] == "-" &&
-            !is.na(as.numeric(sidebar_menu[[5]])) &&
+            !is.na(singleReadIndex) &&
             (sidebar_menu[[6]] == "Forward" || sidebar_menu[[6]] == "Reverse")&&
             sidebar_menu[[7]] == "Read") {
             rawSeqLength =
@@ -2246,8 +2251,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        if (!is.null(SangerCSetParam[[consensusReadIndex]]$
-                     SangerSingleReadQualReport[[singleReadIndex]])) {
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
             if ( SangerCSetParam[[consensusReadIndex]]$
                  SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod== "M1") {
                 if (is.null(SangerCSetParam[[consensusReadIndex]]$
@@ -2309,8 +2314,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
-        if (!is.null(SangerCSetParam[[consensusReadIndex]]$
-                     SangerSingleReadQualReport[[singleReadIndex]])) {
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
             if (SangerCSetParam[[consensusReadIndex]]$
                 SangerSingleReadQualReport[[singleReadIndex]]@TrimmingMethod == "M1") {
                 tagList(icon("check-circle"),

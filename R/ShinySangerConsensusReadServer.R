@@ -179,14 +179,14 @@ consensusReadServer <- function(input, output, session) {
                                 trimmedMinQualityScore  = 0,
                                 remainingRatio          = 0)
 
-    consensusParam <- reactiveValues(consensusRead   = NULL,
-                                     differencesDF   = NULL,
-                                     alignment       = NULL,
-                                     distanceMatrix  = NULL,
-                                     dendrogram      = NULL,
-                                     indelsDF        = NULL,
-                                     stopCodonsDF    = NULL,
-                                     secondaryPeakDF = NULL)
+    consensusParam <- reactiveValues(consensusRead   = SangerConsensus@consensusRead,
+                                     differencesDF   = SangerConsensus@differencesDF,
+                                     alignment       = SangerConsensus@alignment,
+                                     distanceMatrix  = SangerConsensus@distanceMatrix,
+                                     dendrogram      = SangerConsensus@dendrogram,
+                                     indelsDF        = SangerConsensus@indelsDF,
+                                     stopCodonsDF    = SangerConsensus@stopCodonsDF,
+                                     secondaryPeakDF = SangerConsensus@secondaryPeakDF)
 
     trimmedParam <- reactiveValues(M1TrimmingCutoff     = 0,
                                    M2CutoffQualityScore = 0,
@@ -196,8 +196,6 @@ consensusReadServer <- function(input, output, session) {
                                         heightPerRow      = 0,
                                         signalRatioCutoff = 0,
                                         showTrimmed       = TRUE)
-
-
 
     ############################################################################
     ### Functions for all UI page
@@ -219,18 +217,6 @@ consensusReadServer <- function(input, output, session) {
             ### ----------------------------------------------------------------
             ### Dynamic page navigation: consensusRead content overview
             ### ----------------------------------------------------------------
-            ### ----------------------------------------------------------------
-            ### 1. Re-calculate consensus read & Update global variable
-            ### ----------------------------------------------------------------
-            consensusParam[["consensusRead"]] <<- SangerConsensus@consensusRead
-            consensusParam[["differencesDF"]] <<- SangerConsensus@differencesDF
-            consensusParam[["alignment"]] <<- SangerConsensus@alignment
-            consensusParam[["distanceMatrix"]] <<-SangerConsensus@distanceMatrix
-            consensusParam[["dendrogram"]] <<- SangerConsensus@dendrogram
-            consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
-            consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
-            consensusParam[["secondaryPeakDF"]] <<-
-                SangerConsensus@secondaryPeakDF
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p(tagList(icon("dot-circle"),
