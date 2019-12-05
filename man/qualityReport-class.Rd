@@ -12,13 +12,13 @@ An S4 class for quality report for a SangerSingleRead S4 object
 \describe{
 \item{\code{qualityScoresID}}{.}
 
+\item{\code{qualityPhredScoresRaw}}{.}
+
 \item{\code{qualityPhredScores}}{.}
 
-\item{\code{qualityPhredScoresBC}}{.}
+\item{\code{qualityBaseScoresRaw}}{.}
 
 \item{\code{qualityBaseScores}}{.}
-
-\item{\code{qualityBaseScoresBC}}{.}
 
 \item{\code{rawSeqLength}}{.}
 

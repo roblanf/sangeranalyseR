@@ -238,6 +238,11 @@ alignedConsensusSetServer <- function(input, output, session) {
     output$aligned_consensusRead_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
+
+            consensusParamSet[["consensusReadSCSet"]] <<- SangerConsensusSet@consensusReadSCSet
+            consensusParamSet[["alignmentSCSet"]] <<- SangerConsensusSet@alignmentSCSet
+            consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
+
             message(">>>>>>>> Inside 'Sanger Aligned Consensus Set Overview'")
             SCTrimmingMethod <-
                 SangerCSetParam[[1]]$SangerSingleReadFReadsList[[1]]@
@@ -1097,7 +1102,7 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
         message("######## Reactive button clicked !!!")
-        message("######## Start recalculating consensus read (SCSet")
+        message("######## Start recalculating consensus read (SCSet)")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         CSResult<-
@@ -1172,6 +1177,25 @@ alignedConsensusSetServer <- function(input, output, session) {
             consensusReadsList[[consensusReadIndex]]@secondaryPeakDF
         message("######## Finish recalculation")
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus read re-calculating (SCSet) UI
@@ -1264,9 +1288,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                             SangerSingleReadQualReport[[singleReadIndex]]@
                             qualityBaseScores,
                         strtoi(inputM2CutoffQualityScoreText),
-                        SangerCSetParam[[consensusReadIndex]]$
-                            SangerSingleReadQualReport[[singleReadIndex]]@
-                            M2SlidingWindowSize)
+                        strtoi(inputM2SlidingWindowSizeText)
+                        )
                 SangerCSetParam[[consensusReadIndex]]$
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     M2CutoffQualityScore <<- strtoi(inputM2CutoffQualityScoreText)

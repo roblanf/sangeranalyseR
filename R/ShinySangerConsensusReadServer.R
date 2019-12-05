@@ -524,6 +524,32 @@ consensusReadServer <- function(input, output, session) {
                     round(SangerSingleReadQualReport[[singleReadIndex]]@
                               remainingRatio * 100, 2)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                message("trimmedRV[[rawMeanQualityScore]]: ", trimmedRV[["rawMeanQualityScore"]])
+                message("trimmedRV[[rawMinQualityScore]]: ", trimmedRV[["rawMinQualityScore"]])
+                message("trimmedRV[[trimmedMeanQualityScore]]: ", trimmedRV[["trimmedMeanQualityScore"]])
+                message("trimmedRV[[trimmedMinQualityScore]]: ", trimmedRV[["trimmedMinQualityScore"]])
+
+
                 fluidRow(
                     useShinyjs(),
                     box(title = tags$p(tagList(icon("dot-circle"),

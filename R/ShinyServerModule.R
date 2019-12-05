@@ -124,25 +124,29 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
                                    maxFractionLost, geneticCode,
                                    acceptStopCodons, readingFrame,
                                    processorsNum) {
-    ### --------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     ### forward & reverse character reads list string creation
-    ### --------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
 
     trimmedStartPos <- forwardReadsList[[1]]@QualityReport@trimmedStartPos
     trimmedFinishPos <- forwardReadsList[[1]]@QualityReport@trimmedFinishPos
-    primaryDNA <- as.character(primarySeq(forwardReadsList[[1]]))[1]
 
 
+
+
+    ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ### Question !!!!! Why alignment don't use primary basecall result ?
+    ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
         trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
         trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
-        primaryDNA <- as.character(primarySeq(forwardRead))
+        primaryDNA <- as.character(forwardRead@primarySeqRaw)
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
     })
     rRDNAStringSet <- sapply(reverseReadsList, function(reverseRead) {
         trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
         trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
-        primaryDNA <- as.character(primarySeq(reverseRead))
+        primaryDNA <- as.character(reverseRead@primarySeqRaw)
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
     })
 
@@ -309,7 +313,7 @@ alignConsensusReads <- function(SangerConsensusReadList,
     ### --------------------------------------------------------------------
     if(length(SangerConsensusReadDNASet) > 1) {
         message("Aligning consensus reads ... ")
-        if(!is.null(refAminoAcidSeq)){
+        if(refAminoAcidSeq != ""){
             aln = AlignTranslation(SangerConsensusReadDNASet,
                                    geneticCode = geneticCode,
                                    processors = processorsNum,

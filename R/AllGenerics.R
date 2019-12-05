@@ -55,8 +55,8 @@ setGeneric("MakeBaseCalls", function(obj, signalRatioCutoff = 0.33) {
 #' @export
 setClassUnion("numericORNULL", c("numeric", "NULL"))
 
-#' @export
-setClassUnion("DNAStringORNULL", c("DNAString", "NULL"))
-
-#' @export
-setClassUnion("matrixORNULL", c("matrix", "NULL"))
+#' #' @export
+#' setClassUnion("DNAStringORNULL", c("DNAString", "NULL"))
+#'
+#' #' @export
+#' setClassUnion("matrixORNULL", c("matrix", "NULL"))

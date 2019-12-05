@@ -34,13 +34,13 @@ An S4 class extending sangerseq S4 class
 
 \item{\code{geneticCode}}{.}
 
-\item{\code{primarySeqBC}}{.}
+\item{\code{primarySeqRaw}}{.}
 
-\item{\code{secondarySeqBC}}{.}
+\item{\code{secondarySeqRaw}}{.}
 
-\item{\code{peakPosMatrixBC}}{.}
+\item{\code{peakPosMatrixRaw}}{.}
 
-\item{\code{peakAmpMatrixBC}}{.}
+\item{\code{peakAmpMatrixRaw}}{.}
 }}
 
 \examples{

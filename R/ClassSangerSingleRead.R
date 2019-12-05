@@ -53,10 +53,10 @@ setClass(
             ChromatogramParam   = "ChromatogramParam",
             primaryAASeq        = "AAString",
             geneticCode         = "character",
-            primarySeqRaw       = "DNAStringORNULL",
-            secondarySeqRaw     = "DNAStringORNULL",
-            peakPosMatrixRaw    = "matrixORNULL",
-            peakAmpMatrixRaw    = "matrixORNULL"
+            primarySeqRaw       = "DNAString",
+            secondarySeqRaw     = "DNAString",
+            peakPosMatrixRaw    = "matrix",
+            peakAmpMatrixRaw    = "matrix"
             )
 ) -> SangerSingleRead
 
