@@ -197,9 +197,9 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrix,
 
     QualityReport@qualityScoresID <- "After BaseCall"
     QualityReport@qualityPhredScoresBC <-
-        QualityReport@qualityPhredScoresBC[indexBaseCall]
+        QualityReport@qualityPhredScores[indexBaseCall]
     QualityReport@qualityBaseScoresBC <-
-        QualityReport@qualityBaseScoresBC[indexBaseCall]
+        QualityReport@qualityBaseScores[indexBaseCall]
 
     peakPosMatrixBC <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     peakAmpMatrixBC <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
