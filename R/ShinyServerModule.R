@@ -134,6 +134,15 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
 
 
 
+
+
+
+
+
+
+
+
+
     ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ### Question !!!!! Why alignment don't use primary basecall result ?
     ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

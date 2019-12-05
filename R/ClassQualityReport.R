@@ -146,15 +146,6 @@ setMethod("initialize",
                       trimmingPos[["trimmedMinQualityScore"]]
                   remainingRatio <- trimmingPos[["remainingRatio"]]
                   qualityScoresID = "Before Basecall"
-
-
-                  message("rawMeanQualityScore: ", rawMeanQualityScore)
-                  message("rawMinQualityScore: ", rawMinQualityScore)
-                  message("trimmedMeanQualityScore: ", trimmedMeanQualityScore)
-                  message("trimmedMinQualityScore: ", trimmedMinQualityScore)
-
-
-
               } else {
                   stop(errors)
               }
