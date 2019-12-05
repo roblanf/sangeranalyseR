@@ -121,6 +121,7 @@ suppressPlotlyMessage <- function(p) {
 MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
                                 qualityPhredScoresRaw, qualityBaseScoresRaw,
                                 signalRatioCutoff) {
+    message("     * Making basecall !!")
     #get peaks for each base
     Apeaks <- getpeaks(traceMatrix[,1])
     Cpeaks <- getpeaks(traceMatrix[,2])
@@ -205,6 +206,7 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     primarySeq <- DNAString(paste(primary, collapse=""))
     secondarySeqID <- "After BaseCall (secondary basecalls)"
     secondarySeq <- DNAString(paste(secondary, collapse=""))
+    message("     * Updating slots in 'SangerSingleRead' instance !!")
 
     return(list("qualityScoresID" = qualityScoresID,
                 "qualityPhredScores" = qualityPhredScores,

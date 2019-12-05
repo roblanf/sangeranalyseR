@@ -69,13 +69,11 @@ setMethod("MakeBaseCalls", "SangerSingleRead",
               qualityPhredScoresRaw <- obj@QualityReport@qualityPhredScoresRaw
               qualityBaseScoresRaw <- obj@QualityReport@qualityBaseScoresRaw
 
-              message("     Making basecall !!")
               MBCResult <- MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                                 qualityPhredScoresRaw,
                                                 qualityBaseScoresRaw,
                                                 signalRatioCutoff=
                                                     signalRatioCutoff)
-              message("     Updating slots in 'SangerSingleRead' instance !!")
               obj@QualityReport@qualityScoresID <-
                   MBCResult[["qualityScoresID"]]
               obj@QualityReport@qualityPhredScores <-
