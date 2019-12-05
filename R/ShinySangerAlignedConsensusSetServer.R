@@ -2067,36 +2067,100 @@ alignedConsensusSetServer <- function(input, output, session) {
             rawSeqLength =
                 SangerCSetParam[[consensusReadIndex]]$
                 SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
-            hetcalls <-
-                MakeBaseCalls(
-                    SangerCSetParam[[consensusReadIndex]]$
-                        SangerConsensusFRReadsList[[singleReadIndex]],
-                    signalRatioCutoff = as.numeric(
-                        ChromatogramParam[["signalRatioCutoff"]]))
 
-            # ### ------------------------------------------------------------
-            # ### Save SangerConsensus quality S4 object
-            # ### ------------------------------------------------------------
-            # SangerCSetParam[[consensusReadIndex]]$
-            #     SangerConsensusFRReadsList[[singleReadIndex]] <<- hetcalls
-            #
-            # forwardReadNum <-
-            #     length(SangerConsensusSet@
-            #                consensusReadsList[[consensusReadIndex]]@forwardReadsList)
-            # reverseReadNum <-
-            #     length(SangerConsensusSet@
-            #                consensusReadsList[[consensusReadIndex]]@reverseReadsList)
-            # SangerSingleReadNum <- forwardReadNum + reverseReadNum
-            # if (singleReadIndex <= forwardReadNum) {
-            #     # This is forward list
-            #     SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
-            #         forwardReadsList[[singleReadIndex]] <<- hetcalls
-            # } else {
-            #     # This is reverse list
-            #     SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
-            #         reverseReadsList[[singleReadIndex-forwardReadNum]] <<-
-            #         hetcalls
-            # }
+            #### Should be test when adding dynamic secondary peak
+            ### ------------------------------------------------------------
+            ### Save SangerConsensus quality S4 object
+            ### ------------------------------------------------------------
+            forwardReadNum <-
+                length(SangerConsensusSet@
+                           consensusReadsList[[consensusReadIndex]]@forwardReadsList)
+            reverseReadNum <-
+                length(SangerConsensusSet@
+                           consensusReadsList[[consensusReadIndex]]@reverseReadsList)
+            SangerSingleReadNum <- forwardReadNum + reverseReadNum
+            if (singleReadIndex <= forwardReadNum) {
+                # This is forward list
+                index <- singleReadIndex
+                hetcalls <-
+                    MakeBaseCalls(
+                        SangerConsensusSet@
+                            consensusReadsList[[consensusReadIndex]]@
+                            forwardReadsList[[index]],
+                        signalRatioCutoff = as.numeric(
+                            ChromatogramParam[["signalRatioCutoff"]]))
+
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[index]]@QualityReport@qualityScoresID <-
+                    hetcalls@QualityReport@qualityScoresID
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[index]]@
+                    QualityReport@qualityPhredScores <-
+                    hetcalls@QualityReport@qualityPhredScores
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[index]]@
+                    QualityReport@qualityBaseScoresRaw <-
+                    hetcalls@QualityReport@qualityBaseScoresRaw
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[index]]@peakPosMatrix <-
+                    hetcalls@peakPosMatrix
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[index]]@peakAmpMatrix <-
+                    hetcalls@peakAmpMatrix
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[index]]@primarySeqID <-
+                    hetcalls@primarySeqID
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[index]]@primarySeq <-
+                    hetcalls@primarySeq
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[index]]@secondarySeqID <-
+                    hetcalls@secondarySeqID
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[index]]@secondarySeq <-
+                    hetcalls@secondarySeq
+            } else {
+                # This is reverse list
+                index <- singleReadIndex-forwardReadNum
+                hetcalls <-
+                    MakeBaseCalls(
+                        SangerConsensusSet@
+                            consensusReadsList[[consensusReadIndex]]@
+                            reverseReadsList[[index]],
+                        signalRatioCutoff = as.numeric(
+                            ChromatogramParam[["signalRatioCutoff"]]))
+
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[index]]@
+                    QualityReport@qualityScoresID <-
+                    hetcalls@QualityReport@qualityScoresID
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[index]]@
+                    QualityReport@qualityPhredScores <-
+                    hetcalls@QualityReport@qualityPhredScores
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[index]]@
+                    QualityReport@qualityBaseScoresRaw <-
+                    hetcalls@QualityReport@qualityBaseScoresRaw
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[index]]@peakPosMatrix <-
+                    hetcalls@peakPosMatrix
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[index]]@peakAmpMatrix <-
+                    hetcalls@peakAmpMatrix
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[index]]@primarySeqID <-
+                    hetcalls@primarySeqID
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[index]]@primarySeq <-
+                    hetcalls@primarySeq
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[index]]@secondarySeqID <-
+                    hetcalls@secondarySeqID
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[index]]@secondarySeq <-
+                    hetcalls@secondarySeq
+            }
 
 
 
