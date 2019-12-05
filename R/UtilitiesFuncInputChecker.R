@@ -221,7 +221,9 @@ checkHeightPerRow <- function(heightPerRow, errors) {
     return(errors)
 }
 
-
+### ============================================================================
+### MakeBaseCalls Utilities function
+### ============================================================================
 checkSignalRatioCutoff <- function(signalRatioCutoff, errors) {
     if (signalRatioCutoff < 0 || signalRatioCutoff > 1) {
         msg <- paste("\n'signalRatioCutoff' must be between 0 and 1.\n",
