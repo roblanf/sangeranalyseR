@@ -105,3 +105,17 @@ suppressPlotlyMessage <- function(p) {
     suppressMessages(plotly_build(p))
 }
 
+
+getpeaks <- function(trace) {
+    r <- rle(trace)
+    indexes <- which(rep(diff(sign(diff(c(-Inf, r$values, -Inf)))) == -2,
+                         times = r$lengths))
+    cbind(indexes, trace[indexes])
+}
+
+peakvalues <- function(x, pstart, pstop) {
+    region <- x[x[,1] > pstart & x[,1] < pstop, ,drop=FALSE]
+    if (length(region[,1]) == 0) return(c(0, NA))
+    else return(c(max(region[,2], na.rm=TRUE), region[which.max(region[,2]),1]))
+}
+

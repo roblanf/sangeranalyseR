@@ -63,7 +63,7 @@ setMethod("updateQualityParam",  "SangerSingleRead",
           })
 
 setMethod("MakeBaseCalls", "SangerSingleRead",
-          function(obj, ratio=.33) {
+          function(obj, signalRatioCutoff=.33) {
               #get peaks for each base
               Apeaks <- getpeaks(obj@traceMatrix[,1])
               Cpeaks <- getpeaks(obj@traceMatrix[,2])
@@ -87,6 +87,7 @@ setMethod("MakeBaseCalls", "SangerSingleRead",
               secondary <- NULL
               tempPosMatrix <- matrix(nrow=length(starts), ncol=4)
               tempAmpMatrix <- matrix(nrow=length(starts), ncol=4)
+              indexBaseCall <- c()
               for(i in 1:length(starts)) {
                   Apeak <- peakvalues(Apeaks, starts[i], stops[i])
                   Cpeak <- peakvalues(Cpeaks, starts[i], stops[i])
@@ -96,32 +97,36 @@ setMethod("MakeBaseCalls", "SangerSingleRead",
                      is.na(Cpeak[2]) &
                      is.na(Gpeak[2]) &
                      is.na(Tpeak[2])) {
-                      ### ------------------------------------------------------
-                      ### My modification here: Add "N"
-                      ###     Total length won't change.
-                      ### ------------------------------------------------------
-                      primary <- c(primary, "N")
-                      secondary <- c(secondary, "N")
                       next #rare case where no peak found
                   }
+                  ### ----------------------------------------------------------
+                  ### My modification here: Tracking BaseCall index
+                  ###     Add qualtiy score when making basecall
+                  ### ----------------------------------------------------------
+                  indexBaseCall <- c(indexBaseCall, i)
                   signals <- c(Apeak[1], Cpeak[1], Gpeak[1], Tpeak[1])
+
                   tempAmpMatrix[i,] <- signals
+                  # print(tempAmpMatrix[i,])
+
                   positions <- c(Apeak[2], Cpeak[2], Gpeak[2], Tpeak[2])
+
                   tempPosMatrix[i,] <- positions
+                  # print(tempPosMatrix[i,])
+
+
                   signalratios <- signals/max(signals, na.rm=TRUE)
                   Bases <- c("A", "C", "G", "T")
-                  Bases[signalratios < ratio] <- NA
+                  Bases[signalratios < signalRatioCutoff] <- NA
                   #sort by decreasing signal strength
                   Bases <- Bases[order(signals, decreasing=TRUE)]
                   positions <- positions[order(signals, decreasing=TRUE)]
                   if(length(Bases[!is.na(Bases)]) == 4
                      | length(Bases[!is.na(Bases)]) == 0) {
-                      print(i)
                       primary <- c(primary, "N")
                       secondary <- c(secondary, "N")
                   }
                   else if(length(Bases[!is.na(Bases)]) > 1) {
-                      print(i)
                       primary <- c(primary, Bases[1])
                       Bases2 <- Bases[2:4]
                       secondary <- c(secondary,
@@ -129,11 +134,12 @@ setMethod("MakeBaseCalls", "SangerSingleRead",
                                                              collapse="")))
                   }
                   else {
-                      print(i)
                       primary <- c(primary, Bases[1])
                       secondary <- c(secondary, Bases[1])
                   }
               }
+              obj@QualityReport@qualityPhredScores <-
+                  obj@QualityReport@qualityPhredScores[indexBaseCall]
               obj@peakPosMatrix <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
               obj@peakAmpMatrix <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
               obj@primarySeqID <- "sangerseq package primary basecalls"

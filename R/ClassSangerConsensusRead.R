@@ -212,7 +212,9 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     if (length(errors) == 0) {
         # sapply to create SangerSingleRead list.
-
+        ### --------------------------------------------------------------------
+        ### "SangerSingleRead" S4 class creation (forward list)
+        ### --------------------------------------------------------------------
         forwardReadsList <- sapply(forwardAllReads[[1]], SangerSingleRead,
                                    readFeature = "Forward Read",
                                    TrimmingMethod = TrimmingMethod,
@@ -223,7 +225,15 @@ setMethod("initialize",
                                    heightPerRow = heightPerRow,
                                    signalRatioCutoff = signalRatioCutoff,
                                    showTrimmed = showTrimmed)
+        ### --------------------------------------------------------------------
+        ### Run 'MakeBaseCalls' for each forward reads
+        ### --------------------------------------------------------------------
+        forwardReadsList <- sapply(forwardReadsList, MakeBaseCalls,
+                                   signalRatioCutoff = signalRatioCutoff)
 
+        ### --------------------------------------------------------------------
+        ### "SangerSingleRead" S4 class creation (reverse list)
+        ### --------------------------------------------------------------------
         reverseReadsList <- sapply(reverseAllReads[[1]], SangerSingleRead,
                                    readFeature = "Reverse Read",
                                    TrimmingMethod = TrimmingMethod,
@@ -234,6 +244,11 @@ setMethod("initialize",
                                    heightPerRow = heightPerRow,
                                    signalRatioCutoff = signalRatioCutoff,
                                    showTrimmed = showTrimmed)
+        ### --------------------------------------------------------------------
+        ### Run 'MakeBaseCalls' for each reverse reads
+        ### --------------------------------------------------------------------
+        reverseReadsList <- sapply(reverseReadsList, MakeBaseCalls,
+                                   signalRatioCutoff = signalRatioCutoff)
 
         CSResult<-
             calculateConsensusRead (forwardReadsList, reverseReadsList,

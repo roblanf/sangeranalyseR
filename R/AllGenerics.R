@@ -43,6 +43,14 @@ setGeneric("updateQualityParam", function(object,
     standardGeneric("updateQualityParam")
 })
 
+### ============================================================================
+### Defined in SangerSingleRead
+### ============================================================================
+#' @export
+setGeneric("MakeBaseCalls", function(obj, signalRatioCutoff = 0.33) {
+    standardGeneric("MakeBaseCalls")
+})
+
 
 #' @export
 setClassUnion("numericORNULL", c("numeric", "NULL"))

@@ -2233,10 +2233,10 @@ alignedConsensusSetServer <- function(input, output, session) {
                 SangerCSetParam[[consensusReadIndex]]$
                 SangerSingleReadQualReport[[singleReadIndex]]@rawSeqLength
             hetcalls <-
-                makeBaseCalls(
+                MakeBaseCalls(
                     SangerCSetParam[[consensusReadIndex]]$
                         SangerConsensusFRReadsList[[singleReadIndex]],
-                    ratio = as.numeric(
+                    signalRatioCutoff = as.numeric(
                         ChromatogramParam[["signalRatioCutoff"]]))
             chromatogram(hetcalls,
                          width = strtoi(ChromatogramParam[["baseNumPerRow"]]),

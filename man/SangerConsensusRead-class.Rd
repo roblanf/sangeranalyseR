@@ -11,7 +11,7 @@ An S4 class for storing multiple single reads to build up new
 \section{Slots}{
 
 \describe{
-\item{\code{consenesusReadName}}{.}
+\item{\code{consensusReadName}}{.}
 
 \item{\code{suffixForwardRegExp}}{.}
 
@@ -23,12 +23,12 @@ An S4 class for storing multiple single reads to build up new
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-consenesusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+consensusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 A_chloroticConsensusReads <- new("SangerConsensusRead",
                                  parentDirectory       = inputFilesParentDir,
-                                 consenesusReadName    = consenesusReadName,
+                                 consensusReadName    = consensusReadName,
                                  suffixForwardRegExp   = suffixForwardRegExp,
                                  suffixReverseRegExp   = suffixReverseRegExp,
                                  refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",

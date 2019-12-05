@@ -97,11 +97,13 @@ consensusReadServer <- function(input, output, session) {
 
     # primarySeqDF
     forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
+        message("SangerConsensus@forwardReadsList[[i]]@primarySeq: ", SangerConsensus@forwardReadsList[[i]]@primarySeq)
+        message("SangerConsensus@forwardReadsList[[i]]@primarySeq: ", length(SangerConsensus@forwardReadsList[[i]]@primarySeq))
         basecalls1 <- unlist(strsplit(
             toString(SangerConsensus@forwardReadsList[[i]]@primarySeq), ""))
-        aveposition <- rowMeans(
-            SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        basecalls1 <- basecalls1[1:length(aveposition)]
+        # aveposition <- rowMeans(
+        #     SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        # basecalls1 <- basecalls1[1:length(aveposition)]
         basecalls1DF <- data.frame(
             t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
@@ -109,11 +111,13 @@ consensusReadServer <- function(input, output, session) {
         return(basecalls1DF)
     })
     reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(i) {
+        message("SangerConsensus@forwardReadsList[[i]]@primarySeq: ", SangerConsensus@forwardReadsList[[i]]@primarySeq)
+        message("SangerConsensus@forwardReadsList[[i]]@primarySeq: ", length(SangerConsensus@forwardReadsList[[i]]@primarySeq))
         basecalls1 <- unlist(strsplit(
             toString(SangerConsensus@reverseReadsList[[i]]@primarySeq), ""))
-        aveposition <- rowMeans(
-            SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        basecalls1 <- basecalls1[1:length(aveposition)]
+        # aveposition <- rowMeans(
+        #     SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        # basecalls1 <- basecalls1[1:length(aveposition)]
         basecalls1DF <- data.frame(
             t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
@@ -126,9 +130,9 @@ consensusReadServer <- function(input, output, session) {
     forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
         basecalls2 <- unlist(strsplit(
             toString(SangerConsensus@forwardReadsList[[i]]@secondarySeq), ""))
-        aveposition <- rowMeans(
-            SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        basecalls2 <- basecalls2[1:length(aveposition)]
+        # aveposition <- rowMeans(
+        #     SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        # basecalls2 <- basecalls2[1:length(aveposition)]
         basecalls2DF <- data.frame(
             t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
@@ -138,9 +142,9 @@ consensusReadServer <- function(input, output, session) {
     reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(i) {
         basecalls2 <- unlist(strsplit(toString(
             SangerConsensus@reverseReadsList[[i]]@secondarySeq), ""))
-        aveposition <- rowMeans(
-            SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        basecalls2 <- basecalls2[1:length(aveposition)]
+        # aveposition <- rowMeans(
+        #     SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
+        # basecalls2 <- basecalls2[1:length(aveposition)]
         basecalls2DF <- data.frame(
             t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
@@ -1527,11 +1531,10 @@ consensusReadServer <- function(input, output, session) {
                 rawSeqLength <-
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     rawSeqLength
-
                 hetcalls <-
-                    makeBaseCalls(SangerConsensusFRReadsList[[
+                    MakeBaseCalls(SangerConsensusFRReadsList[[
                         singleReadIndex]],
-                        ratio = as.numeric(
+                        signalRatioCutoff = as.numeric(
                             ChromatogramParam[["signalRatioCutoff"]]))
                     chromatogram(hetcalls,
                                  width = strtoi(
