@@ -544,10 +544,6 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-                message("trimmedRV[[rawMeanQualityScore]]: ", trimmedRV[["rawMeanQualityScore"]])
-                message("trimmedRV[[rawMinQualityScore]]: ", trimmedRV[["rawMinQualityScore"]])
-                message("trimmedRV[[trimmedMeanQualityScore]]: ", trimmedRV[["trimmedMeanQualityScore"]])
-                message("trimmedRV[[trimmedMinQualityScore]]: ", trimmedRV[["trimmedMinQualityScore"]])
 
 
                 fluidRow(
@@ -1258,7 +1254,8 @@ consensusReadServer <- function(input, output, session) {
                        defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       loadingSpin = TRUE)
         )
     })
 
@@ -1271,7 +1268,8 @@ consensusReadServer <- function(input, output, session) {
                        defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       loadingSpin = TRUE)
         )
     })
 
@@ -1284,20 +1282,60 @@ consensusReadServer <- function(input, output, session) {
                        defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       loadingSpin = TRUE)
         )
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     output$PrimAASeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
+        width <- c()
+        color <- c()
+
+        width <- rep(90, length(SangerSingleReadPrimAASeqDF[[1]])-1)
+        widthFinal <- c(30, width)
+
         suppressMessages(
             excelTable(data =
                            SangerSingleReadPrimAASeqDF[[singleReadIndex]],
+                       columns = data.frame(width = widthFinal),
                        defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       loadingSpin = TRUE)
         )
     })
 
