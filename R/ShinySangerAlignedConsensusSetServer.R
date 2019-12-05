@@ -2059,6 +2059,44 @@ alignedConsensusSetServer <- function(input, output, session) {
                         SangerConsensusFRReadsList[[singleReadIndex]],
                     signalRatioCutoff = as.numeric(
                         ChromatogramParam[["signalRatioCutoff"]]))
+
+            # ### ------------------------------------------------------------
+            # ### Save SangerConsensus quality S4 object
+            # ### ------------------------------------------------------------
+            # SangerCSetParam[[consensusReadIndex]]$
+            #     SangerConsensusFRReadsList[[singleReadIndex]] <<- hetcalls
+            #
+            # forwardReadNum <-
+            #     length(SangerConsensusSet@
+            #                consensusReadsList[[consensusReadIndex]]@forwardReadsList)
+            # reverseReadNum <-
+            #     length(SangerConsensusSet@
+            #                consensusReadsList[[consensusReadIndex]]@reverseReadsList)
+            # SangerSingleReadNum <- forwardReadNum + reverseReadNum
+            # if (singleReadIndex <= forwardReadNum) {
+            #     # This is forward list
+            #     SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+            #         forwardReadsList[[singleReadIndex]] <<- hetcalls
+            # } else {
+            #     # This is reverse list
+            #     SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+            #         reverseReadsList[[singleReadIndex-forwardReadNum]] <<-
+            #         hetcalls
+            # }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             chromatogram(hetcalls,
                          width = strtoi(ChromatogramParam[["baseNumPerRow"]]),
                          height = 2, trim5 = trimmedRV[["trimmedStartPos"]],

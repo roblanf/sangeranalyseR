@@ -980,7 +980,6 @@ consensusReadServer <- function(input, output, session) {
                     QualityReport <<-
                     SangerSingleReadQualReport[[singleReadIndex]]
             }
-
         }
     })
 
@@ -1378,6 +1377,36 @@ consensusReadServer <- function(input, output, session) {
                         singleReadIndex]],
                         signalRatioCutoff = as.numeric(
                             ChromatogramParam[["signalRatioCutoff"]]))
+
+                # ### ------------------------------------------------------------
+                # ### Save new 'SangerSingleRead' S4 instance
+                # ### ------------------------------------------------------------
+                # SangerConsensusFRReadsList[[singleReadIndex]] <<- hetcalls
+                #
+                # forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+                # reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+                # SangerSingleReadNum <- forwardReadNum + reverseReadNum
+                # if (singleReadIndex <= forwardReadNum) {
+                #     # This is forward list
+                #     SangerConsensus@
+                #         forwardReadsList[[singleReadIndex]] <<- hetcalls
+                # } else {
+                #     # This is reverse list
+                #     SangerConsensus@
+                #         reverseReadsList[[singleReadIndex-forwardReadNum]] <<-
+                #         hetcalls
+                # }
+
+
+
+
+
+
+
+
+
+
+
                 message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
                 chromatogram(hetcalls,
                              width = strtoi(

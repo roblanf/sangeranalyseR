@@ -124,10 +124,14 @@ setMethod("initialize",
                   secondarySeq = readSangerseq@secondarySeq
 
                   if (readFeature == "Reverse Read") {
-                      primarySeqRaw = reverseComplement(primarySeqRaw)
-                      primarySeq = reverseComplement(primarySeq)
-                      secondarySeqRaw = reverseComplement(secondarySeqRaw)
-                      secondarySeq = reverseComplement(secondarySeq)
+                      primarySeqRaw =
+                          reverseComplement(readSangerseq@primarySeq)
+                      primarySeq =
+                          reverseComplement(readSangerseq@primarySeq)
+                      secondarySeqRaw =
+                          reverseComplement(readSangerseq@secondarySeq)
+                      secondarySeq =
+                          reverseComplement(readSangerseq@secondarySeq)
                   }
 
                   #### ADDDD !!!!
