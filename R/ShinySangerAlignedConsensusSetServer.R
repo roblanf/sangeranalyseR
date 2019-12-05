@@ -197,9 +197,10 @@ alignedConsensusSetServer <- function(input, output, session) {
     })
 
 
-    consensusParamSet <- reactiveValues(consensusReadSCSet  = SangerConsensusSet@consensusReadSCSet,
-                                        alignmentSCSet      = SangerConsensusSet@alignmentSCSet,
-                                        alignmentTreeSCSet  = SangerConsensusSet@alignmentTreeSCSet)
+    consensusParamSet <-
+        reactiveValues(consensusReadSCSet = SangerConsensusSet@consensusReadSCSet,
+                       alignmentSCSet     = SangerConsensusSet@alignmentSCSet,
+                       alignmentTreeSCSet = SangerConsensusSet@alignmentTreeSCSet)
 
     consensusParam <- reactiveValues(consensusRead      = NULL,
                                      consensusReadName = NULL,
@@ -239,9 +240,12 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
 
-            consensusParamSet[["consensusReadSCSet"]] <<- SangerConsensusSet@consensusReadSCSet
-            consensusParamSet[["alignmentSCSet"]] <<- SangerConsensusSet@alignmentSCSet
-            consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
+            consensusParamSet[["consensusReadSCSet"]] <<-
+                SangerConsensusSet@consensusReadSCSet
+            consensusParamSet[["alignmentSCSet"]] <<-
+                SangerConsensusSet@alignmentSCSet
+            consensusParamSet[["alignmentTreeSCSet"]] <<-
+                SangerConsensusSet@alignmentTreeSCSet
 
             message(">>>>>>>> Inside 'Sanger Aligned Consensus Set Overview'")
             SCTrimmingMethod <-
@@ -1178,47 +1182,30 @@ alignedConsensusSetServer <- function(input, output, session) {
         message("######## Finish recalculation")
     })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus read re-calculating (SCSet) UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButtonSCSet, {
         message("######## Reactive button clicked !!!")
         message("######## Start recalculating consensus read (SC)")
-        CSSetResult <-
-            alignConsensusReads (SangerConsensusSet@consensusReadsList,
-                                 SangerConsensusSet@geneticCode,
-                                 SangerConsensusSet@refAminoAcidSeq,
-                                 SangerConsensusSet@minFractionCallSCSet,
-                                 SangerConsensusSet@maxFractionLostSCSet,
-                                 1)
+        if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
+            CSSetResult <-
+                alignConsensusReads (SangerConsensusSet@consensusReadsList,
+                                     SangerConsensusSet@geneticCode,
+                                     SangerConsensusSet@refAminoAcidSeq,
+                                     SangerConsensusSet@minFractionCallSCSet,
+                                     SangerConsensusSet@maxFractionLostSCSet,
+                                     1)
 
-        SangerConsensusSet@consensusReadSCSet <<- CSSetResult$consensus
-        SangerConsensusSet@alignmentSCSet <<- CSSetResult$aln
-        SangerConsensusSet@alignmentTreeSCSet <<- CSSetResult$aln.tree
+            SangerConsensusSet@consensusReadSCSet <<- CSSetResult$consensus
+            SangerConsensusSet@alignmentSCSet <<- CSSetResult$aln
+            SangerConsensusSet@alignmentTreeSCSet <<- CSSetResult$aln.tree
 
-        consensusParamSet[["consensusReadSCSet"]] <<- SangerConsensusSet@consensusReadSCSet
-        consensusParamSet[["alignmentSCSet"]] <<- SangerConsensusSet@alignmentSCSet
-        consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
-        message("######## Finish recalculation consensus read")
+            consensusParamSet[["consensusReadSCSet"]] <<- SangerConsensusSet@consensusReadSCSet
+            consensusParamSet[["alignmentSCSet"]] <<- SangerConsensusSet@alignmentSCSet
+            consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
+            message("######## Finish recalculation consensus read")
+        }
     })
 
     ### ------------------------------------------------------------------------
@@ -1468,22 +1455,26 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### Alignment
     ### ------------------------------------------------------------------------
     output$consensusSetAlignmentHTML<-renderUI({
-        consensusParamSet[["alignmentSCSet"]] <-
-            SangerConsensusSet@alignmentSCSet
-        browseSeqHTML <-
-            file.path(shinyDirectory,
-                      "Consensus_Readset_Alignment_BrowseSeqs.html")
-        BrowseSeqs(consensusParamSet[["alignmentSCSet"]] ,
-                   openURL=FALSE, htmlFile=browseSeqHTML)
-        includeHTML(browseSeqHTML)
+        if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
+            # consensusParamSet[["alignmentSCSet"]] <-
+            #     SangerConsensusSet@alignmentSCSet
+            browseSeqHTML <-
+                file.path(shinyDirectory,
+                          "Consensus_Readset_Alignment_BrowseSeqs.html")
+            BrowseSeqs(consensusParamSet[["alignmentSCSet"]] ,
+                       openURL=FALSE, htmlFile=browseSeqHTML)
+            includeHTML(browseSeqHTML)
+        }
     })
 
     ### ------------------------------------------------------------------------
     ### Consensus Reads Tree
     ### ------------------------------------------------------------------------
     output$SCSetConsensusReadTreePlot <- renderPlot({
-        consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
-        plot(consensusParamSet[["alignmentTreeSCSet"]])
+        if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
+            # consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
+            plot(consensusParamSet[["alignmentTreeSCSet"]])
+        }
     })
 
     ############################################################################

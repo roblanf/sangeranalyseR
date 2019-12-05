@@ -1404,35 +1404,40 @@ consensusReadServer <- function(input, output, session) {
                         signalRatioCutoff = as.numeric(
                             ChromatogramParam[["signalRatioCutoff"]]))
 
-                # ### ------------------------------------------------------------
-                # ### Save new 'SangerSingleRead' S4 instance
-                # ### ------------------------------------------------------------
-                # SangerConsensusFRReadsList[[singleReadIndex]] <<- hetcalls
-                #
-                # forwardReadNum <- length((SangerConsensus)@forwardReadsList)
-                # reverseReadNum <- length((SangerConsensus)@reverseReadsList)
-                # SangerSingleReadNum <- forwardReadNum + reverseReadNum
-                # if (singleReadIndex <= forwardReadNum) {
-                #     # This is forward list
-                #     SangerConsensus@
-                #         forwardReadsList[[singleReadIndex]] <<- hetcalls
-                # } else {
-                #     # This is reverse list
-                #     SangerConsensus@
-                #         reverseReadsList[[singleReadIndex-forwardReadNum]] <<-
-                #         hetcalls
-                # }
-
-
-
-
-
-
-
-
-
-
-
+                ### ------------------------------------------------------------
+                ### Save new 'SangerSingleRead' S4 instance
+                ### ------------------------------------------------------------
+                forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+                reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+                SangerSingleReadNum <- forwardReadNum + reverseReadNum
+                if (singleReadIndex <= forwardReadNum) {
+                    # This is forward list
+                    index <- singleReadIndex
+                } else {
+                    # This is reverse list
+                    index <- singleReadIndex-forwardReadNum
+                }
+                SangerConsensus@forwardReadsList[[index]]@
+                    QualityReport@qualityScoresID <-
+                    hetcalls@QualityReport@qualityScoresID
+                SangerConsensus@forwardReadsList[[index]]@
+                    QualityReport@qualityPhredScores <-
+                    hetcalls@QualityReport@qualityPhredScores
+                SangerConsensus@forwardReadsList[[index]]@
+                    QualityReport@qualityBaseScoresRaw <-
+                    hetcalls@QualityReport@qualityBaseScoresRaw
+                SangerConsensus@forwardReadsList[[index]]@peakPosMatrix <-
+                    hetcalls@peakPosMatrix
+                SangerConsensus@forwardReadsList[[index]]@peakAmpMatrix <-
+                    hetcalls@peakAmpMatrix
+                SangerConsensus@forwardReadsList[[index]]@primarySeqID <-
+                    hetcalls@primarySeqID
+                SangerConsensus@forwardReadsList[[index]]@primarySeq <-
+                    hetcalls@primarySeq
+                SangerConsensus@forwardReadsList[[index]]@secondarySeqID <-
+                    hetcalls@secondarySeqID
+                SangerConsensus@forwardReadsList[[index]]@secondarySeq <-
+                    hetcalls@secondarySeq
                 message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
                 chromatogram(hetcalls,
                              width = strtoi(
