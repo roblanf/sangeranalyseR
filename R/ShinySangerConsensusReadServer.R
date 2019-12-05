@@ -605,31 +605,6 @@ consensusReadServer <- function(input, output, session) {
                                        style = "simple", color = "success",
                                        block = TRUE, size = "lg")
                             ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         box(title = tags$p(tagList(icon("arrow-circle-left"),
                                                    "Trimmed Result Output"),
                                            style = "font-size: 24px;
@@ -863,40 +838,12 @@ consensusReadServer <- function(input, output, session) {
         message("######## Finish recalculation")
     })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$startTrimmingButton, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-
-
-
         if (!is.null(SangerSingleReadQualReport[[singleReadIndex]])) {
             if (SangerSingleReadQualReport[[singleReadIndex]]@
                 TrimmingMethod == "M1") {
@@ -1036,54 +983,6 @@ consensusReadServer <- function(input, output, session) {
 
         }
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
@@ -1411,7 +1310,7 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(singleReadIndex)) {
-            message(">>>>>>>>>>>> You have input ", input$M1TrimmingCutoffText,
+            message("************ You have input ", input$M1TrimmingCutoffText,
                     " in the 'M1 Trimming Cutoff' input box")
         }
     })
@@ -1423,7 +1322,7 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(singleReadIndex)) {
-            message(">>>>>>>>>>>> You have input ",
+            message("************ You have input ",
                     input$M2CutoffQualityScoreText,
                     " in the 'M2 Cutoff Quality Score' input box")
         }
@@ -1436,7 +1335,7 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(singleReadIndex)) {
-            message(">>>>>>>>>>>> You have input ",
+            message("************ You have input ",
                     input$M2SlidingWindowSizeText,
                     " in the 'M2 Sliding Window Size' input box")
         }
