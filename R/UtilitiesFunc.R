@@ -118,8 +118,9 @@ suppressPlotlyMessage <- function(p) {
 ### ============================================================================
 ### MakeBaseCalls related function
 ### ============================================================================
-MakeBaseCallsInside <- function(traceMatrix, peakPosMatrix,
-                                QualityReport, signalRatioCutoff=.33) {
+MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
+                                qualityPhredScoresRaw, qualityBaseScoresRaw,
+                                signalRatioCutoff) {
     #get peaks for each base
     Apeaks <- getpeaks(traceMatrix[,1])
     Cpeaks <- getpeaks(traceMatrix[,2])
@@ -127,7 +128,7 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrix,
     Tpeaks <- getpeaks(traceMatrix[,4])
 
     #get window around primary basecall peaks
-    primarypeaks <- peakPosMatrix[,1]
+    primarypeaks <- peakPosMatrixRaw[,1]
     diffs <- diff(c(0,primarypeaks))
     starts <- primarypeaks - 0.5*diffs
     stops <- c(primarypeaks[1:(length(primarypeaks)-1)] +
@@ -195,26 +196,25 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrix,
         }
     }
 
-    QualityReport@qualityScoresID <- "After BaseCall"
-    QualityReport@qualityPhredScoresBC <-
-        QualityReport@qualityPhredScores[indexBaseCall]
-    QualityReport@qualityBaseScoresBC <-
-        QualityReport@qualityBaseScores[indexBaseCall]
-
-    peakPosMatrixBC <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
-    peakAmpMatrixBC <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
+    qualityScoresID <- "After BaseCall"
+    qualityPhredScores <- qualityPhredScoresRaw[indexBaseCall]
+    qualityBaseScores <- qualityBaseScoresRaw[indexBaseCall]
+    peakPosMatrix <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
+    peakAmpMatrix <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     primarySeqID <- "After BaseCall (primary basecalls)"
-    primarySeqBC <- DNAString(paste(primary, collapse=""))
+    primarySeq <- DNAString(paste(primary, collapse=""))
     secondarySeqID <- "After BaseCall (secondary basecalls)"
-    secondarySeqBC <- DNAString(paste(secondary, collapse=""))
+    secondarySeq <- DNAString(paste(secondary, collapse=""))
 
-    return(list("QualityReport" = QualityReport,
-                "peakPosMatrixBC" = peakPosMatrixBC,
-                "peakAmpMatrixBC" = peakAmpMatrixBC,
+    return(list("qualityScoresID" = qualityScoresID,
+                "qualityPhredScores" = qualityPhredScores,
+                "qualityBaseScores" = qualityBaseScores,
+                "peakPosMatrix" = peakPosMatrix,
+                "peakAmpMatrix" = peakAmpMatrix,
                 "primarySeqID" = primarySeqID,
-                "primarySeqBC" = primarySeqBC,
+                "primarySeq" = primarySeq,
                 "secondarySeqID" = secondarySeqID,
-                "secondarySeqBC" = secondarySeqBC))
+                "secondarySeq" = secondarySeq))
 }
 
 getpeaks <- function(trace) {

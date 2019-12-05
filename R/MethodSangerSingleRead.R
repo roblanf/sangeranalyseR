@@ -65,17 +65,28 @@ setMethod("updateQualityParam",  "SangerSingleRead",
 setMethod("MakeBaseCalls", "SangerSingleRead",
           function(obj, signalRatioCutoff=.33) {
               traceMatrix <- obj@traceMatrix
-              peakPosMatrix <- obj@peakPosMatrix
-              QualityReport <- obj@QualityReport
-              MBCResult <- MakeBaseCallsInside (traceMatrix, peakPosMatrix,
-                                                QualityReport,
-                                                signalRatioCutoff=.33)
-              obj@QualityReport <- MBCResult[["QualityReport"]]
-              obj@peakPosMatrixBC <- MBCResult[["peakPosMatrixBC"]]
-              obj@peakAmpMatrixBC <- MBCResult[["peakAmpMatrixBC"]]
+              peakPosMatrixRaw <- obj@peakPosMatrixRaw
+              qualityPhredScoresRaw <- obj@QualityReport@qualityPhredScoresRaw
+              qualityBaseScoresRaw <- obj@QualityReport@qualityBaseScoresRaw
+
+              message("     Making basecall !!")
+              MBCResult <- MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
+                                                qualityPhredScoresRaw,
+                                                qualityBaseScoresRaw,
+                                                signalRatioCutoff=
+                                                    signalRatioCutoff)
+              message("     Updating slots in 'SangerSingleRead' instance !!")
+              obj@QualityReport@qualityScoresID <-
+                  MBCResult[["qualityScoresID"]]
+              obj@QualityReport@qualityPhredScores <-
+                  MBCResult[["qualityPhredScores"]]
+              obj@QualityReport@qualityBaseScores <-
+                  MBCResult[["qualityBaseScores"]]
+              obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
+              obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
               obj@primarySeqID <- MBCResult[["primarySeqID"]]
-              obj@primarySeqBC <- MBCResult[["primarySeqBC"]]
+              obj@primarySeq <- MBCResult[["primarySeq"]]
               obj@secondarySeqID <- MBCResult[["secondarySeqID"]]
-              obj@secondarySeqBC <- MBCResult[["secondarySeqBC"]]
+              obj@secondarySeq <- MBCResult[["secondarySeq"]]
               return(obj)
           })

@@ -10,10 +10,10 @@
 #' @slot ChromatogramParam .
 #' @slot primaryAASeq .
 #' @slot geneticCode .
-#' @slot primarySeqBC .
-#' @slot secondarySeqBC .
-#' @slot peakPosMatrixBC .
-#' @slot peakAmpMatrixBC .
+#' @slot primarySeqRaw .
+#' @slot secondarySeqRaw .
+#' @slot peakPosMatrixRaw .
+#' @slot peakAmpMatrixRaw .
 #'
 #' @name SangerSingleRead-class
 #'
@@ -53,10 +53,10 @@ setClass(
             ChromatogramParam   = "ChromatogramParam",
             primaryAASeq        = "AAString",
             geneticCode         = "character",
-            primarySeqBC        = "DNAStringORNULL",
-            secondarySeqBC      = "DNAStringORNULL",
-            peakPosMatrixBC     = "matrixORNULL",
-            peakAmpMatrixBC     = "matrixORNULL"
+            primarySeqRaw       = "DNAStringORNULL",
+            secondarySeqRaw     = "DNAStringORNULL",
+            peakPosMatrixRaw    = "matrixORNULL",
+            peakAmpMatrixRaw    = "matrixORNULL"
             )
 ) -> SangerSingleRead
 
@@ -112,24 +112,36 @@ setMethod("initialize",
                   readRawAbif = read.abif(readFileName)
                   message("    * Creating ", readFeature , " raw sangerseq ...")
                   readSangerseq = sangerseq(readRawAbif)
-                  primarySeqID        = readSangerseq@primarySeqID
-                  secondarySeqID      = readSangerseq@secondarySeqID
-                  if (readFeature == "Forward Read") {
-                      primarySeq = readSangerseq@primarySeq
-                      secondarySeq = readSangerseq@secondarySeq
-                  } else if (readFeature == "Reverse Read") {
-                      primarySeq = reverseComplement(
-                          readSangerseq@primarySeq)
-                      secondarySeq = reverseComplement(
-                          readSangerseq@secondarySeq)
+                  primarySeqID = readSangerseq@primarySeqID
+                  secondarySeqID = readSangerseq@secondarySeqID
+
+                  ### -------------------------------------------------------------
+                  ### With non-raw & raw primarySeq / secondarySeq
+                  ### --------------------------------------------------------------
+                  primarySeqRaw = readSangerseq@primarySeq
+                  primarySeq = readSangerseq@primarySeq
+                  secondarySeqRaw = readSangerseq@secondarySeq
+                  secondarySeq = readSangerseq@secondarySeq
+
+                  if (readFeature == "Reverse Read") {
+                      primarySeqRaw = reverseComplement(primarySeqRaw)
+                      primarySeq = reverseComplement(primarySeq)
+                      secondarySeqRaw = reverseComplement(secondarySeqRaw)
+                      secondarySeq = reverseComplement(secondarySeq)
                   }
+
+                  #### ADDDD !!!!
                   primaryAASeq        = suppressWarnings(translate(primarySeq,
                                                   genetic.code = geneticCode,
                                                   no.init.codon=TRUE,
                                                   if.fuzzy.codon="solve"))
+                  traceMatrixRaw      = readSangerseq@traceMatrix
                   traceMatrix         = readSangerseq@traceMatrix
+                  peakPosMatrixRaw    = readSangerseq@peakPosMatrix
                   peakPosMatrix       = readSangerseq@peakPosMatrix
+                  peakAmpMatrixRaw    = readSangerseq@peakAmpMatrix
                   peakAmpMatrix       = readSangerseq@peakAmpMatrix
+
                   abifRawData         = readRawAbif
 
                   ### ----------------------------------------------------------
@@ -138,7 +150,7 @@ setMethod("initialize",
                   ##### PCON.2: char => Per-base quality values
                   ### ----------------------------------------------------------
                   QualityReport <- new("QualityReport",
-                                       qualityPhredScores =
+                                       qualityPhredScoresRaw =
                                            readRawAbif@data$PCON.2,
                                        TrimmingMethod = TrimmingMethod,
                                        M1TrimmingCutoff = M1TrimmingCutoff,
@@ -155,17 +167,26 @@ setMethod("initialize",
                   ###     'MakeBaseCallsInside' will be called during S4 object
                   ###     creation
                   ### ----------------------------------------------------------
-                  MBCResult <- MakeBaseCallsInside (traceMatrix, peakPosMatrix,
-                                                    QualityReport,
-                                                    signalRatioCutoff =
-                                                        signalRatioCutoff)
-                  QualityReport <- MBCResult[["QualityReport"]]
-                  peakPosMatrixBC <- MBCResult[["peakPosMatrixBC"]]
-                  peakAmpMatrixBC <- MBCResult[["peakAmpMatrixBC"]]
+                  MBCResult <-
+                      MakeBaseCallsInside (traceMatrixRaw, peakPosMatrixRaw,
+                                           QualityReport@qualityPhredScoresRaw,
+                                           QualityReport@qualityBaseScoresRaw,
+                                           signalRatioCutoff=signalRatioCutoff)
+
+                  # New to re-trimm again !!!!
+                  QualityReport@qualityScoresID <-
+                      MBCResult[["qualityScoresID"]]
+                  QualityReport@qualityPhredScores <-
+                      MBCResult[["qualityPhredScores"]]
+                  QualityReport@qualityBaseScores <-
+                      MBCResult[["qualityBaseScores"]]
+
+                  peakPosMatrix <- MBCResult[["peakPosMatrix"]]
+                  peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
                   primarySeqID <- MBCResult[["primarySeqID"]]
-                  primarySeqBC <- MBCResult[["primarySeqBC"]]
+                  primarySeq <- MBCResult[["primarySeq"]]
                   secondarySeqID <- MBCResult[["secondarySeqID"]]
-                  secondarySeqBC <- MBCResult[["secondarySeqBC"]]
+                  secondarySeq <- MBCResult[["secondarySeq"]]
               } else {
                   stop(errors)
               }
@@ -174,17 +195,17 @@ setMethod("initialize",
                              readFileName        = readFileName,
                              geneticCode         = geneticCode,
                              primarySeqID        = primarySeqID,
+                             primarySeqRaw       = primarySeqRaw,
                              primarySeq          = primarySeq,
-                             primarySeqBC        = primarySeqBC,
                              secondarySeqID      = secondarySeqID,
+                             secondarySeqRaw     = secondarySeqRaw,
                              secondarySeq        = secondarySeq,
-                             secondarySeqBC      = secondarySeqBC,
                              primaryAASeq        = primaryAASeq,
                              traceMatrix         = traceMatrix,
                              peakPosMatrix       = peakPosMatrix,
-                             peakPosMatrixBC     = peakPosMatrixBC,
+                             peakPosMatrixRaw    = peakPosMatrixRaw,
                              peakAmpMatrix       = peakAmpMatrix,
-                             peakAmpMatrixBC     = peakAmpMatrixBC,
+                             peakAmpMatrixRaw    = peakAmpMatrixRaw,
                              abifRawData         = abifRawData,
                              QualityReport       = QualityReport,
                              ChromatogramParam   = ChromatogramParam)

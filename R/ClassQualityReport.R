@@ -3,10 +3,10 @@
 #' @description  An S4 class for quality report for a SangerSingleRead S4 object
 #'
 #' @slot qualityScoresID .
+#' @slot qualityPhredScoresRaw .
 #' @slot qualityPhredScores .
-#' @slot qualityPhredScoresBC .
+#' @slot qualityBaseScoresRaw .
 #' @slot qualityBaseScores .
-#' @slot qualityBaseScoresBC .
 #' @slot rawSeqLength .
 #' @slot trimmedSeqLength .
 #' @slot trimmedStartPos .
@@ -50,10 +50,10 @@ setClass("QualityReport",
              M1TrimmingCutoff        = "numericORNULL",
              M2CutoffQualityScore    = "numericORNULL",
              M2SlidingWindowSize     = "numericORNULL",
+             qualityPhredScoresRaw   = "numericORNULL",
              qualityPhredScores      = "numeric",
-             qualityPhredScoresBC    = "numericORNULL",
+             qualityBaseScoresRaw    = "numericORNULL",
              qualityBaseScores       = "numeric",
-             qualityBaseScoresBC     = "numericORNULL",
              rawSeqLength            = "numeric",
              trimmedSeqLength        = "numeric",
              trimmedStartPos         = "numeric",
@@ -74,7 +74,7 @@ setClass("QualityReport",
 setMethod("initialize",
           "QualityReport",
           function(.Object, ...,
-                   qualityPhredScores    = numeric(0),
+                   qualityPhredScoresRaw = numeric(0),
                    TrimmingMethod        = "M1",
                    M1TrimmingCutoff      = 0.0001,
                    M2CutoffQualityScore  = NULL,
@@ -83,7 +83,7 @@ setMethod("initialize",
               ### Input parameter prechecking
               ### --------------------------------------------------------------
               errors <- character()
-              errors <- checkQualityPhredScores (qualityPhredScores, errors)
+              errors <- checkQualityPhredScores (qualityPhredScoresRaw, errors)
 
               ##### ------------------------------------------------------------
               ##### Input parameter prechecking for TrimmingMethod.
@@ -98,12 +98,22 @@ setMethod("initialize",
                   ### Prechecking success.
                   ### ----------------------------------------------------------
 
-
                   # calculate base score
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
-                  qualityBaseScores <- 10** (qualityPhredScores / (-10.0))
+                  qualityBaseScoresRaw <- 10** (qualityPhredScoresRaw / (-10.0))
 
+                  ### ----------------------------------------------------------
+                  ### Initialize 'qualityPhredScores' & 'qualityBaseScores'
+                  ###   with 'qualityBaseScoresRaw' & 'qualityBaseScoresRaw'
+                  ### ----------------------------------------------------------
+                  qualityPhredScores <- qualityBaseScoresRaw
+                  qualityBaseScores <- qualityBaseScoresRaw
+
+                  ### ----------------------------------------------------------
+                  ### Use 'qualityPhredScores' & 'qualityBaseScores' for
+                  ###     trimming ==> Not the raw one !!!
+                  ### ----------------------------------------------------------
                   if (TrimmingMethod == "M1") {
                       ### ------------------------------------------------------
                       ### Quality Trimming (Using Logarithmic Scale
@@ -135,19 +145,16 @@ setMethod("initialize",
                   trimmedMinQualityScore <-
                       trimmingPos[["trimmedMinQualityScore"]]
                   remainingRatio <- trimmingPos[["remainingRatio"]]
-
-                  qualityScoresID         = "Before BaseCall"
-                  qualityPhredScoresBC    = NULL
-                  qualityBaseScoresBC     = NULL
+                  qualityScoresID = "Before Basecall"
               } else {
                   stop(errors)
               }
               callNextMethod(.Object, ...,
                              qualityScoresID         = qualityScoresID,
+                             qualityPhredScoresRaw   = qualityPhredScoresRaw,
                              qualityPhredScores      = qualityPhredScores,
-                             qualityPhredScoresBC    = qualityPhredScoresBC,
+                             qualityBaseScoresRaw    = qualityBaseScoresRaw,
                              qualityBaseScores       = qualityBaseScores,
-                             qualityBaseScoresBC     = qualityBaseScoresBC,
                              rawSeqLength            = rawSeqLength,
                              trimmedSeqLength        = trimmedSeqLength,
                              trimmedStartPos         = trimmedStartPos,

@@ -97,13 +97,8 @@ consensusReadServer <- function(input, output, session) {
 
     # primarySeqDF
     forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
-        message("SangerConsensus@forwardReadsList[[i]]@primarySeq: ", SangerConsensus@forwardReadsList[[i]]@primarySeq)
-        message("SangerConsensus@forwardReadsList[[i]]@primarySeq: ", length(SangerConsensus@forwardReadsList[[i]]@primarySeq))
         basecalls1 <- unlist(strsplit(
             toString(SangerConsensus@forwardReadsList[[i]]@primarySeq), ""))
-        # aveposition <- rowMeans(
-        #     SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        # basecalls1 <- basecalls1[1:length(aveposition)]
         basecalls1DF <- data.frame(
             t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
@@ -111,13 +106,8 @@ consensusReadServer <- function(input, output, session) {
         return(basecalls1DF)
     })
     reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(i) {
-        message("SangerConsensus@forwardReadsList[[i]]@primarySeq: ", SangerConsensus@forwardReadsList[[i]]@primarySeq)
-        message("SangerConsensus@forwardReadsList[[i]]@primarySeq: ", length(SangerConsensus@forwardReadsList[[i]]@primarySeq))
         basecalls1 <- unlist(strsplit(
             toString(SangerConsensus@reverseReadsList[[i]]@primarySeq), ""))
-        # aveposition <- rowMeans(
-        #     SangerConsensus@reverseReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        # basecalls1 <- basecalls1[1:length(aveposition)]
         basecalls1DF <- data.frame(
             t(data.frame(basecalls1)), stringsAsFactors = FALSE)
         colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
@@ -130,9 +120,6 @@ consensusReadServer <- function(input, output, session) {
     forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
         basecalls2 <- unlist(strsplit(
             toString(SangerConsensus@forwardReadsList[[i]]@secondarySeq), ""))
-        # aveposition <- rowMeans(
-        #     SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        # basecalls2 <- basecalls2[1:length(aveposition)]
         basecalls2DF <- data.frame(
             t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
@@ -142,9 +129,6 @@ consensusReadServer <- function(input, output, session) {
     reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(i) {
         basecalls2 <- unlist(strsplit(toString(
             SangerConsensus@reverseReadsList[[i]]@secondarySeq), ""))
-        # aveposition <- rowMeans(
-        #     SangerConsensus@forwardReadsList[[i]]@peakPosMatrix, na.rm=TRUE)
-        # basecalls2 <- basecalls2[1:length(aveposition)]
         basecalls2DF <- data.frame(
             t(data.frame(basecalls2)), stringsAsFactors = FALSE)
         colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
@@ -183,14 +167,16 @@ consensusReadServer <- function(input, output, session) {
                                 trimmedMinQualityScore  = 0,
                                 remainingRatio          = 0)
 
-    consensusParam <- reactiveValues(consensusRead   = SangerConsensus@consensusRead,
-                                     differencesDF   = SangerConsensus@differencesDF,
-                                     alignment       = SangerConsensus@alignment,
-                                     distanceMatrix  = SangerConsensus@distanceMatrix,
-                                     dendrogram      = SangerConsensus@dendrogram,
-                                     indelsDF        = SangerConsensus@indelsDF,
-                                     stopCodonsDF    = SangerConsensus@stopCodonsDF,
-                                     secondaryPeakDF = SangerConsensus@secondaryPeakDF)
+    consensusParam <-
+        reactiveValues(
+            consensusRead   = SangerConsensus@consensusRead,
+            differencesDF   = SangerConsensus@differencesDF,
+            alignment       = SangerConsensus@alignment,
+            distanceMatrix  = SangerConsensus@distanceMatrix,
+            dendrogram      = SangerConsensus@dendrogram,
+            indelsDF        = SangerConsensus@indelsDF,
+            stopCodonsDF    = SangerConsensus@stopCodonsDF,
+            secondaryPeakDF = SangerConsensus@secondaryPeakDF)
 
     trimmedParam <- reactiveValues(M1TrimmingCutoff     = 0,
                                    M2CutoffQualityScore = 0,
@@ -1518,7 +1504,6 @@ consensusReadServer <- function(input, output, session) {
                         ChromatogramParam[["showTrimmed"]]) *
                     strtoi(ChromatogramParam[["heightPerRow"]])
                     plotOutput("chromatogram", height = chromatogramRowNumAns)
-                        # addSpinner(spin = "circle", color = "#eb4034")
             }
         }
     })
@@ -1531,20 +1516,22 @@ consensusReadServer <- function(input, output, session) {
                 rawSeqLength <-
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     rawSeqLength
+                message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function")
                 hetcalls <-
                     MakeBaseCalls(SangerConsensusFRReadsList[[
                         singleReadIndex]],
                         signalRatioCutoff = as.numeric(
                             ChromatogramParam[["signalRatioCutoff"]]))
-                    chromatogram(hetcalls,
-                                 width = strtoi(
-                                     ChromatogramParam[["baseNumPerRow"]]),
-                                 height = 2,
-                                 trim5 = trimmedRV[["trimmedStartPos"]],
-                                 trim3 = rawSeqLength -
-                                     trimmedRV[["trimmedFinishPos"]],
-                                 showtrim = (ChromatogramParam[["showTrimmed"]]),
-                                 showcalls = "both")
+                message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
+                chromatogram(hetcalls,
+                             width = strtoi(
+                                 ChromatogramParam[["baseNumPerRow"]]),
+                             height = 2,
+                             trim5 = trimmedRV[["trimmedStartPos"]],
+                             trim3 = rawSeqLength -
+                                 trimmedRV[["trimmedFinishPos"]],
+                             showtrim = (ChromatogramParam[["showTrimmed"]]),
+                             showcalls = "both")
                 }
 
             }
