@@ -1188,7 +1188,7 @@ consensusReadServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]@
                         qualityPhredScores,
                     SangerSingleReadQualReport[[singleReadIndex]]@
-                        qualityBaseScore,
+                        qualityBaseScores,
                     as.numeric(inputM1TrimmingCutoffText))
             rawSeqLength <- trimmingPos[["rawSeqLength"]]
             rawMeanQualityScore <- trimmingPos[["rawMeanQualityScore"]]
@@ -1296,7 +1296,7 @@ consensusReadServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]@
                         qualityPhredScores,
                     SangerSingleReadQualReport[[singleReadIndex]]@
-                        qualityBaseScore,
+                        qualityBaseScores,
                     strtoi(inputM2CutoffQualityScoreText),
                     SangerSingleReadQualReport[[singleReadIndex]]@
                         M2SlidingWindowSize)
@@ -1409,7 +1409,7 @@ consensusReadServer <- function(input, output, session) {
                     SangerSingleReadQualReport[[singleReadIndex]]@
                         qualityPhredScores,
                     SangerSingleReadQualReport[[singleReadIndex]]@
-                        qualityBaseScore,
+                        qualityBaseScores,
                     SangerSingleReadQualReport[[singleReadIndex]]@
                         M2CutoffQualityScore,
                     strtoi(inputM2SlidingWindowSizeText))

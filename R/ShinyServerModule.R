@@ -1,19 +1,19 @@
 M1inside_calculate_trimming <- function(qualityPhredScores,
-                                        qualityBaseScore,
+                                        qualityBaseScores,
                                         M1TrimmingCutoff) {
-    rawSeqLength <- length(qualityBaseScore)
+    rawSeqLength <- length(qualityBaseScores)
     rawMeanQualityScore <- mean(qualityPhredScores)
     rawMinQualityScore <- min(qualityPhredScores)
     start = FALSE
     trimmedStartPos = 0
-    qualityBaseScoreCutOff = M1TrimmingCutoff - qualityBaseScore
+    qualityBaseScoresCutOff = M1TrimmingCutoff - qualityBaseScores
     ### ------------------------------------------------------------------------
     ### calculate cummulative score
     ### if cumulative value < 0, set it to 0
     ### the BioPython implementation always trims the first base,
     ### this implementation does not.
     ### ------------------------------------------------------------------------
-    score = qualityBaseScoreCutOff[1]
+    score = qualityBaseScoresCutOff[1]
     if(score < 0){
         score = 0
     }else{
@@ -28,8 +28,8 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
     ### trimmedFinishPos = index of highest cummulative score,
     ### marking the end of sequence segment with highest cummulative score
     ### ------------------------------------------------------------------------
-    for(i in 2:length(qualityBaseScoreCutOff)){
-        score = cummul_score[length(cummul_score)] + qualityBaseScoreCutOff[i]
+    for(i in 2:length(qualityBaseScoresCutOff)){
+        score = cummul_score[length(cummul_score)] + qualityBaseScoresCutOff[i]
         if (score <= 0) {
             cummul_score = c(cummul_score, 0)
         }else{
@@ -64,10 +64,10 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
 }
 
 M2inside_calculate_trimming <- function(qualityPhredScores,
-                                      qualityBaseScore,
+                                      qualityBaseScores,
                                       M2CutoffQualityScore,
                                       M2SlidingWindowSize) {
-    rawSeqLength <- length(qualityBaseScore)
+    rawSeqLength <- length(qualityBaseScores)
     rawMeanQualityScore <- mean(qualityPhredScores)
     rawMinQualityScore <- min(qualityPhredScores)
     qualityPbCutoff <- 10** (M2CutoffQualityScore / (-10.0))
@@ -81,7 +81,7 @@ M2inside_calculate_trimming <- function(qualityPhredScores,
     } else {
         for (i in 1:(rawSeqLength-M2SlidingWindowSize+1)) {
             meanSLidingWindow <-
-                mean(qualityBaseScore[i:(i+M2SlidingWindowSize-1)])
+                mean(qualityBaseScores[i:(i+M2SlidingWindowSize-1)])
             if (meanSLidingWindow < qualityPbCutoff) {
                 remainingIndex <- c(remainingIndex, i)
                 # or ==> i + floor(M2SlidingWindowSize/3)

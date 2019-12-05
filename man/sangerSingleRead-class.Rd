@@ -33,6 +33,14 @@ An S4 class extending sangerseq S4 class
 \item{\code{primaryAASeq}}{.}
 
 \item{\code{geneticCode}}{.}
+
+\item{\code{primarySeqBC}}{.}
+
+\item{\code{secondarySeqBC}}{.}
+
+\item{\code{peakPosMatrixBC}}{.}
+
+\item{\code{peakAmpMatrixBC}}{.}
 }}
 
 \examples{

@@ -79,8 +79,8 @@ setMethod("updateQualityParam",  "SangerConsensusRead",
     ### ------------------------------------------------------------------------
     ### Updating forward read quality parameters
     ### ------------------------------------------------------------------------
-    # qualityBaseScoreFD <-
-    #     object@forwardReadSangerseq@QualityReport@qualityBaseScore
+    # qualityBaseScoresFD <-
+    #     object@forwardReadSangerseq@QualityReport@qualityBaseScores
     object@forwardReadSangerseq <-
         updateQualityParam(object@forwardReadSangerseq,
                            TrimmingMethod,

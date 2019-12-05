@@ -173,8 +173,8 @@ setMethod("updateQualityParam",  "QualityReport",
               ### --------------------------------------------------------------
               ### Updating QualityReport quality parameters
               ### --------------------------------------------------------------
-              qualityBaseScore <- object@qualityBaseScore
-              trimmingPos <- M2inside_calculate_trimming(qualityBaseScore,
+              qualityBaseScores <- object@qualityBaseScores
+              trimmingPos <- M2inside_calculate_trimming(qualityBaseScores,
                                                        TrimmingMethod,
                                                        M1TrimmingCutoff,
                                                        M2CutoffQualityScore,

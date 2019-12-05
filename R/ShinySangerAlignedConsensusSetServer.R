@@ -1653,7 +1653,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                         qualityPhredScores,
                     SangerCSetParam[[consensusReadIndex]]$
                         SangerSingleReadQualReport[[singleReadIndex]]@
-                        qualityBaseScore,
+                        qualityBaseScores,
                     as.numeric(inputM1TrimmingCutoffText))
             rawSeqLength <- trimmingPos[["rawSeqLength"]]
             rawMeanQualityScore <- trimmingPos[["rawMeanQualityScore"]]
@@ -1781,7 +1781,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                     qualityPhredScores,
                 SangerCSetParam[[consensusReadIndex]]$
                     SangerSingleReadQualReport[[singleReadIndex]]@
-                    qualityBaseScore,
+                    qualityBaseScores,
                 strtoi(inputM2CutoffQualityScoreText),
                 SangerCSetParam[[consensusReadIndex]]$
                     SangerSingleReadQualReport[[singleReadIndex]]@
@@ -1908,7 +1908,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                     qualityPhredScores,
                 SangerCSetParam[[consensusReadIndex]]$
                     SangerSingleReadQualReport[[singleReadIndex]]@
-                    qualityBaseScore,
+                    qualityBaseScores,
                 SangerCSetParam[[consensusReadIndex]]$
                     SangerSingleReadQualReport[[singleReadIndex]]@
                     M2CutoffQualityScore,

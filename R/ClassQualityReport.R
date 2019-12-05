@@ -2,8 +2,11 @@
 #'
 #' @description  An S4 class for quality report for a SangerSingleRead S4 object
 #'
+#' @slot qualityScoresID .
 #' @slot qualityPhredScores .
-#' @slot qualityBaseScore .
+#' @slot qualityPhredScoresBC .
+#' @slot qualityBaseScores .
+#' @slot qualityBaseScoresBC .
 #' @slot rawSeqLength .
 #' @slot trimmedSeqLength .
 #' @slot trimmedStartPos .
@@ -42,12 +45,15 @@ setClass("QualityReport",
          ### Input type of each variable
          ### -------------------------------------------------------------------
          representation(
+             qualityScoresID         = "character",
              TrimmingMethod          = "character",
              M1TrimmingCutoff        = "numericORNULL",
              M2CutoffQualityScore    = "numericORNULL",
              M2SlidingWindowSize     = "numericORNULL",
              qualityPhredScores      = "numeric",
-             qualityBaseScore        = "numeric",
+             qualityPhredScoresBC    = "numericORNULL",
+             qualityBaseScores       = "numeric",
+             qualityBaseScoresBC     = "numericORNULL",
              rawSeqLength            = "numeric",
              trimmedSeqLength        = "numeric",
              trimmedStartPos         = "numeric",
@@ -96,7 +102,7 @@ setMethod("initialize",
                   # calculate base score
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
-                  qualityBaseScore <- 10** (qualityPhredScores / (-10.0))
+                  qualityBaseScores <- 10** (qualityPhredScores / (-10.0))
 
                   if (TrimmingMethod == "M1") {
                       ### ------------------------------------------------------
@@ -105,7 +111,7 @@ setMethod("initialize",
                       ### ------------------------------------------------------
                       trimmingPos <-
                           M1inside_calculate_trimming(qualityPhredScores,
-                                                      qualityBaseScore,
+                                                      qualityBaseScores,
                                                       M1TrimmingCutoff)
                   } else if (TrimmingMethod == "M2") {
                       ### ------------------------------------------------------
@@ -114,7 +120,7 @@ setMethod("initialize",
                       ### ------------------------------------------------------
                       trimmingPos <-
                           M2inside_calculate_trimming(qualityPhredScores,
-                                                      qualityBaseScore,
+                                                      qualityBaseScores,
                                                       M2CutoffQualityScore,
                                                       M2SlidingWindowSize)
                   }
@@ -129,12 +135,19 @@ setMethod("initialize",
                   trimmedMinQualityScore <-
                       trimmingPos[["trimmedMinQualityScore"]]
                   remainingRatio <- trimmingPos[["remainingRatio"]]
+
+                  qualityScoresID         = "Before BaseCall"
+                  qualityPhredScoresBC    = NULL
+                  qualityBaseScoresBC     = NULL
               } else {
                   stop(errors)
               }
               callNextMethod(.Object, ...,
+                             qualityScoresID         = qualityScoresID,
                              qualityPhredScores      = qualityPhredScores,
-                             qualityBaseScore        = qualityBaseScore,
+                             qualityPhredScoresBC    = qualityPhredScoresBC,
+                             qualityBaseScores       = qualityBaseScores,
+                             qualityBaseScoresBC     = qualityBaseScoresBC,
                              rawSeqLength            = rawSeqLength,
                              trimmedSeqLength        = trimmedSeqLength,
                              trimmedStartPos         = trimmedStartPos,
@@ -143,7 +156,7 @@ setMethod("initialize",
                              trimmedMeanQualityScore = trimmedMeanQualityScore,
                              rawMinQualityScore      = rawMinQualityScore,
                              trimmedMinQualityScore  = trimmedMinQualityScore,
-                             remainingRatio         = remainingRatio,
+                             remainingRatio          = remainingRatio,
                              TrimmingMethod          = TrimmingMethod,
                              M1TrimmingCutoff        = M1TrimmingCutoff,
                              M2CutoffQualityScore    = M2CutoffQualityScore,

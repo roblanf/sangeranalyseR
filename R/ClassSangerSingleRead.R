@@ -10,6 +10,10 @@
 #' @slot ChromatogramParam .
 #' @slot primaryAASeq .
 #' @slot geneticCode .
+#' @slot primarySeqBC .
+#' @slot secondarySeqBC .
+#' @slot peakPosMatrixBC .
+#' @slot peakAmpMatrixBC .
 #'
 #' @name SangerSingleRead-class
 #'
@@ -48,7 +52,12 @@ setClass(
             QualityReport       = "QualityReport",
             ChromatogramParam   = "ChromatogramParam",
             primaryAASeq        = "AAString",
-            geneticCode         = "character")
+            geneticCode         = "character",
+            primarySeqBC        = "DNAStringORNULL",
+            secondarySeqBC      = "DNAStringORNULL",
+            peakPosMatrixBC     = "matrixORNULL",
+            peakAmpMatrixBC     = "matrixORNULL"
+            )
 ) -> SangerSingleRead
 
 
@@ -140,6 +149,23 @@ setMethod("initialize",
                                            heightPerRow      = heightPerRow,
                                            signalRatioCutoff = signalRatioCutoff,
                                            showTrimmed       = showTrimmed)
+
+                  ### ----------------------------------------------------------
+                  ### Before running MakeBaseCall, the parameters below are NULL
+                  ###     'MakeBaseCallsInside' will be called during S4 object
+                  ###     creation
+                  ### ----------------------------------------------------------
+                  MBCResult <- MakeBaseCallsInside (traceMatrix, peakPosMatrix,
+                                                    QualityReport,
+                                                    signalRatioCutoff =
+                                                        signalRatioCutoff)
+                  QualityReport <- MBCResult[["QualityReport"]]
+                  peakPosMatrixBC <- MBCResult[["peakPosMatrixBC"]]
+                  peakAmpMatrixBC <- MBCResult[["peakAmpMatrixBC"]]
+                  primarySeqID <- MBCResult[["primarySeqID"]]
+                  primarySeqBC <- MBCResult[["primarySeqBC"]]
+                  secondarySeqID <- MBCResult[["secondarySeqID"]]
+                  secondarySeqBC <- MBCResult[["secondarySeqBC"]]
               } else {
                   stop(errors)
               }
@@ -149,12 +175,16 @@ setMethod("initialize",
                              geneticCode         = geneticCode,
                              primarySeqID        = primarySeqID,
                              primarySeq          = primarySeq,
+                             primarySeqBC        = primarySeqBC,
                              secondarySeqID      = secondarySeqID,
                              secondarySeq        = secondarySeq,
+                             secondarySeqBC      = secondarySeqBC,
                              primaryAASeq        = primaryAASeq,
                              traceMatrix         = traceMatrix,
                              peakPosMatrix       = peakPosMatrix,
+                             peakPosMatrixBC     = peakPosMatrixBC,
                              peakAmpMatrix       = peakAmpMatrix,
+                             peakAmpMatrixBC     = peakAmpMatrixBC,
                              abifRawData         = abifRawData,
                              QualityReport       = QualityReport,
                              ChromatogramParam   = ChromatogramParam)
