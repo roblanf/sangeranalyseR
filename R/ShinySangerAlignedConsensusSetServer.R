@@ -153,27 +153,78 @@ alignedConsensusSetServer <- function(input, output, session) {
         SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF,
                                        reverseReadSecoSeqDF)
 
-        # primaryAASeqDF
-        forwardReadPrimAASeqDF <- lapply(1:forwardReadNum, function(j) {
-            AAString <- SangerSingleReadFReadsList[[j]]@primaryAASeq
+        # primaryAASeqS1DF
+        forwardReadPrimAASeqS1DF <- lapply(1:forwardReadNum, function(j) {
+            AAString <- data.frame(SangerSingleReadFReadsList[[j]]@primaryAASeqS1)
             AAStringDF <- data.frame(
-                t(data.frame(AAString)), stringsAsFactors = FALSE)
+                t(AAString), stringsAsFactors = FALSE)
             colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
             rownames(AAStringDF) <- NULL
             return(AAStringDF)
             }
         )
-        reverseReadPrimAASeqDF <- lapply(1:reverseReadNum, function(j) {
-            AAString <- SangerSingleReadRReadsList[[j]]@primaryAASeq
+        reverseReadPrimAASeqS1DF <- lapply(1:reverseReadNum, function(j) {
+            AAString <- data.frame(SangerSingleReadRReadsList[[j]]@primaryAASeqS1)
             AAStringDF <- data.frame(
-                t(data.frame(AAString)), stringsAsFactors = FALSE)
+                t(AAString), stringsAsFactors = FALSE)
             colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
             rownames(AAStringDF) <- NULL
             return(AAStringDF)
             }
         )
-        SangerSingleReadPrimAASeqDF <- c(forwardReadPrimAASeqDF,
-                                         reverseReadPrimAASeqDF)
+        SangerSingleReadPrimAASeqS1DF <- c(forwardReadPrimAASeqS1DF,
+                                           reverseReadPrimAASeqS1DF)
+
+        # primaryAASeqS2DF
+        forwardReadPrimAASeqS2DF <- lapply(1:forwardReadNum, function(j) {
+            AAString <- data.frame(SangerSingleReadFReadsList[[j]]@primaryAASeqS2)
+            AAString <- rbind(NA, AAString)
+            AAStringDF <- data.frame(
+                t(AAString), stringsAsFactors = FALSE)
+            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+            rownames(AAStringDF) <- NULL
+            return(AAStringDF)
+        }
+        )
+        reverseReadPrimAASeqS2DF <- lapply(1:reverseReadNum, function(j) {
+            AAString <- data.frame(SangerSingleReadRReadsList[[j]]@primaryAASeqS2)
+            AAString <- rbind(NA, AAString)
+            AAStringDF <- data.frame(
+                t(AAString), stringsAsFactors = FALSE)
+            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+            rownames(AAStringDF) <- NULL
+            return(AAStringDF)
+        }
+        )
+        SangerSingleReadPrimAASeqS2DF <- c(forwardReadPrimAASeqS2DF,
+                                           reverseReadPrimAASeqS2DF)
+
+        # primaryAASeqS3DF
+        forwardReadPrimAASeqS3DF <- lapply(1:forwardReadNum, function(j) {
+            AAString <- data.frame(SangerSingleReadFReadsList[[j]]@primaryAASeqS3)
+            AAString <- rbind(NA, AAString)
+            AAString <- rbind(NA, AAString)
+            AAStringDF <- data.frame(
+                t(AAString), stringsAsFactors = FALSE)
+            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+            rownames(AAStringDF) <- NULL
+            return(AAStringDF)
+        }
+        )
+        reverseReadPrimAASeqS3DF <- lapply(1:reverseReadNum, function(j) {
+            AAString <- data.frame(SangerSingleReadRReadsList[[j]]@primaryAASeqS3)
+            AAString <- rbind(NA, AAString)
+            AAString <- rbind(NA, AAString)
+            AAStringDF <- data.frame(
+                t(AAString), stringsAsFactors = FALSE)
+            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+            rownames(AAStringDF) <- NULL
+            return(AAStringDF)
+        }
+        )
+        SangerSingleReadPrimAASeqS3DF <- c(forwardReadPrimAASeqS3DF,
+                                           reverseReadPrimAASeqS3DF)
+
         return(list(SCName = SCName,
                     SangerSingleReadFReadsList = SangerSingleReadFReadsList,
                     SangerSingleReadRReadsList = SangerSingleReadRReadsList,
@@ -191,7 +242,11 @@ alignedConsensusSetServer <- function(input, output, session) {
                     SangerSingleReadPrimSeqDF = SangerSingleReadPrimSeqDF,
                     forwardReadSecoSeqDF = forwardReadSecoSeqDF,
                     reverseReadSecoSeqDF = reverseReadSecoSeqDF,
-                    SangerSingleReadPrimAASeqDF = SangerSingleReadPrimAASeqDF,
+                    SangerSingleReadPrimAASeqS1DF = SangerSingleReadPrimAASeqS1DF,
+                    SangerSingleReadPrimAASeqS2DF = SangerSingleReadPrimAASeqS2DF,
+                    SangerSingleReadPrimAASeqS3DF = SangerSingleReadPrimAASeqS3DF,
+
+
                     SangerSingleReadQSDF = SangerSingleReadQSDF,
                     SangerSingleReadSecoSeqDF = SangerSingleReadSecoSeqDF))
     })
@@ -835,39 +890,75 @@ alignedConsensusSetServer <- function(input, output, session) {
                             solidHeader = TRUE, collapsible = TRUE,
                             status = "success", width = 12,
                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                            column(width = 2,
-                                   tags$p("Primary Sequence",
-                                          style = "font-size: 15px;
+                            column(width = 12,
+                                   tags$p(tagList(icon("bars"),
+                                                  "Primary Sequence"),
+                                          style = "font-size: 22px;
                                        font-weight: bold;"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p("Primary AA Sequence",
-                                          style = "font-size: 15px;
-                                       font-weight: bold;"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p("Secondary Sequence",
-                                          style = "font-size: 15px;
-                                       font-weight: bold;"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p("Quality Phred Score",
-                                          style = "font-size: 15px;
-                                       font-weight: bold;"),
-                            ),
-                            column(width = 10,
                                    excelOutput("primarySeqDF",
                                                width = "100%", height = "50"),
-                                   excelOutput("PrimAASeqDF",
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "AA Sequence 1"),
+                                          style = "font-size: 22px;
+                                       font-weight: bold;"),
+                                   excelOutput("PrimAASeqS1DF",
                                                width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "AA Sequence 2"),
+                                          style = "font-size: 22px;
+                                       font-weight: bold;"),
+                                   excelOutput("PrimAASeqS2DF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "AA Sequence 3"),
+                                          style = "font-size: 22px;
+                                       font-weight: bold;"),
+                                   excelOutput("PrimAASeqS3DF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "Secondary Sequence"),
+                                          style = "font-size: 22px;
+                                       font-weight: bold;"),
                                    excelOutput("secondSeqDF",
                                                width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "Quality Phred Score"),
+                                          style = "font-size: 22px;
+                                       font-weight: bold;"),
                                    excelOutput("qualityScoreDF",
                                                width = "100%", height = "50"),
-
                                    style = paste("overflow-y: hidden;",
                                                  "overflow-x: scroll;")
-                            )
+                            ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         ),
                         box(title = tags$p(tagList(icon("dot-circle"),
                                                    "Quality Report: "),
@@ -1725,13 +1816,46 @@ alignedConsensusSetServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[5]])
         if (!is.na(consensusReadIndex) &&
             !is.na(singleReadIndex)) {
+            AstyleList <-
+                getStopList(SangerCSetParam[[consensusReadIndex]]$
+                                SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                            "A", "#1eff00")
+            TstyleList <-
+                getStopList(SangerCSetParam[[consensusReadIndex]]$
+                                SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                            "T", "#ff7a7a")
+            CstyleList <-
+                getStopList(SangerCSetParam[[consensusReadIndex]]$
+                                SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                            "C", "#7ac3ff")
+            GstyleList <-
+                getStopList(SangerCSetParam[[consensusReadIndex]]$
+                                SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                            "G", "#c9c9c9")
+            styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             suppressMessages(
                 excelTable(data =SangerCSetParam[[consensusReadIndex]]$
                                SangerSingleReadPrimSeqDF[[singleReadIndex]],
                            defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                            columnResize = FALSE, allowInsertRow = FALSE,
                            allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
             )
         }
     })
@@ -1742,6 +1866,41 @@ alignedConsensusSetServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[5]])
         if (!is.na(consensusReadIndex) &&
             !is.na(singleReadIndex)) {
+            AstyleList <-
+                getStopList(SangerCSetParam[[consensusReadIndex]]$
+                                SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                            "A", "#1eff00")
+            TstyleList <-
+                getStopList(SangerCSetParam[[consensusReadIndex]]$
+                                SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                            "T", "#ff7a7a")
+            CstyleList <-
+                getStopList(SangerCSetParam[[consensusReadIndex]]$
+                                SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                            "C", "#7ac3ff")
+            GstyleList <-
+                getStopList(SangerCSetParam[[consensusReadIndex]]$
+                                SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                            "G", "#c9c9c9")
+            styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             suppressMessages(
                 excelTable(data =
                                SangerCSetParam[[consensusReadIndex]]$
@@ -1749,7 +1908,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                            defaultColWidth = 30, editable = TRUE, rowResize = FALSE,
                            columnResize = FALSE, allowInsertRow = FALSE,
                            allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
             )
         }
     })
@@ -1772,23 +1932,129 @@ alignedConsensusSetServer <- function(input, output, session) {
         }
     })
 
-    output$PrimAASeqDF <- renderExcel({
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    output$PrimAASeqS1DF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[5]])
         if (!is.na(consensusReadIndex) &&
             !is.na(singleReadIndex)) {
+            width <- rep(90, length(SangerCSetParam[[consensusReadIndex]]$
+                                        SangerSingleReadPrimAASeqS1DF[[singleReadIndex]]))
+            styleList <-
+                getStopList (SangerCSetParam[[consensusReadIndex]]$
+                                 SangerSingleReadPrimAASeqS1DF[[singleReadIndex]],
+                             "*", "#cf0000")
             suppressMessages(
                 excelTable(data =
                                SangerCSetParam[[consensusReadIndex]]$
-                               SangerSingleReadPrimAASeqDF[[singleReadIndex]],
+                               SangerSingleReadPrimAASeqS1DF[[singleReadIndex]],
                            defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
                            columnResize = FALSE, allowInsertRow = FALSE,
                            allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
             )
         }
     })
+    output$PrimAASeqS2DF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            width <- rep(90, length(SangerCSetParam[[consensusReadIndex]]$
+                                        SangerSingleReadPrimAASeqS2DF[[singleReadIndex]]))
+            styleList <-
+                getStopList (SangerCSetParam[[consensusReadIndex]]$
+                                 SangerSingleReadPrimAASeqS2DF[[singleReadIndex]],
+                             "*", "#cf0000")
+            styleList[['A1']] <- 'background-color: black;'
+            suppressMessages(
+                excelTable(data =
+                               SangerCSetParam[[consensusReadIndex]]$
+                               SangerSingleReadPrimAASeqS2DF[[singleReadIndex]],
+                           defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
+            )
+        }
+    })
+    output$PrimAASeqS3DF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[5]])
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            width <- rep(90, length(SangerCSetParam[[consensusReadIndex]]$
+                                        SangerSingleReadPrimAASeqS3DF[[singleReadIndex]]))
+            styleList <-
+                getStopList (SangerCSetParam[[consensusReadIndex]]$
+                                 SangerSingleReadPrimAASeqS3DF[[singleReadIndex]],
+                             "*", "#cf0000")
+            styleList[['A1']] <- 'background-color: black;'
+            styleList[['B1']] <- 'background-color: black;'
+            suppressMessages(
+                excelTable(data =
+                               SangerCSetParam[[consensusReadIndex]]$
+                               SangerSingleReadPrimAASeqS3DF[[singleReadIndex]],
+                           defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
+            )
+        }
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     valueBoxSCMinReadsNumCSSet (input, output, SangerConsensusSet, session)
     valueBoxSCMinReadLengthCSSet (input, output, SangerConsensusSet, session)

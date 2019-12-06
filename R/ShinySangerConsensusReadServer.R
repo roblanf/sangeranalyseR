@@ -1389,8 +1389,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = styleList,
-                       loadingSpin = TRUE)
+                       style = styleList, loadingSpin = TRUE)
         )
     })
 
@@ -1438,8 +1437,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = styleList,
-                       loadingSpin = TRUE)
+                       style = styleList, loadingSpin = TRUE)
         )
     })
 
@@ -1503,8 +1501,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = styleList,
-                       loadingSpin = TRUE)
+                       style = styleList, loadingSpin = TRUE)
         )
     })
 
@@ -1525,8 +1522,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = styleList,
-                       loadingSpin = TRUE)
+                       style = styleList, loadingSpin = TRUE)
         )
     })
 
@@ -1548,8 +1544,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = styleList,
-                       loadingSpin = TRUE)
+                       style = styleList, loadingSpin = TRUE)
         )
     })
 
