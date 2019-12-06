@@ -200,16 +200,10 @@ consensusReadServer <- function(input, output, session) {
     SangerSingleReadPrimAASeqS3DF <- c(forwardReadPrimAASeqS3DF,
                                        reverseReadPrimAASeqS3DF)
 
-    trimmedRV <- reactiveValues(rawSeqLength            = 0,
-                                rawMeanQualityScore     = 0,
-                                rawMinQualityScore      = 0,
-                                trimmedStartPos         = 0,
-                                trimmedFinishPos        = 0,
-                                trimmedSeqLength        = 0,
-                                trimmedMeanQualityScore = 0,
-                                trimmedMinQualityScore  = 0,
-                                remainingRatio          = 0)
 
+    ### ------------------------------------------------------------------------
+    ### ConsensusRead reactiveValue
+    ### ------------------------------------------------------------------------
     consensusParam <-
         reactiveValues(
             consensusRead   = SangerConsensus@consensusRead,
@@ -220,6 +214,49 @@ consensusReadServer <- function(input, output, session) {
             indelsDF        = SangerConsensus@indelsDF,
             stopCodonsDF    = SangerConsensus@stopCodonsDF,
             secondaryPeakDF = SangerConsensus@secondaryPeakDF)
+
+    ### ------------------------------------------------------------------------
+    ### SingleRead reactiveValue
+    ### ------------------------------------------------------------------------
+    sequenceParam <- reactiveValues(primarySeq = 0,
+                                    secondarySeq = 0,
+                                    primaryAASeqS1 = 0,
+                                    primaryAASeqS2 = 0,
+                                    primaryAASeqS3 = 0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    trimmedRV <- reactiveValues(rawSeqLength            = 0,
+                                rawMeanQualityScore     = 0,
+                                rawMinQualityScore      = 0,
+                                trimmedStartPos         = 0,
+                                trimmedFinishPos        = 0,
+                                trimmedSeqLength        = 0,
+                                trimmedMeanQualityScore = 0,
+                                trimmedMinQualityScore  = 0,
+                                remainingRatio          = 0)
 
     trimmedParam <- reactiveValues(M1TrimmingCutoff     = 0,
                                    M2CutoffQualityScore = 0,
@@ -515,6 +552,46 @@ consensusReadServer <- function(input, output, session) {
                 ### ------------------------------------------------------------
                 message(">>>>>>>> Inside '", input$sidebar_menu, "'")
                 singleReadIndex <- strtoi(sidebar_menu[[1]])
+
+                sequenceParam[["primarySeq"]] <<-
+                    SangerSingleReadPrimSeqDF[[singleReadIndex]]
+                sequenceParam[["secondarySeq"]] <<-
+                    SangerSingleReadSecoSeqDF[[singleReadIndex]]
+                sequenceParam[["primaryAASeqS1"]] <<-
+                    SangerSingleReadPrimAASeqS1DF[[singleReadIndex]]
+                sequenceParam[["primaryAASeqS2"]] <<-
+                    SangerSingleReadPrimAASeqS2DF[[singleReadIndex]]
+                sequenceParam[["primaryAASeqS3"]] <<-
+                    SangerSingleReadPrimAASeqS3DF[[singleReadIndex]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 ChromatogramParam[["baseNumPerRow"]] <<-
                     SangerSingleReadChromatogramParam[[singleReadIndex]]@
                     baseNumPerRow
@@ -1282,6 +1359,44 @@ consensusReadServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### primarySeq & secondSeq related
     ### ------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    sequenceParam[["primarySeq"]] <<-
+        SangerSingleReadPrimSeqDF[[singleReadIndex]]
+    sequenceParam[["secondarySeq"]] <<-
+        SangerSingleReadSecoSeqDF[[singleReadIndex]]
+    sequenceParam[["primaryAASeqS1"]] <<-
+        SangerSingleReadPrimAASeqS1DF[[singleReadIndex]]
+    sequenceParam[["primaryAASeqS2"]] <<-
+        SangerSingleReadPrimAASeqS2DF[[singleReadIndex]]
+    sequenceParam[["primaryAASeqS3"]] <<-
+        SangerSingleReadPrimAASeqS3DF[[singleReadIndex]]
+
+
+
+
+
+
+
+
+
+
+
+
+
     output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
@@ -1510,7 +1625,7 @@ consensusReadServer <- function(input, output, session) {
                     rawSeqLength
                 message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function")
                 ### ------------------------------------------------------------
-                ### Save new 'SangerSingleRead' S4 instance
+                ### Re-run 'MakeBaseCall' function
                 ### ------------------------------------------------------------
                 forwardReadNum <- length((SangerConsensus)@forwardReadsList)
                 reverseReadNum <- length((SangerConsensus)@reverseReadsList)
@@ -1522,27 +1637,27 @@ consensusReadServer <- function(input, output, session) {
                         MakeBaseCalls(SangerConsensus@forwardReadsList[[
                             index]], signalRatioCutoff = as.numeric(
                                 ChromatogramParam[["signalRatioCutoff"]]))
-                    SangerConsensus@forwardReadsList[[index]]@
-                        QualityReport@qualityScoresID <-
-                        hetcalls@QualityReport@qualityScoresID
-                    SangerConsensus@forwardReadsList[[index]]@
-                        QualityReport@qualityPhredScores <-
-                        hetcalls@QualityReport@qualityPhredScores
-                    SangerConsensus@forwardReadsList[[index]]@
-                        QualityReport@qualityBaseScoresRaw <-
-                        hetcalls@QualityReport@qualityBaseScoresRaw
+
                     SangerConsensus@forwardReadsList[[index]]@peakPosMatrix <-
                         hetcalls@peakPosMatrix
                     SangerConsensus@forwardReadsList[[index]]@peakAmpMatrix <-
                         hetcalls@peakAmpMatrix
-                    SangerConsensus@forwardReadsList[[index]]@primarySeqID <-
-                        hetcalls@primarySeqID
                     SangerConsensus@forwardReadsList[[index]]@primarySeq <-
                         hetcalls@primarySeq
-                    SangerConsensus@forwardReadsList[[index]]@secondarySeqID <-
-                        hetcalls@secondarySeqID
                     SangerConsensus@forwardReadsList[[index]]@secondarySeq <-
                         hetcalls@secondarySeq
+
+                    ### --------------------------------------------------------
+                    ### Updating AASeqs
+                    ### --------------------------------------------------------
+                    AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                                   hetcalls@secondarySeq)
+                    SangerConsensus@forwardReadsList[[index]]@primaryAASeqS1 <-
+                        AASeqResult[["primaryAASeqS1"]]
+                    SangerConsensus@forwardReadsList[[index]]@primaryAASeqS2 <-
+                        AASeqResult[["primaryAASeqS2"]]
+                    SangerConsensus@forwardReadsList[[index]]@primaryAASeqS3 <-
+                        AASeqResult[["primaryAASeqS3"]]
                 } else {
                     # This is reverse list
                     index <- singleReadIndex-forwardReadNum
@@ -1550,28 +1665,55 @@ consensusReadServer <- function(input, output, session) {
                         MakeBaseCalls(SangerConsensus@reverseReadsList[[
                             index]], signalRatioCutoff = as.numeric(
                                 ChromatogramParam[["signalRatioCutoff"]]))
-                    SangerConsensus@reverseReadsList[[index]]@
-                        QualityReport@qualityScoresID <-
-                        hetcalls@QualityReport@qualityScoresID
-                    SangerConsensus@reverseReadsList[[index]]@
-                        QualityReport@qualityPhredScores <-
-                        hetcalls@QualityReport@qualityPhredScores
-                    SangerConsensus@reverseReadsList[[index]]@
-                        QualityReport@qualityBaseScoresRaw <-
-                        hetcalls@QualityReport@qualityBaseScoresRaw
+
                     SangerConsensus@reverseReadsList[[index]]@peakPosMatrix <-
                         hetcalls@peakPosMatrix
                     SangerConsensus@reverseReadsList[[index]]@peakAmpMatrix <-
                         hetcalls@peakAmpMatrix
-                    SangerConsensus@reverseReadsList[[index]]@primarySeqID <-
-                        hetcalls@primarySeqID
                     SangerConsensus@reverseReadsList[[index]]@primarySeq <-
                         hetcalls@primarySeq
-                    SangerConsensus@reverseReadsList[[index]]@secondarySeqID <-
-                        hetcalls@secondarySeqID
                     SangerConsensus@reverseReadsList[[index]]@secondarySeq <-
                         hetcalls@secondarySeq
+
+                    ### --------------------------------------------------------
+                    ### Updating AASeqs
+                    ### --------------------------------------------------------
+                    AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                                   hetcalls@secondarySeq)
+                    SangerConsensus@reverseReadsList[[index]]@primaryAASeqS1 <-
+                        AASeqResult[["primaryAASeqS1"]]
+                    SangerConsensus@reverseReadsList[[index]]@primaryAASeqS2 <-
+                        AASeqResult[["primaryAASeqS2"]]
+                    SangerConsensus@reverseReadsList[[index]]@primaryAASeqS3 <-
+                        AASeqResult[["primaryAASeqS3"]]
                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

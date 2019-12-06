@@ -67,21 +67,14 @@ setMethod("MakeBaseCalls", "SangerSingleRead",
               traceMatrix <- obj@traceMatrix
               peakPosMatrixRaw <- obj@peakPosMatrixRaw
               qualityPhredScoresRaw <- obj@QualityReport@qualityPhredScoresRaw
-              qualityBaseScoresRaw <- obj@QualityReport@qualityBaseScoresRaw
 
               MBCResult <- MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                                 qualityPhredScoresRaw,
-                                                qualityBaseScoresRaw,
                                                 signalRatioCutoff=
                                                     signalRatioCutoff)
-
-
-
-
-
-
-              obj@QualityReport@qualityPhredScores <-
-                  MBCResult[["qualityPhredScores"]]
+              # Length won't change, so we don't need to update !
+              # obj@QualityReport@qualityPhredScores <-
+              #     MBCResult[["qualityPhredScores"]]
 
               obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
               obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]

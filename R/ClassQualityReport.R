@@ -1,7 +1,7 @@
 #' @title QualityReport
 #'
 #' @description  An S4 class for quality report for a SangerSingleRead S4 object
-#'
+#' @slot qualityPhredScoresRaw .
 #' @slot qualityPhredScores .
 #' @slot qualityBaseScores .
 #' @slot rawSeqLength .
@@ -46,6 +46,7 @@ setClass("QualityReport",
              M1TrimmingCutoff        = "numericORNULL",
              M2CutoffQualityScore    = "numericORNULL",
              M2SlidingWindowSize     = "numericORNULL",
+             qualityPhredScoresRaw   = "numeric",
              qualityPhredScores      = "numeric",
              qualityBaseScores       = "numeric",
              rawSeqLength            = "numeric",
@@ -68,7 +69,8 @@ setClass("QualityReport",
 setMethod("initialize",
           "QualityReport",
           function(.Object, ...,
-                   qualityPhredScores = numeric(0),
+                   qualityPhredScoresRaw = numeric(0),
+                   qualityPhredScores    = numeric(0),
                    TrimmingMethod        = "M1",
                    M1TrimmingCutoff      = 0.0001,
                    M2CutoffQualityScore  = NULL,
@@ -137,6 +139,7 @@ setMethod("initialize",
                   stop(errors)
               }
               callNextMethod(.Object, ...,
+                             qualityPhredScoresRaw   = qualityPhredScoresRaw,
                              qualityPhredScores      = qualityPhredScores,
                              qualityBaseScores       = qualityBaseScores,
                              rawSeqLength            = rawSeqLength,

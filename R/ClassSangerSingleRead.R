@@ -169,11 +169,12 @@ setMethod("initialize",
                   ### ----------------------------------------------------------
                   MBCResult <-
                       MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
-                                           readRawAbif@data$PCON.2,
+                                           abifRawData@data$PCON.2,
                                            signalRatioCutoff=signalRatioCutoff)
 
                   ### ==========================================================
                   ### Update Once (Only during creation)
+                  ###    Basecall primary seq length will be same !
                   ### ==========================================================
                   qualityPhredScores <- MBCResult[["qualityPhredScores"]]
                   ### ----------------------------------------------------------
@@ -181,12 +182,12 @@ setMethod("initialize",
                   ### ----------------------------------------------------------
                   QualityReport <-
                       new("QualityReport",
+                          qualityPhredScoresRaw = abifRawData@data$PCON.2,
                           qualityPhredScores = qualityPhredScores,
                           TrimmingMethod = TrimmingMethod,
                           M1TrimmingCutoff = M1TrimmingCutoff,
                           M2CutoffQualityScore = M2CutoffQualityScore,
                           M2SlidingWindowSize = M2SlidingWindowSize)
-
 
                   ### ==========================================================
                   ### Update everytime (whenever 'signalRatioCutoff' is changed)
