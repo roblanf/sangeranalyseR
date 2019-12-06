@@ -119,7 +119,7 @@ suppressPlotlyMessage <- function(p) {
 ### MakeBaseCalls related function
 ### ============================================================================
 MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
-                                qualityPhredScoresRaw, qualityBaseScoresRaw,
+                                qualityPhredScoresRaw,
                                 signalRatioCutoff) {
     message("     * Making basecall !!")
     #get peaks for each base
@@ -197,25 +197,17 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
         }
     }
 
-    qualityScoresID <- "After BaseCall"
     qualityPhredScores <- qualityPhredScoresRaw[indexBaseCall]
-    qualityBaseScores <- qualityBaseScoresRaw[indexBaseCall]
     peakPosMatrix <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     peakAmpMatrix <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
-    primarySeqID <- "After BaseCall (primary basecalls)"
     primarySeq <- DNAString(paste(primary, collapse=""))
-    secondarySeqID <- "After BaseCall (secondary basecalls)"
     secondarySeq <- DNAString(paste(secondary, collapse=""))
     message("     * Updating slots in 'SangerSingleRead' instance !!")
 
-    return(list("qualityScoresID" = qualityScoresID,
-                "qualityPhredScores" = qualityPhredScores,
-                "qualityBaseScores" = qualityBaseScores,
+    return(list("qualityPhredScores" = qualityPhredScores,
                 "peakPosMatrix" = peakPosMatrix,
                 "peakAmpMatrix" = peakAmpMatrix,
-                "primarySeqID" = primarySeqID,
                 "primarySeq" = primarySeq,
-                "secondarySeqID" = secondarySeqID,
                 "secondarySeq" = secondarySeq))
 }
 

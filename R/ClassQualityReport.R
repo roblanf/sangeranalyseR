@@ -2,10 +2,7 @@
 #'
 #' @description  An S4 class for quality report for a SangerSingleRead S4 object
 #'
-#' @slot qualityScoresID .
-#' @slot qualityPhredScoresRaw .
 #' @slot qualityPhredScores .
-#' @slot qualityBaseScoresRaw .
 #' @slot qualityBaseScores .
 #' @slot rawSeqLength .
 #' @slot trimmedSeqLength .
@@ -45,14 +42,11 @@ setClass("QualityReport",
          ### Input type of each variable
          ### -------------------------------------------------------------------
          representation(
-             qualityScoresID         = "character",
              TrimmingMethod          = "character",
              M1TrimmingCutoff        = "numericORNULL",
              M2CutoffQualityScore    = "numericORNULL",
              M2SlidingWindowSize     = "numericORNULL",
-             qualityPhredScoresRaw   = "numericORNULL",
              qualityPhredScores      = "numeric",
-             qualityBaseScoresRaw    = "numericORNULL",
              qualityBaseScores       = "numeric",
              rawSeqLength            = "numeric",
              trimmedSeqLength        = "numeric",
@@ -74,7 +68,7 @@ setClass("QualityReport",
 setMethod("initialize",
           "QualityReport",
           function(.Object, ...,
-                   qualityPhredScoresRaw = numeric(0),
+                   qualityPhredScores = numeric(0),
                    TrimmingMethod        = "M1",
                    M1TrimmingCutoff      = 0.0001,
                    M2CutoffQualityScore  = NULL,
@@ -83,7 +77,7 @@ setMethod("initialize",
               ### Input parameter prechecking
               ### --------------------------------------------------------------
               errors <- character()
-              errors <- checkQualityPhredScores (qualityPhredScoresRaw, errors)
+              errors <- checkQualityPhredScores (qualityPhredScores, errors)
 
               ##### ------------------------------------------------------------
               ##### Input parameter prechecking for TrimmingMethod.
@@ -101,14 +95,7 @@ setMethod("initialize",
                   # calculate base score
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
-                  qualityBaseScoresRaw <- 10** (qualityPhredScoresRaw / (-10.0))
-
-                  ### ----------------------------------------------------------
-                  ### Initialize 'qualityPhredScores' & 'qualityBaseScores'
-                  ###   with 'qualityBaseScoresRaw' & 'qualityBaseScoresRaw'
-                  ### ----------------------------------------------------------
-                  qualityPhredScores <- qualityPhredScoresRaw
-                  qualityBaseScores <- qualityBaseScoresRaw
+                  qualityBaseScores <- 10** (qualityPhredScores / (-10.0))
 
                   ### ----------------------------------------------------------
                   ### Use 'qualityPhredScores' & 'qualityBaseScores' for
@@ -150,10 +137,7 @@ setMethod("initialize",
                   stop(errors)
               }
               callNextMethod(.Object, ...,
-                             qualityScoresID         = qualityScoresID,
-                             qualityPhredScoresRaw   = qualityPhredScoresRaw,
                              qualityPhredScores      = qualityPhredScores,
-                             qualityBaseScoresRaw    = qualityBaseScoresRaw,
                              qualityBaseScores       = qualityBaseScores,
                              rawSeqLength            = rawSeqLength,
                              trimmedSeqLength        = trimmedSeqLength,

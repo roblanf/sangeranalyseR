@@ -74,12 +74,15 @@ setMethod("MakeBaseCalls", "SangerSingleRead",
                                                 qualityBaseScoresRaw,
                                                 signalRatioCutoff=
                                                     signalRatioCutoff)
-              obj@QualityReport@qualityScoresID <-
-                  MBCResult[["qualityScoresID"]]
+
+
+
+
+
+
               obj@QualityReport@qualityPhredScores <-
                   MBCResult[["qualityPhredScores"]]
-              obj@QualityReport@qualityBaseScores <-
-                  MBCResult[["qualityBaseScores"]]
+
               obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
               obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
               obj@primarySeqID <- MBCResult[["primarySeqID"]]

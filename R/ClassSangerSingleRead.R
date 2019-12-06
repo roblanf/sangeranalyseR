@@ -111,9 +111,9 @@ setMethod("initialize",
               if (length(errors) == 0) {
                   message(readFeature, " read: Creating abif & sangerseq ...")
                   message("    * Creating ", readFeature , " raw abif ...")
-                  readRawAbif = read.abif(readFileName)
+                  abifRawData = read.abif(readFileName)
                   message("    * Creating ", readFeature , " raw sangerseq ...")
-                  readSangerseq = sangerseq(readRawAbif)
+                  readSangerseq = sangerseq(abifRawData)
                   primarySeqID = readSangerseq@primarySeqID
                   secondarySeqID = readSangerseq@secondarySeqID
 
@@ -125,13 +125,6 @@ setMethod("initialize",
                   secondarySeqRaw = readSangerseq@secondarySeq
                   secondarySeq = readSangerseq@secondarySeq
 
-                  ### ----------------------------------------------------------
-                  ### After Here, if 'MakeBaseCall' is called, we need to
-                  ###    update parameters !!
-                  ### 'primarySeq', 'secondarySeq',
-                  ### 'traceMatrix', 'peakPosMatrix', 'peakAmpMatrix',
-                  ### 'QualityReport@', 'ChromatogramParam@'
-                  ### ----------------------------------------------------------
                   if (readFeature == "Reverse Read") {
                       primarySeqRaw =
                           reverseComplement(readSangerseq@primarySeq)
@@ -143,82 +136,82 @@ setMethod("initialize",
                           reverseComplement(readSangerseq@secondarySeq)
                   }
 
-
-                  traceMatrixRaw      = readSangerseq@traceMatrix
                   traceMatrix         = readSangerseq@traceMatrix
                   peakPosMatrixRaw    = readSangerseq@peakPosMatrix
                   peakPosMatrix       = readSangerseq@peakPosMatrix
                   peakAmpMatrixRaw    = readSangerseq@peakAmpMatrix
                   peakAmpMatrix       = readSangerseq@peakAmpMatrix
 
-                  abifRawData         = readRawAbif
+                  # qualityBaseScoresRaw <- 10** (qualityPhredScoresRaw / (-10.0))
+
+                  ### ----------------------------------------------------------
+                  ### After Here, if 'MakeBaseCall' is called, we need to
+                  ###    update parameters !!
+                  ### ===== Update Once ========================================
+                  ### 'primarySeqID', 'secondarySeqID'
+                  ### 'primarySeq', 'QualityReport@qualityScoresID',
+                  ### 'QualityReport@qualityPhredScores',
+                  ### 'QualityReport@qualityBaseScores'
+                  ### ===== Update everytime ===================================
+                  ### 'secondarySeq',
+                  ### 'peakPosMatrix', 'peakAmpMatrix',
+                  ### ----------------------------------------------------------
 
                   ### ----------------------------------------------------------
                   ### Definition of 'PCON.1' & 'PCON.2'
                   ##### PCON.1: char => Per-base quality values (edited)
                   ##### PCON.2: char => Per-base quality values
                   ### ----------------------------------------------------------
-                  QualityReport <- new("QualityReport",
-                                       qualityPhredScoresRaw =
+
+
+                  ### ----------------------------------------------------------
+                  ### Running 'MakeBaseCall' !! Remember to update parameters !!
+                  ### ----------------------------------------------------------
+                  MBCResult <-
+                      MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                            readRawAbif@data$PCON.2,
-                                       TrimmingMethod = TrimmingMethod,
-                                       M1TrimmingCutoff = M1TrimmingCutoff,
-                                       M2CutoffQualityScore = M2CutoffQualityScore,
-                                       M2SlidingWindowSize = M2SlidingWindowSize)
+                                           signalRatioCutoff=signalRatioCutoff)
+
+                  ### ==========================================================
+                  ### Update Once (Only during creation)
+                  ### ==========================================================
+                  qualityPhredScores <- MBCResult[["qualityPhredScores"]]
+                  ### ----------------------------------------------------------
+                  ##### 'QualityReport' creation
+                  ### ----------------------------------------------------------
+                  QualityReport <-
+                      new("QualityReport",
+                          qualityPhredScores = qualityPhredScores,
+                          TrimmingMethod = TrimmingMethod,
+                          M1TrimmingCutoff = M1TrimmingCutoff,
+                          M2CutoffQualityScore = M2CutoffQualityScore,
+                          M2SlidingWindowSize = M2SlidingWindowSize)
+
+
+                  ### ==========================================================
+                  ### Update everytime (whenever 'signalRatioCutoff' is changed)
+                  ### ==========================================================
+                  primarySeq <- MBCResult[["primarySeq"]]
+                  secondarySeq <- MBCResult[["secondarySeq"]]
+                  peakPosMatrix <- MBCResult[["peakPosMatrix"]]
+                  peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
+                  ### ----------------------------------------------------------
+                  ##### 'QualityReport' & 'ChromatogramParam' creation
+                  ### ----------------------------------------------------------
                   ChromatogramParam <- new("ChromatogramParam",
                                            baseNumPerRow     = baseNumPerRow,
                                            heightPerRow      = heightPerRow,
                                            signalRatioCutoff = signalRatioCutoff,
                                            showTrimmed       = showTrimmed)
 
-                  ### ----------------------------------------------------------
-                  ### Before running MakeBaseCall, the parameters below are NULL
-                  ###     'MakeBaseCallsInside' will be called during S4 object
-                  ###     creation
-                  ### ----------------------------------------------------------
-                  MBCResult <-
-                      MakeBaseCallsInside (traceMatrixRaw, peakPosMatrixRaw,
-                                           QualityReport@qualityPhredScoresRaw,
-                                           QualityReport@qualityBaseScoresRaw,
-                                           signalRatioCutoff=signalRatioCutoff)
+                  AASeqResult <- calculateAASeq (primarySeq, geneticCode)
 
-                  # New to re-trimm again !!!!
-                  QualityReport@qualityScoresID <-
-                      MBCResult[["qualityScoresID"]]
-                  QualityReport@qualityPhredScores <-
-                      MBCResult[["qualityPhredScores"]]
-                  QualityReport@qualityBaseScores <-
-                      MBCResult[["qualityBaseScores"]]
+                  primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
+                  primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
+                  primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+                  ### ==========================================================
+                  ### ==========================================================
 
-                  peakPosMatrix <- MBCResult[["peakPosMatrix"]]
-                  peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
-                  primarySeqID <- MBCResult[["primarySeqID"]]
-                  primarySeq <- MBCResult[["primarySeq"]]
-                  secondarySeqID <- MBCResult[["secondarySeqID"]]
-                  secondarySeq <- MBCResult[["secondarySeq"]]
-
-
-                  primaryAASeqS1 =
-                      suppressWarnings(translate(primarySeq,
-                                                 genetic.code = geneticCode,
-                                                 no.init.codon=TRUE,
-                                                 if.fuzzy.codon="solve"))
-                  DNASeqshift1 <-DNAString(substr(as.character(primarySeq),
-                                                  2, length(primarySeq)))
-
-                  primaryAASeqS2 =
-                      suppressWarnings(translate(DNASeqshift1,
-                                                 genetic.code = geneticCode,
-                                                 no.init.codon=TRUE,
-                                                 if.fuzzy.codon="solve"))
-                  DNASeqshift2 <-
-                      DNAString(substr(as.character(primarySeq),
-                                       3, length(primarySeq)))
-                  primaryAASeqS3 <-
-                      suppressWarnings(translate(DNASeqshift2,
-                                                 genetic.code = geneticCode,
-                                                 no.init.codon=TRUE,
-                                                 if.fuzzy.codon="solve"))
               } else {
                   stop(errors)
               }
