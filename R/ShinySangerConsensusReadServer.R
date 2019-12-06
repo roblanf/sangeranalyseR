@@ -625,51 +625,73 @@ consensusReadServer <- function(input, output, session) {
                         solidHeader = TRUE, collapsible = TRUE,
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                        column(width = 2,
+                        column(width = 12,
                                tags$p("Primary Sequence",
                                       style = "font-size: 15px;
                                        font-weight: bold;"),
-                               tags$br(),
-                               tags$br(),
-                               tags$p("Primary AA Sequence",
-                                      style = "font-size: 15px;
+
+                               tags$p(tagList(icon("arrow-circle-right"),
+                                              "Primary Sequence"),
+                                      style = "font-size: 24px;
                                        font-weight: bold;"),
-                               tags$br(),
-                               tags$br(),
-                               tags$p("Secondary Sequence",
-                                      style = "font-size: 15px;
-                                       font-weight: bold;"),
-                               tags$br(),
-                               tags$br(),
-                               tags$p("Quality Phred Score",
-                                      style = "font-size: 15px;
-                                       font-weight: bold;"),
-                        ),
-                        column(width = 10,
                                excelOutput("primarySeqDF",
                                            width = "100%", height = "50"),
+                               tags$p("AA Sequence 1",
+                                      style = "font-size: 15px;
+                                       font-weight: bold;"),
                                excelOutput("PrimAASeqS1DF",
                                            width = "100%", height = "50"),
+                               tags$p("AA Sequence 2",
+                                      style = "font-size: 15px;
+                                              font-weight: bold;"),
                                excelOutput("PrimAASeqS2DF",
                                            width = "100%", height = "50"),
+                               tags$p("AA Sequence 3",
+                                      style = "font-size: 15px;
+                                              font-weight: bold;"),
                                excelOutput("PrimAASeqS3DF",
                                            width = "100%", height = "50"),
-
-
-
-
-
-
-
-
+                               tags$p("Secondary Sequence",
+                                      style = "font-size: 15px;
+                                              font-weight: bold;"),
                                excelOutput("secondSeqDF",
                                            width = "100%", height = "50"),
+                               tags$p("Quality Phred Score",
+                                      style = "font-size: 15px;
+                                              font-weight: bold;"),
                                excelOutput("qualityScoreDF",
                                            width = "100%", height = "50"),
-
                                style = paste("overflow-y: hidden;",
                                              "overflow-x: scroll;")
-                        )
+                        ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     ),
                     box(title = tags$p(tagList(icon("dot-circle"),
                                                "Quality Report: "),
@@ -1318,6 +1340,37 @@ consensusReadServer <- function(input, output, session) {
     output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
+        AstyleList <-
+            getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                        "A", "#1eff00")
+        TstyleList <-
+            getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                        "T", "#ff7a7a")
+        CstyleList <-
+            getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                        "C", "#7ac3ff")
+        GstyleList <-
+            getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                        "G", "#c9c9c9")
+        styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         suppressMessages(
             excelTable(data =
                            SangerSingleReadPrimSeqDF[[singleReadIndex]],
@@ -1325,6 +1378,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       style = styleList,
                        loadingSpin = TRUE)
         )
     })
@@ -1332,6 +1386,40 @@ consensusReadServer <- function(input, output, session) {
     output$secondSeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
+        AstyleList <-
+            getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                        "A", "#1eff00")
+        TstyleList <-
+            getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                        "T", "#ff7a7a")
+        CstyleList <-
+            getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                        "C", "#7ac3ff")
+        GstyleList <-
+            getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
+                        "G", "#c9c9c9")
+        styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         suppressMessages(
             excelTable(data =
                            SangerSingleReadSecoSeqDF[[singleReadIndex]],
@@ -1339,6 +1427,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       style = styleList,
                        loadingSpin = TRUE)
         )
     })
@@ -1392,6 +1481,9 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         width <- rep(90, length(SangerSingleReadPrimAASeqS1DF[[singleReadIndex]]))
+        styleList <-
+            getStopList (SangerSingleReadPrimAASeqS1DF[[singleReadIndex]],
+                         "*", "#cf0000")
         suppressMessages(
             excelTable(data =
                            SangerSingleReadPrimAASeqS1DF[[singleReadIndex]],
@@ -1400,6 +1492,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       style = styleList,
                        loadingSpin = TRUE)
         )
     })
@@ -1409,6 +1502,10 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         width <- rep(90, length(SangerSingleReadPrimAASeqS2DF[[singleReadIndex]])-1)
         widthFinal <- c(30, width)
+        styleList <-
+            getStopList (SangerSingleReadPrimAASeqS2DF[[singleReadIndex]],
+                         "*", "#cf0000")
+        styleList[['A1']] <- 'background-color: black;'
         suppressMessages(
             excelTable(data =
                            SangerSingleReadPrimAASeqS2DF[[singleReadIndex]],
@@ -1417,9 +1514,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = list(
-                           "A1" = 'background-color: black;'
-                       ),
+                       style = styleList,
                        loadingSpin = TRUE)
         )
     })
@@ -1429,7 +1524,11 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         width <- rep(90, length(SangerSingleReadPrimAASeqS3DF[[singleReadIndex]])-2)
         widthFinal <- c(30, 30, width)
-
+        styleList <-
+            getStopList (SangerSingleReadPrimAASeqS3DF[[singleReadIndex]],
+                         "*", "#cf0000")
+        styleList[['A1']] <- 'background-color: black;'
+        styleList[['B1']] <- 'background-color: black;'
         suppressMessages(
             excelTable(data =
                            SangerSingleReadPrimAASeqS3DF[[singleReadIndex]],
@@ -1438,10 +1537,7 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = list(
-                           "A1" = 'background-color: black;',
-                           "B1" = 'background-color: black;'
-                       ),
+                       style = styleList,
                        loadingSpin = TRUE)
         )
     })

@@ -20,5 +20,6 @@
 #' @importFrom ggdendro ggdendrogram
 #' @importFrom ape BIONJ
 #' @importFrom shinyWidgets actionBttn
+#' @importFrom openxlsx int2col
 
 

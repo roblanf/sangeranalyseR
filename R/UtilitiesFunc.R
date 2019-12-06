@@ -232,3 +232,11 @@ peakvalues <- function(x, pstart, pstop) {
     else return(c(max(region[,2], na.rm=TRUE), region[which.max(region[,2]),1]))
 }
 
+getStopList <- function(AASeqDF, selectChar, colorCode) {
+    stopIndex <- AASeqDF %>% `==`(selectChar) %>% which()
+    stopExcelIndex <- int2col(stopIndex)
+    stopExcelIndexName <- paste0(stopExcelIndex, "1")
+    styleList <- as.list(rep(paste('background-color:', colorCode, "; font-weight: bold;"), length(stopExcelIndex)))
+    names(styleList) <- stopExcelIndexName
+    return(styleList)
+}
