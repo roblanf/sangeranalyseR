@@ -378,17 +378,32 @@ alignConsensusReads <- function(SangerConsensusReadList,
 ### Adding dynamic menu to sidebar.
 ### ============================================================================
 dynamicMenuSideBarSC <- function(input, output, session,
-                               SangerSingleReadNum, SangerSingleReadFeature) {
+                                  forwardReadNum, reverseReadNum,
+                                  forwardReadFeature, reverseReadFeature) {
     output$singleReadMenu <- renderMenu({
-        menu_list <- sapply(1:SangerSingleReadNum, function(i) {
-            list(menuItem(text = SangerSingleReadFeature[i],
-                          tabName = SangerSingleReadFeature[i],
-                          selected = TRUE, icon = icon("minus")))
+
+        fmenuSub_list <- sapply(1:forwardReadNum, function(i) {
+            list(menuSubItem(text = forwardReadFeature[i],
+                          tabName = forwardReadFeature[i],
+                          icon = icon("minus")))
         })
-        sidebarMenu(.list = menu_list)
+        rmenuSub_list <- sapply(1:reverseReadNum, function(i) {
+            list(menuSubItem(text = reverseReadFeature[i],
+                          tabName = reverseReadFeature[i],
+                          icon = icon("minus")))
+        })
+        fmenu_list <- menuItem(text = "Forward Reads",
+                               tabName = "forwardReads",
+                               icon = icon("minus"), fmenuSub_list)
+
+        rmenu_list <- menuItem(text = "Reverse Reads",
+                               tabName = "reverseReads",
+                               icon = icon("minus"), rmenuSub_list)
+        sidebarMenu(.list = list(fmenu_list, rmenu_list))
     })
     # Select consensus Read Menu first
-    isolate({updateTabItems(session, "sidebar_menu", "Sanger Consensus Read Overview")})
+    isolate({updateTabItems(session, "sidebar_menu",
+                            "Sanger Consensus Read Overview")})
 }
 
 dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
@@ -421,22 +436,24 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
                                            SangerSingleReadQualReport) {
     observeEvent(input$sidebar_menu, {
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
+        message("menuItem: ", menuItem)
         html("rightHeader", menuItem)
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
-            trimmedRV[["trimmedStartPos"]] <-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-            trimmedRV[["trimmedFinishPos"]] <-
-                SangerSingleReadQualReport[[
-                    strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
-            qualityPhredScores = SangerSingleReadQualReport[[
-                strtoi(sidebar_menu[[1]])]]@qualityPhredScores
-
-            readLen = length(qualityPhredScores)
-            trimmedRV[["trimmedSeqLength"]] <- trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1
-            trimmedRV[["remainingRatio"]] <- round(((trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1) / readLen) * 100, digits = 2)
-        }
+        # if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
+        #     trimmedRV[["trimmedStartPos"]] <-
+        #         SangerSingleReadQualReport[[
+        #             strtoi(sidebar_menu[[1]])]]@trimmedStartPos
+        #     trimmedRV[["trimmedFinishPos"]] <-
+        #         SangerSingleReadQualReport[[
+        #             strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
+        #
+        #     qualityPhredScores = SangerSingleReadQualReport[[
+        #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
+        #
+        #     readLen = length(qualityPhredScores)
+        #     trimmedRV[["trimmedSeqLength"]] <- trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1
+        #     trimmedRV[["remainingRatio"]] <- round(((trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1) / readLen) * 100, digits = 2)
+        # }
     })
 }
 
