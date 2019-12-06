@@ -137,25 +137,81 @@ consensusReadServer <- function(input, output, session) {
     })
     SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
 
-    # primaryAASeqDF
-    forwardReadPrimAASeqDF <- lapply(1:forwardReadNum, function(i) {
-        AAString <- SangerConsensus@forwardReadsList[[i]]@primaryAASeq
+    # primaryAASeqS1DF
+    forwardReadPrimAASeqS1DF <- lapply(1:forwardReadNum, function(i) {
+        AAString <- SangerConsensus@forwardReadsList[[i]]@primaryAASeqS1
         AAStringDF <- data.frame(
             t(data.frame(AAString)), stringsAsFactors = FALSE)
         colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
         rownames(AAStringDF) <- NULL
         return(AAStringDF)
     })
-    reverseReadPrimAASeqDF <- lapply(1:reverseReadNum, function(i) {
-        AAString <- SangerConsensus@reverseReadsList[[i]]@primaryAASeq
+    reverseReadPrimAASeqS1DF <- lapply(1:reverseReadNum, function(i) {
+        AAString <- SangerConsensus@reverseReadsList[[i]]@primaryAASeqS1
         AAStringDF <- data.frame(
             t(data.frame(AAString)), stringsAsFactors = FALSE)
         colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
         rownames(AAStringDF) <- NULL
         return(AAStringDF)
     })
-    SangerSingleReadPrimAASeqDF <- c(forwardReadPrimAASeqDF,
-                                     reverseReadPrimAASeqDF)
+    SangerSingleReadPrimAASeqS1DF <- c(forwardReadPrimAASeqS1DF,
+                                     reverseReadPrimAASeqS1DF)
+
+
+    # primaryAASeqS2DF
+    forwardReadPrimAASeqS2DF <- lapply(1:forwardReadNum, function(i) {
+        AAString <- SangerConsensus@forwardReadsList[[i]]@primaryAASeqS2
+        AAStringDF <- data.frame(
+            t(data.frame(AAString)), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        return(AAStringDF)
+    })
+    reverseReadPrimAASeqS2DF <- lapply(1:reverseReadNum, function(i) {
+        AAString <- SangerConsensus@reverseReadsList[[i]]@primaryAASeqS2
+        AAStringDF <- data.frame(
+            t(data.frame(AAString)), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        return(AAStringDF)
+    })
+    SangerSingleReadPrimAASeqS2DF <- c(forwardReadPrimAASeqS2DF,
+                                       reverseReadPrimAASeqS2DF)
+
+    # primaryAASeqS3DF
+    forwardReadPrimAASeqS3DF <- lapply(1:forwardReadNum, function(i) {
+        AAString <- SangerConsensus@forwardReadsList[[i]]@primaryAASeqS3
+        AAStringDF <- data.frame(
+            t(data.frame(AAString)), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        return(AAStringDF)
+    })
+    reverseReadPrimAASeqS2DF <- lapply(1:reverseReadNum, function(i) {
+        AAString <- SangerConsensus@reverseReadsList[[i]]@primaryAASeqS3
+        AAStringDF <- data.frame(
+            t(data.frame(AAString)), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        return(AAStringDF)
+    })
+    SangerSingleReadPrimAASeqS3DF <- c(forwardReadPrimAASeqS3DF,
+                                       reverseReadPrimAASeqS3DF)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     trimmedRV <- reactiveValues(rawSeqLength            = 0,
                                 rawMeanQualityScore     = 0,

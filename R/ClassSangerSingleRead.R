@@ -51,7 +51,9 @@ setClass(
             abifRawData         = "abif",
             QualityReport       = "QualityReport",
             ChromatogramParam   = "ChromatogramParam",
-            primaryAASeq        = "AAString",
+            primaryAASeqS1      = "AAString",
+            primaryAASeqS2      = "AAString",
+            primaryAASeqS3      = "AAString",
             geneticCode         = "character",
             primarySeqRaw       = "DNAString",
             secondarySeqRaw     = "DNAString",
@@ -115,14 +117,21 @@ setMethod("initialize",
                   primarySeqID = readSangerseq@primarySeqID
                   secondarySeqID = readSangerseq@secondarySeqID
 
-                  ### -------------------------------------------------------------
+                  ### ----------------------------------------------------------
                   ### With non-raw & raw primarySeq / secondarySeq
-                  ### --------------------------------------------------------------
+                  ### ----------------------------------------------------------
                   primarySeqRaw = readSangerseq@primarySeq
                   primarySeq = readSangerseq@primarySeq
                   secondarySeqRaw = readSangerseq@secondarySeq
                   secondarySeq = readSangerseq@secondarySeq
 
+                  ### ----------------------------------------------------------
+                  ### After Here, if 'MakeBaseCall' is called, we need to
+                  ###    update parameters !!
+                  ### 'primarySeq', 'secondarySeq',
+                  ### 'traceMatrix', 'peakPosMatrix', 'peakAmpMatrix',
+                  ### 'QualityReport@', 'ChromatogramParam@'
+                  ### ----------------------------------------------------------
                   if (readFeature == "Reverse Read") {
                       primarySeqRaw =
                           reverseComplement(readSangerseq@primarySeq)
@@ -133,12 +142,28 @@ setMethod("initialize",
                       secondarySeq =
                           reverseComplement(readSangerseq@secondarySeq)
                   }
+                  primaryAASeqS1 =
+                      suppressWarnings(translate(primarySeq,
+                                                 genetic.code = geneticCode,
+                                                 no.init.codon=TRUE,
+                                                 if.fuzzy.codon="solve"))
+                  DNASeqshift1 <-DNAString(substr(as.character(primarySeq),
+                                                  2, length(primarySeq)))
 
-                  #### ADDDD !!!!
-                  primaryAASeq        = suppressWarnings(translate(primarySeq,
-                                                  genetic.code = geneticCode,
-                                                  no.init.codon=TRUE,
-                                                  if.fuzzy.codon="solve"))
+                  primaryAASeqS2 =
+                      suppressWarnings(translate(DNASeqshift1,
+                                                 genetic.code = geneticCode,
+                                                 no.init.codon=TRUE,
+                                                 if.fuzzy.codon="solve"))
+                  DNASeqshift2 <-
+                      DNAString(substr(as.character(primarySeq),
+                                       3, length(primarySeq)))
+                  primaryAASeqS3 <-
+                      suppressWarnings(translate(DNASeqshift2,
+                                                 genetic.code = geneticCode,
+                                                 no.init.codon=TRUE,
+                                                 if.fuzzy.codon="solve"))
+
                   traceMatrixRaw      = readSangerseq@traceMatrix
                   traceMatrix         = readSangerseq@traceMatrix
                   peakPosMatrixRaw    = readSangerseq@peakPosMatrix
@@ -204,7 +229,9 @@ setMethod("initialize",
                              secondarySeqID      = secondarySeqID,
                              secondarySeqRaw     = secondarySeqRaw,
                              secondarySeq        = secondarySeq,
-                             primaryAASeq        = primaryAASeq,
+                             primaryAASeqS1      = primaryAASeqS1,
+                             primaryAASeqS2      = primaryAASeqS2,
+                             primaryAASeqS3      = primaryAASeqS3,
                              traceMatrix         = traceMatrix,
                              peakPosMatrix       = peakPosMatrix,
                              peakPosMatrixRaw    = peakPosMatrixRaw,
