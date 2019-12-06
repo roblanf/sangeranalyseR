@@ -94,27 +94,6 @@ consensusReadServer <- function(input, output, session) {
     SangerSingleReadChromatogramParam <- c(forwardReadChromatogramParam,
                                            reverseReadChromatogramParam)
 
-    # primarySeqDF
-    forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(i) {
-        basecalls1 <- unlist(strsplit(
-            toString(SangerConsensus@forwardReadsList[[i]]@primarySeq), ""))
-        basecalls1DF <- data.frame(
-            t(data.frame(basecalls1)), stringsAsFactors = FALSE)
-        colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-        rownames(basecalls1DF) <- NULL
-        return(basecalls1DF)
-    })
-    reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(i) {
-        basecalls1 <- unlist(strsplit(
-            toString(SangerConsensus@reverseReadsList[[i]]@primarySeq), ""))
-        basecalls1DF <- data.frame(
-            t(data.frame(basecalls1)), stringsAsFactors = FALSE)
-        colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-        rownames(basecalls1DF) <- NULL
-        return(basecalls1DF)
-    })
-    SangerSingleReadPrimSeqDF <- c(forwardReadPrimSeqDF, reverseReadPrimSeqDF)
-
     # secondarySeqDF
     forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
         basecalls2 <- unlist(strsplit(
@@ -260,7 +239,6 @@ consensusReadServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[2]]
         if (input$sidebar_menu == "Sanger Consensus Read Overview") {
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
-            # h1(input$sidebar_menu)
             ### ------------------------------------------------------------
             ### First assign the ChromatogramParam parameter
             ### ------------------------------------------------------------
@@ -527,10 +505,249 @@ consensusReadServer <- function(input, output, session) {
             )
         } else if (!is.na(strtoi(singleReadIndex)) &&
                    directionParam == "Forward") {
-
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
             h1(input$sidebar_menu)
-
+            fluidRow(
+                useShinyjs(),
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Raw File: "),
+                                   style = "font-size: 26px;
+                                             font-weight: bold;"),
+                    solidHeader = TRUE,
+                    status = "success", width = 12,
+                    h1(paste0(
+                        forwardReadBFN[[strtoi(singleReadIndex)]])),
+                    tags$h5(paste("( full path:",
+                                  forwardReadAFN[[strtoi(singleReadIndex)]],
+                                  ")"), style = "font-style:italic")),
+                box(title =
+                        tags$p(tagList(icon("dot-circle"),
+                                       "Primary, Secondary DNA Sequences &
+                                       Amino Acid Sequence (Before Trimming):"),
+                                   style = "font-size: 26px;
+                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    column(width = 12,
+                           tags$p(tagList(icon("bars"),
+                                          "Primary Sequence"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("primarySeqDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "Secondary Sequence"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("secondSeqDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "Quality Phred Score"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("qualityScoreDF",
+                                       width = "100%", height = "50"),
+                           # tags$br(),
+                           # tags$br(),
+                           # tags$p(tagList(icon("bars"),
+                           #                "AA Sequence 1"),
+                           #        style = "font-size: 22px;
+                           #                 font-weight: bold;"),
+                           # excelOutput("PrimAASeqS1DF",
+                           #             width = "100%", height = "50"),
+                           # tags$br(),
+                           # tags$br(),
+                           # tags$p(tagList(icon("bars"),
+                           #                "AA Sequence 2"),
+                           #        style = "font-size: 22px;
+                           #                 font-weight: bold;"),
+                           # excelOutput("PrimAASeqS2DF",
+                           #             width = "100%", height = "50"),
+                           # tags$br(),
+                           # tags$br(),
+                           # tags$p(tagList(icon("bars"),
+                           #                "AA Sequence 3"),
+                           #        style = "font-size: 22px;
+                           #                 font-weight: bold;"),
+                           # excelOutput("PrimAASeqS3DF",
+                           #             width = "100%", height = "50"),
+                           style = paste("overflow-y: hidden;",
+                                         "overflow-x: scroll;")
+                    ),
+                ),
+                # box(title = tags$p(tagList(icon("dot-circle"),
+                #                            "Quality Report: "),
+                #                    style = "font-size: 26px;
+                #                            font-weight: bold;"),
+                #     solidHeader = TRUE, collapsible = TRUE,
+                #     status = "success", width = 12,
+                #     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                #     box(title = tags$p(tagList(icon("arrow-circle-right"),
+                #                                "Trimming Parameters Input"),
+                #                        style = "font-size: 24px;
+                #                            font-weight: bold;"),
+                #         collapsible = TRUE,
+                #         status = "success", width = 12,
+                #         fluidRow(
+                #             column(width = 12,
+                #                    uiOutput("TrimmingMethodSelectionOutput"),
+                #             ),
+                #         ),
+                #         column(width = 12,
+                #                uiOutput("TrimmingMethodUI"),
+                #         ),
+                #         actionBttn("startTrimmingButton",
+                #                    "Apply Trimming Parameters",
+                #                    style = "simple", color = "success",
+                #                    block = TRUE, size = "lg")
+                #     ),
+                #     box(title = tags$p(tagList(icon("arrow-circle-left"),
+                #                                "Trimmed Result Output"),
+                #                        style = "font-size: 24px;
+                #                            font-weight: bold;"),
+                #         collapsible = TRUE,
+                #         status = "success", width = 12,
+                #         fluidRow(
+                #             box(title = tags$p("Before Trimming",
+                #                                style = "font-size: 21px;
+                #                            font-weight: bold;"),
+                #                 collapsible = TRUE,
+                #                 status = "success", width = 12,
+                #                 column(width = 12,
+                #                        column(4,
+                #                               uiOutput("rawSeqLength") ,
+                #                        ),
+                #                        column(4,
+                #                               uiOutput("rawMeanQualityScore"),
+                #                        ),
+                #                        column(4,
+                #                               uiOutput("rawMinQualityScore"),
+                #                        ),
+                #                 ),
+                #             ),
+                #         ),
+                #         fluidRow(
+                #             box(title = tags$p("After Trimming",
+                #                                style = "font-size: 21px;
+                #                            font-weight: bold;"),
+                #                 collapsible = TRUE,
+                #                 status = "success", width = 12,
+                #                 column(width = 12,
+                #                        column(4,
+                #                               uiOutput("trimmedSeqLength"),
+                #                        ),
+                #                        column(4,
+                #                               uiOutput("trimmedMeanQualityScore"),
+                #                        ),
+                #                        column(4,
+                #                               uiOutput("trimmedMinQualityScore"),
+                #                        ),
+                #                 ),
+                #
+                #                 column(width = 12,
+                #                        column(4,
+                #                               uiOutput("trimmedStartPos") ,
+                #                        ),
+                #                        column(4,
+                #                               uiOutput("trimmedFinishPos") ,
+                #                        ),
+                #                        column(4,
+                #                               uiOutput("remainingRatio") ,
+                #                        )
+                #                 ),
+                #             ),
+                #         ),
+                #         tags$hr(
+                #             style = ("border-top: 6px double #A9A9A9;")),
+                #         fluidRow(
+                #             box(title = tags$p("Cumulative Ratio Plot",
+                #                                style = "font-size: 21px;
+                #                            font-weight: bold;"),
+                #                 collapsible = TRUE,
+                #                 status = "success", width = 12,
+                #                 plotlyOutput("qualityTrimmingRatioPlot") %>%
+                #                     withSpinner()),
+                #             box(title = tags$p("Cumulative Ratio Plot",
+                #                                style = "font-size: 21px;
+                #                            font-weight: bold;"),
+                #                 collapsible = TRUE,
+                #                 status = "success", width = 12,
+                #                 plotlyOutput("qualityQualityBasePlot") %>%
+                #                     withSpinner()),
+                #         ),
+                #     ),
+                # ),
+                # box(title = tags$p(tagList(icon("dot-circle"),
+                #                            "Chromatogram: "),
+                #                    style = "font-size: 26px;
+                #                            font-weight: bold;"),
+                #     solidHeader = TRUE, collapsible = TRUE,
+                #     status = "success", width = 12,
+                #     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                #
+                #     box(title = tags$p(tagList(icon("arrow-circle-right"),
+                #                                "Chromatogram Input"),
+                #                        style = "font-size: 24px;
+                #                            font-weight: bold;"),
+                #         collapsible = TRUE,
+                #         status = "success", width = 12,
+                #         column(3,
+                #                sliderInput("ChromatogramBasePerRow",
+                #                            label =h4("Base Number Per Row"),
+                #                            min = 5,
+                #                            max = 200,
+                #                            value = ChromatogramParam[["baseNumPerRow"]]),
+                #                sliderInput("ChromatogramHeightPerRow",
+                #                            label = h4("Height Per Row"),
+                #                            min = 50,
+                #                            max = 600,
+                #                            value = ChromatogramParam[["heightPerRow"]]),
+                #         ),
+                #         column(3,
+                #                tags$hr(
+                #                    style =
+                #                        ("border-top: 4px hidden #A9A9A9;")),
+                #                numericInput(
+                #                    "ChromatogramSignalRatioCutoff",
+                #                    h3("Signal Ratio Cutoff"),
+                #                    value = ChromatogramParam[["signalRatioCutoff"]]),
+                #                checkboxInput(
+                #                    "ChromatogramCheckShowTrimmed",
+                #                    "Whether show trimmed region",
+                #                    value =
+                #                        ChromatogramParam[["showTrimmed"]])
+                #         ),
+                #         column(3,
+                #                tags$hr(
+                #                    style=("border-top: 4px hidden #A9A9A9;")),
+                #                uiOutput("ChromatogramtrimmedStartPos"),
+                #         ),
+                #         column(3,
+                #                tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                #                uiOutput("ChromatogramtrimmedFinishPos"),
+                #         ),
+                #         actionBttn("saveChromatogramParam",
+                #                    "Apply Chromatogram Parameters",
+                #                    style = "simple", color = "success",
+                #                    block = TRUE, size = "lg")
+                #     ),
+                #     box(title = tags$p(tagList(icon("arrow-circle-left"),
+                #                                "Chromatogram Output"),
+                #                        style = "font-size: 24px;
+                #                            font-weight: bold;"),
+                #         collapsible = TRUE,
+                #         status = "success", width = 12,
+                #         column(width = 12,
+                #                uiOutput("chromatogramUIOutput"),
+                #         )
+                #     ),
+                # )
+            )
         } else if (!is.na(strtoi(singleReadIndex)) &&
                    directionParam == "Reverse") {
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
@@ -762,6 +979,110 @@ consensusReadServer <- function(input, output, session) {
     output$SCStopCodonsDF <- renderDataTable({
         consensusParam[["stopCodonsDF"]]
     })
+
+
+
+
+
+
+
+    ############################################################################
+    ### SangerSingleRead (Function for singel read in consensusRead)
+    ############################################################################
+    output$primarySeqDF <- renderExcel({
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(singleReadIndex)) {
+            if (directionParam == "Forward") {
+                primarySeq <-unlist(strsplit(toString(
+                    SangerConsensus@
+                        forwardReadsList[[singleReadIndex]]@primarySeq), ""))
+
+            } else if (directionParam == "Reverse") {
+                primarySeq <- unlist(strsplit(toString(
+                    SangerConsensus@
+                        reverseReadsList[[singleReadIndex]]@primarySeq), ""))
+            }
+            primarySeqDF <- data.frame(
+                t(data.frame(primarySeq)), stringsAsFactors = FALSE)
+            colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
+            rownames(primarySeqDF) <- NULL
+            AstyleList <- getStopList(primarySeqDF, "A", "#1eff00")
+            TstyleList <- getStopList(primarySeqDF, "T", "#ff7a7a")
+            CstyleList <- getStopList(primarySeqDF, "C", "#7ac3ff")
+            GstyleList <- getStopList(primarySeqDF, "G", "#c9c9c9")
+            styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+            suppressMessages(
+                excelTable(data = primarySeqDF, defaultColWidth = 30,
+                           editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
+            )
+        }
+    })
+    output$secondSeqDF <- renderExcel({
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(singleReadIndex)) {
+            if (directionParam == "Forward") {
+                secondarySeq <-unlist(strsplit(toString(
+                    SangerConsensus@
+                        forwardReadsList[[singleReadIndex]]@secondarySeq), ""))
+            } else if (directionParam == "Reverse") {
+                secondarySeq <-unlist(strsplit(toString(
+                    SangerConsensus@
+                        reverseReadsList[[singleReadIndex]]@secondarySeq), ""))
+            }
+            secondarySeqDF <- data.frame(
+                t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
+            colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
+            rownames(secondarySeqDF) <- NULL
+            AstyleList <- getStopList(secondarySeqDF, "A", "#1eff00")
+            TstyleList <- getStopList(secondarySeqDF, "T", "#ff7a7a")
+            CstyleList <- getStopList(secondarySeqDF, "C", "#7ac3ff")
+            GstyleList <- getStopList(secondarySeqDF, "G", "#c9c9c9")
+            styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+            suppressMessages(
+                excelTable(data = secondarySeqDF, defaultColWidth = 30,
+                           editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
+            )
+        }
+    })
+    output$qualityScoreDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(strtoi(singleReadIndex)) &&
+            directionParam == "Forward") {
+            PhredScore <- SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@qualityPhredScores
+        } else if (!is.na(strtoi(singleReadIndex)) &&
+                   directionParam == "Reverse") {
+            PhredScore <- SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@qualityPhredScores
+
+        }
+        PhredScoreDF <- data.frame(
+            t(data.frame(PhredScore)), stringsAsFactors = FALSE)
+        colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+        rownames(PhredScoreDF) <- NULL
+        suppressMessages(
+            excelTable(data =
+                           PhredScoreDF, defaultColWidth = 30,
+                       editable = TRUE, rowResize = FALSE, columnResize = FALSE,
+                       allowInsertRow = FALSE, allowInsertColumn = FALSE,
+                       allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
+                       allowRenameColumn = FALSE, loadingSpin = TRUE)
+        )
+    })
 }
 
 
@@ -769,8 +1090,9 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-
-
+# sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+# singleReadIndex <- strtoi(sidebar_menu[[1]])
+# directionParam <- sidebar_menu[[2]]
 # if (!is.na(strtoi(singleReadIndex)) &&
 #     directionParam == "Forward") {
 #     SSReadBFN <- basename(SangerConsensus@forwardReadsList[[singleReadIndex]]@readFileName)
