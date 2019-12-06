@@ -551,108 +551,112 @@ consensusReadServer <- function(input, output, session) {
                                          "overflow-x: scroll;")
                     ),
                 ),
-                # box(title = tags$p(tagList(icon("dot-circle"),
-                #                            "Quality Report: "),
-                #                    style = "font-size: 26px;
-                #                            font-weight: bold;"),
-                #     solidHeader = TRUE, collapsible = TRUE,
-                #     status = "success", width = 12,
-                #     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                #     box(title = tags$p(tagList(icon("arrow-circle-right"),
-                #                                "Trimming Parameters Input"),
-                #                        style = "font-size: 24px;
-                #                            font-weight: bold;"),
-                #         collapsible = TRUE,
-                #         status = "success", width = 12,
-                #         fluidRow(
-                #             column(width = 12,
-                #                    uiOutput("TrimmingMethodSelectionOutput"),
-                #             ),
-                #         ),
-                #         column(width = 12,
-                #                uiOutput("TrimmingMethodUI"),
-                #         ),
-                #         actionBttn("startTrimmingButton",
-                #                    "Apply Trimming Parameters",
-                #                    style = "simple", color = "success",
-                #                    block = TRUE, size = "lg")
-                #     ),
-                #     box(title = tags$p(tagList(icon("arrow-circle-left"),
-                #                                "Trimmed Result Output"),
-                #                        style = "font-size: 24px;
-                #                            font-weight: bold;"),
-                #         collapsible = TRUE,
-                #         status = "success", width = 12,
-                #         fluidRow(
-                #             box(title = tags$p("Before Trimming",
-                #                                style = "font-size: 21px;
-                #                            font-weight: bold;"),
-                #                 collapsible = TRUE,
-                #                 status = "success", width = 12,
-                #                 column(width = 12,
-                #                        column(4,
-                #                               uiOutput("rawSeqLength") ,
-                #                        ),
-                #                        column(4,
-                #                               uiOutput("rawMeanQualityScore"),
-                #                        ),
-                #                        column(4,
-                #                               uiOutput("rawMinQualityScore"),
-                #                        ),
-                #                 ),
-                #             ),
-                #         ),
-                #         fluidRow(
-                #             box(title = tags$p("After Trimming",
-                #                                style = "font-size: 21px;
-                #                            font-weight: bold;"),
-                #                 collapsible = TRUE,
-                #                 status = "success", width = 12,
-                #                 column(width = 12,
-                #                        column(4,
-                #                               uiOutput("trimmedSeqLength"),
-                #                        ),
-                #                        column(4,
-                #                               uiOutput("trimmedMeanQualityScore"),
-                #                        ),
-                #                        column(4,
-                #                               uiOutput("trimmedMinQualityScore"),
-                #                        ),
-                #                 ),
-                #
-                #                 column(width = 12,
-                #                        column(4,
-                #                               uiOutput("trimmedStartPos") ,
-                #                        ),
-                #                        column(4,
-                #                               uiOutput("trimmedFinishPos") ,
-                #                        ),
-                #                        column(4,
-                #                               uiOutput("remainingRatio") ,
-                #                        )
-                #                 ),
-                #             ),
-                #         ),
-                #         tags$hr(
-                #             style = ("border-top: 6px double #A9A9A9;")),
-                #         fluidRow(
-                #             box(title = tags$p("Cumulative Ratio Plot",
-                #                                style = "font-size: 21px;
-                #                            font-weight: bold;"),
-                #                 collapsible = TRUE,
-                #                 status = "success", width = 12,
-                #                 plotlyOutput("qualityTrimmingRatioPlot") %>%
-                #                     withSpinner()),
-                #             box(title = tags$p("Cumulative Ratio Plot",
-                #                                style = "font-size: 21px;
-                #                            font-weight: bold;"),
-                #                 collapsible = TRUE,
-                #                 status = "success", width = 12,
-                #                 plotlyOutput("qualityQualityBasePlot") %>%
-                #                     withSpinner()),
-                #         ),
-                #     ),
-                # ),
+
+
+
+
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Quality Report: "),
+                                   style = "font-size: 26px;
+                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    box(title = tags$p(tagList(icon("arrow-circle-right"),
+                                               "Trimming Parameters Input"),
+                                       style = "font-size: 24px;
+                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        fluidRow(
+                            column(width = 12,
+                                   uiOutput("TrimmingMethodSelectionOutput"),
+                            ),
+                        ),
+                        column(width = 12,
+                               uiOutput("TrimmingMethodUI"),
+                        ),
+                        actionBttn("startTrimmingButton",
+                                   "Apply Trimming Parameters",
+                                   style = "simple", color = "success",
+                                   block = TRUE, size = "lg")
+                    ),
+                    box(title = tags$p(tagList(icon("arrow-circle-left"),
+                                               "Trimmed Result Output"),
+                                       style = "font-size: 24px;
+                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        fluidRow(
+                            box(title = tags$p("Before Trimming",
+                                               style = "font-size: 21px;
+                                           font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       column(4,
+                                              uiOutput("rawSeqLength") ,
+                                       ),
+                                       column(4,
+                                              uiOutput("rawMeanQualityScore"),
+                                       ),
+                                       column(4,
+                                              uiOutput("rawMinQualityScore"),
+                                       ),
+                                ),
+                            ),
+                        ),
+                        fluidRow(
+                            box(title = tags$p("After Trimming",
+                                               style = "font-size: 21px;
+                                           font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       column(4,
+                                              uiOutput("trimmedSeqLength"),
+                                       ),
+                                       column(4,
+                                              uiOutput("trimmedMeanQualityScore"),
+                                       ),
+                                       column(4,
+                                              uiOutput("trimmedMinQualityScore"),
+                                       ),
+                                ),
+
+                                column(width = 12,
+                                       column(4,
+                                              uiOutput("trimmedStartPos") ,
+                                       ),
+                                       column(4,
+                                              uiOutput("trimmedFinishPos") ,
+                                       ),
+                                       column(4,
+                                              uiOutput("remainingRatio") ,
+                                       )
+                                ),
+                            ),
+                        ),
+                        tags$hr(
+                            style = ("border-top: 6px double #A9A9A9;")),
+                        fluidRow(
+                            box(title = tags$p("Cumulative Ratio Plot",
+                                               style = "font-size: 21px;
+                                           font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                plotlyOutput("qualityTrimmingRatioPlot") %>%
+                                    withSpinner()),
+                            box(title = tags$p("Cumulative Ratio Plot",
+                                               style = "font-size: 21px;
+                                           font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                plotlyOutput("qualityQualityBasePlot") %>%
+                                    withSpinner()),
+                        ),
+                    ),
+                ),
                 # box(title = tags$p(tagList(icon("dot-circle"),
                 #                            "Chromatogram: "),
                 #                    style = "font-size: 26px;
@@ -1178,6 +1182,120 @@ consensusReadServer <- function(input, output, session) {
                        style = styleList, loadingSpin = TRUE)
         )
     })
+    ############################################################################
+    ### Trimming method selection functions
+    ############################################################################
+    ### ------------------------------------------------------------------------
+    ### Trimming Method Selection
+    ### ------------------------------------------------------------------------
+    output$TrimmingMethodSelectionOutput <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                QualityReport@TrimmingMethod == "M1") {
+                tagList(icon("check-circle"),
+                        "Your trimming method selection :
+                        'Logarithmic Scale Trimming'")
+            } else if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                       QualityReport@TrimmingMethod == "M2") {
+                tagList(icon("check-circle"),
+                        "Your trimming method selection :
+                        'Logarithmic Scale Sliding Window Trimming'")
+            }
+        }
+    })
+
+    output$TrimmingMethodUI <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(strtoi(singleReadIndex))) {
+            ## For method, everyone is same, so just pick forward one.
+            if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                QualityReport@TrimmingMethod == "M1") {
+                if (directionParam == "Forward") {
+                    if (is.null(SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                                QualityReport@M1TrimmingCutoff)) {
+                        SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                            QualityReport@M1TrimmingCutoff <<-  0.0001
+                    }
+                } else if (directionParam == "Reverse") {
+                    if (is.null(SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                                QualityReport@M1TrimmingCutoff)) {
+                        SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                            QualityReport@M1TrimmingCutoff <<-  0.0001
+                    }
+                }
+                fluidRow(
+                    column(6,
+                           uiOutput("M1TrimmingCutoff") ,
+                           tags$ul(
+                               textInput("M1TrimmingCutoffText",
+                                         label = p("Input Value"),
+                                         value = toString(
+                                             trimmedParam[["M1TrimmingCutoff"]]),
+                                         width = '70%')
+                           ),
+                    ),
+                )
+            } else if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                       QualityReport@TrimmingMethod == "M2") {
+                if (directionParam == "Forward") {
+                    if (is.null(SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                                QualityReport@M2CutoffQualityScore)) {
+                        SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                            QualityReport@M2CutoffQualityScore <<-  20
+                    }
+                    if (is.null(SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                                QualityReport@M2SlidingWindowSize )) {
+                        SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                            QualityReport@M2SlidingWindowSize <<-  5
+                    }
+                } else if (directionParam == "Reverse") {
+                    if (is.null(SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                                QualityReport@M2CutoffQualityScore)) {
+                        SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                            QualityReport@M2CutoffQualityScore <<-  20
+                    }
+                    if (is.null(SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                                QualityReport@M2SlidingWindowSize )) {
+                        SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                            QualityReport@M2SlidingWindowSize <<-  5
+                    }
+                }
+                fluidRow(
+                    column(6,
+                           uiOutput("M2CutoffQualityScore") ,
+                           tags$ul(
+                               textInput("M2CutoffQualityScoreText",
+                                         label = p("Input Value"),
+                                         value = toString(
+                                             trimmedParam[["M2CutoffQualityScore"]]),
+                                         width = '70%')
+                           ),
+                    ),
+                    column(6,
+                           uiOutput("M2SlidingWindowSize") ,
+                           tags$ul(
+                               textInput("M2SlidingWindowSizeText",
+                                         label = p("Input Value"),
+                                         value = toString(
+                                             trimmedParam[["M2SlidingWindowSize"]]),
+                                         width = '70%')
+                           ),
+                    ),
+                )
+            }
+        }
+    })
+    ### ------------------------------------------------------------------------
+    ### Quality trimming related (value box)
+    ### ------------------------------------------------------------------------
+    valueBoxM1TrimmingCutoff (input, output, session)
+    valueBoxM2CutoffQualityScore (input, output, session)
+    valueBoxM2SlidingWindowSize (input, output, session)
 }
 
 
