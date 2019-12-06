@@ -139,17 +139,16 @@ consensusReadServer <- function(input, output, session) {
 
     # primaryAASeqS1DF
     forwardReadPrimAASeqS1DF <- lapply(1:forwardReadNum, function(i) {
-        AAString <- SangerConsensus@forwardReadsList[[i]]@primaryAASeqS1
-        AAStringDF <- data.frame(
-            t(data.frame(AAString)), stringsAsFactors = FALSE)
+        AAString <- data.frame(SangerConsensus@forwardReadsList[[i]]@primaryAASeqS1)
+        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
         colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
         rownames(AAStringDF) <- NULL
         return(AAStringDF)
     })
     reverseReadPrimAASeqS1DF <- lapply(1:reverseReadNum, function(i) {
-        AAString <- SangerConsensus@reverseReadsList[[i]]@primaryAASeqS1
+        AAString <- data.frame(SangerConsensus@reverseReadsList[[i]]@primaryAASeqS1)
         AAStringDF <- data.frame(
-            t(data.frame(AAString)), stringsAsFactors = FALSE)
+            t(AAString), stringsAsFactors = FALSE)
         colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
         rownames(AAStringDF) <- NULL
         return(AAStringDF)
@@ -159,17 +158,19 @@ consensusReadServer <- function(input, output, session) {
 
     # primaryAASeqS2DF
     forwardReadPrimAASeqS2DF <- lapply(1:forwardReadNum, function(i) {
-        AAString <- SangerConsensus@forwardReadsList[[i]]@primaryAASeqS2
+        AAString <- data.frame(SangerConsensus@forwardReadsList[[i]]@primaryAASeqS2)
+        AAString <- rbind(NA, AAString)
         AAStringDF <- data.frame(
-            t(data.frame(AAString)), stringsAsFactors = FALSE)
+            t(AAString), stringsAsFactors = FALSE)
         colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
         rownames(AAStringDF) <- NULL
         return(AAStringDF)
     })
     reverseReadPrimAASeqS2DF <- lapply(1:reverseReadNum, function(i) {
-        AAString <- SangerConsensus@reverseReadsList[[i]]@primaryAASeqS2
+        AAString <- data.frame(SangerConsensus@reverseReadsList[[i]]@primaryAASeqS2)
+        AAString <- rbind(NA, AAString)
         AAStringDF <- data.frame(
-            t(data.frame(AAString)), stringsAsFactors = FALSE)
+            t(AAString), stringsAsFactors = FALSE)
         colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
         rownames(AAStringDF) <- NULL
         return(AAStringDF)
@@ -179,17 +180,19 @@ consensusReadServer <- function(input, output, session) {
 
     # primaryAASeqS3DF
     forwardReadPrimAASeqS3DF <- lapply(1:forwardReadNum, function(i) {
-        AAString <- SangerConsensus@forwardReadsList[[i]]@primaryAASeqS3
+        AAString <- data.frame(SangerConsensus@forwardReadsList[[i]]@primaryAASeqS3)
+        AAString <- rbind(NA, NA, AAString)
         AAStringDF <- data.frame(
-            t(data.frame(AAString)), stringsAsFactors = FALSE)
+            t(AAString), stringsAsFactors = FALSE)
         colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
         rownames(AAStringDF) <- NULL
         return(AAStringDF)
     })
     reverseReadPrimAASeqS3DF <- lapply(1:reverseReadNum, function(i) {
-        AAString <- SangerConsensus@reverseReadsList[[i]]@primaryAASeqS3
+        AAString <- data.frame(SangerConsensus@reverseReadsList[[i]]@primaryAASeqS3)
+        AAString <- rbind(NA, NA, AAString)
         AAStringDF <- data.frame(
-            t(data.frame(AAString)), stringsAsFactors = FALSE)
+            t(AAString), stringsAsFactors = FALSE)
         colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
         rownames(AAStringDF) <- NULL
         return(AAStringDF)
@@ -1388,8 +1391,7 @@ consensusReadServer <- function(input, output, session) {
     output$PrimAASeqS1DF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        width <- rep(90, length(SangerSingleReadPrimAASeqS1DF[[1]]))
-
+        width <- rep(90, length(SangerSingleReadPrimAASeqS1DF[[singleReadIndex]]))
         suppressMessages(
             excelTable(data =
                            SangerSingleReadPrimAASeqS1DF[[singleReadIndex]],
@@ -1405,9 +1407,8 @@ consensusReadServer <- function(input, output, session) {
     output$PrimAASeqS2DF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        width <- rep(90, length(SangerSingleReadPrimAASeqS2DF[[1]])-1)
+        width <- rep(90, length(SangerSingleReadPrimAASeqS2DF[[singleReadIndex]])-1)
         widthFinal <- c(30, width)
-
         suppressMessages(
             excelTable(data =
                            SangerSingleReadPrimAASeqS2DF[[singleReadIndex]],
@@ -1416,9 +1417,9 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       # style = list(
-                       #     "A1" = 'background-color: black;',
-                       # ),
+                       style = list(
+                           "A1" = 'background-color: black;'
+                       ),
                        loadingSpin = TRUE)
         )
     })
@@ -1426,7 +1427,7 @@ consensusReadServer <- function(input, output, session) {
     output$PrimAASeqS3DF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        width <- rep(90, length(SangerSingleReadPrimAASeqS3DF[[1]])-2)
+        width <- rep(90, length(SangerSingleReadPrimAASeqS3DF[[singleReadIndex]])-2)
         widthFinal <- c(30, 30, width)
 
         suppressMessages(
@@ -1437,10 +1438,10 @@ consensusReadServer <- function(input, output, session) {
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       # style = list(
-                       #     "A1" = 'background-color: black;',
-                       #     "A2" = 'background-color: black;',
-                       # ),
+                       style = list(
+                           "A1" = 'background-color: black;',
+                           "B1" = 'background-color: black;'
+                       ),
                        loadingSpin = TRUE)
         )
     })
