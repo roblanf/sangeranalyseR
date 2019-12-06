@@ -884,7 +884,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                           ")"), style = "font-style:italic")),
                         box(title = tags$p(
                             tagList(icon("dot-circle"),
-                                    "Primary & Secondary Sequences:"),
+                                    "Primary, Secondary DNA Sequences & Amino Acid Sequence (Before Trimming):"),
                                            style = "font-size: 26px;
                                        font-weight: bold;"),
                             solidHeader = TRUE, collapsible = TRUE,
@@ -896,6 +896,22 @@ alignedConsensusSetServer <- function(input, output, session) {
                                           style = "font-size: 22px;
                                        font-weight: bold;"),
                                    excelOutput("primarySeqDF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "Secondary Sequence"),
+                                          style = "font-size: 22px;
+                                       font-weight: bold;"),
+                                   excelOutput("secondSeqDF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "Quality Phred Score"),
+                                          style = "font-size: 22px;
+                                       font-weight: bold;"),
+                                   excelOutput("qualityScoreDF",
                                                width = "100%", height = "50"),
                                    tags$br(),
                                    tags$br(),
@@ -920,22 +936,6 @@ alignedConsensusSetServer <- function(input, output, session) {
                                           style = "font-size: 22px;
                                        font-weight: bold;"),
                                    excelOutput("PrimAASeqS3DF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "Secondary Sequence"),
-                                          style = "font-size: 22px;
-                                       font-weight: bold;"),
-                                   excelOutput("secondSeqDF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "Quality Phred Score"),
-                                          style = "font-size: 22px;
-                                       font-weight: bold;"),
-                                   excelOutput("qualityScoreDF",
                                                width = "100%", height = "50"),
                                    style = paste("overflow-y: hidden;",
                                                  "overflow-x: scroll;")
@@ -1975,6 +1975,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                 excelTable(data =
                                SangerCSetParam[[consensusReadIndex]]$
                                SangerSingleReadPrimAASeqS1DF[[singleReadIndex]],
+                           columns = data.frame(width = width),
                            defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
                            columnResize = FALSE, allowInsertRow = FALSE,
                            allowInsertColumn = FALSE, allowDeleteRow = FALSE,
@@ -1990,7 +1991,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         if (!is.na(consensusReadIndex) &&
             !is.na(singleReadIndex)) {
             width <- rep(90, length(SangerCSetParam[[consensusReadIndex]]$
-                                        SangerSingleReadPrimAASeqS2DF[[singleReadIndex]]))
+                                        SangerSingleReadPrimAASeqS2DF[[singleReadIndex]])-1)
+            widthFinal <- c(30, width)
             styleList <-
                 getStopList (SangerCSetParam[[consensusReadIndex]]$
                                  SangerSingleReadPrimAASeqS2DF[[singleReadIndex]],
@@ -2000,6 +2002,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                 excelTable(data =
                                SangerCSetParam[[consensusReadIndex]]$
                                SangerSingleReadPrimAASeqS2DF[[singleReadIndex]],
+                           columns = data.frame(width = widthFinal),
                            defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
                            columnResize = FALSE, allowInsertRow = FALSE,
                            allowInsertColumn = FALSE, allowDeleteRow = FALSE,
@@ -2015,7 +2018,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         if (!is.na(consensusReadIndex) &&
             !is.na(singleReadIndex)) {
             width <- rep(90, length(SangerCSetParam[[consensusReadIndex]]$
-                                        SangerSingleReadPrimAASeqS3DF[[singleReadIndex]]))
+                                        SangerSingleReadPrimAASeqS3DF[[singleReadIndex]])-2)
+            widthFinal <- c(30, 30, width)
             styleList <-
                 getStopList (SangerCSetParam[[consensusReadIndex]]$
                                  SangerSingleReadPrimAASeqS3DF[[singleReadIndex]],
@@ -2026,6 +2030,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                 excelTable(data =
                                SangerCSetParam[[consensusReadIndex]]$
                                SangerSingleReadPrimAASeqS3DF[[singleReadIndex]],
+                           columns = data.frame(width = widthFinal),
                            defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
                            columnResize = FALSE, allowInsertRow = FALSE,
                            allowInsertColumn = FALSE, allowDeleteRow = FALSE,

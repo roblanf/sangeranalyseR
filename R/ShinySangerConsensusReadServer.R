@@ -200,21 +200,6 @@ consensusReadServer <- function(input, output, session) {
     SangerSingleReadPrimAASeqS3DF <- c(forwardReadPrimAASeqS3DF,
                                        reverseReadPrimAASeqS3DF)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     trimmedRV <- reactiveValues(rawSeqLength            = 0,
                                 rawMeanQualityScore     = 0,
                                 rawMinQualityScore      = 0,
@@ -581,29 +566,6 @@ consensusReadServer <- function(input, output, session) {
                 trimmedRV[["remainingRatio"]] <<-
                     round(SangerSingleReadQualReport[[singleReadIndex]]@
                               remainingRatio * 100, 2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 fluidRow(
                     useShinyjs(),
                     box(title = tags$p(tagList(icon("dot-circle"),
@@ -619,7 +581,7 @@ consensusReadServer <- function(input, output, session) {
                                           strtoi(singleReadIndex)]],
                                       ")"), style = "font-style:italic")),
                     box(title = tags$p(tagList(icon("dot-circle"),
-                                              "Primary & Secondary Sequences:"),
+                                               "Primary, Secondary DNA Sequences & Amino Acid Sequence (Before Trimming):"),
                                        style = "font-size: 26px;
                                        font-weight: bold;"),
                         solidHeader = TRUE, collapsible = TRUE,
@@ -631,6 +593,22 @@ consensusReadServer <- function(input, output, session) {
                                       style = "font-size: 22px;
                                        font-weight: bold;"),
                                excelOutput("primarySeqDF",
+                                           width = "100%", height = "50"),
+                               tags$br(),
+                               tags$br(),
+                               tags$p(tagList(icon("bars"),
+                                              "Secondary Sequence"),
+                                      style = "font-size: 22px;
+                                       font-weight: bold;"),
+                               excelOutput("secondSeqDF",
+                                           width = "100%", height = "50"),
+                               tags$br(),
+                               tags$br(),
+                               tags$p(tagList(icon("bars"),
+                                              "Quality Phred Score"),
+                                      style = "font-size: 22px;
+                                       font-weight: bold;"),
+                               excelOutput("qualityScoreDF",
                                            width = "100%", height = "50"),
                                tags$br(),
                                tags$br(),
@@ -656,53 +634,9 @@ consensusReadServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                excelOutput("PrimAASeqS3DF",
                                            width = "100%", height = "50"),
-                               tags$br(),
-                               tags$br(),
-                               tags$p(tagList(icon("bars"),
-                                              "Secondary Sequence"),
-                                      style = "font-size: 22px;
-                                       font-weight: bold;"),
-                               excelOutput("secondSeqDF",
-                                           width = "100%", height = "50"),
-                               tags$br(),
-                               tags$br(),
-                               tags$p(tagList(icon("bars"),
-                                              "Quality Phred Score"),
-                                      style = "font-size: 22px;
-                                       font-weight: bold;"),
-                               excelOutput("qualityScoreDF",
-                                           width = "100%", height = "50"),
                                style = paste("overflow-y: hidden;",
                                              "overflow-x: scroll;")
                         ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     ),
                     box(title = tags$p(tagList(icon("dot-circle"),
                                                "Quality Report: "),
@@ -1364,24 +1298,6 @@ consensusReadServer <- function(input, output, session) {
             getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
                         "G", "#c9c9c9")
         styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         suppressMessages(
             excelTable(data =
                            SangerSingleReadPrimSeqDF[[singleReadIndex]],
@@ -1409,27 +1325,6 @@ consensusReadServer <- function(input, output, session) {
             getStopList(SangerSingleReadPrimSeqDF[[singleReadIndex]],
                         "G", "#c9c9c9")
         styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         suppressMessages(
             excelTable(data =
                            SangerSingleReadSecoSeqDF[[singleReadIndex]],
@@ -1454,37 +1349,6 @@ consensusReadServer <- function(input, output, session) {
                        loadingSpin = TRUE)
         )
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     output$PrimAASeqS1DF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -1708,6 +1572,10 @@ consensusReadServer <- function(input, output, session) {
                     SangerConsensus@reverseReadsList[[index]]@secondarySeq <-
                         hetcalls@secondarySeq
                 }
+
+
+
+
 
 
 
