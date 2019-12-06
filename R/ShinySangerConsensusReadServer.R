@@ -463,9 +463,23 @@ consensusReadServer <- function(input, output, session) {
                 ),
             )
         } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Forward") {
+                   (directionParam == "Forward" ||
+                    directionParam == "Reverse")) {
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
             h1(input$sidebar_menu)
+            if (directionParam == "Forward") {
+                SSReadBFN <- basename(
+                    SangerConsensus@
+                        forwardReadsList[[singleReadIndex]]@readFileName)
+                SSReadAFN <- SangerConsensus@
+                    forwardReadsList[[singleReadIndex]]@readFileName
+            } else if (directionParam == "Reverse") {
+                SSReadBFN <- basename(
+                    SangerConsensus@
+                        reverseReadsList[[singleReadIndex]]@readFileName)
+                SSReadAFN <- SangerConsensus@
+                    reverseReadsList[[singleReadIndex]]@readFileName
+            }
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p(tagList(icon("dot-circle"),
@@ -474,11 +488,9 @@ consensusReadServer <- function(input, output, session) {
                                              font-weight: bold;"),
                     solidHeader = TRUE,
                     status = "success", width = 12,
-                    h1(paste0(
-                        forwardReadBFN[[strtoi(singleReadIndex)]])),
-                    tags$h5(paste("( full path:",
-                                  forwardReadAFN[[strtoi(singleReadIndex)]],
-                                  ")"), style = "font-style:italic")),
+                    h1(paste0(SSReadBFN)),
+                    tags$h5(paste("( full path:", SSReadAFN, ")"),
+                            style = "font-style:italic")),
                 box(title =
                         tags$p(tagList(icon("dot-circle"),
                                        "Primary, Secondary DNA Sequences &
@@ -519,22 +531,22 @@ consensusReadServer <- function(input, output, session) {
                                            font-weight: bold;"),
                            excelOutput("PrimAASeqS1DF",
                                        width = "100%", height = "50"),
-                           # tags$br(),
-                           # tags$br(),
-                           # tags$p(tagList(icon("bars"),
-                           #                "AA Sequence 2"),
-                           #        style = "font-size: 22px;
-                           #                 font-weight: bold;"),
-                           # excelOutput("PrimAASeqS2DF",
-                           #             width = "100%", height = "50"),
-                           # tags$br(),
-                           # tags$br(),
-                           # tags$p(tagList(icon("bars"),
-                           #                "AA Sequence 3"),
-                           #        style = "font-size: 22px;
-                           #                 font-weight: bold;"),
-                           # excelOutput("PrimAASeqS3DF",
-                           #             width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "AA Sequence 2"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("PrimAASeqS2DF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "AA Sequence 3"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("PrimAASeqS3DF",
+                                       width = "100%", height = "50"),
                            style = paste("overflow-y: hidden;",
                                          "overflow-x: scroll;")
                     ),
@@ -948,6 +960,9 @@ consensusReadServer <- function(input, output, session) {
     ############################################################################
     ### SangerSingleRead (Function for singel read in consensusRead)
     ############################################################################
+    ### ------------------------------------------------------------------------
+    ### Primary dataframe
+    ### ------------------------------------------------------------------------
     output$primarySeqDF <- renderExcel({
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -983,6 +998,9 @@ consensusReadServer <- function(input, output, session) {
             )
         }
     })
+    ### ------------------------------------------------------------------------
+    ### Secondary dataframe
+    ### ------------------------------------------------------------------------
     output$secondSeqDF <- renderExcel({
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -1017,6 +1035,9 @@ consensusReadServer <- function(input, output, session) {
             )
         }
     })
+    ### ------------------------------------------------------------------------
+    ### Quality Score dataframe
+    ### ------------------------------------------------------------------------
     output$qualityScoreDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
@@ -1045,7 +1066,11 @@ consensusReadServer <- function(input, output, session) {
                        loadingSpin = TRUE)
         )
     })
+    ### ------------------------------------------------------------------------
+    ### Primary Amino Acids dataframe (1)
+    ### ------------------------------------------------------------------------
     output$PrimAASeqS1DF <- renderExcel({
+        ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1064,9 +1089,86 @@ consensusReadServer <- function(input, output, session) {
         colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
         rownames(AAStringDF) <- NULL
         width <- rep(90, length(AAStringDF))
-        styleList1 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
-        styleList2 <- SetAllStyleList(AAStringDF, "#ecffd9")
+        styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+        styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
         styleList <- c(styleList1, styleList2)
+        suppressMessages(
+            excelTable(data = AAStringDF, columns = data.frame(width = width),
+                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       style = styleList, loadingSpin = TRUE)
+        )
+    })
+    ### ------------------------------------------------------------------------
+    ### Primary Amino Acids dataframe (2)
+    ### ------------------------------------------------------------------------
+    output$PrimAASeqS2DF <- renderExcel({
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(strtoi(singleReadIndex)) &&
+            directionParam == "Forward") {
+            AAString <- data.frame(SangerConsensus@
+                                       forwardReadsList[[singleReadIndex]]@
+                                       primaryAASeqS2)
+        } else if (!is.na(strtoi(singleReadIndex)) &&
+                   directionParam == "Reverse") {
+            AAString <- data.frame(SangerConsensus@
+                                       reverseReadsList[[singleReadIndex]]@
+                                       primaryAASeqS2)
+        }
+        AAString <- rbind(NA, AAString)
+        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        width <- rep(90, length(AAStringDF) - 1)
+        width <- c(30, width)
+        styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+        styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+        styleList <- c(styleList1, styleList2)
+        styleList[['A1']] <- 'background-color: black;'
+        suppressMessages(
+            excelTable(data = AAStringDF, columns = data.frame(width = width),
+                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       style = styleList, loadingSpin = TRUE)
+        )
+    })
+    ### ------------------------------------------------------------------------
+    ### Primary Amino Acids dataframe (3)
+    ### ------------------------------------------------------------------------
+    output$PrimAASeqS3DF <- renderExcel({
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(strtoi(singleReadIndex)) &&
+            directionParam == "Forward") {
+            AAString <- data.frame(SangerConsensus@
+                                       forwardReadsList[[singleReadIndex]]@
+                                       primaryAASeqS3)
+        } else if (!is.na(strtoi(singleReadIndex)) &&
+                   directionParam == "Reverse") {
+            AAString <- data.frame(SangerConsensus@
+                                       reverseReadsList[[singleReadIndex]]@
+                                       primaryAASeqS3)
+        }
+        AAString <- rbind(NA, NA, AAString)
+        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        width <- rep(90, length(AAStringDF) - 2)
+        width <- c(30, 30, width)
+        styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+        styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+        styleList <- c(styleList1, styleList2)
+        styleList[['A1']] <- 'background-color: black;'
+        styleList[['B1']] <- 'background-color: black;'
         suppressMessages(
             excelTable(data = AAStringDF, columns = data.frame(width = width),
                        defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
