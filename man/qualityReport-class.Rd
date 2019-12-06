@@ -10,13 +10,9 @@ An S4 class for quality report for a SangerSingleRead S4 object
 \section{Slots}{
 
 \describe{
-\item{\code{qualityScoresID}}{.}
-
 \item{\code{qualityPhredScoresRaw}}{.}
 
 \item{\code{qualityPhredScores}}{.}
-
-\item{\code{qualityBaseScoresRaw}}{.}
 
 \item{\code{qualityBaseScores}}{.}
 

@@ -410,14 +410,35 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
     output$singleReadMenu <- renderMenu({
         SangerCSNum <- length(SangerCSetParam)
         menu_list <- sapply(1:SangerCSNum, function(i) {
-            SangerSingleReadNum <- SangerCSetParam[[i]]$SangerSingleReadNum
-            SangerCSMenuSubItem <- sapply(1:SangerSingleReadNum, function(j) {
-                list(menuSubItem(text = SangerCSetParam[[i]]$SangerSingleReadFeature[[j]],
-                                 tabName = paste0(i, " Consensus Read - ", SangerCSetParam[[i]]$SangerSingleReadFeature[[j]])))
+            forwardReadNum <- SangerCSetParam[[i]]$forwardReadNum
+            reverseReadNum <- SangerCSetParam[[i]]$reverseReadNum
+
+            forwardReadFeature <- SangerCSetParam[[i]]$forwardReadFeature
+            reverseReadFeature <- SangerCSetParam[[i]]$reverseReadFeature
+            fmenuSub_list <- sapply(1:forwardReadNum, function(j) {
+                list(menuSubItem(text = paste0(i, " CR - ", forwardReadFeature[j]),
+                                 tabName = paste0(i, " CR - ", forwardReadFeature[j]),
+                                 icon = icon("minus")))
             })
+            rmenuSub_list <- sapply(1:reverseReadNum, function(j) {
+                list(menuSubItem(text = paste0(i, " CR - ", reverseReadFeature[j]),
+                                 tabName = paste0(i, " CR - ", reverseReadFeature[j]),
+                                 icon = icon("minus")))
+            })
+            fmenu_list <- menuItem(text = "Forward Reads",
+                                   tabName = "forwardReads",
+                                   icon = icon("minus"), fmenuSub_list)
+
+            rmenu_list <- menuItem(text = "Reverse Reads",
+                                   tabName = "reverseReads",
+                                   icon = icon("minus"), rmenuSub_list)
+            SangerCSMenuSubItem <- list(fmenu_list, rmenu_list)
+
             SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerCSetParam[[i]]$SCName, "Overview"),
-                                                      tabName = paste0(i, " Sanger Consensus Read Overview"), icon = icon("align-left"))),
+                                                      tabName = paste0(i, " Sanger Consensus Read Overview"),
+                                                      icon = icon("align-left"))),
                                      SangerCSMenuSubItem)
+
             SangerCSetParam[[i]]$SCName
             list(menuItem(text = SangerCSetParam[[i]]$SCName,
                           tabName = SangerCSetParam[[i]]$SCName,
