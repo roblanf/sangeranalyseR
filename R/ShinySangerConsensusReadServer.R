@@ -626,39 +626,50 @@ consensusReadServer <- function(input, output, session) {
                         status = "success", width = 12,
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                         column(width = 12,
-                               tags$p("Primary Sequence",
-                                      style = "font-size: 15px;
-                                       font-weight: bold;"),
-
-                               tags$p(tagList(icon("arrow-circle-right"),
+                               tags$p(tagList(icon("bars"),
                                               "Primary Sequence"),
-                                      style = "font-size: 24px;
+                                      style = "font-size: 22px;
                                        font-weight: bold;"),
                                excelOutput("primarySeqDF",
                                            width = "100%", height = "50"),
-                               tags$p("AA Sequence 1",
-                                      style = "font-size: 15px;
+                               tags$br(),
+                               tags$br(),
+                               tags$p(tagList(icon("bars"),
+                                              "AA Sequence 1"),
+                                      style = "font-size: 22px;
                                        font-weight: bold;"),
                                excelOutput("PrimAASeqS1DF",
                                            width = "100%", height = "50"),
-                               tags$p("AA Sequence 2",
-                                      style = "font-size: 15px;
-                                              font-weight: bold;"),
+                               tags$br(),
+                               tags$br(),
+                               tags$p(tagList(icon("bars"),
+                                              "AA Sequence 2"),
+                                      style = "font-size: 22px;
+                                       font-weight: bold;"),
                                excelOutput("PrimAASeqS2DF",
                                            width = "100%", height = "50"),
-                               tags$p("AA Sequence 3",
-                                      style = "font-size: 15px;
-                                              font-weight: bold;"),
+                               tags$br(),
+                               tags$br(),
+                               tags$p(tagList(icon("bars"),
+                                              "AA Sequence 3"),
+                                      style = "font-size: 22px;
+                                       font-weight: bold;"),
                                excelOutput("PrimAASeqS3DF",
                                            width = "100%", height = "50"),
-                               tags$p("Secondary Sequence",
-                                      style = "font-size: 15px;
-                                              font-weight: bold;"),
+                               tags$br(),
+                               tags$br(),
+                               tags$p(tagList(icon("bars"),
+                                              "Secondary Sequence"),
+                                      style = "font-size: 22px;
+                                       font-weight: bold;"),
                                excelOutput("secondSeqDF",
                                            width = "100%", height = "50"),
-                               tags$p("Quality Phred Score",
-                                      style = "font-size: 15px;
-                                              font-weight: bold;"),
+                               tags$br(),
+                               tags$br(),
+                               tags$p(tagList(icon("bars"),
+                                              "Quality Phred Score"),
+                                      style = "font-size: 22px;
+                                       font-weight: bold;"),
                                excelOutput("qualityScoreDF",
                                            width = "100%", height = "50"),
                                style = paste("overflow-y: hidden;",
