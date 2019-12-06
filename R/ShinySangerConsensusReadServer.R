@@ -32,16 +32,15 @@ consensusReadServer <- function(input, output, session) {
     reverseReadNum <- length((SangerConsensus)@reverseReadsList)
     SangerSingleReadNum <- forwardReadNum + reverseReadNum
 
-    # Forward & reverse reads list
-    SangerConsensusFRReadsList <- c(SangerConsensus@forwardReadsList,
-                                    SangerConsensus@reverseReadsList)
-
-    # readFileName (basename)
+    # readFileName (basename) (Fixed)
     forwardReadBFN <- sapply(1:forwardReadNum, function(i)
         basename(SangerConsensus@forwardReadsList[[i]]@readFileName))
     reverseReadBFN <- sapply(1:reverseReadNum, function(i)
         basename(SangerConsensus@reverseReadsList[[i]]@readFileName))
     SangerSingleReadBFN <- c(forwardReadBFN, reverseReadBFN)
+
+
+
 
     # readFileName (absolute)
     forwardReadAFN <- sapply(1:forwardReadNum, function(i)
@@ -200,7 +199,6 @@ consensusReadServer <- function(input, output, session) {
     SangerSingleReadPrimAASeqS3DF <- c(forwardReadPrimAASeqS3DF,
                                        reverseReadPrimAASeqS3DF)
 
-
     ### ------------------------------------------------------------------------
     ### ConsensusRead reactiveValue
     ### ------------------------------------------------------------------------
@@ -223,30 +221,6 @@ consensusReadServer <- function(input, output, session) {
                                     primaryAASeqS1 = 0,
                                     primaryAASeqS2 = 0,
                                     primaryAASeqS3 = 0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     trimmedRV <- reactiveValues(rawSeqLength            = 0,
                                 rawMeanQualityScore     = 0,
@@ -286,8 +260,271 @@ consensusReadServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[2]]
         if (input$sidebar_menu == "Sanger Consensus Read Overview") {
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
-            h1(input$sidebar_menu)
+            # h1(input$sidebar_menu)
+            ### ------------------------------------------------------------
+            ### First assign the ChromatogramParam parameter
+            ### ------------------------------------------------------------
+            ### ----------------------------------------------------------------
+            ### Dynamic page navigation: consensusRead content overview
+            ### ----------------------------------------------------------------
+            fluidRow(
+                useShinyjs(),
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Basic Information: "),
+                                   style = "font-size: 26px;
+                                   font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 2px hidden #A9A9A9;")),
+                    fluidRow(
+                        column(width = 12,
+                               actionBttn("recalculateButton",
+                                          "Re-calculate consensus read",
+                                          icon = icon("calculator"),
+                                          style = "simple", color = "danger",
+                                          block = TRUE, size = "lg")
+                        ),
+                        column(12,
+                               tags$hr(
+                                   style = ("border-top: 2px hidden #A9A9A9;")),
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Output Directory: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(shinyDirectory),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                "Raw ABI Parent Directory:"),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerConsensus@parentDirectory),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Consenesus Read Name: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerConsensus@consensusReadName),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Trimming Method: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SCTrimmingMethodName),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Forward Suffix RegExp: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerConsensus@suffixForwardRegExp),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Forward Read Number: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(forwardReadNum),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Reverse Suffix RegExp: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerConsensus@suffixReverseRegExp),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Reverse Read Number: "),
+                                             style = "font-size: 20px;
+                                       font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(reverseReadNum),
+                               )
+                        ),
+                    ),
+                    ################################################
+                    #### Add this after having reference sample ####
+                    ################################################
+                    # If it is null
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    box(title = tags$p("Consensus Read Parameters",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(3,
+                               uiOutput("SCMinReadsNum") ,
+                        ),
+                        column(3,
+                               uiOutput("SCMinReadLength")  ,
+                        ),
+                        column(3,
+                               uiOutput("SCMinFractionCall") ,
+                        ),
+                        column(3,
+                               uiOutput("SCMaxFractionLost") ,
+                        ),
+                        column(3,
+                               uiOutput("SCAcceptStopCodons") ,
+                        ),
+                        column(3,
+                               uiOutput("SCReadingFrame") ,
+                        ),
+                    ),
+                    box(title = tags$p("Genetic Code Data Frame",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 2,
+                               tags$p("Tri-nucleotide:",
+                                      style = "font-size: 15px;
+                                       font-weight: bold;"),
+                               tags$p("Amino Acid : ",
+                                      style = "font-size: 15px;
+                                       font-weight: bold;"),
+                               tags$p("('*' : stop codon) ",
+                                      style = "font-size: 12px;
+                                       font-weight: italic;"),
+                        ),
+                        column(width = 10,
+                               excelOutput("geneticCodeDF",
+                                           width = "100%", height = "50"),
+                               style = paste("height:100%; ",
+                                             "overflow-y: hidden;",
+                                             "overflow-x: scroll;")
+                        ),
+                    ),
+                    uiOutput("SCrefAminoAcidSeq") ,
+                ),
 
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Consensus Read Results: "),
+                                   style = "font-size: 26px;
+                                       font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    box(title = tags$p("Alignment",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               htmlOutput("consensusAlignmentHTML"),
+                        ),
+                    ),
+                    box(title = tags$p("Differences Data frame",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCDifferencesDFUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Dendrogram",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               plotOutput("dendrogramPlot"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        ),
+                        column(width = 12,
+                               tags$hr(
+                                   style = ("border-top: 4px hidden #A9A9A9;")),
+                        ),
+                        column(width = 12,
+                               dataTableOutput("dendrogramDF"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Samples Distance",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               # plot()
+                               uiOutput("SCDistanceMatrixPlotUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        ),
+                        column(width = 12,
+                               tags$hr(
+                                   style = ("border-top: 4px hidden #A9A9A9;")),
+                        ),
+                        column(width = 12,
+                               uiOutput("SCDistanceMatrixUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Indels Data frame",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCIndelsDFUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Stop Codons Data frame",
+                                       style = "font-size: 24px;
+                                       font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("SCStopCodonsDFUI"),
+                               style = paste("height:100%; overflow-y:",
+                                             "scroll;overflow-x: scroll;")
+                        )
+                    )
+                ),
+            )
         } else if (!is.na(strtoi(singleReadIndex)) &&
                    directionParam == "Forward") {
 
@@ -315,22 +552,228 @@ consensusReadServer <- function(input, output, session) {
 
 
 
+    ############################################################################
+    ### ConsensusRead (Function for Sanger Consensus Read Overview)
+    ############################################################################
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Consensus read re-calculating UI
+    ### ------------------------------------------------------------------------
+    observeEvent(input$recalculateButton, {
+        message("######## Reactive button clicked !!!")
+        message("######## Start recalculating consensus read (SC")
+        CSResult<-
+            calculateConsensusRead (SangerConsensus@forwardReadsList,
+                                    SangerConsensus@reverseReadsList,
+                                    SangerConsensus@refAminoAcidSeq,
+                                    SangerConsensus@minFractionCall,
+                                    SangerConsensus@maxFractionLost,
+                                    SangerConsensus@geneticCode,
+                                    SangerConsensus@acceptStopCodons,
+                                    SangerConsensus@readingFrame)
 
+        SangerConsensus@consensusRead <<- CSResult$consensusGapfree
+        SangerConsensus@differencesDF <<- CSResult$diffsDf
+        SangerConsensus@alignment <<- CSResult$aln2
+        SangerConsensus@distanceMatrix <<- CSResult$dist
+        SangerConsensus@dendrogram <<- CSResult$dend
+        SangerConsensus@indelsDF <<- CSResult$indels
+        SangerConsensus@stopCodonsDF <<- CSResult$stopsDf
+        SangerConsensus@secondaryPeakDF <<- CSResult$spDf
 
+        consensusParam[["consensusRead"]] <<- SangerConsensus@consensusRead
+        consensusParam[["differencesDF"]] <<- SangerConsensus@differencesDF
+        consensusParam[["alignment"]] <<- SangerConsensus@alignment
+        consensusParam[["distanceMatrix"]] <<-SangerConsensus@distanceMatrix
+        consensusParam[["dendrogram"]] <<- SangerConsensus@dendrogram
+        consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
+        consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
+        consensusParam[["secondaryPeakDF"]] <<- SangerConsensus@secondaryPeakDF
+        message("######## Finish recalculation")
+    })
+    ### ------------------------------------------------------------------------
+    ### Valuebox for basic information
+    ### ------------------------------------------------------------------------
+    valueBoxSCMinReadsNum(input, output,
+                          SangerConsensus@minReadsNum, session)
+    valueBoxSCMinReadLength(input, output,
+                            SangerConsensus@minReadLength, session)
+    valueBoxSCMinFractionCall(input, output,
+                              SangerConsensus@minFractionCall, session)
+    valueBoxSCMaxFractionLost(input, output,
+                              SangerConsensus@maxFractionLost, session)
+    valueBoxSCAcceptStopCodons(input, output,
+                               SangerConsensus@acceptStopCodons, session)
+    valueBoxSCReadingFrame(input, output,
+                           SangerConsensus@readingFrame, session)
+    ### ------------------------------------------------------------------------
+    ### geneticCodeDF
+    ### ------------------------------------------------------------------------
+    output$geneticCodeDF <- renderExcel({
+        suppressMessages(
+            excelTable(data =  t(data.frame(SangerConsensus@geneticCode)),
+                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
+    })
+    ### ------------------------------------------------------------------------
+    ### refAminoAcidSeq
+    ### ------------------------------------------------------------------------
+    output$SCrefAminoAcidSeq <- renderUI({
+        if (SangerConsensus@refAminoAcidSeq == "") {
+            box(title = tags$p("Reference Amino Acids Sequence",
+                               style = "font-size: 24px;
+                                    font-weight: bold;"),
+                collapsible = TRUE,
+                status = "success", width = 12,
+                column(width = 1),
+                column(width = 11,
+                       h4("Reference Amino Acid Sequence is not provided."))
+            )
+        } else {
+            box(title = tags$p("Reference Amino Acids Sequence",
+                               style = "font-size: 24px;
+                                    font-weight: bold;"),
+                collapsible = TRUE,
+                status = "success", width = 12,
+                column(width = 2,
+                       tags$br(),
+                       tags$p("AA Sequence:",
+                              style = "font-size: 15px;
+                                       font-weight: bold;"),
+                ),
+                column(width = 10,
+                       excelOutput("SCrefAminoAcidSeqDF",
+                                   width = "100%", height = "50"),
+                       style = paste("height:100%; ",
+                                     "overflow-y: hidden;",
+                                     "overflow-x: scroll;")
+                ),
+            )
+        }
+    })
+    output$SCrefAminoAcidSeqDF <- renderExcel({
+        refAminoAcidSeqVec <- strsplit(SangerConsensus@refAminoAcidSeq, "")[[1]]
+        names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
+        suppressMessages(
+            excelTable(data =
+                           t(data.frame(refAminoAcidSeqVec)),
+                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+        )
+    })
+    ### ------------------------------------------------------------------------
+    ### Alignment
+    ### ------------------------------------------------------------------------
+    output$consensusAlignmentHTML <- renderUI({
+        browseSeqHTML <-
+            file.path(shinyDirectory,
+                      paste0(SangerConsensus@consensusReadName,
+                             "_Alignment_BrowseSeqs.html"))
+        BrowseSeqs(consensusParam[["alignment"]],
+                   openURL=FALSE, htmlFile=browseSeqHTML)
+        includeHTML(
+            file.path(shinyDirectory,
+                      paste0(SangerConsensus@consensusReadName,
+                             "_Alignment_BrowseSeqs.html")))
+    })
+    ### ------------------------------------------------------------------------
+    ### Difference
+    ### ------------------------------------------------------------------------
+    output$SCDifferencesDFUI <- renderUI({
+        if (all(dim(consensusParam[["differencesDF"]]) == c(0,0))) {
+            h4("*** 'Differences' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCDifferencesDF")
+        }
+    })
+    output$SCDifferencesDF = renderDataTable({
+        consensusParam[["differencesDF"]]
+    })
+    ### ------------------------------------------------------------------------
+    ### dendrogram
+    ### ------------------------------------------------------------------------
+    output$dendrogramPlot <- renderPlot({
+        # plot(consensusParam[["dendrogram"]][[2]])
+        ggdendrogram(consensusParam[["dendrogram"]][[2]], rotate = TRUE)
+    })
+    output$dendrogramDF <- renderDataTable({
+        consensusParam[["dendrogram"]][[1]]
+    })
+    ### ------------------------------------------------------------------------
+    ### Distance
+    ### ------------------------------------------------------------------------
+    output$SCDistanceMatrixPlotUI <- renderUI({
+        if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
+            h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            plotlyOutput("SCDistanceMatrixPlot")
+        }
+    })
+    output$SCDistanceMatrixPlot <- renderPlotly({
+        plot_ly(x = SangerSingleReadBFN,
+                y = SangerSingleReadBFN,
+                z = consensusParam[["distanceMatrix"]],
+                colors = colorRamp(c("white", "#32a852")),
+                type = "heatmap")
+    })
+    output$SCDistanceMatrixUI <- renderUI({
+        if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
+            h4("*** 'Distance' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCDistanceMatrix")
+        }
+    })
+    output$SCDistanceMatrix = renderDataTable({
+        consensusParam[["distanceMatrix"]]
+    })
+    ### ------------------------------------------------------------------------
+    ### Indels
+    ### ------------------------------------------------------------------------
+    output$SCIndelsDFUI <- renderUI({
+        if (all(dim(consensusParam[["indelsDF"]]) == c(0,0))) {
+            h4("*** 'Indels' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCIndelsDF")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }
+    })
+    output$SCIndelsDF <- renderDataTable({
+        consensusParam[["indelsDF"]]
+    })
+    ### ------------------------------------------------------------------------
+    ### StopCodons
+    ### ------------------------------------------------------------------------
+    output$SCStopCodonsDFUI <- renderUI({
+        if (all(dim(consensusParam[["stopCodonsDF"]]) == c(0,0))) {
+            h4("*** 'Stop Codons' dataframe is empty. ***",
+               style="font-weight: bold; font-style: italic;")
+        } else {
+            dataTableOutput("SCStopCodonsDF")
+        }
+    })
+    output$SCStopCodonsDF <- renderDataTable({
+        consensusParam[["stopCodonsDF"]]
+    })
 }
 
+
+
+
+
+
+
+
+# if (!is.na(strtoi(singleReadIndex)) &&
+#     directionParam == "Forward") {
+#     SSReadBFN <- basename(SangerConsensus@forwardReadsList[[singleReadIndex]]@readFileName)
+# } else if (!is.na(strtoi(singleReadIndex)) &&
+#            directionParam == "Reverse") {
+# }
