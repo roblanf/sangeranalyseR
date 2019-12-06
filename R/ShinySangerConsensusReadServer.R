@@ -66,26 +66,6 @@ consensusReadServer <- function(input, output, session) {
     SangerSingleReadQualReport <- c(forwardReadQualReport,
                                     reverseReadQualReport)
 
-    # Quality Score Dataframe
-    forwardQualityScoreDF <- lapply(1:forwardReadNum, function(i) {
-        PhredScore <- forwardReadQualReport[[i]]@qualityPhredScores
-        PhredScoreDF <- data.frame(
-            t(data.frame(PhredScore)), stringsAsFactors = FALSE)
-        colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
-        rownames(PhredScoreDF) <- NULL
-        return(PhredScoreDF)
-        }
-    )
-    reverseQualityScoreDF <- lapply(1:reverseReadNum, function(i) {
-        PhredScore <- reverseReadQualReport[[i]]@qualityPhredScores
-        PhredScoreDF <- data.frame(
-            t(data.frame(PhredScore)), stringsAsFactors = FALSE)
-        colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
-        rownames(PhredScoreDF) <- NULL
-        return(PhredScoreDF)
-    })
-    SangerSingleReadQSDF <- c(forwardQualityScoreDF, reverseQualityScoreDF)
-
     # ChromatogramParam
     forwardReadChromatogramParam <- sapply(1:forwardReadNum, function(i)
         SangerConsensus@forwardReadsList[[i]]@ChromatogramParam)
@@ -93,27 +73,6 @@ consensusReadServer <- function(input, output, session) {
         SangerConsensus@reverseReadsList[[i]]@ChromatogramParam)
     SangerSingleReadChromatogramParam <- c(forwardReadChromatogramParam,
                                            reverseReadChromatogramParam)
-
-    # secondarySeqDF
-    forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(i) {
-        basecalls2 <- unlist(strsplit(
-            toString(SangerConsensus@forwardReadsList[[i]]@secondarySeq), ""))
-        basecalls2DF <- data.frame(
-            t(data.frame(basecalls2)), stringsAsFactors = FALSE)
-        colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-        rownames(basecalls2DF) <- NULL
-        return(basecalls2DF)
-    })
-    reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(i) {
-        basecalls2 <- unlist(strsplit(toString(
-            SangerConsensus@reverseReadsList[[i]]@secondarySeq), ""))
-        basecalls2DF <- data.frame(
-            t(data.frame(basecalls2)), stringsAsFactors = FALSE)
-        colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-        rownames(basecalls2DF) <- NULL
-        return(basecalls2DF)
-    })
-    SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF, reverseReadSecoSeqDF)
 
     # primaryAASeqS1DF
     forwardReadPrimAASeqS1DF <- lapply(1:forwardReadNum, function(i) {
@@ -552,14 +511,14 @@ consensusReadServer <- function(input, output, session) {
                                            font-weight: bold;"),
                            excelOutput("qualityScoreDF",
                                        width = "100%", height = "50"),
-                           # tags$br(),
-                           # tags$br(),
-                           # tags$p(tagList(icon("bars"),
-                           #                "AA Sequence 1"),
-                           #        style = "font-size: 22px;
-                           #                 font-weight: bold;"),
-                           # excelOutput("PrimAASeqS1DF",
-                           #             width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "AA Sequence 1"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("PrimAASeqS1DF",
+                                       width = "100%", height = "50"),
                            # tags$br(),
                            # tags$br(),
                            # tags$p(tagList(icon("bars"),
@@ -1009,10 +968,10 @@ consensusReadServer <- function(input, output, session) {
                 t(data.frame(primarySeq)), stringsAsFactors = FALSE)
             colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
             rownames(primarySeqDF) <- NULL
-            AstyleList <- getStopList(primarySeqDF, "A", "#1eff00")
-            TstyleList <- getStopList(primarySeqDF, "T", "#ff7a7a")
-            CstyleList <- getStopList(primarySeqDF, "C", "#7ac3ff")
-            GstyleList <- getStopList(primarySeqDF, "G", "#c9c9c9")
+            AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
+            TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
+            CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
+            GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
             styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
             suppressMessages(
                 excelTable(data = primarySeqDF, defaultColWidth = 30,
@@ -1043,10 +1002,10 @@ consensusReadServer <- function(input, output, session) {
                 t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
             colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
             rownames(secondarySeqDF) <- NULL
-            AstyleList <- getStopList(secondarySeqDF, "A", "#1eff00")
-            TstyleList <- getStopList(secondarySeqDF, "T", "#ff7a7a")
-            CstyleList <- getStopList(secondarySeqDF, "C", "#7ac3ff")
-            GstyleList <- getStopList(secondarySeqDF, "G", "#c9c9c9")
+            AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
+            TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
+            CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
+            GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
             styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
             suppressMessages(
                 excelTable(data = secondarySeqDF, defaultColWidth = 30,
@@ -1064,23 +1023,57 @@ consensusReadServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(singleReadIndex)) &&
             directionParam == "Forward") {
-            PhredScore <- SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@qualityPhredScores
+            PhredScore <- SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                QualityReport@qualityPhredScores
         } else if (!is.na(strtoi(singleReadIndex)) &&
                    directionParam == "Reverse") {
-            PhredScore <- SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@qualityPhredScores
-
+            PhredScore <- SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                QualityReport@qualityPhredScores
         }
         PhredScoreDF <- data.frame(
             t(data.frame(PhredScore)), stringsAsFactors = FALSE)
         colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
         rownames(PhredScoreDF) <- NULL
+        styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
         suppressMessages(
             excelTable(data =
-                           PhredScoreDF, defaultColWidth = 30,
-                       editable = TRUE, rowResize = FALSE, columnResize = FALSE,
+                           PhredScoreDF, defaultColWidth = 30, editable = TRUE,
+                       rowResize = FALSE, columnResize = FALSE,
                        allowInsertRow = FALSE, allowInsertColumn = FALSE,
                        allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
-                       allowRenameColumn = FALSE, loadingSpin = TRUE)
+                       style = styleList, allowRenameColumn = FALSE,
+                       loadingSpin = TRUE)
+        )
+    })
+    output$PrimAASeqS1DF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(strtoi(singleReadIndex)) &&
+            directionParam == "Forward") {
+            AAString <- data.frame(SangerConsensus@
+                                       forwardReadsList[[singleReadIndex]]@
+                                       primaryAASeqS1)
+        } else if (!is.na(strtoi(singleReadIndex)) &&
+                   directionParam == "Reverse") {
+            AAString <- data.frame(SangerConsensus@
+                                       reverseReadsList[[singleReadIndex]]@
+                                       primaryAASeqS1)
+        }
+        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        width <- rep(90, length(AAStringDF))
+        styleList1 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+        styleList2 <- SetAllStyleList(AAStringDF, "#ecffd9")
+        styleList <- c(styleList1, styleList2)
+        suppressMessages(
+            excelTable(data = AAStringDF, columns = data.frame(width = width),
+                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       style = styleList, loadingSpin = TRUE)
         )
     })
 }
@@ -1089,7 +1082,7 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-
+## !!!!! Update !!!!
 # sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
 # singleReadIndex <- strtoi(sidebar_menu[[1]])
 # directionParam <- sidebar_menu[[2]]
