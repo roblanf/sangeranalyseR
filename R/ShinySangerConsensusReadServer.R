@@ -155,8 +155,7 @@ consensusReadServer <- function(input, output, session) {
         return(AAStringDF)
     })
     SangerSingleReadPrimAASeqS1DF <- c(forwardReadPrimAASeqS1DF,
-                                     reverseReadPrimAASeqS1DF)
-
+                                       reverseReadPrimAASeqS1DF)
 
     # primaryAASeqS2DF
     forwardReadPrimAASeqS2DF <- lapply(1:forwardReadNum, function(i) {
@@ -187,7 +186,7 @@ consensusReadServer <- function(input, output, session) {
         rownames(AAStringDF) <- NULL
         return(AAStringDF)
     })
-    reverseReadPrimAASeqS2DF <- lapply(1:reverseReadNum, function(i) {
+    reverseReadPrimAASeqS3DF <- lapply(1:reverseReadNum, function(i) {
         AAString <- SangerConsensus@reverseReadsList[[i]]@primaryAASeqS3
         AAStringDF <- data.frame(
             t(data.frame(AAString)), stringsAsFactors = FALSE)
@@ -646,8 +645,20 @@ consensusReadServer <- function(input, output, session) {
                         column(width = 10,
                                excelOutput("primarySeqDF",
                                            width = "100%", height = "50"),
-                               excelOutput("PrimAASeqDF",
+                               excelOutput("PrimAASeqS1DF",
                                            width = "100%", height = "50"),
+                               excelOutput("PrimAASeqS2DF",
+                                           width = "100%", height = "50"),
+                               excelOutput("PrimAASeqS3DF",
+                                           width = "100%", height = "50"),
+
+
+
+
+
+
+
+
                                excelOutput("secondSeqDF",
                                            width = "100%", height = "50"),
                                excelOutput("qualityScoreDF",
@@ -1374,23 +1385,62 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-    output$PrimAASeqDF <- renderExcel({
+    output$PrimAASeqS1DF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        width <- c()
-        color <- c()
+        width <- rep(90, length(SangerSingleReadPrimAASeqS1DF[[1]]))
 
-        width <- rep(90, length(SangerSingleReadPrimAASeqDF[[1]])-1)
+        suppressMessages(
+            excelTable(data =
+                           SangerSingleReadPrimAASeqS1DF[[singleReadIndex]],
+                       columns = data.frame(width = width),
+                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       loadingSpin = TRUE)
+        )
+    })
+
+    output$PrimAASeqS2DF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        width <- rep(90, length(SangerSingleReadPrimAASeqS2DF[[1]])-1)
         widthFinal <- c(30, width)
 
         suppressMessages(
             excelTable(data =
-                           SangerSingleReadPrimAASeqDF[[singleReadIndex]],
+                           SangerSingleReadPrimAASeqS2DF[[singleReadIndex]],
                        columns = data.frame(width = widthFinal),
                        defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       # style = list(
+                       #     "A1" = 'background-color: black;',
+                       # ),
+                       loadingSpin = TRUE)
+        )
+    })
+
+    output$PrimAASeqS3DF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        width <- rep(90, length(SangerSingleReadPrimAASeqS3DF[[1]])-2)
+        widthFinal <- c(30, 30, width)
+
+        suppressMessages(
+            excelTable(data =
+                           SangerSingleReadPrimAASeqS3DF[[singleReadIndex]],
+                       columns = data.frame(width = widthFinal),
+                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                       columnResize = FALSE, allowInsertRow = FALSE,
+                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                       # style = list(
+                       #     "A1" = 'background-color: black;',
+                       #     "A2" = 'background-color: black;',
+                       # ),
                        loadingSpin = TRUE)
         )
     })

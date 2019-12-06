@@ -142,27 +142,7 @@ setMethod("initialize",
                       secondarySeq =
                           reverseComplement(readSangerseq@secondarySeq)
                   }
-                  primaryAASeqS1 =
-                      suppressWarnings(translate(primarySeq,
-                                                 genetic.code = geneticCode,
-                                                 no.init.codon=TRUE,
-                                                 if.fuzzy.codon="solve"))
-                  DNASeqshift1 <-DNAString(substr(as.character(primarySeq),
-                                                  2, length(primarySeq)))
 
-                  primaryAASeqS2 =
-                      suppressWarnings(translate(DNASeqshift1,
-                                                 genetic.code = geneticCode,
-                                                 no.init.codon=TRUE,
-                                                 if.fuzzy.codon="solve"))
-                  DNASeqshift2 <-
-                      DNAString(substr(as.character(primarySeq),
-                                       3, length(primarySeq)))
-                  primaryAASeqS3 <-
-                      suppressWarnings(translate(DNASeqshift2,
-                                                 genetic.code = geneticCode,
-                                                 no.init.codon=TRUE,
-                                                 if.fuzzy.codon="solve"))
 
                   traceMatrixRaw      = readSangerseq@traceMatrix
                   traceMatrix         = readSangerseq@traceMatrix
@@ -216,6 +196,29 @@ setMethod("initialize",
                   primarySeq <- MBCResult[["primarySeq"]]
                   secondarySeqID <- MBCResult[["secondarySeqID"]]
                   secondarySeq <- MBCResult[["secondarySeq"]]
+
+
+                  primaryAASeqS1 =
+                      suppressWarnings(translate(primarySeq,
+                                                 genetic.code = geneticCode,
+                                                 no.init.codon=TRUE,
+                                                 if.fuzzy.codon="solve"))
+                  DNASeqshift1 <-DNAString(substr(as.character(primarySeq),
+                                                  2, length(primarySeq)))
+
+                  primaryAASeqS2 =
+                      suppressWarnings(translate(DNASeqshift1,
+                                                 genetic.code = geneticCode,
+                                                 no.init.codon=TRUE,
+                                                 if.fuzzy.codon="solve"))
+                  DNASeqshift2 <-
+                      DNAString(substr(as.character(primarySeq),
+                                       3, length(primarySeq)))
+                  primaryAASeqS3 <-
+                      suppressWarnings(translate(DNASeqshift2,
+                                                 genetic.code = geneticCode,
+                                                 no.init.codon=TRUE,
+                                                 if.fuzzy.codon="solve"))
               } else {
                   stop(errors)
               }
