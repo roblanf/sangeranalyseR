@@ -844,7 +844,7 @@ consensusReadServer <- function(input, output, session) {
         message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
         showNotification(paste("New S4 object is store as:", newS4Object),
-                         type = "message", duration = 10)
+                         closeButton = TRUE, type = "message", duration = 10)
         ### --------------------------------------------------------------------
         ### Save SangerConsensus quality S4 object
         ### --------------------------------------------------------------------
@@ -1803,11 +1803,45 @@ consensusReadServer <- function(input, output, session) {
     })
 
     output$chromatogram <- renderPlot({
+
+
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(singleReadIndex))) {
+            showNotification(
+                ui = fluidRow(
+                    column(1),
+                    column(11,
+                           tags$p(tagList(icon("hourglass-start"),
+                                          "Plotting Chromatogram ...  "),
+                                  style = "font-size: 28px;
+                                   font-weight: bold;"),
+                           tags$p(tagList(icon("dot-circle"),
+                                          "Base pairs per row : ",
+                                          ChromatogramParam[["baseNumPerRow"]]),
+                                  style = "font-size: 20px;
+                                   font-style: italic"),
+                           tags$p(tagList(icon("dot-circle"),
+                                          "Height per row : ",
+                                          ChromatogramParam[["heightPerRow"]]),
+                                  style = "font-size: 20px;
+                                   font-style: italic"),
+                           tags$p(tagList(icon("dot-circle"),
+                                          "Signal Ratio Cutoff : ",
+                                          ChromatogramParam[["signalRatioCutoff"]]),
+                                  style = "font-size: 20px;
+                                   font-style: italic"),
+                           tags$p(tagList(icon("dot-circle"),
+                                          "Show trimmed : ",
+                                          ChromatogramParam[["showTrimmed"]]),
+                                  style = "font-size: 20px;
+                                   font-style: italic"),)
+                ),
+                action = NULL, duration = NULL, closeButton = FALSE,
+                id = "chromatogramNotification",
+                type = "message")
             if (directionParam == "Forward") {
                 rawSeqLength <-
                     SangerConsensus@forwardReadsList[[singleReadIndex]]@
@@ -1924,6 +1958,7 @@ consensusReadServer <- function(input, output, session) {
                              trimmedRV[["trimmedFinishPos"]],
                          showtrim = (ChromatogramParam[["showTrimmed"]]),
                          showcalls = "both")
+            removeNotification(id = "chromatogramNotification")
         }
     })
 }
