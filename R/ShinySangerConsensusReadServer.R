@@ -749,8 +749,29 @@ consensusReadServer <- function(input, output, session) {
 
 
     ############################################################################
-    ### ConsensusRead (Function for Sanger Consensus Read Overview)
+    ### All other features (dynamic header / button save / button close)
     ############################################################################
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Close UI
+    ### ------------------------------------------------------------------------
+    observeEvent(input$closeUI, {
+        btn <- input$closeUI
+        stopApp()
+    })
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Save S4 object
+    ### ------------------------------------------------------------------------
+    observeEvent(input$saveS4, {
+        newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
+        showNotification(paste("New S4 object is store as:", newS4Object),
+                         type = "message", duration = 10)
+        ### --------------------------------------------------------------------
+        ### Save SangerConsensus quality S4 object
+        ### --------------------------------------------------------------------
+        saveRDS(SangerConsensus, file=newS4Object)
+        message("New S4 object is store as: ", newS4Object)
+        NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
+    })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus read re-calculating UI
     ### ------------------------------------------------------------------------
@@ -786,7 +807,6 @@ consensusReadServer <- function(input, output, session) {
         consensusParam[["secondaryPeakDF"]] <<- SangerConsensus@secondaryPeakDF
         message("######## Finish recalculation")
     })
-
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
@@ -829,7 +849,6 @@ consensusReadServer <- function(input, output, session) {
         ChromatogramParam[["showTrimmed"]] <<-
             input$ChromatogramCheckShowTrimmed
     })
-
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
@@ -1057,7 +1076,9 @@ consensusReadServer <- function(input, output, session) {
 
 
 
-
+    ############################################################################
+    ### ConsensusRead (Function for Sanger Consensus Read Overview)
+    ############################################################################
     ### ------------------------------------------------------------------------
     ### Valuebox for basic information
     ### ------------------------------------------------------------------------
