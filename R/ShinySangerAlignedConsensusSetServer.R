@@ -800,9 +800,32 @@ alignedConsensusSetServer <- function(input, output, session) {
                             directionParam == "Reverse") &&
                            sidebar_menu[[6]] == "Read") {
                     if (directionParam == "Forward") {
-                        SangerSingleReadBFN <-
-                            SangerCSetParam[[consensusReadIndex]]$
-                            SangerSingleReadBFN
+                        sequenceParam[["primarySeq"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             forwardReadsList[[singleReadIndex]]@primarySeq)
+                        sequenceParam[["secondarySeq"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             forwardReadsList[[singleReadIndex]]@secondarySeq)
+                        sequenceParam[["primaryAASeqS1"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             forwardReadsList[[singleReadIndex]]@primaryAASeqS1)
+                        sequenceParam[["primaryAASeqS2"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             forwardReadsList[[singleReadIndex]]@primaryAASeqS2)
+                        sequenceParam[["primaryAASeqS3"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             forwardReadsList[[singleReadIndex]]@primaryAASeqS3)
+
+
+
+
+
+
 
                         SangerSingleReadBFN <-
                             basename(SangerConsensusSet@
@@ -813,6 +836,30 @@ alignedConsensusSetServer <- function(input, output, session) {
                             consensusReadsList[[consensusReadIndex]]@
                             forwardReadsList[[singleReadIndex]]@readFileName
                     } else if (directionParam == "Reverse") {
+                        sequenceParam[["primarySeq"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             reverseReadsList[[singleReadIndex]]@primarySeq)
+                        sequenceParam[["secondarySeq"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             reverseReadsList[[singleReadIndex]]@secondarySeq)
+                        sequenceParam[["primaryAASeqS1"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             reverseReadsList[[singleReadIndex]]@primaryAASeqS1)
+                        sequenceParam[["primaryAASeqS2"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             reverseReadsList[[singleReadIndex]]@primaryAASeqS2)
+                        sequenceParam[["primaryAASeqS3"]] <<-
+                            as.character(SangerConsensusSet@
+                                             consensusReadsList[[consensusReadIndex]]@
+                                             reverseReadsList[[singleReadIndex]]@primaryAASeqS3)
+
+
+
+
                         SangerSingleReadBFN <-
                             basename(SangerConsensusSet@
                                          consensusReadsList[[consensusReadIndex]]@
@@ -837,65 +884,65 @@ alignedConsensusSetServer <- function(input, output, session) {
                             tags$h5(paste("( full path:",
                                           SangerSingleReadAFN,
                                           ")"), style = "font-style:italic")),
-                        # box(title = tags$p(
-                        #     tagList(icon("dot-circle"),
-                        #             "Primary, Secondary DNA Sequences & Amino Acid Sequence (Before Trimming):"),
-                        #     style = "font-size: 26px;
-                        #                                    font-weight: bold;"),
-                        #     solidHeader = TRUE, collapsible = TRUE,
-                        #     status = "success", width = 12,
-                        #     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                        #     column(width = 12,
-                        #            tags$p(tagList(icon("bars"),
-                        #                           "Primary Sequence"),
-                        #                   style = "font-size: 22px;
-                        #                                    font-weight: bold;"),
-                        #            excelOutput("primarySeqDF",
-                        #                        width = "100%", height = "50"),
-                        #            tags$br(),
-                        #            tags$br(),
-                        #            tags$p(tagList(icon("bars"),
-                        #                           "Secondary Sequence"),
-                        #                   style = "font-size: 22px;
-                        #                                    font-weight: bold;"),
-                        #            excelOutput("secondSeqDF",
-                        #                        width = "100%", height = "50"),
-                        #            tags$br(),
-                        #            tags$br(),
-                        #            tags$p(tagList(icon("bars"),
-                        #                           "Quality Phred Score"),
-                        #                   style = "font-size: 22px;
-                        #                                    font-weight: bold;"),
-                        #            excelOutput("qualityScoreDF",
-                        #                        width = "100%", height = "50"),
-                        #            tags$br(),
-                        #            tags$br(),
-                        #            tags$p(tagList(icon("bars"),
-                        #                           "AA Sequence 1"),
-                        #                   style = "font-size: 22px;
-                        #                                    font-weight: bold;"),
-                        #            excelOutput("PrimAASeqS1DF",
-                        #                        width = "100%", height = "50"),
-                        #            tags$br(),
-                        #            tags$br(),
-                        #            tags$p(tagList(icon("bars"),
-                        #                           "AA Sequence 2"),
-                        #                   style = "font-size: 22px;
-                        #                                    font-weight: bold;"),
-                        #            excelOutput("PrimAASeqS2DF",
-                        #                        width = "100%", height = "50"),
-                        #            tags$br(),
-                        #            tags$br(),
-                        #            tags$p(tagList(icon("bars"),
-                        #                           "AA Sequence 3"),
-                        #                   style = "font-size: 22px;
-                        #                                    font-weight: bold;"),
-                        #            excelOutput("PrimAASeqS3DF",
-                        #                        width = "100%", height = "50"),
-                        #            style = paste("overflow-y: hidden;",
-                        #                          "overflow-x: scroll;")
-                        #     ),
-                        # ),
+                        box(title = tags$p(
+                            tagList(icon("dot-circle"),
+                                    "Primary, Secondary DNA Sequences & Amino Acid Sequence (Before Trimming):"),
+                            style = "font-size: 26px;
+                                                           font-weight: bold;"),
+                            solidHeader = TRUE, collapsible = TRUE,
+                            status = "success", width = 12,
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            column(width = 12,
+                                   tags$p(tagList(icon("bars"),
+                                                  "Primary Sequence"),
+                                          style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                                   excelOutput("primarySeqDF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "Secondary Sequence"),
+                                          style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                                   excelOutput("secondSeqDF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "Quality Phred Score"),
+                                          style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                                   excelOutput("qualityScoreDF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "AA Sequence 1"),
+                                          style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                                   excelOutput("PrimAASeqS1DF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "AA Sequence 2"),
+                                          style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                                   excelOutput("PrimAASeqS2DF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "AA Sequence 3"),
+                                          style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                                   excelOutput("PrimAASeqS3DF",
+                                               width = "100%", height = "50"),
+                                   style = paste("overflow-y: hidden;",
+                                                 "overflow-x: scroll;")
+                            ),
+                        ),
                         # box(title = tags$p(tagList(icon("dot-circle"),
                         #                            "Quality Report: "),
                         #                    style = "font-size: 26px;
@@ -1404,5 +1451,82 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusParam[["stopCodonsDF"]]
     })
 
+
+
+
+    ############################################################################
+    ### SangerSingleRead (Function for singel read in consensusRead)
+    ############################################################################
+    output$primarySeqDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            primarySeqDisplay (sequenceParam)
+        }
+    })
+    output$secondSeqDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            secondarySeqDisplay (sequenceParam)
+        }
+    })
+    output$qualityScoreDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            if (directionParam == "Forward") {
+                PhredScore <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            } else if (directionParam == "Reverse") {
+                PhredScore <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            }
+            qualityScoreDisplay (PhredScore)
+        }
+    })
+    output$PrimAASeqS1DF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            PrimAASeqS1Display (sequenceParam)
+        }
+    })
+    output$PrimAASeqS2DF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            PrimAASeqS2Display (sequenceParam)
+        }
+    })
+    output$PrimAASeqS3DF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            PrimAASeqS3Display (sequenceParam)
+        }
+    })
 }
 

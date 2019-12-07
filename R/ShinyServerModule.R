@@ -1269,3 +1269,130 @@ vline <- function(x = 0, color = "red") {
     )
 }
 
+
+
+
+### ============================================================================
+### SangerSingleRead Sequence Render Function (DNA / AA) dynamic
+### ============================================================================
+primarySeqDisplay <- function(sequenceParam) {
+    primarySeq <- unlist(strsplit(
+        sequenceParam[["primarySeq"]], ""))
+    primarySeqDF <- data.frame(
+        t(data.frame(primarySeq)), stringsAsFactors = FALSE)
+    colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
+    rownames(primarySeqDF) <- NULL
+    AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
+    TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
+    CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
+    GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
+    styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+    suppressMessages(
+        excelTable(data = primarySeqDF, defaultColWidth = 30,
+                   editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                   style = styleList, loadingSpin = TRUE)
+    )
+}
+secondarySeqDisplay <- function(sequenceParam) {
+    secondarySeq <-unlist(strsplit(
+        sequenceParam[["secondarySeq"]], ""))
+    secondarySeqDF <- data.frame(
+        t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
+    colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
+    rownames(secondarySeqDF) <- NULL
+    AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
+    TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
+    CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
+    GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
+    styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+    suppressMessages(
+        excelTable(data = secondarySeqDF, defaultColWidth = 30,
+                   editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                   style = styleList, loadingSpin = TRUE)
+    )
+}
+qualityScoreDisplay <- function(PhredScore) {
+    PhredScoreDF <- data.frame(
+        t(data.frame(PhredScore)), stringsAsFactors = FALSE)
+    colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+    rownames(PhredScoreDF) <- NULL
+    styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
+    suppressMessages(
+        excelTable(data =
+                       PhredScoreDF, defaultColWidth = 30, editable = TRUE,
+                   rowResize = FALSE, columnResize = FALSE,
+                   allowInsertRow = FALSE, allowInsertColumn = FALSE,
+                   allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
+                   style = styleList, allowRenameColumn = FALSE,
+                   loadingSpin = TRUE)
+    )
+}
+PrimAASeqS1Display <- function(sequenceParam) {
+    AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS1"]]))
+    AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+    colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+    rownames(AAStringDF) <- NULL
+    width <- rep(90, length(AAStringDF))
+    styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+    styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+    styleList <- c(styleList1, styleList2)
+    suppressMessages(
+        excelTable(data = AAStringDF, columns = data.frame(width = width),
+                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                   style = styleList, loadingSpin = TRUE)
+    )
+}
+PrimAASeqS2Display <- function(sequenceParam) {
+    AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS2"]]))
+    AAString <- rbind(NA, AAString)
+    AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+    colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+    rownames(AAStringDF) <- NULL
+    width <- rep(90, length(AAStringDF) - 1)
+    width <- c(30, width)
+    styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+    styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+    styleList <- c(styleList1, styleList2)
+    styleList[['A1']] <- 'background-color: black;'
+    suppressMessages(
+        excelTable(data = AAStringDF, columns = data.frame(width = width),
+                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                   style = styleList, loadingSpin = TRUE)
+    )
+}
+PrimAASeqS3Display <- function(sequenceParam) {
+    AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS3"]]))
+    AAString <- rbind(NA, NA, AAString)
+    AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+    colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+    rownames(AAStringDF) <- NULL
+    width <- rep(90, length(AAStringDF) - 2)
+    width <- c(30, 30, width)
+    styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+    styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+    styleList <- c(styleList1, styleList2)
+    styleList[['A1']] <- 'background-color: black;'
+    styleList[['B1']] <- 'background-color: black;'
+    suppressMessages(
+        excelTable(data = AAStringDF, columns = data.frame(width = width),
+                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                   style = styleList, loadingSpin = TRUE)
+    )
+}
+
+
