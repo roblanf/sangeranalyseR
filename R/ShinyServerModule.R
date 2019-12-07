@@ -1064,6 +1064,17 @@ valueBoxChromTrimmedFinishPos <- function(input, output, session, trimmedRV) {
 qualityTrimmingRatioPlot <- function(input, output, session, trimmedRV,
                                      SangerSingleReadQualReport,
                                      SangerSingleReadFeature) {
+
+
+
+
+
+
+
+
+
+
+
     output$qualityTrimmingRatioPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (!is.na(strtoi(sidebar_menu[[1]])) &&

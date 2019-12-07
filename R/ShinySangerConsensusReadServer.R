@@ -657,77 +657,78 @@ consensusReadServer <- function(input, output, session) {
                         ),
                     ),
                 ),
-                # box(title = tags$p(tagList(icon("dot-circle"),
-                #                            "Chromatogram: "),
-                #                    style = "font-size: 26px;
-                #                            font-weight: bold;"),
-                #     solidHeader = TRUE, collapsible = TRUE,
-                #     status = "success", width = 12,
-                #     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                #
-                #     box(title = tags$p(tagList(icon("arrow-circle-right"),
-                #                                "Chromatogram Input"),
-                #                        style = "font-size: 24px;
-                #                            font-weight: bold;"),
-                #         collapsible = TRUE,
-                #         status = "success", width = 12,
-                #         column(3,
-                #                sliderInput("ChromatogramBasePerRow",
-                #                            label =h4("Base Number Per Row"),
-                #                            min = 5,
-                #                            max = 200,
-                #                            value = ChromatogramParam[["baseNumPerRow"]]),
-                #                sliderInput("ChromatogramHeightPerRow",
-                #                            label = h4("Height Per Row"),
-                #                            min = 50,
-                #                            max = 600,
-                #                            value = ChromatogramParam[["heightPerRow"]]),
-                #         ),
-                #         column(3,
-                #                tags$hr(
-                #                    style =
-                #                        ("border-top: 4px hidden #A9A9A9;")),
-                #                numericInput(
-                #                    "ChromatogramSignalRatioCutoff",
-                #                    h3("Signal Ratio Cutoff"),
-                #                    value = ChromatogramParam[["signalRatioCutoff"]]),
-                #                checkboxInput(
-                #                    "ChromatogramCheckShowTrimmed",
-                #                    "Whether show trimmed region",
-                #                    value =
-                #                        ChromatogramParam[["showTrimmed"]])
-                #         ),
-                #         column(3,
-                #                tags$hr(
-                #                    style=("border-top: 4px hidden #A9A9A9;")),
-                #                uiOutput("ChromatogramtrimmedStartPos"),
-                #         ),
-                #         column(3,
-                #                tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                #                uiOutput("ChromatogramtrimmedFinishPos"),
-                #         ),
-                #         actionBttn("saveChromatogramParam",
-                #                    "Apply Chromatogram Parameters",
-                #                    style = "simple", color = "success",
-                #                    block = TRUE, size = "lg")
-                #     ),
-                #     box(title = tags$p(tagList(icon("arrow-circle-left"),
-                #                                "Chromatogram Output"),
-                #                        style = "font-size: 24px;
-                #                            font-weight: bold;"),
-                #         collapsible = TRUE,
-                #         status = "success", width = 12,
-                #         column(width = 12,
-                #                uiOutput("chromatogramUIOutput"),
-                #         )
-                #     ),
-                # )
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Chromatogram: "),
+                                   style = "font-size: 26px;
+                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+
+                    box(title = tags$p(tagList(icon("arrow-circle-right"),
+                                               "Chromatogram Input"),
+                                       style = "font-size: 24px;
+                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(3,
+                               sliderInput("ChromatogramBasePerRow",
+                                           label =h4("Base Number Per Row"),
+                                           min = 5,
+                                           max = 200,
+                                           value = ChromatogramParam[["baseNumPerRow"]]),
+                               sliderInput("ChromatogramHeightPerRow",
+                                           label = h4("Height Per Row"),
+                                           min = 50,
+                                           max = 600,
+                                           value = ChromatogramParam[["heightPerRow"]]),
+                        ),
+                        column(3,
+                               tags$hr(
+                                   style =
+                                       ("border-top: 4px hidden #A9A9A9;")),
+                               numericInput(
+                                   "ChromatogramSignalRatioCutoff",
+                                   h3("Signal Ratio Cutoff"),
+                                   value = ChromatogramParam[["signalRatioCutoff"]]),
+                               checkboxInput(
+                                   "ChromatogramCheckShowTrimmed",
+                                   "Whether show trimmed region",
+                                   value =
+                                       ChromatogramParam[["showTrimmed"]])
+                        ),
+                        column(3,
+                               tags$hr(
+                                   style=("border-top: 4px hidden #A9A9A9;")),
+                               uiOutput("ChromatogramtrimmedStartPos"),
+                        ),
+                        column(3,
+                               tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                               uiOutput("ChromatogramtrimmedFinishPos"),
+                        ),
+                        actionBttn("saveChromatogramParam",
+                                   "Apply Chromatogram Parameters",
+                                   style = "simple", color = "success",
+                                   block = TRUE, size = "lg")
+                    ),
+                    box(title = tags$p(tagList(icon("arrow-circle-left"),
+                                               "Chromatogram Output"),
+                                       style = "font-size: 24px;
+                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("chromatogramUIOutput"),
+                        )
+                    ),
+                )
             )
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            message(">>>>>>>> Inside '", input$sidebar_menu, "'")
-            h1(input$sidebar_menu)
         }
+        # else if (!is.na(strtoi(singleReadIndex)) &&
+        #            directionParam == "Reverse") {
+        #     message(">>>>>>>> Inside '", input$sidebar_menu, "'")
+        #     h1(input$sidebar_menu)
+        # }
     })
 
 
@@ -782,6 +783,65 @@ consensusReadServer <- function(input, output, session) {
         consensusParam[["secondaryPeakDF"]] <<- SangerConsensus@secondaryPeakDF
         message("######## Finish recalculation")
     })
+
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
+    ### ------------------------------------------------------------------------
+    observeEvent(input$saveChromatogramParam, {
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        ### --------------------------------------------------------------------
+        ### Update ChromatogramBasePerRow
+        ### --------------------------------------------------------------------
+        if (!is.na(strtoi(singleReadIndex)) &&
+            directionParam == "Forward") {
+            SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@
+                baseNumPerRow <<- input$ChromatogramBasePerRow
+            SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@
+                heightPerRow <<- input$ChromatogramHeightPerRow
+            SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@
+                signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
+            SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@
+                showTrimmed <<- input$ChromatogramCheckShowTrimmed
+        } else if (!is.na(strtoi(singleReadIndex)) &&
+                   directionParam == "Reverse") {
+            SangerConsensus@reverseReadsList[[i]]@ChromatogramParam@
+                baseNumPerRow <<- input$ChromatogramBasePerRow
+            SangerConsensus@reverseReadsList[[i]]@ChromatogramParam@
+                heightPerRow <<- input$ChromatogramHeightPerRow
+            SangerConsensus@reverseReadsList[[i]]@ChromatogramParam@
+                signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
+            SangerConsensus@reverseReadsList[[i]]@ChromatogramParam@
+                showTrimmed <<- input$ChromatogramCheckShowTrimmed
+        }
+        ### ------------------------------------------------------------
+        ### Save 'ChromatogramParam' dynamic value
+        ### ------------------------------------------------------------
+        ChromatogramParam[["baseNumPerRow"]] <<- input$ChromatogramBasePerRow
+        ChromatogramParam[["heightPerRow"]] <<- input$ChromatogramHeightPerRow
+        ChromatogramParam[["signalRatioCutoff"]] <<-
+            input$ChromatogramSignalRatioCutoff
+        ChromatogramParam[["showTrimmed"]] <<-
+            input$ChromatogramCheckShowTrimmed
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ### ------------------------------------------------------------------------
     ### Valuebox for basic information
     ### ------------------------------------------------------------------------
@@ -1296,6 +1356,130 @@ consensusReadServer <- function(input, output, session) {
     valueBoxM1TrimmingCutoff (input, output, session)
     valueBoxM2CutoffQualityScore (input, output, session)
     valueBoxM2SlidingWindowSize (input, output, session)
+
+    # qualityTrimmingRatioPlot (input, output, session, trimmedRV,
+    #                           SangerSingleReadQualReport,
+    #                           SangerSingleReadFeature)
+    # qualityQualityBasePlot (input, output, session, trimmedRV,
+    #                         SangerSingleReadQualReport, SangerSingleReadFeature)
+
+    valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
+    valueBoxChromTrimmedFinishPos (input, output, session, trimmedRV)
+    ### ------------------------------------------------------------------------
+    ### chromatogram related feature
+    ### ------------------------------------------------------------------------
+    output$chromatogramUIOutput <- renderUI({
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        trimmedRV[["trimmedSeqLength"]]
+        if (!is.na(strtoi(singleReadIndex)) &&
+            directionParam == "Forward") {
+            chromatogramRowNumAns <-
+                chromatogramRowNum (
+                    strtoi(ChromatogramParam[["baseNumPerRow"]]),
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@rawSeqLength,
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@trimmedSeqLength,
+                    ChromatogramParam[["showTrimmed"]]) *
+                strtoi(ChromatogramParam[["heightPerRow"]])
+
+        } else if (!is.na(strtoi(singleReadIndex)) &&
+                   directionParam == "Reverse") {
+            chromatogramRowNumAns <-
+                chromatogramRowNum (
+                    strtoi(ChromatogramParam[["baseNumPerRow"]]),
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@rawSeqLength,
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@trimmedSeqLength,
+                    ChromatogramParam[["showTrimmed"]]) *
+                strtoi(ChromatogramParam[["heightPerRow"]])
+        }
+        plotOutput("chromatogram", height = chromatogramRowNumAns)
+    })
+
+    output$chromatogram <- renderPlot({
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(strtoi(singleReadIndex)) &&
+            directionParam == "Forward") {
+            rawSeqLength <-
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
+            message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function")
+            ### ------------------------------------------------------------
+            ### Re-run 'MakeBaseCall' function
+            ### ------------------------------------------------------------
+            hetcalls <-
+                MakeBaseCalls(SangerConsensus@forwardReadsList[[singleReadIndex]], signalRatioCutoff = as.numeric(
+                        ChromatogramParam[["signalRatioCutoff"]]))
+            ### ------------------------------------------------------------
+            ### Update 'SangerConsensus'!
+            ### ------------------------------------------------------------
+            SangerConsensus@forwardReadsList[[index]]@peakPosMatrix <-
+                hetcalls@peakPosMatrix
+            SangerConsensus@forwardReadsList[[index]]@peakAmpMatrix <-
+                hetcalls@peakAmpMatrix
+            SangerConsensus@forwardReadsList[[index]]@primarySeq <-
+                hetcalls@primarySeq
+            SangerConsensus@forwardReadsList[[index]]@secondarySeq <-
+                hetcalls@secondarySeq
+            ### --------------------------------------------------------
+            ### Updating AASeqs
+            ### --------------------------------------------------------
+            AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                           hetcalls@secondarySeq)
+            SangerConsensus@forwardReadsList[[index]]@primaryAASeqS1 <-
+                AASeqResult[["primaryAASeqS1"]]
+            SangerConsensus@forwardReadsList[[index]]@primaryAASeqS2 <-
+                AASeqResult[["primaryAASeqS2"]]
+            SangerConsensus@forwardReadsList[[index]]@primaryAASeqS3 <-
+                AASeqResult[["primaryAASeqS3"]]
+        } else if (!is.na(strtoi(singleReadIndex)) &&
+                   directionParam == "Reverse") {
+            rawSeqLength <-
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
+            message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function")
+            ### ------------------------------------------------------------
+            ### Re-run 'MakeBaseCall' function
+            ### ------------------------------------------------------------
+            hetcalls <-
+                MakeBaseCalls(SangerConsensus@reverseReadsList[[singleReadIndex]], signalRatioCutoff = as.numeric(
+                    ChromatogramParam[["signalRatioCutoff"]]))
+            ### ------------------------------------------------------------
+            ### Update 'SangerConsensus'!
+            ### ------------------------------------------------------------
+            SangerConsensus@reverseReadsList[[index]]@peakPosMatrix <-
+                hetcalls@peakPosMatrix
+            SangerConsensus@reverseReadsList[[index]]@peakAmpMatrix <-
+                hetcalls@peakAmpMatrix
+            SangerConsensus@reverseReadsList[[index]]@primarySeq <-
+                hetcalls@primarySeq
+            SangerConsensus@reverseReadsList[[index]]@secondarySeq <-
+                hetcalls@secondarySeq
+            ### --------------------------------------------------------
+            ### Updating AASeqs
+            ### --------------------------------------------------------
+            AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                           hetcalls@secondarySeq)
+            SangerConsensus@reverseReadsList[[index]]@primaryAASeqS1 <-
+                AASeqResult[["primaryAASeqS1"]]
+            SangerConsensus@reverseReadsList[[index]]@primaryAASeqS2 <-
+                AASeqResult[["primaryAASeqS2"]]
+            SangerConsensus@reverseReadsList[[index]]@primaryAASeqS3 <-
+                AASeqResult[["primaryAASeqS3"]]
+        }
+        message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
+        chromatogram(hetcalls,
+                     width = strtoi(
+                         ChromatogramParam[["baseNumPerRow"]]),
+                     height = 2,
+                     trim5 = trimmedRV[["trimmedStartPos"]],
+                     trim3 = rawSeqLength -
+                         trimmedRV[["trimmedFinishPos"]],
+                     showtrim = (ChromatogramParam[["showTrimmed"]]),
+                     showcalls = "both")
+    })
 }
 
 
