@@ -269,7 +269,7 @@ alignedConsensusSetServer <- function(input, output, session) {
     consensusParamSet <-
         reactiveValues(
             consensusReadSCSet = SangerConsensusSet@consensusReadSCSet,
-            alignmentSCSet     = SangerConsensusSet@alignmentSCSet,
+            alignmentSCSet     = as.character(SangerConsensusSet@alignmentSCSet),
             alignmentTreeSCSet = SangerConsensusSet@alignmentTreeSCSet)
 
     ### ------------------------------------------------------------------------
@@ -492,8 +492,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                         SangerConsensusSet@
                         consensusReadsList[[consensusReadIndex]]@differencesDF
                     consensusParam[["alignment"]] <<-
-                        SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@alignment
+                        as.character(SangerConsensusSet@
+                        consensusReadsList[[consensusReadIndex]]@alignment)
                     consensusParam[["distanceMatrix"]] <<-
                         SangerConsensusSet@
                         consensusReadsList[[consensusReadIndex]]@distanceMatrix
@@ -1357,7 +1357,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerConsensusSet@alignmentSCSet <<- CSSetResult$aln
             SangerConsensusSet@alignmentTreeSCSet <<- CSSetResult$aln.tree
             consensusParamSet[["consensusReadSCSet"]] <<- SangerConsensusSet@consensusReadSCSet
-            consensusParamSet[["alignmentSCSet"]] <<- SangerConsensusSet@alignmentSCSet
+            consensusParamSet[["alignmentSCSet"]] <<- as.character(SangerConsensusSet@alignmentSCSet)
             consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
             message("######## Finish recalculation consensus read")
         }
@@ -1391,7 +1391,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@secondaryPeakDF <<- CSResult$spDf
             consensusParam[["consensusRead"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consensusRead
             consensusParam[["differencesDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@differencesDF
-            consensusParam[["alignment"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment
+            consensusParam[["alignment"]] <<- as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment)
             consensusParam[["distanceMatrix"]] <<-SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@distanceMatrix
             consensusParam[["dendrogram"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@dendrogram
             consensusParam[["indelsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF
@@ -1719,7 +1719,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             browseSeqHTML <-
                 file.path(shinyDirectory,
                           "Consensus_Readset_Alignment_BrowseSeqs.html")
-            BrowseSeqs(consensusParamSet[["alignmentSCSet"]] ,
+            BrowseSeqs(DNAStringSet(consensusParamSet[["alignmentSCSet"]]) ,
                        openURL=FALSE, htmlFile=browseSeqHTML)
             includeHTML(browseSeqHTML)
         }
@@ -1835,7 +1835,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
                 dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
             }
-            BrowseSeqs(consensusParam[["alignment"]],
+            BrowseSeqs(DNAStringSet(consensusParam[["alignment"]]),
                        openURL=FALSE, htmlFile=browseSeqHTML)
             includeHTML(browseSeqHTML)
         }

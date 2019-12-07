@@ -52,7 +52,7 @@ consensusReadServer <- function(input, output, session) {
         reactiveValues(
             consensusRead   = SangerConsensus@consensusRead,
             differencesDF   = SangerConsensus@differencesDF,
-            alignment       = SangerConsensus@alignment,
+            alignment       = as.character(SangerConsensus@alignment),
             distanceMatrix  = SangerConsensus@distanceMatrix,
             dendrogram      = SangerConsensus@dendrogram,
             indelsDF        = SangerConsensus@indelsDF,
@@ -898,7 +898,7 @@ consensusReadServer <- function(input, output, session) {
 
         consensusParam[["consensusRead"]] <<- SangerConsensus@consensusRead
         consensusParam[["differencesDF"]] <<- SangerConsensus@differencesDF
-        consensusParam[["alignment"]] <<- SangerConsensus@alignment
+        consensusParam[["alignment"]] <<- as.character(SangerConsensus@alignment)
         consensusParam[["distanceMatrix"]] <<-SangerConsensus@distanceMatrix
         consensusParam[["dendrogram"]] <<- SangerConsensus@dendrogram
         consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
@@ -1251,7 +1251,7 @@ consensusReadServer <- function(input, output, session) {
             file.path(shinyDirectory,
                       paste0(SangerConsensus@consensusReadName,
                              "_Alignment_BrowseSeqs.html"))
-        BrowseSeqs(consensusParam[["alignment"]],
+        BrowseSeqs(DNAStringSet(consensusParam[["alignment"]]),
                    openURL=FALSE, htmlFile=browseSeqHTML)
         includeHTML(
             file.path(shinyDirectory,
