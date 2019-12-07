@@ -624,7 +624,7 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         actionBttn("startTrimmingButton",
                                    "Apply Trimming Parameters",
-                                   style = "simple", color = "success",
+                                   style = "simple", color = "danger",
                                    block = TRUE, size = "lg")
                     ),
                     box(title = tags$p(tagList(icon("arrow-circle-left"),
@@ -793,7 +793,7 @@ consensusReadServer <- function(input, output, session) {
                         ),
                         actionBttn("saveChromatogramParam",
                                    "Apply Chromatogram Parameters",
-                                   style = "simple", color = "success",
+                                   style = "simple", color = "danger",
                                    block = TRUE, size = "lg")
                     ),
                     box(title = tags$p(tagList(icon("arrow-circle-left"),
@@ -1401,29 +1401,30 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            PhredScore <- SangerConsensus@forwardReadsList[[singleReadIndex]]@
-                QualityReport@qualityPhredScores
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            PhredScore <- SangerConsensus@reverseReadsList[[singleReadIndex]]@
-                QualityReport@qualityPhredScores
-        }
-        PhredScoreDF <- data.frame(
-            t(data.frame(PhredScore)), stringsAsFactors = FALSE)
-        colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
-        rownames(PhredScoreDF) <- NULL
-        styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
-        suppressMessages(
-            excelTable(data =
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                PhredScore <- SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            } else if (directionParam == "Reverse") {
+                PhredScore <- SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            }
+            PhredScoreDF <- data.frame(
+                t(data.frame(PhredScore)), stringsAsFactors = FALSE)
+            colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+            rownames(PhredScoreDF) <- NULL
+            styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
+            suppressMessages(
+                excelTable(data =
                            PhredScoreDF, defaultColWidth = 30, editable = TRUE,
-                       rowResize = FALSE, columnResize = FALSE,
-                       allowInsertRow = FALSE, allowInsertColumn = FALSE,
-                       allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
-                       style = styleList, allowRenameColumn = FALSE,
-                       loadingSpin = TRUE)
-        )
+                           rowResize = FALSE, columnResize = FALSE,
+                           allowInsertRow = FALSE, allowInsertColumn = FALSE,
+                           allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
+                           style = styleList, allowRenameColumn = FALSE,
+                           loadingSpin = TRUE)
+            )
+        }
+
     })
     ### ------------------------------------------------------------------------
     ### Primary Amino Acids dataframe (1)
@@ -1433,28 +1434,30 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS1"]]))
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS1"]]))
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                AAString <-
+                    data.frame(AAString(sequenceParam[["primaryAASeqS1"]]))
+            } else if (directionParam == "Reverse") {
+                AAString <-
+                    data.frame(AAString(sequenceParam[["primaryAASeqS1"]]))
+            }
+            AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+            rownames(AAStringDF) <- NULL
+            width <- rep(90, length(AAStringDF))
+            styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+            styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+            styleList <- c(styleList1, styleList2)
+            suppressMessages(
+                excelTable(data = AAStringDF, columns = data.frame(width = width),
+                           defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
+            )
         }
-        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
-        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-        rownames(AAStringDF) <- NULL
-        width <- rep(90, length(AAStringDF))
-        styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
-        styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
-        styleList <- c(styleList1, styleList2)
-        suppressMessages(
-            excelTable(data = AAStringDF, columns = data.frame(width = width),
-                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
-                       columnResize = FALSE, allowInsertRow = FALSE,
-                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = styleList, loadingSpin = TRUE)
-        )
     })
     ### ------------------------------------------------------------------------
     ### Primary Amino Acids dataframe (2)
@@ -1464,31 +1467,33 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS2"]]))
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS2"]]))
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                AAString <-
+                    data.frame(AAString(sequenceParam[["primaryAASeqS2"]]))
+            } else if (directionParam == "Reverse") {
+                AAString <-
+                    data.frame(AAString(sequenceParam[["primaryAASeqS2"]]))
+            }
+            AAString <- rbind(NA, AAString)
+            AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+            rownames(AAStringDF) <- NULL
+            width <- rep(90, length(AAStringDF) - 1)
+            width <- c(30, width)
+            styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+            styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+            styleList <- c(styleList1, styleList2)
+            styleList[['A1']] <- 'background-color: black;'
+            suppressMessages(
+                excelTable(data = AAStringDF, columns = data.frame(width = width),
+                           defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
+            )
         }
-        AAString <- rbind(NA, AAString)
-        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
-        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-        rownames(AAStringDF) <- NULL
-        width <- rep(90, length(AAStringDF) - 1)
-        width <- c(30, width)
-        styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
-        styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
-        styleList <- c(styleList1, styleList2)
-        styleList[['A1']] <- 'background-color: black;'
-        suppressMessages(
-            excelTable(data = AAStringDF, columns = data.frame(width = width),
-                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
-                       columnResize = FALSE, allowInsertRow = FALSE,
-                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = styleList, loadingSpin = TRUE)
-        )
     })
     ### ------------------------------------------------------------------------
     ### Primary Amino Acids dataframe (3)
@@ -1498,32 +1503,34 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS3"]]))
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS3"]]))
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                AAString <-
+                    data.frame(AAString(sequenceParam[["primaryAASeqS3"]]))
+            } else if (directionParam == "Reverse") {
+                AAString <-
+                    data.frame(AAString(sequenceParam[["primaryAASeqS3"]]))
+            }
+            AAString <- rbind(NA, NA, AAString)
+            AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+            rownames(AAStringDF) <- NULL
+            width <- rep(90, length(AAStringDF) - 2)
+            width <- c(30, 30, width)
+            styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+            styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+            styleList <- c(styleList1, styleList2)
+            styleList[['A1']] <- 'background-color: black;'
+            styleList[['B1']] <- 'background-color: black;'
+            suppressMessages(
+                excelTable(data = AAStringDF, columns = data.frame(width = width),
+                           defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
+            )
         }
-        AAString <- rbind(NA, NA, AAString)
-        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
-        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-        rownames(AAStringDF) <- NULL
-        width <- rep(90, length(AAStringDF) - 2)
-        width <- c(30, 30, width)
-        styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
-        styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
-        styleList <- c(styleList1, styleList2)
-        styleList[['A1']] <- 'background-color: black;'
-        styleList[['B1']] <- 'background-color: black;'
-        suppressMessages(
-            excelTable(data = AAStringDF, columns = data.frame(width = width),
-                       defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
-                       columnResize = FALSE, allowInsertRow = FALSE,
-                       allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                       allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                       style = styleList, loadingSpin = TRUE)
-        )
     })
     ### ------------------------------------------------------------------------
     ### Primary Trimmed dataframe
@@ -1601,33 +1608,33 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            PhredScore <- SangerConsensus@forwardReadsList[[singleReadIndex]]@
-                QualityReport@qualityPhredScores[
-                    (trimmedRV[["trimmedStartPos"]]+1):
-                        trimmedRV[["trimmedFinishPos"]]]
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            PhredScore <- SangerConsensus@reverseReadsList[[singleReadIndex]]@
-                QualityReport@qualityPhredScores[
-                    (trimmedRV[["trimmedStartPos"]]+1):
-                        trimmedRV[["trimmedFinishPos"]]]
+        if (!is.na(singleReadIndex)) {
+            if (directionParam == "Forward") {
+                PhredScore <- SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores[
+                        (trimmedRV[["trimmedStartPos"]]+1):
+                            trimmedRV[["trimmedFinishPos"]]]
+            } else if (directionParam == "Reverse") {
+                PhredScore <- SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores[
+                        (trimmedRV[["trimmedStartPos"]]+1):
+                            trimmedRV[["trimmedFinishPos"]]]
+            }
+            PhredScoreDF <- data.frame(
+                t(data.frame(PhredScore)), stringsAsFactors = FALSE)
+            colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+            rownames(PhredScoreDF) <- NULL
+            styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
+            suppressMessages(
+                excelTable(data =
+                               PhredScoreDF, defaultColWidth = 30, editable = TRUE,
+                           rowResize = FALSE, columnResize = FALSE,
+                           allowInsertRow = FALSE, allowInsertColumn = FALSE,
+                           allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
+                           style = styleList, allowRenameColumn = FALSE,
+                           loadingSpin = TRUE)
+            )
         }
-        PhredScoreDF <- data.frame(
-            t(data.frame(PhredScore)), stringsAsFactors = FALSE)
-        colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
-        rownames(PhredScoreDF) <- NULL
-        styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
-        suppressMessages(
-            excelTable(data =
-                           PhredScoreDF, defaultColWidth = 30, editable = TRUE,
-                       rowResize = FALSE, columnResize = FALSE,
-                       allowInsertRow = FALSE, allowInsertColumn = FALSE,
-                       allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
-                       style = styleList, allowRenameColumn = FALSE,
-                       loadingSpin = TRUE)
-        )
     })
     ############################################################################
     ### Trimming method selection functions
@@ -1768,31 +1775,31 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         trimmedRV[["trimmedSeqLength"]]
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            chromatogramRowNumAns <-
-                chromatogramRowNum (
-                    strtoi(ChromatogramParam[["baseNumPerRow"]]),
-                    SangerConsensus@forwardReadsList[[singleReadIndex]]@
-                        QualityReport@rawSeqLength,
-                    SangerConsensus@forwardReadsList[[singleReadIndex]]@
-                        QualityReport@trimmedSeqLength,
-                    ChromatogramParam[["showTrimmed"]]) *
-                strtoi(ChromatogramParam[["heightPerRow"]])
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                chromatogramRowNumAns <-
+                    chromatogramRowNum (
+                        strtoi(ChromatogramParam[["baseNumPerRow"]]),
+                        SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                            QualityReport@rawSeqLength,
+                        SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                            QualityReport@trimmedSeqLength,
+                        ChromatogramParam[["showTrimmed"]]) *
+                    strtoi(ChromatogramParam[["heightPerRow"]])
 
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            chromatogramRowNumAns <-
-                chromatogramRowNum (
-                    strtoi(ChromatogramParam[["baseNumPerRow"]]),
-                    SangerConsensus@reverseReadsList[[singleReadIndex]]@
-                        QualityReport@rawSeqLength,
-                    SangerConsensus@reverseReadsList[[singleReadIndex]]@
-                        QualityReport@trimmedSeqLength,
-                    ChromatogramParam[["showTrimmed"]]) *
-                strtoi(ChromatogramParam[["heightPerRow"]])
+            } else if (directionParam == "Reverse") {
+                chromatogramRowNumAns <-
+                    chromatogramRowNum (
+                        strtoi(ChromatogramParam[["baseNumPerRow"]]),
+                        SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                            QualityReport@rawSeqLength,
+                        SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                            QualityReport@trimmedSeqLength,
+                        ChromatogramParam[["showTrimmed"]]) *
+                    strtoi(ChromatogramParam[["heightPerRow"]])
+            }
+            plotOutput("chromatogram", height = chromatogramRowNumAns)
         }
-        plotOutput("chromatogram", height = chromatogramRowNumAns)
     })
 
     output$chromatogram <- renderPlot({
@@ -1800,123 +1807,123 @@ consensusReadServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            rawSeqLength <-
-                SangerConsensus@forwardReadsList[[singleReadIndex]]@
-                QualityReport@rawSeqLength
-            message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (forward)")
-            ### ----------------------------------------------------------------
-            ### Re-run 'MakeBaseCall' function
-            ### ----------------------------------------------------------------
-            hetcalls <-
-                MakeBaseCalls(SangerConsensus@forwardReadsList[[singleReadIndex]],
-                              signalRatioCutoff = as.numeric(
-                        ChromatogramParam[["signalRatioCutoff"]]))
-            ### ----------------------------------------------------------------
-            ### Update 'SangerConsensus'!
-            ### ----------------------------------------------------------------
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@peakPosMatrix <<-
-                hetcalls@peakPosMatrix
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@peakAmpMatrix <<-
-                hetcalls@peakAmpMatrix
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq <<-
-                hetcalls@primarySeq
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq <<-
-                hetcalls@secondarySeq
-            ### ----------------------------------------------------------------
-            ### Updating AASeqs
-            ### ----------------------------------------------------------------
-            AASeqResult <- calculateAASeq (hetcalls@primarySeq,
-                                           SangerConsensus@geneticCode)
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
-                AASeqResult[["primaryAASeqS1"]]
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
-                AASeqResult[["primaryAASeqS2"]]
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
-                AASeqResult[["primaryAASeqS3"]]
-            ### ----------------------------------------------------------------
-            ### Updating reactive values
-            ### ----------------------------------------------------------------
-            sequenceParam[["primarySeq"]] <<-
-                as.character(SangerConsensus@forwardReadsList[[
-                    singleReadIndex]]@primarySeq)
-            sequenceParam[["secondarySeq"]] <<-
-                as.character(SangerConsensus@forwardReadsList[[
-                    singleReadIndex]]@secondarySeq)
-            sequenceParam[["primaryAASeqS1"]] <<-
-                as.character(SangerConsensus@forwardReadsList[[
-                    singleReadIndex]]@primaryAASeqS1)
-            sequenceParam[["primaryAASeqS2"]] <<-
-                as.character(SangerConsensus@forwardReadsList[[
-                    singleReadIndex]]@primaryAASeqS2)
-            sequenceParam[["primaryAASeqS3"]] <<-
-                as.character(SangerConsensus@forwardReadsList[[
-                    singleReadIndex]]@primaryAASeqS3)
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            rawSeqLength <-
-                SangerConsensus@reverseReadsList[[singleReadIndex]]@
-                QualityReport@rawSeqLength
-            message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (reverse)")
-            ### ----------------------------------------------------------------
-            ### Re-run 'MakeBaseCall' function
-            ### ----------------------------------------------------------------
-            hetcalls <-
-                MakeBaseCalls(SangerConsensus@reverseReadsList[[singleReadIndex]],
-                              signalRatioCutoff = as.numeric(
-                    ChromatogramParam[["signalRatioCutoff"]]))
-            ### ----------------------------------------------------------------
-            ### Update 'SangerConsensus'!
-            ### ----------------------------------------------------------------
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@peakPosMatrix <<-
-                hetcalls@peakPosMatrix
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@peakAmpMatrix <<-
-                hetcalls@peakAmpMatrix
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@primarySeq <<-
-                hetcalls@primarySeq
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@secondarySeq <<-
-                hetcalls@secondarySeq
-            ### ----------------------------------------------------------------
-            ### Updating AASeqs
-            ### ----------------------------------------------------------------
-            AASeqResult <- calculateAASeq (hetcalls@primarySeq,
-                                           SangerConsensus@geneticCode)
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
-                AASeqResult[["primaryAASeqS1"]]
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
-                AASeqResult[["primaryAASeqS2"]]
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
-                AASeqResult[["primaryAASeqS3"]]
-            ### ----------------------------------------------------------------
-            ### Updating reactive values
-            ### ----------------------------------------------------------------
-            sequenceParam[["primarySeq"]] <<-
-                as.character(SangerConsensus@reverseReadsList[[
-                    singleReadIndex]]@primarySeq)
-            sequenceParam[["secondarySeq"]] <<-
-                as.character(SangerConsensus@reverseReadsList[[
-                    singleReadIndex]]@secondarySeq)
-            sequenceParam[["primaryAASeqS1"]] <<-
-                as.character(SangerConsensus@reverseReadsList[[
-                    singleReadIndex]]@primaryAASeqS1)
-            sequenceParam[["primaryAASeqS2"]] <<-
-                as.character(SangerConsensus@reverseReadsList[[
-                    singleReadIndex]]@primaryAASeqS2)
-            sequenceParam[["primaryAASeqS3"]] <<-
-                as.character(SangerConsensus@reverseReadsList[[
-                    singleReadIndex]]@primaryAASeqS3)
-        }
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                rawSeqLength <-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                    QualityReport@rawSeqLength
+                message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (forward)")
+                ### ----------------------------------------------------------------
+                ### Re-run 'MakeBaseCall' function
+                ### ----------------------------------------------------------------
+                hetcalls <-
+                    MakeBaseCalls(SangerConsensus@forwardReadsList[[singleReadIndex]],
+                                  signalRatioCutoff = as.numeric(
+                                      ChromatogramParam[["signalRatioCutoff"]]))
+                ### ----------------------------------------------------------------
+                ### Update 'SangerConsensus'!
+                ### ----------------------------------------------------------------
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@peakPosMatrix <<-
+                    hetcalls@peakPosMatrix
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@peakAmpMatrix <<-
+                    hetcalls@peakAmpMatrix
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq <<-
+                    hetcalls@primarySeq
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq <<-
+                    hetcalls@secondarySeq
+                ### ----------------------------------------------------------------
+                ### Updating AASeqs
+                ### ----------------------------------------------------------------
+                AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                               SangerConsensus@geneticCode)
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
+                    AASeqResult[["primaryAASeqS1"]]
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
+                    AASeqResult[["primaryAASeqS2"]]
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
+                    AASeqResult[["primaryAASeqS3"]]
+                ### ----------------------------------------------------------------
+                ### Updating reactive values
+                ### ----------------------------------------------------------------
+                sequenceParam[["primarySeq"]] <<-
+                    as.character(SangerConsensus@forwardReadsList[[
+                        singleReadIndex]]@primarySeq)
+                sequenceParam[["secondarySeq"]] <<-
+                    as.character(SangerConsensus@forwardReadsList[[
+                        singleReadIndex]]@secondarySeq)
+                sequenceParam[["primaryAASeqS1"]] <<-
+                    as.character(SangerConsensus@forwardReadsList[[
+                        singleReadIndex]]@primaryAASeqS1)
+                sequenceParam[["primaryAASeqS2"]] <<-
+                    as.character(SangerConsensus@forwardReadsList[[
+                        singleReadIndex]]@primaryAASeqS2)
+                sequenceParam[["primaryAASeqS3"]] <<-
+                    as.character(SangerConsensus@forwardReadsList[[
+                        singleReadIndex]]@primaryAASeqS3)
+            } else if (directionParam == "Reverse") {
+                rawSeqLength <-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                    QualityReport@rawSeqLength
+                message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (reverse)")
+                ### ----------------------------------------------------------------
+                ### Re-run 'MakeBaseCall' function
+                ### ----------------------------------------------------------------
+                hetcalls <-
+                    MakeBaseCalls(SangerConsensus@reverseReadsList[[singleReadIndex]],
+                                  signalRatioCutoff = as.numeric(
+                                      ChromatogramParam[["signalRatioCutoff"]]))
+                ### ----------------------------------------------------------------
+                ### Update 'SangerConsensus'!
+                ### ----------------------------------------------------------------
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@peakPosMatrix <<-
+                    hetcalls@peakPosMatrix
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@peakAmpMatrix <<-
+                    hetcalls@peakAmpMatrix
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@primarySeq <<-
+                    hetcalls@primarySeq
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@secondarySeq <<-
+                    hetcalls@secondarySeq
+                ### ----------------------------------------------------------------
+                ### Updating AASeqs
+                ### ----------------------------------------------------------------
+                AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                               SangerConsensus@geneticCode)
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
+                    AASeqResult[["primaryAASeqS1"]]
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
+                    AASeqResult[["primaryAASeqS2"]]
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
+                    AASeqResult[["primaryAASeqS3"]]
+                ### ----------------------------------------------------------------
+                ### Updating reactive values
+                ### ----------------------------------------------------------------
+                sequenceParam[["primarySeq"]] <<-
+                    as.character(SangerConsensus@reverseReadsList[[
+                        singleReadIndex]]@primarySeq)
+                sequenceParam[["secondarySeq"]] <<-
+                    as.character(SangerConsensus@reverseReadsList[[
+                        singleReadIndex]]@secondarySeq)
+                sequenceParam[["primaryAASeqS1"]] <<-
+                    as.character(SangerConsensus@reverseReadsList[[
+                        singleReadIndex]]@primaryAASeqS1)
+                sequenceParam[["primaryAASeqS2"]] <<-
+                    as.character(SangerConsensus@reverseReadsList[[
+                        singleReadIndex]]@primaryAASeqS2)
+                sequenceParam[["primaryAASeqS3"]] <<-
+                    as.character(SangerConsensus@reverseReadsList[[
+                        singleReadIndex]]@primaryAASeqS3)
+            }
 
-        # message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
-        chromatogram(hetcalls,
-                     width = strtoi(
-                         ChromatogramParam[["baseNumPerRow"]]),
-                     height = 2,
-                     trim5 = trimmedRV[["trimmedStartPos"]],
-                     trim3 = rawSeqLength -
-                         trimmedRV[["trimmedFinishPos"]],
-                     showtrim = (ChromatogramParam[["showTrimmed"]]),
-                     showcalls = "both")
+            # message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
+            chromatogram(hetcalls,
+                         width = strtoi(
+                             ChromatogramParam[["baseNumPerRow"]]),
+                         height = 2,
+                         trim5 = trimmedRV[["trimmedStartPos"]],
+                         trim3 = rawSeqLength -
+                             trimmedRV[["trimmedFinishPos"]],
+                         showtrim = (ChromatogramParam[["showTrimmed"]]),
+                         showcalls = "both")
+        }
     })
 }

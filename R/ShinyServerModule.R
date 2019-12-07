@@ -759,7 +759,9 @@ valueBoxSCReadingFrameCSSet <- function(input, output, SangerConsensusSet, sessi
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(consensusReadIndex)) {
-            SCReadingFrame <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@readingFrame
+            SCReadingFrame <-
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@readingFrame
             valueBox(
                 subtitle = tags$p("ReadingFrame",
                                   style = "font-size: 15px;
@@ -784,23 +786,25 @@ valueBoxM1TrimmingCutoff <- function(input, output, session) {
     output$M1TrimmingCutoff <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
-            as.numeric(input$M1TrimmingCutoffText) > 0 &&
-            as.numeric(input$M1TrimmingCutoffText) <= 1) {
-            inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
-        } else {
-            inputM1TrimmingCutoffText <- 0.0001
-        }
-        valueBox(
-            subtitle = tags$p("Cut Off Log Score",
-                              style = "font-size: 15px;
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
+                as.numeric(input$M1TrimmingCutoffText) > 0 &&
+                as.numeric(input$M1TrimmingCutoffText) <= 1) {
+                inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
+            } else {
+                inputM1TrimmingCutoffText <- 0.0001
+            }
+            valueBox(
+                subtitle = tags$p("Cut Off Log Score",
+                                  style = "font-size: 15px;
                                        font-weight: bold;"),
-            value = tags$p(as.numeric(inputM1TrimmingCutoffText),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 10,
-        )
+                value = tags$p(as.numeric(inputM1TrimmingCutoffText),
+                               style = "font-size: 29px;"),
+                icon = icon("cut", "fa-sm"),
+                color = "olive",
+                width = 10,
+            )
+        }
     })
 }
 
@@ -811,24 +815,26 @@ valueBoxM2CutoffQualityScore <- function(input, output, session) {
     output$M2CutoffQualityScore <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
-            strtoi(input$M2CutoffQualityScoreText) > 0 &&
-            strtoi(input$M2CutoffQualityScoreText) <= 60 &&
-            strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
-            inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
-        } else {
-            inputM2CutoffQualityScoreText <- 20
-        }
-        valueBox(
-            subtitle = tags$p("Cut Off Quality Score",
-                              style = "font-size: 15px;
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
+                strtoi(input$M2CutoffQualityScoreText) > 0 &&
+                strtoi(input$M2CutoffQualityScoreText) <= 60 &&
+                strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
+                inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
+            } else {
+                inputM2CutoffQualityScoreText <- 20
+            }
+            valueBox(
+                subtitle = tags$p("Cut Off Quality Score",
+                                  style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(inputM2CutoffQualityScoreText),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 10,
-        )
+                value = tags$p(strtoi(inputM2CutoffQualityScoreText),
+                               style = "font-size: 29px;"),
+                icon = icon("cut", "fa-sm"),
+                color = "olive",
+                width = 10,
+            )
+        }
     })
 }
 
@@ -838,24 +844,27 @@ valueBoxM2CutoffQualityScore <- function(input, output, session) {
 valueBoxM2SlidingWindowSize <- function(input, output, session) {
     output$M2SlidingWindowSize <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
-            strtoi(input$M2SlidingWindowSizeText) > 0 &&
-            strtoi(input$M2SlidingWindowSizeText) <= 20 &&
-            strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
-            inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
-        } else {
-            inputM2SlidingWindowSizeText <- 5
-        }
-        valueBox(
-            # strtoi(input$M2CutoffQualityScoreText
-            subtitle = tags$p("Sliding Window Size ",
-                              style = "font-size: 15px;
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
+                strtoi(input$M2SlidingWindowSizeText) > 0 &&
+                strtoi(input$M2SlidingWindowSizeText) <= 20 &&
+                strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
+                inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
+            } else {
+                inputM2SlidingWindowSizeText <- 5
+            }
+            valueBox(
+                # strtoi(input$M2CutoffQualityScoreText
+                subtitle = tags$p("Sliding Window Size ",
+                                  style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(inputM2SlidingWindowSizeText),
-                           style = "font-size: 29px;"),
-            icon = icon("expand", "fa-sm"),
-            color = "olive", width = 10,
-        )
+                value = tags$p(strtoi(inputM2SlidingWindowSizeText),
+                               style = "font-size: 29px;"),
+                icon = icon("expand", "fa-sm"),
+                color = "olive", width = 10,
+            )
+        }
     })
 }
 
@@ -864,7 +873,6 @@ valueBoxM2SlidingWindowSize <- function(input, output, session) {
 ### ============================================================================
 valueBoxRawSeqLength <- function(input, output, session, trimmedRV) {
     output$rawSeqLength <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Raw Seqence Len ",
                               style = "font-size: 15px;
@@ -882,7 +890,6 @@ valueBoxRawSeqLength <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxRawMeanQualityScore <- function(input, output, session, trimmedRV) {
     output$rawMeanQualityScore <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Raw Mean Quality Score ",
                               style = "font-size: 15px;
@@ -900,7 +907,6 @@ valueBoxRawMeanQualityScore <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxRawMinQualityScore <- function(input, output, session, trimmedRV) {
     output$rawMinQualityScore <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Raw Min Quality Score ",
                               style = "font-size: 15px;
@@ -918,7 +924,6 @@ valueBoxRawMinQualityScore <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxTrimmedStartPos <- function(input, output, session, trimmedRV) {
     output$trimmedStartPos <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimming Start Pos ",
                               style = "font-size: 15px;
@@ -936,7 +941,6 @@ valueBoxTrimmedStartPos <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxTrimmedFinishPos <- function(input, output, session, trimmedRV) {
     output$trimmedFinishPos <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimming End Pos ",
                               style = "font-size: 15px;
@@ -954,7 +958,6 @@ valueBoxTrimmedFinishPos <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxTrimmedSeqLength <- function(input, output, session, trimmedRV) {
     output$trimmedSeqLength <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimmed Seqence Length ",
                               style = "font-size: 15px;
@@ -972,7 +975,6 @@ valueBoxTrimmedSeqLength <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxTrimmedMeanQualityScore <- function(input, output, session, trimmedRV) {
     output$trimmedMeanQualityScore <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimmed Mean Quality Score ",
                               style = "font-size: 15px;
@@ -990,7 +992,6 @@ valueBoxTrimmedMeanQualityScore <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxTrimmedMinQualityScore <- function(input, output, session, trimmedRV) {
     output$trimmedMinQualityScore <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimmed Min Quality Score ",
                               style = "font-size: 15px;
@@ -1008,7 +1009,6 @@ valueBoxTrimmedMinQualityScore <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxRemainingRatio <- function(input, output, session, trimmedRV) {
     output$remainingRatio <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Remaining Ratio",
                               style = "font-size: 15px;
@@ -1027,7 +1027,6 @@ valueBoxRemainingRatio <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxChromTrimmedStartPos <- function(input, output, session, trimmedRV) {
     output$ChromatogramtrimmedStartPos <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimming Start Pos ",
                               style = "font-size: 15px;
@@ -1045,7 +1044,6 @@ valueBoxChromTrimmedStartPos <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 valueBoxChromTrimmedFinishPos <- function(input, output, session, trimmedRV) {
     output$ChromatogramtrimmedFinishPos <- renderUI({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         valueBox(
             subtitle = tags$p("Trimming End Pos ",
                               style = "font-size: 15px;
@@ -1069,81 +1067,89 @@ qualityTrimmingRatioPlot <- function(input, output, session,
         directionParam <- sidebar_menu[[2]]
         trimmedStartPos = trimmedRV[["trimmedStartPos"]]
         trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            readFeature <- SangerConsensus@forwardReadsList[[singleReadIndex]]@readFeature
-            qualityPhredScores = SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@qualityPhredScores
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            readFeature <- SangerConsensus@reverseReadsList[[singleReadIndex]]@readFeature
-            qualityPhredScores = SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@qualityPhredScores
-        }
-        readLen = length(qualityPhredScores)
-        stepRatio = 1 / readLen
-        trimmedStartPos / readLen
-        trimmedFinishPos / readLen
-        trimmedPer <- c()
-        remainingPer <- c()
-        for (i in 1:trimmedStartPos) {
-            if (i != trimmedStartPos) {
-                trimmedPer <- c(trimmedPer, stepRatio)
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                readFeature <-
+                    SangerConsensus@
+                    forwardReadsList[[singleReadIndex]]@readFeature
+                qualityPhredScores <- SangerConsensus@
+                    forwardReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            } else if (directionParam == "Reverse") {
+                readFeature <-
+                    SangerConsensus@
+                    reverseReadsList[[singleReadIndex]]@readFeature
+                qualityPhredScores <- SangerConsensus@
+                    reverseReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
             }
-        }
-        for (i in trimmedStartPos:trimmedFinishPos) {
-            trimmedPer <- c(trimmedPer, 0)
-        }
-        for (i in trimmedFinishPos:readLen) {
-            if (i != trimmedFinishPos) {
-                trimmedPer <- c(trimmedPer, stepRatio)
+            readLen = length(qualityPhredScores)
+            stepRatio = 1 / readLen
+            trimmedStartPos / readLen
+            trimmedFinishPos / readLen
+            trimmedPer <- c()
+            remainingPer <- c()
+            for (i in 1:trimmedStartPos) {
+                if (i != trimmedStartPos) {
+                    trimmedPer <- c(trimmedPer, stepRatio)
+                }
             }
+            for (i in trimmedStartPos:trimmedFinishPos) {
+                trimmedPer <- c(trimmedPer, 0)
+            }
+            for (i in trimmedFinishPos:readLen) {
+                if (i != trimmedFinishPos) {
+                    trimmedPer <- c(trimmedPer, stepRatio)
+                }
+            }
+            trimmedPer <- cumsum(trimmedPer)
+            remainingPer = 1 - trimmedPer
+            PerData <- data.frame(1:length(trimmedPer),
+                                  trimmedPer, remainingPer)
+            colnames(PerData) <- c("Base",
+                                   "Trimmed Ratio",
+                                   "Remaining Ratio")
+            # Change font setting
+            # f <- list(
+            #     family = "Courier New, monospace",
+            #     size = 18,
+            #     color = "#7f7f7f"
+            # )
+            x <- list(
+                title = "Base Pair Index"
+                # titlefont = f
+            )
+            y <- list(
+                title = "Read Ratio"
+            )
+            PerDataPlot <- melt(PerData, id.vars = c("Base"))
+            suppressPlotlyMessage(
+                plot_ly(data=PerDataPlot,
+                        x=~Base,
+                        y=~value,
+                        mode="markers",
+                        color = ~variable,
+                        text = ~paste("BP Index : ",
+                                      Base, '<sup>th</sup><br>Read Ratio :',
+                                      round(value*100, digits = 2), '%')) %>%
+                    layout(xaxis = x, yaxis = y, legend = list(orientation = 'h',
+                                                               xanchor = "center",  # use center of legend as anchor
+                                                               x = 0.5, y = 1.1)) %>%
+                    add_annotations(
+                        text = "Trimmed Ratio (Each BP)",
+                        x = (trimmedStartPos + trimmedFinishPos) / 2,
+                        y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
+                        + 0.06,
+                        showarrow=FALSE
+                    ) %>%
+                    add_annotations(
+                        text = "Remaining Ratio (Each BP)",
+                        x = (trimmedStartPos+trimmedFinishPos) / 2,
+                        y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
+                        - 0.06,
+                        showarrow=FALSE
+                    ))
         }
-        trimmedPer <- cumsum(trimmedPer)
-        remainingPer = 1 - trimmedPer
-        PerData <- data.frame(1:length(trimmedPer),
-                              trimmedPer, remainingPer)
-        colnames(PerData) <- c("Base",
-                               "Trimmed Ratio",
-                               "Remaining Ratio")
-        # Change font setting
-        # f <- list(
-        #     family = "Courier New, monospace",
-        #     size = 18,
-        #     color = "#7f7f7f"
-        # )
-        x <- list(
-            title = "Base Pair Index"
-            # titlefont = f
-        )
-        y <- list(
-            title = "Read Ratio"
-        )
-        PerDataPlot <- melt(PerData, id.vars = c("Base"))
-        suppressPlotlyMessage(
-            plot_ly(data=PerDataPlot,
-                    x=~Base,
-                    y=~value,
-                    mode="markers",
-                    color = ~variable,
-                    text = ~paste("BP Index : ",
-                                  Base, '<sup>th</sup><br>Read Ratio :',
-                                  round(value*100, digits = 2), '%')) %>%
-                layout(xaxis = x, yaxis = y, legend = list(orientation = 'h',
-                                                           xanchor = "center",  # use center of legend as anchor
-                                                           x = 0.5, y = 1.1)) %>%
-                add_annotations(
-                    text = "Trimmed Ratio (Each BP)",
-                    x = (trimmedStartPos + trimmedFinishPos) / 2,
-                    y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
-                    + 0.06,
-                    showarrow=FALSE
-                ) %>%
-                add_annotations(
-                    text = "Remaining Ratio (Each BP)",
-                    x = (trimmedStartPos+trimmedFinishPos) / 2,
-                    y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
-                    - 0.06,
-                    showarrow=FALSE
-                ))
     })
 }
 
@@ -1158,83 +1164,83 @@ qualityQualityBasePlot <- function(input, output, session,
         directionParam <- sidebar_menu[[2]]
         trimmedStartPos <- trimmedRV[["trimmedStartPos"]]
         trimmedFinishPos <- trimmedRV[["trimmedFinishPos"]]
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            readFeature <-
-                SangerConsensus@forwardReadsList[[singleReadIndex]]@readFeature
-            qualityPhredScores <-
-                SangerConsensus@forwardReadsList[[singleReadIndex]]@
-                QualityReport@qualityPhredScores
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            readFeature <-
-                SangerConsensus@reverseReadsList[[singleReadIndex]]@readFeature
-            qualityPhredScores <-
-                SangerConsensus@reverseReadsList[[singleReadIndex]]@
-                QualityReport@qualityPhredScores
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                readFeature <-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@readFeature
+                qualityPhredScores <-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            } else if (directionParam == "Reverse") {
+                readFeature <-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@readFeature
+                qualityPhredScores <-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            }
+            readLen = length(qualityPhredScores)
+            qualityPlotDf<- data.frame(1:length(qualityPhredScores),
+                                       qualityPhredScores)
+            colnames(qualityPlotDf) <- c("Index", "Score")
+            x <- list(
+                title = "Base Pair Index"
+                # titlefont = f
+            )
+            y <- list(
+                title = "Phred Quality Score"
+                # titlefont = f
+            )
+            suppressPlotlyMessage(
+                plot_ly(data=qualityPlotDf,
+                        x=~Index) %>%
+                    add_markers(y=~Score,
+                                text = ~paste("BP Index : ",
+                                              Index,
+                                              '<sup>th</sup><br>Phred Quality Score :',
+                                              Score),
+                                name = 'Quality Each BP') %>%
+                    add_trace(x=seq(trimmedStartPos,
+                                    trimmedFinishPos,
+                                    len=trimmedFinishPos-trimmedStartPos+1),
+                              y=rep(70, trimmedFinishPos-trimmedStartPos+1),
+                              mode="lines", hoverinfo="text",
+                              text=paste("Trimmed Reads BP length:",
+                                         trimmedFinishPos-trimmedStartPos+1,
+                                         "BPs <br>",
+                                         "Trimmed Reads BP ratio:",
+                                         round((trimmedFinishPos - trimmedStartPos+1)/
+                                                   readLen * 100,
+                                               digits=2),
+                                         "%"),
+                              line = list(width = 12),
+                              name = 'Trimmed Read') %>%
+                    add_trace(x=seq(0,readLen,len=readLen),
+                              y=rep(80, readLen), mode="lines", hoverinfo="text",
+                              text=paste("Whole Reads BP length:",
+                                         readLen,
+                                         "BPs <br>",
+                                         "Trimmed Reads BP ratio: 100 %"),
+                              line = list(width = 12),
+                              name = 'Whole Read') %>%
+                    layout(xaxis = x, yaxis = y,
+                           shapes = list(vline(trimmedStartPos),
+                                         vline(trimmedFinishPos)),
+                           legend = list(orientation = 'h',
+                                         xanchor = "center",  # use center of legend as anchor
+                                         x = 0.5, y = 1.1)) %>%
+                    add_annotations(
+                        text = "Trimming Strat <br> BP Index",
+                        x = trimmedStartPos + 40,
+                        y = 15,
+                        showarrow=FALSE
+                    ) %>%
+                    add_annotations(
+                        text = "Trimming End <br> BP Index",
+                        x = trimmedFinishPos - 40,
+                        y = 15,
+                        showarrow=FALSE
+                    ))
         }
-        readLen = length(qualityPhredScores)
-        qualityPlotDf<- data.frame(1:length(qualityPhredScores),
-                                   qualityPhredScores)
-        colnames(qualityPlotDf) <- c("Index", "Score")
-        x <- list(
-            title = "Base Pair Index"
-            # titlefont = f
-        )
-        y <- list(
-            title = "Phred Quality Score"
-            # titlefont = f
-        )
-        suppressPlotlyMessage(
-            plot_ly(data=qualityPlotDf,
-                    x=~Index) %>%
-                add_markers(y=~Score,
-                            text = ~paste("BP Index : ",
-                                          Index,
-                                          '<sup>th</sup><br>Phred Quality Score :',
-                                          Score),
-                            name = 'Quality Each BP') %>%
-                add_trace(x=seq(trimmedStartPos,
-                                trimmedFinishPos,
-                                len=trimmedFinishPos-trimmedStartPos+1),
-                          y=rep(70, trimmedFinishPos-trimmedStartPos+1),
-                          mode="lines", hoverinfo="text",
-                          text=paste("Trimmed Reads BP length:",
-                                     trimmedFinishPos-trimmedStartPos+1,
-                                     "BPs <br>",
-                                     "Trimmed Reads BP ratio:",
-                                     round((trimmedFinishPos - trimmedStartPos+1)/
-                                               readLen * 100,
-                                           digits=2),
-                                     "%"),
-                          line = list(width = 12),
-                          name = 'Trimmed Read') %>%
-                add_trace(x=seq(0,readLen,len=readLen),
-                          y=rep(80, readLen), mode="lines", hoverinfo="text",
-                          text=paste("Whole Reads BP length:",
-                                     readLen,
-                                     "BPs <br>",
-                                     "Trimmed Reads BP ratio: 100 %"),
-                          line = list(width = 12),
-                          name = 'Whole Read') %>%
-                layout(xaxis = x, yaxis = y,
-                       shapes = list(vline(trimmedStartPos),
-                                     vline(trimmedFinishPos)),
-                       legend = list(orientation = 'h',
-                                     xanchor = "center",  # use center of legend as anchor
-                                     x = 0.5, y = 1.1)) %>%
-                add_annotations(
-                    text = "Trimming Strat <br> BP Index",
-                    x = trimmedStartPos + 40,
-                    y = 15,
-                    showarrow=FALSE
-                ) %>%
-                add_annotations(
-                    text = "Trimming End <br> BP Index",
-                    x = trimmedFinishPos - 40,
-                    y = 15,
-                    showarrow=FALSE
-                ))
     })
 }
 
