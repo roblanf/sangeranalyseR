@@ -17,7 +17,7 @@
 #'                                  M2SlidingWindowSize   = NULL,
 #'                                  baseNumPerRow         = 80,
 #'                                  heightPerRow          = 200,
-#'                                  signalRatioCutoff     = 0.23,
+#'                                  signalRatioCutoff     = 0.03,
 #'                                  showTrimmed           = FALSE)
 #' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
 launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
