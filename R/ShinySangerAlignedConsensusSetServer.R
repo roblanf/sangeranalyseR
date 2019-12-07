@@ -1185,6 +1185,42 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                             ),
                         ),
+                        box(title =
+                                tags$p(tagList(icon("dot-circle"),
+                                               "DNA Sequence
+                                       (After Trimming):"),
+                                       style = "font-size: 26px;
+                                           font-weight: bold;"),
+                            solidHeader = TRUE, collapsible = TRUE,
+                            status = "success", width = 12,
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                            column(width = 12,
+                                   tags$p(tagList(icon("bars"),
+                                                  "Primary Sequence"),
+                                          style = "font-size: 22px;
+                                           font-weight: bold;"),
+                                   excelOutput("primarySeqTrimmedDF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "Secondary Sequence"),
+                                          style = "font-size: 22px;
+                                           font-weight: bold;"),
+                                   excelOutput("secondSeqTrimmedDF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "Quality Phred Score"),
+                                          style = "font-size: 22px;
+                                           font-weight: bold;"),
+                                   excelOutput("qualityScoreTrimmedDF",
+                                               width = "100%", height = "50"),
+                                   style = paste("overflow-y: hidden;",
+                                                 "overflow-x: scroll;")
+                            )
+                        ),
                         box(title = tags$p(tagList(icon("dot-circle"),
                                                    "Chromatogram: "),
                                            style = "font-size: 26px;
@@ -1997,6 +2033,59 @@ alignedConsensusSetServer <- function(input, output, session) {
         if (!is.na(consensusReadIndex) &&
             !is.na(singleReadIndex)) {
             PrimAASeqS3Display (sequenceParam)
+        }
+    })
+
+
+
+
+
+    output$primarySeqTrimmedDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            primarySeqTrimmedDisplay (input, output, session,
+                                      sequenceParam, trimmedRV)
+        }
+    })
+
+    output$secondSeqTrimmedDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            secondSeqTrimmedDisplay (input, output, session,
+                                     sequenceParam, trimmedRV)
+        }
+    })
+    output$qualityScoreTrimmedDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            if (directionParam == "Forward") {
+                PhredScore <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores[
+                        (trimmedRV[["trimmedStartPos"]]+1):
+                            trimmedRV[["trimmedFinishPos"]]]
+            } else if (directionParam == "Reverse") {
+                PhredScore <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores[
+                        (trimmedRV[["trimmedStartPos"]]+1):
+                            trimmedRV[["trimmedFinishPos"]]]
+            }
+            qualityScoreDisplay (PhredScore)
         }
     })
     ############################################################################

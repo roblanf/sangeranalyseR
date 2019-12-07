@@ -1353,5 +1353,55 @@ PrimAASeqS3Display <- function(sequenceParam) {
                    style = styleList, loadingSpin = TRUE)
     )
 }
+primarySeqTrimmedDisplay <- function(input, output, session,
+                                     sequenceParam, trimmedRV) {
+    primarySeq <- unlist(strsplit(
+        substr(sequenceParam[["primarySeq"]],
+               trimmedRV[["trimmedStartPos"]] + 1,
+               trimmedRV[["trimmedFinishPos"]])
+        , ""))
+    primarySeqDF <- data.frame(
+        t(data.frame(primarySeq)), stringsAsFactors = FALSE)
+    colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
+    rownames(primarySeqDF) <- NULL
+    AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
+    TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
+    CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
+    GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
+    styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+    suppressMessages(
+        excelTable(data = primarySeqDF, defaultColWidth = 30,
+                   editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                   style = styleList, loadingSpin = TRUE)
+    )
+}
 
+secondSeqTrimmedDisplay <- function(input, output, session,
+                                    sequenceParam, trimmedRV) {
+    secondarySeq <- unlist(strsplit(
+        substr(sequenceParam[["secondarySeq"]],
+               trimmedRV[["trimmedStartPos"]] + 1,
+               trimmedRV[["trimmedFinishPos"]])
+        , ""))
+    secondarySeqDF <- data.frame(
+        t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
+    colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
+    rownames(secondarySeqDF) <- NULL
+    AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
+    TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
+    CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
+    GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
+    styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+    suppressMessages(
+        excelTable(data = secondarySeqDF, defaultColWidth = 30,
+                   editable = TRUE, rowResize = FALSE,
+                   columnResize = FALSE, allowInsertRow = FALSE,
+                   allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                   style = styleList, loadingSpin = TRUE)
+    )
+}
 

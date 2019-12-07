@@ -703,8 +703,6 @@ consensusReadServer <- function(input, output, session) {
                         ),
                     ),
                 ),
-
-
                 box(title =
                         tags$p(tagList(icon("dot-circle"),
                                        "DNA Sequence
@@ -741,7 +739,6 @@ consensusReadServer <- function(input, output, session) {
                                          "overflow-x: scroll;")
                     )
                 ),
-
                 box(title = tags$p(tagList(icon("dot-circle"),
                                            "Chromatogram: "),
                                    style = "font-size: 26px;
@@ -1412,28 +1409,8 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(singleReadIndex)) {
-            primarySeq <- unlist(strsplit(
-                substr(sequenceParam[["primarySeq"]],
-                       trimmedRV[["trimmedStartPos"]] + 1,
-                       trimmedRV[["trimmedFinishPos"]])
-                , ""))
-            primarySeqDF <- data.frame(
-                t(data.frame(primarySeq)), stringsAsFactors = FALSE)
-            colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
-            rownames(primarySeqDF) <- NULL
-            AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
-            TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
-            CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
-            GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
-            styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
-            suppressMessages(
-                excelTable(data = primarySeqDF, defaultColWidth = 30,
-                           editable = TRUE, rowResize = FALSE,
-                           columnResize = FALSE, allowInsertRow = FALSE,
-                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                           style = styleList, loadingSpin = TRUE)
-            )
+            primarySeqTrimmedDisplay (input, output, session,
+                                      sequenceParam, trimmedRV)
         }
     })
     ### ------------------------------------------------------------------------
@@ -1446,28 +1423,8 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(singleReadIndex)) {
-            secondarySeq <- unlist(strsplit(
-                substr(sequenceParam[["secondarySeq"]],
-                       trimmedRV[["trimmedStartPos"]] + 1,
-                       trimmedRV[["trimmedFinishPos"]])
-                , ""))
-            secondarySeqDF <- data.frame(
-                t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
-            colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
-            rownames(secondarySeqDF) <- NULL
-            AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
-            TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
-            CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
-            GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
-            styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
-            suppressMessages(
-                excelTable(data = secondarySeqDF, defaultColWidth = 30,
-                           editable = TRUE, rowResize = FALSE,
-                           columnResize = FALSE, allowInsertRow = FALSE,
-                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                           style = styleList, loadingSpin = TRUE)
-            )
+            secondSeqTrimmedDisplay (input, output, session,
+                                     sequenceParam, trimmedRV)
         }
     })
     ### ------------------------------------------------------------------------
@@ -1490,20 +1447,7 @@ consensusReadServer <- function(input, output, session) {
                         (trimmedRV[["trimmedStartPos"]]+1):
                             trimmedRV[["trimmedFinishPos"]]]
             }
-            PhredScoreDF <- data.frame(
-                t(data.frame(PhredScore)), stringsAsFactors = FALSE)
-            colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
-            rownames(PhredScoreDF) <- NULL
-            styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
-            suppressMessages(
-                excelTable(data =
-                               PhredScoreDF, defaultColWidth = 30, editable = TRUE,
-                           rowResize = FALSE, columnResize = FALSE,
-                           allowInsertRow = FALSE, allowInsertColumn = FALSE,
-                           allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
-                           style = styleList, allowRenameColumn = FALSE,
-                           loadingSpin = TRUE)
-            )
+            qualityScoreDisplay (PhredScore)
         }
     })
     ############################################################################
