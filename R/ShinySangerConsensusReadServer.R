@@ -31,24 +31,6 @@ consensusReadServer <- function(input, output, session) {
     forwardReadNum <- length((SangerConsensus)@forwardReadsList)
     reverseReadNum <- length((SangerConsensus)@reverseReadsList)
     SangerSingleReadNum <- forwardReadNum + reverseReadNum
-
-    # readFileName (basename) (Fixed)
-    forwardReadBFN <- sapply(1:forwardReadNum, function(i)
-        basename(SangerConsensus@forwardReadsList[[i]]@readFileName))
-    reverseReadBFN <- sapply(1:reverseReadNum, function(i)
-        basename(SangerConsensus@reverseReadsList[[i]]@readFileName))
-    SangerSingleReadBFN <- c(forwardReadBFN, reverseReadBFN)
-
-
-
-
-    # readFileName (absolute)
-    forwardReadAFN <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@readFileName)
-    reverseReadAFN <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@readFileName)
-    SangerSingleReadAFN <- c(forwardReadAFN, reverseReadAFN)
-
     # readFeature
     forwardReadFeature <- sapply(1:forwardReadNum, function(i)
         paste0(i, " ",
@@ -56,86 +38,12 @@ consensusReadServer <- function(input, output, session) {
     reverseReadFeature <- sapply(1:reverseReadNum, function(i)
         paste0(i, " ",
                SangerConsensus@reverseReadsList[[i]]@readFeature))
-    SangerSingleReadFeature <- c(forwardReadFeature, reverseReadFeature)
-
-    # QualityReport
-    forwardReadQualReport <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@QualityReport)
-    reverseReadQualReport <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@QualityReport)
-    SangerSingleReadQualReport <- c(forwardReadQualReport,
-                                    reverseReadQualReport)
-
-    # ChromatogramParam
-    forwardReadChromatogramParam <- sapply(1:forwardReadNum, function(i)
-        SangerConsensus@forwardReadsList[[i]]@ChromatogramParam)
-    reverseReadChromatogramParam <- sapply(1:reverseReadNum, function(i)
-        SangerConsensus@reverseReadsList[[i]]@ChromatogramParam)
-    SangerSingleReadChromatogramParam <- c(forwardReadChromatogramParam,
-                                           reverseReadChromatogramParam)
-
-    # primaryAASeqS1DF
-    forwardReadPrimAASeqS1DF <- lapply(1:forwardReadNum, function(i) {
-        AAString <- data.frame(SangerConsensus@forwardReadsList[[i]]@primaryAASeqS1)
-        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
-        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-        rownames(AAStringDF) <- NULL
-        return(AAStringDF)
-    })
-    reverseReadPrimAASeqS1DF <- lapply(1:reverseReadNum, function(i) {
-        AAString <- data.frame(SangerConsensus@reverseReadsList[[i]]@primaryAASeqS1)
-        AAStringDF <- data.frame(
-            t(AAString), stringsAsFactors = FALSE)
-        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-        rownames(AAStringDF) <- NULL
-        return(AAStringDF)
-    })
-    SangerSingleReadPrimAASeqS1DF <- c(forwardReadPrimAASeqS1DF,
-                                       reverseReadPrimAASeqS1DF)
-
-    # primaryAASeqS2DF
-    forwardReadPrimAASeqS2DF <- lapply(1:forwardReadNum, function(i) {
-        AAString <- data.frame(SangerConsensus@forwardReadsList[[i]]@primaryAASeqS2)
-        AAString <- rbind(NA, AAString)
-        AAStringDF <- data.frame(
-            t(AAString), stringsAsFactors = FALSE)
-        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-        rownames(AAStringDF) <- NULL
-        return(AAStringDF)
-    })
-    reverseReadPrimAASeqS2DF <- lapply(1:reverseReadNum, function(i) {
-        AAString <- data.frame(SangerConsensus@reverseReadsList[[i]]@primaryAASeqS2)
-        AAString <- rbind(NA, AAString)
-        AAStringDF <- data.frame(
-            t(AAString), stringsAsFactors = FALSE)
-        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-        rownames(AAStringDF) <- NULL
-        return(AAStringDF)
-    })
-    SangerSingleReadPrimAASeqS2DF <- c(forwardReadPrimAASeqS2DF,
-                                       reverseReadPrimAASeqS2DF)
-
-    # primaryAASeqS3DF
-    forwardReadPrimAASeqS3DF <- lapply(1:forwardReadNum, function(i) {
-        AAString <- data.frame(SangerConsensus@forwardReadsList[[i]]@primaryAASeqS3)
-        AAString <- rbind(NA, NA, AAString)
-        AAStringDF <- data.frame(
-            t(AAString), stringsAsFactors = FALSE)
-        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-        rownames(AAStringDF) <- NULL
-        return(AAStringDF)
-    })
-    reverseReadPrimAASeqS3DF <- lapply(1:reverseReadNum, function(i) {
-        AAString <- data.frame(SangerConsensus@reverseReadsList[[i]]@primaryAASeqS3)
-        AAString <- rbind(NA, NA, AAString)
-        AAStringDF <- data.frame(
-            t(AAString), stringsAsFactors = FALSE)
-        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-        rownames(AAStringDF) <- NULL
-        return(AAStringDF)
-    })
-    SangerSingleReadPrimAASeqS3DF <- c(forwardReadPrimAASeqS3DF,
-                                       reverseReadPrimAASeqS3DF)
+    # readFileName (basename) (Fixed)
+    forwardReadBFN <- sapply(1:forwardReadNum, function(i)
+        basename(SangerConsensus@forwardReadsList[[i]]@readFileName))
+    reverseReadBFN <- sapply(1:reverseReadNum, function(i)
+        basename(SangerConsensus@reverseReadsList[[i]]@readFileName))
+    SangerSingleReadBFN <- c(forwardReadBFN, reverseReadBFN)
 
     ### ------------------------------------------------------------------------
     ### ConsensusRead reactiveValue
@@ -466,19 +374,114 @@ consensusReadServer <- function(input, output, session) {
                    (directionParam == "Forward" ||
                     directionParam == "Reverse")) {
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
-            h1(input$sidebar_menu)
+
             if (directionParam == "Forward") {
+                ChromatogramParam[["baseNumPerRow"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    baseNumPerRow
+                ChromatogramParam[["heightPerRow"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    heightPerRow
+                ChromatogramParam[["signalRatioCutoff"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    signalRatioCutoff
+                ChromatogramParam[["showTrimmed"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    showTrimmed
+
+                trimmedParam[["M1TrimmingCutoff"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    M1TrimmingCutoff
+                trimmedParam[["M2CutoffQualityScore"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    M2CutoffQualityScore
+                trimmedParam[["M2SlidingWindowSize"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    M2SlidingWindowSize
+
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerConsensus@forwardReadsList[[singleReadIndex]]@QualityReport@
+                              remainingRatio * 100, 2)
                 SSReadBFN <- basename(
                     SangerConsensus@
                         forwardReadsList[[singleReadIndex]]@readFileName)
                 SSReadAFN <- SangerConsensus@
                     forwardReadsList[[singleReadIndex]]@readFileName
             } else if (directionParam == "Reverse") {
-                SSReadBFN <- basename(
-                    SangerConsensus@
-                        reverseReadsList[[singleReadIndex]]@readFileName)
-                SSReadAFN <- SangerConsensus@
-                    reverseReadsList[[singleReadIndex]]@readFileName
+                ChromatogramParam[["baseNumPerRow"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    baseNumPerRow
+                ChromatogramParam[["heightPerRow"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    heightPerRow
+                ChromatogramParam[["signalRatioCutoff"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    signalRatioCutoff
+                ChromatogramParam[["showTrimmed"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    showTrimmed
+
+                trimmedParam[["M1TrimmingCutoff"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    M1TrimmingCutoff
+                trimmedParam[["M2CutoffQualityScore"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    M2CutoffQualityScore
+                trimmedParam[["M2SlidingWindowSize"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    M2SlidingWindowSize
+
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
+                              remainingRatio * 100, 2)
             }
             fluidRow(
                 useShinyjs(),
@@ -827,6 +830,150 @@ consensusReadServer <- function(input, output, session) {
             input$ChromatogramCheckShowTrimmed
     })
 
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
+    ### ------------------------------------------------------------------------
+    observeEvent(input$startTrimmingButton, {
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.null(SangerSingleReadQualReport[[singleReadIndex]])) {
+            if (SangerSingleReadQualReport[[singleReadIndex]]@
+                TrimmingMethod == "M1") {
+                if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
+                    as.numeric(input$M1TrimmingCutoffText) > 0 &&
+                    as.numeric(input$M1TrimmingCutoffText) <= 1) {
+                    inputM1TrimmingCutoffText <- input$M1TrimmingCutoffText
+                } else {
+                    inputM1TrimmingCutoffText <- 0.0001
+                }
+                ### ------------------------------------------------------------
+                ### Start M1 trimming calculation
+                ### ------------------------------------------------------------
+                trimmingPos <-
+                    M1inside_calculate_trimming(
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                            qualityPhredScores,
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                            qualityBaseScores,
+                        as.numeric(inputM1TrimmingCutoffText))
+
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                    M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
+                trimmedParam[["M1TrimmingCutoff"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    M1TrimmingCutoff
+
+            } else if (SangerSingleReadQualReport[[singleReadIndex]]@
+                       TrimmingMethod == "M2") {
+                if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
+                    strtoi(input$M2CutoffQualityScoreText) > 0 &&
+                    strtoi(input$M2CutoffQualityScoreText) <= 60 &&
+                    strtoi(input$M2CutoffQualityScoreText) %% 1 ==0) {
+                    inputM2CutoffQualityScoreText <- input$M2CutoffQualityScoreText
+                } else {
+                    inputM2CutoffQualityScoreText <- 20
+                }
+                if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
+                    strtoi(input$M2SlidingWindowSizeText) > 0 &&
+                    strtoi(input$M2SlidingWindowSizeText) <= 20 &&
+                    strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
+                    inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
+                } else {
+                    inputM2SlidingWindowSizeText <- 5
+                }
+                ### ------------------------------------------------------------
+                ### Start M2 trimming calculation
+                ### ------------------------------------------------------------
+                trimmingPos <-
+                    M2inside_calculate_trimming(
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                            qualityPhredScores,
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                            qualityBaseScores,
+                        strtoi(inputM2CutoffQualityScoreText),
+                        SangerSingleReadQualReport[[singleReadIndex]]@
+                            M2SlidingWindowSize)
+
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                    M2CutoffQualityScore <<-
+                    strtoi(inputM2CutoffQualityScoreText)
+                trimmedParam[["M2CutoffQualityScore"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    M2CutoffQualityScore
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                    M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
+                trimmedParam[["M2SlidingWindowSize"]] <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]@
+                    M2SlidingWindowSize
+            }
+
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawSeqLength <<- trimmingPos[["rawSeqLength"]]
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMeanQualityScore <<- trimmingPos[["rawMeanQualityScore"]]
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMinQualityScore <<- trimmingPos[["rawMinQualityScore"]]
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedStartPos <<- trimmingPos[["trimmedStartPos"]]
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedFinishPos <<- trimmingPos[["trimmedFinishPos"]]
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedSeqLength <<- trimmingPos[["trimmedSeqLength"]]
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMeanQualityScore <<- trimmingPos[["trimmedMeanQualityScore"]]
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMinQualityScore <<- trimmingPos[["trimmedMinQualityScore"]]
+            SangerSingleReadQualReport[[singleReadIndex]]@
+                remainingRatio <<- trimmingPos[["remainingRatio"]]
+
+            trimmedRV[["rawSeqLength"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                rawSeqLength
+            trimmedRV[["rawMeanQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMeanQualityScore
+            trimmedRV[["rawMinQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                rawMinQualityScore
+            trimmedRV[["trimmedStartPos"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedStartPos
+            trimmedRV[["trimmedFinishPos"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedFinishPos
+            trimmedRV[["trimmedSeqLength"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedSeqLength
+            trimmedRV[["trimmedMeanQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMeanQualityScore
+            trimmedRV[["trimmedMinQualityScore"]] <<-
+                SangerSingleReadQualReport[[singleReadIndex]]@
+                trimmedMinQualityScore
+            trimmedRV[["remainingRatio"]] <<-
+                round(SangerSingleReadQualReport[[singleReadIndex]]@
+                          remainingRatio * 100, 2)
+            ### ------------------------------------------------------------
+            ### Save SangerConsensus quality S4 object
+            ### ------------------------------------------------------------
+            forwardReadNum <- length((SangerConsensus)@forwardReadsList)
+            reverseReadNum <- length((SangerConsensus)@reverseReadsList)
+            SangerSingleReadNum <- forwardReadNum + reverseReadNum
+            if (singleReadIndex <= forwardReadNum) {
+                # This is forward list
+                SangerConsensus@
+                    forwardReadsList[[singleReadIndex]]@
+                    QualityReport <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]
+            } else {
+                # This is reverse list
+                SangerConsensus@
+                    reverseReadsList[[singleReadIndex-forwardReadNum]]@
+                    QualityReport <<-
+                    SangerSingleReadQualReport[[singleReadIndex]]
+            }
+        }
+    })
 
 
 
@@ -1357,11 +1504,8 @@ consensusReadServer <- function(input, output, session) {
     valueBoxM2CutoffQualityScore (input, output, session)
     valueBoxM2SlidingWindowSize (input, output, session)
 
-    # qualityTrimmingRatioPlot (input, output, session, trimmedRV,
-    #                           SangerSingleReadQualReport,
-    #                           SangerSingleReadFeature)
-    # qualityQualityBasePlot (input, output, session, trimmedRV,
-    #                         SangerSingleReadQualReport, SangerSingleReadFeature)
+    qualityTrimmingRatioPlot (input, output, session, trimmedRV, SangerConsensus)
+    qualityQualityBasePlot (input, output, session, trimmedRV, SangerConsensus)
 
     valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
     valueBoxChromTrimmedFinishPos (input, output, session, trimmedRV)
