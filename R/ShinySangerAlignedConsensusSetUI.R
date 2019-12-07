@@ -109,6 +109,7 @@ alignedConsensusSetUI <- dashboardPage(
             HTML(".shiny-notification {
              color: white;
              background-color:#0E8C3A;
+             opacity:1.0;
              position:fixed;
              top: calc(50% - 150px);
              left: calc(50% - 150px);

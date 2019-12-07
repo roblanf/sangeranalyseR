@@ -840,8 +840,30 @@ consensusReadServer <- function(input, output, session) {
     observeEvent(input$saveS4, {
         message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
-        showNotification(paste("New S4 object is store as:", newS4Object),
-                         closeButton = TRUE, type = "message", duration = 10)
+        showNotification(
+            ui = fluidRow(
+                column(1),
+                column(11,
+                       tags$p(tagList(icon("dot-circle"),
+                                      "New S4 object is store as: "),
+                              style = "font-size: 28px;
+                                   font-weight: bold;"),
+                       tags$p(paste0("'", newS4Object, "'"),
+                              style = "font-size: 26px;
+                                   font-style: italic"),
+                       tags$br(),
+                       tags$p(paste0(">> Run 'readRDS(\"",newS4Object,
+                                     "\")'"),
+                              style = "font-size: 18px;
+                                   font-style: italic"),
+                       tags$p("   to load saved S4 object into R
+                                     environment",
+                              style = "font-size: 18px;
+                                   font-style: italic"),
+
+                )
+            ), closeButton = TRUE, type = "message", duration = 10)
+
         ### --------------------------------------------------------------------
         ### Save SangerConsensus quality S4 object
         ### --------------------------------------------------------------------
@@ -1683,6 +1705,11 @@ consensusReadServer <- function(input, output, session) {
                                           "Show trimmed : ",
                                           ChromatogramParam[["showTrimmed"]]),
                                   style = "font-size: 20px;
+                                   font-style: italic"),
+                           tags$p("( If 'Signal Ratio Cutoff' is too small,
+                                  it would need more time to replot
+                                  the chromatogram)",
+                                  style = "font-size: 16px;
                                    font-style: italic"),)
                 ),
                 action = NULL, duration = NULL, closeButton = FALSE,
