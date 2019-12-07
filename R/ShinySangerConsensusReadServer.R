@@ -375,16 +375,25 @@ consensusReadServer <- function(input, output, session) {
                     directionParam == "Reverse")) {
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
             if (directionParam == "Forward") {
-                sequenceParam[["primarySeq"]] <<-
-                    SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq
-                sequenceParam[["secondarySeq"]] <<-
-                    SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq
-                sequenceParam[["primaryAASeqS1"]] <<-
-                    SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS1
-                sequenceParam[["primaryAASeqS2"]] <<-
-                    SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS2
-                sequenceParam[["primaryAASeqS3"]] <<-
-                    SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS3
+                # sequenceParam[["primarySeq"]] <<-
+                #     SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq
+                # sequenceParam[["secondarySeq"]] <<-
+                #     SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq
+                # sequenceParam[["primaryAASeqS1"]] <<-
+                #     SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS1
+                # sequenceParam[["primaryAASeqS2"]] <<-
+                #     SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS2
+                # sequenceParam[["primaryAASeqS3"]] <<-
+                #     SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS3
+
+
+
+
+
+
+
+
+
 
                 ChromatogramParam[["baseNumPerRow"]] <<-
                     SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
@@ -826,6 +835,7 @@ consensusReadServer <- function(input, output, session) {
     ### observeEvent: Button Close UI
     ### ------------------------------------------------------------------------
     observeEvent(input$closeUI, {
+        message("@@@@@@@ 'close button' has been clicked")
         btn <- input$closeUI
         stopApp()
     })
@@ -833,6 +843,7 @@ consensusReadServer <- function(input, output, session) {
     ### observeEvent: Button Save S4 object
     ### ------------------------------------------------------------------------
     observeEvent(input$saveS4, {
+        message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
         showNotification(paste("New S4 object is store as:", newS4Object),
                          type = "message", duration = 10)
@@ -847,7 +858,7 @@ consensusReadServer <- function(input, output, session) {
     ### observeEvent: Button Consensus read re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
-        message("######## Reactive button clicked !!!")
+        message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start recalculating consensus read (SC")
         CSResult<-
             calculateConsensusRead (SangerConsensus@forwardReadsList,
@@ -876,13 +887,14 @@ consensusReadServer <- function(input, output, session) {
         consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
         consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
         consensusParam[["secondaryPeakDF"]] <<- SangerConsensus@secondaryPeakDF
-        message("######## Finish recalculation")
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$saveChromatogramParam, {
         ## !!!!! Update !!!!
+        message("@@@@@@@ 'Reactive button' has been clicked")
+        message("######## Start recalculating chromatogram")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1562,10 +1574,11 @@ consensusReadServer <- function(input, output, session) {
 
 
     ### ------------------------------------------------------------------------
-    ### Primary dataframe
+    ### Primary Trimmed dataframe
     ### ------------------------------------------------------------------------
     output$primarySeqTrimmedDF <- renderExcel({
         ## !!!!! Update !!!!
+        message(">>>>>>>>>>>> Update primarySeqTrimmedDF! ")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1595,10 +1608,11 @@ consensusReadServer <- function(input, output, session) {
         }
     })
     ### ------------------------------------------------------------------------
-    ### Secondary dataframe
+    ### Secondary Trimmed dataframe
     ### ------------------------------------------------------------------------
     output$secondSeqTrimmedDF <- renderExcel({
         ## !!!!! Update !!!!
+        message(">>>>>>>>>>>> Update secondSeqTrimmedDF! ")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1628,9 +1642,10 @@ consensusReadServer <- function(input, output, session) {
         }
     })
     ### ------------------------------------------------------------------------
-    ### Quality Score dataframe
+    ### Quality Score Trimmed dataframe
     ### ------------------------------------------------------------------------
     output$qualityScoreTrimmedDF <- renderExcel({
+        message(">>>>>>>>>>>> Update qualityScoreTrimmedDF! ")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1838,29 +1853,38 @@ consensusReadServer <- function(input, output, session) {
             ### Re-run 'MakeBaseCall' function
             ### ----------------------------------------------------------------
             hetcalls <-
-                MakeBaseCalls(SangerConsensus@forwardReadsList[[singleReadIndex]], signalRatioCutoff = as.numeric(
+                MakeBaseCalls(SangerConsensus@forwardReadsList[[singleReadIndex]],
+                              signalRatioCutoff = as.numeric(
                         ChromatogramParam[["signalRatioCutoff"]]))
+            message("hetcalls@primarySeq: ", as.character(hetcalls@primarySeq))
+            message("hetcalls@secondarySeq: ", as.character(hetcalls@secondarySeq))
+
+
             ### ----------------------------------------------------------------
             ### Update 'SangerConsensus'!
             ### ----------------------------------------------------------------
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@peakPosMatrix <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@peakPosMatrix <<-
                 hetcalls@peakPosMatrix
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@peakAmpMatrix <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@peakAmpMatrix <<-
                 hetcalls@peakAmpMatrix
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq <<-
                 hetcalls@primarySeq
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq <<-
                 hetcalls@secondarySeq
+
+            message("SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq: ", SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq)
+            message("SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq: ", SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq)
+
             ### ----------------------------------------------------------------
             ### Updating AASeqs
             ### ----------------------------------------------------------------
             AASeqResult <- calculateAASeq (hetcalls@primarySeq,
                                            SangerConsensus@geneticCode)
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS1 <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
                 AASeqResult[["primaryAASeqS1"]]
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS2 <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
                 AASeqResult[["primaryAASeqS2"]]
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS3 <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
                 AASeqResult[["primaryAASeqS3"]]
             ### ----------------------------------------------------------------
             ### Updating reactive values
@@ -1869,6 +1893,10 @@ consensusReadServer <- function(input, output, session) {
                 SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq
             sequenceParam[["secondarySeq"]] <<-
                 SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq
+
+            message("primarySeq: ", as.character(sequenceParam[["primarySeq"]]))
+            message("secondarySeq: ", as.character(sequenceParam[["secondarySeq"]]))
+
             sequenceParam[["primaryAASeqS1"]] <<-
                 SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS1
             sequenceParam[["primaryAASeqS2"]] <<-
@@ -1889,24 +1917,24 @@ consensusReadServer <- function(input, output, session) {
             ### ----------------------------------------------------------------
             ### Update 'SangerConsensus'!
             ### ----------------------------------------------------------------
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@peakPosMatrix <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@peakPosMatrix <<-
                 hetcalls@peakPosMatrix
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@peakAmpMatrix <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@peakAmpMatrix <<-
                 hetcalls@peakAmpMatrix
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@primarySeq <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@primarySeq <<-
                 hetcalls@primarySeq
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@secondarySeq <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@secondarySeq <<-
                 hetcalls@secondarySeq
             ### ----------------------------------------------------------------
             ### Updating AASeqs
             ### ----------------------------------------------------------------
             AASeqResult <- calculateAASeq (hetcalls@primarySeq,
                                            SangerConsensus@geneticCode)
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS1 <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
                 AASeqResult[["primaryAASeqS1"]]
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS2 <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
                 AASeqResult[["primaryAASeqS2"]]
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS3 <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
                 AASeqResult[["primaryAASeqS3"]]
             ### ----------------------------------------------------------------
             ### Updating reactive values
@@ -1922,6 +1950,7 @@ consensusReadServer <- function(input, output, session) {
             sequenceParam[["primaryAASeqS3"]] <<-
                 SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS3
         }
+
         message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
         chromatogram(hetcalls,
                      width = strtoi(
