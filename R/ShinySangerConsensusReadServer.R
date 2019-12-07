@@ -939,7 +939,7 @@ consensusReadServer <- function(input, output, session) {
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(singleReadIndex))) {
-            if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+            if (SangerConsensus@forwardReadsList[[1]]@
                 QualityReport@TrimmingMethod == "M1") {
                 if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
                     as.numeric(input$M1TrimmingCutoffText) > 0 &&
@@ -982,7 +982,7 @@ consensusReadServer <- function(input, output, session) {
                         SangerConsensus@reverseReadsList[[singleReadIndex]]@
                         QualityReport@M1TrimmingCutoff
                 }
-            } else if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+            } else if (SangerConsensus@forwardReadsList[[1]]@
                        QualityReport@TrimmingMethod == "M2") {
                 if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
                     strtoi(input$M2CutoffQualityScoreText) > 0 &&
@@ -1510,19 +1510,19 @@ consensusReadServer <- function(input, output, session) {
     ### Trimming method selection functions
     ############################################################################
     ### ------------------------------------------------------------------------
-    ### Trimming Method Selection
+    ### Trimming Method Selection (Just check forward reads => not dynamic)
     ### ------------------------------------------------------------------------
     output$TrimmingMethodSelectionOutput <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(singleReadIndex))) {
-            if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+            if (SangerConsensus@forwardReadsList[[1]]@
                 QualityReport@TrimmingMethod == "M1") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
                         'Logarithmic Scale Trimming'")
-            } else if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+            } else if (SangerConsensus@forwardReadsList[[1]]@
                        QualityReport@TrimmingMethod == "M2") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
@@ -1530,14 +1530,13 @@ consensusReadServer <- function(input, output, session) {
             }
         }
     })
-
     output$TrimmingMethodUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(singleReadIndex))) {
             ## For method, everyone is same, so just pick forward one.
-            if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+            if (SangerConsensus@forwardReadsList[[1]]@
                 QualityReport@TrimmingMethod == "M1") {
                 if (directionParam == "Forward") {
                     if (is.null(SangerConsensus@forwardReadsList[[singleReadIndex]]@
@@ -1564,7 +1563,7 @@ consensusReadServer <- function(input, output, session) {
                            ),
                     ),
                 )
-            } else if (SangerConsensus@forwardReadsList[[singleReadIndex]]@
+            } else if (SangerConsensus@forwardReadsList[[1]]@
                        QualityReport@TrimmingMethod == "M2") {
                 if (directionParam == "Forward") {
                     if (is.null(SangerConsensus@forwardReadsList[[singleReadIndex]]@
