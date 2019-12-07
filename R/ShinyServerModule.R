@@ -1059,189 +1059,148 @@ valueBoxChromTrimmedFinishPos <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 ### qualityTrimmingRatioPlot
 ### ============================================================================
-qualityTrimmingRatioPlot <- function(input, output, session,
-                                     trimmedRV, SangerConsensus) {
-    output$qualityTrimmingRatioPlot <- renderPlotly({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
-        directionParam <- sidebar_menu[[2]]
-        trimmedStartPos = trimmedRV[["trimmedStartPos"]]
-        trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
-        if (!is.na(strtoi(singleReadIndex))) {
-            if (directionParam == "Forward") {
-                readFeature <-
-                    SangerConsensus@
-                    forwardReadsList[[singleReadIndex]]@readFeature
-                qualityPhredScores <- SangerConsensus@
-                    forwardReadsList[[singleReadIndex]]@
-                    QualityReport@qualityPhredScores
-            } else if (directionParam == "Reverse") {
-                readFeature <-
-                    SangerConsensus@
-                    reverseReadsList[[singleReadIndex]]@readFeature
-                qualityPhredScores <- SangerConsensus@
-                    reverseReadsList[[singleReadIndex]]@
-                    QualityReport@qualityPhredScores
-            }
-            readLen = length(qualityPhredScores)
-            stepRatio = 1 / readLen
-            trimmedStartPos / readLen
-            trimmedFinishPos / readLen
-            trimmedPer <- c()
-            remainingPer <- c()
-            for (i in 1:trimmedStartPos) {
-                if (i != trimmedStartPos) {
-                    trimmedPer <- c(trimmedPer, stepRatio)
-                }
-            }
-            for (i in trimmedStartPos:trimmedFinishPos) {
-                trimmedPer <- c(trimmedPer, 0)
-            }
-            for (i in trimmedFinishPos:readLen) {
-                if (i != trimmedFinishPos) {
-                    trimmedPer <- c(trimmedPer, stepRatio)
-                }
-            }
-            trimmedPer <- cumsum(trimmedPer)
-            remainingPer = 1 - trimmedPer
-            PerData <- data.frame(1:length(trimmedPer),
-                                  trimmedPer, remainingPer)
-            colnames(PerData) <- c("Base",
-                                   "Trimmed Ratio",
-                                   "Remaining Ratio")
-            # Change font setting
-            # f <- list(
-            #     family = "Courier New, monospace",
-            #     size = 18,
-            #     color = "#7f7f7f"
-            # )
-            x <- list(
-                title = "Base Pair Index"
-                # titlefont = f
-            )
-            y <- list(
-                title = "Read Ratio"
-            )
-            PerDataPlot <- melt(PerData, id.vars = c("Base"))
-            suppressPlotlyMessage(
-                plot_ly(data=PerDataPlot,
-                        x=~Base,
-                        y=~value,
-                        mode="markers",
-                        color = ~variable,
-                        text = ~paste("BP Index : ",
-                                      Base, '<sup>th</sup><br>Read Ratio :',
-                                      round(value*100, digits = 2), '%')) %>%
-                    layout(xaxis = x, yaxis = y, legend = list(orientation = 'h',
-                                                               xanchor = "center",  # use center of legend as anchor
-                                                               x = 0.5, y = 1.1)) %>%
-                    add_annotations(
-                        text = "Trimmed Ratio (Each BP)",
-                        x = (trimmedStartPos + trimmedFinishPos) / 2,
-                        y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
-                        + 0.06,
-                        showarrow=FALSE
-                    ) %>%
-                    add_annotations(
-                        text = "Remaining Ratio (Each BP)",
-                        x = (trimmedStartPos+trimmedFinishPos) / 2,
-                        y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
-                        - 0.06,
-                        showarrow=FALSE
-                    ))
+qualityTrimmingRatioPlotDisplay <- function(input, output, session,
+                                            trimmedRV, qualityPhredScores) {
+    trimmedStartPos = trimmedRV[["trimmedStartPos"]]
+    trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
+    readLen = length(qualityPhredScores)
+    stepRatio = 1 / readLen
+    trimmedStartPos / readLen
+    trimmedFinishPos / readLen
+    trimmedPer <- c()
+    remainingPer <- c()
+    for (i in 1:trimmedStartPos) {
+        if (i != trimmedStartPos) {
+            trimmedPer <- c(trimmedPer, stepRatio)
         }
-    })
+    }
+    for (i in trimmedStartPos:trimmedFinishPos) {
+        trimmedPer <- c(trimmedPer, 0)
+    }
+    for (i in trimmedFinishPos:readLen) {
+        if (i != trimmedFinishPos) {
+            trimmedPer <- c(trimmedPer, stepRatio)
+        }
+    }
+    trimmedPer <- cumsum(trimmedPer)
+    remainingPer = 1 - trimmedPer
+    PerData <- data.frame(1:length(trimmedPer),
+                          trimmedPer, remainingPer)
+    colnames(PerData) <- c("Base",
+                           "Trimmed Ratio",
+                           "Remaining Ratio")
+    # Change font setting
+    # f <- list(
+    #     family = "Courier New, monospace",
+    #     size = 18,
+    #     color = "#7f7f7f"
+    # )
+    x <- list(
+        title = "Base Pair Index"
+        # titlefont = f
+    )
+    y <- list(
+        title = "Read Ratio"
+    )
+    PerDataPlot <- melt(PerData, id.vars = c("Base"))
+    suppressPlotlyMessage(
+        plot_ly(data=PerDataPlot,
+                x=~Base,
+                y=~value,
+                mode="markers",
+                color = ~variable,
+                text = ~paste("BP Index : ",
+                              Base, '<sup>th</sup><br>Read Ratio :',
+                              round(value*100, digits = 2), '%')) %>%
+            layout(xaxis = x, yaxis = y, legend = list(orientation = 'h',
+                                                       xanchor = "center",  # use center of legend as anchor
+                                                       x = 0.5, y = 1.1)) %>%
+            add_annotations(
+                text = "Trimmed Ratio (Each BP)",
+                x = (trimmedStartPos + trimmedFinishPos) / 2,
+                y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
+                + 0.06,
+                showarrow=FALSE
+            ) %>%
+            add_annotations(
+                text = "Remaining Ratio (Each BP)",
+                x = (trimmedStartPos+trimmedFinishPos) / 2,
+                y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
+                - 0.06,
+                showarrow=FALSE
+            ))
 }
+
 
 ### ============================================================================
 ### qualityQualityBasePlot
 ### ============================================================================
-qualityQualityBasePlot <- function(input, output, session,
-                                   trimmedRV, SangerConsensus) {
-    output$qualityQualityBasePlot <- renderPlotly({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
-        directionParam <- sidebar_menu[[2]]
-        trimmedStartPos <- trimmedRV[["trimmedStartPos"]]
-        trimmedFinishPos <- trimmedRV[["trimmedFinishPos"]]
-        if (!is.na(strtoi(singleReadIndex))) {
-            if (directionParam == "Forward") {
-                readFeature <-
-                    SangerConsensus@forwardReadsList[[singleReadIndex]]@readFeature
-                qualityPhredScores <-
-                    SangerConsensus@forwardReadsList[[singleReadIndex]]@
-                    QualityReport@qualityPhredScores
-            } else if (directionParam == "Reverse") {
-                readFeature <-
-                    SangerConsensus@reverseReadsList[[singleReadIndex]]@readFeature
-                qualityPhredScores <-
-                    SangerConsensus@reverseReadsList[[singleReadIndex]]@
-                    QualityReport@qualityPhredScores
-            }
-            readLen = length(qualityPhredScores)
-            qualityPlotDf<- data.frame(1:length(qualityPhredScores),
-                                       qualityPhredScores)
-            colnames(qualityPlotDf) <- c("Index", "Score")
-            x <- list(
-                title = "Base Pair Index"
-                # titlefont = f
-            )
-            y <- list(
-                title = "Phred Quality Score"
-                # titlefont = f
-            )
-            suppressPlotlyMessage(
-                plot_ly(data=qualityPlotDf,
-                        x=~Index) %>%
-                    add_markers(y=~Score,
-                                text = ~paste("BP Index : ",
-                                              Index,
-                                              '<sup>th</sup><br>Phred Quality Score :',
-                                              Score),
-                                name = 'Quality Each BP') %>%
-                    add_trace(x=seq(trimmedStartPos,
-                                    trimmedFinishPos,
-                                    len=trimmedFinishPos-trimmedStartPos+1),
-                              y=rep(70, trimmedFinishPos-trimmedStartPos+1),
-                              mode="lines", hoverinfo="text",
-                              text=paste("Trimmed Reads BP length:",
-                                         trimmedFinishPos-trimmedStartPos+1,
-                                         "BPs <br>",
-                                         "Trimmed Reads BP ratio:",
-                                         round((trimmedFinishPos - trimmedStartPos+1)/
-                                                   readLen * 100,
-                                               digits=2),
-                                         "%"),
-                              line = list(width = 12),
-                              name = 'Trimmed Read') %>%
-                    add_trace(x=seq(0,readLen,len=readLen),
-                              y=rep(80, readLen), mode="lines", hoverinfo="text",
-                              text=paste("Whole Reads BP length:",
-                                         readLen,
-                                         "BPs <br>",
-                                         "Trimmed Reads BP ratio: 100 %"),
-                              line = list(width = 12),
-                              name = 'Whole Read') %>%
-                    layout(xaxis = x, yaxis = y,
-                           shapes = list(vline(trimmedStartPos),
-                                         vline(trimmedFinishPos)),
-                           legend = list(orientation = 'h',
-                                         xanchor = "center",  # use center of legend as anchor
-                                         x = 0.5, y = 1.1)) %>%
-                    add_annotations(
-                        text = "Trimming Strat <br> BP Index",
-                        x = trimmedStartPos + 40,
-                        y = 15,
-                        showarrow=FALSE
-                    ) %>%
-                    add_annotations(
-                        text = "Trimming End <br> BP Index",
-                        x = trimmedFinishPos - 40,
-                        y = 15,
-                        showarrow=FALSE
-                    ))
-        }
-    })
+qualityQualityBasePlotDisplay <- function(input, output, session,
+                                          trimmedRV, qualityPhredScores) {
+    trimmedStartPos <- trimmedRV[["trimmedStartPos"]]
+    trimmedFinishPos <- trimmedRV[["trimmedFinishPos"]]
+    readLen = length(qualityPhredScores)
+    qualityPlotDf<- data.frame(1:length(qualityPhredScores),
+                               qualityPhredScores)
+    colnames(qualityPlotDf) <- c("Index", "Score")
+    x <- list(
+        title = "Base Pair Index"
+        # titlefont = f
+    )
+    y <- list(
+        title = "Phred Quality Score"
+        # titlefont = f
+    )
+    suppressPlotlyMessage(
+        plot_ly(data=qualityPlotDf,
+                x=~Index) %>%
+            add_markers(y=~Score,
+                        text = ~paste("BP Index : ",
+                                      Index,
+                                      '<sup>th</sup><br>Phred Quality Score :',
+                                      Score),
+                        name = 'Quality Each BP') %>%
+            add_trace(x=seq(trimmedStartPos,
+                            trimmedFinishPos,
+                            len=trimmedFinishPos-trimmedStartPos+1),
+                      y=rep(70, trimmedFinishPos-trimmedStartPos+1),
+                      mode="lines", hoverinfo="text",
+                      text=paste("Trimmed Reads BP length:",
+                                 trimmedFinishPos-trimmedStartPos+1,
+                                 "BPs <br>",
+                                 "Trimmed Reads BP ratio:",
+                                 round((trimmedFinishPos - trimmedStartPos+1)/
+                                           readLen * 100,
+                                       digits=2),
+                                 "%"),
+                      line = list(width = 12),
+                      name = 'Trimmed Read') %>%
+            add_trace(x=seq(0,readLen,len=readLen),
+                      y=rep(80, readLen), mode="lines", hoverinfo="text",
+                      text=paste("Whole Reads BP length:",
+                                 readLen,
+                                 "BPs <br>",
+                                 "Trimmed Reads BP ratio: 100 %"),
+                      line = list(width = 12),
+                      name = 'Whole Read') %>%
+            layout(xaxis = x, yaxis = y,
+                   shapes = list(vline(trimmedStartPos),
+                                 vline(trimmedFinishPos)),
+                   legend = list(orientation = 'h',
+                                 xanchor = "center",  # use center of legend as anchor
+                                 x = 0.5, y = 1.1)) %>%
+            add_annotations(
+                text = "Trimming Strat <br> BP Index",
+                x = trimmedStartPos + 40,
+                y = 15,
+                showarrow=FALSE
+            ) %>%
+            add_annotations(
+                text = "Trimming End <br> BP Index",
+                x = trimmedFinishPos - 40,
+                y = 15,
+                showarrow=FALSE
+            ))
 }
 
 ### ============================================================================

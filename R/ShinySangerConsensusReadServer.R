@@ -1631,8 +1631,43 @@ consensusReadServer <- function(input, output, session) {
     valueBoxTrimmedMinQualityScore (input, output, session, trimmedRV)
     valueBoxRemainingRatio (input, output, session, trimmedRV)
 
-    qualityTrimmingRatioPlot (input, output, session, trimmedRV, SangerConsensus)
-    qualityQualityBasePlot (input, output, session, trimmedRV, SangerConsensus)
+    output$qualityTrimmingRatioPlot <- renderPlotly({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                qualityPhredScores <- SangerConsensus@
+                    forwardReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            } else if (directionParam == "Reverse") {
+                qualityPhredScores <- SangerConsensus@
+                    reverseReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            }
+            qualityTrimmingRatioPlotDisplay(input, output,session,
+                                            trimmedRV, qualityPhredScores)
+        }
+    })
+    output$qualityQualityBasePlot <- renderPlotly({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                qualityPhredScores <-
+                    SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            } else if (directionParam == "Reverse") {
+                qualityPhredScores <-
+                    SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                    QualityReport@qualityPhredScores
+            }
+            qualityQualityBasePlotDisplay(input, output,session,
+                                          trimmedRV, qualityPhredScores)
+        }
+    })
 
     valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
     valueBoxChromTrimmedFinishPos (input, output, session, trimmedRV)
