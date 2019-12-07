@@ -877,9 +877,22 @@ alignedConsensusSetServer <- function(input, output, session) {
                                       forwardReadsList[[singleReadIndex]]@QualityReport@
                                       remainingRatio * 100, 2)
 
-
-
-
+                        ChromatogramParam[["baseNumPerRow"]] <<-
+                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                            baseNumPerRow
+                        ChromatogramParam[["heightPerRow"]] <<-
+                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                            heightPerRow
+                        ChromatogramParam[["signalRatioCutoff"]] <<-
+                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                            signalRatioCutoff
+                        ChromatogramParam[["showTrimmed"]] <<-
+                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                            showTrimmed
 
                         SangerSingleReadBFN <-
                             basename(SangerConsensusSet@
@@ -968,7 +981,22 @@ alignedConsensusSetServer <- function(input, output, session) {
                                       reverseReadsList[[singleReadIndex]]@QualityReport@
                                       remainingRatio * 100, 2)
 
-
+                        ChromatogramParam[["baseNumPerRow"]] <<-
+                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                            baseNumPerRow
+                        ChromatogramParam[["heightPerRow"]] <<-
+                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                            heightPerRow
+                        ChromatogramParam[["signalRatioCutoff"]] <<-
+                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                            signalRatioCutoff
+                        ChromatogramParam[["showTrimmed"]] <<-
+                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                            showTrimmed
 
                         SangerSingleReadBFN <-
                             basename(SangerConsensusSet@
@@ -1157,64 +1185,64 @@ alignedConsensusSetServer <- function(input, output, session) {
                                 ),
                             ),
                         ),
-                        # box(title = tags$p(tagList(icon("dot-circle"),
-                        #                            "Chromatogram: "),
-                        #                    style = "font-size: 26px;
-                        #                                    font-weight: bold;"),
-                        #     solidHeader = TRUE, collapsible = TRUE,
-                        #     status = "success", width = 12,
-                        #     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                        #
-                        #     box(title = tags$p(tagList(icon("arrow-circle-right"),
-                        #                                "Chromatogram Input"),
-                        #                        style = "font-size: 24px;
-                        #                                    font-weight: bold;"),
-                        #         collapsible = TRUE,
-                        #         status = "success", width = 12,
-                        #         column(3,
-                        #                sliderInput("ChromatogramBasePerRow",
-                        #                            label = h4("Base Number Per Row"),
-                        #                            min = 5,
-                        #                            max = 200,
-                        #                            value = ChromatogramParam[["baseNumPerRow"]]),
-                        #                sliderInput("ChromatogramHeightPerRow",
-                        #                            label = h4("Height Per Row"),
-                        #                            min = 50,
-                        #                            max = 600,
-                        #                            value =ChromatogramParam[["heightPerRow"]]),
-                        #         ),
-                        #         column(3,
-                        #                numericInput(
-                        #                    "ChromatogramSignalRatioCutoff",
-                        #                    h3("Signal Ratio Cutoff"),
-                        #                    value = ChromatogramParam[["signalRatioCutoff"]]),
-                        #                checkboxInput(
-                        #                    "ChromatogramCheckShowTrimmed",
-                        #                    "Whether show trimmed region",
-                        #                    value = ChromatogramParam[["showTrimmed"]])
-                        #         ),
-                        #         column(3,
-                        #                uiOutput("ChromatogramtrimmedStartPos"),
-                        #         ),
-                        #         column(3,
-                        #                uiOutput("ChromatogramtrimmedFinishPos"),
-                        #         ),
-                        #         actionBttn("saveChromatogramParam",
-                        #                    "Apply Chromatogram Parameters",
-                        #                    style = "simple", color = "success",
-                        #                    block = TRUE, size = "lg")
-                        #     ),
-                        #     box(title = tags$p(tagList(icon("arrow-circle-left"),
-                        #                                "Chromatogram Output"),
-                        #                        style = "font-size: 24px;
-                        #                                    font-weight: bold;"),
-                        #         collapsible = TRUE,
-                        #         status = "success", width = 12,
-                        #         column(width = 12,
-                        #                uiOutput("chromatogramUIOutput"),
-                        #         )
-                        #     ),
-                        # )
+                        box(title = tags$p(tagList(icon("dot-circle"),
+                                                   "Chromatogram: "),
+                                           style = "font-size: 26px;
+                                                           font-weight: bold;"),
+                            solidHeader = TRUE, collapsible = TRUE,
+                            status = "success", width = 12,
+                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+
+                            box(title = tags$p(tagList(icon("arrow-circle-right"),
+                                                       "Chromatogram Input"),
+                                               style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(3,
+                                       sliderInput("ChromatogramBasePerRow",
+                                                   label = h4("Base Number Per Row"),
+                                                   min = 5,
+                                                   max = 200,
+                                                   value = ChromatogramParam[["baseNumPerRow"]]),
+                                       sliderInput("ChromatogramHeightPerRow",
+                                                   label = h4("Height Per Row"),
+                                                   min = 50,
+                                                   max = 600,
+                                                   value =ChromatogramParam[["heightPerRow"]]),
+                                ),
+                                column(3,
+                                       numericInput(
+                                           "ChromatogramSignalRatioCutoff",
+                                           h3("Signal Ratio Cutoff"),
+                                           value = ChromatogramParam[["signalRatioCutoff"]]),
+                                       checkboxInput(
+                                           "ChromatogramCheckShowTrimmed",
+                                           "Whether show trimmed region",
+                                           value = ChromatogramParam[["showTrimmed"]])
+                                ),
+                                column(3,
+                                       uiOutput("ChromatogramtrimmedStartPos"),
+                                ),
+                                column(3,
+                                       uiOutput("ChromatogramtrimmedFinishPos"),
+                                ),
+                                actionBttn("saveChromatogramParam",
+                                           "Apply Chromatogram Parameters",
+                                           style = "simple", color = "success",
+                                           block = TRUE, size = "lg")
+                            ),
+                            box(title = tags$p(tagList(icon("arrow-circle-left"),
+                                                       "Chromatogram Output"),
+                                               style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       uiOutput("chromatogramUIOutput"),
+                                )
+                            ),
+                        )
                     )
                 }
             }
@@ -1231,6 +1259,30 @@ alignedConsensusSetServer <- function(input, output, session) {
     ############################################################################
     ### All other features (dynamic header / button save / button close)
     ############################################################################
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Close UI
+    ### ------------------------------------------------------------------------
+    observeEvent(input$closeUI, {
+        message("@@@@@@@ 'close button' has been clicked")
+        btn <- input$closeUI
+        stopApp()
+    })
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Save S4 object
+    ### ------------------------------------------------------------------------
+    observeEvent(input$saveS4, {
+        message("@@@@@@@ 'save button' has been clicked")
+        newS4Object <- file.path(shinyDirectory,
+                                 "SangerAlignedConsensusSet.Rda")
+        showNotification(paste("New S4 object is store as:", newS4Object),
+                         closeButton = TRUE, type = "message", duration = 10)
+        ### --------------------------------------------------------------------
+        ### Save SangerConsensus quality S4 object
+        ### --------------------------------------------------------------------
+        saveRDS(SangerConsensusSet, file=newS4Object)
+        message("New S4 object is store as: ", newS4Object)
+        NEW_SANGER_ALIGNED_CONSENSUS_READ_SET <<- readRDS(file=newS4Object)
+    })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus reads re-calculating (SCSet) UI
     ### ------------------------------------------------------------------------
@@ -1260,31 +1312,36 @@ alignedConsensusSetServer <- function(input, output, session) {
     observeEvent(input$recalculateButton, {
         message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start recalculating consensus read (SC")
-        CSResult<-
-            calculateConsensusRead (SangerConsensus@forwardReadsList,
-                                    SangerConsensus@reverseReadsList,
-                                    SangerConsensus@refAminoAcidSeq,
-                                    SangerConsensus@minFractionCall,
-                                    SangerConsensus@maxFractionLost,
-                                    SangerConsensus@geneticCode,
-                                    SangerConsensus@acceptStopCodons,
-                                    SangerConsensus@readingFrame)
-        SangerConsensus@consensusRead <<- CSResult$consensusGapfree
-        SangerConsensus@differencesDF <<- CSResult$diffsDf
-        SangerConsensus@alignment <<- CSResult$aln2
-        SangerConsensus@distanceMatrix <<- CSResult$dist
-        SangerConsensus@dendrogram <<- CSResult$dend
-        SangerConsensus@indelsDF <<- CSResult$indels
-        SangerConsensus@stopCodonsDF <<- CSResult$stopsDf
-        SangerConsensus@secondaryPeakDF <<- CSResult$spDf
-        consensusParam[["consensusRead"]] <<- SangerConsensus@consensusRead
-        consensusParam[["differencesDF"]] <<- SangerConsensus@differencesDF
-        consensusParam[["alignment"]] <<- SangerConsensus@alignment
-        consensusParam[["distanceMatrix"]] <<-SangerConsensus@distanceMatrix
-        consensusParam[["dendrogram"]] <<- SangerConsensus@dendrogram
-        consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
-        consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
-        consensusParam[["secondaryPeakDF"]] <<- SangerConsensus@secondaryPeakDF
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(consensusReadIndex)) {
+            CSResult<-
+                calculateConsensusRead (
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList,
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList,
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@refAminoAcidSeq,
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@minFractionCall,
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@maxFractionLost,
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@geneticCode,
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@acceptStopCodons,
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@readingFrame)
+            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consensusRead <<- CSResult$consensusGapfree
+            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@differencesDF <<- CSResult$diffsDf
+            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment <<- CSResult$aln2
+            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@distanceMatrix <<- CSResult$dist
+            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@dendrogram <<- CSResult$dend
+            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF <<- CSResult$indels
+            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@stopCodonsDF <<- CSResult$stopsDf
+            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@secondaryPeakDF <<- CSResult$spDf
+            consensusParam[["consensusRead"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consensusRead
+            consensusParam[["differencesDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@differencesDF
+            consensusParam[["alignment"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment
+            consensusParam[["distanceMatrix"]] <<-SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@distanceMatrix
+            consensusParam[["dendrogram"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@dendrogram
+            consensusParam[["indelsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF
+            consensusParam[["stopCodonsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@stopCodonsDF
+            consensusParam[["secondaryPeakDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@secondaryPeakDF
+        }
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button apply trimming parameters
@@ -1535,6 +1592,62 @@ alignedConsensusSetServer <- function(input, output, session) {
             }
         }
     })
+    ### ------------------------------------------------------------------------
+    ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
+    ### ------------------------------------------------------------------------
+    observeEvent(input$saveChromatogramParam, {
+        message("@@@@@@@ 'Reactive button' has been clicked")
+        message("######## Start recalculating chromatogram")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        ### ------------------------------------------------------------
+        ### Update ChromatogramBasePerRow
+        ### ------------------------------------------------------------
+        if (!is.na(consensusReadIndex) &&
+            !is.na(singleReadIndex)) {
+            if (directionParam == "Forward") {
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    baseNumPerRow <<- input$ChromatogramBasePerRow
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    heightPerRow <<- input$ChromatogramHeightPerRow
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    showTrimmed <<- input$ChromatogramCheckShowTrimmed
+            } else if (directionParam == "Reverse") {
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    baseNumPerRow <<- input$ChromatogramBasePerRow
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    heightPerRow <<- input$ChromatogramHeightPerRow
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    showTrimmed <<- input$ChromatogramCheckShowTrimmed
+            }
+            ### --------------------------------------------------------------------
+            ### Save 'ChromatogramParam' dynamic value
+            ### --------------------------------------------------------------------
+            ChromatogramParam[["baseNumPerRow"]] <<-
+                input$ChromatogramBasePerRow
+            ChromatogramParam[["heightPerRow"]] <<-
+                input$ChromatogramHeightPerRow
+            ChromatogramParam[["signalRatioCutoff"]] <<-
+                input$ChromatogramSignalRatioCutoff
+            ChromatogramParam[["showTrimmed"]] <<-
+                input$ChromatogramCheckShowTrimmed
+        }
+    })
+
 
 
     ############################################################################
@@ -2072,5 +2185,225 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     valueBoxChromTrimmedStartPos (input, output, session, trimmedRV)
     valueBoxChromTrimmedFinishPos (input, output, session, trimmedRV)
+
+    # chromatogram
+    output$chromatogramUIOutput <- renderUI({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (sidebar_menu[[2]] == "CR" &&
+            sidebar_menu[[3]] == "-" &&
+            !is.na(singleReadIndex) &&
+            (directionParam == "Forward" ||
+             directionParam == "Reverse") &&
+            sidebar_menu[[6]] == "Read") {
+            trimmedRV[["trimmedSeqLength"]]
+
+            if (directionParam == "Forward") {
+                rawSeqLength <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@
+                    QualityReport@rawSeqLength
+                trimmedSeqLength <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@
+                    QualityReport@trimmedSeqLength
+            } else if (directionParam == "Reverse") {
+                rawSeqLength <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@
+                    QualityReport@rawSeqLength
+                trimmedSeqLength <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@
+                    QualityReport@trimmedSeqLength
+            }
+            chromatogramRowNumAns <- chromatogramRowNum (
+                strtoi(ChromatogramParam[["baseNumPerRow"]]),
+                rawSeqLength, trimmedSeqLength,
+                ChromatogramParam[["showTrimmed"]]) *
+                strtoi(ChromatogramParam[["heightPerRow"]])
+            plotOutput("chromatogram", height = chromatogramRowNumAns)
+        }
+    })
+    output$chromatogram <- renderPlot({
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        singleReadIndex <- strtoi(sidebar_menu[[4]])
+        directionParam <- sidebar_menu[[5]]
+        if (sidebar_menu[[2]] == "CR" &&
+            sidebar_menu[[3]] == "-" &&
+            !is.na(singleReadIndex) &&
+            (directionParam == "Forward" ||
+             directionParam == "Reverse") &&
+            sidebar_menu[[6]] == "Read") {
+            showNotification(
+                ui = fluidRow(
+                    column(1),
+                    column(11,
+                           tags$p(tagList(icon("hourglass-start"),
+                                          "Plotting Chromatogram ...  "),
+                                  style = "font-size: 28px;
+                                   font-weight: bold;"),
+                           tags$p(tagList(icon("dot-circle"),
+                                          "Base pairs per row : ",
+                                          ChromatogramParam[["baseNumPerRow"]]),
+                                  style = "font-size: 20px;
+                                   font-style: italic"),
+                           tags$p(tagList(icon("dot-circle"),
+                                          "Height per row : ",
+                                          ChromatogramParam[["heightPerRow"]]),
+                                  style = "font-size: 20px;
+                                   font-style: italic"),
+                           tags$p(tagList(icon("dot-circle"),
+                                          "Signal Ratio Cutoff : ",
+                                          ChromatogramParam[["signalRatioCutoff"]]),
+                                  style = "font-size: 20px;
+                                   font-style: italic"),
+                           tags$p(tagList(icon("dot-circle"),
+                                          "Show trimmed : ",
+                                          ChromatogramParam[["showTrimmed"]]),
+                                  style = "font-size: 20px;
+                                   font-style: italic"),)
+                ),
+                action = NULL, duration = NULL, closeButton = FALSE,
+                id = "chromatogramNotification",
+                type = "message")
+            if (directionParam == "Forward") {
+                rawSeqLength <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
+                message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (forward)")
+                ### ----------------------------------------------------------------
+                ### Re-run 'MakeBaseCall' function
+                ### ----------------------------------------------------------------
+                hetcalls <-
+                    MakeBaseCalls(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                      forwardReadsList[[singleReadIndex]],
+                                  signalRatioCutoff = as.numeric(
+                                      ChromatogramParam[["signalRatioCutoff"]]))
+                ### ----------------------------------------------------------------
+                ### Update 'SangerConsensus'!
+                ### ----------------------------------------------------------------
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@peakPosMatrix <<-
+                    hetcalls@peakPosMatrix
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@peakAmpMatrix <<-
+                    hetcalls@peakAmpMatrix
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@primarySeq <<-
+                    hetcalls@primarySeq
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@secondarySeq <<-
+                    hetcalls@secondarySeq
+                ### ----------------------------------------------------------------
+                ### Updating AASeqs
+                ### ----------------------------------------------------------------
+                AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                               SangerConsensusSet@geneticCode)
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
+                    AASeqResult[["primaryAASeqS1"]]
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
+                    AASeqResult[["primaryAASeqS2"]]
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    forwardReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
+                    AASeqResult[["primaryAASeqS3"]]
+                ### ----------------------------------------------------------------
+                ### Updating reactive values
+                ### ----------------------------------------------------------------
+                sequenceParam[["primarySeq"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     forwardReadsList[[singleReadIndex]]@primarySeq)
+                sequenceParam[["secondarySeq"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     forwardReadsList[[singleReadIndex]]@secondarySeq)
+                sequenceParam[["primaryAASeqS1"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     forwardReadsList[[singleReadIndex]]@primaryAASeqS1)
+                sequenceParam[["primaryAASeqS2"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     forwardReadsList[[singleReadIndex]]@primaryAASeqS2)
+                sequenceParam[["primaryAASeqS3"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     forwardReadsList[[singleReadIndex]]@primaryAASeqS3)
+            } else if (directionParam == "Reverse") {
+                rawSeqLength <-
+                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
+                message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (reverse)")
+                ### ----------------------------------------------------------------
+                ### Re-run 'MakeBaseCall' function
+                ### ----------------------------------------------------------------
+                hetcalls <-
+                    MakeBaseCalls(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                      reverseReadsList[[singleReadIndex]],
+                                  signalRatioCutoff = as.numeric(
+                                      ChromatogramParam[["signalRatioCutoff"]]))
+                ### ----------------------------------------------------------------
+                ### Update 'SangerConsensus'!
+                ### ----------------------------------------------------------------
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@peakPosMatrix <<-
+                    hetcalls@peakPosMatrix
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@peakAmpMatrix <<-
+                    hetcalls@peakAmpMatrix
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@primarySeq <<-
+                    hetcalls@primarySeq
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@secondarySeq <<-
+                    hetcalls@secondarySeq
+                ### ----------------------------------------------------------------
+                ### Updating AASeqs
+                ### ----------------------------------------------------------------
+                AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                               SangerConsensusSet@geneticCode)
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
+                    AASeqResult[["primaryAASeqS1"]]
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
+                    AASeqResult[["primaryAASeqS2"]]
+                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    reverseReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
+                    AASeqResult[["primaryAASeqS3"]]
+                ### ----------------------------------------------------------------
+                ### Updating reactive values
+                ### ----------------------------------------------------------------
+                sequenceParam[["primarySeq"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     reverseReadsList[[singleReadIndex]]@primarySeq)
+                sequenceParam[["secondarySeq"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     reverseReadsList[[singleReadIndex]]@secondarySeq)
+                sequenceParam[["primaryAASeqS1"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     reverseReadsList[[singleReadIndex]]@primaryAASeqS1)
+                sequenceParam[["primaryAASeqS2"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     reverseReadsList[[singleReadIndex]]@primaryAASeqS2)
+                sequenceParam[["primaryAASeqS3"]] <<-
+                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                     reverseReadsList[[singleReadIndex]]@primaryAASeqS3)
+            }
+            # message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
+            chromatogram(hetcalls,
+                         width = strtoi(
+                             ChromatogramParam[["baseNumPerRow"]]),
+                         height = 2,
+                         trim5 = trimmedRV[["trimmedStartPos"]],
+                         trim3 = rawSeqLength -
+                             trimmedRV[["trimmedFinishPos"]],
+                         showtrim = (ChromatogramParam[["showTrimmed"]]),
+                         showcalls = "both")
+            removeNotification(id = "chromatogramNotification")
+        }
+    })
 }
 

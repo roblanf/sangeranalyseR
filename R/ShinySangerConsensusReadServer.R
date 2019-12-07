@@ -899,36 +899,36 @@ consensusReadServer <- function(input, output, session) {
         ### --------------------------------------------------------------------
         ### Update ChromatogramBasePerRow
         ### --------------------------------------------------------------------
-        if (!is.na(strtoi(singleReadIndex)) &&
-            directionParam == "Forward") {
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
-                baseNumPerRow <<- input$ChromatogramBasePerRow
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
-                heightPerRow <<- input$ChromatogramHeightPerRow
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
-                signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
-            SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
-                showTrimmed <<- input$ChromatogramCheckShowTrimmed
-        } else if (!is.na(strtoi(singleReadIndex)) &&
-                   directionParam == "Reverse") {
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
-                baseNumPerRow <<- input$ChromatogramBasePerRow
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
-                heightPerRow <<- input$ChromatogramHeightPerRow
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
-                signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
-            SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
-                showTrimmed <<- input$ChromatogramCheckShowTrimmed
+        if (!is.na(strtoi(singleReadIndex))) {
+            if (directionParam == "Forward") {
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    baseNumPerRow <<- input$ChromatogramBasePerRow
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    heightPerRow <<- input$ChromatogramHeightPerRow
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
+                SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                    showTrimmed <<- input$ChromatogramCheckShowTrimmed
+            } else if (directionParam == "Reverse") {
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    baseNumPerRow <<- input$ChromatogramBasePerRow
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    heightPerRow <<- input$ChromatogramHeightPerRow
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
+                SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                    showTrimmed <<- input$ChromatogramCheckShowTrimmed
+            }
+            ### ------------------------------------------------------------
+            ### Save 'ChromatogramParam' dynamic value
+            ### ------------------------------------------------------------
+            ChromatogramParam[["baseNumPerRow"]] <<- input$ChromatogramBasePerRow
+            ChromatogramParam[["heightPerRow"]] <<- input$ChromatogramHeightPerRow
+            ChromatogramParam[["signalRatioCutoff"]] <<-
+                input$ChromatogramSignalRatioCutoff
+            ChromatogramParam[["showTrimmed"]] <<-
+                input$ChromatogramCheckShowTrimmed
         }
-        ### ------------------------------------------------------------
-        ### Save 'ChromatogramParam' dynamic value
-        ### ------------------------------------------------------------
-        ChromatogramParam[["baseNumPerRow"]] <<- input$ChromatogramBasePerRow
-        ChromatogramParam[["heightPerRow"]] <<- input$ChromatogramHeightPerRow
-        ChromatogramParam[["signalRatioCutoff"]] <<-
-            input$ChromatogramSignalRatioCutoff
-        ChromatogramParam[["showTrimmed"]] <<-
-            input$ChromatogramCheckShowTrimmed
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
@@ -1707,8 +1707,6 @@ consensusReadServer <- function(input, output, session) {
     })
 
     output$chromatogram <- renderPlot({
-
-
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
