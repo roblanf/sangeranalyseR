@@ -49,7 +49,7 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
     trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
     trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
     trimmedMinQualityScore <- min(trimmedQualityPhredScore)
-    trimmedSeqLength = trimmedFinishPos - trimmedStartPos + 1
+    trimmedSeqLength = trimmedFinishPos - trimmedStartPos
     remainingRatio = trimmedSeqLength / rawSeqLength
 
     return(c("rawSeqLength" = rawSeqLength,
@@ -101,7 +101,7 @@ M2inside_calculate_trimming <- function(qualityPhredScores,
             trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
             trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
             trimmedMinQualityScore <- min(trimmedQualityPhredScore)
-            trimmedSeqLength = trimmedFinishPos - trimmedStartPos + 1
+            trimmedSeqLength = trimmedFinishPos - trimmedStartPos
             remainingRatio = trimmedSeqLength / rawSeqLength
         }
     }

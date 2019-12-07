@@ -676,7 +676,7 @@ consensusReadServer <- function(input, output, session) {
                                 status = "success", width = 12,
                                 plotlyOutput("qualityTrimmingRatioPlot") %>%
                                     withSpinner()),
-                            box(title = tags$p("Cumulative Ratio Plot",
+                            box(title = tags$p("Quality BP Plot",
                                                style = "font-size: 21px;
                                            font-weight: bold;"),
                                 collapsible = TRUE,
@@ -686,6 +686,49 @@ consensusReadServer <- function(input, output, session) {
                         ),
                     ),
                 ),
+
+
+                box(title =
+                        tags$p(tagList(icon("dot-circle"),
+                                       "DNA Sequence
+                                       (After Trimming):"),
+                               style = "font-size: 26px;
+                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    column(width = 12,
+                           tags$p(tagList(icon("bars"),
+                                          "Primary Sequence"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("primarySeqTrimmedDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "Secondary Sequence"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("secondSeqTrimmedDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "Quality Phred Score"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("qualityScoreTrimmedDF",
+                                       width = "100%", height = "50"),
+                           style = paste("overflow-y: hidden;",
+                                         "overflow-x: scroll;")
+                    )
+                ),
+
+
+
+
+
                 box(title = tags$p(tagList(icon("dot-circle"),
                                            "Chromatogram: "),
                                    style = "font-size: 26px;
@@ -1279,13 +1322,6 @@ consensusReadServer <- function(input, output, session) {
     output$SCStopCodonsDF <- renderDataTable({
         consensusParam[["stopCodonsDF"]]
     })
-
-
-
-
-
-
-
     ############################################################################
     ### SangerSingleRead (Function for singel read in consensusRead)
     ############################################################################
@@ -1488,6 +1524,142 @@ consensusReadServer <- function(input, output, session) {
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
                        style = styleList, loadingSpin = TRUE)
+        )
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ### ------------------------------------------------------------------------
+    ### Primary dataframe
+    ### ------------------------------------------------------------------------
+    output$primarySeqTrimmedDF <- renderExcel({
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(singleReadIndex)) {
+            primarySeq <- unlist(strsplit(
+                substr(toString(sequenceParam[["primarySeq"]]),
+                       trimmedRV[["trimmedStartPos"]] + 1,
+                       trimmedRV[["trimmedFinishPos"]])
+                , ""))
+            primarySeqDF <- data.frame(
+                t(data.frame(primarySeq)), stringsAsFactors = FALSE)
+            colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
+            rownames(primarySeqDF) <- NULL
+            AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
+            TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
+            CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
+            GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
+            styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+            suppressMessages(
+                excelTable(data = primarySeqDF, defaultColWidth = 30,
+                           editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
+            )
+        }
+    })
+    ### ------------------------------------------------------------------------
+    ### Secondary dataframe
+    ### ------------------------------------------------------------------------
+    output$secondSeqTrimmedDF <- renderExcel({
+        ## !!!!! Update !!!!
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(singleReadIndex)) {
+            secondarySeq <- unlist(strsplit(
+                substr(toString(sequenceParam[["secondarySeq"]]),
+                       trimmedRV[["trimmedStartPos"]] + 1,
+                       trimmedRV[["trimmedFinishPos"]])
+                , ""))
+            secondarySeqDF <- data.frame(
+                t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
+            colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
+            rownames(secondarySeqDF) <- NULL
+            AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
+            TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
+            CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
+            GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
+            styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+            suppressMessages(
+                excelTable(data = secondarySeqDF, defaultColWidth = 30,
+                           editable = TRUE, rowResize = FALSE,
+                           columnResize = FALSE, allowInsertRow = FALSE,
+                           allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+                           allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                           style = styleList, loadingSpin = TRUE)
+            )
+        }
+    })
+    ### ------------------------------------------------------------------------
+    ### Quality Score dataframe
+    ### ------------------------------------------------------------------------
+    output$qualityScoreTrimmedDF <- renderExcel({
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (!is.na(strtoi(singleReadIndex)) &&
+            directionParam == "Forward") {
+            PhredScore <- SangerConsensus@forwardReadsList[[singleReadIndex]]@
+                QualityReport@qualityPhredScores[
+                    (trimmedRV[["trimmedStartPos"]]+1):
+                        trimmedRV[["trimmedFinishPos"]]]
+        } else if (!is.na(strtoi(singleReadIndex)) &&
+                   directionParam == "Reverse") {
+            PhredScore <- SangerConsensus@reverseReadsList[[singleReadIndex]]@
+                QualityReport@qualityPhredScores[
+                    (trimmedRV[["trimmedStartPos"]]+1):
+                        trimmedRV[["trimmedFinishPos"]]]
+        }
+        PhredScoreDF <- data.frame(
+            t(data.frame(PhredScore)), stringsAsFactors = FALSE)
+        colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+        rownames(PhredScoreDF) <- NULL
+        styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
+        suppressMessages(
+            excelTable(data =
+                           PhredScoreDF, defaultColWidth = 30, editable = TRUE,
+                       rowResize = FALSE, columnResize = FALSE,
+                       allowInsertRow = FALSE, allowInsertColumn = FALSE,
+                       allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
+                       style = styleList, allowRenameColumn = FALSE,
+                       loadingSpin = TRUE)
         )
     })
     ############################################################################
