@@ -78,9 +78,7 @@ setMethod("MakeBaseCalls", "SangerSingleRead",
 
               obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
               obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
-              obj@primarySeqID <- MBCResult[["primarySeqID"]]
               obj@primarySeq <- MBCResult[["primarySeq"]]
-              obj@secondarySeqID <- MBCResult[["secondarySeqID"]]
               obj@secondarySeq <- MBCResult[["secondarySeq"]]
               return(obj)
           })
