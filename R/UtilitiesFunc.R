@@ -211,6 +211,33 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
                 "secondarySeq" = secondarySeq))
 }
 
+calculateAASeq <- function(primarySeq, geneticCode) {
+    primaryAASeqS1 =
+        suppressWarnings(translate(primarySeq,
+                                   genetic.code = geneticCode,
+                                   no.init.codon=TRUE,
+                                   if.fuzzy.codon="solve"))
+
+    DNASeqshift1 <-DNAString(substr(as.character(primarySeq),
+                                    2, length(primarySeq)))
+    primaryAASeqS2 =
+        suppressWarnings(translate(DNASeqshift1,
+                                   genetic.code = geneticCode,
+                                   no.init.codon=TRUE,
+                                   if.fuzzy.codon="solve"))
+
+    DNASeqshift2 <- DNAString(substr(as.character(primarySeq),
+                                     3, length(primarySeq)))
+    primaryAASeqS3 <-
+        suppressWarnings(translate(DNASeqshift2,
+                                   genetic.code = geneticCode,
+                                   no.init.codon=TRUE,
+                                   if.fuzzy.codon="solve"))
+    return(list("primaryAASeqS1" = primaryAASeqS1,
+                "primaryAASeqS2" = primaryAASeqS2,
+                "primaryAASeqS3" = primaryAASeqS3))
+}
+
 getpeaks <- function(trace) {
     r <- rle(trace)
     indexes <- which(rep(diff(sign(diff(c(-Inf, r$values, -Inf)))) == -2,

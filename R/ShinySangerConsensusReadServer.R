@@ -374,7 +374,6 @@ consensusReadServer <- function(input, output, session) {
                    (directionParam == "Forward" ||
                     directionParam == "Reverse")) {
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
-
             if (directionParam == "Forward") {
                 ChromatogramParam[["baseNumPerRow"]] <<-
                     SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
@@ -482,6 +481,11 @@ consensusReadServer <- function(input, output, session) {
                 trimmedRV[["remainingRatio"]] <<-
                     round(SangerConsensus@reverseReadsList[[singleReadIndex]]@QualityReport@
                               remainingRatio * 100, 2)
+                SSReadBFN <- basename(
+                    SangerConsensus@
+                        reverseReadsList[[singleReadIndex]]@readFileName)
+                SSReadAFN <- SangerConsensus@
+                    reverseReadsList[[singleReadIndex]]@readFileName
             }
             fluidRow(
                 useShinyjs(),
@@ -820,23 +824,23 @@ consensusReadServer <- function(input, output, session) {
         ### --------------------------------------------------------------------
         if (!is.na(strtoi(singleReadIndex)) &&
             directionParam == "Forward") {
-            SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                 baseNumPerRow <<- input$ChromatogramBasePerRow
-            SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                 heightPerRow <<- input$ChromatogramHeightPerRow
-            SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                 signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
-            SangerConsensus@forwardReadsList[[i]]@ChromatogramParam@
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                 showTrimmed <<- input$ChromatogramCheckShowTrimmed
         } else if (!is.na(strtoi(singleReadIndex)) &&
                    directionParam == "Reverse") {
-            SangerConsensus@reverseReadsList[[i]]@ChromatogramParam@
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                 baseNumPerRow <<- input$ChromatogramBasePerRow
-            SangerConsensus@reverseReadsList[[i]]@ChromatogramParam@
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                 heightPerRow <<- input$ChromatogramHeightPerRow
-            SangerConsensus@reverseReadsList[[i]]@ChromatogramParam@
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                 signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
-            SangerConsensus@reverseReadsList[[i]]@ChromatogramParam@
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                 showTrimmed <<- input$ChromatogramCheckShowTrimmed
         }
         ### ------------------------------------------------------------
@@ -1660,24 +1664,24 @@ consensusReadServer <- function(input, output, session) {
             ### ------------------------------------------------------------
             ### Update 'SangerConsensus'!
             ### ------------------------------------------------------------
-            SangerConsensus@forwardReadsList[[index]]@peakPosMatrix <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@peakPosMatrix <-
                 hetcalls@peakPosMatrix
-            SangerConsensus@forwardReadsList[[index]]@peakAmpMatrix <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@peakAmpMatrix <-
                 hetcalls@peakAmpMatrix
-            SangerConsensus@forwardReadsList[[index]]@primarySeq <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@primarySeq <-
                 hetcalls@primarySeq
-            SangerConsensus@forwardReadsList[[index]]@secondarySeq <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@secondarySeq <-
                 hetcalls@secondarySeq
             ### --------------------------------------------------------
             ### Updating AASeqs
             ### --------------------------------------------------------
             AASeqResult <- calculateAASeq (hetcalls@primarySeq,
-                                           hetcalls@secondarySeq)
-            SangerConsensus@forwardReadsList[[index]]@primaryAASeqS1 <-
+                                           SangerConsensus@geneticCode)
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS1 <-
                 AASeqResult[["primaryAASeqS1"]]
-            SangerConsensus@forwardReadsList[[index]]@primaryAASeqS2 <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS2 <-
                 AASeqResult[["primaryAASeqS2"]]
-            SangerConsensus@forwardReadsList[[index]]@primaryAASeqS3 <-
+            SangerConsensus@forwardReadsList[[singleReadIndex]]@primaryAASeqS3 <-
                 AASeqResult[["primaryAASeqS3"]]
         } else if (!is.na(strtoi(singleReadIndex)) &&
                    directionParam == "Reverse") {
@@ -1693,24 +1697,24 @@ consensusReadServer <- function(input, output, session) {
             ### ------------------------------------------------------------
             ### Update 'SangerConsensus'!
             ### ------------------------------------------------------------
-            SangerConsensus@reverseReadsList[[index]]@peakPosMatrix <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@peakPosMatrix <-
                 hetcalls@peakPosMatrix
-            SangerConsensus@reverseReadsList[[index]]@peakAmpMatrix <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@peakAmpMatrix <-
                 hetcalls@peakAmpMatrix
-            SangerConsensus@reverseReadsList[[index]]@primarySeq <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@primarySeq <-
                 hetcalls@primarySeq
-            SangerConsensus@reverseReadsList[[index]]@secondarySeq <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@secondarySeq <-
                 hetcalls@secondarySeq
             ### --------------------------------------------------------
             ### Updating AASeqs
             ### --------------------------------------------------------
             AASeqResult <- calculateAASeq (hetcalls@primarySeq,
-                                           hetcalls@secondarySeq)
-            SangerConsensus@reverseReadsList[[index]]@primaryAASeqS1 <-
+                                           SangerConsensus@geneticCode)
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS1 <-
                 AASeqResult[["primaryAASeqS1"]]
-            SangerConsensus@reverseReadsList[[index]]@primaryAASeqS2 <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS2 <-
                 AASeqResult[["primaryAASeqS2"]]
-            SangerConsensus@reverseReadsList[[index]]@primaryAASeqS3 <-
+            SangerConsensus@reverseReadsList[[singleReadIndex]]@primaryAASeqS3 <-
                 AASeqResult[["primaryAASeqS3"]]
         }
         message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
