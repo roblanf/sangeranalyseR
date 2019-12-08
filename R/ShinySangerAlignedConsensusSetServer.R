@@ -1307,6 +1307,7 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### observeEvent: Button Save S4 object
     ### ------------------------------------------------------------------------
     observeEvent(input$saveS4, {
+        shinyjs::disable("saveS4")
         message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory,
                                  "SangerAlignedConsensusSet.Rda")
@@ -1338,11 +1339,13 @@ alignedConsensusSetServer <- function(input, output, session) {
         saveRDS(SangerConsensusSet, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
         NEW_SANGER_ALIGNED_CONSENSUS_READ_SET <<- readRDS(file=newS4Object)
+        shinyjs::enable("saveS4")
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus reads re-calculating (SCSet) UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButtonSCSet, {
+        shinyjs::disable("recalculateButtonSCSet")
         message("######## Reactive button clicked !!!")
         message("######## Start recalculating consensus read (SC)")
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
@@ -1361,11 +1364,13 @@ alignedConsensusSetServer <- function(input, output, session) {
             consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
             message("######## Finish recalculation consensus read")
         }
+        shinyjs::enable("recalculateButtonSCSet")
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus read re-calculating (SC) UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
+        shinyjs::disable("recalculateButton")
         message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start recalculating consensus read (SC")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -1398,6 +1403,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             consensusParam[["stopCodonsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@stopCodonsDF
             consensusParam[["secondaryPeakDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@secondaryPeakDF
         }
+        shinyjs::enable("recalculateButton")
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button apply trimming parameters
@@ -2338,6 +2344,15 @@ alignedConsensusSetServer <- function(input, output, session) {
     })
     output$chromatogram <- renderPlot({
         ## !!!!! Update !!!!
+        shinyjs::disable("startTrimmingButton")
+        shinyjs::disable("saveChromatogramParam")
+        shinyjs::disable("ChromatogramBasePerRow")
+        shinyjs::disable("ChromatogramHeightPerRow")
+        shinyjs::disable("ChromatogramSignalRatioCutoff")
+        shinyjs::disable("ChromatogramCheckShowTrimmed")
+        shinyjs::disable("M1TrimmingCutoffText")
+        shinyjs::disable("M2CutoffQualityScoreText")
+        shinyjs::disable("M2SlidingWindowSizeText")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
@@ -2348,6 +2363,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             (directionParam == "Forward" ||
              directionParam == "Reverse") &&
             sidebar_menu[[6]] == "Read") {
+            removeNotification(id = "saveNotification")
             showNotification(
                 ui = fluidRow(
                     column(1),
@@ -2517,6 +2533,15 @@ alignedConsensusSetServer <- function(input, output, session) {
                          showtrim = (ChromatogramParam[["showTrimmed"]]),
                          showcalls = "both")
             removeNotification(id = "chromatogramNotification")
+            shinyjs::enable("ChromatogramBasePerRow")
+            shinyjs::enable("ChromatogramHeightPerRow")
+            shinyjs::enable("ChromatogramSignalRatioCutoff")
+            shinyjs::enable("ChromatogramCheckShowTrimmed")
+            shinyjs::enable("M1TrimmingCutoffText")
+            shinyjs::enable("M2CutoffQualityScoreText")
+            shinyjs::enable("M2SlidingWindowSizeText")
+            shinyjs::enable("startTrimmingButton")
+            shinyjs::enable("saveChromatogramParam")
         }
     })
 }

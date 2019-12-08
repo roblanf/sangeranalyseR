@@ -113,7 +113,7 @@ consensusReadUI <- dashboardPage(
         tags$style(
             HTML(".shiny-notification {
              color: white;
-             background-color:#0E8C3A;
+             background-color:#1b6940;
              opacity:1.0;
              position:fixed;
              top: calc(50% - 150px);

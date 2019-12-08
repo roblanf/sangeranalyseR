@@ -838,6 +838,7 @@ consensusReadServer <- function(input, output, session) {
     ### observeEvent: Button Save S4 object
     ### ------------------------------------------------------------------------
     observeEvent(input$saveS4, {
+        shinyjs::disable("saveS4")
         message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
         showNotification(
@@ -860,9 +861,9 @@ consensusReadServer <- function(input, output, session) {
                                      environment",
                               style = "font-size: 18px;
                                    font-style: italic"),
-
                 )
-            ), closeButton = TRUE, type = "message", duration = 10)
+            ), closeButton = TRUE, id = "saveNotification",
+            type = "message", duration = 10)
 
         ### --------------------------------------------------------------------
         ### Save SangerConsensus quality S4 object
@@ -870,11 +871,13 @@ consensusReadServer <- function(input, output, session) {
         saveRDS(SangerConsensus, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
         NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
+        shinyjs::enable("saveS4")
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus read re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
+        shinyjs::disable("recalculateButton")
         message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start recalculating consensus read (SC")
         CSResult<-
@@ -904,6 +907,7 @@ consensusReadServer <- function(input, output, session) {
         consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
         consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
         consensusParam[["secondaryPeakDF"]] <<- SangerConsensus@secondaryPeakDF
+        shinyjs::enable("recalculateButton")
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
@@ -1674,10 +1678,20 @@ consensusReadServer <- function(input, output, session) {
 
     output$chromatogram <- renderPlot({
         ## !!!!! Update !!!!
+        shinyjs::disable("startTrimmingButton")
+        shinyjs::disable("saveChromatogramParam")
+        shinyjs::disable("ChromatogramBasePerRow")
+        shinyjs::disable("ChromatogramHeightPerRow")
+        shinyjs::disable("ChromatogramSignalRatioCutoff")
+        shinyjs::disable("ChromatogramCheckShowTrimmed")
+        shinyjs::disable("M1TrimmingCutoffText")
+        shinyjs::disable("M2CutoffQualityScoreText")
+        shinyjs::disable("M2SlidingWindowSizeText")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(singleReadIndex))) {
+            removeNotification(id = "saveNotification")
             showNotification(
                 ui = fluidRow(
                     column(1),
@@ -1710,11 +1724,10 @@ consensusReadServer <- function(input, output, session) {
                                   it would need more time to replot
                                   the chromatogram)",
                                   style = "font-size: 16px;
-                                   font-style: italic"),)
-                ),
-                action = NULL, duration = NULL, closeButton = FALSE,
-                id = "chromatogramNotification",
-                type = "message")
+                                   font-style: italic"),
+                           )
+                ), action = NULL, duration = NULL, closeButton = FALSE,
+                id = "chromatogramNotification", type = "message")
             if (directionParam == "Forward") {
                 rawSeqLength <-
                     SangerConsensus@forwardReadsList[[singleReadIndex]]@
@@ -1832,6 +1845,15 @@ consensusReadServer <- function(input, output, session) {
                          showtrim = (ChromatogramParam[["showTrimmed"]]),
                          showcalls = "both")
             removeNotification(id = "chromatogramNotification")
+            shinyjs::enable("ChromatogramBasePerRow")
+            shinyjs::enable("ChromatogramHeightPerRow")
+            shinyjs::enable("ChromatogramSignalRatioCutoff")
+            shinyjs::enable("ChromatogramCheckShowTrimmed")
+            shinyjs::enable("M1TrimmingCutoffText")
+            shinyjs::enable("M2CutoffQualityScoreText")
+            shinyjs::enable("M2SlidingWindowSizeText")
+            shinyjs::enable("startTrimmingButton")
+            shinyjs::enable("saveChromatogramParam")
         }
     })
 }
