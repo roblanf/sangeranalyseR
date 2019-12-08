@@ -33,7 +33,7 @@ The [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) provides S4 clas
 There are three main S4 classes in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are **'SangerSingleRead'**, **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Each of them stores different level of input parameters and results in Sanger sequencing data analysis. Figure 1 shows the hierarchy of these three S4 classes.
 
 ```{r, out.width = "2000px",fig.cap="\\label{fig:figs} S4 class hierarchy", echo=FALSE}
-knitr::include_graphics("figure/S4_Class_Hierarchy.png")
+knitr::include_graphics("figure/Figure_1_S4_Class_Hierarchy.png")
 ```
 
 * **'SangerSingleRead'** extends from 'sangerseq' class and stores raw data 'abif' class in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html) as well as essential information including quality trimming and chromatogram parameters. It corresponds to a single ABIF file in Sanger sequencing. 
@@ -71,7 +71,7 @@ Figure 2 below shows the filename regulation of input raw ABIF file which is goi
 
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerSingleRead'", echo=FALSE}
-knitr::include_graphics("figure/SangerSingleRead_filename_regulation.png")
+knitr::include_graphics("figure/Figure_2_SangerSingleRead_filename_regulation.png")
 ```
 
 Here is an example of getting the absolute filename of a raw ABIF file. We will show the meaning of **[*Consensus Read Name*]**, **[*F,R*]** and **[*Number Index*]** with true data.
@@ -190,12 +190,12 @@ slotNames(singleReadCtor@ChromatogramParam)
 Before creating a **"SangerConsensusRead"** S4 instance, we need to prepare a  directory storing all raw ABIF files in the same consensus group with valid filenames. Figure 3 shows the directory hierarchy of **"SangerConsensusRead"**.
 
 ```{r, out.width = "600px", fig.cap="\\label{fig:figs}'SangerConsensusRead' directory hierarchy", echo=FALSE}
-knitr::include_graphics("figure/SangerConsensusRead_file_structure.png")
+knitr::include_graphics("figure/Figure_3_SangerConsensusRead_file_structure.png")
 ```
 The `parentDirectory` stores the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in Figure 4. The filename regulation for each raw ABIF files are same as filename regulation in **"SangerSingleRead"**; however, users have to pay attention to the [*Number Index*]. The **[*Number Index*]** of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerConsensusRead'", echo=FALSE}
-knitr::include_graphics("figure/SangerConsensusRead_filename_regulation.png")
+knitr::include_graphics("figure/Figure_4_SangerConsensusRead_filename_regulation.png")
 ```
 
 Now, after preparing valid directory, we start to define the parameters. First, we need to define the absolute parent directory, the consensus read name and suffix regular expression for forward as well as reverse read.
@@ -230,7 +230,7 @@ consensusReadsRef <- new("SangerConsensusRead",
 
 
 Same as the previous **'SangerSingleRead'**, we also create a constructor wrapper function for **'SangerConsensusRead'**. The instance created by new and constructor functions are same. In this example, we do not provide a reference amino acids sequence and choose Method 2 (M2) *"Logarithmic Scale Sliding Window Trimming"* as our quality trimming approach.
-``` {r}
+``` {r eval=FALSE}
 consensusReadsNoRef <- SangerConsensusRead(
                               parentDirectory       = inputFilesParentDir,
                               consensusReadName    = consensusReadName,
@@ -275,13 +275,13 @@ slotNames(consensusReadsRef)
 Before creating a **"AlignedConsensusSet"** S4 instance, we need to prepare a directory storing all raw ABIF files. Figure 5 shows the directory hierarchy of **"AlignedConsensusSet"**. 
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' directory hierarchy", echo=FALSE}
-knitr::include_graphics("figure/AlignedConsensusSet_file_structure.png")
+knitr::include_graphics("figure/Figure_5_AlignedConsensusSet_file_structure.png")
 ```
 
 The `parentDirectory` is same as **"SangerConsensusRead"** which is the absolute file path storing all raw ABIF files. The difference is that raw ABIF files do not need to be in the first layer inside `parentDirectory`; in other words, it is allowed to have some middle directories separating the ABIF files. Figure 6 shows the  **"AlignedConsensusSet"** filename regulation and grouping strategy. The ABIF files with the same **[*Consensus Read Name*]** will be categorized into the same group and for each group, a **"SangerConsensusRead"** will be created. **"AlignedConsensusSet"** will be created by these **"SangerConsensusRead"**.
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
-knitr::include_graphics("figure/AlignedConsensusSet_filename_regulation.png")
+knitr::include_graphics("figure/Figure_6_AlignedConsensusSet_filename_regulation.png")
 ```
 
 Here is an example. Users only need to define the `parentDirectory`, foward and reverse reads regular expression suffix, and program will recursively search all the root ABIF files inside the `parentDirectory` with the valid filename regulation. These three parameters are the important inputs for creating **"AlignedConsensusSet"**. 
@@ -295,7 +295,7 @@ suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 ### S4 Instance Creation Example
 
 After defining `parentDirectory`, `suffixForwardRegExp`, and `suffixReverseRegExp`, we can create the **"AlignedConsensusSet"**.  
-```{r echo = T, results = 'hide'}
+```{r echo = T, results = 'hide', eval= FALSE}
 setOldClass("phylo")
 
 alignedConsensusRef <- new("SangerAlignedConsensusSet",
@@ -321,7 +321,7 @@ For more input details, please refer to **'SangerSingleRead'**, **'SangerConsens
 
 ### Slots Definition
 Here, we show all the slots in **'AlignedConsensusSet'**. For more details about the meaning of each slot, please refer to sangeranalyseR reference manual.
-```{r }
+```{r , eval= FALSE}
 slotNames(alignedConsensusRef)
 ```
 
@@ -330,15 +330,52 @@ slotNames(alignedConsensusRef)
 
 ## ShinySangerConsensusRead
 
-### Right-hand side panel
-
-### Overiview page
-
-### Single Read page
-
 ```{r }
 RShinySCR <- launchAppConsensusRead(list(consensusReadsRef))
 ```
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_7_.png")
+```
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_8_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_9_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_10_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_11_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_12_.png")
+```
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_13_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_14_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_15_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_16_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_17_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_18_.png")
+```
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_19_.png")
+```
+
 
 
 ### Example
@@ -348,7 +385,7 @@ launchAppConsensusRead
 
 ## ShinySangerAlignedConsensusSet
 
-```{r }
+```{r eval= FALSE}
 RShinyACS <- launchAppAlignedConsensusSet(list(alignedConsensusRef))
 ```
 
@@ -363,3 +400,9 @@ launchAppAlignedConsensusSet
 
 # Reference
 Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120.
+
+<style>
+    body .main-container {
+        max-width: 1000px;
+    }
+</style>
