@@ -43,8 +43,8 @@ knitr::include_graphics("figure/Figure_1_S4_Class_Hierarchy.png")
 * **'AlignedConsensusSet'** contains a list of 'SangerConsensusRead' and the alignment results for all consensus reads. We call the aligned consensus reads "an aligned-consensus read". It corresponds to a rebuild genome fragment in Sanger sequencing. In the following documentation, we will say "the consensus reads in **'AlignedConsensusSet'**" which means all the consensus reads from each consensus group.
 
 
-### Interactive Shiny UI
-We build two local interactive Shiny user interface for users to explore their created **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Inside the Shiny UI, users can change the input parameters for quality trimming, chromatogram and rebuild consensus read etc. Information displayed on the UI is dynamic based on user input. Furthermore, all changed parameters and results can be saved to a new S4 instance and be exported as an *RDS* file.
+### Interactive Shiny App
+We build two local interactive Shiny app for users to explore their created **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Inside the Shiny app, users can change the input parameters for quality trimming, chromatogram and rebuild consensus read etc. Information displayed on the UI is dynamic based on user input. Furthermore, all changed parameters and results can be saved to a new S4 instance and be exported as an *RDS* file.
 
 ## System Requirement
 >>> After uploading to Bioconductor
@@ -150,7 +150,7 @@ Method 2 (M2) is similar to "Trimmomatic"(Bolger et al.) SLIDINGWINDOW trimming 
 
 #### Chromatogram Related Parameters
 
-These parameters are used for drawing chromatogram in Shiny UI.
+These parameters are used for drawing chromatogram in Shiny app.
 
 * **`baseNumPerRow`** : It defines maximum base pairs in each row. The default value is *"100"*
 * **`heightPerRow`** : It defines the height of each row in chromatogram. The default value is *"200"*.
@@ -170,7 +170,7 @@ slotNames(singleReadCtor)
 There are two special slots in **'SangerSingleRead'** which are S4 classes defined in this R package.
 
 * **`QualityReport`** : Storing quality-related parameters and trimmed results.
-* **`ChromatogramParam`** : Storing chromatogram-related parameters for Shiny UI.
+* **`ChromatogramParam`** : Storing chromatogram-related parameters for Shiny app.
 
 We also show all the slots in **'QualityReport'** and **'ChromatogramParam'** class.
 ```{r }
@@ -247,7 +247,7 @@ consensusReadsNoRef <- SangerConsensusRead(
 ```
 
 ### Inputs Definition
-The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"**. The **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** are same as the input of **'SangerSingleRead'**. By default, all reads will use the same parameters and users can use the local Shiny UI that we provide to explore and change these input parameters. The Shiny UI will be discussed in next section.
+The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"**. The **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** are same as the input of **'SangerSingleRead'**. By default, all reads will use the same parameters and users can use the local Shiny app that we provide to explore and change these input parameters. The Shiny app will be discussed in next section.
 
 For more input details, please refer to the **'SangerSingleRead'** section and sangeranalyseR reference manul. Here, we will only show the "Basic Parameters".
 
@@ -315,7 +315,7 @@ alignedConsensusRef <- new("SangerAlignedConsensusSet",
 ```
 
 ### Inputs Definition
-The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** which are same as **'SangerConsensusRead'**. By default, all **'SangerConsensusRead'** in **'AlignedConsensus'** will use the same trimming and chromatogram parameters. We provide Shiny UI for users to explore and change these input parameters. Shiny UI will be discussed in next section.
+The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** which are same as **'SangerConsensusRead'**. By default, all **'SangerConsensusRead'** in **'AlignedConsensus'** will use the same trimming and chromatogram parameters. We provide Shiny app for users to explore and change these input parameters. Shiny app will be discussed in next section.
 
 For more input details, please refer to **'SangerSingleRead'**, **'SangerConsensusRead'** and sangeranalyseR reference manul.
 
@@ -328,19 +328,37 @@ slotNames(alignedConsensusRef)
 
 # Shiny App
 
-## ShinySangerConsensusRead
+In sangeranalyseR, we create two interactive Shiny apps which are **'*SangerConsensusRead App*'** and **'*AlignedConsensusSet App*'** for users to check Sanger sequencing data results. These two Shiny apps can be run locally in current R environment. Users need to create a **'SangerConsensusRead'** or an **'AlignedConsensusSet'** S4 instance mentioned above first and use them as input to start the Shiny app. Inside the Shiny app, users can change the input parameters for quality trimming, base calling, chromatogram plotting etc. The results displayed in the app are dynamic based on user input. In this section, we are going to show how to run the Shiny apps.
 
+## SangerConsensusRead App
+
+To run **'*SangerConsensusRead App*'**, users have to create a **SangerConsensusRead** instance. Notice that the input of this function is **"****SangerConsensusRead** instance in a list**"**.
+Now we execute the function and create a `RShinySCR` Shiny object.
 ```{r }
 RShinySCR <- launchAppConsensusRead(list(consensusReadsRef))
 ```
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+Run the `RShinySCR` in R console to trigger the **'*SangerConsensusRead App*'**.
+
+### "Consensus Read Overview Page"
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Initial page for 'SangerConsensusRead App'", echo=FALSE}
 knitr::include_graphics("figure/Figure_7_.png")
 ```
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+
+Figure 7 is the initial page of **'*SangerConsensusRead App*'** which is the **"Consensus Read Overview page"**. In this page, users can see basic information of this consensus read. Notice that there is a red "*Re-calculate consensus read button*". It is highly suggested to click the button before checking the results in order to get the up-to-date information.
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs} 'Alignment' & 'Difference Data Frame' results", echo=FALSE}
 knitr::include_graphics("figure/Figure_8_.png")
 ```
+
+The information provided in this page includes : *"input parameters"*, *"genetic code table"*, *"reference amino acids sequence"*, *"reads alignment"*, *"difference data frame"*, *"dendrogram"*, *"sample distance heatmap"*, *"indels data frame"*, *"stop codons data frame"*. Figure 8 shows part of the results in the **"Consensus Read Overview Page"**.
+
+### "Single Read Page"
+
+
+
+All reads in **'SangerConsensusRead'** are in *forward* or *reverse* direction. In the right pannel, 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
 knitr::include_graphics("figure/Figure_9_.png")
 ```
@@ -383,7 +401,7 @@ knitr::include_graphics("figure/Figure_19_.png")
 
 launchAppConsensusRead 
 
-## ShinySangerAlignedConsensusSet
+## AlignedConsensusSet App
 
 ```{r eval= FALSE}
 RShinyACS <- launchAppAlignedConsensusSet(list(alignedConsensusRef))
