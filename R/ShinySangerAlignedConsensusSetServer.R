@@ -133,7 +133,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                         column(width = 12,
                                actionBttn("recalculateButtonSCSet",
                                           "Re-calculate
-                                                      consensusread (read set)",
+                                          Aligned Consensus Reads",
                                           icon = icon("calculator"),
                                           style = "simple", color = "danger",
                                           block = TRUE, size = "lg")
@@ -317,7 +317,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                             fluidRow(
                                 column(width = 12,
                                        actionBttn("recalculateButton",
-                                                  "Re-calculate consensus read",
+                                                  "Re-calculate Consensus Read",
                                                   icon = icon("calculator"),
                                                   style = "simple",
                                                   color = "danger",
@@ -970,7 +970,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                         status = "success", width = 12,
                                         plotlyOutput("qualityTrimmingRatioPlot") %>%
                                             withSpinner()),
-                                    box(title = tags$p("Cumulative Ratio Plot",
+                                    box(title = tags$p("Base Pairs Quality Plot",
                                                        style = "font-size: 21px;
                                                            font-weight: bold;"),
                                         collapsible = TRUE,

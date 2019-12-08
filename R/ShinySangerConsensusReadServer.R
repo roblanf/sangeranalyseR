@@ -124,7 +124,7 @@ consensusReadServer <- function(input, output, session) {
                     fluidRow(
                         column(width = 12,
                                actionBttn("recalculateButton",
-                                          "Re-calculate consensus read",
+                                          "Re-calculate Consensus Read",
                                           icon = icon("calculator"),
                                           style = "simple", color = "danger",
                                           block = TRUE, size = "lg")
@@ -693,7 +693,7 @@ consensusReadServer <- function(input, output, session) {
                                 status = "success", width = 12,
                                 plotlyOutput("qualityTrimmingRatioPlot") %>%
                                     withSpinner()),
-                            box(title = tags$p("Quality BP Plot",
+                            box(title = tags$p("Base Pairs Quality Plot",
                                                style = "font-size: 21px;
                                            font-weight: bold;"),
                                 collapsible = TRUE,

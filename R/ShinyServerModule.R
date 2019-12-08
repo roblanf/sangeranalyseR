@@ -777,7 +777,7 @@ valueBoxM1TrimmingCutoff <- function(input, output, session) {
                 inputM1TrimmingCutoffText <- 0.0001
             }
             valueBox(
-                subtitle = tags$p("Cut Off Log Score",
+                subtitle = tags$p("Cutoff Score",
                                   style = "font-size: 15px;
                                        font-weight: bold;"),
                 value = tags$p(as.numeric(inputM1TrimmingCutoffText),
@@ -807,7 +807,7 @@ valueBoxM2CutoffQualityScore <- function(input, output, session) {
                 inputM2CutoffQualityScoreText <- 20
             }
             valueBox(
-                subtitle = tags$p("Cut Off Quality Score",
+                subtitle = tags$p("Cutoff Quality Score",
                                   style = "font-size: 15px;
                                             font-weight: bold;"),
                 value = tags$p(strtoi(inputM2CutoffQualityScoreText),

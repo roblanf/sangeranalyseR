@@ -332,12 +332,12 @@ In sangeranalyseR, we create two interactive Shiny apps which are **'*SangerCons
 
 ## SangerConsensusRead App
 
-To run **'*SangerConsensusRead App*'**, users have to create a **SangerConsensusRead** instance. Notice that the input of this function is **"****SangerConsensusRead** instance in a list**"**.
+To run **'*SangerConsensusRead App*'**, users have to create a **SangerConsensusRead** instance first. Notice that the input of this function is **"****SangerConsensusRead** instance in a list**"**.
 Now, we execute the `launchAppConsensusRead` function and create a `RShinySCR` Shiny object.
 ```{r }
 RShinySCR <- launchAppConsensusRead(list(consensusReadsRef))
 ```
-Run the `RShinySCR` in R console to trigger the **'*SangerConsensusRead App*'**.
+Run the `RShinySCR` in R console to trigger the **'*SangerConsensusRead App*'**. There are two layers in **"SangerConsensusRead"** which are ***"Consensus Read Overview Page"*** and ***"Single Read Page"***
 
 ### "Consensus Read Overview Page"
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Initial page for 'SangerConsensusRead App'", echo=FALSE}
@@ -360,69 +360,99 @@ All reads in **'SangerConsensusRead'** are in *forward* or *reverse* direction. 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Initial page for 'Single Read Page'", echo=FALSE}
 knitr::include_graphics("figure/Figure_9_.png")
 ```
-**Figure 9** is the initial page for **'Single Read Page'** which provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences and quality phred scores table displayed in this figure are dynamic based on the `signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in **Figure 17** below are always same.
+**Figure 9** is the initial page for **'Single Read Page'** which provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences and quality Phred scores table displayed in this figure are dynamic based on the `signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in **Figure 17** below are same and the color coding for **A**/**T**/**C**/**G** is same as well.
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Frameshift Amino Acids sequences for primary sequence", echo=FALSE}
 knitr::include_graphics("figure/Figure_10_.png")
 ```
 **Figure 10** shows the frameshift amino acids sequence translated from the primary sequence. Stop codons are highlighted in red. These three AA sequences are also dynamic based on the `signalRatioCutoff` value for base calling.
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Trimming Method 1 (M1): 'Logarithmic Scale Trimming' UI", echo=FALSE}
 knitr::include_graphics("figure/Figure_11_.png")
 ```
-In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would provide better alignment resutls. In **Figure 11**, 
+In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would improves alignment resutls. **Figure 11** shows the UI for Trimming Method 1 (M1): *'Logarithmic Scale Trimming'*. Users can change the cutoff score and click "*Apply Trimming Parameters button*" to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default `0.0001`.
 
-
-in that sequence.
-
-
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Trimming Method 2 (M2): 'Logarithmic Scale Sliding Window Trimming' UI", echo=FALSE}
 knitr::include_graphics("figure/Figure_12_.png")
 ```
+**Figure 12** shows another quality trimming methods for users to choose from, Trimming Method 2 (M2): *'Logarithmic Scale Sliding Window Trimming'*. Users can change the cutoff quality score as well as sliding window size and click "*Apply Trimming Parameters button*" to update the UI. The value of cutoff quality score must be between 0 and 60 (default 20); the value of sliding window size must be between 0 and 20 (default 5). If the inputs are invalid, their values will be set to default.
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Trimmed quality results", echo=FALSE}
 knitr::include_graphics("figure/Figure_13_.png")
 ```
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+**Figure 13** shows the quality report before trimming and after trimming. After clicking the "*Apply Trimming Parameters button*", the values of these information boxes will be updated to the latest values.
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Cumulative ration value", echo=FALSE}
 knitr::include_graphics("figure/Figure_14_.png")
 ```
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+In **Figure 14**, the x-axis is the index of the base pairs; the y-axis is the ratio to the raw read length. The green line is the trimmed read ration and the purple is the remaining read ration.
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Base pairs quality plot", echo=FALSE}
 knitr::include_graphics("figure/Figure_15_.png")
 ```
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+In **Figure 15**, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top is the raw read region and the orange horizontal bar represents the trimmed read region. Both **Figure 15** and **Figure 16** will be updated once users change the input parameters and click the "*Apply Trimming Parameters button*".
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Chromatogram panel in 'Single Read Page'", echo=FALSE}
 knitr::include_graphics("figure/Figure_16_.png")
 ```
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+If we only see primary and secondary sequences in the table, we will loose some variations. Chromatogram is very helpful to check the peak resolution. **Figure 15** shows the panel of plotting chromatogram. Users can change four parameters: *"Base Number Per Row"*, *"Height Per Row"*, *"Signal Ratio Cutoff"*, and *"Show Trimmed Region"*. Among them, *"Signal Ratio Cutoff"* is a key parameter. If its value is default value `0.33`, it indicates that the lower peak should be at least 1/3rd as high as the higher peak for it count as a secondary peak. 
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Loading notification popup during replotting chromatogram", echo=FALSE}
 knitr::include_graphics("figure/Figure_17_.png")
 ```
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+Here is an example of applying new chromatogram parameters. We click *"Show Trimmed Region"* to set its value from `FALSE` to `TRUE`. **Figure 17** shows the loading notification popup during base calling and chromatogram plotting.
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Chromatogram with showing trimmed region", echo=FALSE}
 knitr::include_graphics("figure/Figure_18_.png")
 ```
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+After replotting the chromatogram, trimmed region is showed in red striped region. **Figure 18** shows part of the the chromatogram (1 bp ~ 240 bp). Moreover, chromatogram will be replotted when trimmed positions or chromatogram parameters are updated.
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Trimmed primary/secondary sequences and Phred quality score in Table format", echo=FALSE}
 knitr::include_graphics("figure/Figure_19_.png")
 ```
+To let user browse the trimmed primary/secondary sequences without finding **"Trimming start point"** and **"Trimming End point"** in **Figure 9** by themselves, we provide the final trimmed primary/secondary sequences that will be used for consensus read alignment in table format with quality scores in **Figure 19**.
 
-
-
-### Example
-* UI for **'SangerConsensusRead'** class: Users can access to each read and an overview page for consensus reads. 
-
-launchAppConsensusRead 
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Save notification popup", echo=FALSE}
+knitr::include_graphics("figure/Figure_20_.png")
+```
+We have updated the trimming and chromatogram parameters for each read. Now, we need to click "*Re-calculate consensus read button*" to do alignment again. Last but not least, we can save all data into a new **'SangerConsensusRead'** S4 instance by clicking "*Save S4 Object button*". New S4 instance would be saved in ***Rda*** format. Users can run `readRDS` function to load it into current R environment. **Figure 20** shows some hints in the save notification popup.
 
 ## AlignedConsensusSet App
+
+To run **'*AlignedConsensusSet App*'**, users have to create a **AlignedConsensusSet** instance first. Notice that the input of this function is **"****AlignedConsensusSet** instance in a list**"**.
+Now, we execute the `launchAppConsensusRead` function and create a `RShinySCR` Shiny object.
 
 ```{r eval= FALSE}
 RShinyACS <- launchAppAlignedConsensusSet(list(alignedConsensusRef))
 ```
 
-### Example
-* UI for **'AlignedConsensusSet'** class: Users can recursively access to all single reads, each overview page for consensus reads and 
-launchAppAlignedConsensusSet
+Run `RShinyACS` in R console to trigger the **'*AlignedConsensusSet App*'**. There are three layers in **"AlignedConsensusSet App"** which are ***"Aligned Consensus Set Overview Page"***, ***"Consensus Read Overview Page"*** and ***"Single Read Page"***.
 
+### "Aligned Consensus Set Overview Page"
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Initial page for 'AlignedConsensusSet App'", echo=FALSE}
+knitr::include_graphics("figure/Figure_21_.png")
+```
+**Figure 21** is the initial page and the toppest layer of **'*AlignedConsensusSet App*'**. It provides basic information of **AlignedConsensusSet**, alignment result and classification tree. After updating all the trimmed reads, users need to remember to click "*Re-calculate Algined Consensus Reads button*" to do alignment again. From the left-hand side panel, we can clearly see the hierarchy of the **AlignedConsensusSet** S4 instance and easily access to all reads in it.
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Alignment result for all consensus reads from each 'SangerConsensusRead'", echo=FALSE}
+knitr::include_graphics("figure/Figure_22_.png")
+```
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Classification Tree for each consensus group", echo=FALSE}
+knitr::include_graphics("figure/Figure_23_.png")
+```
+
+### "Consensus Read Overview Page"
+This page is same as **"*Consensus Read Overview Page*"** in **'*SangerConsensusRead App*'**. Please refer to the previous to **'*SangerConsensusRead App*'** section.
+
+### "Single Read Page"
+This page is same as **"*Single Read Page*"** in **'*SangerConsensusRead App*'**. Please refer to the previous to **'*SangerConsensusRead App*'** section.
 
 # Conclusion
 
 # Session Information
+sessionInfo()
 
 # Reference
 Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120.
