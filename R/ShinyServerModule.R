@@ -46,10 +46,14 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
     ### in this case you wouldn't want to keep any bases at all
     ### ------------------------------------------------------------------------
     if(sum(cummul_score)==0){trimmedFinishPos = 0}
+    if (trimmedFinishPos - trimmedStartPos == 0) {
+        trimmedStartPos = 1
+        trimmedFinishPos = 2
+    }
+    trimmedSeqLength = trimmedFinishPos - trimmedStartPos
     trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
     trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
     trimmedMinQualityScore <- min(trimmedQualityPhredScore)
-    trimmedSeqLength = trimmedFinishPos - trimmedStartPos
     remainingRatio = trimmedSeqLength / rawSeqLength
 
     return(c("rawSeqLength" = rawSeqLength,
@@ -90,20 +94,14 @@ M2inside_calculate_trimming <- function(qualityPhredScores,
         trimmedStartPos = remainingIndex[1]
         trimmedFinishPos = remainingIndex[length(remainingIndex)]
         if (is.null(trimmedStartPos) || is.null(trimmedFinishPos)) {
-            trimmedStartPos <- 0
-            trimmedFinishPos <- 0
-            trimmedQualityPhredScore <- 0
-            trimmedMeanQualityScore <- 0
-            trimmedMinQualityScore <- 0
-            trimmedSeqLength = 0
-            remainingRatio = 0
-        } else {
-            trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
-            trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
-            trimmedMinQualityScore <- min(trimmedQualityPhredScore)
-            trimmedSeqLength = trimmedFinishPos - trimmedStartPos
-            remainingRatio = trimmedSeqLength / rawSeqLength
+            trimmedStartPos <- 1
+            trimmedFinishPos <- 2
         }
+        trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
+        trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
+        trimmedMinQualityScore <- min(trimmedQualityPhredScore)
+        trimmedSeqLength = trimmedFinishPos - trimmedStartPos
+        remainingRatio = trimmedSeqLength / rawSeqLength
     }
     return(list("rawSeqLength" = rawSeqLength,
                 "rawMeanQualityScore" = rawMeanQualityScore,
@@ -1232,7 +1230,7 @@ primarySeqDisplay <- function(sequenceParam) {
     styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
     suppressMessages(
         excelTable(data = primarySeqDF, defaultColWidth = 30,
-                   editable = TRUE, rowResize = FALSE,
+                   editable = FALSE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
@@ -1253,7 +1251,7 @@ secondarySeqDisplay <- function(sequenceParam) {
     styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
     suppressMessages(
         excelTable(data = secondarySeqDF, defaultColWidth = 30,
-                   editable = TRUE, rowResize = FALSE,
+                   editable = FALSE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
@@ -1268,7 +1266,7 @@ qualityScoreDisplay <- function(PhredScore) {
     styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
     suppressMessages(
         excelTable(data =
-                       PhredScoreDF, defaultColWidth = 30, editable = TRUE,
+                       PhredScoreDF, defaultColWidth = 30, editable = FALSE,
                    rowResize = FALSE, columnResize = FALSE,
                    allowInsertRow = FALSE, allowInsertColumn = FALSE,
                    allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
@@ -1287,7 +1285,7 @@ PrimAASeqS1Display <- function(sequenceParam) {
     styleList <- c(styleList1, styleList2)
     suppressMessages(
         excelTable(data = AAStringDF, columns = data.frame(width = width),
-                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                   defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
@@ -1308,7 +1306,7 @@ PrimAASeqS2Display <- function(sequenceParam) {
     styleList[['A1']] <- 'background-color: black;'
     suppressMessages(
         excelTable(data = AAStringDF, columns = data.frame(width = width),
-                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                   defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
@@ -1330,7 +1328,7 @@ PrimAASeqS3Display <- function(sequenceParam) {
     styleList[['B1']] <- 'background-color: black;'
     suppressMessages(
         excelTable(data = AAStringDF, columns = data.frame(width = width),
-                   defaultColWidth = 90, editable = TRUE, rowResize = FALSE,
+                   defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
@@ -1346,7 +1344,11 @@ primarySeqTrimmedDisplay <- function(input, output, session,
         , ""))
     primarySeqDF <- data.frame(
         t(data.frame(primarySeq)), stringsAsFactors = FALSE)
-    colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
+    if ((trimmedRV[["trimmedFinishPos"]]-trimmedRV[["trimmedStartPos"]]) == 1) {
+        colnames(primarySeqDF) <- "1"
+    } else {
+        colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
+    }
     rownames(primarySeqDF) <- NULL
     AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
     TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
@@ -1355,7 +1357,7 @@ primarySeqTrimmedDisplay <- function(input, output, session,
     styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
     suppressMessages(
         excelTable(data = primarySeqDF, defaultColWidth = 30,
-                   editable = TRUE, rowResize = FALSE,
+                   editable = FALSE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
@@ -1372,7 +1374,11 @@ secondSeqTrimmedDisplay <- function(input, output, session,
         , ""))
     secondarySeqDF <- data.frame(
         t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
-    colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
+    if ((trimmedRV[["trimmedFinishPos"]]-trimmedRV[["trimmedStartPos"]]) == 1) {
+        colnames(secondarySeqDF) <- "1"
+    } else {
+        colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
+    }
     rownames(secondarySeqDF) <- NULL
     AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
     TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
@@ -1381,7 +1387,7 @@ secondSeqTrimmedDisplay <- function(input, output, session,
     styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
     suppressMessages(
         excelTable(data = secondarySeqDF, defaultColWidth = 30,
-                   editable = TRUE, rowResize = FALSE,
+                   editable = FALSE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,

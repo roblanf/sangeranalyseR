@@ -26,6 +26,14 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerConsensusSet@consensusReadsList[[i]]@reverseReadsList
         forwardReadNum <- length(SangerSingleReadFReadsList)
         reverseReadNum <- length(SangerSingleReadRReadsList)
+        # readFeature
+        forwardReadFeature <- sapply(1:forwardReadNum, function(j)
+            paste0(j, " ",
+                   SangerSingleReadFReadsList[[j]]@readFeature))
+        reverseReadFeature <- sapply(1:reverseReadNum, function(j)
+            paste0(j, " ",
+                   SangerSingleReadRReadsList[[j]]@readFeature))
+        SangerSingleReadFeature <- c(forwardReadFeature, reverseReadFeature)
         # readFileName (basename)
         forwardReadBFN <- sapply(1:forwardReadNum, function(j)
             basename(SangerSingleReadFReadsList[[j]]@readFileName))
@@ -35,8 +43,9 @@ alignedConsensusSetServer <- function(input, output, session) {
         return(list(SCName = SCName,
                     forwardReadNum = forwardReadNum,
                     reverseReadNum = reverseReadNum,
-                    SangerSingleReadBFN = SangerSingleReadBFN,
-                    SangerSingleReadAFN = SangerSingleReadAFN))
+                    forwardReadFeature = forwardReadFeature,
+                    reverseReadFeature = reverseReadFeature,
+                    SangerSingleReadBFN = SangerSingleReadBFN))
     })
 
     SCTrimmingMethod <-
@@ -1537,7 +1546,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         SCGeneticCode <- SangerConsensusSet@geneticCode
         suppressMessages(
             excelTable(data = t(data.frame(SCGeneticCode)),
-                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       defaultColWidth = 50, editable = FALSE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
@@ -1586,7 +1595,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         suppressMessages(
             excelTable(data =
                            t(data.frame(refAminoAcidSeqVec)),
-                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       defaultColWidth = 50, editable = FALSE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE)

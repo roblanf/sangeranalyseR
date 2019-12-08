@@ -258,7 +258,9 @@ SetCharStyleList <- function(AASeqDF, selectChar, colorCode) {
     styleList <-
         as.list(rep(paste('background-color:', colorCode,
                           "; font-weight: bold;"), length(stopExcelIndex)))
-    names(styleList) <- stopExcelIndexName
+    if (length(stopIndex) != 0) {
+        names(styleList) <- stopExcelIndexName
+    }
     return(styleList)
 }
 

@@ -1187,7 +1187,7 @@ consensusReadServer <- function(input, output, session) {
     output$geneticCodeDF <- renderExcel({
         suppressMessages(
             excelTable(data =  t(data.frame(SangerConsensus@geneticCode)),
-                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       defaultColWidth = 50, editable = FALSE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
@@ -1235,7 +1235,7 @@ consensusReadServer <- function(input, output, session) {
         suppressMessages(
             excelTable(data =
                            t(data.frame(refAminoAcidSeqVec)),
-                       defaultColWidth = 50, editable = TRUE, rowResize = FALSE,
+                       defaultColWidth = 50, editable = FALSE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                        allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
