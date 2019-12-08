@@ -30,7 +30,7 @@ setOldClass("phylo")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
-#'                                parentDirectory       = inputFilesParentDir,
+#'                                parentDirectory       = rawDataDir,
 #'                                suffixForwardRegExp   = suffixForwardRegExp,
 #'                                suffixReverseRegExp   = suffixReverseRegExp,
 #'                                refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -141,7 +141,7 @@ setMethod("initialize",
         ### --------------------------------------------------------------------
         ### Automatically finding consensus read name by forward&reverse suffix
         ### --------------------------------------------------------------------
-        parentDirFiles <- list.files(parentDirectory)
+        parentDirFiles <- list.files(parentDirectory, recursive = TRUE)
         forwardSelectInputFiles <- parentDirFiles[grepl(suffixForwardRegExp,
                                                         parentDirFiles)]
         reverseSelectInputFiles <- parentDirFiles[grepl(suffixReverseRegExp,
@@ -165,10 +165,12 @@ setMethod("initialize",
         SangerConsensusReadList <-
             sapply(consensusReadsName,
                    function(eachConsRead) {
+                       insideDirName<- dirname(eachConsRead)
+                       insideConsensusName <- basename(eachConsRead)
                        SangerConsensusRead(
-                           parentDirectory, eachConsRead,
-                           suffixForwardRegExp, suffixReverseRegExp,
-                           TrimmingMethod, M1TrimmingCutoff,
+                           file.path(parentDirectory, insideDirName),
+                           insideConsensusName, suffixForwardRegExp,
+                           suffixReverseRegExp,TrimmingMethod, M1TrimmingCutoff,
                            M2CutoffQualityScore, M2SlidingWindowSize,
                            baseNumPerRow, heightPerRow, signalRatioCutoff,
                            showTrimmed, refAminoAcidSeq, minReadsNum,
