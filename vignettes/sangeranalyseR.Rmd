@@ -25,6 +25,7 @@ knitr::opts_chunk$set(tidy = FALSE,
 ```
 
 # Introduction
+sangeranalyseR is an R package for analysing Sanger sequencing reads, especially those from the ABIF platform, in pure R environment. We create three main S4 R classes which are in hierarchy to store user inputs and data analysis results. Furthermore, in order to let users check and change some essential parameters of each read easily, we provide two local interactive Shiny apps that visualize the created S4 R instance.
 
 ## Design Overview
 The [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) provides S4 classes for importing Sanger sequencing files into R environment. 
@@ -442,6 +443,7 @@ knitr::include_graphics("figure/Figure_22_.png")
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Classification Tree for each consensus group", echo=FALSE}
 knitr::include_graphics("figure/Figure_23_.png")
 ```
+Here we show alignment result in **Figure 22** and classification tree in **Figure 23**.
 
 ### "Consensus Read Overview Page"
 This page is same as **"*Consensus Read Overview Page*"** in **'*SangerConsensusRead App*'**. Please refer to the previous to **'*SangerConsensusRead App*'** section.
@@ -452,7 +454,9 @@ This page is same as **"*Single Read Page*"** in **'*SangerConsensusRead App*'**
 # Conclusion
 
 # Session Information
+```{r}
 sessionInfo()
+```
 
 # Reference
 Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120.
