@@ -32,11 +32,8 @@ The [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) provides S4 clas
 ### S4 Classes
 There are three main S4 classes in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are **'SangerSingleRead'**, **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Each of them stores different level of input parameters and results in Sanger sequencing data analysis. Figure 1 shows the hierarchy of these three S4 classes.
 
-```{r fig.width=10, fig.cap="\\label{fig:figs} S4 class hierarchy", echo=FALSE}
-library(png)
-library(grid)
-img <- readPNG("figure/S4_Class_Hierarchy.png")
-grid.raster(img, just = "center")
+```{r, out.width = "2000px",fig.cap="\\label{fig:figs} S4 class hierarchy", echo=FALSE}
+knitr::include_graphics("figure/S4_Class_Hierarchy.png")
 ```
 
 * **'SangerSingleRead'** extends from 'sangerseq' class and stores raw data 'abif' class in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html) as well as essential information including quality trimming and chromatogram parameters. It corresponds to a single ABIF file in Sanger sequencing. 
@@ -47,18 +44,15 @@ grid.raster(img, just = "center")
 
 
 ### Interactive Shiny UI
-We build two local interactive Shiny user interface for users to explore their created **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Inside the Shiny UI, users can change the input parameters for quality trimming, chromatogram and rebuild consensus read etc. Information showed on the UI will be dynamic based on user input. Furthermore, all changed parameters and results will be applied to a new S4 instance and be exported as an *RDS* file.
+We build two local interactive Shiny user interface for users to explore their created **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Inside the Shiny UI, users can change the input parameters for quality trimming, chromatogram and rebuild consensus read etc. Information displayed on the UI is dynamic based on user input. Furthermore, all changed parameters and results can be saved to a new S4 instance and be exported as an *RDS* file.
 
 ## System Requirement
 >>> After uploading to Bioconductor
 
 ## Installation
 ### Installing from GitHub using devtools
-```{r eval=FALSE}
-install.packages("devtools")
-library(devtools)
-install_github("roblanf/sangeranalyseR")
-```
+For now, users need to git clone the newest commit on the 'develop' branch on github. 
+Press install button on RStudio to install sangeranalyseR.
 
 ### Installing from Bioconductor
 >>> After uploading to Bioconductor
@@ -76,11 +70,9 @@ install_github("roblanf/sangeranalyseR")
 ### ABIF Filename Regulation
 Figure 2 below shows the filename regulation of input raw ABIF file which is going to be used as input to create **"SangerSingleRead"**. All raw ABIF files must be *forward* or *reverse* and the reason there is a [*Number Index*] in the suffix is that later we are going to create **"SangerConsensusRead"** S4 instance. There are no range restriction on [*Number Index*] here. But in **"SangerConsensusRead"** section, all reads in the same consensus group that are going to be aligned must be indexed properly. More details please refer to next section. 
 
-```{r fig.width=10, fig.height=1, fig.cap="\\label{fig:figs} Filename regulation for 'SangerSingleRead'", echo=FALSE}
-library(png)
-library(grid)
-img <- readPNG("figure/SangerSingleRead_filename_regulation.png")
-grid.raster(img, just = "center")
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerSingleRead'", echo=FALSE}
+knitr::include_graphics("figure/SangerSingleRead_filename_regulation.png")
 ```
 
 Here is an example of getting the absolute filename of a raw ABIF file. We will show the meaning of **[*Consensus Read Name*]**, **[*F,R*]** and **[*Number Index*]** with true data.
@@ -212,20 +204,13 @@ slotNames(A_chloroticaSingleRead@ChromatogramParam)
 
 Before creating a **"SangerConsensusRead"** S4 instance, we need to prepare a  directory storing all raw ABIF files in the same consensus group with valid filenames. Figure 3 shows the directory hierarchy of **"SangerConsensusRead"**.
 
-```{r fig.width=6, fig.height=3, fig.cap="\\label{fig:figs}'SangerConsensusRead' directory hierarchy", echo=FALSE}
-library(png)
-library(grid)
-img <- readPNG("figure/SangerConsensusRead_file_structure.png")
-grid.raster(img, just = "center")
+```{r, out.width = "600px", fig.cap="\\label{fig:figs}'SangerConsensusRead' directory hierarchy", echo=FALSE}
+knitr::include_graphics("figure/SangerConsensusRead_file_structure.png")
 ```
-
 The `parentDirectory` is the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in Figure 4. The filename regulation for each raw ABIF files are same as filename regulation in **"SangerSingleRead"**. However, users have to pay attention to the [*Number Index*]. The [*Number Index*] of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
 
-```{r fig.width=10, fig.height=2, fig.cap="\\label{fig:figs} Filename regulation for 'SangerConsensusRead'", echo=FALSE}
-library(png)
-library(grid)
-img <- readPNG("figure/SangerConsensusRead_filename_regulation.png")
-grid.raster(img, just = "center")
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerConsensusRead'", echo=FALSE}
+knitr::include_graphics("figure/SangerConsensusRead_filename_regulation.png")
 ```
 
 Now, after preparing valid directory, we start to define the parameters. First, we need to define the absolute parent directory, the consensus read name and suffix regular expression for forward as well as reverse read.
@@ -319,6 +304,14 @@ slotNames(A_chloroticConsensusReadsRef)
 ## AlignedConsensusSet
 ### ABIF Filename Regulation & Input directory regulation
 
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusRead' directory hierarchy", echo=FALSE}
+knitr::include_graphics("figure/AlignedConsensusRead_file_structure.png")
+```
+
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusRead' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/AlignedConsensusRead_filename_regulation.png")
+```
+
 ```{r}
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
@@ -328,7 +321,7 @@ suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 
 ### S4 Instance Creation Example
 
-```{r}
+```{r eval=FALSE}
 setOldClass("phylo")
 
 SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
