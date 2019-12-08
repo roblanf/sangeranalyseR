@@ -62,7 +62,6 @@ Press install button on RStudio to install sangeranalyseR.
 
 
 
-
 # S4 Classes
 ## SangerSingleRead
 **"SangerSingleRead"** S4 class corresponds to a single ABIF file in Sanger sequencing. We will show how to create a **"SangerSingleRead"** instance and the slots in this class.
@@ -101,32 +100,32 @@ library(sangeranalyseR)
 
 Then, we can create **'SangerSingleRead'** S4 instance by running *"new"* function.
 ```{r}
-A_chloroticaSingleRead <- new("SangerSingleRead",
-                               readFeature           = "Forward Read",
-                               readFileName          = A_chloroticaFdReadFN,
-                               TrimmingMethod        = "M2",
-                               M1TrimmingCutoff      = NULL,
-                               M2CutoffQualityScore  = 40,
-                               M2SlidingWindowSize   = 10,
-                               baseNumPerRow         = 100,
-                               heightPerRow          = 200,
-                               signalRatioCutoff     = 0.33,
-                               showTrimmed           = TRUE)
+singleReadNew <- new("SangerSingleRead",
+                     readFeature           = "Forward Read",
+                     readFileName          = A_chloroticaFdReadFN,
+                     TrimmingMethod        = "M2",
+                     M1TrimmingCutoff      = NULL,
+                     M2CutoffQualityScore  = 40,
+                     M2SlidingWindowSize   = 10,
+                     baseNumPerRow         = 100,
+                     heightPerRow          = 200,
+                     signalRatioCutoff     = 0.33,
+                     showTrimmed           = TRUE)
 ```
 
 Moreover, we also create a constructor wrapper function for **'SangerSingleRead'**. The instance created by new and constructor functions are same. The constructor function makes creating **'SangerSingleRead'** S4 instance more intuitive.
 ```{r}
- A_chloroticaSingleRead <- SangerSingleRead(readFeature           = "Forward Read",
-                                            readFileName          = A_chloroticaFdReadFN,
-                                            geneticCode           = GENETIC_CODE,
-                                            TrimmingMethod        = "M2",
-                                            M1TrimmingCutoff      = NULL,
-                                            M2CutoffQualityScore  = 40,
-                                            M2SlidingWindowSize   = 10,
-                                            baseNumPerRow         = 100,
-                                            heightPerRow          = 200,
-                                            signalRatioCutoff     = 0.33,
-                                            showTrimmed           = TRUE)
+ singleReadCtor <- SangerSingleRead(readFeature           = "Forward Read",
+                                    readFileName          = A_chloroticaFdReadFN,
+                                    geneticCode           = GENETIC_CODE,
+                                    TrimmingMethod        = "M2",
+                                    M1TrimmingCutoff      = NULL,
+                                    M2CutoffQualityScore  = 40,
+                                    M2SlidingWindowSize   = 10,
+                                    baseNumPerRow         = 100,
+                                    heightPerRow          = 200,
+                                    signalRatioCutoff     = 0.33,
+                                    showTrimmed           = TRUE)
 ```
 
 ### Inputs Definition
@@ -140,7 +139,7 @@ The inputs of new and constructor methods are same. Both of their input paramete
 #### Quality Trimming Related Parameters
 There are two read trimming methods for users to choose from. The Method 1 (M1) is *"Logarithmic Scale Trimming"* and the Method 2 (M2) is *"Logarithmic Scale Sliding Window Trimming"*. 
 
->>> Method 1 (M1) is (!!!!!!! Add !!!!!!!)
+>>> Method 1 (M1) explanation (!!!!!!! Add !!!!!!!)
 
 Method 2 (M2) is similar to "Trimmomatic"(Bolger et al.) SLIDINGWINDOW trimming method. We take the average logarithmic quality score in the sliding window size and if the average quality score is smaller than the cutoff quality score, then the first base pair of the sliding window will be the trimming start point.
 
@@ -207,7 +206,7 @@ Before creating a **"SangerConsensusRead"** S4 instance, we need to prepare a  d
 ```{r, out.width = "600px", fig.cap="\\label{fig:figs}'SangerConsensusRead' directory hierarchy", echo=FALSE}
 knitr::include_graphics("figure/SangerConsensusRead_file_structure.png")
 ```
-The `parentDirectory` is the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in Figure 4. The filename regulation for each raw ABIF files are same as filename regulation in **"SangerSingleRead"**. However, users have to pay attention to the [*Number Index*]. The [*Number Index*] of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
+The `parentDirectory` stores the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in Figure 4. The filename regulation for each raw ABIF files are same as filename regulation in **"SangerSingleRead"**; however, users have to pay attention to the [*Number Index*]. The [*Number Index*] of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerConsensusRead'", echo=FALSE}
 knitr::include_graphics("figure/SangerConsensusRead_filename_regulation.png")
@@ -303,14 +302,19 @@ slotNames(A_chloroticConsensusReadsRef)
 
 ## AlignedConsensusSet
 ### ABIF Filename Regulation & Input directory regulation
+Before creating a **"AlignedConsensusSet"** S4 instance, we need to prepare a directory storing all raw ABIF files. Figure 5 shows the directory hierarchy of **"AlignedConsensusSet"**. 
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusRead' directory hierarchy", echo=FALSE}
 knitr::include_graphics("figure/AlignedConsensusRead_file_structure.png")
 ```
 
+The `parentDirectory` is same as **"SangerConsensusRead"** which is the absolute file path storing all raw ABIF files. The difference is that raw ABIF files do not need to be in the first layer inside `parentDirectory`; in other words, it is allowed to have some middle directories separating the ABIF files. Figure 6 shows the  **"AlignedConsensusSet"** filename regulation and grouping strategy. The ABIF files with the same **[*Consensus Read Name*]** will be categorized into the same group and for each group, a **"SangerConsensusRead"** will be created. **"AlignedConsensusSet"** will be created by these **"SangerConsensusRead"**.
+
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusRead' filename regulation", echo=FALSE}
 knitr::include_graphics("figure/AlignedConsensusRead_filename_regulation.png")
 ```
+
+Here is an example. Users only need to define the `parentDirectory`, foward and reverse reads regular expression suffix, and program will recursively search all the root files inside the `parentDirectory` with the valid filename regulation. These three parameters are the important inputs for creating **"AlignedConsensusSet"**. 
 
 ```{r}
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
@@ -321,6 +325,7 @@ suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 
 ### S4 Instance Creation Example
 
+After defining `parentDirectory`, `suffixForwardRegExp`, and `suffixReverseRegExp`, we can start to create the SangerAlginedConsensusSet. 
 ```{r eval=FALSE}
 setOldClass("phylo")
 
