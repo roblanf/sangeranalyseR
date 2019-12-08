@@ -30,7 +30,7 @@ knitr::opts_chunk$set(tidy = FALSE,
 The [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) provides S4 classes for importing Sanger sequencing files into R environment. 
 
 ### S4 Classes
-There are three main S4 classes in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are **'SangerSingleRead'**, **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Each of them stores different level of input parameters and results in Sanger sequencing data analysis. Figure 1 shows the hierarchy of these three S4 classes.
+There are three main S4 classes in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are **'SangerSingleRead'**, **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Each of them stores different level of input parameters and results in Sanger sequencing data analysis. **Figure 1** shows the hierarchy of these three S4 classes.
 
 ```{r, out.width = "2000px",fig.cap="\\label{fig:figs} S4 class hierarchy", echo=FALSE}
 knitr::include_graphics("figure/Figure_1_S4_Class_Hierarchy.png")
@@ -67,7 +67,7 @@ Press install button on RStudio to install sangeranalyseR.
 **"SangerSingleRead"** S4 class corresponds to a single ABIF file in Sanger sequencing. We will show how to create a **"SangerSingleRead"** instance and the slots in this class.
 
 ### ABIF Filename Regulation
-Figure 2 below shows the filename regulation of input raw ABIF file which is going to be used as input to create **"SangerSingleRead"**. All raw ABIF files must be *forward* or *reverse* and the reason there is a **[*Number Index*]** in the suffix is that later we are going to create **"SangerConsensusRead"** S4 instance. There are no range restriction on **[*Number Index*]** here. But in **"SangerConsensusRead"** section, all reads in the same consensus group that are going to be aligned must be indexed properly. More details please refer to next section. 
+**Figure 2** below shows the filename regulation of input raw ABIF file which is going to be used as input to create **"SangerSingleRead"**. All raw ABIF files must be *forward* or *reverse* and the reason there is a **[*Number Index*]** in the suffix is that later we are going to create **"SangerConsensusRead"** S4 instance. There are no range restriction on **[*Number Index*]** here. But in **"SangerConsensusRead"** section, all reads in the same consensus group that are going to be aligned must be indexed properly. More details please refer to next section. 
 
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerSingleRead'", echo=FALSE}
@@ -187,12 +187,12 @@ slotNames(singleReadCtor@ChromatogramParam)
 
 ### ABIF Filename Regulation & Input directory regulation
 
-Before creating a **"SangerConsensusRead"** S4 instance, we need to prepare a  directory storing all raw ABIF files in the same consensus group with valid filenames. Figure 3 shows the directory hierarchy of **"SangerConsensusRead"**.
+Before creating a **"SangerConsensusRead"** S4 instance, we need to prepare a  directory storing all raw ABIF files in the same consensus group with valid filenames. **Figure 3** shows the directory hierarchy of **"SangerConsensusRead"**.
 
 ```{r, out.width = "600px", fig.cap="\\label{fig:figs}'SangerConsensusRead' directory hierarchy", echo=FALSE}
 knitr::include_graphics("figure/Figure_3_SangerConsensusRead_file_structure.png")
 ```
-The `parentDirectory` stores the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in Figure 4. The filename regulation for each raw ABIF files are same as filename regulation in **"SangerSingleRead"**; however, users have to pay attention to the [*Number Index*]. The **[*Number Index*]** of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
+The `parentDirectory` stores the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in **Figure 4**. The filename regulation for each raw ABIF files are same as filename regulation in **"SangerSingleRead"**; however, users have to pay attention to the [*Number Index*]. The **[*Number Index*]** of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerConsensusRead'", echo=FALSE}
 knitr::include_graphics("figure/Figure_4_SangerConsensusRead_filename_regulation.png")
@@ -272,13 +272,13 @@ slotNames(consensusReadsRef)
 **"AlignedConsensusSet"** S4 class corresponds to a rebuild genome fragment in Sanger sequencing. It contains all the single reads, the alignment results and the created consensus read etc. We will show how to create a **"AlignedConsensusSet"** instance and the slots in this class.
 
 ### ABIF Filename Regulation & Input directory regulation
-Before creating a **"AlignedConsensusSet"** S4 instance, we need to prepare a directory storing all raw ABIF files. Figure 5 shows the directory hierarchy of **"AlignedConsensusSet"**. 
+Before creating a **"AlignedConsensusSet"** S4 instance, we need to prepare a directory storing all raw ABIF files. **Figure 5** shows the directory hierarchy of **"AlignedConsensusSet"**. 
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' directory hierarchy", echo=FALSE}
 knitr::include_graphics("figure/Figure_5_AlignedConsensusSet_file_structure.png")
 ```
 
-The `parentDirectory` is same as **"SangerConsensusRead"** which is the absolute file path storing all raw ABIF files. The difference is that raw ABIF files do not need to be in the first layer inside `parentDirectory`; in other words, it is allowed to have some middle directories separating the ABIF files. Figure 6 shows the  **"AlignedConsensusSet"** filename regulation and grouping strategy. The ABIF files with the same **[*Consensus Read Name*]** will be categorized into the same group and for each group, a **"SangerConsensusRead"** will be created. **"AlignedConsensusSet"** will be created by these **"SangerConsensusRead"**.
+The `parentDirectory` is same as **"SangerConsensusRead"** which is the absolute file path storing all raw ABIF files. The difference is that raw ABIF files do not need to be in the first layer inside `parentDirectory`; in other words, it is allowed to have some middle directories separating the ABIF files. **Figure 6** shows the  **"AlignedConsensusSet"** filename regulation and grouping strategy. The ABIF files with the same **[*Consensus Read Name*]** will be categorized into the same group and for each group, a **"SangerConsensusRead"** will be created. **"AlignedConsensusSet"** will be created by these **"SangerConsensusRead"**.
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
 knitr::include_graphics("figure/Figure_6_AlignedConsensusSet_filename_regulation.png")
@@ -333,11 +333,10 @@ In sangeranalyseR, we create two interactive Shiny apps which are **'*SangerCons
 ## SangerConsensusRead App
 
 To run **'*SangerConsensusRead App*'**, users have to create a **SangerConsensusRead** instance. Notice that the input of this function is **"****SangerConsensusRead** instance in a list**"**.
-Now we execute the function and create a `RShinySCR` Shiny object.
+Now, we execute the `launchAppConsensusRead` function and create a `RShinySCR` Shiny object.
 ```{r }
 RShinySCR <- launchAppConsensusRead(list(consensusReadsRef))
 ```
-
 Run the `RShinySCR` in R console to trigger the **'*SangerConsensusRead App*'**.
 
 ### "Consensus Read Overview Page"
@@ -346,28 +345,37 @@ knitr::include_graphics("figure/Figure_7_.png")
 ```
 
 
-Figure 7 is the initial page of **'*SangerConsensusRead App*'** which is the **"Consensus Read Overview page"**. In this page, users can see basic information of this consensus read. Notice that there is a red "*Re-calculate consensus read button*". It is highly suggested to click the button before checking the results in order to get the up-to-date information.
+**Figure 7** is the initial page of **'*SangerConsensusRead App*'** which is the **"Consensus Read Overview page"**. In this page, users can see basic information of this consensus read. Notice that there is a red "*Re-calculate consensus read button*". It is highly suggested to click the button before checking the results in order to get the updated information.
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} 'Alignment' & 'Difference Data Frame' results", echo=FALSE}
 knitr::include_graphics("figure/Figure_8_.png")
 ```
 
-The information provided in this page includes : *"input parameters"*, *"genetic code table"*, *"reference amino acids sequence"*, *"reads alignment"*, *"difference data frame"*, *"dendrogram"*, *"sample distance heatmap"*, *"indels data frame"*, *"stop codons data frame"*. Figure 8 shows part of the results in the **"Consensus Read Overview Page"**.
+The information provided in this page includes : *"input parameters"*, *"genetic code table"*, *"reference amino acids sequence"*, *"reads alignment"*, *"difference data frame"*, *"dendrogram"*, *"sample distance heatmap"*, *"indels data frame"*, *"stop codons data frame"*. **Figure 8** shows part of the results in the **"Consensus Read Overview Page"**. The results are dynamic based on the trimming inputs getting from *"Single Read Page"*. 
 
 ### "Single Read Page"
 
+All reads in **'SangerConsensusRead'** are in *forward* or *reverse* direction. In addition to **"Consensus Read Overview Page"**, there are also two expendable tabs, **"Forward Reads"** and **"Reverse Reads"** storing the corresponding reads in the left-hand side navigation panel. In this example, there are one read in each tab and **Figure 9** shows the **"1 Forward Read page"**. 
 
-
-All reads in **'SangerConsensusRead'** are in *forward* or *reverse* direction. In the right pannel, 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Initial page for 'Single Read Page'", echo=FALSE}
 knitr::include_graphics("figure/Figure_9_.png")
 ```
+**Figure 9** is the initial page for **'Single Read Page'** which provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences and quality phred scores table displayed in this figure are dynamic based on the `signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in **Figure 17** below are always same.
+
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
 knitr::include_graphics("figure/Figure_10_.png")
 ```
+**Figure 10** shows the frameshift amino acids sequence translated from the primary sequence. Stop codons are highlighted in red. These three AA sequences are also dynamic based on the `signalRatioCutoff` value for base calling.
+
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
 knitr::include_graphics("figure/Figure_11_.png")
 ```
+In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would provide better alignment resutls. In **Figure 11**, 
+
+
+in that sequence.
+
+
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
 knitr::include_graphics("figure/Figure_12_.png")
 ```
