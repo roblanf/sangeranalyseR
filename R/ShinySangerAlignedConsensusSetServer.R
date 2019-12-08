@@ -5,7 +5,7 @@ alignedConsensusSetServer <- function(input, output, session) {
     # Suppress Warning
     options(warn = -1)
     ### ------------------------------------------------------------------------
-    ### SangerConsensusRead parameters initialization.
+    ### AlignedConsensusSet parameters initialization.
     ### ------------------------------------------------------------------------
     SangerConsensusSet <- getShinyOption("SangerAlignedConsensusSet")
     shinyDirectory <- getShinyOption("shinyDirectory")
@@ -13,14 +13,12 @@ alignedConsensusSetServer <- function(input, output, session) {
 
     SangerConsensusSetNum <- length(SangerConsensusSet@consensusReadsList)
 
-
     SangerCSetParam <- lapply(1:SangerConsensusSetNum, function(i) {
         ### --------------------------------------------------------------------
         ### ConsensusRead-related parameters initialization.
         ### --------------------------------------------------------------------
         # readFeature
         SCName <- paste0(i, " Consensus Read")
-
         # Forward & reverse reads list
         SangerSingleReadFReadsList <-
             SangerConsensusSet@consensusReadsList[[i]]@forwardReadsList
@@ -28,229 +26,17 @@ alignedConsensusSetServer <- function(input, output, session) {
             SangerConsensusSet@consensusReadsList[[i]]@reverseReadsList
         forwardReadNum <- length(SangerSingleReadFReadsList)
         reverseReadNum <- length(SangerSingleReadRReadsList)
-        SangerSingleReadNum <- forwardReadNum + reverseReadNum
-
-        # Forward + reverse reads list
-        SangerConsensusFRReadsList <- c(SangerSingleReadFReadsList,
-                                        SangerSingleReadRReadsList)
-
         # readFileName (basename)
         forwardReadBFN <- sapply(1:forwardReadNum, function(j)
             basename(SangerSingleReadFReadsList[[j]]@readFileName))
         reverseReadBFN <- sapply(1:reverseReadNum, function(j)
             basename(SangerSingleReadRReadsList[[j]]@readFileName))
         SangerSingleReadBFN <- c(forwardReadBFN, reverseReadBFN)
-
-        # readFileName (absolute)
-        forwardReadAFN <- sapply(1:forwardReadNum, function(j)
-            SangerSingleReadFReadsList[[j]]@readFileName)
-        reverseReadAFN <- sapply(1:reverseReadNum, function(j)
-            SangerSingleReadRReadsList[[j]]@readFileName)
-        SangerSingleReadAFN <- c(forwardReadAFN, reverseReadAFN)
-
-        # readFeature
-        forwardReadFeature <- sapply(1:forwardReadNum, function(j)
-            paste0(j, " ",
-                   SangerSingleReadFReadsList[[j]]@readFeature))
-        reverseReadFeature <- sapply(1:reverseReadNum, function(j)
-            paste0(j, " ",
-                   SangerSingleReadRReadsList[[j]]@readFeature))
-        SangerSingleReadFeature <- c(forwardReadFeature, reverseReadFeature)
-
-        # QualityReport
-        forwardReadQualReport <- sapply(1:forwardReadNum, function(j)
-            SangerSingleReadFReadsList[[j]]@QualityReport)
-        reverseReadQualReport <- sapply(1:reverseReadNum, function(j)
-            SangerSingleReadRReadsList[[j]]@QualityReport)
-        SangerSingleReadQualReport <- c(forwardReadQualReport,
-                                        reverseReadQualReport)
-        # Quality Score Dataframe
-        forwardQualityScoreDF <- lapply(1:forwardReadNum, function(j) {
-            PhredScore <- forwardReadQualReport[[j]]@qualityPhredScores
-            PhredScoreDF <- data.frame(
-                t(data.frame(PhredScore)), stringsAsFactors = FALSE)
-            colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
-            rownames(PhredScoreDF) <- NULL
-            return(PhredScoreDF)
-            }
-        )
-        reverseQualityScoreDF <- lapply(1:reverseReadNum, function(j) {
-            PhredScore <- reverseReadQualReport[[j]]@qualityPhredScores
-            PhredScoreDF <- data.frame(
-                t(data.frame(PhredScore)), stringsAsFactors = FALSE)
-            colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
-            rownames(PhredScoreDF) <- NULL
-            return(PhredScoreDF)
-            }
-        )
-        SangerSingleReadQSDF <- c(forwardQualityScoreDF, reverseQualityScoreDF)
-
-        # ChromatogramParam
-        forwardReadChromatogramParam <- sapply(1:forwardReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@ChromatogramParam)
-        reverseReadChromatogramParam <- sapply(1:reverseReadNum, function(i)
-            SangerSingleReadFReadsList[[i]]@ChromatogramParam)
-        SangerSingleReadChromatogramParam <- c(forwardReadChromatogramParam,
-                                               reverseReadChromatogramParam)
-
-        # primarySeqDF
-        forwardReadPrimSeqDF <- lapply(1:forwardReadNum, function(j) {
-            basecalls1 <- unlist(strsplit(
-                toString(SangerSingleReadFReadsList[[j]]@primarySeq), ""))
-            aveposition <- rowMeans(
-                SangerSingleReadFReadsList[[j]]@peakPosMatrix, na.rm=TRUE)
-            basecalls1 <- basecalls1[1:length(aveposition)]
-            basecalls1DF <- data.frame(
-                t(data.frame(basecalls1)), stringsAsFactors = FALSE)
-            colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-            rownames(basecalls1DF) <- NULL
-            return(basecalls1DF)
-            }
-        )
-        reverseReadPrimSeqDF <- lapply(1:reverseReadNum, function(j) {
-            basecalls1 <- unlist(strsplit(
-                toString(SangerSingleReadRReadsList[[j]]@primarySeq), ""))
-            aveposition <- rowMeans(
-                SangerSingleReadRReadsList[[j]]@peakPosMatrix, na.rm=TRUE)
-            basecalls1 <- basecalls1[1:length(aveposition)]
-            basecalls1DF <- data.frame(
-                t(data.frame(basecalls1)), stringsAsFactors = FALSE)
-            colnames(basecalls1DF) <- substr(colnames(basecalls1DF), 2, 100)
-            rownames(basecalls1DF) <- NULL
-            return(basecalls1DF)
-            }
-        )
-        SangerSingleReadPrimSeqDF <- c(forwardReadPrimSeqDF,
-                                       reverseReadPrimSeqDF)
-
-        # secondarySeqDF
-        forwardReadSecoSeqDF <- lapply(1:forwardReadNum, function(j) {
-            basecalls2 <- unlist(strsplit(
-                toString(SangerSingleReadFReadsList[[j]]@secondarySeq), ""))
-            aveposition <- rowMeans(
-                SangerSingleReadFReadsList[[j]]@peakPosMatrix, na.rm=TRUE)
-            basecalls2 <- basecalls2[1:length(aveposition)]
-            basecalls2DF <- data.frame(
-                t(data.frame(basecalls2)), stringsAsFactors = FALSE)
-            colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-            rownames(basecalls2DF) <- NULL
-            return(basecalls2DF)
-            }
-        )
-        reverseReadSecoSeqDF <- lapply(1:reverseReadNum, function(j) {
-            basecalls2 <- unlist(strsplit(toString(
-                SangerSingleReadRReadsList[[j]]@secondarySeq), ""))
-            aveposition <- rowMeans(
-                SangerSingleReadRReadsList[[j]]@peakPosMatrix, na.rm=TRUE)
-            basecalls2 <- basecalls2[1:length(aveposition)]
-            basecalls2DF <- data.frame(
-                t(data.frame(basecalls2)), stringsAsFactors = FALSE)
-            colnames(basecalls2DF) <- substr(colnames(basecalls2DF), 2, 100)
-            rownames(basecalls2DF) <- NULL
-            return(basecalls2DF)
-            }
-        )
-        SangerSingleReadSecoSeqDF <- c(forwardReadSecoSeqDF,
-                                       reverseReadSecoSeqDF)
-
-        # primaryAASeqS1DF
-        forwardReadPrimAASeqS1DF <- lapply(1:forwardReadNum, function(j) {
-            AAString <- data.frame(SangerSingleReadFReadsList[[j]]@primaryAASeqS1)
-            AAStringDF <- data.frame(
-                t(AAString), stringsAsFactors = FALSE)
-            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-            rownames(AAStringDF) <- NULL
-            return(AAStringDF)
-            }
-        )
-        reverseReadPrimAASeqS1DF <- lapply(1:reverseReadNum, function(j) {
-            AAString <- data.frame(SangerSingleReadRReadsList[[j]]@primaryAASeqS1)
-            AAStringDF <- data.frame(
-                t(AAString), stringsAsFactors = FALSE)
-            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-            rownames(AAStringDF) <- NULL
-            return(AAStringDF)
-            }
-        )
-        SangerSingleReadPrimAASeqS1DF <- c(forwardReadPrimAASeqS1DF,
-                                           reverseReadPrimAASeqS1DF)
-
-        # primaryAASeqS2DF
-        forwardReadPrimAASeqS2DF <- lapply(1:forwardReadNum, function(j) {
-            AAString <- data.frame(SangerSingleReadFReadsList[[j]]@primaryAASeqS2)
-            AAString <- rbind(NA, AAString)
-            AAStringDF <- data.frame(
-                t(AAString), stringsAsFactors = FALSE)
-            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-            rownames(AAStringDF) <- NULL
-            return(AAStringDF)
-        }
-        )
-        reverseReadPrimAASeqS2DF <- lapply(1:reverseReadNum, function(j) {
-            AAString <- data.frame(SangerSingleReadRReadsList[[j]]@primaryAASeqS2)
-            AAString <- rbind(NA, AAString)
-            AAStringDF <- data.frame(
-                t(AAString), stringsAsFactors = FALSE)
-            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-            rownames(AAStringDF) <- NULL
-            return(AAStringDF)
-        }
-        )
-        SangerSingleReadPrimAASeqS2DF <- c(forwardReadPrimAASeqS2DF,
-                                           reverseReadPrimAASeqS2DF)
-
-        # primaryAASeqS3DF
-        forwardReadPrimAASeqS3DF <- lapply(1:forwardReadNum, function(j) {
-            AAString <- data.frame(SangerSingleReadFReadsList[[j]]@primaryAASeqS3)
-            AAString <- rbind(NA, AAString)
-            AAString <- rbind(NA, AAString)
-            AAStringDF <- data.frame(
-                t(AAString), stringsAsFactors = FALSE)
-            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-            rownames(AAStringDF) <- NULL
-            return(AAStringDF)
-        }
-        )
-        reverseReadPrimAASeqS3DF <- lapply(1:reverseReadNum, function(j) {
-            AAString <- data.frame(SangerSingleReadRReadsList[[j]]@primaryAASeqS3)
-            AAString <- rbind(NA, AAString)
-            AAString <- rbind(NA, AAString)
-            AAStringDF <- data.frame(
-                t(AAString), stringsAsFactors = FALSE)
-            colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-            rownames(AAStringDF) <- NULL
-            return(AAStringDF)
-        }
-        )
-        SangerSingleReadPrimAASeqS3DF <- c(forwardReadPrimAASeqS3DF,
-                                           reverseReadPrimAASeqS3DF)
-
         return(list(SCName = SCName,
-                    SangerSingleReadFReadsList = SangerSingleReadFReadsList,
-                    SangerSingleReadRReadsList = SangerSingleReadRReadsList,
                     forwardReadNum = forwardReadNum,
                     reverseReadNum = reverseReadNum,
-                    SangerSingleReadNum = SangerSingleReadNum,
-                    SangerConsensusFRReadsList = SangerConsensusFRReadsList,
                     SangerSingleReadBFN = SangerSingleReadBFN,
-                    SangerSingleReadAFN = SangerSingleReadAFN,
-                    forwardReadFeature = forwardReadFeature,
-                    reverseReadFeature = reverseReadFeature,
-                    SangerSingleReadFeature = SangerSingleReadFeature,
-                    SangerSingleReadQualReport = SangerSingleReadQualReport,
-                    SangerSingleReadChromatogramParam = SangerSingleReadChromatogramParam,
-                    forwardReadPrimSeqDF = forwardReadPrimSeqDF,
-                    reverseReadPrimSeqDF = reverseReadPrimSeqDF,
-                    SangerSingleReadPrimSeqDF = SangerSingleReadPrimSeqDF,
-                    forwardReadSecoSeqDF = forwardReadSecoSeqDF,
-                    reverseReadSecoSeqDF = reverseReadSecoSeqDF,
-                    SangerSingleReadPrimAASeqS1DF = SangerSingleReadPrimAASeqS1DF,
-                    SangerSingleReadPrimAASeqS2DF = SangerSingleReadPrimAASeqS2DF,
-                    SangerSingleReadPrimAASeqS3DF = SangerSingleReadPrimAASeqS3DF,
-
-
-                    SangerSingleReadQSDF = SangerSingleReadQSDF,
-                    SangerSingleReadSecoSeqDF = SangerSingleReadSecoSeqDF))
+                    SangerSingleReadAFN = SangerSingleReadAFN))
     })
 
     SCTrimmingMethod <-
@@ -1311,28 +1097,30 @@ alignedConsensusSetServer <- function(input, output, session) {
         message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory,
                                  "SangerAlignedConsensusSet.Rda")
-        showNotification(ui = fluidRow(
-            column(1),
-            column(11,
-                   tags$p(tagList(icon("dot-circle"),
-                                  "New S4 object is store as: "),
-                          style = "font-size: 28px;
+        showNotification(
+            ui = column(12,
+                        tags$p(tagList(icon("dot-circle"),
+                                       "New S4 object is store as: "),
+                               style = "font-size: 28px;
                                    font-weight: bold;"),
-                   tags$p(paste0("'", newS4Object, "'"),
-                          style = "font-size: 26px;
+                        tags$p(paste0("'", newS4Object, "'"),
+                               style = "font-size: 26px;
                                    font-style: italic"),
-                   tags$br(),
-                   tags$p(paste0(">> Run 'readRDS(\"",newS4Object,
-                                 "\")'"),
-                          style = "font-size: 18px;
+                        tags$br(),
+                        tags$p(">> Run",
+                               style = "font-size: 18px;
                                    font-style: italic"),
-                   tags$p("   to load saved S4 object into R
+                        tags$p(paste0("readRDS(\"",newS4Object,
+                                      "\")"),
+                               style = "font-size: 18px;
+                                      font-weight: bold;
+                                      font-family: Courier, Monospace;"),
+                        tags$p("   to load saved S4 object into R
                                      environment",
-                          style = "font-size: 18px;
-                                   font-style: italic"),
-
-            )
-        ), closeButton = TRUE, type = "message", duration = 10)
+                               style = "font-size: 18px;
+                                      font-style: italic")),
+            closeButton = TRUE, id = "saveNotification",
+            type = "message", duration = 10)
         ### --------------------------------------------------------------------
         ### Save SangerConsensus quality S4 object
         ### --------------------------------------------------------------------
@@ -1458,8 +1246,8 @@ alignedConsensusSetServer <- function(input, output, session) {
                         SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
                         reverseReadsList[[singleReadIndex]]@QualityReport@M1TrimmingCutoff
                 }
-            } else if (SangerCSetParam[[1]]$
-                       SangerSingleReadQualReport[[1]]@
+            } else if (SangerConsensusSet@consensusReadsList[[1]]@
+                       forwardReadsList[[1]]@QualityReport@
                        TrimmingMethod == "M2") {
                 if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
                     strtoi(input$M2CutoffQualityScoreText) > 0 &&
@@ -1696,9 +1484,9 @@ alignedConsensusSetServer <- function(input, output, session) {
                     reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                     showTrimmed <<- input$ChromatogramCheckShowTrimmed
             }
-            ### --------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### Save 'ChromatogramParam' dynamic value
-            ### --------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ChromatogramParam[["baseNumPerRow"]] <<-
                 input$ChromatogramBasePerRow
             ChromatogramParam[["heightPerRow"]] <<-
@@ -1720,8 +1508,6 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$consensusSetAlignmentHTML<-renderUI({
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
-            # consensusParamSet[["alignmentSCSet"]] <-
-            #     SangerConsensusSet@alignmentSCSet
             browseSeqHTML <-
                 file.path(shinyDirectory,
                           "Consensus_Readset_Alignment_BrowseSeqs.html")
@@ -1735,7 +1521,6 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$SCSetConsensusReadTreePlot <- renderPlot({
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
-            # consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
             plot(consensusParamSet[["alignmentTreeSCSet"]])
         }
     })
@@ -1950,7 +1735,8 @@ alignedConsensusSetServer <- function(input, output, session) {
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(consensusReadIndex)) {
             consensusParam[["indelsDF"]] <<-
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF
+                SangerConsensusSet@
+                consensusReadsList[[consensusReadIndex]]@indelsDF
             if (all(dim(consensusParam[["indelsDF"]] ) == c(0,0))) {
                 h4("*** 'Indels' data frame is empty. ***",
                    style="font-weight: bold; font-style: italic;")

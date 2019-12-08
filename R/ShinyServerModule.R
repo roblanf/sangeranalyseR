@@ -453,28 +453,12 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
 ### ============================================================================
 ### observeEvent: Adding dynamic rightHeader text
 ### ============================================================================
-observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV,
-                                           SangerSingleReadQualReport) {
+observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV) {
     observeEvent(input$sidebar_menu, {
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
         message("menuItem: ", menuItem)
         html("rightHeader", menuItem)
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        # if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
-        #     trimmedRV[["trimmedStartPos"]] <-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@trimmedStartPos
-        #     trimmedRV[["trimmedFinishPos"]] <-
-        #         SangerSingleReadQualReport[[
-        #             strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
-        #
-        #     qualityPhredScores = SangerSingleReadQualReport[[
-        #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
-        #
-        #     readLen = length(qualityPhredScores)
-        #     trimmedRV[["trimmedSeqLength"]] <- trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1
-        #     trimmedRV[["remainingRatio"]] <- round(((trimmedRV[["trimmedFinishPos"]] - trimmedRV[["trimmedStartPos"]] + 1) / readLen) * 100, digits = 2)
-        # }
     })
 }
 

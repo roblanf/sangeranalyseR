@@ -806,11 +806,6 @@ consensusReadServer <- function(input, output, session) {
                 )
             )
         }
-        # else if (!is.na(strtoi(singleReadIndex)) &&
-        #            directionParam == "Reverse") {
-        #     message(">>>>>>>> Inside '", input$sidebar_menu, "'")
-        #     h1(input$sidebar_menu)
-        # }
     })
 
 
@@ -821,8 +816,7 @@ consensusReadServer <- function(input, output, session) {
     ### observeEvent: Adding dynamic rightHeader text
     ### ------------------------------------------------------------------------
     #!!!!!!!! Fix
-    observeEventDynamicHeaderSC(input, output, session, trimmedRV,
-                              SangerSingleReadQualReport)
+    observeEventDynamicHeaderSC(input, output, session, trimmedRV)
     ############################################################################
     ### All other features (dynamic header / button save / button close)
     ############################################################################
@@ -842,9 +836,7 @@ consensusReadServer <- function(input, output, session) {
         message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
         showNotification(
-            ui = fluidRow(
-                column(1),
-                column(11,
+            ui = column(12,
                        tags$p(tagList(icon("dot-circle"),
                                       "New S4 object is store as: "),
                               style = "font-size: 28px;
@@ -853,18 +845,20 @@ consensusReadServer <- function(input, output, session) {
                               style = "font-size: 26px;
                                    font-style: italic"),
                        tags$br(),
-                       tags$p(paste0(">> Run 'readRDS(\"",newS4Object,
-                                     "\")'"),
+                       tags$p(">> Run",
                               style = "font-size: 18px;
                                    font-style: italic"),
+                       tags$p(paste0("readRDS(\"",newS4Object,
+                                     "\")"),
+                              style = "font-size: 18px;
+                                      font-weight: bold;
+                                      font-family: Courier, Monospace;"),
                        tags$p("   to load saved S4 object into R
                                      environment",
                               style = "font-size: 18px;
-                                   font-style: italic"),
-                )
-            ), closeButton = TRUE, id = "saveNotification",
+                                      font-style: italic")),
+            closeButton = TRUE, id = "saveNotification",
             type = "message", duration = 10)
-
         ### --------------------------------------------------------------------
         ### Save SangerConsensus quality S4 object
         ### --------------------------------------------------------------------
