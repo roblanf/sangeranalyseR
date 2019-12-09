@@ -12,10 +12,10 @@ setOldClass("phylo")
 #' @slot maxFractionLostSCSet .
 #' @slot geneticCode .
 #' @slot refAminoAcidSeq .
-#' @slot consensusReadsList .
-#' @slot consensusReadSCSet .
-#' @slot alignmentSCSet .
-#' @slot alignmentTreeSCSet .
+#' @slot contigList .
+#' @slot contigsConsensus .
+#' @slot contigsAlignment .
+#' @slot contigsTree .
 #'
 #' @name SangerAlignment-class
 #'
@@ -46,7 +46,7 @@ setClass("SangerAlignment",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
          #  1. Naming: XXXXX_F[0-9]*.ab1 / XXXXX_R[0-9]*.ab1
-         #        For same consensus reads, XXXXX must be same.
+         #        For reads in same contig, XXXXX must be same.
          #  2. Users can set
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerAlignment'
@@ -59,10 +59,10 @@ setClass("SangerAlignment",
              maxFractionLostSCSet        = "numeric",
              geneticCode                 = "character",
              refAminoAcidSeq             = "character",
-             consensusReadsList          = "list",
-             consensusReadSCSet          = "DNAString",
-             alignmentSCSet              = "DNAStringSet",
-             alignmentTreeSCSet          = "phylo"
+             contigList                  = "list",
+             contigsConsensus            = "DNAString",
+             contigsAlignment            = "DNAStringSet",
+             contigsTree                 = "phylo"
              ),
 )
 
@@ -107,11 +107,8 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking for TrimmingMethod.
     ### ------------------------------------------------------------------------
-    errors <- checkTrimParam(TrimmingMethod,
-                             M1TrimmingCutoff,
-                             M2CutoffQualityScore,
-                             M2SlidingWindowSize,
-                             errors)
+    errors <- checkTrimParam(TrimmingMethod, M1TrimmingCutoff,
+                             M2CutoffQualityScore, M2SlidingWindowSize, errors)
 
     ##### ----------------------------------------------------------------------
     ##### Input parameter prechecking for ChromatogramParam
@@ -122,7 +119,7 @@ setMethod("initialize",
     errors <- checkShowTrimmed (showTrimmed, errors)
 
     ##### ----------------------------------------------------------------------
-    ##### Input parameter prechecking for ConsensusRead parameter
+    ##### Input parameter prechecking for SangerContig parameter
     ##### ----------------------------------------------------------------------
     errors <- checkMinReadsNum(minReadsNum, errors)
     errors <- checkMinReadLength(minReadLength, errors)
@@ -139,7 +136,7 @@ setMethod("initialize",
 
     if (length(errors) == 0) {
         ### --------------------------------------------------------------------
-        ### Automatically finding consensus read name by forward&reverse suffix
+        ### Automatically finding contig name by forward&reverse suffix
         ### --------------------------------------------------------------------
         parentDirFiles <- list.files(parentDirectory, recursive = TRUE)
         forwardSelectInputFiles <- parentDirFiles[grepl(suffixForwardRegExp,
@@ -148,28 +145,28 @@ setMethod("initialize",
                                                         parentDirFiles)]
 
         # Find possible consensus Name for forward and reverse reads
-        forwardConsensusName <-
+        forwardContigName <-
             unlist(str_split(forwardSelectInputFiles, suffixForwardRegExp,
                              n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
-        reverseConsensusName <-
+        reverseContigName <-
             unlist(str_split(reverseSelectInputFiles, suffixReverseRegExp,
                              n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
 
-        consensusReadsName <- union(forwardConsensusName, reverseConsensusName)
-        consensusReadsNumber <- length(consensusReadsName)
+        contigName <- union(forwardContigName, reverseContigName)
+        contigNumber <- length(contigName)
 
-        # Create consensusReads for all list of consensusReadsNumber
+        # Create contig for all list of contigNumber
         ### --------------------------------------------------------------------
         ### Creating each SangerContig (store as SangerContigList)
         ### --------------------------------------------------------------------
         SangerContigList <-
-            sapply(consensusReadsName,
+            sapply(contigName,
                    function(eachConsRead) {
                        insideDirName<- dirname(eachConsRead)
-                       insideConsensusName <- basename(eachConsRead)
+                       insideContigName <- basename(eachConsRead)
                        SangerContig(
                            file.path(parentDirectory, insideDirName),
-                           insideConsensusName, suffixForwardRegExp,
+                           insideContigName, suffixForwardRegExp,
                            suffixReverseRegExp,TrimmingMethod, M1TrimmingCutoff,
                            M2CutoffQualityScore, M2SlidingWindowSize,
                            baseNumPerRow, heightPerRow, signalRatioCutoff,
@@ -179,11 +176,9 @@ setMethod("initialize",
                            readingFrame, processorsNum)
                    })
 
-        acResult <-
-            alignConsensusReads(SangerContigList,
-                                geneticCode, refAminoAcidSeq,
-                                minFractionCallSCSet, maxFractionLostSCSet,
-                                processorsNum)
+        acResult <- alignContigs(SangerContigList, geneticCode, refAminoAcidSeq,
+                                 minFractionCallSCSet, maxFractionLostSCSet,
+                                 processorsNum)
         consensus <- acResult[["consensus"]]
         aln <- acResult[["aln"]]
         aln.tree <- acResult[["aln.tree"]]
@@ -191,17 +186,17 @@ setMethod("initialize",
         stop(errors)
     }
     callNextMethod(.Object, ...,
-                   parentDirectory           = parentDirectory,
-                   suffixForwardRegExp       = suffixForwardRegExp,
-                   suffixReverseRegExp       = suffixReverseRegExp,
-                   consensusReadsList        = SangerContigList,
-                   minFractionCallSCSet      = minFractionCallSCSet,
-                   maxFractionLostSCSet      = maxFractionLostSCSet,
-                   geneticCode               = geneticCode,
-                   consensusReadSCSet        = consensus,
-                   refAminoAcidSeq           = refAminoAcidSeq,
-                   alignmentSCSet            = aln,
-                   alignmentTreeSCSet        = aln.tree
+                   parentDirectory       = parentDirectory,
+                   suffixForwardRegExp   = suffixForwardRegExp,
+                   suffixReverseRegExp   = suffixReverseRegExp,
+                   contigList            = SangerContigList,
+                   minFractionCallSCSet  = minFractionCallSCSet,
+                   maxFractionLostSCSet  = maxFractionLostSCSet,
+                   geneticCode           = geneticCode,
+                   contigsConsensus      = consensus,
+                   refAminoAcidSeq       = refAminoAcidSeq,
+                   contigsAlignment      = aln,
+                   contigsTree           = aln.tree
                    )
 })
 

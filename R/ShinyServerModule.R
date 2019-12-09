@@ -282,7 +282,7 @@ calculateContigSeq <- function(forwardReadsList, reverseReadsList,
 ### ============================================================================
 ### Aligning consensus reads into a new consensus read for all reads
 ### ============================================================================
-alignConsensusReads <- function(SangerContigList,
+alignContigs <- function(SangerContigList,
                                 geneticCode, refAminoAcidSeq,
                                 minFractionCallSCSet, maxFractionLostSCSet,
                                 processorsNum) {

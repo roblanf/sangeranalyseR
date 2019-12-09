@@ -22,13 +22,13 @@ An S4 class for storing multiple single consensus reads to
 
 \item{\code{refAminoAcidSeq}}{.}
 
-\item{\code{consensusReadsList}}{.}
+\item{\code{contigList}}{.}
 
-\item{\code{consensusReadSCSet}}{.}
+\item{\code{contigsConsensus}}{.}
 
-\item{\code{alignmentSCSet}}{.}
+\item{\code{contigsAlignment}}{.}
 
-\item{\code{alignmentTreeSCSet}}{.}
+\item{\code{contigsTree}}{.}
 }}
 
 \examples{

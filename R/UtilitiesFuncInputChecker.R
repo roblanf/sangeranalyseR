@@ -187,7 +187,7 @@ checkProcessorsNum <- function(processorsNum, errors) {
 ### 'parentDirectory' prechecking
 ### ============================================================================
 checkParentDirectory <- function(parentDirectory, errors) {
-    if (!file.exists(parentDirectory)) {
+    if (!dir.exists(parentDirectory)) {
         msg <- paste("\n'", parentDirectory, "'",
                      " parent directory does not exist.\n", sep = "")
         errors <- c(errors, msg)
