@@ -1102,6 +1102,7 @@ alignedConsensusSetServer <- function(input, output, session) {
     ### observeEvent: Button Save S4 object
     ### ------------------------------------------------------------------------
     observeEvent(input$saveS4, {
+        shinyjs::disable("closeUI")
         shinyjs::disable("saveS4")
         message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory,
@@ -1136,6 +1137,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         saveRDS(SangerConsensusSet, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
         NEW_SANGER_ALIGNED_CONSENSUS_READ_SET <<- readRDS(file=newS4Object)
+        shinyjs::enable("closeUI")
         shinyjs::enable("saveS4")
     })
     ### ------------------------------------------------------------------------

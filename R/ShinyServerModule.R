@@ -129,37 +129,37 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
     trimmedStartPos <- forwardReadsList[[1]]@QualityReport@trimmedStartPos
     trimmedFinishPos <- forwardReadsList[[1]]@QualityReport@trimmedFinishPos
 
-
-
-
-
-
-
-
-
-
-
-
-
-    ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    ### Question !!!!! Why alignment don't use primary basecall result ?
-    ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
         trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
         trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
-        primaryDNA <- as.character(forwardRead@primarySeqRaw)
-        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
-    })
-    rRDNAStringSet <- sapply(reverseReadsList, function(reverseRead) {
-        trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
-        trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
-        primaryDNA <- as.character(reverseRead@primarySeqRaw)
+        primaryDNA <- as.character(forwardRead@primarySeq)
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
     })
 
+    # fRDNAStringSet2 <- sapply(forwardReadsList, function(forwardRead) {
+    #     trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
+    #     trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
+    #     primaryDNA <- as.character(forwardRead@primarySeq)
+    #     substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+    # })
+
+    rRDNAStringSet <- sapply(reverseReadsList, function(reverseRead) {
+        trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
+        trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
+        primaryDNA <- as.character(reverseRead@primarySeq)
+        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+    })
+
+    # rRDNAStringSet2 <- sapply(reverseReadsList, function(reverseRead) {
+    #     trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
+    #     trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
+    #     primaryDNA <- as.character(reverseRead@primarySeq)
+    #     substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+    # })
+
     ### --------------------------------------------------------------------
     ### DNAStringSet storing forward & reverse reads ! (Origin)
-    ### --------------------------------------------------------------------
+    # ### --------------------------------------------------------------------
     frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),
                                 unlist(rRDNAStringSet)))
     frReadFeatureList <- c(rep("Forward Reads", length(fRDNAStringSet)),

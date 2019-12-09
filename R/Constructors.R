@@ -1,96 +1,96 @@
-### ============================================================================
-### Self-defined constructor for AlignedConsensusSet
-### ============================================================================
-#' @description
-#'
-#' @param parentDirectory .
-#' @param consensusReadName .
-#' @param suffixForwardRegExp .
-#' @param suffixReverseRegExp .
-#' @param TrimmingMethod .
-#' @param M1TrimmingCutoff .
-#' @param M2CutoffQualityScore .
-#' @param M2SlidingWindowSize .
-#' @param baseNumPerRow .
-#' @param heightPerRow .
-#' @param signalRatioCutoff .
-#' @param showTrimmed .
-#' @param refAminoAcidSeq .
-#' @param minReadsNum .
-#' @param minReadLength .
-#' @param minFractionCall .
-#' @param maxFractionLost .
-#' @param geneticCode .
-#' @param acceptStopCodons .
-#' @param readingFrame .
-#' @param processorsNum .
-#'
-#' @return AlignedConsensusSet
-#' @export
-#' @author Kuan-Hao Chao
-#' @example
-#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' SangerAlignedConsensusSet <- SangerAlignedConsensusSet(
-#'                                parentDirectory       = rawDataDir,
-#'                                suffixForwardRegExp   = suffixForwardRegExp,
-#'                                suffixReverseRegExp   = suffixReverseRegExp,
-#'                                refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                                TrimmingMethod        = "M2",
-#'                                M1TrimmingCutoff      = NULL,
-#'                                M2CutoffQualityScore  = 40,
-#'                                M2SlidingWindowSize   = 10,
-#'                                baseNumPerRow         = 100,
-#'                                heightPerRow          = 200,
-#'                                signalRatioCutoff     = 0.33,
-#'                                showTrimmed           = TRUE)
-SangerAlignedConsensusSet <- function(parentDirectory        = character(0),
-                                      consensusReadName      = character(0),
-                                      suffixForwardRegExp    = character(0),
-                                      suffixReverseRegExp    = character(0),
-                                      TrimmingMethod         = "M1",
-                                      M1TrimmingCutoff       = 0.0001,
-                                      M2CutoffQualityScore   = NULL,
-                                      M2SlidingWindowSize    = NULL,
-                                      baseNumPerRow          = 100,
-                                      heightPerRow           = 200,
-                                      signalRatioCutoff      = 0.33,
-                                      showTrimmed            = TRUE,
-                                      refAminoAcidSeq        = "",
-                                      minReadsNum            = 2,
-                                      minReadLength          = 20,
-                                      minFractionCall        = 0.5,
-                                      maxFractionLost        = 0.5,
-                                      geneticCode            = GENETIC_CODE,
-                                      acceptStopCodons       = TRUE,
-                                      readingFrame           = 1,
-                                      processorsNum          = 1) {
-    newAlignedConsensusSet <- new("SangerAlignedConsensusSet",
-                                  parentDirectory        = parentDirectory,
-                                  consensusReadName     = consensusReadName,
-                                  suffixForwardRegExp    = suffixForwardRegExp,
-                                  suffixReverseRegExp    = suffixReverseRegExp,
-                                  TrimmingMethod         = TrimmingMethod,
-                                  M1TrimmingCutoff       = M1TrimmingCutoff,
-                                  M2CutoffQualityScore   = M2CutoffQualityScore,
-                                  M2SlidingWindowSize    = M2SlidingWindowSize,
-                                  baseNumPerRow          = baseNumPerRow,
-                                  heightPerRow           = heightPerRow,
-                                  signalRatioCutoff      = signalRatioCutoff,
-                                  showTrimmed            = showTrimmed,
-                                  refAminoAcidSeq        = refAminoAcidSeq,
-                                  minReadsNum            = minReadsNum,
-                                  minReadLength          = minReadLength,
-                                  minFractionCall        = minFractionCall,
-                                  maxFractionLost        = maxFractionLost,
-                                  geneticCode            = geneticCode,
-                                  acceptStopCodons       = acceptStopCodons,
-                                  readingFrame           = readingFrame,
-                                  processorsNum          = processorsNum)
-    return(newAlignedConsensusSet)
-}
+#' ### ============================================================================
+#' ### Self-defined constructor for AlignedConsensusSet
+#' ### ============================================================================
+#' #' @description
+#' #'
+#' #' @param parentDirectory .
+#' #' @param consensusReadName .
+#' #' @param suffixForwardRegExp .
+#' #' @param suffixReverseRegExp .
+#' #' @param TrimmingMethod .
+#' #' @param M1TrimmingCutoff .
+#' #' @param M2CutoffQualityScore .
+#' #' @param M2SlidingWindowSize .
+#' #' @param baseNumPerRow .
+#' #' @param heightPerRow .
+#' #' @param signalRatioCutoff .
+#' #' @param showTrimmed .
+#' #' @param refAminoAcidSeq .
+#' #' @param minReadsNum .
+#' #' @param minReadLength .
+#' #' @param minFractionCall .
+#' #' @param maxFractionLost .
+#' #' @param geneticCode .
+#' #' @param acceptStopCodons .
+#' #' @param readingFrame .
+#' #' @param processorsNum .
+#' #'
+#' #' @return AlignedConsensusSet
+#' #' @export
+#' #' @author Kuan-Hao Chao
+#' #' @example
+#' #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
+#' #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+#' #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' #' SangerAlignedConsensusSet <- SangerAlignedConsensusSet(
+#' #'                                parentDirectory       = rawDataDir,
+#' #'                                suffixForwardRegExp   = suffixForwardRegExp,
+#' #'                                suffixReverseRegExp   = suffixReverseRegExp,
+#' #'                                refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#' #'                                TrimmingMethod        = "M2",
+#' #'                                M1TrimmingCutoff      = NULL,
+#' #'                                M2CutoffQualityScore  = 40,
+#' #'                                M2SlidingWindowSize   = 10,
+#' #'                                baseNumPerRow         = 100,
+#' #'                                heightPerRow          = 200,
+#' #'                                signalRatioCutoff     = 0.33,
+#' #'                                showTrimmed           = TRUE)
+#' SangerAlignedConsensusSet <- function(parentDirectory        = character(0),
+#'                                       consensusReadName      = character(0),
+#'                                       suffixForwardRegExp    = character(0),
+#'                                       suffixReverseRegExp    = character(0),
+#'                                       TrimmingMethod         = "M1",
+#'                                       M1TrimmingCutoff       = 0.0001,
+#'                                       M2CutoffQualityScore   = NULL,
+#'                                       M2SlidingWindowSize    = NULL,
+#'                                       baseNumPerRow          = 100,
+#'                                       heightPerRow           = 200,
+#'                                       signalRatioCutoff      = 0.33,
+#'                                       showTrimmed            = TRUE,
+#'                                       refAminoAcidSeq        = "",
+#'                                       minReadsNum            = 2,
+#'                                       minReadLength          = 20,
+#'                                       minFractionCall        = 0.5,
+#'                                       maxFractionLost        = 0.5,
+#'                                       geneticCode            = GENETIC_CODE,
+#'                                       acceptStopCodons       = TRUE,
+#'                                       readingFrame           = 1,
+#'                                       processorsNum          = 1) {
+#'     newAlignedConsensusSet <- new("SangerAlignedConsensusSet",
+#'                                   parentDirectory        = parentDirectory,
+#'                                   consensusReadName     = consensusReadName,
+#'                                   suffixForwardRegExp    = suffixForwardRegExp,
+#'                                   suffixReverseRegExp    = suffixReverseRegExp,
+#'                                   TrimmingMethod         = TrimmingMethod,
+#'                                   M1TrimmingCutoff       = M1TrimmingCutoff,
+#'                                   M2CutoffQualityScore   = M2CutoffQualityScore,
+#'                                   M2SlidingWindowSize    = M2SlidingWindowSize,
+#'                                   baseNumPerRow          = baseNumPerRow,
+#'                                   heightPerRow           = heightPerRow,
+#'                                   signalRatioCutoff      = signalRatioCutoff,
+#'                                   showTrimmed            = showTrimmed,
+#'                                   refAminoAcidSeq        = refAminoAcidSeq,
+#'                                   minReadsNum            = minReadsNum,
+#'                                   minReadLength          = minReadLength,
+#'                                   minFractionCall        = minFractionCall,
+#'                                   maxFractionLost        = maxFractionLost,
+#'                                   geneticCode            = geneticCode,
+#'                                   acceptStopCodons       = acceptStopCodons,
+#'                                   readingFrame           = readingFrame,
+#'                                   processorsNum          = processorsNum)
+#'     return(newAlignedConsensusSet)
+#' }
 
 
 

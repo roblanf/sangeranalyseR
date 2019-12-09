@@ -832,6 +832,7 @@ consensusReadServer <- function(input, output, session) {
     ### observeEvent: Button Save S4 object
     ### ------------------------------------------------------------------------
     observeEvent(input$saveS4, {
+        shinyjs::disable("closeUI")
         shinyjs::disable("saveS4")
         message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory, "SangerConsensus.Rda")
@@ -901,6 +902,7 @@ consensusReadServer <- function(input, output, session) {
         consensusParam[["indelsDF"]] <<- SangerConsensus@indelsDF
         consensusParam[["stopCodonsDF"]] <<- SangerConsensus@stopCodonsDF
         consensusParam[["secondaryPeakDF"]] <<- SangerConsensus@secondaryPeakDF
+        shinyjs::enable("closeUI")
         shinyjs::enable("recalculateButton")
     })
     ### ------------------------------------------------------------------------

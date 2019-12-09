@@ -170,7 +170,7 @@ setMethod("initialize",
                   MBCResult <-
                       MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                            abifRawData@data$PCON.2,
-                                           signalRatioCutoff=signalRatioCutoff)
+                                           signalRatioCutoff, readFeature)
 
                   ### ==========================================================
                   ### Update Once (Only during creation)
@@ -206,13 +206,11 @@ setMethod("initialize",
                                            showTrimmed       = showTrimmed)
 
                   AASeqResult <- calculateAASeq (primarySeq, geneticCode)
-
                   primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
                   primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
                   primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
                   ### ==========================================================
                   ### ==========================================================
-
               } else {
                   stop(errors)
               }

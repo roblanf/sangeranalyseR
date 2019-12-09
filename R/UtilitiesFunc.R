@@ -120,7 +120,7 @@ suppressPlotlyMessage <- function(p) {
 ### ============================================================================
 MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
                                 qualityPhredScoresRaw,
-                                signalRatioCutoff) {
+                                signalRatioCutoff, readFeature) {
     message("     * Making basecall !!")
     #get peaks for each base
     Apeaks <- getpeaks(traceMatrix[,1])
@@ -196,14 +196,18 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
             secondary <- c(secondary, Bases[1])
         }
     }
-
-    qualityPhredScores <- qualityPhredScoresRaw[indexBaseCall]
+    if (readFeature == "Forward Read") {
+        qualityPhredScores <- qualityPhredScoresRaw[indexBaseCall]
+        primarySeq <- DNAString(paste(primary, collapse=""))
+        secondarySeq <- DNAString(paste(secondary, collapse=""))
+    } else if (readFeature == "Reverse Read") {
+        qualityPhredScores <- rev(qualityPhredScoresRaw[indexBaseCall])
+        primarySeq <- reverseComplement(DNAString(paste(primary, collapse="")))
+        secondarySeq <- reverseComplement(DNAString(paste(secondary, collapse="")))
+    }
     peakPosMatrix <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     peakAmpMatrix <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
-    primarySeq <- DNAString(paste(primary, collapse=""))
-    secondarySeq <- DNAString(paste(secondary, collapse=""))
     message("     * Updating slots in 'SangerSingleRead' instance !!")
-
     return(list("qualityPhredScores" = qualityPhredScores,
                 "peakPosMatrix" = peakPosMatrix,
                 "peakAmpMatrix" = peakAmpMatrix,
