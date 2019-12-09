@@ -14,9 +14,9 @@ An S4 class for storing multiple single consensus reads to
 
 \item{\code{suffixReverseRegExp}}{.}
 
-\item{\code{minFractionCallSCSet}}{.}
+\item{\code{minFractionCallSA}}{.}
 
-\item{\code{maxFractionLostSCSet}}{.}
+\item{\code{maxFractionLostSA}}{.}
 
 \item{\code{geneticCode}}{.}
 
@@ -36,19 +36,19 @@ rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-SangerAlignment <- new("SangerAlignment",
-                               parentDirectory       = rawDataDir,
-                               suffixForwardRegExp   = suffixForwardRegExp,
-                               suffixReverseRegExp   = suffixReverseRegExp,
-                               refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-                               TrimmingMethod        = "M2",
-                               M1TrimmingCutoff      = NULL,
-                               M2CutoffQualityScore  = 40,
-                               M2SlidingWindowSize   = 10,
-                               baseNumPerRow         = 100,
-                               heightPerRow          = 200,
-                               signalRatioCutoff     = 0.33,
-                               showTrimmed           = TRUE)
+newAlignment <- new("SangerAlignment",
+                    parentDirectory       = rawDataDir,
+                    suffixForwardRegExp   = suffixForwardRegExp,
+                    suffixReverseRegExp   = suffixReverseRegExp,
+                    refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                    TrimmingMethod        = "M2",
+                    M1TrimmingCutoff      = NULL,
+                    M2CutoffQualityScore  = 40,
+                    M2SlidingWindowSize   = 10,
+                    baseNumPerRow         = 100,
+                    heightPerRow          = 200,
+                    signalRatioCutoff     = 0.33,
+                    showTrimmed           = TRUE)
 }
 \author{
 Kuan-Hao Chao

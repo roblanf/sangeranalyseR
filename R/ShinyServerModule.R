@@ -117,7 +117,7 @@ M2inside_calculate_trimming <- function(qualityPhredScores,
 ### ============================================================================
 ### Calculating consensus read for one read set.
 ### ============================================================================
-calculateContigSeq <- function(forwardReadsList, reverseReadsList,
+calculateContigSeq <- function(forwardReadsList, forwardReadList,
                                    refAminoAcidSeq, minFractionCall,
                                    maxFractionLost, geneticCode,
                                    acceptStopCodons, readingFrame,
@@ -131,7 +131,7 @@ calculateContigSeq <- function(forwardReadsList, reverseReadsList,
         primaryDNA <- as.character(forwardRead@primarySeq)
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
     })
-    rRDNAStringSet <- sapply(reverseReadsList, function(reverseRead) {
+    rRDNAStringSet <- sapply(forwardReadList, function(reverseRead) {
         trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
         trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
         primaryDNA <- as.character(reverseRead@primarySeq)
@@ -385,15 +385,15 @@ dynamicMenuSideBarSA <- function(input, output, session,
                             "Sanger Contig Overview")})
 }
 
-dynamicMenuSideBarSA <- function(input, output, session, SangerCSetParam) {
+dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
     output$singleReadMenu <- renderMenu({
-        SangerCSNum <- length(SangerCSetParam)
+        SangerCSNum <- length(SangerAlignmentParam)
         menu_list <- sapply(1:SangerCSNum, function(i) {
-            forwardReadNum <- SangerCSetParam[[i]]$forwardReadNum
-            reverseReadNum <- SangerCSetParam[[i]]$reverseReadNum
+            forwardReadNum <- SangerAlignmentParam[[i]]$forwardReadNum
+            reverseReadNum <- SangerAlignmentParam[[i]]$reverseReadNum
 
-            forwardReadFeature <- SangerCSetParam[[i]]$forwardReadFeature
-            reverseReadFeature <- SangerCSetParam[[i]]$reverseReadFeature
+            forwardReadFeature <- SangerAlignmentParam[[i]]$forwardReadFeature
+            reverseReadFeature <- SangerAlignmentParam[[i]]$reverseReadFeature
             fmenuSub_list <- sapply(1:forwardReadNum, function(j) {
                 list(menuSubItem(text = paste0(i, " CR - ", forwardReadFeature[j]),
                                  tabName = paste0(i, " CR - ", forwardReadFeature[j]),
@@ -413,20 +413,20 @@ dynamicMenuSideBarSA <- function(input, output, session, SangerCSetParam) {
                                    icon = icon("minus"), rmenuSub_list)
             SangerCSMenuSubItem <- list(fmenu_list, rmenu_list)
 
-            SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerCSetParam[[i]]$SAName, "Overview"),
+            SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerAlignmentParam[[i]]$SCName, "Overview"),
                                                       tabName = paste0(i, " Sanger Consensus Read Overview"),
                                                       icon = icon("align-left"))),
                                      SangerCSMenuSubItem)
 
-            SangerCSetParam[[i]]$SAName
-            list(menuItem(text = SangerCSetParam[[i]]$SAName,
-                          tabName = SangerCSetParam[[i]]$SAName,
+            SangerAlignmentParam[[i]]$SCName
+            list(menuItem(text = SangerAlignmentParam[[i]]$SCName,
+                          tabName = SangerAlignmentParam[[i]]$SCName,
                           icon = icon("minus"), SangerCSMenuSubItem))
         })
         sidebarMenu(.list = menu_list)
     })
     # Select consensus Read Menu first
-    isolate({updateTabItems(session, "sidebar_menu", "Sanger Aligned Consensus Set Overview")})
+    isolate({updateTabItems(session, "sidebar_menu", "Sanger Alignment Overview")})
 }
 
 ### ============================================================================
@@ -463,7 +463,7 @@ observeEventDynamicHeaderSA <- function(input, output, session, trimmedRV) {
 
 
 # observeEventDynamicHeaderSA <- function(input, output, session, trimmedRV,
-#                                            SangerCSetParam) {
+#                                            SangerAlignmentParam) {
 #
 #     output$res <- renderText({
 #         paste("You've selected:", input$sidebar_menu)
@@ -748,8 +748,8 @@ valueBoxSAReadingFrameCSSet <- function(input, output, SangerConsensusSet, sessi
 valueBoxM1TrimmingCutoff <- function(input, output, session) {
     output$M1TrimmingCutoff <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(strtoi(singleReadIndex))) {
+        readIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(strtoi(readIndex))) {
             if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
                 as.numeric(input$M1TrimmingCutoffText) > 0 &&
                 as.numeric(input$M1TrimmingCutoffText) <= 1) {
@@ -777,8 +777,8 @@ valueBoxM1TrimmingCutoff <- function(input, output, session) {
 valueBoxM2CutoffQualityScore <- function(input, output, session) {
     output$M2CutoffQualityScore <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(strtoi(singleReadIndex))) {
+        readIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(strtoi(readIndex))) {
             if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
                 strtoi(input$M2CutoffQualityScoreText) > 0 &&
                 strtoi(input$M2CutoffQualityScoreText) <= 60 &&
@@ -807,8 +807,8 @@ valueBoxM2CutoffQualityScore <- function(input, output, session) {
 valueBoxM2SlidingWindowSize <- function(input, output, session) {
     output$M2SlidingWindowSize <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(strtoi(singleReadIndex))) {
+        readIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(strtoi(readIndex))) {
             if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
                 strtoi(input$M2SlidingWindowSizeText) > 0 &&
                 strtoi(input$M2SlidingWindowSizeText) <= 20 &&

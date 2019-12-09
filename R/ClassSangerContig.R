@@ -7,8 +7,8 @@
 #' @slot contigName .
 #' @slot suffixForwardRegExp .
 #' @slot suffixReverseRegExp .
-#' @slot forwardReadsList
-#' @slot reverseReadsList
+#' @slot forwardReadList
+#' @slot reverseReadList
 #' @slot minReadsNum
 #' @slot minReadLength
 #' @slot refAminoAcidSeq
@@ -62,8 +62,8 @@ setClass("SangerContig",
              contigName                = "character",
              suffixForwardRegExp       = "character",
              suffixReverseRegExp       = "character",
-             forwardReadsList          = "list",
-             reverseReadsList          = "list",
+             forwardReadList          = "list",
+             reverseReadList          = "list",
              minReadsNum               = "numeric",
              minReadLength             = "numeric",
              refAminoAcidSeq           = "character",
@@ -215,7 +215,7 @@ setMethod("initialize",
         ### --------------------------------------------------------------------
         ### "SangerRead" S4 class creation (forward list)
         ### --------------------------------------------------------------------
-        forwardReadsList <- sapply(forwardAllReads[[1]], SangerRead,
+        forwardReadList <- sapply(forwardAllReads[[1]], SangerRead,
                                    readFeature = "Forward Read",
                                    TrimmingMethod = TrimmingMethod,
                                    M1TrimmingCutoff = M1TrimmingCutoff,
@@ -228,7 +228,7 @@ setMethod("initialize",
         ### --------------------------------------------------------------------
         ### "SangerRead" S4 class creation (reverse list)
         ### --------------------------------------------------------------------
-        reverseReadsList <- sapply(reverseAllReads[[1]], SangerRead,
+        reverseReadList <- sapply(reverseAllReads[[1]], SangerRead,
                                    readFeature = "Reverse Read",
                                    TrimmingMethod = TrimmingMethod,
                                    M1TrimmingCutoff = M1TrimmingCutoff,
@@ -238,7 +238,7 @@ setMethod("initialize",
                                    heightPerRow = heightPerRow,
                                    signalRatioCutoff = signalRatioCutoff,
                                    showTrimmed = showTrimmed)
-        CSResult <- calculateContigSeq (forwardReadsList, reverseReadsList,
+        CSResult <- calculateContigSeq (forwardReadList, reverseReadList,
                                         refAminoAcidSeq, minFractionCall,
                                         maxFractionLost, geneticCode,
                                         acceptStopCodons, readingFrame,
@@ -260,8 +260,8 @@ setMethod("initialize",
                    contigName             = contigName,
                    suffixForwardRegExp    = suffixForwardRegExp,
                    suffixReverseRegExp    = suffixReverseRegExp,
-                   forwardReadsList       = forwardReadsList,
-                   reverseReadsList       = reverseReadsList,
+                   forwardReadList       = forwardReadList,
+                   reverseReadList       = reverseReadList,
                    minReadsNum            = minReadsNum,
                    minReadLength          = minReadLength,
                    refAminoAcidSeq        = refAminoAcidSeq,

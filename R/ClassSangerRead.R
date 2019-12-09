@@ -28,17 +28,17 @@
 #'                                   "Allolobophora_chlorotica",
 #'                                   "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
 #' A_chloroticaRead <- new("SangerRead",
-#'                               readFeature           = "Forward Read",
-#'                               readFileName          = A_chloroticaFdReadFN,
-#'                               geneticCode           = GENETIC_CODE,
-#'                               TrimmingMethod        = "M2",
-#'                               M1TrimmingCutoff      = NULL,
-#'                               M2CutoffQualityScore  = 40,
-#'                               M2SlidingWindowSize   = 10,
-#'                               baseNumPerRow         = 100,
-#'                               heightPerRow          = 200,
-#'                               signalRatioCutoff     = 0.33,
-#'                               showTrimmed           = TRUE)
+#'                         readFeature           = "Forward Read",
+#'                         readFileName          = A_chloroticaFdReadFN,
+#'                         geneticCode           = GENETIC_CODE,
+#'                         TrimmingMethod        = "M1",
+#'                         M1TrimmingCutoff      = 0.0001,
+#'                         M2CutoffQualityScore  = NULL,
+#'                         M2SlidingWindowSize   = NULL,
+#'                         baseNumPerRow         = NULL,
+#'                         heightPerRow          = 200,
+#'                         signalRatioCutoff     = 0.33,
+#'                         showTrimmed           = TRUE)
 setClass(
     "SangerRead",
     ### -------------------------------------------------------------------

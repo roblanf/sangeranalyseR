@@ -4,45 +4,40 @@
 SangerContigServer <- function(input, output, session) {
     # Suppress Warning
     options(warn = -1)
-
     ### ------------------------------------------------------------------------
-    ### SangerContig parameters initialization.
+    ### SangerContig-related parameters initialization.
     ### ------------------------------------------------------------------------
     SangerContig <- getShinyOption("sangerContig")
     shinyDirectory <- getShinyOption("shinyDirectory")
     SangerContig <- SangerContig[[1]]
-
-    ### ------------------------------------------------------------------------
-    ### SangerContig-related parameters initialization.
-    ### ------------------------------------------------------------------------
-    SCTrimmingMethod <- SangerContig@forwardReadsList[[1]]@
+    trimmingMethod <- SangerContig@forwardReadList[[1]]@
         QualityReport@TrimmingMethod
-    if (SCTrimmingMethod == "M1") {
-        SCTrimmingMethodName = "Method 1:
-                                'Logarithmic Scale Trimming'"
-    } else if (SCTrimmingMethod == "M2") {
-        SCTrimmingMethodName = "Method 2:
-                                'Logarithmic Scale Sliding Window Trimming'"
+    if (trimmingMethod == "M1") {
+        trimmingMethodName = "Method 1:
+                               'Logarithmic Scale Trimming'"
+    } else if (trimmingMethod == "M2") {
+        trimmingMethodName = "Method 2:
+                               'Logarithmic Scale Sliding Window Trimming'"
     }
 
     ### ------------------------------------------------------------------------
-    ### Reads-related parameters initialization.
+    ### SangerRead-related parameters initialization.
     ### ------------------------------------------------------------------------
-    forwardReadNum <- length(SangerContig@forwardReadsList)
-    reverseReadNum <- length(SangerContig@reverseReadsList)
+    forwardReadNum <- length(SangerContig@forwardReadList)
+    reverseReadNum <- length(SangerContig@reverseReadList)
     SangerReadNum <- forwardReadNum + reverseReadNum
     # readFeature
     forwardReadFeature <- sapply(1:forwardReadNum, function(i)
         paste0(i, " ",
-               SangerContig@forwardReadsList[[i]]@readFeature))
+               SangerContig@forwardReadList[[i]]@readFeature))
     reverseReadFeature <- sapply(1:reverseReadNum, function(i)
         paste0(i, " ",
-               SangerContig@reverseReadsList[[i]]@readFeature))
+               SangerContig@reverseReadList[[i]]@readFeature))
     # readFileName (basename) (Fixed)
     forwardReadBFN <- sapply(1:forwardReadNum, function(i)
-        basename(SangerContig@forwardReadsList[[i]]@readFileName))
+        basename(SangerContig@forwardReadList[[i]]@readFileName))
     reverseReadBFN <- sapply(1:reverseReadNum, function(i)
-        basename(SangerContig@reverseReadsList[[i]]@readFileName))
+        basename(SangerContig@reverseReadList[[i]]@readFileName))
     SangerReadBFN <- c(forwardReadBFN, reverseReadBFN)
 
     ### ------------------------------------------------------------------------
@@ -50,7 +45,7 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     contigParam <-
         reactiveValues(
-            contigSeq   = SangerContig@contigSeq,
+            contigSeq       = SangerContig@contigSeq,
             differencesDF   = SangerContig@differencesDF,
             alignment       = as.character(SangerContig@alignment),
             distanceMatrix  = SangerContig@distanceMatrix,
@@ -58,7 +53,6 @@ SangerContigServer <- function(input, output, session) {
             indelsDF        = SangerContig@indelsDF,
             stopCodonsDF    = SangerContig@stopCodonsDF,
             secondaryPeakDF = SangerContig@secondaryPeakDF)
-
     ### ------------------------------------------------------------------------
     ### SingleRead reactiveValue
     ### ------------------------------------------------------------------------
@@ -67,7 +61,6 @@ SangerContigServer <- function(input, output, session) {
                                     primaryAASeqS1 = "",
                                     primaryAASeqS2 = "",
                                     primaryAASeqS3 = "")
-
     trimmedRV <- reactiveValues(rawSeqLength            = 0,
                                 rawMeanQualityScore     = 0,
                                 rawMinQualityScore      = 0,
@@ -77,18 +70,16 @@ SangerContigServer <- function(input, output, session) {
                                 trimmedMeanQualityScore = 0,
                                 trimmedMinQualityScore  = 0,
                                 remainingRatio          = 0)
-
     trimmedParam <- reactiveValues(M1TrimmingCutoff     = 0,
                                    M2CutoffQualityScore = 0,
                                    M2SlidingWindowSize  = 0)
-
     ChromatogramParam <- reactiveValues(baseNumPerRow     = 0,
                                         heightPerRow      = 0,
                                         signalRatioCutoff = 0,
                                         showTrimmed       = TRUE)
 
     ############################################################################
-    ### Functions for all UI page
+    ### output$ for all UI page
     ############################################################################
     ### ------------------------------------------------------------------------
     ### dynamic side menu bar
@@ -102,15 +93,12 @@ SangerContigServer <- function(input, output, session) {
     ############################################################################
     output$SangerContig_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (input$sidebar_menu == "Sanger Contig Overview") {
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
-            ### ------------------------------------------------------------
-            ### First assign the ChromatogramParam parameter
-            ### ------------------------------------------------------------
             ### ----------------------------------------------------------------
-            ### Dynamic page navigation: SangerContig content overview
+            ### Dynamic page navigation: SangerContig overview page
             ### ----------------------------------------------------------------
             fluidRow(
                 useShinyjs(),
@@ -174,7 +162,7 @@ SangerContigServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SCTrimmingMethodName),
+                                      h4(trimmingMethodName),
                                )
                         ),
                         column(12,
@@ -222,10 +210,6 @@ SangerContigServer <- function(input, output, session) {
                                )
                         ),
                     ),
-                    ################################################
-                    #### Add this after having reference sample ####
-                    ################################################
-                    # If it is null
                     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                     box(title = tags$p("Contig Parameters",
                                        style = "font-size: 24px;
@@ -277,7 +261,6 @@ SangerContigServer <- function(input, output, session) {
                     ),
                     uiOutput("SCrefAminoAcidSeq") ,
                 ),
-
                 box(title = tags$p(tagList(icon("dot-circle"),
                                            "Contig Results: "),
                                    style = "font-size: 26px;
@@ -370,165 +353,149 @@ SangerContigServer <- function(input, output, session) {
                     )
                 ),
             )
-        } else if (!is.na(strtoi(singleReadIndex)) &&
+        } else if (!is.na(strtoi(readIndex)) &&
                    (directionParam == "Forward" ||
                     directionParam == "Reverse")) {
+            ### ----------------------------------------------------------------
+            ### Dynamic page navigation: SangerRead page
+            ### ----------------------------------------------------------------
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
             if (directionParam == "Forward") {
                 sequenceParam[["primarySeq"]] <<-
-                    as.character(
-                        SangerContig@
-                            forwardReadsList[[singleReadIndex]]@primarySeq)
+                    as.character(SangerContig@
+                                     forwardReadList[[readIndex]]@primarySeq)
                 sequenceParam[["secondarySeq"]] <<-
-                    as.character(
-                        SangerContig@
-                            forwardReadsList[[singleReadIndex]]@secondarySeq)
+                    as.character(SangerContig@
+                                     forwardReadList[[readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(
-                        SangerContig@
-                            forwardReadsList[[singleReadIndex]]@primaryAASeqS1)
+                    as.character(SangerContig@
+                                     forwardReadList[[readIndex]]@primaryAASeqS1)
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(
-                        SangerContig@
-                            forwardReadsList[[singleReadIndex]]@primaryAASeqS2)
+                    as.character(SangerContig@
+                                     forwardReadList[[readIndex]]@primaryAASeqS2)
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(
-                        SangerContig@
-                            forwardReadsList[[singleReadIndex]]@primaryAASeqS3)
-
-
+                    as.character(SangerContig@
+                                     forwardReadList[[readIndex]]@primaryAASeqS3)
                 ChromatogramParam[["baseNumPerRow"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     ChromatogramParam@baseNumPerRow
                 ChromatogramParam[["heightPerRow"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     ChromatogramParam@heightPerRow
                 ChromatogramParam[["signalRatioCutoff"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     ChromatogramParam@signalRatioCutoff
                 ChromatogramParam[["showTrimmed"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     ChromatogramParam@showTrimmed
-
                 trimmedParam[["M1TrimmingCutoff"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@M1TrimmingCutoff
                 trimmedParam[["M2CutoffQualityScore"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@M2CutoffQualityScore
                 trimmedParam[["M2SlidingWindowSize"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@M2SlidingWindowSize
-
                 trimmedRV[["rawSeqLength"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@rawSeqLength
                 trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@rawMeanQualityScore
                 trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@rawMinQualityScore
                 trimmedRV[["trimmedStartPos"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedStartPos
                 trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedFinishPos
                 trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedSeqLength
                 trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedMeanQualityScore
                 trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedMinQualityScore
                 trimmedRV[["remainingRatio"]] <<-
-                    round(SangerContig@forwardReadsList[[singleReadIndex]]@
+                    round(SangerContig@forwardReadList[[readIndex]]@
                               QualityReport@remainingRatio * 100, 2)
                 SSReadBFN <- basename(
-                    SangerContig@
-                        forwardReadsList[[singleReadIndex]]@readFileName)
+                    SangerContig@forwardReadList[[readIndex]]@readFileName)
                 SSReadAFN <- SangerContig@
-                    forwardReadsList[[singleReadIndex]]@readFileName
+                    forwardReadList[[readIndex]]@readFileName
             } else if (directionParam == "Reverse") {
                 sequenceParam[["primarySeq"]] <<-
-                    as.character(
-                        SangerContig@
-                            reverseReadsList[[singleReadIndex]]@primarySeq)
+                    as.character(SangerContig@
+                                     reverseReadList[[readIndex]]@primarySeq)
                 sequenceParam[["secondarySeq"]] <<-
-                    as.character(
-                        SangerContig@
-                            reverseReadsList[[singleReadIndex]]@secondarySeq)
+                    as.character(SangerContig@
+                                     reverseReadList[[readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(
-                        SangerContig@
-                            reverseReadsList[[singleReadIndex]]@primaryAASeqS1)
+                    as.character(SangerContig@
+                                     reverseReadList[[readIndex]]@primaryAASeqS1)
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(
-                        SangerContig@
-                            reverseReadsList[[singleReadIndex]]@primaryAASeqS2)
+                    as.character(SangerContig@
+                                     reverseReadList[[readIndex]]@primaryAASeqS2)
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(
-                        SangerContig@
-                            reverseReadsList[[singleReadIndex]]@primaryAASeqS3)
-
+                    as.character(SangerContig@
+                                     reverseReadList[[readIndex]]@primaryAASeqS3)
                 ChromatogramParam[["baseNumPerRow"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     ChromatogramParam@baseNumPerRow
                 ChromatogramParam[["heightPerRow"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     ChromatogramParam@heightPerRow
                 ChromatogramParam[["signalRatioCutoff"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     ChromatogramParam@signalRatioCutoff
                 ChromatogramParam[["showTrimmed"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     ChromatogramParam@showTrimmed
-
                 trimmedParam[["M1TrimmingCutoff"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     M1TrimmingCutoff
                 trimmedParam[["M2CutoffQualityScore"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     M2CutoffQualityScore
                 trimmedParam[["M2SlidingWindowSize"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                    SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     M2SlidingWindowSize
-
                 trimmedRV[["rawSeqLength"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@rawSeqLength
                 trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@rawMeanQualityScore
                 trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@rawMinQualityScore
                 trimmedRV[["trimmedStartPos"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedStartPos
                 trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedFinishPos
                 trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedSeqLength
                 trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedMeanQualityScore
                 trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedMinQualityScore
                 trimmedRV[["remainingRatio"]] <<-
-                    round(SangerContig@reverseReadsList[[singleReadIndex]]@
+                    round(SangerContig@reverseReadList[[readIndex]]@
                               QualityReport@remainingRatio * 100, 2)
                 SSReadBFN <- basename(
-                    SangerContig@
-                        reverseReadsList[[singleReadIndex]]@readFileName)
+                    SangerContig@reverseReadList[[readIndex]]@readFileName)
                 SSReadAFN <- SangerContig@
-                    reverseReadsList[[singleReadIndex]]@readFileName
+                    reverseReadList[[readIndex]]@readFileName
             }
             fluidRow(
                 useShinyjs(),
@@ -808,18 +775,14 @@ SangerContigServer <- function(input, output, session) {
         }
     })
 
-
     ############################################################################
-    ### All other features (dynamic header / button save / button close)
+    ### All other features (dynamic header / buttons)
     ############################################################################
     ### ------------------------------------------------------------------------
     ### observeEvent: Adding dynamic rightHeader text
     ### ------------------------------------------------------------------------
     #!!!!!!!! Fix
     observeEventDynamicHeaderSC(input, output, session, trimmedRV)
-    ############################################################################
-    ### All other features (dynamic header / button save / button close)
-    ############################################################################
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Close UI
     ### ------------------------------------------------------------------------
@@ -878,15 +841,14 @@ SangerContigServer <- function(input, output, session) {
         message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start recalculating contig")
         CSResult<-
-            calculateContigSeq (SangerContig@forwardReadsList,
-                                SangerContig@reverseReadsList,
+            calculateContigSeq (SangerContig@forwardReadList,
+                                SangerContig@reverseReadList,
                                 SangerContig@refAminoAcidSeq,
                                 SangerContig@minFractionCall,
                                 SangerContig@maxFractionLost,
                                 SangerContig@geneticCode,
                                 SangerContig@acceptStopCodons,
                                 SangerContig@readingFrame)
-
         SangerContig@contigSeq <<- CSResult$consensusGapfree
         SangerContig@differencesDF <<- CSResult$diffsDf
         SangerContig@alignment <<- CSResult$aln2
@@ -895,7 +857,6 @@ SangerContigServer <- function(input, output, session) {
         SangerContig@indelsDF <<- CSResult$indels
         SangerContig@stopCodonsDF <<- CSResult$stopsDf
         SangerContig@secondaryPeakDF <<- CSResult$spDf
-
         contigParam[["contigSeq"]] <<- SangerContig@contigSeq
         contigParam[["differencesDF"]] <<- SangerContig@differencesDF
         contigParam[["alignment"]] <<- as.character(SangerContig@alignment)
@@ -911,33 +872,32 @@ SangerContigServer <- function(input, output, session) {
     ### observeEvent: Button chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$saveChromatogramParam, {
-        ## !!!!! Update !!!!
         message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start recalculating chromatogram")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         ### --------------------------------------------------------------------
         ### Update ChromatogramBasePerRow
         ### --------------------------------------------------------------------
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             if (directionParam == "Forward") {
-                SangerContig@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                SangerContig@forwardReadList[[readIndex]]@ChromatogramParam@
                     baseNumPerRow <<- input$ChromatogramBasePerRow
-                SangerContig@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                SangerContig@forwardReadList[[readIndex]]@ChromatogramParam@
                     heightPerRow <<- input$ChromatogramHeightPerRow
-                SangerContig@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                SangerContig@forwardReadList[[readIndex]]@ChromatogramParam@
                     signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
-                SangerContig@forwardReadsList[[singleReadIndex]]@ChromatogramParam@
+                SangerContig@forwardReadList[[readIndex]]@ChromatogramParam@
                     showTrimmed <<- input$ChromatogramCheckShowTrimmed
             } else if (directionParam == "Reverse") {
-                SangerContig@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                SangerContig@reverseReadList[[readIndex]]@ChromatogramParam@
                     baseNumPerRow <<- input$ChromatogramBasePerRow
-                SangerContig@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                SangerContig@reverseReadList[[readIndex]]@ChromatogramParam@
                     heightPerRow <<- input$ChromatogramHeightPerRow
-                SangerContig@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                SangerContig@reverseReadList[[readIndex]]@ChromatogramParam@
                     signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
-                SangerContig@reverseReadsList[[singleReadIndex]]@ChromatogramParam@
+                SangerContig@reverseReadList[[readIndex]]@ChromatogramParam@
                     showTrimmed <<- input$ChromatogramCheckShowTrimmed
             }
             ### ------------------------------------------------------------
@@ -957,10 +917,10 @@ SangerContigServer <- function(input, output, session) {
     observeEvent(input$startTrimmingButton, {
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex))) {
-            if (SangerContig@forwardReadsList[[1]]@
+        if (!is.na(strtoi(readIndex))) {
+            if (SangerContig@forwardReadList[[1]]@
                 QualityReport@TrimmingMethod == "M1") {
                 if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
                     as.numeric(input$M1TrimmingCutoffText) > 0 &&
@@ -975,35 +935,35 @@ SangerContigServer <- function(input, output, session) {
                     ### Start M1 trimming calculation
                     ### --------------------------------------------------------
                     trimmingPos <- M1inside_calculate_trimming(
-                            SangerContig@forwardReadsList[[singleReadIndex]]@
+                            SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@qualityPhredScores,
-                            SangerContig@forwardReadsList[[singleReadIndex]]@
+                            SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@qualityBaseScores,
                             as.numeric(inputM1TrimmingCutoffText))
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                         QualityReport@M1TrimmingCutoff <<-
                         as.numeric(inputM1TrimmingCutoffText)
                     trimmedParam[["M1TrimmingCutoff"]] <<-
-                        SangerContig@forwardReadsList[[singleReadIndex]]@
+                        SangerContig@forwardReadList[[readIndex]]@
                         QualityReport@M1TrimmingCutoff
                 } else if (directionParam == "Reverse") {
                     ### --------------------------------------------------------
                     ### Start M1 trimming calculation
                     ### --------------------------------------------------------
                     trimmingPos <- M1inside_calculate_trimming(
-                            SangerContig@reverseReadsList[[singleReadIndex]]@
+                            SangerContig@reverseReadList[[readIndex]]@
                                 QualityReport@qualityPhredScores,
-                            SangerContig@reverseReadsList[[singleReadIndex]]@
+                            SangerContig@reverseReadList[[readIndex]]@
                                 QualityReport@qualityBaseScores,
                             as.numeric(inputM1TrimmingCutoffText))
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                         QualityReport@M1TrimmingCutoff <<-
                         as.numeric(inputM1TrimmingCutoffText)
                     trimmedParam[["M1TrimmingCutoff"]] <<-
-                        SangerContig@reverseReadsList[[singleReadIndex]]@
+                        SangerContig@reverseReadList[[readIndex]]@
                         QualityReport@M1TrimmingCutoff
                 }
-            } else if (SangerContig@forwardReadsList[[1]]@
+            } else if (SangerContig@forwardReadList[[1]]@
                        QualityReport@TrimmingMethod == "M2") {
                 if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
                     strtoi(input$M2CutoffQualityScoreText) > 0 &&
@@ -1027,23 +987,23 @@ SangerContigServer <- function(input, output, session) {
                     ### ------------------------------------------------------------
                     trimmingPos <-
                         M2inside_calculate_trimming(
-                            SangerContig@forwardReadsList[[singleReadIndex]]@
+                            SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@qualityPhredScores,
-                            SangerContig@forwardReadsList[[singleReadIndex]]@
+                            SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@qualityBaseScores,
                             strtoi(inputM2CutoffQualityScoreText),
                             strtoi(inputM2SlidingWindowSizeText))
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                         QualityReport@M2CutoffQualityScore <<-
                         strtoi(inputM2CutoffQualityScoreText)
                     trimmedParam[["M2CutoffQualityScore"]] <<-
-                        SangerContig@forwardReadsList[[singleReadIndex]]@
+                        SangerContig@forwardReadList[[readIndex]]@
                         QualityReport@M2CutoffQualityScore
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                         QualityReport@M2SlidingWindowSize <<-
                         strtoi(inputM2SlidingWindowSizeText)
                     trimmedParam[["M2SlidingWindowSize"]] <<-
-                        SangerContig@forwardReadsList[[singleReadIndex]]@
+                        SangerContig@forwardReadList[[readIndex]]@
                         QualityReport@M2SlidingWindowSize
                 } else if (directionParam == "Reverse") {
                     ### ------------------------------------------------------------
@@ -1051,117 +1011,117 @@ SangerContigServer <- function(input, output, session) {
                     ### ------------------------------------------------------------
                     trimmingPos <-
                         M2inside_calculate_trimming(
-                            SangerContig@reverseReadsList[[singleReadIndex]]@
+                            SangerContig@reverseReadList[[readIndex]]@
                                 QualityReport@qualityPhredScores,
-                            SangerContig@reverseReadsList[[singleReadIndex]]@
+                            SangerContig@reverseReadList[[readIndex]]@
                                 QualityReport@qualityBaseScores,
                             strtoi(inputM2CutoffQualityScoreText),
                             strtoi(inputM2SlidingWindowSizeText))
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                         QualityReport@M2CutoffQualityScore <<-
                         strtoi(inputM2CutoffQualityScoreText)
                     trimmedParam[["M2CutoffQualityScore"]] <<-
-                        SangerContig@reverseReadsList[[singleReadIndex]]@
+                        SangerContig@reverseReadList[[readIndex]]@
                         QualityReport@M2CutoffQualityScore
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                         QualityReport@M2SlidingWindowSize <<-
                         strtoi(inputM2SlidingWindowSizeText)
                     trimmedParam[["M2SlidingWindowSize"]] <<-
-                        SangerContig@reverseReadsList[[singleReadIndex]]@
+                        SangerContig@reverseReadList[[readIndex]]@
                         QualityReport@M2SlidingWindowSize
                 }
             }
             if (directionParam == "Forward") {
-                SangerContig@forwardReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@forwardReadList[[readIndex]]@QualityReport@
                     rawSeqLength <<- trimmingPos[["rawSeqLength"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@forwardReadList[[readIndex]]@QualityReport@
                     rawMeanQualityScore <<- trimmingPos[["rawMeanQualityScore"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@forwardReadList[[readIndex]]@QualityReport@
                     rawMinQualityScore <<- trimmingPos[["rawMinQualityScore"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@forwardReadList[[readIndex]]@QualityReport@
                     trimmedStartPos <<- trimmingPos[["trimmedStartPos"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@forwardReadList[[readIndex]]@QualityReport@
                     trimmedFinishPos <<- trimmingPos[["trimmedFinishPos"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@forwardReadList[[readIndex]]@QualityReport@
                     trimmedSeqLength <<- trimmingPos[["trimmedSeqLength"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@forwardReadList[[readIndex]]@QualityReport@
                     trimmedMeanQualityScore <<- trimmingPos[["trimmedMeanQualityScore"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@forwardReadList[[readIndex]]@QualityReport@
                     trimmedMinQualityScore <<- trimmingPos[["trimmedMinQualityScore"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@forwardReadList[[readIndex]]@QualityReport@
                     remainingRatio <<- trimmingPos[["remainingRatio"]]
                 trimmedRV[["rawSeqLength"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@rawSeqLength
                 trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@rawMeanQualityScore
                 trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@rawMinQualityScore
                 trimmedRV[["trimmedStartPos"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedStartPos
                 trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedFinishPos
                 trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedSeqLength
                 trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedMeanQualityScore
                 trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@trimmedMinQualityScore
                 trimmedRV[["remainingRatio"]] <<-
-                    round(SangerContig@forwardReadsList[[singleReadIndex]]@
+                    round(SangerContig@forwardReadList[[readIndex]]@
                               QualityReport@remainingRatio * 100, 2)
             } else if (directionParam == "Reverse") {
-                SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     rawSeqLength <<- trimmingPos[["rawSeqLength"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     rawMeanQualityScore <<- trimmingPos[["rawMeanQualityScore"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     rawMinQualityScore <<- trimmingPos[["rawMinQualityScore"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     trimmedStartPos <<- trimmingPos[["trimmedStartPos"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     trimmedFinishPos <<- trimmingPos[["trimmedFinishPos"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     trimmedSeqLength <<- trimmingPos[["trimmedSeqLength"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     trimmedMeanQualityScore <<- trimmingPos[["trimmedMeanQualityScore"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     trimmedMinQualityScore <<- trimmingPos[["trimmedMinQualityScore"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@QualityReport@
+                SangerContig@reverseReadList[[readIndex]]@QualityReport@
                     remainingRatio <<- trimmingPos[["remainingRatio"]]
                 trimmedRV[["rawSeqLength"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@rawSeqLength
                 trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@rawMeanQualityScore
                 trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@rawMinQualityScore
                 trimmedRV[["trimmedStartPos"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedStartPos
                 trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedFinishPos
                 trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedSeqLength
                 trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedMeanQualityScore
                 trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@trimmedMinQualityScore
                 trimmedRV[["remainingRatio"]] <<-
-                    round(SangerContig@reverseReadsList[[singleReadIndex]]@
+                    round(SangerContig@reverseReadList[[readIndex]]@
                               QualityReport@remainingRatio * 100, 2)
             }
         }
@@ -1351,9 +1311,9 @@ SangerContigServer <- function(input, output, session) {
     output$primarySeqDF <- renderExcel({
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(singleReadIndex)) {
+        if (!is.na(readIndex)) {
             primarySeqDisplay (sequenceParam)
         }
     })
@@ -1363,9 +1323,9 @@ SangerContigServer <- function(input, output, session) {
     output$secondSeqDF <- renderExcel({
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(singleReadIndex)) {
+        if (!is.na(readIndex)) {
             secondarySeqDisplay (sequenceParam)
         }
     })
@@ -1374,14 +1334,14 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$qualityScoreDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             if (directionParam == "Forward") {
-                PhredScore <- SangerContig@forwardReadsList[[singleReadIndex]]@
+                PhredScore <- SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@qualityPhredScores
             } else if (directionParam == "Reverse") {
-                PhredScore <- SangerContig@reverseReadsList[[singleReadIndex]]@
+                PhredScore <- SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@qualityPhredScores
             }
             qualityScoreDisplay (PhredScore)
@@ -1393,9 +1353,9 @@ SangerContigServer <- function(input, output, session) {
     output$PrimAASeqS1DF <- renderExcel({
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             PrimAASeqS1Display (sequenceParam)
         }
     })
@@ -1405,9 +1365,9 @@ SangerContigServer <- function(input, output, session) {
     output$PrimAASeqS2DF <- renderExcel({
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             PrimAASeqS2Display (sequenceParam)
         }
     })
@@ -1417,9 +1377,9 @@ SangerContigServer <- function(input, output, session) {
     output$PrimAASeqS3DF <- renderExcel({
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             PrimAASeqS3Display (sequenceParam)
         }
     })
@@ -1430,9 +1390,9 @@ SangerContigServer <- function(input, output, session) {
         ## !!!!! Update !!!!
         message(">>>>>>>>>>>> Update primarySeqTrimmedDF! ")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(singleReadIndex)) {
+        if (!is.na(readIndex)) {
             primarySeqTrimmedDisplay (input, output, session,
                                       sequenceParam, trimmedRV)
         }
@@ -1444,9 +1404,9 @@ SangerContigServer <- function(input, output, session) {
         ## !!!!! Update !!!!
         message(">>>>>>>>>>>> Update secondSeqTrimmedDF! ")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(singleReadIndex)) {
+        if (!is.na(readIndex)) {
             secondSeqTrimmedDisplay (input, output, session,
                                      sequenceParam, trimmedRV)
         }
@@ -1457,16 +1417,16 @@ SangerContigServer <- function(input, output, session) {
     output$qualityScoreTrimmedDF <- renderExcel({
         message(">>>>>>>>>>>> Update qualityScoreTrimmedDF! ")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(singleReadIndex)) {
+        if (!is.na(readIndex)) {
             if (directionParam == "Forward") {
-                PhredScore <- SangerContig@forwardReadsList[[singleReadIndex]]@
+                PhredScore <- SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@qualityPhredScores[
                         (trimmedRV[["trimmedStartPos"]]+1):
                             trimmedRV[["trimmedFinishPos"]]]
             } else if (directionParam == "Reverse") {
-                PhredScore <- SangerContig@reverseReadsList[[singleReadIndex]]@
+                PhredScore <- SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@qualityPhredScores[
                         (trimmedRV[["trimmedStartPos"]]+1):
                             trimmedRV[["trimmedFinishPos"]]]
@@ -1482,15 +1442,15 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$TrimmingMethodSelectionOutput <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex))) {
-            if (SangerContig@forwardReadsList[[1]]@
+        if (!is.na(strtoi(readIndex))) {
+            if (SangerContig@forwardReadList[[1]]@
                 QualityReport@TrimmingMethod == "M1") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
                         'Logarithmic Scale Trimming'")
-            } else if (SangerContig@forwardReadsList[[1]]@
+            } else if (SangerContig@forwardReadList[[1]]@
                        QualityReport@TrimmingMethod == "M2") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
@@ -1500,22 +1460,22 @@ SangerContigServer <- function(input, output, session) {
     })
     output$TrimmingMethodUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             ## For method, everyone is same, so just pick forward one.
-            if (SangerContig@forwardReadsList[[1]]@
+            if (SangerContig@forwardReadList[[1]]@
                 QualityReport@TrimmingMethod == "M1") {
                 if (directionParam == "Forward") {
-                    if (is.null(SangerContig@forwardReadsList[[singleReadIndex]]@
+                    if (is.null(SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@M1TrimmingCutoff)) {
-                        SangerContig@forwardReadsList[[singleReadIndex]]@
+                        SangerContig@forwardReadList[[readIndex]]@
                             QualityReport@M1TrimmingCutoff <<-  0.0001
                     }
                 } else if (directionParam == "Reverse") {
-                    if (is.null(SangerContig@reverseReadsList[[singleReadIndex]]@
+                    if (is.null(SangerContig@reverseReadList[[readIndex]]@
                                 QualityReport@M1TrimmingCutoff)) {
-                        SangerContig@reverseReadsList[[singleReadIndex]]@
+                        SangerContig@reverseReadList[[readIndex]]@
                             QualityReport@M1TrimmingCutoff <<-  0.0001
                     }
                 }
@@ -1531,28 +1491,28 @@ SangerContigServer <- function(input, output, session) {
                            ),
                     ),
                 )
-            } else if (SangerContig@forwardReadsList[[1]]@
+            } else if (SangerContig@forwardReadList[[1]]@
                        QualityReport@TrimmingMethod == "M2") {
                 if (directionParam == "Forward") {
-                    if (is.null(SangerContig@forwardReadsList[[singleReadIndex]]@
+                    if (is.null(SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@M2CutoffQualityScore)) {
-                        SangerContig@forwardReadsList[[singleReadIndex]]@
+                        SangerContig@forwardReadList[[readIndex]]@
                             QualityReport@M2CutoffQualityScore <<-  20
                     }
-                    if (is.null(SangerContig@forwardReadsList[[singleReadIndex]]@
+                    if (is.null(SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@M2SlidingWindowSize )) {
-                        SangerContig@forwardReadsList[[singleReadIndex]]@
+                        SangerContig@forwardReadList[[readIndex]]@
                             QualityReport@M2SlidingWindowSize <<-  5
                     }
                 } else if (directionParam == "Reverse") {
-                    if (is.null(SangerContig@reverseReadsList[[singleReadIndex]]@
+                    if (is.null(SangerContig@reverseReadList[[readIndex]]@
                                 QualityReport@M2CutoffQualityScore)) {
-                        SangerContig@reverseReadsList[[singleReadIndex]]@
+                        SangerContig@reverseReadList[[readIndex]]@
                             QualityReport@M2CutoffQualityScore <<-  20
                     }
-                    if (is.null(SangerContig@reverseReadsList[[singleReadIndex]]@
+                    if (is.null(SangerContig@reverseReadList[[readIndex]]@
                                 QualityReport@M2SlidingWindowSize )) {
-                        SangerContig@reverseReadsList[[singleReadIndex]]@
+                        SangerContig@reverseReadList[[readIndex]]@
                             QualityReport@M2SlidingWindowSize <<-  5
                     }
                 }
@@ -1600,17 +1560,17 @@ SangerContigServer <- function(input, output, session) {
 
     output$qualityTrimmingRatioPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
 
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             if (directionParam == "Forward") {
                 qualityPhredScores <- SangerContig@
-                    forwardReadsList[[singleReadIndex]]@
+                    forwardReadList[[readIndex]]@
                     QualityReport@qualityPhredScores
             } else if (directionParam == "Reverse") {
                 qualityPhredScores <- SangerContig@
-                    reverseReadsList[[singleReadIndex]]@
+                    reverseReadList[[readIndex]]@
                     QualityReport@qualityPhredScores
             }
             qualityTrimmingRatioPlotDisplay(input, output,session,
@@ -1619,16 +1579,16 @@ SangerContigServer <- function(input, output, session) {
     })
     output$qualityQualityBasePlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             if (directionParam == "Forward") {
                 qualityPhredScores <-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@qualityPhredScores
             } else if (directionParam == "Reverse") {
                 qualityPhredScores <-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@qualityPhredScores
             }
             qualityQualityBasePlotDisplay(input, output,session,
@@ -1644,17 +1604,17 @@ SangerContigServer <- function(input, output, session) {
     output$chromatogramUIOutput <- renderUI({
         ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         trimmedRV[["trimmedSeqLength"]]
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             if (directionParam == "Forward") {
                 chromatogramRowNumAns <-
                     chromatogramRowNum (
                         strtoi(ChromatogramParam[["baseNumPerRow"]]),
-                        SangerContig@forwardReadsList[[singleReadIndex]]@
+                        SangerContig@forwardReadList[[readIndex]]@
                             QualityReport@rawSeqLength,
-                        SangerContig@forwardReadsList[[singleReadIndex]]@
+                        SangerContig@forwardReadList[[readIndex]]@
                             QualityReport@trimmedSeqLength,
                         ChromatogramParam[["showTrimmed"]]) *
                     strtoi(ChromatogramParam[["heightPerRow"]])
@@ -1663,9 +1623,9 @@ SangerContigServer <- function(input, output, session) {
                 chromatogramRowNumAns <-
                     chromatogramRowNum (
                         strtoi(ChromatogramParam[["baseNumPerRow"]]),
-                        SangerContig@reverseReadsList[[singleReadIndex]]@
+                        SangerContig@reverseReadList[[readIndex]]@
                             QualityReport@rawSeqLength,
-                        SangerContig@reverseReadsList[[singleReadIndex]]@
+                        SangerContig@reverseReadList[[readIndex]]@
                             QualityReport@trimmedSeqLength,
                         ChromatogramParam[["showTrimmed"]]) *
                     strtoi(ChromatogramParam[["heightPerRow"]])
@@ -1686,9 +1646,9 @@ SangerContigServer <- function(input, output, session) {
         shinyjs::disable("M2CutoffQualityScoreText")
         shinyjs::disable("M2SlidingWindowSizeText")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        singleReadIndex <- strtoi(sidebar_menu[[1]])
+        readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (!is.na(strtoi(singleReadIndex))) {
+        if (!is.na(strtoi(readIndex))) {
             removeNotification(id = "saveNotification")
             showNotification(
                 ui = fluidRow(
@@ -1728,108 +1688,108 @@ SangerContigServer <- function(input, output, session) {
                 id = "chromatogramNotification", type = "message")
             if (directionParam == "Forward") {
                 rawSeqLength <-
-                    SangerContig@forwardReadsList[[singleReadIndex]]@
+                    SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@rawSeqLength
                 message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (forward)")
                 ### ----------------------------------------------------------------
                 ### Re-run 'MakeBaseCall' function
                 ### ----------------------------------------------------------------
                 hetcalls <-
-                    MakeBaseCalls(SangerContig@forwardReadsList[[singleReadIndex]],
+                    MakeBaseCalls(SangerContig@forwardReadList[[readIndex]],
                                   signalRatioCutoff = as.numeric(
                                       ChromatogramParam[["signalRatioCutoff"]]))
                 ### ----------------------------------------------------------------
                 ### Update 'SangerContig'!
                 ### ----------------------------------------------------------------
-                SangerContig@forwardReadsList[[singleReadIndex]]@peakPosMatrix <<-
+                SangerContig@forwardReadList[[readIndex]]@peakPosMatrix <<-
                     hetcalls@peakPosMatrix
-                SangerContig@forwardReadsList[[singleReadIndex]]@peakAmpMatrix <<-
+                SangerContig@forwardReadList[[readIndex]]@peakAmpMatrix <<-
                     hetcalls@peakAmpMatrix
-                SangerContig@forwardReadsList[[singleReadIndex]]@primarySeq <<-
+                SangerContig@forwardReadList[[readIndex]]@primarySeq <<-
                     hetcalls@primarySeq
-                SangerContig@forwardReadsList[[singleReadIndex]]@secondarySeq <<-
+                SangerContig@forwardReadList[[readIndex]]@secondarySeq <<-
                     hetcalls@secondarySeq
                 ### ----------------------------------------------------------------
                 ### Updating AASeqs
                 ### ----------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
                                                SangerContig@geneticCode)
-                SangerContig@forwardReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
+                SangerContig@forwardReadList[[readIndex]]@primaryAASeqS1 <<-
                     AASeqResult[["primaryAASeqS1"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
+                SangerContig@forwardReadList[[readIndex]]@primaryAASeqS2 <<-
                     AASeqResult[["primaryAASeqS2"]]
-                SangerContig@forwardReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
+                SangerContig@forwardReadList[[readIndex]]@primaryAASeqS3 <<-
                     AASeqResult[["primaryAASeqS3"]]
                 ### ----------------------------------------------------------------
                 ### Updating reactive values
                 ### ----------------------------------------------------------------
                 sequenceParam[["primarySeq"]] <<-
-                    as.character(SangerContig@forwardReadsList[[
-                        singleReadIndex]]@primarySeq)
+                    as.character(SangerContig@forwardReadList[[
+                        readIndex]]@primarySeq)
                 sequenceParam[["secondarySeq"]] <<-
-                    as.character(SangerContig@forwardReadsList[[
-                        singleReadIndex]]@secondarySeq)
+                    as.character(SangerContig@forwardReadList[[
+                        readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerContig@forwardReadsList[[
-                        singleReadIndex]]@primaryAASeqS1)
+                    as.character(SangerContig@forwardReadList[[
+                        readIndex]]@primaryAASeqS1)
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerContig@forwardReadsList[[
-                        singleReadIndex]]@primaryAASeqS2)
+                    as.character(SangerContig@forwardReadList[[
+                        readIndex]]@primaryAASeqS2)
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerContig@forwardReadsList[[
-                        singleReadIndex]]@primaryAASeqS3)
+                    as.character(SangerContig@forwardReadList[[
+                        readIndex]]@primaryAASeqS3)
             } else if (directionParam == "Reverse") {
                 rawSeqLength <-
-                    SangerContig@reverseReadsList[[singleReadIndex]]@
+                    SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@rawSeqLength
                 message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (reverse)")
                 ### ----------------------------------------------------------------
                 ### Re-run 'MakeBaseCall' function
                 ### ----------------------------------------------------------------
                 hetcalls <-
-                    MakeBaseCalls(SangerContig@reverseReadsList[[singleReadIndex]],
+                    MakeBaseCalls(SangerContig@reverseReadList[[readIndex]],
                                   signalRatioCutoff = as.numeric(
                                       ChromatogramParam[["signalRatioCutoff"]]))
                 ### ----------------------------------------------------------------
                 ### Update 'SangerContig'!
                 ### ----------------------------------------------------------------
-                SangerContig@reverseReadsList[[singleReadIndex]]@peakPosMatrix <<-
+                SangerContig@reverseReadList[[readIndex]]@peakPosMatrix <<-
                     hetcalls@peakPosMatrix
-                SangerContig@reverseReadsList[[singleReadIndex]]@peakAmpMatrix <<-
+                SangerContig@reverseReadList[[readIndex]]@peakAmpMatrix <<-
                     hetcalls@peakAmpMatrix
-                SangerContig@reverseReadsList[[singleReadIndex]]@primarySeq <<-
+                SangerContig@reverseReadList[[readIndex]]@primarySeq <<-
                     hetcalls@primarySeq
-                SangerContig@reverseReadsList[[singleReadIndex]]@secondarySeq <<-
+                SangerContig@reverseReadList[[readIndex]]@secondarySeq <<-
                     hetcalls@secondarySeq
                 ### ----------------------------------------------------------------
                 ### Updating AASeqs
                 ### ----------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
                                                SangerContig@geneticCode)
-                SangerContig@reverseReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
+                SangerContig@reverseReadList[[readIndex]]@primaryAASeqS1 <<-
                     AASeqResult[["primaryAASeqS1"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
+                SangerContig@reverseReadList[[readIndex]]@primaryAASeqS2 <<-
                     AASeqResult[["primaryAASeqS2"]]
-                SangerContig@reverseReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
+                SangerContig@reverseReadList[[readIndex]]@primaryAASeqS3 <<-
                     AASeqResult[["primaryAASeqS3"]]
                 ### ----------------------------------------------------------------
                 ### Updating reactive values
                 ### ----------------------------------------------------------------
                 sequenceParam[["primarySeq"]] <<-
-                    as.character(SangerContig@reverseReadsList[[
-                        singleReadIndex]]@primarySeq)
+                    as.character(SangerContig@reverseReadList[[
+                        readIndex]]@primarySeq)
                 sequenceParam[["secondarySeq"]] <<-
-                    as.character(SangerContig@reverseReadsList[[
-                        singleReadIndex]]@secondarySeq)
+                    as.character(SangerContig@reverseReadList[[
+                        readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerContig@reverseReadsList[[
-                        singleReadIndex]]@primaryAASeqS1)
+                    as.character(SangerContig@reverseReadList[[
+                        readIndex]]@primaryAASeqS1)
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerContig@reverseReadsList[[
-                        singleReadIndex]]@primaryAASeqS2)
+                    as.character(SangerContig@reverseReadList[[
+                        readIndex]]@primaryAASeqS2)
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerContig@reverseReadsList[[
-                        singleReadIndex]]@primaryAASeqS3)
+                    as.character(SangerContig@reverseReadList[[
+                        readIndex]]@primaryAASeqS3)
             }
 
             # message(">>>>>>>>>>>> 'MakeBaseCalls' finished")

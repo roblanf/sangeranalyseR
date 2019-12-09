@@ -31,8 +31,7 @@ SangerContigUI <- dashboardPage(
         ### Main Box style changing
         ### --------------------------------------------------------------------
         tags$style(HTML("
-                    .box.box-solid.box-success>.box-header {
-                    }
+                    .box.box-solid.box-success>.box-header {}
                     .box.box-solid.box-success{
                     border-bottom-color:#f3ffe6;
                     border-left-color:#f3ffe6;
@@ -97,7 +96,6 @@ SangerContigUI <- dashboardPage(
             tags$style(HTML("#TrimmingMethodSelectionOutput{font-size: 18px;
                                  margin-bottom: 30px;
                                  }")),
-
             ### ----------------------------------------------------------------
             ### Suppress error message in Shiny app
             ### ----------------------------------------------------------------

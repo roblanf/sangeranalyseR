@@ -1,69 +1,4 @@
 ### ============================================================================
-### Plotting trimmed and remaining ratio for "QualityReport" S4 object
-### ============================================================================
-setMethod("preTrimmingRatioPlot",  "QualityReport", function(object){
-    readFeature <- object@readFeature
-    trimmedStartPos = object@trimmedStartPos
-    trimmedFinishPos = object@trimmedFinishPos
-    readLen = length(object@qualityPhredScores)
-
-    stepRatio = 1 / readLen
-    trimmedStartPos / readLen
-    trimmedFinishPos / readLen
-
-    trimmedPer <- c()
-    remainingPer <- c()
-
-    for (i in 1:trimmedStartPos) {
-        if (i != trimmedStartPos) {
-            trimmedPer <- c(trimmedPer, stepRatio)
-        }
-    }
-
-    for (i in trimmedStartPos:trimmedFinishPos) {
-        trimmedPer <- c(trimmedPer, 0)
-    }
-
-
-    for (i in trimmedFinishPos:readLen) {
-        if (i != trimmedFinishPos) {
-            trimmedPer <- c(trimmedPer, stepRatio)
-        }
-    }
-
-    trimmedPer <- cumsum(trimmedPer)
-    remainingPer = 1 - trimmedPer
-
-    PerData <- data.frame(1:length(trimmedPer),
-                          trimmedPer, remainingPer)
-
-    colnames(PerData) <- c("Base",
-                           "Trimmed Percent",
-                           "Remaining Percent")
-
-    PerDataPlot <- melt(PerData, id.vars = c("Base"))
-
-    p <- ggplot(as.data.frame(PerDataPlot),
-               aes(x=Base, y=value, colour=variable)) +
-            geom_line() +
-            geom_point() +
-            theme_bw() +
-            xlab("Base Index") + ylab("Percentage") +
-            ggtitle(paste(readFeature, " Quality Trimming Percentage Plot")) +
-            theme(axis.text.x = element_text(angle = 90, hjust = 1),
-                  plot.title = element_text(size = 15,
-                                            face = "bold",
-                                            hjust = 0.5),
-                  axis.title.x = element_text(size = 10),
-                  axis.title.y = element_text(size = 10),
-                  legend.position="top",
-                  legend.text = element_text(size = 6),
-                  legend.title = element_blank())
-})
-
-
-
-### ============================================================================
 ### Plotting quality for each base for "QualityReport" S4 object
 ### ============================================================================
 setMethod("preQualityBasePlot",  "QualityReport", function(object){
@@ -119,28 +54,6 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
     plotting
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## =============================================================================
 ## Updating quality parameters for QualityReport object.

@@ -2,6 +2,7 @@
 
 export()
 export(MakeBaseCalls)
+export(SangerAlignment)
 export(SangerContig)
 export(SangerRead)
 export(createReport)

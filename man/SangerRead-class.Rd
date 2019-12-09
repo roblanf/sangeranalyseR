@@ -6,10 +6,10 @@
 \title{SangerRead}
 \usage{
 SangerRead(readFeature = character(0), readFileName = character(0),
-  geneticCode = GENETIC_CODE, TrimmingMethod = "M2",
-  M1TrimmingCutoff = NULL, M2CutoffQualityScore = 40,
-  M2SlidingWindowSize = 10, baseNumPerRow = 100, heightPerRow = 200,
-  signalRatioCutoff = 0.33, showTrimmed = TRUE)
+  geneticCode = GENETIC_CODE, TrimmingMethod = "M1",
+  M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
+  M2SlidingWindowSize = NULL, baseNumPerRow = 100,
+  heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE)
 }
 \description{
 An S4 class extending sangerseq S4 class
@@ -48,17 +48,17 @@ A_chloroticaFdReadFN <- file.path(inputFilesPath,
                                   "Allolobophora_chlorotica",
                                   "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
 A_chloroticaRead <- new("SangerRead",
-                              readFeature           = "Forward Read",
-                              readFileName          = A_chloroticaFdReadFN,
-                              geneticCode           = GENETIC_CODE,
-                              TrimmingMethod        = "M2",
-                              M1TrimmingCutoff      = NULL,
-                              M2CutoffQualityScore  = 40,
-                              M2SlidingWindowSize   = 10,
-                              baseNumPerRow         = 100,
-                              heightPerRow          = 200,
-                              signalRatioCutoff     = 0.33,
-                              showTrimmed           = TRUE)
+                        readFeature           = "Forward Read",
+                        readFileName          = A_chloroticaFdReadFN,
+                        geneticCode           = GENETIC_CODE,
+                        TrimmingMethod        = "M1",
+                        M1TrimmingCutoff      = 0.0001,
+                        M2CutoffQualityScore  = NULL,
+                        M2SlidingWindowSize   = NULL,
+                        baseNumPerRow         = NULL,
+                        heightPerRow          = 200,
+                        signalRatioCutoff     = 0.33,
+                        showTrimmed           = TRUE)
 }
 \author{
 Kuan-Hao Chao

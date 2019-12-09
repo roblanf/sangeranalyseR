@@ -5,20 +5,19 @@
 #' contigName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' A_chloroticContig <- SangerContig(
-#'                            parentDirectory       = inputFilesParentDir,
-#'                            contigName            = contigName,
-#'                            suffixForwardRegExp   = suffixForwardRegExp,
-#'                            suffixReverseRegExp   = suffixReverseRegExp,
-#'                            refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                            TrimmingMethod        = "M1",
-#'                            M1TrimmingCutoff      = 0.0001,
-#'                            M2CutoffQualityScore  = NULL,
-#'                            M2SlidingWindowSize   = NULL,
-#'                            baseNumPerRow         = 80,
-#'                            heightPerRow          = 200,
-#'                            signalRatioCutoff     = 0.33,
-#'                            showTrimmed           = FALSE)
+#' A_chloroticConsensusReads <- SangerContig(
+#'                                  parentDirectory       = inputFilesParentDir,
+#'                                  contigName            = contigName,
+#'                                  suffixForwardRegExp   = suffixForwardRegExp,
+#'                                  suffixReverseRegExp   = suffixReverseRegExp,
+#'                                  TrimmingMethod        = "M2",
+#'                                  M1TrimmingCutoff      = NULL,
+#'                                  M2CutoffQualityScore  = 40,
+#'                                  M2SlidingWindowSize   = 10,
+#'                                  baseNumPerRow         = 100,
+#'                                  heightPerRow          = 200,
+#'                                  signalRatioCutoff     = 0.33,
+#'                                  showTrimmed           = TRUE)
 #' RShinyCS <- launchAppSangerContig(list(A_chloroticContig))
 launchAppSangerContig <- function(SangerContig, outputDir = NULL) {
     ### ------------------------------------------------------------------------
@@ -43,23 +42,22 @@ launchAppSangerContig <- function(SangerContig, outputDir = NULL) {
 #' @export
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' SangerAlignment <- new("SangerAlignment",
-#'                                  parentDirectory       = rawDataDir,
-#'                                  suffixForwardRegExp   = suffixForwardRegExp,
-#'                                  suffixReverseRegExp   = suffixReverseRegExp,
-#'                                  refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                                  TrimmingMethod        = "M1",
-#'                                  M1TrimmingCutoff      = 0.001,
-#'                                  M2CutoffQualityScore  = NULL,
-#'                                  M2SlidingWindowSize   = NULL,
-#'                                  baseNumPerRow         = 80,
-#'                                  heightPerRow          = 200,
-#'                                  signalRatioCutoff     = 0.23,
-#'                                  showTrimmed           = FALSE)
-#' RShinyCSSet <- launchAppSangerAlignment(list(SangerAlignment))
+#' newAlignment <- SangerAlignment(
+#'                     parentDirectory       = rawDataDir,
+#'                     suffixForwardRegExp   = suffixForwardRegExp,
+#'                     suffixReverseRegExp   = suffixReverseRegExp,
+#'                     refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                     TrimmingMethod        = "M2",
+#'                     M1TrimmingCutoff      = NULL,
+#'                     M2CutoffQualityScore  = 40,
+#'                     M2SlidingWindowSize   = 10,
+#'                     baseNumPerRow         = 100,
+#'                     heightPerRow          = 200,
+#'                     signalRatioCutoff     = 0.33,
+#'                     showTrimmed           = TRUE)
+#' RShinyCSSet <- launchAppSangerAlignment(list(newAlignment))
 launchAppSangerAlignment <- function(SangerAlignment,
                                          outputDir = NULL) {
     ### ------------------------------------------------------------------------

@@ -26,22 +26,21 @@ setOldClass("phylo")
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' SangerAlignment <- new("SangerAlignment",
-#'                                parentDirectory       = rawDataDir,
-#'                                suffixForwardRegExp   = suffixForwardRegExp,
-#'                                suffixReverseRegExp   = suffixReverseRegExp,
-#'                                refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                                TrimmingMethod        = "M2",
-#'                                M1TrimmingCutoff      = NULL,
-#'                                M2CutoffQualityScore  = 40,
-#'                                M2SlidingWindowSize   = 10,
-#'                                baseNumPerRow         = 100,
-#'                                heightPerRow          = 200,
-#'                                signalRatioCutoff     = 0.33,
-#'                                showTrimmed           = TRUE)
+#' newAlignment <- new("SangerAlignment",
+#'                     parentDirectory       = rawDataDir,
+#'                     suffixForwardRegExp   = suffixForwardRegExp,
+#'                     suffixReverseRegExp   = suffixReverseRegExp,
+#'                     refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                     TrimmingMethod        = "M2",
+#'                     M1TrimmingCutoff      = NULL,
+#'                     M2CutoffQualityScore  = 40,
+#'                     M2SlidingWindowSize   = 10,
+#'                     baseNumPerRow         = 100,
+#'                     heightPerRow          = 200,
+#'                     signalRatioCutoff     = 0.33,
+#'                     showTrimmed           = TRUE)
 setClass("SangerAlignment",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
@@ -55,8 +54,8 @@ setClass("SangerAlignment",
              parentDirectory             = "character",
              suffixForwardRegExp         = "character",
              suffixReverseRegExp         = "character",
-             minFractionCallSA        = "numeric",
-             maxFractionLostSA        = "numeric",
+             minFractionCallSA           = "numeric",
+             maxFractionLostSA           = "numeric",
              geneticCode                 = "character",
              refAminoAcidSeq             = "character",
              contigList                  = "list",
@@ -91,8 +90,8 @@ setMethod("initialize",
                    geneticCode            = GENETIC_CODE,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
-                   minFractionCallSA   = 0.5,
-                   maxFractionLostSA   = 0.5,
+                   minFractionCallSA      = 0.5,
+                   maxFractionLostSA      = 0.5,
                    processorsNum          = 1) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
@@ -190,8 +189,8 @@ setMethod("initialize",
                    suffixForwardRegExp   = suffixForwardRegExp,
                    suffixReverseRegExp   = suffixReverseRegExp,
                    contigList            = SangerContigList,
-                   minFractionCallSA  = minFractionCallSA,
-                   maxFractionLostSA  = maxFractionLostSA,
+                   minFractionCallSA     = minFractionCallSA,
+                   maxFractionLostSA     = maxFractionLostSA,
                    geneticCode           = geneticCode,
                    contigsConsensus      = consensus,
                    refAminoAcidSeq       = refAminoAcidSeq,
