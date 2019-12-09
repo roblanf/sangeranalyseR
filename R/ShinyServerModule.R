@@ -476,12 +476,12 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV) {
 #         # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
 #         if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
 #         #     trimmedRV[["trimmedStartPos"]] <-
-#         #         SangerSingleReadQualReport[[
+#         #         SangerReadQualReport[[
 #         #             strtoi(sidebar_menu[[1]])]]@trimmedStartPos
 #         #     trimmedRV[["trimmedFinishPos"]] <-
-#         #         SangerSingleReadQualReport[[
+#         #         SangerReadQualReport[[
 #         #             strtoi(sidebar_menu[[1]])]]@trimmedFinishPos
-#         #     qualityPhredScores = SangerSingleReadQualReport[[
+#         #     qualityPhredScores = SangerReadQualReport[[
 #         #         strtoi(sidebar_menu[[1]])]]@qualityPhredScores
 #         #
 #         #     readLen = length(qualityPhredScores)
@@ -1195,7 +1195,7 @@ vline <- function(x = 0, color = "red") {
 
 
 ### ============================================================================
-### SangerSingleRead Sequence Render Function (DNA / AA) dynamic
+### SangerRead Sequence Render Function (DNA / AA) dynamic
 ### ============================================================================
 primarySeqDisplay <- function(sequenceParam) {
     primarySeq <- unlist(strsplit(

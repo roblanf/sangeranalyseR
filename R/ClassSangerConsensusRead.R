@@ -32,7 +32,7 @@
 #'
 #' @exportClass SangerConsensusRead
 #' @author Kuan-Hao Chao
-#' @include ClassQualityReport.R ClassSangerSingleRead.R
+#' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
@@ -211,11 +211,11 @@ setMethod("initialize",
     ### Prechecking success. Start to create multiple reads.
     ### ------------------------------------------------------------------------
     if (length(errors) == 0) {
-        # sapply to create SangerSingleRead list.
+        # sapply to create SangerRead list.
         ### --------------------------------------------------------------------
-        ### "SangerSingleRead" S4 class creation (forward list)
+        ### "SangerRead" S4 class creation (forward list)
         ### --------------------------------------------------------------------
-        forwardReadsList <- sapply(forwardAllReads[[1]], SangerSingleRead,
+        forwardReadsList <- sapply(forwardAllReads[[1]], SangerRead,
                                    readFeature = "Forward Read",
                                    TrimmingMethod = TrimmingMethod,
                                    M1TrimmingCutoff = M1TrimmingCutoff,
@@ -226,9 +226,9 @@ setMethod("initialize",
                                    signalRatioCutoff = signalRatioCutoff,
                                    showTrimmed = showTrimmed)
         ### --------------------------------------------------------------------
-        ### "SangerSingleRead" S4 class creation (reverse list)
+        ### "SangerRead" S4 class creation (reverse list)
         ### --------------------------------------------------------------------
-        reverseReadsList <- sapply(reverseAllReads[[1]], SangerSingleRead,
+        reverseReadsList <- sapply(reverseAllReads[[1]], SangerRead,
                                    readFeature = "Reverse Read",
                                    TrimmingMethod = TrimmingMethod,
                                    M1TrimmingCutoff = M1TrimmingCutoff,

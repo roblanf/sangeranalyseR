@@ -23,7 +23,7 @@ setOldClass("phylo")
 #'
 #' @exportClass SangerAlignedConsensusSet
 #' @author Kuan-Hao Chao
-#' @include ClassQualityReport.R ClassSangerSingleRead.R
+#' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")

@@ -1,10 +1,10 @@
 ### ============================================================================
-### Plotting trimmed and remaining ratio for "SangerSingleRead" S4 object
+### Plotting trimmed and remaining ratio for "SangerRead" S4 object
 ### ============================================================================
 #' @example
-#' load("data/A_chloroticaSingleRead.RDdata")
-#' trimmingRatioPlot(A_chloroticaSingleRead)
-setMethod("trimmingRatioPlot",  "SangerSingleRead", function(object){
+#' load("data/A_chloroticaRead.RDdata")
+#' trimmingRatioPlot(A_chloroticaRead)
+setMethod("trimmingRatioPlot",  "SangerRead", function(object){
     QualityReportObject = object@QualityReport
     plotting <- preTrimmingRatioPlot(QualityReportObject)
     plotting
@@ -13,46 +13,46 @@ setMethod("trimmingRatioPlot",  "SangerSingleRead", function(object){
 
 
 ### ============================================================================
-### Plotting quality for each base for "SangerSingleRead" S4 object
+### Plotting quality for each base for "SangerRead" S4 object
 ### ============================================================================
 #' @example
-#' load("data/A_chloroticaSingleRead.RDdata")
-#' qualityBasePlot(A_chloroticaSingleRead)
-setMethod("qualityBasePlot",  "SangerSingleRead", function(object){
+#' load("data/A_chloroticaRead.RDdata")
+#' qualityBasePlot(A_chloroticaRead)
+setMethod("qualityBasePlot",  "SangerRead", function(object){
     QualityReportObject = object@QualityReport
     plotting <- preQualityBasePlot(QualityReportObject)
     plotting
 })
 
 ## =============================================================================
-## Updating quality parameters for SangerSingleRead object.
+## Updating quality parameters for SangerRead object.
 ## =============================================================================
 #' @example
-#' load("data/A_chloroticaSingleRead.RDdata")
-#' trimmingRatioPlot(A_chloroticaSingleRead)
-#' qualityBasePlot(A_chloroticaSingleRead)
-#' A_chloroticaSingleRead@QualityReport@TrimmingMethod
-#' A_chloroticaSingleRead@QualityReport@M1TrimmingCutoff
-#' A_chloroticaSingleRead@QualityReport@M2CutoffQualityScore
-#' A_chloroticaSingleRead@QualityReport@M2SlidingWindowSize
+#' load("data/A_chloroticaRead.RDdata")
+#' trimmingRatioPlot(A_chloroticaRead)
+#' qualityBasePlot(A_chloroticaRead)
+#' A_chloroticaRead@QualityReport@TrimmingMethod
+#' A_chloroticaRead@QualityReport@M1TrimmingCutoff
+#' A_chloroticaRead@QualityReport@M2CutoffQualityScore
+#' A_chloroticaRead@QualityReport@M2SlidingWindowSize
 #'
-#' A_chloroticaSingleRead <- updateQualityParam(A_chloroticaSingleRead,
+#' A_chloroticaRead <- updateQualityParam(A_chloroticaRead,
 #'                                              "M1", 0.0001, NULL, NULL)
 #'
-#' trimmingRatioPlot(A_chloroticaSingleRead)
-#' qualityBasePlot(A_chloroticaSingleRead)
-#' A_chloroticaSingleRead@QualityReport@TrimmingMethod
-#' A_chloroticaSingleRead@QualityReport@M1TrimmingCutoff
-#' A_chloroticaSingleRead@QualityReport@M2CutoffQualityScore
-#' A_chloroticaSingleRead@QualityReport@M2SlidingWindowSize
-setMethod("updateQualityParam",  "SangerSingleRead",
+#' trimmingRatioPlot(A_chloroticaRead)
+#' qualityBasePlot(A_chloroticaRead)
+#' A_chloroticaRead@QualityReport@TrimmingMethod
+#' A_chloroticaRead@QualityReport@M1TrimmingCutoff
+#' A_chloroticaRead@QualityReport@M2CutoffQualityScore
+#' A_chloroticaRead@QualityReport@M2SlidingWindowSize
+setMethod("updateQualityParam",  "SangerRead",
           function(object,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
                    M2CutoffQualityScore   = NULL,
                    M2SlidingWindowSize    = NULL){
               ### --------------------------------------------------------------
-              ### Updating SangerSingleRead quality parameters
+              ### Updating SangerRead quality parameters
               ### --------------------------------------------------------------
               object@QualityReport <- updateQualityParam(object@QualityReport,
                                                          TrimmingMethod,
@@ -62,7 +62,7 @@ setMethod("updateQualityParam",  "SangerSingleRead",
               return(object)
           })
 
-setMethod("MakeBaseCalls", "SangerSingleRead",
+setMethod("MakeBaseCalls", "SangerRead",
           function(obj, signalRatioCutoff=.33) {
               traceMatrix <- obj@traceMatrix
               peakPosMatrixRaw <- obj@peakPosMatrixRaw
@@ -83,11 +83,11 @@ setMethod("MakeBaseCalls", "SangerSingleRead",
           })
 
 
-setMethod("createReport", "SangerSingleRead",
+setMethod("createReport", "SangerRead",
           function(obj) {
 })
 
-setMethod("writeFASTA", "SangerSingleRead", function(obj, outputDir, compress,
+setMethod("writeFASTA", "SangerRead", function(obj, outputDir, compress,
                                                      compression_level) {
     message("Start writing '", obj@readFileName, "' to FASTA format ...")
     fastaFilename <- gsub(file_ext(basename(obj@readFileName)), "fa",

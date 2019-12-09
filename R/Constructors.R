@@ -192,7 +192,7 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 
 
 ### ============================================================================
-### Self-defined constructor for SangerSingleRead
+### Self-defined constructor for SangerRead
 ### ============================================================================
 #' @description
 #'
@@ -207,7 +207,7 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #' @param signalRatioCutoff .
 #' @param showTrimmed .
 #'
-#' @return SangerSingleRead
+#' @return SangerRead
 #' @export
 #' @author Kuan-Hao Chao
 #' @example
@@ -216,8 +216,8 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #'             file.path(inputFilesPath,
 #'                       "Allolobophora_chlorotica",
 #'                       "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
-#' A_chloroticaSingleRead <-
-#'        SangerSingleRead(readFeature           = "Forward Read",
+#' A_chloroticaRead <-
+#'        SangerRead(readFeature           = "Forward Read",
 #'                         readFileName          = A_chloroticaFdReadFN,
 #'                         geneticCode           = GENETIC_CODE,
 #'                         TrimmingMethod        = "M2",
@@ -228,7 +228,7 @@ SangerConsensusRead <- function(parentDirectory        = character(0),
 #'                         heightPerRow          = 200,
 #'                         signalRatioCutoff     = 0.33,
 #'                         showTrimmed           = TRUE)
-SangerSingleRead <- function(readFeature           = character(0),
+SangerRead <- function(readFeature           = character(0),
                              readFileName          = character(0),
                              geneticCode           = GENETIC_CODE,
                              TrimmingMethod        = "M2",
@@ -239,17 +239,17 @@ SangerSingleRead <- function(readFeature           = character(0),
                              heightPerRow          = 200,
                              signalRatioCutoff     = 0.33,
                              showTrimmed           = TRUE) {
-    newSingleReads <- new("SangerSingleRead",
-                          readFeature          = readFeature,
-                          readFileName         = readFileName,
-                          geneticCode          = geneticCode,
-                          TrimmingMethod       = TrimmingMethod,
-                          M1TrimmingCutoff     = M1TrimmingCutoff,
-                          M2CutoffQualityScore = M2CutoffQualityScore,
-                          M2SlidingWindowSize  = M2SlidingWindowSize,
-                          baseNumPerRow        = baseNumPerRow,
-                          heightPerRow         = heightPerRow,
-                          signalRatioCutoff    = signalRatioCutoff,
-                          showTrimmed          = showTrimmed)
-    return(newSingleReads)
+    newRead <- new("SangerRead",
+                   readFeature          = readFeature,
+                   readFileName         = readFileName,
+                   geneticCode          = geneticCode,
+                   TrimmingMethod       = TrimmingMethod,
+                   M1TrimmingCutoff     = M1TrimmingCutoff,
+                   M2CutoffQualityScore = M2CutoffQualityScore,
+                   M2SlidingWindowSize  = M2SlidingWindowSize,
+                   baseNumPerRow        = baseNumPerRow,
+                   heightPerRow         = heightPerRow,
+                   signalRatioCutoff    = signalRatioCutoff,
+                   showTrimmed          = showTrimmed)
+    return(newRead)
 }

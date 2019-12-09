@@ -1,4 +1,4 @@
-#' @title SangerSingleRead
+#' @title SangerRead
 #'
 #' @description  An S4 class extending sangerseq S4 class
 #'
@@ -15,11 +15,11 @@
 #' @slot peakPosMatrixRaw .
 #' @slot peakAmpMatrixRaw .
 #'
-#' @name SangerSingleRead-class
+#' @name SangerRead-class
 #'
-#' @rdname SangerSingleRead-class
+#' @rdname SangerRead-class
 #'
-#' @exportClass SangerSingleRead
+#' @exportClass SangerRead
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R
 #' @examples
@@ -27,7 +27,7 @@
 #' A_chloroticaFdReadFN <- file.path(inputFilesPath,
 #'                                   "Allolobophora_chlorotica",
 #'                                   "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
-#' A_chloroticaSingleRead <- new("SangerSingleRead",
+#' A_chloroticaRead <- new("SangerRead",
 #'                               readFeature           = "Forward Read",
 #'                               readFileName          = A_chloroticaFdReadFN,
 #'                               geneticCode           = GENETIC_CODE,
@@ -40,7 +40,7 @@
 #'                               signalRatioCutoff     = 0.33,
 #'                               showTrimmed           = TRUE)
 setClass(
-    "SangerSingleRead",
+    "SangerRead",
     ### -------------------------------------------------------------------
     ### Input type of each variable of 'SangerMergeReads'.
     ###     * Inherit from 'sangerseq' from sangerseqR.
@@ -60,14 +60,14 @@ setClass(
             peakPosMatrixRaw    = "matrix",
             peakAmpMatrixRaw    = "matrix"
             )
-) -> SangerSingleRead
+) -> SangerRead
 
 
 ### ============================================================================
-### Overwrite initialize for SangerSingleRead (New constructor)
+### Overwrite initialize for SangerRead (New constructor)
 ### ============================================================================
 setMethod("initialize",
-          "SangerSingleRead",
+          "SangerRead",
           function(.Object, ...,
                    readFeature          = character(0),
                    readFileName         = character(0),
@@ -106,7 +106,7 @@ setMethod("initialize",
               errors <- checkShowTrimmed (showTrimmed, errors)
 
               ### --------------------------------------------------------------
-              ### Prechecking success. Start to create 'SangerSingleRead'
+              ### Prechecking success. Start to create 'SangerRead'
               ### --------------------------------------------------------------
               if (length(errors) == 0) {
                   message(readFeature, " read: Creating abif & sangerseq ...")

@@ -30,7 +30,7 @@ consensusReadServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     forwardReadNum <- length((SangerConsensus)@forwardReadsList)
     reverseReadNum <- length((SangerConsensus)@reverseReadsList)
-    SangerSingleReadNum <- forwardReadNum + reverseReadNum
+    SangerReadNum <- forwardReadNum + reverseReadNum
     # readFeature
     forwardReadFeature <- sapply(1:forwardReadNum, function(i)
         paste0(i, " ",
@@ -43,7 +43,7 @@ consensusReadServer <- function(input, output, session) {
         basename(SangerConsensus@forwardReadsList[[i]]@readFileName))
     reverseReadBFN <- sapply(1:reverseReadNum, function(i)
         basename(SangerConsensus@reverseReadsList[[i]]@readFileName))
-    SangerSingleReadBFN <- c(forwardReadBFN, reverseReadBFN)
+    SangerReadBFN <- c(forwardReadBFN, reverseReadBFN)
 
     ### ------------------------------------------------------------------------
     ### ConsensusRead reactiveValue
@@ -1294,8 +1294,8 @@ consensusReadServer <- function(input, output, session) {
         }
     })
     output$SCDistanceMatrixPlot <- renderPlotly({
-        plot_ly(x = SangerSingleReadBFN,
-                y = SangerSingleReadBFN,
+        plot_ly(x = SangerReadBFN,
+                y = SangerReadBFN,
                 z = consensusParam[["distanceMatrix"]],
                 colors = colorRamp(c("white", "#32a852")),
                 type = "heatmap")
@@ -1341,7 +1341,7 @@ consensusReadServer <- function(input, output, session) {
         consensusParam[["stopCodonsDF"]]
     })
     ############################################################################
-    ### SangerSingleRead (Function for singel read in consensusRead)
+    ### SangerRead (Function for singel read in consensusRead)
     ############################################################################
     ### ------------------------------------------------------------------------
     ### Primary dataframe

@@ -100,7 +100,7 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object){
 ### Plotting trimmed and remaining ratio for "QualityReport" S4 object
 ### ============================================================================
 #' @example
-#' load("data/A_chloroticaSingleRead.RDdata")
+#' load("data/A_chloroticaRead.RDdata")
 #' trimmingRatioPlot(A_chloroticaSingleRead@QualityReport)
 setMethod("trimmingRatioPlot",  "QualityReport", function(object){
     plotting <- preTrimmingRatioPlot(object)
@@ -113,7 +113,7 @@ setMethod("trimmingRatioPlot",  "QualityReport", function(object){
 ### Plotting quality for each base for "QualityReport" S4 object
 ### ============================================================================
 #' @example
-#' load("data/A_chloroticaSingleRead.RDdata")
+#' load("data/A_chloroticaRead.RDdata")
 #' qualityBasePlot(A_chloroticaSingleRead@QualityReport)
 setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
@@ -146,7 +146,7 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 ## Updating quality parameters for QualityReport object.
 ## =============================================================================
 #' @example
-#' load("data/A_chloroticaSingleRead.RDdata")
+#' load("data/A_chloroticaRead.RDdata")
 #' QualityReport <- A_chloroticaSingleRead@QualityReport
 #' trimmingRatioPlot(QualityReport)
 #' qualityBasePlot(QualityReport)

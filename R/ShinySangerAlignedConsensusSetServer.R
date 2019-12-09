@@ -20,32 +20,32 @@ alignedConsensusSetServer <- function(input, output, session) {
         # readFeature
         SCName <- paste0(i, " Consensus Read")
         # Forward & reverse reads list
-        SangerSingleReadFReadsList <-
+        SangerReadFReadsList <-
             SangerConsensusSet@consensusReadsList[[i]]@forwardReadsList
-        SangerSingleReadRReadsList <-
+        SangerReadRReadsList <-
             SangerConsensusSet@consensusReadsList[[i]]@reverseReadsList
-        forwardReadNum <- length(SangerSingleReadFReadsList)
-        reverseReadNum <- length(SangerSingleReadRReadsList)
+        forwardReadNum <- length(SangerReadFReadsList)
+        reverseReadNum <- length(SangerReadRReadsList)
         # readFeature
         forwardReadFeature <- sapply(1:forwardReadNum, function(j)
             paste0(j, " ",
-                   SangerSingleReadFReadsList[[j]]@readFeature))
+                   SangerReadFReadsList[[j]]@readFeature))
         reverseReadFeature <- sapply(1:reverseReadNum, function(j)
             paste0(j, " ",
-                   SangerSingleReadRReadsList[[j]]@readFeature))
-        SangerSingleReadFeature <- c(forwardReadFeature, reverseReadFeature)
+                   SangerReadRReadsList[[j]]@readFeature))
+        SangerReadFeature <- c(forwardReadFeature, reverseReadFeature)
         # readFileName (basename)
         forwardReadBFN <- sapply(1:forwardReadNum, function(j)
-            basename(SangerSingleReadFReadsList[[j]]@readFileName))
+            basename(SangerReadFReadsList[[j]]@readFileName))
         reverseReadBFN <- sapply(1:reverseReadNum, function(j)
-            basename(SangerSingleReadRReadsList[[j]]@readFileName))
-        SangerSingleReadBFN <- c(forwardReadBFN, reverseReadBFN)
+            basename(SangerReadRReadsList[[j]]@readFileName))
+        SangerReadBFN <- c(forwardReadBFN, reverseReadBFN)
         return(list(SCName = SCName,
                     forwardReadNum = forwardReadNum,
                     reverseReadNum = reverseReadNum,
                     forwardReadFeature = forwardReadFeature,
                     reverseReadFeature = reverseReadFeature,
-                    SangerSingleReadBFN = SangerSingleReadBFN))
+                    SangerReadBFN = SangerReadBFN))
     })
 
     SCTrimmingMethod <-
@@ -689,11 +689,11 @@ alignedConsensusSetServer <- function(input, output, session) {
                             forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                             showTrimmed
 
-                        SangerSingleReadBFN <-
+                        SangerReadBFN <-
                             basename(SangerConsensusSet@
                                          consensusReadsList[[consensusReadIndex]]@
                                          forwardReadsList[[singleReadIndex]]@readFileName)
-                        SangerSingleReadAFN <-
+                        SangerReadAFN <-
                             SangerConsensusSet@
                             consensusReadsList[[consensusReadIndex]]@
                             forwardReadsList[[singleReadIndex]]@readFileName
@@ -793,11 +793,11 @@ alignedConsensusSetServer <- function(input, output, session) {
                             reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                             showTrimmed
 
-                        SangerSingleReadBFN <-
+                        SangerReadBFN <-
                             basename(SangerConsensusSet@
                                          consensusReadsList[[consensusReadIndex]]@
                                          reverseReadsList[[singleReadIndex]]@readFileName)
-                        SangerSingleReadAFN <-
+                        SangerReadAFN <-
                             SangerConsensusSet@
                             consensusReadsList[[consensusReadIndex]]@
                             reverseReadsList[[singleReadIndex]]@readFileName
@@ -813,9 +813,9 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                              font-weight: bold;"),
                             solidHeader = TRUE,
                             status = "success", width = 12,
-                            h1(SangerSingleReadBFN),
+                            h1(SangerReadBFN),
                             tags$h5(paste("( full path:",
-                                          SangerSingleReadAFN,
+                                          SangerReadAFN,
                                           ")"), style = "font-style:italic")),
                         box(title = tags$p(
                             tagList(icon("dot-circle"),
@@ -1709,11 +1709,11 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(consensusReadIndex)) {
-            SangerSingleReadBFN <-
-                SangerCSetParam[[consensusReadIndex]]$SangerSingleReadBFN
+            SangerReadBFN <-
+                SangerCSetParam[[consensusReadIndex]]$SangerReadBFN
             suppressPlotlyMessage(
-                plot_ly(x = SangerSingleReadBFN,
-                        y = SangerSingleReadBFN,
+                plot_ly(x = SangerReadBFN,
+                        y = SangerReadBFN,
                         z = consensusParam[["distanceMatrix"]],
                         colors = colorRamp(c("white", "#32a852")),
                         type = "heatmap")
@@ -1785,7 +1785,7 @@ alignedConsensusSetServer <- function(input, output, session) {
 
 
     ############################################################################
-    ### SangerSingleRead (Function for singel read in consensusRead)
+    ### SangerRead (Function for singel read in consensusRead)
     ############################################################################
     output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")

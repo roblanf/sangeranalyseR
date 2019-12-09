@@ -5,7 +5,7 @@
 \alias{QualityReport-class}
 \title{QualityReport}
 \description{
-An S4 class for quality report for a SangerSingleRead S4 object
+An S4 class for quality report for a SangerRead S4 object
 }
 \section{Slots}{
 
@@ -49,7 +49,7 @@ A_chloroticaFdReadFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 A_chloroticaRead <-
-       SangerSingleRead(readFeature           = "Forward Read",
+       SangerRead(readFeature           = "Forward Read",
                         readFileName          = A_chloroticaFdReadFN,
                         TrimmingMethod        = "M2",
                         M1TrimmingCutoff      = NULL,

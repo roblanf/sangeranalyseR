@@ -40,7 +40,7 @@ Suggests: BiocStyle, knitr, rmarkdown, testthat
 Collate: 
     'AllGenerics.R'
     'ClassQualityReport.R'
-    'ClassSangerSingleRead.R'
+    'ClassSangerRead.R'
     'ClassAlignedConsensusSet.R'
     'ClassBaseCall.R'
     'ClassChromatogramParam.R'

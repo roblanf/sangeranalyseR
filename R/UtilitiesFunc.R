@@ -207,7 +207,7 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     }
     peakPosMatrix <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     peakAmpMatrix <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
-    message("     * Updating slots in 'SangerSingleRead' instance !!")
+    message("     * Updating slots in 'SangerRead' instance !!")
     return(list("qualityPhredScores" = qualityPhredScores,
                 "peakPosMatrix" = peakPosMatrix,
                 "peakAmpMatrix" = peakAmpMatrix,
