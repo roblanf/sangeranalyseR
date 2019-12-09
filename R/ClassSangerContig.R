@@ -1,4 +1,4 @@
-#' @title SangerConsensusRead
+#' @title SangerContig
 #'
 #' @description  An S4 class for storing multiple single reads to build up new
 #'  consensus read
@@ -26,11 +26,11 @@
 #' @slot stopCodonsDF
 #' @slot secondaryPeakDF
 #'
-#' @name SangerConsensusRead-class
+#' @name SangerContig-class
 #'
-#' @rdname SangerConsensusRead-class
+#' @rdname SangerContig-class
 #'
-#' @exportClass SangerConsensusRead
+#' @exportClass SangerContig
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
@@ -39,7 +39,7 @@
 #' consensusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' A_chloroticConsensusReads <- new("SangerConsensusRead",
+#' A_chloroticConsensusReads <- new("SangerContig",
 #'                                  parentDirectory       = inputFilesParentDir,
 #'                                  consensusReadName    = consensusReadName,
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
@@ -53,9 +53,9 @@
 #'                                  heightPerRow          = 200,
 #'                                  signalRatioCutoff     = 0.33,
 #'                                  showTrimmed           = TRUE)
-setClass("SangerConsensusRead",
+setClass("SangerContig",
          ### -------------------------------------------------------------------
-         ### Input type of each variable of 'SangerConsensusRead'
+         ### Input type of each variable of 'SangerContig'
          ### -------------------------------------------------------------------
          representation(
              parentDirectory           = "character",
@@ -84,10 +84,10 @@ setClass("SangerConsensusRead",
 )
 
 ### ============================================================================
-### Overwrite initialize for 'SangerConsensusRead' (New constructor)
+### Overwrite initialize for 'SangerContig' (New constructor)
 ### ============================================================================
 setMethod("initialize",
-          "SangerConsensusRead",
+          "SangerContig",
           function(.Object, ...,
                    parentDirectory        = parentDirectory,
                    consensusReadName     = consensusReadName,

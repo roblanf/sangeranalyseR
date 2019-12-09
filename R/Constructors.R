@@ -95,7 +95,7 @@
 
 
 ### ============================================================================
-### Self-defined constructor for SangerConsensusRead
+### Self-defined constructor for SangerContig
 ### ============================================================================
 #' @description
 #'
@@ -121,7 +121,7 @@
 #' @param readingFrame .
 #' @param processorsNum .
 #'
-#' @return SangerConsensusRead
+#' @return SangerContig
 #' @export
 #' @author Kuan-Hao Chao
 #' @example
@@ -130,7 +130,7 @@
 #' consensusReadName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' A_chloroticConsensusReads <- SangerConsensusRead(
+#' A_chloroticConsensusReads <- SangerContig(
 #'                                parentDirectory       = inputFilesParentDir,
 #'                                consensusReadName    = consensusReadName,
 #'                                suffixForwardRegExp   = suffixForwardRegExp,
@@ -143,28 +143,28 @@
 #'                                heightPerRow          = 200,
 #'                                signalRatioCutoff     = 0.33,
 #'                                showTrimmed           = TRUE)
-SangerConsensusRead <- function(parentDirectory        = character(0),
-                                consensusReadName     = character(0),
-                                suffixForwardRegExp    = character(0),
-                                suffixReverseRegExp    = character(0),
-                                TrimmingMethod         = "M1",
-                                M1TrimmingCutoff       = 0.0001,
-                                M2CutoffQualityScore   = NULL,
-                                M2SlidingWindowSize    = NULL,
-                                baseNumPerRow          = 100,
-                                heightPerRow           = 200,
-                                signalRatioCutoff      = 0.33,
-                                showTrimmed            = TRUE,
-                                refAminoAcidSeq        = "",
-                                minReadsNum            = 2,
-                                minReadLength          = 20,
-                                minFractionCall        = 0.5,
-                                maxFractionLost        = 0.5,
-                                geneticCode            = GENETIC_CODE,
-                                acceptStopCodons       = TRUE,
-                                readingFrame           = 1,
-                                processorsNum          = 1) {
-    newConsensusReads <- new("SangerConsensusRead",
+SangerContig <- function(parentDirectory        = character(0),
+                         consensusReadName     = character(0),
+                         suffixForwardRegExp    = character(0),
+                         suffixReverseRegExp    = character(0),
+                         TrimmingMethod         = "M1",
+                         M1TrimmingCutoff       = 0.0001,
+                         M2CutoffQualityScore   = NULL,
+                         M2SlidingWindowSize    = NULL,
+                         baseNumPerRow          = 100,
+                         heightPerRow           = 200,
+                         signalRatioCutoff      = 0.33,
+                         showTrimmed            = TRUE,
+                         refAminoAcidSeq        = "",
+                         minReadsNum            = 2,
+                         minReadLength          = 20,
+                         minFractionCall        = 0.5,
+                         maxFractionLost        = 0.5,
+                         geneticCode            = GENETIC_CODE,
+                         acceptStopCodons       = TRUE,
+                         readingFrame           = 1,
+                         processorsNum          = 1) {
+    newConsensusReads <- new("SangerContig",
                              parentDirectory        = parentDirectory,
                              consensusReadName     = consensusReadName,
                              suffixForwardRegExp    = suffixForwardRegExp,

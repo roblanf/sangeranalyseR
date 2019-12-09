@@ -1,7 +1,7 @@
 ### ============================================================================
-### R shiny consensusRead UI function
+### R shiny SangerContig UI function
 ### ============================================================================
-consensusReadUI <- dashboardPage(
+SangerContigUI <- dashboardPage(
     skin = "green",
     dashboardHeader(
         title = "sangeranalyseR",
@@ -143,7 +143,7 @@ consensusReadUI <- dashboardPage(
         tags$style(HTML(".nav-tabs-custom .nav-tabs li.active
                         {border-top-color: #5cb85c;}")),
 
-        uiOutput("consensusRead_content"),
+        uiOutput("SangerContig_content"),
         tags$head(tags$style(".sidebar-menu li { margin-bottom: 10px; }")),
         textOutput("selected_var"),
         verbatimTextOutput("clientdataText")

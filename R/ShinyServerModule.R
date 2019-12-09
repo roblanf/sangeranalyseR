@@ -282,39 +282,39 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
 ### ============================================================================
 ### Aligning consensus reads into a new consensus read for all reads
 ### ============================================================================
-alignConsensusReads <- function(SangerConsensusReadList,
+alignConsensusReads <- function(SangerContigList,
                                 geneticCode, refAminoAcidSeq,
                                 minFractionCallSCSet, maxFractionLostSCSet,
                                 processorsNum) {
     ### --------------------------------------------------------------------
-    ### Creating SangerConsensusReadList DNAStringSet
+    ### Creating SangerContigList DNAStringSet
     ### --------------------------------------------------------------------
-    SangerConsensusReadDNAList <-
-        sapply(SangerConsensusReadList, function(SangerConsensusRead) {
-            as.character(SangerConsensusRead@consensusRead)
+    SangerContigDNAList <-
+        sapply(SangerContigList, function(SangerContig) {
+            as.character(SangerContig@consensusRead)
         })
 
-    SangerConsensusReadDNASet <- DNAStringSet(SangerConsensusReadDNAList)
+    SangerContigDNASet <- DNAStringSet(SangerContigDNAList)
 
     ### --------------------------------------------------------------------
     ### Aligning consensus reads
     ### --------------------------------------------------------------------
-    if(length(SangerConsensusReadDNASet) > 1) {
+    if(length(SangerContigDNASet) > 1) {
         message("Aligning consensus reads ... ")
         if(refAminoAcidSeq != ""){
-            aln = AlignTranslation(SangerConsensusReadDNASet,
+            aln = AlignTranslation(SangerContigDNASet,
                                    geneticCode = geneticCode,
                                    processors = processorsNum,
                                    verbose = FALSE)
         }else{
-            aln = AlignSeqs(SangerConsensusReadDNASet,
+            aln = AlignSeqs(SangerContigDNASet,
                             processors = processorsNum,
                             verbose = FALSE)
         }
 
         # Making a rough NJ tree. Labels are rows in the summary df
         neat.labels = match(names(aln),
-                            as.character(names(SangerConsensusReadDNASet))
+                            as.character(names(SangerContigDNASet))
         )
         aln2 = aln
         names(aln2) = neat.labels

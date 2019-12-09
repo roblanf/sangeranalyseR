@@ -47,7 +47,7 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFdReadFN <- file.path(inputFilesPath,
                                   "Allolobophora_chlorotica",
                                   "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
-A_chloroticaSingleRead <- new("SangerRead",
+A_chloroticaRead <- new("SangerRead",
                               readFeature           = "Forward Read",
                               readFileName          = A_chloroticaFdReadFN,
                               geneticCode           = GENETIC_CODE,

@@ -1,10 +1,10 @@
 ### ============================================================================
-### Plotting trimmed and remaining ratio for "SangerConsensusRead" S4 object
+### Plotting trimmed and remaining ratio for "SangerContig" S4 object
 ### ============================================================================
 #' @example
 #' load("data/A_chloroticaConsensusRead.RDdata")
 #' trimmingRatioPlot(A_chloroticaConsensusRead)
-setMethod("trimmingRatioPlot",  "SangerConsensusRead", function(object){
+setMethod("trimmingRatioPlot",  "SangerContig", function(object){
     ### ------------------------------------------------------------------------
     ### Trimmed ratio plot for forward read
     ### ------------------------------------------------------------------------
@@ -26,12 +26,12 @@ setMethod("trimmingRatioPlot",  "SangerConsensusRead", function(object){
 
 
 ### ============================================================================
-### Plotting quality for each base for "SangerConsensusRead" S4 object
+### Plotting quality for each base for "SangerContig" S4 object
 ### ============================================================================
 #' @example
 #' load("data/A_chloroticaConsensusRead.RDdata")
 #' qualityBasePlot(A_chloroticaConsensusRead)
-setMethod("qualityBasePlot",  "SangerConsensusRead", function(object){
+setMethod("qualityBasePlot",  "SangerContig", function(object){
     ### ------------------------------------------------------------------------
     ### Quality base plot for forward read
     ### ------------------------------------------------------------------------
@@ -49,7 +49,7 @@ setMethod("qualityBasePlot",  "SangerConsensusRead", function(object){
 
 
 ## ============================================================================
-## Updating quality parameters for SangerConsensusRead object.
+## Updating quality parameters for SangerContig object.
 ## ============================================================================
 #' @example
 #' load("data/A_chloroticaConsensusRead.RDdata")
@@ -70,7 +70,7 @@ setMethod("qualityBasePlot",  "SangerConsensusRead", function(object){
 #' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M1TrimmingCutoff
 #' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2CutoffQualityScore
 #' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2SlidingWindowSize
-setMethod("updateQualityParam",  "SangerConsensusRead",
+setMethod("updateQualityParam",  "SangerContig",
           function(object,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
@@ -100,7 +100,7 @@ setMethod("updateQualityParam",  "SangerConsensusRead",
     return(object)
 })
 
-setMethod("writeFASTA", "SangerConsensusRead", function(obj, outputDir, compress,
+setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
                                                         compression_level,
                                                         selection = "all") {
     ### ------------------------------------------------------------------------

@@ -67,7 +67,7 @@ setClass("SangerAlignedConsensusSet",
 )
 
 ### ============================================================================
-### Overwrite initialize for 'SangerConsensusRead' (New constructor)
+### Overwrite initialize for 'SangerContig' (New constructor)
 ### ============================================================================
 setMethod("initialize",
           "SangerAlignedConsensusSet",
@@ -160,14 +160,14 @@ setMethod("initialize",
 
         # Create consensusReads for all list of consensusReadsNumber
         ### --------------------------------------------------------------------
-        ### Creating each SangerConsensusRead (store as SangerConsensusReadList)
+        ### Creating each SangerContig (store as SangerContigList)
         ### --------------------------------------------------------------------
-        SangerConsensusReadList <-
+        SangerContigList <-
             sapply(consensusReadsName,
                    function(eachConsRead) {
                        insideDirName<- dirname(eachConsRead)
                        insideConsensusName <- basename(eachConsRead)
-                       SangerConsensusRead(
+                       SangerContig(
                            file.path(parentDirectory, insideDirName),
                            insideConsensusName, suffixForwardRegExp,
                            suffixReverseRegExp,TrimmingMethod, M1TrimmingCutoff,
@@ -180,7 +180,7 @@ setMethod("initialize",
                    })
 
         acResult <-
-            alignConsensusReads(SangerConsensusReadList,
+            alignConsensusReads(SangerContigList,
                                 geneticCode, refAminoAcidSeq,
                                 minFractionCallSCSet, maxFractionLostSCSet,
                                 processorsNum)
@@ -194,7 +194,7 @@ setMethod("initialize",
                    parentDirectory           = parentDirectory,
                    suffixForwardRegExp       = suffixForwardRegExp,
                    suffixReverseRegExp       = suffixReverseRegExp,
-                   consensusReadsList        = SangerConsensusReadList,
+                   consensusReadsList        = SangerContigList,
                    minFractionCallSCSet      = minFractionCallSCSet,
                    maxFractionLostSCSet      = maxFractionLostSCSet,
                    geneticCode               = geneticCode,

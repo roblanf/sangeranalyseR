@@ -44,7 +44,7 @@ Collate:
     'ClassAlignedConsensusSet.R'
     'ClassBaseCall.R'
     'ClassChromatogramParam.R'
-    'ClassSangerConsensusRead.R'
+    'ClassSangerContig.R'
     'Constructors.R'
     'LoadMessage.R'
     'MethodSangerConsensusReads.R'

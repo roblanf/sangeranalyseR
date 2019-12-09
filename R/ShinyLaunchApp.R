@@ -5,8 +5,8 @@
 #' consensusReadName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' A_chloroticConsensusReads <- SangerConsensusRead(
-#'                                  parentoutputDir       = inputFilesParentDir,
+#' A_chloroticConsensusReads <- SangerContig(
+#'                                  parentDirectory       = inputFilesParentDir,
 #'                                  consensusReadName    = consensusReadName,
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
@@ -20,9 +20,9 @@
 #'                                  signalRatioCutoff     = 0.33,
 #'                                  showTrimmed           = FALSE)
 #' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
-launchAppConsensusRead <- function(SangerConsensusRead, outputDir = NULL) {
+launchAppConsensusRead <- function(SangerContig, outputDir = NULL) {
     ### ------------------------------------------------------------------------
-    ### Checking SangerConsensusRead input parameter is a list containing
+    ### Checking SangerContig input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
@@ -30,11 +30,11 @@ launchAppConsensusRead <- function(SangerConsensusRead, outputDir = NULL) {
         suppressWarnings(dir.create(outputDir))
     }
     if (dir.exists(outputDir)) {
-        shinyOptions(SangerConsensusRead = SangerConsensusRead)
-        shinyOptions(shinyoutputDir = outputDir)
-        newSangerConsensusRead <- shinyApp(consensusReadUI, consensusReadServer,
-                                           options = SangerConsensusRead)
-        return(newSangerConsensusRead)
+        shinyOptions(SangerContig = SangerContig)
+        shinyOptions(shinyDirectory = outputDir)
+        newSangerContig <- shinyApp(SangerContigUI, SangerContigServer,
+                                           options = SangerContig)
+        return(newSangerContig)
     } else {
         stop("'", outputDir, "' is not valid. Please check again")
     }
@@ -72,7 +72,7 @@ launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet,
     }
     if (dir.exists(outputDir)) {
         shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
-        shinyOptions(shinyoutputDir = outputDir)
+        shinyOptions(shinyDirectory = outputDir)
         newSangerAlignedConsensusSet <- shinyApp(alignedConsensusSetUI,
                                                  alignedConsensusSetServer,
                                                  options =
