@@ -1,0 +1,99 @@
+---
+title: "sangeranalyseR"
+author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+    code_folding: show
+    fig_caption: yes
+  BiocStyle::pdf_document: default
+#bibliography: bibliography.bib
+fontsize: 14pt
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+---
+<script src="hideOutput.js"></script>
+
+<div class="fold s o">
+
+```{r}
+## Inside here
+plot(cars)
+```
+</div>
+
+
+## Method 1
+
+This method uses button.
+
+```{css,echo=FALSE}
+button.btn.collapsed:before
+{
+    content:'+' ;
+    display:block;
+    width:15px;
+}
+button.btn:before
+{
+    content:'-' ;
+    display:block;
+    width:15px;
+}
+```
+
+```{r,echo=FALSE,results='hide'}
+knitr::knit_hooks$set(drop1=function(before, options, envir) {
+    if (before) {
+        paste(
+            '<p>',
+'<button class="btn btn-primary collapsed" data-toggle="collapse" data-target="#ce1">',
+'</button>',
+'</p>',
+'<div class="collapse" id="ce1">',
+'<div class="card card-body">',  sep = "\n")
+    } else {
+        paste("</div>", "</div>", sep = "\n")
+    }
+})
+```
+
+
+```{r,drop1=TRUE,results="markup"}
+str(iris)
+```
+
+
+
+
+# Use buttons or tabs for sub-chapters {.tabset .tabset-fade .tabset-pills}
+***
+Save space in your document using buttons or tabs for sub chapters. Add this code at the end of your title:
+
+## First {.tabset .tabset-fade .tabset-pills}
+A first section
+
+### 1-1
+### 1-2
+### 1-3
+
+## Second
+content of sub-chapter #2
+
+## Third
+content of sub-chapter #3
+
+
+
+
+# Question 1 {.tabset}
+
+##  <span>&#8203;</span>
+
+## Answer
+
+```{r, echo = FALSE, eval = TRUE}
+```

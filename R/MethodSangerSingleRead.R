@@ -81,3 +81,23 @@ setMethod("MakeBaseCalls", "SangerSingleRead",
               obj@secondarySeq <- MBCResult[["secondarySeq"]]
               return(obj)
           })
+
+
+setMethod("createReport", "SangerSingleRead",
+          function(obj) {
+})
+
+setMethod("writeFASTA", "SangerSingleRead", function(obj, outputDir, compress,
+                                                     compression_level) {
+    message("Start writing '", obj@readFileName, "' to FASTA format ...")
+    fastaFilename <- gsub(file_ext(basename(obj@readFileName)), "fa",
+                          basename(obj@readFileName))
+    outputFilename = file.path(outputDir, fastaFilename)
+    writeTarget <- DNAStringSet(obj@primarySeq)
+    names(writeTarget) <- basename(obj@readFileName)
+    writeXStringSet(writeTarget,
+                    filepath = outputFilename,
+                    compress = compress,
+                    compression_level = compression_level)
+    message("\n >> '", outputFilename, "' is written")
+})

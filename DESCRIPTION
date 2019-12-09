@@ -32,7 +32,8 @@ Depends:
     shinycssloaders,
     ggdendro,
     shinyWidgets,
-    openxlsx
+    openxlsx,
+    tools
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: BiocStyle, knitr, rmarkdown, testthat

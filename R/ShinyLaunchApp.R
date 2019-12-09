@@ -6,7 +6,7 @@
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' A_chloroticConsensusReads <- SangerConsensusRead(
-#'                                  parentDirectory       = inputFilesParentDir,
+#'                                  parentoutputDir       = inputFilesParentDir,
 #'                                  consensusReadName    = consensusReadName,
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
@@ -20,23 +20,23 @@
 #'                                  signalRatioCutoff     = 0.33,
 #'                                  showTrimmed           = FALSE)
 #' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
-launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
+launchAppConsensusRead <- function(SangerConsensusRead, outputDir = NULL) {
     ### ------------------------------------------------------------------------
     ### Checking SangerConsensusRead input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------
-    if (is.null(directory)) {
-        directory <- tempdir()
-        suppressWarnings(dir.create(directory))
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir))
     }
-    if (dir.exists(directory)) {
+    if (dir.exists(outputDir)) {
         shinyOptions(SangerConsensusRead = SangerConsensusRead)
-        shinyOptions(shinyDirectory = directory)
+        shinyOptions(shinyoutputDir = outputDir)
         newSangerConsensusRead <- shinyApp(consensusReadUI, consensusReadServer,
                                            options = SangerConsensusRead)
         return(newSangerConsensusRead)
     } else {
-        stop("'", directory, "' is not valid. Please check again")
+        stop("'", outputDir, "' is not valid. Please check again")
     }
 }
 
@@ -47,7 +47,7 @@ launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
-#'                                  parentDirectory       = rawDataDir,
+#'                                  parentoutputDir       = rawDataDir,
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
 #'                                  refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -61,25 +61,25 @@ launchAppConsensusRead <- function(SangerConsensusRead, directory = NULL) {
 #'                                  showTrimmed           = FALSE)
 #' RShinyCSSet <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))
 launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet,
-                                         directory = NULL) {
+                                         outputDir = NULL) {
     ### ------------------------------------------------------------------------
     ### Checking AlignedConsensusSet input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------
-    if (is.null(directory)) {
-        directory <- tempdir()
-        suppressWarnings(dir.create(directory))
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir))
     }
-    if (dir.exists(directory)) {
+    if (dir.exists(outputDir)) {
         shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
-        shinyOptions(shinyDirectory = directory)
+        shinyOptions(shinyoutputDir = outputDir)
         newSangerAlignedConsensusSet <- shinyApp(alignedConsensusSetUI,
                                                  alignedConsensusSetServer,
                                                  options =
                                                      SangerAlignedConsensusSet)
         return(newSangerAlignedConsensusSet)
     } else {
-        stop("'", directory, "' is not valid. Please check again")
+        stop("'", outputDir, "' is not valid. Please check again")
     }
 }
 

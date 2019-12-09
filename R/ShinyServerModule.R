@@ -125,37 +125,18 @@ calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
     ### ------------------------------------------------------------------------
     ### forward & reverse character reads list string creation
     ### ------------------------------------------------------------------------
-
-    trimmedStartPos <- forwardReadsList[[1]]@QualityReport@trimmedStartPos
-    trimmedFinishPos <- forwardReadsList[[1]]@QualityReport@trimmedFinishPos
-
     fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
         trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
         trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
         primaryDNA <- as.character(forwardRead@primarySeq)
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
     })
-
-    # fRDNAStringSet2 <- sapply(forwardReadsList, function(forwardRead) {
-    #     trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
-    #     trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
-    #     primaryDNA <- as.character(forwardRead@primarySeq)
-    #     substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
-    # })
-
     rRDNAStringSet <- sapply(reverseReadsList, function(reverseRead) {
         trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
         trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
         primaryDNA <- as.character(reverseRead@primarySeq)
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
     })
-
-    # rRDNAStringSet2 <- sapply(reverseReadsList, function(reverseRead) {
-    #     trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
-    #     trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
-    #     primaryDNA <- as.character(reverseRead@primarySeq)
-    #     substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
-    # })
 
     ### --------------------------------------------------------------------
     ### DNAStringSet storing forward & reverse reads ! (Origin)

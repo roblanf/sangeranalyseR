@@ -51,6 +51,36 @@ setGeneric("MakeBaseCalls", function(obj, signalRatioCutoff = 0.33) {
     standardGeneric("MakeBaseCalls")
 })
 
+### ============================================================================
+### Create report
+### ============================================================================
+#' @export
+setGeneric("createReport", function(obj) {
+    standardGeneric("createReport")
+})
+
+### ============================================================================
+### Write FASTA
+### ============================================================================
+#' @export
+setGeneric("writeFASTA", function(obj,outputDir = tempdir(),
+                                  compress  = FALSE,
+                                  compression_level = NA) {
+    standardGeneric("writeFASTA")
+})
+
+### ============================================================================
+### Write FASTA
+### ============================================================================
+#' @export
+setGeneric("writeFASTA", function(obj,outputDir = tempdir(),
+                                  compress  = FALSE,
+                                  compression_level = NA,
+                                  selection = "all") {
+    standardGeneric("writeFASTA")
+})
+
+
 
 #' @export
 setClassUnion("numericORNULL", c("numeric", "NULL"))

@@ -21,5 +21,6 @@
 #' @importFrom ape BIONJ
 #' @importFrom shinyWidgets actionBttn
 #' @importFrom openxlsx int2col
+#' @importFrom tools file_ext
 
 
