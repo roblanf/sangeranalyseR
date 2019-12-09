@@ -284,7 +284,7 @@ calculateContigSeq <- function(forwardReadsList, reverseReadsList,
 ### ============================================================================
 alignContigs <- function(SangerContigList,
                                 geneticCode, refAminoAcidSeq,
-                                minFractionCallSCSet, maxFractionLostSCSet,
+                                minFractionCallSA, maxFractionLostSA,
                                 processorsNum) {
     ### --------------------------------------------------------------------
     ### Creating SangerContigList DNAStringSet
@@ -338,10 +338,10 @@ alignContigs <- function(SangerContigList,
 
         # Get consensus read and add to alignment result
         consensus = ConsensusSequence(aln,
-                                      minInformation = minFractionCallSCSet,
+                                      minInformation = minFractionCallSA,
                                       includeTerminalGaps = TRUE,
                                       ignoreNonBases = TRUE,
-                                      threshold = maxFractionLostSCSet,
+                                      threshold = maxFractionLostSA,
                                       noConsensusChar = "-",
                                       ambiguity = TRUE
         )[[1]]
@@ -356,7 +356,7 @@ alignContigs <- function(SangerContigList,
 ### ============================================================================
 ### Adding dynamic menu to sidebar.
 ### ============================================================================
-dynamicMenuSideBarSC <- function(input, output, session,
+dynamicMenuSideBarSA <- function(input, output, session,
                                   forwardReadNum, reverseReadNum,
                                   forwardReadFeature, reverseReadFeature) {
     output$singleReadMenu <- renderMenu({
@@ -385,7 +385,7 @@ dynamicMenuSideBarSC <- function(input, output, session,
                             "Sanger Contig Overview")})
 }
 
-dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
+dynamicMenuSideBarSA <- function(input, output, session, SangerCSetParam) {
     output$singleReadMenu <- renderMenu({
         SangerCSNum <- length(SangerCSetParam)
         menu_list <- sapply(1:SangerCSNum, function(i) {
@@ -413,14 +413,14 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
                                    icon = icon("minus"), rmenuSub_list)
             SangerCSMenuSubItem <- list(fmenu_list, rmenu_list)
 
-            SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerCSetParam[[i]]$SCName, "Overview"),
+            SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerCSetParam[[i]]$SAName, "Overview"),
                                                       tabName = paste0(i, " Sanger Consensus Read Overview"),
                                                       icon = icon("align-left"))),
                                      SangerCSMenuSubItem)
 
-            SangerCSetParam[[i]]$SCName
-            list(menuItem(text = SangerCSetParam[[i]]$SCName,
-                          tabName = SangerCSetParam[[i]]$SCName,
+            SangerCSetParam[[i]]$SAName
+            list(menuItem(text = SangerCSetParam[[i]]$SAName,
+                          tabName = SangerCSetParam[[i]]$SAName,
                           icon = icon("minus"), SangerCSMenuSubItem))
         })
         sidebarMenu(.list = menu_list)
@@ -432,7 +432,7 @@ dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {
 ### ============================================================================
 ### observeEvent: Adding dynamic rightHeader text
 ### ============================================================================
-observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV) {
+observeEventDynamicHeaderSA <- function(input, output, session, trimmedRV) {
     observeEvent(input$sidebar_menu, {
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
         message("menuItem: ", menuItem)
@@ -462,7 +462,7 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV) {
 
 
 
-# observeEventDynamicHeaderSCSet <- function(input, output, session, trimmedRV,
+# observeEventDynamicHeaderSA <- function(input, output, session, trimmedRV,
 #                                            SangerCSetParam) {
 #
 #     output$res <- renderText({
@@ -492,15 +492,15 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV) {
 # }
 
 ### ============================================================================
-### valueBox: SCMinReadsNum
+### valueBox: SAMinReadsNum
 ### ============================================================================
-valueBoxSCMinReadsNum <- function(input, output, SCMinReadsNum, session) {
-    output$SCMinReadsNum <- renderUI({
+valueBoxSAMinReadsNum <- function(input, output, SAMinReadsNum, session) {
+    output$SAMinReadsNum <- renderUI({
         valueBox(
             subtitle = tags$p("MinReadsNum",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(SCMinReadsNum),
+            value = tags$p(strtoi(SAMinReadsNum),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -510,15 +510,15 @@ valueBoxSCMinReadsNum <- function(input, output, SCMinReadsNum, session) {
 }
 
 ### ============================================================================
-### valueBox: SCMinReadLength
+### valueBox: SAMinReadLength
 ### ============================================================================
-valueBoxSCMinReadLength <- function(input, output, SCMinReadLength, session) {
-    output$SCMinReadLength <- renderUI({
+valueBoxSAMinReadLength <- function(input, output, SAMinReadLength, session) {
+    output$SAMinReadLength <- renderUI({
         valueBox(
             subtitle = tags$p("MinReadLength",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(SCMinReadLength),
+            value = tags$p(strtoi(SAMinReadLength),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -528,15 +528,15 @@ valueBoxSCMinReadLength <- function(input, output, SCMinReadLength, session) {
 }
 
 ### ============================================================================
-### valueBox: SCMinFractionCall
+### valueBox: SAMinFractionCall
 ### ============================================================================
-valueBoxSCMinFractionCall <- function(input, output, SCMinFractionCall, session) {
-    output$SCMinFractionCall <- renderUI({
+valueBoxSAMinFractionCall <- function(input, output, SAMinFractionCall, session) {
+    output$SAMinFractionCall <- renderUI({
         valueBox(
             subtitle = tags$p("MinFractionCall",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(as.numeric(SCMinFractionCall),
+            value = tags$p(as.numeric(SAMinFractionCall),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -546,15 +546,15 @@ valueBoxSCMinFractionCall <- function(input, output, SCMinFractionCall, session)
 }
 
 ### ============================================================================
-### valueBox: SCMaxFractionLost
+### valueBox: SAMaxFractionLost
 ### ============================================================================
-valueBoxSCMaxFractionLost <- function(input, output, SCMaxFractionLost, session) {
-    output$SCMaxFractionLost <- renderUI({
+valueBoxSAMaxFractionLost <- function(input, output, SAMaxFractionLost, session) {
+    output$SAMaxFractionLost <- renderUI({
         valueBox(
             subtitle = tags$p("MaxFractionLost",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(as.numeric(SCMaxFractionLost),
+            value = tags$p(as.numeric(SAMaxFractionLost),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -564,15 +564,15 @@ valueBoxSCMaxFractionLost <- function(input, output, SCMaxFractionLost, session)
 }
 
 ### ============================================================================
-### valueBox: SCAcceptStopCodons
+### valueBox: SAAcceptStopCodons
 ### ============================================================================
-valueBoxSCAcceptStopCodons <- function(input, output, SCAcceptStopCodons, session) {
-    output$SCAcceptStopCodons <- renderUI({
+valueBoxSAAcceptStopCodons <- function(input, output, SAAcceptStopCodons, session) {
+    output$SAAcceptStopCodons <- renderUI({
         valueBox(
             subtitle = tags$p("AcceptStopCodons",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(SCAcceptStopCodons,
+            value = tags$p(SAAcceptStopCodons,
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -582,15 +582,15 @@ valueBoxSCAcceptStopCodons <- function(input, output, SCAcceptStopCodons, sessio
 }
 
 ### ============================================================================
-### valueBox: SCReadingFrame
+### valueBox: SAReadingFrame
 ### ============================================================================
-valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
-    output$SCReadingFrame <- renderUI({
+valueBoxSAReadingFrame <- function(input, output, SAReadingFrame, session) {
+    output$SAReadingFrame <- renderUI({
         valueBox(
             subtitle = tags$p("ReadingFrame",
                               style = "font-size: 15px;
                                             font-weight: bold;"),
-            value = tags$p(strtoi(SCReadingFrame),
+            value = tags$p(strtoi(SAReadingFrame),
                            style = "font-size: 29px;"),
             icon = icon("cut", "fa-sm"),
             color = "olive",
@@ -600,19 +600,19 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
 }
 
 ### ============================================================================
-### valueBox: SCMinReadsNum
+### valueBox: SAMinReadsNum
 ### ============================================================================
-valueBoxSCMinReadsNumCSSet <- function(input, output, SangerConsensusSet, session) {
-    output$SCMinReadsNum <- renderUI({
+valueBoxSAMinReadsNumCSSet <- function(input, output, SangerConsensusSet, session) {
+    output$SAMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            SCMinReadsNum <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@minReadsNum
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            SAMinReadsNum <- SangerConsensusSet@contigList[[contigIndex]]@minReadsNum
             valueBox(
                 subtitle = tags$p("MinReadsNum",
                                   style = "font-size: 15px;
                                             font-weight: bold;"),
-                value = tags$p(strtoi(SCMinReadsNum),
+                value = tags$p(strtoi(SAMinReadsNum),
                                style = "font-size: 29px;"),
                 icon = icon("cut", "fa-sm"),
                 color = "olive",
@@ -623,19 +623,19 @@ valueBoxSCMinReadsNumCSSet <- function(input, output, SangerConsensusSet, sessio
 }
 
 ### ============================================================================
-### valueBox: SCMinReadLength
+### valueBox: SAMinReadLength
 ### ============================================================================
-valueBoxSCMinReadLengthCSSet <- function(input, output, SangerConsensusSet, session) {
-    output$SCMinReadLength <- renderUI({
+valueBoxSAMinReadLengthCSSet <- function(input, output, SangerConsensusSet, session) {
+    output$SAMinReadLength <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            SCMinReadLength <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@minReadLength
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            SAMinReadLength <- SangerConsensusSet@contigList[[contigIndex]]@minReadLength
             valueBox(
                 subtitle = tags$p("MinReadLength",
                                   style = "font-size: 15px;
                                             font-weight: bold;"),
-                value = tags$p(strtoi(SCMinReadLength),
+                value = tags$p(strtoi(SAMinReadLength),
                                style = "font-size: 29px;"),
                 icon = icon("cut", "fa-sm"),
                 color = "olive",
@@ -646,19 +646,19 @@ valueBoxSCMinReadLengthCSSet <- function(input, output, SangerConsensusSet, sess
 }
 
 ### ============================================================================
-### valueBox: SCMinFractionCall
+### valueBox: SAMinFractionCall
 ### ============================================================================
-valueBoxSCMinFractionCallCSSet <- function(input, output, SangerConsensusSet, session) {
-    output$SCMinFractionCall <- renderUI({
+valueBoxSAMinFractionCallCSSet <- function(input, output, SangerConsensusSet, session) {
+    output$SAMinFractionCall <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            SCMinFractionCall <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@minFractionCall
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            SAMinFractionCall <- SangerConsensusSet@contigList[[contigIndex]]@minFractionCall
             valueBox(
                 subtitle = tags$p("MinFractionCall",
                                   style = "font-size: 15px;
                                             font-weight: bold;"),
-                value = tags$p(as.numeric(SCMinFractionCall),
+                value = tags$p(as.numeric(SAMinFractionCall),
                                style = "font-size: 29px;"),
                 icon = icon("cut", "fa-sm"),
                 color = "olive",
@@ -669,19 +669,19 @@ valueBoxSCMinFractionCallCSSet <- function(input, output, SangerConsensusSet, se
 }
 
 ### ============================================================================
-### valueBox: SCMaxFractionLost
+### valueBox: SAMaxFractionLost
 ### ============================================================================
-valueBoxSCMaxFractionLostCSSet <- function(input, output, SangerConsensusSet, session) {
-    output$SCMaxFractionLost <- renderUI({
+valueBoxSAMaxFractionLostCSSet <- function(input, output, SangerConsensusSet, session) {
+    output$SAMaxFractionLost <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            SCMaxFractionLost <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@maxFractionLost
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            SAMaxFractionLost <- SangerConsensusSet@contigList[[contigIndex]]@maxFractionLost
             valueBox(
                 subtitle = tags$p("MaxFractionLost",
                                   style = "font-size: 15px;
                                             font-weight: bold;"),
-                value = tags$p(as.numeric(SCMaxFractionLost),
+                value = tags$p(as.numeric(SAMaxFractionLost),
                                style = "font-size: 29px;"),
                 icon = icon("cut", "fa-sm"),
                 color = "olive",
@@ -692,19 +692,19 @@ valueBoxSCMaxFractionLostCSSet <- function(input, output, SangerConsensusSet, se
 }
 
 ### ============================================================================
-### valueBox: SCAcceptStopCodons
+### valueBox: SAAcceptStopCodons
 ### ============================================================================
-valueBoxSCAcceptStopCodonsCSSet <- function(input, output, SangerConsensusSet, session) {
-    output$SCAcceptStopCodons <- renderUI({
+valueBoxSAAcceptStopCodonsCSSet <- function(input, output, SangerConsensusSet, session) {
+    output$SAAcceptStopCodons <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            SCAcceptStopCodons <- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@acceptStopCodons
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            SAAcceptStopCodons <- SangerConsensusSet@contigList[[contigIndex]]@acceptStopCodons
             valueBox(
                 subtitle = tags$p("AcceptStopCodons",
                                   style = "font-size: 15px;
                                             font-weight: bold;"),
-                value = tags$p(SCAcceptStopCodons,
+                value = tags$p(SAAcceptStopCodons,
                                style = "font-size: 29px;"),
                 icon = icon("cut", "fa-sm"),
                 color = "olive",
@@ -715,21 +715,21 @@ valueBoxSCAcceptStopCodonsCSSet <- function(input, output, SangerConsensusSet, s
 }
 
 ### ============================================================================
-### valueBox: SCReadingFrame
+### valueBox: SAReadingFrame
 ### ============================================================================
-valueBoxSCReadingFrameCSSet <- function(input, output, SangerConsensusSet, session) {
-    output$SCReadingFrame <- renderUI({
+valueBoxSAReadingFrameCSSet <- function(input, output, SangerConsensusSet, session) {
+    output$SAReadingFrame <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            SCReadingFrame <-
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            SAReadingFrame <-
                 SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@readingFrame
+                contigList[[contigIndex]]@readingFrame
             valueBox(
                 subtitle = tags$p("ReadingFrame",
                                   style = "font-size: 15px;
                                             font-weight: bold;"),
-                value = tags$p(strtoi(SCReadingFrame),
+                value = tags$p(strtoi(SAReadingFrame),
                                style = "font-size: 29px;"),
                 icon = icon("cut", "fa-sm"),
                 color = "olive",

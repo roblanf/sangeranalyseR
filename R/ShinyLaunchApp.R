@@ -71,7 +71,7 @@ launchAppSangerAlignment <- function(SangerAlignment,
         suppressWarnings(dir.create(outputDir))
     }
     if (dir.exists(outputDir)) {
-        shinyOptions(SangerAlignment = SangerAlignment)
+        shinyOptions(sangerAlignment = SangerAlignment)
         shinyOptions(shinyDirectory = outputDir)
         newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer,
                                        options = SangerAlignment)

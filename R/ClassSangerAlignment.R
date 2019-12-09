@@ -8,8 +8,8 @@ setOldClass("phylo")
 #' @slot parentDirectory .
 #' @slot suffixForwardRegExp.
 #' @slot suffixReverseRegExp .
-#' @slot minFractionCallSCSet .
-#' @slot maxFractionLostSCSet .
+#' @slot minFractionCallSA .
+#' @slot maxFractionLostSA .
 #' @slot geneticCode .
 #' @slot refAminoAcidSeq .
 #' @slot contigList .
@@ -55,8 +55,8 @@ setClass("SangerAlignment",
              parentDirectory             = "character",
              suffixForwardRegExp         = "character",
              suffixReverseRegExp         = "character",
-             minFractionCallSCSet        = "numeric",
-             maxFractionLostSCSet        = "numeric",
+             minFractionCallSA        = "numeric",
+             maxFractionLostSA        = "numeric",
              geneticCode                 = "character",
              refAminoAcidSeq             = "character",
              contigList                  = "list",
@@ -91,8 +91,8 @@ setMethod("initialize",
                    geneticCode            = GENETIC_CODE,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
-                   minFractionCallSCSet   = 0.5,
-                   maxFractionLostSCSet   = 0.5,
+                   minFractionCallSA   = 0.5,
+                   maxFractionLostSA   = 0.5,
                    processorsNum          = 1) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
@@ -177,7 +177,7 @@ setMethod("initialize",
                    })
 
         acResult <- alignContigs(SangerContigList, geneticCode, refAminoAcidSeq,
-                                 minFractionCallSCSet, maxFractionLostSCSet,
+                                 minFractionCallSA, maxFractionLostSA,
                                  processorsNum)
         consensus <- acResult[["consensus"]]
         aln <- acResult[["aln"]]
@@ -190,8 +190,8 @@ setMethod("initialize",
                    suffixForwardRegExp   = suffixForwardRegExp,
                    suffixReverseRegExp   = suffixReverseRegExp,
                    contigList            = SangerContigList,
-                   minFractionCallSCSet  = minFractionCallSCSet,
-                   maxFractionLostSCSet  = maxFractionLostSCSet,
+                   minFractionCallSA  = minFractionCallSA,
+                   maxFractionLostSA  = maxFractionLostSA,
                    geneticCode           = geneticCode,
                    contigsConsensus      = consensus,
                    refAminoAcidSeq       = refAminoAcidSeq,

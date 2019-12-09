@@ -7,23 +7,23 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### SangerAlignment parameters initialization.
     ### ------------------------------------------------------------------------
-    SangerConsensusSet <- getShinyOption("SangerAlignment")
+    SangerAlignment <- getShinyOption("sangerAlignment")
     shinyDirectory <- getShinyOption("shinyDirectory")
-    SangerConsensusSet <- SangerConsensusSet[[1]]
+    SangerAlignment <- SangerAlignment[[1]]
 
-    SangerConsensusSetNum <- length(SangerConsensusSet@consensusReadsList)
+    SangerAlignmentNum <- length(SangerAlignment@contigList)
 
-    SangerCSetParam <- lapply(1:SangerConsensusSetNum, function(i) {
+    SangerCSetParam <- lapply(1:SangerAlignmentNum, function(i) {
         ### --------------------------------------------------------------------
         ### ConsensusRead-related parameters initialization.
         ### --------------------------------------------------------------------
         # readFeature
-        SCName <- paste0(i, " Consensus Read")
+        SAName <- paste0(i, " Consensus Read")
         # Forward & reverse reads list
         SangerReadFReadsList <-
-            SangerConsensusSet@consensusReadsList[[i]]@forwardReadsList
+            SangerAlignment@contigList[[i]]@forwardReadsList
         SangerReadRReadsList <-
-            SangerConsensusSet@consensusReadsList[[i]]@reverseReadsList
+            SangerAlignment@contigList[[i]]@reverseReadsList
         forwardReadNum <- length(SangerReadFReadsList)
         reverseReadNum <- length(SangerReadRReadsList)
         # readFeature
@@ -40,7 +40,7 @@ SangerAlignmentServer <- function(input, output, session) {
         reverseReadBFN <- sapply(1:reverseReadNum, function(j)
             basename(SangerReadRReadsList[[j]]@readFileName))
         SangerReadBFN <- c(forwardReadBFN, reverseReadBFN)
-        return(list(SCName = SCName,
+        return(list(SAName = SAName,
                     forwardReadNum = forwardReadNum,
                     reverseReadNum = reverseReadNum,
                     forwardReadFeature = forwardReadFeature,
@@ -48,31 +48,31 @@ SangerAlignmentServer <- function(input, output, session) {
                     SangerReadBFN = SangerReadBFN))
     })
 
-    SCTrimmingMethod <-
-        SangerConsensusSet@consensusReadsList[[1]]@
+    SATrimmingMethod <-
+        SangerAlignment@contigList[[1]]@
         forwardReadsList[[1]]@QualityReport@TrimmingMethod
-    if (SCTrimmingMethod == "M1") {
-        SCTrimmingMethodName = "Method 1: 'Logarithmic Scale Trimming'"
-    } else if (SCTrimmingMethod == "M2") {
-        SCTrimmingMethodName =
+    if (SATrimmingMethod == "M1") {
+        SATrimmingMethodName = "Method 1: 'Logarithmic Scale Trimming'"
+    } else if (SATrimmingMethod == "M2") {
+        SATrimmingMethodName =
             "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
     }
 
     ### ------------------------------------------------------------------------
     ### ConsensusRead Set reactiveValue
     ### ------------------------------------------------------------------------
-    consensusParamSet <-
+    sangerAlignmentParam <-
         reactiveValues(
-            consensusReadSCSet = SangerConsensusSet@consensusReadSCSet,
-            alignmentSCSet     = as.character(SangerConsensusSet@alignmentSCSet),
-            alignmentTreeSCSet = SangerConsensusSet@alignmentTreeSCSet)
+            contigsConsensus = SangerAlignment@contigsConsensus,
+            contigsAlignment     = as.character(SangerAlignment@contigsAlignment),
+            contigsTree = SangerAlignment@contigsTree)
 
     ### ------------------------------------------------------------------------
     ### ConsensusRead reactiveValue
     ### ------------------------------------------------------------------------
-    consensusParam <-
+    contigParam <-
         reactiveValues(
-            consensusRead   = NULL,
+            contigSeq   = NULL,
             differencesDF   = NULL,
             alignment       = NULL,
             distanceMatrix  = NULL,
@@ -112,9 +112,9 @@ SangerAlignmentServer <- function(input, output, session) {
     ############################################################################
     ### output$ID
     ############################################################################
-    output$aligned_consensusRead_content <- renderUI({
+    output$aligned_contigSeq_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
         message(input$sidebar_menu)
@@ -131,7 +131,7 @@ SangerAlignmentServer <- function(input, output, session) {
                     tags$hr(style = ("border-top: 0.2px hidden #A9A9A9;")),
                     fluidRow(
                         column(width = 12,
-                               actionBttn("recalculateButtonSCSet",
+                               actionBttn("recalculateButtonSA",
                                           "Re-calculate
                                           Aligned Consensus Reads",
                                           icon = icon("calculator"),
@@ -162,7 +162,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                    font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerConsensusSet@parentDirectory),
+                                      h4(SangerAlignment@parentDirectory),
                                )
                         ),
                         column(12,
@@ -173,7 +173,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                    font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SCTrimmingMethodName),
+                                      h4(SATrimmingMethodName),
                                )
                         ),
                         column(12,
@@ -184,7 +184,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                    font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerConsensusSet@suffixForwardRegExp),
+                                      h4(SangerAlignment@suffixForwardRegExp),
                                )
                         ),
                         column(12,
@@ -195,7 +195,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                    font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerConsensusSet@suffixReverseRegExp),
+                                      h4(SangerAlignment@suffixReverseRegExp),
                                )
                         ),
                         column(12,
@@ -206,8 +206,8 @@ SangerAlignmentServer <- function(input, output, session) {
                                                    font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(length(SangerConsensusSet@
-                                                    consensusReadsList)),
+                                      h4(length(SangerAlignment@
+                                                    contigList)),
                                )
                         ),
                         box(title = tags$p("Genetic Code Data Frame",
@@ -234,7 +234,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                  "overflow-x: scroll;")
                             ),
                         ),
-                        uiOutput("SCrefAminoAcidSeq") ,
+                        uiOutput("SArefAminoAcidSeq") ,
                     ),
                 ),
                 box(title = tags$p(tagList(icon("dot-circle"),
@@ -250,7 +250,7 @@ SangerAlignmentServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               htmlOutput("consensusSetAlignmentHTML"),
+                               htmlOutput("sangerAlignmentAlignmentHTML"),
                         ),
                     ),
                     box(title = tags$p("Consensus Reads Tree",
@@ -259,7 +259,7 @@ SangerAlignmentServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               plotOutput("SCSetConsensusReadTreePlot"),
+                               plotOutput("SAConsensusReadTreePlot"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         )
@@ -271,39 +271,39 @@ SangerAlignmentServer <- function(input, output, session) {
 
 
         } else {
-            if (!is.na(consensusReadIndex)) {
+            if (!is.na(contigIndex)) {
                 if (sidebar_menu[[2]] == "Sanger" &&
                     sidebar_menu[[3]] == "Consensus" &&
                     sidebar_menu[[4]] == "Read" &&
                     sidebar_menu[[5]] == "Overview") {
                     message(">>>>>>>> Inside '", input$sidebar_menu, "'")
-                    consensusParam[["contigName"]] <<-
-                        SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@contigName
-                    consensusParam[["consensusRead"]] <<-
-                        as.character(SangerConsensusSet@
-                                         consensusReadsList[[consensusReadIndex]]@consensusRead)
-                    consensusParam[["differencesDF"]] <<-
-                        SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@differencesDF
-                    consensusParam[["alignment"]] <<-
-                        as.character(SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@alignment)
-                    consensusParam[["distanceMatrix"]] <<-
-                        SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@distanceMatrix
-                    consensusParam[["dendrogram"]] <<-
-                        SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@dendrogram
-                    consensusParam[["indelsDF"]] <<-
-                        SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@indelsDF
-                    consensusParam[["stopCodonsDF"]] <<-
-                        SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@stopCodonsDF
-                    consensusParam[["secondaryPeakDF"]] <<-
-                        SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@secondaryPeakDF
+                    contigParam[["contigName"]] <<-
+                        SangerAlignment@
+                        contigList[[contigIndex]]@contigName
+                    contigParam[["contigSeq"]] <<-
+                        as.character(SangerAlignment@
+                                         contigList[[contigIndex]]@contigSeq)
+                    contigParam[["differencesDF"]] <<-
+                        SangerAlignment@
+                        contigList[[contigIndex]]@differencesDF
+                    contigParam[["alignment"]] <<-
+                        as.character(SangerAlignment@
+                        contigList[[contigIndex]]@alignment)
+                    contigParam[["distanceMatrix"]] <<-
+                        SangerAlignment@
+                        contigList[[contigIndex]]@distanceMatrix
+                    contigParam[["dendrogram"]] <<-
+                        SangerAlignment@
+                        contigList[[contigIndex]]@dendrogram
+                    contigParam[["indelsDF"]] <<-
+                        SangerAlignment@
+                        contigList[[contigIndex]]@indelsDF
+                    contigParam[["stopCodonsDF"]] <<-
+                        SangerAlignment@
+                        contigList[[contigIndex]]@stopCodonsDF
+                    contigParam[["secondaryPeakDF"]] <<-
+                        SangerAlignment@
+                        contigList[[contigIndex]]@secondaryPeakDF
                     fluidRow(
                         useShinyjs(),
                         box(title = tags$p(tagList(icon("dot-circle"),
@@ -348,7 +348,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                            font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(SangerConsensusSet@
+                                              h4(SangerAlignment@
                                                      parentDirectory),
                                        )
                                 ),
@@ -361,7 +361,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                            font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(consensusParam[["contigName"]]),
+                                              h4(contigParam[["contigName"]]),
                                        )
                                 ),
                                 column(12,
@@ -373,7 +373,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                            font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(SCTrimmingMethodName),
+                                              h4(SATrimmingMethodName),
                                        )
                                 ),
                                 column(12,
@@ -385,7 +385,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                            font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(SangerConsensusSet@
+                                              h4(SangerAlignment@
                                                      suffixForwardRegExp),
                                        )
 
@@ -399,8 +399,8 @@ SangerAlignmentServer <- function(input, output, session) {
                                                            font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(length(SangerConsensusSet@
-                                                     consensusReadsList[[consensusReadIndex]]@
+                                              h4(length(SangerAlignment@
+                                                     contigList[[contigIndex]]@
                                                      forwardReadsList)),
                                        )
                                 ),
@@ -413,7 +413,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                            font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(SangerConsensusSet@
+                                              h4(SangerAlignment@
                                                      suffixReverseRegExp),
                                        )
                                 ),
@@ -426,8 +426,8 @@ SangerAlignmentServer <- function(input, output, session) {
                                                                   font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(length(SangerConsensusSet@
-                                                     consensusReadsList[[consensusReadIndex]]@
+                                              h4(length(SangerAlignment@
+                                                     contigList[[contigIndex]]@
                                                      reverseReadsList)),
                                        )
                                 ),
@@ -442,22 +442,22 @@ SangerAlignmentServer <- function(input, output, session) {
                                 collapsible = TRUE,
                                 status = "success", width = 12,
                                 column(3,
-                                       uiOutput("SCMinReadsNum") ,
+                                       uiOutput("SAMinReadsNum") ,
                                 ),
                                 column(3,
-                                       uiOutput("SCMinReadLength")  ,
+                                       uiOutput("SAMinReadLength")  ,
                                 ),
                                 column(3,
-                                       uiOutput("SCMinFractionCall") ,
+                                       uiOutput("SAMinFractionCall") ,
                                 ),
                                 column(3,
-                                       uiOutput("SCMaxFractionLost") ,
+                                       uiOutput("SAMaxFractionLost") ,
                                 ),
                                 column(3,
-                                       uiOutput("SCAcceptStopCodons") ,
+                                       uiOutput("SAAcceptStopCodons") ,
                                 ),
                                 column(3,
-                                       uiOutput("SCReadingFrame") ,
+                                       uiOutput("SAReadingFrame") ,
                                 ),
                             ),
                             box(title = tags$p("Genetic Code Data Frame",
@@ -485,7 +485,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                      "overflow-x: scroll;")
                                 ),
                             ),
-                            uiOutput("SCrefAminoAcidSeq") ,
+                            uiOutput("SArefAminoAcidSeq") ,
                         ),
 
                         box(title = tags$p(tagList(icon("dot-circle"),
@@ -501,7 +501,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 collapsible = TRUE,
                                 status = "success", width = 12,
                                 column(width = 12,
-                                       htmlOutput("consensusAlignmentHTML"),
+                                       htmlOutput("contigAlignmentHTML"),
                                 ),
                             ),
                             box(title = tags$p("Differences Data frame",
@@ -510,7 +510,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 collapsible = TRUE,
                                 status = "success", width = 12,
                                 column(width = 12,
-                                       uiOutput("SCDifferencesDFUI"),
+                                       uiOutput("SADifferencesDFUI"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -545,7 +545,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 status = "success", width = 12,
                                 column(width = 12,
                                        # plot()
-                                       uiOutput("SCDistanceMatrixPlotUI"),
+                                       uiOutput("SADistanceMatrixPlotUI"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -555,7 +555,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                            style =("border-top: 4px hidden #A9A9A9;")),
                                 ),
                                 column(width = 12,
-                                       uiOutput("SCDistanceMatrixUI"),
+                                       uiOutput("SADistanceMatrixUI"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -567,7 +567,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 collapsible = TRUE,
                                 status = "success", width = 12,
                                 column(width = 12,
-                                       uiOutput("SCIndelsDFUI"),
+                                       uiOutput("SAIndelsDFUI"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -579,7 +579,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 collapsible = TRUE,
                                 status = "success", width = 12,
                                 column(width = 12,
-                                       uiOutput("SCStopCodonsDFUI"),
+                                       uiOutput("SAStopCodonsDFUI"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -596,210 +596,210 @@ SangerAlignmentServer <- function(input, output, session) {
                            sidebar_menu[[6]] == "Read") {
                     if (directionParam == "Forward") {
                         sequenceParam[["primarySeq"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              forwardReadsList[[singleReadIndex]]@primarySeq)
                         sequenceParam[["secondarySeq"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              forwardReadsList[[singleReadIndex]]@secondarySeq)
                         sequenceParam[["primaryAASeqS1"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              forwardReadsList[[singleReadIndex]]@primaryAASeqS1)
                         sequenceParam[["primaryAASeqS2"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              forwardReadsList[[singleReadIndex]]@primaryAASeqS2)
                         sequenceParam[["primaryAASeqS3"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              forwardReadsList[[singleReadIndex]]@primaryAASeqS3)
                         trimmedParam[["M1TrimmingCutoff"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@
                             M1TrimmingCutoff
                         trimmedParam[["M2CutoffQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@
                             M2CutoffQualityScore
                         trimmedParam[["M2SlidingWindowSize"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@
                             M2SlidingWindowSize
 
                         trimmedRV[["rawSeqLength"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
                         trimmedRV[["rawMeanQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@
                             rawMeanQualityScore
                         trimmedRV[["rawMinQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@rawMinQualityScore
                         trimmedRV[["trimmedStartPos"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@trimmedStartPos
                         trimmedRV[["trimmedFinishPos"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@trimmedFinishPos
                         trimmedRV[["trimmedSeqLength"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@trimmedSeqLength
                         trimmedRV[["trimmedMeanQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@
                             trimmedMeanQualityScore
                         trimmedRV[["trimmedMinQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@QualityReport@
                             trimmedMinQualityScore
                         trimmedRV[["remainingRatio"]] <<-
-                            round(SangerConsensusSet@
-                                      consensusReadsList[[consensusReadIndex]]@
+                            round(SangerAlignment@
+                                      contigList[[contigIndex]]@
                                       forwardReadsList[[singleReadIndex]]@QualityReport@
                                       remainingRatio * 100, 2)
 
                         ChromatogramParam[["baseNumPerRow"]] <<-
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                             baseNumPerRow
                         ChromatogramParam[["heightPerRow"]] <<-
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                             heightPerRow
                         ChromatogramParam[["signalRatioCutoff"]] <<-
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                             signalRatioCutoff
                         ChromatogramParam[["showTrimmed"]] <<-
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                             showTrimmed
 
                         SangerReadBFN <-
-                            basename(SangerConsensusSet@
-                                         consensusReadsList[[consensusReadIndex]]@
+                            basename(SangerAlignment@
+                                         contigList[[contigIndex]]@
                                          forwardReadsList[[singleReadIndex]]@readFileName)
                         SangerReadAFN <-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@readFileName
                     } else if (directionParam == "Reverse") {
                         sequenceParam[["primarySeq"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              reverseReadsList[[singleReadIndex]]@primarySeq)
                         sequenceParam[["secondarySeq"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              reverseReadsList[[singleReadIndex]]@secondarySeq)
                         sequenceParam[["primaryAASeqS1"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              reverseReadsList[[singleReadIndex]]@primaryAASeqS1)
                         sequenceParam[["primaryAASeqS2"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              reverseReadsList[[singleReadIndex]]@primaryAASeqS2)
                         sequenceParam[["primaryAASeqS3"]] <<-
-                            as.character(SangerConsensusSet@
-                                             consensusReadsList[[consensusReadIndex]]@
+                            as.character(SangerAlignment@
+                                             contigList[[contigIndex]]@
                                              reverseReadsList[[singleReadIndex]]@primaryAASeqS3)
 
                         trimmedParam[["M1TrimmingCutoff"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@
                             M1TrimmingCutoff
                         trimmedParam[["M2CutoffQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@
                             M2CutoffQualityScore
                         trimmedParam[["M2SlidingWindowSize"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@
                             M2SlidingWindowSize
 
                         trimmedRV[["rawSeqLength"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
                         trimmedRV[["rawMeanQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@
                             rawMeanQualityScore
                         trimmedRV[["rawMinQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@rawMinQualityScore
                         trimmedRV[["trimmedStartPos"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@trimmedStartPos
                         trimmedRV[["trimmedFinishPos"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@trimmedFinishPos
                         trimmedRV[["trimmedSeqLength"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@trimmedSeqLength
                         trimmedRV[["trimmedMeanQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@
                             trimmedMeanQualityScore
                         trimmedRV[["trimmedMinQualityScore"]] <<-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@QualityReport@
                             trimmedMinQualityScore
                         trimmedRV[["remainingRatio"]] <<-
-                            round(SangerConsensusSet@
-                                      consensusReadsList[[consensusReadIndex]]@
+                            round(SangerAlignment@
+                                      contigList[[contigIndex]]@
                                       reverseReadsList[[singleReadIndex]]@QualityReport@
                                       remainingRatio * 100, 2)
 
                         ChromatogramParam[["baseNumPerRow"]] <<-
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                             baseNumPerRow
                         ChromatogramParam[["heightPerRow"]] <<-
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                             heightPerRow
                         ChromatogramParam[["signalRatioCutoff"]] <<-
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                             signalRatioCutoff
                         ChromatogramParam[["showTrimmed"]] <<-
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                             showTrimmed
 
                         SangerReadBFN <-
-                            basename(SangerConsensusSet@
-                                         consensusReadsList[[consensusReadIndex]]@
+                            basename(SangerAlignment@
+                                         contigList[[contigIndex]]@
                                          reverseReadsList[[singleReadIndex]]@readFileName)
                         SangerReadAFN <-
-                            SangerConsensusSet@
-                            consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@
+                            contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@readFileName
                     }
 
@@ -1086,7 +1086,7 @@ SangerAlignmentServer <- function(input, output, session) {
     ### observeEvent: Adding dynamic sidebar
     ### ------------------------------------------------------------------------
     # !!! Fix !!!
-    dynamicMenuSideBarSCSet(input, output, session, SangerCSetParam)
+    dynamicMenuSideBarSA(input, output, session, SangerCSetParam)
     ############################################################################
     ### All other features (dynamic header / button save / button close)
     ############################################################################
@@ -1134,87 +1134,91 @@ SangerAlignmentServer <- function(input, output, session) {
         ### --------------------------------------------------------------------
         ### Save SangerConsensus quality S4 object
         ### --------------------------------------------------------------------
-        saveRDS(SangerConsensusSet, file=newS4Object)
+        saveRDS(SangerAlignment, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
         NEW_SANGER_ALIGNED_CONSENSUS_READ_SET <<- readRDS(file=newS4Object)
-        shinyjs::enable("closeUI")
         shinyjs::enable("saveS4")
+        shinyjs::enable("closeUI")
     })
     ### ------------------------------------------------------------------------
-    ### observeEvent: Button Consensus reads re-calculating (SCSet) UI
+    ### observeEvent: Button Consensus reads re-calculating (SA) UI
     ### ------------------------------------------------------------------------
-    observeEvent(input$recalculateButtonSCSet, {
-        shinyjs::disable("recalculateButtonSCSet")
+    observeEvent(input$recalculateButtonSA, {
+        shinyjs::disable("closeUI")
+        shinyjs::disable("recalculateButtonSA")
         message("######## Reactive button clicked !!!")
-        message("######## Start recalculating consensus read (SC)")
+        message("######## Start re-aligning contigs")
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
             CSSetResult <-
-                alignConsensusReads (SangerConsensusSet@consensusReadsList,
-                                     SangerConsensusSet@geneticCode,
-                                     SangerConsensusSet@refAminoAcidSeq,
-                                     SangerConsensusSet@minFractionCallSCSet,
-                                     SangerConsensusSet@maxFractionLostSCSet,
+                alignContigs (SangerAlignment@contigList,
+                                     SangerAlignment@geneticCode,
+                                     SangerAlignment@refAminoAcidSeq,
+                                     SangerAlignment@minFractionCallSA,
+                                     SangerAlignment@maxFractionLostSA,
                                      1)
-            SangerConsensusSet@consensusReadSCSet <<- CSSetResult$consensus
-            SangerConsensusSet@alignmentSCSet <<- CSSetResult$aln
-            SangerConsensusSet@alignmentTreeSCSet <<- CSSetResult$aln.tree
-            consensusParamSet[["consensusReadSCSet"]] <<- SangerConsensusSet@consensusReadSCSet
-            consensusParamSet[["alignmentSCSet"]] <<- as.character(SangerConsensusSet@alignmentSCSet)
-            consensusParamSet[["alignmentTreeSCSet"]] <<- SangerConsensusSet@alignmentTreeSCSet
-            message("######## Finish recalculation consensus read")
+            SangerAlignment@contigsConsensus <<- CSSetResult$consensus
+            SangerAlignment@contigsAlignment <<- CSSetResult$aln
+            SangerAlignment@contigsTree <<- CSSetResult$aln.tree
+            sangerAlignmentParam[["contigsConsensus"]] <<- SangerAlignment@contigsConsensus
+            sangerAlignmentParam[["contigsAlignment"]] <<- as.character(SangerAlignment@contigsAlignment)
+            sangerAlignmentParam[["contigsTree"]] <<- SangerAlignment@contigsTree
+            message("######## Finish contigs re-alignment")
         }
-        shinyjs::enable("recalculateButtonSCSet")
+        shinyjs::enable("recalculateButtonSA")
+        shinyjs::enable("closeUI")
     })
     ### ------------------------------------------------------------------------
-    ### observeEvent: Button Consensus read re-calculating (SC) UI
+    ### observeEvent: Button Consensus read re-calculating (SA) UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
+        shinyjs::disable("closeUI")
         shinyjs::disable("recalculateButton")
         message("@@@@@@@ 'Reactive button' has been clicked")
-        message("######## Start recalculating consensus read (SC")
+        message("######## Start recalculating contig")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
             CSResult<-
-                calculateConsensusRead (
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@forwardReadsList,
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@reverseReadsList,
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@refAminoAcidSeq,
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@minFractionCall,
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@maxFractionLost,
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@geneticCode,
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@acceptStopCodons,
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@readingFrame)
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consensusRead <<- CSResult$consensusGapfree
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@differencesDF <<- CSResult$diffsDf
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment <<- CSResult$aln2
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@distanceMatrix <<- CSResult$dist
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@dendrogram <<- CSResult$dend
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF <<- CSResult$indels
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@stopCodonsDF <<- CSResult$stopsDf
-            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@secondaryPeakDF <<- CSResult$spDf
-            consensusParam[["consensusRead"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@consensusRead
-            consensusParam[["differencesDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@differencesDF
-            consensusParam[["alignment"]] <<- as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@alignment)
-            consensusParam[["distanceMatrix"]] <<-SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@distanceMatrix
-            consensusParam[["dendrogram"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@dendrogram
-            consensusParam[["indelsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@indelsDF
-            consensusParam[["stopCodonsDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@stopCodonsDF
-            consensusParam[["secondaryPeakDF"]] <<- SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@secondaryPeakDF
+                calculateContigSeq (
+                    SangerAlignment@contigList[[contigIndex]]@forwardReadsList,
+                    SangerAlignment@contigList[[contigIndex]]@reverseReadsList,
+                    SangerAlignment@contigList[[contigIndex]]@refAminoAcidSeq,
+                    SangerAlignment@contigList[[contigIndex]]@minFractionCall,
+                    SangerAlignment@contigList[[contigIndex]]@maxFractionLost,
+                    SangerAlignment@contigList[[contigIndex]]@geneticCode,
+                    SangerAlignment@contigList[[contigIndex]]@acceptStopCodons,
+                    SangerAlignment@contigList[[contigIndex]]@readingFrame)
+            SangerAlignment@contigList[[contigIndex]]@contigSeq <<- CSResult$consensusGapfree
+            SangerAlignment@contigList[[contigIndex]]@differencesDF <<- CSResult$diffsDf
+            SangerAlignment@contigList[[contigIndex]]@alignment <<- CSResult$aln2
+            SangerAlignment@contigList[[contigIndex]]@distanceMatrix <<- CSResult$dist
+            SangerAlignment@contigList[[contigIndex]]@dendrogram <<- CSResult$dend
+            SangerAlignment@contigList[[contigIndex]]@indelsDF <<- CSResult$indels
+            SangerAlignment@contigList[[contigIndex]]@stopCodonsDF <<- CSResult$stopsDf
+            SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF <<- CSResult$spDf
+            contigParam[["contigSeq"]] <<- SangerAlignment@contigList[[contigIndex]]@contigSeq
+            contigParam[["differencesDF"]] <<- SangerAlignment@contigList[[contigIndex]]@differencesDF
+            contigParam[["alignment"]] <<- as.character(SangerAlignment@contigList[[contigIndex]]@alignment)
+            contigParam[["distanceMatrix"]] <<-SangerAlignment@contigList[[contigIndex]]@distanceMatrix
+            contigParam[["dendrogram"]] <<- SangerAlignment@contigList[[contigIndex]]@dendrogram
+            contigParam[["indelsDF"]] <<- SangerAlignment@contigList[[contigIndex]]@indelsDF
+            contigParam[["stopCodonsDF"]] <<- SangerAlignment@contigList[[contigIndex]]@stopCodonsDF
+            contigParam[["secondaryPeakDF"]] <<- SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF
         }
         shinyjs::enable("recalculateButton")
+        shinyjs::enable("closeUI")
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button apply trimming parameters
     ### ------------------------------------------------------------------------
     observeEvent(input$startTrimmingButton, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
-            if (SangerConsensusSet@consensusReadsList[[1]]@
+            if (SangerAlignment@contigList[[1]]@
                 forwardReadsList[[1]]@QualityReport@
                 TrimmingMethod == "M1") {
                 if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
@@ -1227,37 +1231,37 @@ SangerAlignmentServer <- function(input, output, session) {
                 if (directionParam == "Forward") {
                     trimmingPos <-
                         M1inside_calculate_trimming(
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadsList[[singleReadIndex]]@QualityReport@
                                 qualityPhredScores,
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadsList[[singleReadIndex]]@QualityReport@
                                 qualityBaseScores,
                             as.numeric(inputM1TrimmingCutoffText))
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                         forwardReadsList[[singleReadIndex]]@QualityReport@
                         M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
                     trimmedParam[["M1TrimmingCutoff"]] <<-
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                         forwardReadsList[[singleReadIndex]]@QualityReport@M1TrimmingCutoff
                 } else if (directionParam == "Reverse") {
                     trimmingPos <-
                         M1inside_calculate_trimming(
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                                 reverseReadsList[[singleReadIndex]]@QualityReport@
                                 qualityPhredScores,
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                                 reverseReadsList[[singleReadIndex]]@QualityReport@
                                 qualityBaseScores,
                             as.numeric(inputM1TrimmingCutoffText))
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                         reverseReadsList[[singleReadIndex]]@QualityReport@
                         M1TrimmingCutoff <<- as.numeric(inputM1TrimmingCutoffText)
                     trimmedParam[["M1TrimmingCutoff"]] <<-
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                         reverseReadsList[[singleReadIndex]]@QualityReport@M1TrimmingCutoff
                 }
-            } else if (SangerConsensusSet@consensusReadsList[[1]]@
+            } else if (SangerAlignment@contigList[[1]]@
                        forwardReadsList[[1]]@QualityReport@
                        TrimmingMethod == "M2") {
                 if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
@@ -1279,175 +1283,175 @@ SangerAlignmentServer <- function(input, output, session) {
                 if (directionParam == "Forward") {
                     trimmingPos <-
                         M2inside_calculate_trimming(
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadsList[[singleReadIndex]]@QualityReport@
                                 qualityPhredScores,
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadsList[[singleReadIndex]]@QualityReport@
                                 qualityBaseScores,
                             strtoi(inputM2CutoffQualityScoreText),
                             strtoi(inputM2SlidingWindowSizeText)
                         )
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                         forwardReadsList[[singleReadIndex]]@QualityReport@
                         M2CutoffQualityScore <<- strtoi(inputM2CutoffQualityScoreText)
                     trimmedParam[["M2CutoffQualityScore"]] <<-
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                         forwardReadsList[[singleReadIndex]]@QualityReport@
                         M2CutoffQualityScore
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                         forwardReadsList[[singleReadIndex]]@QualityReport@
                         M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
                     trimmedParam[["M2SlidingWindowSize"]] <<-
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                         forwardReadsList[[singleReadIndex]]@QualityReport@
                         M2SlidingWindowSize
                 } else if ("Reverse") {
                     trimmingPos <-
                         M2inside_calculate_trimming(
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                                 reverseReadsList[[singleReadIndex]]@QualityReport@
                                 qualityPhredScores,
-                            SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                            SangerAlignment@contigList[[contigIndex]]@
                                 reverseReadsList[[singleReadIndex]]@QualityReport@
                                 qualityBaseScores,
                             strtoi(inputM2CutoffQualityScoreText),
                             strtoi(inputM2SlidingWindowSizeText)
                         )
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                         reverseReadsList[[singleReadIndex]]@QualityReport@
                         M2CutoffQualityScore <<- strtoi(inputM2CutoffQualityScoreText)
                     trimmedParam[["M2CutoffQualityScore"]] <<-
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                         reverseReadsList[[singleReadIndex]]@QualityReport@
                         M2CutoffQualityScore
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                         reverseReadsList[[singleReadIndex]]@QualityReport@
                         M2SlidingWindowSize <<- strtoi(inputM2SlidingWindowSizeText)
                     trimmedParam[["M2SlidingWindowSize"]] <<-
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                         reverseReadsList[[singleReadIndex]]@QualityReport@
                         M2SlidingWindowSize
                 }
             }
             if (directionParam == "Forward") {
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     rawSeqLength <<- trimmingPos[["rawSeqLength"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     rawMeanQualityScore <<- trimmingPos[["rawMeanQualityScore"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     rawMinQualityScore <<- trimmingPos[["rawMinQualityScore"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     trimmedStartPos <<- trimmingPos[["trimmedStartPos"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     trimmedFinishPos <<- trimmingPos[["trimmedFinishPos"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     trimmedSeqLength <<- trimmingPos[["trimmedSeqLength"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     trimmedMeanQualityScore <<- trimmingPos[["trimmedMeanQualityScore"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     trimmedMinQualityScore <<- trimmingPos[["trimmedMinQualityScore"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     remainingRatio <<- trimmingPos[["remainingRatio"]]
 
                 trimmedRV[["rawSeqLength"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
                 trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     rawMeanQualityScore
                 trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@rawMinQualityScore
                 trimmedRV[["trimmedStartPos"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@trimmedStartPos
                 trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@trimmedFinishPos
                 trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@trimmedSeqLength
                 trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     trimmedMeanQualityScore
                 trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@
                     trimmedMinQualityScore
                 trimmedRV[["remainingRatio"]] <<-
-                    round(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    round(SangerAlignment@contigList[[contigIndex]]@
                               forwardReadsList[[singleReadIndex]]@QualityReport@
                               remainingRatio * 100, 2)
             } else if (directionParam == "Reverse") {
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     rawSeqLength <<- trimmingPos[["rawSeqLength"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     rawMeanQualityScore <<- trimmingPos[["rawMeanQualityScore"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     rawMinQualityScore <<- trimmingPos[["rawMinQualityScore"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     trimmedStartPos <<- trimmingPos[["trimmedStartPos"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     trimmedFinishPos <<- trimmingPos[["trimmedFinishPos"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     trimmedSeqLength <<- trimmingPos[["trimmedSeqLength"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     trimmedMeanQualityScore <<- trimmingPos[["trimmedMeanQualityScore"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     trimmedMinQualityScore <<- trimmingPos[["trimmedMinQualityScore"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     remainingRatio <<- trimmingPos[["remainingRatio"]]
 
                 trimmedRV[["rawSeqLength"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
                 trimmedRV[["rawMeanQualityScore"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     rawMeanQualityScore
                 trimmedRV[["rawMinQualityScore"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@rawMinQualityScore
                 trimmedRV[["trimmedStartPos"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@trimmedStartPos
                 trimmedRV[["trimmedFinishPos"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@trimmedFinishPos
                 trimmedRV[["trimmedSeqLength"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@trimmedSeqLength
                 trimmedRV[["trimmedMeanQualityScore"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     trimmedMeanQualityScore
                 trimmedRV[["trimmedMinQualityScore"]] <<-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@
                     trimmedMinQualityScore
                 trimmedRV[["remainingRatio"]] <<-
-                    round(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    round(SangerAlignment@contigList[[contigIndex]]@
                               reverseReadsList[[singleReadIndex]]@QualityReport@
                               remainingRatio * 100, 2)
             }
@@ -1460,38 +1464,38 @@ SangerAlignmentServer <- function(input, output, session) {
         message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start recalculating chromatogram")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
         ### ------------------------------------------------------------
         ### Update ChromatogramBasePerRow
         ### ------------------------------------------------------------
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             if (directionParam == "Forward") {
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                     baseNumPerRow <<- input$ChromatogramBasePerRow
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                     heightPerRow <<- input$ChromatogramHeightPerRow
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                     signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@ChromatogramParam@
                     showTrimmed <<- input$ChromatogramCheckShowTrimmed
             } else if (directionParam == "Reverse") {
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                     baseNumPerRow <<- input$ChromatogramBasePerRow
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                     heightPerRow <<- input$ChromatogramHeightPerRow
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                     signalRatioCutoff <<- input$ChromatogramSignalRatioCutoff
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@ChromatogramParam@
                     showTrimmed <<- input$ChromatogramCheckShowTrimmed
             }
@@ -1517,12 +1521,12 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### Alignment
     ### ------------------------------------------------------------------------
-    output$consensusSetAlignmentHTML<-renderUI({
+    output$sangerAlignmentAlignmentHTML<-renderUI({
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
             browseSeqHTML <-
                 file.path(shinyDirectory,
                           "Consensus_Readset_Alignment_BrowseSeqs.html")
-            BrowseSeqs(DNAStringSet(consensusParamSet[["alignmentSCSet"]]) ,
+            BrowseSeqs(DNAStringSet(sangerAlignmentParam[["contigsAlignment"]]) ,
                        openURL=FALSE, htmlFile=browseSeqHTML)
             includeHTML(browseSeqHTML)
         }
@@ -1530,9 +1534,9 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### Consensus Reads Tree
     ### ------------------------------------------------------------------------
-    output$SCSetConsensusReadTreePlot <- renderPlot({
+    output$SAConsensusReadTreePlot <- renderPlot({
         if (input$sidebar_menu == "Sanger Aligned Consensus Set Overview") {
-            plot(consensusParamSet[["alignmentTreeSCSet"]])
+            plot(sangerAlignmentParam[["contigsTree"]])
         }
     })
 
@@ -1545,9 +1549,9 @@ SangerAlignmentServer <- function(input, output, session) {
     ### genetic code
     ### ------------------------------------------------------------------------
     output$geneticCodeDF <- renderExcel({
-        SCGeneticCode <- SangerConsensusSet@geneticCode
+        SAGeneticCode <- SangerAlignment@geneticCode
         suppressMessages(
-            excelTable(data = t(data.frame(SCGeneticCode)),
+            excelTable(data = t(data.frame(SAGeneticCode)),
                        defaultColWidth = 50, editable = FALSE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
@@ -1557,8 +1561,8 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### refAminoAcidSeq
     ### ------------------------------------------------------------------------
-    output$SCrefAminoAcidSeq <- renderUI({
-        if (SangerConsensusSet@refAminoAcidSeq == "") {
+    output$SArefAminoAcidSeq <- renderUI({
+        if (SangerAlignment@refAminoAcidSeq == "") {
             box(title = tags$p("Reference Amino Acids Sequence",
                                style = "font-size: 24px;
                                         font-weight: bold;"),
@@ -1581,7 +1585,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                            font-weight: bold;"),
                 ),
                 column(width = 10,
-                       excelOutput("SCrefAminoAcidSeqDF",
+                       excelOutput("SArefAminoAcidSeqDF",
                                    width = "100%", height = "50"),
                        style = paste("height:100%; ",
                                      "overflow-y: hidden;",
@@ -1590,9 +1594,9 @@ SangerAlignmentServer <- function(input, output, session) {
             )
         }
     })
-    output$SCrefAminoAcidSeqDF <- renderExcel({
+    output$SArefAminoAcidSeqDF <- renderExcel({
         refAminoAcidSeqVec <-
-            strsplit(SangerConsensusSet@refAminoAcidSeq, "")[[1]]
+            strsplit(SangerAlignment@refAminoAcidSeq, "")[[1]]
         names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
         suppressMessages(
             excelTable(data =
@@ -1609,35 +1613,35 @@ SangerAlignmentServer <- function(input, output, session) {
     ############################################################################
     ### ConsensusRead (Function for Sanger Consensus Read Overview)
     ############################################################################
-    valueBoxSCMinReadsNumCSSet (input, output, SangerConsensusSet, session)
-    valueBoxSCMinReadLengthCSSet (input, output, SangerConsensusSet, session)
-    valueBoxSCMinFractionCallCSSet (input, output, SangerConsensusSet, session)
-    valueBoxSCMaxFractionLostCSSet (input, output, SangerConsensusSet, session)
-    valueBoxSCAcceptStopCodonsCSSet (input, output, SangerConsensusSet, session)
-    valueBoxSCReadingFrameCSSet (input, output, SangerConsensusSet, session)
+    valueBoxSAMinReadsNumCSSet (input, output, SangerAlignment, session)
+    valueBoxSAMinReadLengthCSSet (input, output, SangerAlignment, session)
+    valueBoxSAMinFractionCallCSSet (input, output, SangerAlignment, session)
+    valueBoxSAMaxFractionLostCSSet (input, output, SangerAlignment, session)
+    valueBoxSAAcceptStopCodonsCSSet (input, output, SangerAlignment, session)
+    valueBoxSAReadingFrameCSSet (input, output, SangerAlignment, session)
     ### ------------------------------------------------------------------------
     ### Alignment
     ### ------------------------------------------------------------------------
-    output$consensusAlignmentHTML<-renderUI({
+    output$contigAlignmentHTML<-renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            consensusParam[["contigName"]] <<-
-                SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@contigName
-            consensusParam[["alignment"]] <-
-                SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@alignment
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            contigParam[["contigName"]] <<-
+                SangerAlignment@
+                contigList[[contigIndex]]@contigName
+            contigParam[["alignment"]] <-
+                SangerAlignment@
+                contigList[[contigIndex]]@alignment
 
             browseSeqHTML <-
                 file.path(shinyDirectory, "BrowseSeqs_html",
                           paste0(sidebar_menu[[1]], "_",
-                                 consensusParam[["contigName"]],
+                                 contigParam[["contigName"]],
                                  "_Alignment_BrowseSeqs.html"))
             if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
                 dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))
             }
-            BrowseSeqs(DNAStringSet(consensusParam[["alignment"]]),
+            BrowseSeqs(DNAStringSet(contigParam[["alignment"]]),
                        openURL=FALSE, htmlFile=browseSeqHTML)
             includeHTML(browseSeqHTML)
         }
@@ -1645,183 +1649,183 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### difference
     ### ------------------------------------------------------------------------
-    output$SCDifferencesDFUI <- renderUI({
+    output$SADifferencesDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            consensusParam[["differencesDF"]] <<-
-                SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@differencesDF
-            if (all(dim(consensusParam[["differencesDF"]]) == c(0,0))) {
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            contigParam[["differencesDF"]] <<-
+                SangerAlignment@
+                contigList[[contigIndex]]@differencesDF
+            if (all(dim(contigParam[["differencesDF"]]) == c(0,0))) {
                 h4("*** 'Differences' dataframe is empty. ***",
                    style="font-weight: bold; font-style: italic;")
             } else {
-                dataTableOutput("SCDifferencesDF")
+                dataTableOutput("SADifferencesDF")
             }
         }
     })
-    output$SCDifferencesDF = renderDataTable({
-        consensusParam[["differencesDF"]]
+    output$SADifferencesDF = renderDataTable({
+        contigParam[["differencesDF"]]
     })
     ### ------------------------------------------------------------------------
     ### dendrogram
     ### ------------------------------------------------------------------------
     output$dendrogramPlot <- renderPlot({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            consensusParam[["dendrogram"]] <<-
-                SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@dendrogram
-            plot(consensusParam[["dendrogram"]][[2]])
-            ggdendrogram(consensusParam[["dendrogram"]][[2]], rotate = TRUE)
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            contigParam[["dendrogram"]] <<-
+                SangerAlignment@
+                contigList[[contigIndex]]@dendrogram
+            plot(contigParam[["dendrogram"]][[2]])
+            ggdendrogram(contigParam[["dendrogram"]][[2]], rotate = TRUE)
         }
     })
     output$dendrogramDF <- renderDataTable({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            consensusParam[["dendrogram"]] <<-
-                SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@dendrogram
-            consensusParam[["dendrogram"]][[1]]
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            contigParam[["dendrogram"]] <<-
+                SangerAlignment@
+                contigList[[contigIndex]]@dendrogram
+            contigParam[["dendrogram"]][[1]]
         }
     })
     ### ------------------------------------------------------------------------
     ### distance
     ### ------------------------------------------------------------------------
-    output$SCDistanceMatrixPlotUI <- renderUI({
+    output$SADistanceMatrixPlotUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            consensusParam[["distanceMatrix"]] <<-
-                SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@distanceMatrix
-            if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            contigParam[["distanceMatrix"]] <<-
+                SangerAlignment@
+                contigList[[contigIndex]]@distanceMatrix
+            if (all(dim(contigParam[["distanceMatrix"]]) == c(0,0))) {
                 h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
                    style="font-weight: bold; font-style: italic;")
             } else {
-                plotlyOutput("SCDistanceMatrixPlot")
+                plotlyOutput("SADistanceMatrixPlot")
             }
         }
     })
-    output$SCDistanceMatrixPlot <- renderPlotly({
+    output$SADistanceMatrixPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
             SangerReadBFN <-
-                SangerCSetParam[[consensusReadIndex]]$SangerReadBFN
+                SangerCSetParam[[contigIndex]]$SangerReadBFN
             suppressPlotlyMessage(
                 plot_ly(x = SangerReadBFN,
                         y = SangerReadBFN,
-                        z = consensusParam[["distanceMatrix"]],
+                        z = contigParam[["distanceMatrix"]],
                         colors = colorRamp(c("white", "#32a852")),
                         type = "heatmap")
             )
         }
     })
-    output$SCDistanceMatrixUI <- renderUI({
+    output$SADistanceMatrixUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            consensusParam[["distanceMatrix"]] <<-
-                SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@distanceMatrix
-            if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            contigParam[["distanceMatrix"]] <<-
+                SangerAlignment@
+                contigList[[contigIndex]]@distanceMatrix
+            if (all(dim(contigParam[["distanceMatrix"]]) == c(0,0))) {
                 h4("*** 'Distance' dataframe is empty. ***",
                    style="font-weight: bold; font-style: italic;")
             } else {
-                dataTableOutput("SCDistanceMatrix")
+                dataTableOutput("SADistanceMatrix")
             }
         }
     })
-    output$SCDistanceMatrix = renderDataTable({
-        consensusParam[["distanceMatrix"]]
+    output$SADistanceMatrix = renderDataTable({
+        contigParam[["distanceMatrix"]]
     })
     ### ------------------------------------------------------------------------
-    ### SCIndelsDF
+    ### SAIndelsDF
     ### ------------------------------------------------------------------------
-    output$SCIndelsDFUI <- renderUI({
+    output$SAIndelsDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            consensusParam[["indelsDF"]] <<-
-                SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@indelsDF
-            if (all(dim(consensusParam[["indelsDF"]] ) == c(0,0))) {
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            contigParam[["indelsDF"]] <<-
+                SangerAlignment@
+                contigList[[contigIndex]]@indelsDF
+            if (all(dim(contigParam[["indelsDF"]] ) == c(0,0))) {
                 h4("*** 'Indels' data frame is empty. ***",
                    style="font-weight: bold; font-style: italic;")
             } else {
-                dataTableOutput("SCIndelsDF")
+                dataTableOutput("SAIndelsDF")
             }
         }
     })
-    output$SCIndelsDF <- renderDataTable({
-        consensusParam[["indelsDF"]]
+    output$SAIndelsDF <- renderDataTable({
+        contigParam[["indelsDF"]]
     })
     ### ------------------------------------------------------------------------
-    ### SCStopCodons
+    ### SAStopCodons
     ### ------------------------------------------------------------------------
-    output$SCStopCodonsDFUI <- renderUI({
+    output$SAStopCodonsDFUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
-        if (!is.na(consensusReadIndex)) {
-            consensusParam[["stopCodonsDF"]] <<-
-                SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@stopCodonsDF
-            if (all(dim(consensusParam[["stopCodonsDF"]]) == c(0,0))) {
+        contigIndex <- strtoi(sidebar_menu[[1]])
+        if (!is.na(contigIndex)) {
+            contigParam[["stopCodonsDF"]] <<-
+                SangerAlignment@
+                contigList[[contigIndex]]@stopCodonsDF
+            if (all(dim(contigParam[["stopCodonsDF"]]) == c(0,0))) {
                 h4("*** 'Stop Codons' dataframe is empty. ***",
                    style="font-weight: bold; font-style: italic;")
             } else {
-                dataTableOutput("SCStopCodonsDF")
+                dataTableOutput("SAStopCodonsDF")
             }
         }
     })
-    output$SCStopCodonsDF <- renderDataTable({
-        consensusParam[["stopCodonsDF"]]
+    output$SAStopCodonsDF <- renderDataTable({
+        contigParam[["stopCodonsDF"]]
     })
 
 
 
 
     ############################################################################
-    ### SangerRead (Function for singel read in consensusRead)
+    ### SangerRead (Function for singel read in contigSeq)
     ############################################################################
     output$primarySeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             primarySeqDisplay (sequenceParam)
         }
     })
     output$secondSeqDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             secondarySeqDisplay (sequenceParam)
         }
     })
     output$qualityScoreDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             if (directionParam == "Forward") {
                 PhredScore <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@
                     QualityReport@qualityPhredScores
             } else if (directionParam == "Reverse") {
                 PhredScore <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@
                     QualityReport@qualityPhredScores
             }
@@ -1830,30 +1834,30 @@ SangerAlignmentServer <- function(input, output, session) {
     })
     output$PrimAASeqS1DF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             PrimAASeqS1Display (sequenceParam)
         }
     })
     output$PrimAASeqS2DF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             PrimAASeqS2Display (sequenceParam)
         }
     })
     output$PrimAASeqS3DF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             PrimAASeqS3Display (sequenceParam)
         }
@@ -1865,10 +1869,10 @@ SangerAlignmentServer <- function(input, output, session) {
 
     output$primarySeqTrimmedDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             primarySeqTrimmedDisplay (input, output, session,
                                       sequenceParam, trimmedRV)
@@ -1877,10 +1881,10 @@ SangerAlignmentServer <- function(input, output, session) {
 
     output$secondSeqTrimmedDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             secondSeqTrimmedDisplay (input, output, session,
                                      sequenceParam, trimmedRV)
@@ -1888,21 +1892,21 @@ SangerAlignmentServer <- function(input, output, session) {
     })
     output$qualityScoreTrimmedDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             if (directionParam == "Forward") {
                 PhredScore <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@
                     QualityReport@qualityPhredScores[
                         (trimmedRV[["trimmedStartPos"]]+1):
                             trimmedRV[["trimmedFinishPos"]]]
             } else if (directionParam == "Reverse") {
                 PhredScore <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@
                     QualityReport@qualityPhredScores[
                         (trimmedRV[["trimmedStartPos"]]+1):
@@ -1919,16 +1923,16 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$TrimmingMethodSelectionOutput <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
-            if (SangerConsensusSet@consensusReadsList[[1]]@
+            if (SangerAlignment@contigList[[1]]@
                 forwardReadsList[[1]]@QualityReport@TrimmingMethod == "M1") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
                             'Logarithmic Scale Trimming'")
-            } else if (SangerConsensusSet@consensusReadsList[[1]]@
+            } else if (SangerAlignment@contigList[[1]]@
                        forwardReadsList[[1]]@QualityReport@TrimmingMethod == "M2") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
@@ -1938,27 +1942,27 @@ SangerAlignmentServer <- function(input, output, session) {
     })
     output$TrimmingMethodUI <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             ## For method, everyone is same, so just pick forward one.
-            if (SangerConsensusSet@consensusReadsList[[1]]@
+            if (SangerAlignment@contigList[[1]]@
                 forwardReadsList[[1]]@QualityReport@TrimmingMethod== "M1") {
                 if (directionParam == "Forward") {
-                    if (is.null(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    if (is.null(SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadsList[[singleReadIndex]]@
                                 QualityReport@M1TrimmingCutoff)) {
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@
                             QualityReport@M1TrimmingCutoff <<-  0.0001
                     }
                 } else if (directionParam == "Reverse") {
-                    if (is.null(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    if (is.null(SangerAlignment@contigList[[contigIndex]]@
                                 reverseReadsList[[singleReadIndex]]@
                                 QualityReport@M1TrimmingCutoff)) {
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@
                             QualityReport@M1TrimmingCutoff <<-  0.0001
                     }
@@ -1975,37 +1979,37 @@ SangerAlignmentServer <- function(input, output, session) {
                            ),
                     ),
                 )
-            } else if (SangerConsensusSet@consensusReadsList[[1]]@
+            } else if (SangerAlignment@contigList[[1]]@
                        forwardReadsList[[1]]@QualityReport@TrimmingMethod == "M2") {
 
 
                 if (directionParam == "Forward") {
-                    if (is.null(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    if (is.null(SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadsList[[singleReadIndex]]@
                                 QualityReport@M2CutoffQualityScore)) {
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@
                             QualityReport@M2CutoffQualityScore <<-  20
                     }
-                    if (is.null(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    if (is.null(SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadsList[[singleReadIndex]]@
                                 QualityReport@M2SlidingWindowSize )) {
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                             forwardReadsList[[singleReadIndex]]@
                             QualityReport@M2SlidingWindowSize <<-  5
                     }
                 } else if (directionParam == "Reverse") {
-                    if (is.null(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    if (is.null(SangerAlignment@contigList[[contigIndex]]@
                                 reverseReadsList[[singleReadIndex]]@
                                 QualityReport@M2CutoffQualityScore)) {
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@
                             QualityReport@M2CutoffQualityScore <<-  20
                     }
-                    if (is.null(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    if (is.null(SangerAlignment@contigList[[contigIndex]]@
                                 reverseReadsList[[singleReadIndex]]@
                                 QualityReport@M2SlidingWindowSize )) {
-                        SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                        SangerAlignment@contigList[[contigIndex]]@
                             reverseReadsList[[singleReadIndex]]@
                             QualityReport@M2SlidingWindowSize <<-  5
                     }
@@ -2052,19 +2056,19 @@ SangerAlignmentServer <- function(input, output, session) {
 
     output$qualityTrimmingRatioPlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             if (directionParam == "Forward") {
                 qualityPhredScores <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@
                     QualityReport@qualityPhredScores
             } else if (directionParam == "Reverse") {
                 qualityPhredScores <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@
                     QualityReport@qualityPhredScores
             }
@@ -2074,19 +2078,19 @@ SangerAlignmentServer <- function(input, output, session) {
     })
     output$qualityQualityBasePlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (!is.na(consensusReadIndex) &&
+        if (!is.na(contigIndex) &&
             !is.na(singleReadIndex)) {
             if (directionParam == "Forward") {
                 qualityPhredScores <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@
                     QualityReport@qualityPhredScores
             } else if (directionParam == "Reverse") {
                 qualityPhredScores <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@
                     QualityReport@qualityPhredScores
             }
@@ -2101,7 +2105,7 @@ SangerAlignmentServer <- function(input, output, session) {
     # chromatogram
     output$chromatogramUIOutput <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
         if (sidebar_menu[[2]] == "CR" &&
@@ -2114,20 +2118,20 @@ SangerAlignmentServer <- function(input, output, session) {
 
             if (directionParam == "Forward") {
                 rawSeqLength <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@
                     QualityReport@rawSeqLength
                 trimmedSeqLength <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@
                     QualityReport@trimmedSeqLength
             } else if (directionParam == "Reverse") {
                 rawSeqLength <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@
                     QualityReport@rawSeqLength
                 trimmedSeqLength <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@
                     QualityReport@trimmedSeqLength
             }
@@ -2151,7 +2155,7 @@ SangerAlignmentServer <- function(input, output, session) {
         shinyjs::disable("M2CutoffQualityScoreText")
         shinyjs::disable("M2SlidingWindowSizeText")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        consensusReadIndex <- strtoi(sidebar_menu[[1]])
+        contigIndex <- strtoi(sidebar_menu[[1]])
         singleReadIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
         if (sidebar_menu[[2]] == "CR" &&
@@ -2200,123 +2204,123 @@ SangerAlignmentServer <- function(input, output, session) {
                 type = "message")
             if (directionParam == "Forward") {
                 rawSeqLength <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
                 message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (forward)")
                 ### ----------------------------------------------------------------
                 ### Re-run 'MakeBaseCall' function
                 ### ----------------------------------------------------------------
                 hetcalls <-
-                    MakeBaseCalls(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    MakeBaseCalls(SangerAlignment@contigList[[contigIndex]]@
                                       forwardReadsList[[singleReadIndex]],
                                   signalRatioCutoff = as.numeric(
                                       ChromatogramParam[["signalRatioCutoff"]]))
                 ### ----------------------------------------------------------------
                 ### Update 'SangerConsensus'!
                 ### ----------------------------------------------------------------
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@peakPosMatrix <<-
                     hetcalls@peakPosMatrix
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@peakAmpMatrix <<-
                     hetcalls@peakAmpMatrix
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@primarySeq <<-
                     hetcalls@primarySeq
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@secondarySeq <<-
                     hetcalls@secondarySeq
                 ### ----------------------------------------------------------------
                 ### Updating AASeqs
                 ### ----------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
-                                               SangerConsensusSet@geneticCode)
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                               SangerAlignment@geneticCode)
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
                     AASeqResult[["primaryAASeqS1"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
                     AASeqResult[["primaryAASeqS2"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     forwardReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
                     AASeqResult[["primaryAASeqS3"]]
                 ### ----------------------------------------------------------------
                 ### Updating reactive values
                 ### ----------------------------------------------------------------
                 sequenceParam[["primarySeq"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      forwardReadsList[[singleReadIndex]]@primarySeq)
                 sequenceParam[["secondarySeq"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      forwardReadsList[[singleReadIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      forwardReadsList[[singleReadIndex]]@primaryAASeqS1)
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      forwardReadsList[[singleReadIndex]]@primaryAASeqS2)
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      forwardReadsList[[singleReadIndex]]@primaryAASeqS3)
             } else if (directionParam == "Reverse") {
                 rawSeqLength <-
-                    SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@QualityReport@rawSeqLength
                 message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (reverse)")
                 ### ----------------------------------------------------------------
                 ### Re-run 'MakeBaseCall' function
                 ### ----------------------------------------------------------------
                 hetcalls <-
-                    MakeBaseCalls(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    MakeBaseCalls(SangerAlignment@contigList[[contigIndex]]@
                                       reverseReadsList[[singleReadIndex]],
                                   signalRatioCutoff = as.numeric(
                                       ChromatogramParam[["signalRatioCutoff"]]))
                 ### ----------------------------------------------------------------
                 ### Update 'SangerConsensus'!
                 ### ----------------------------------------------------------------
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@peakPosMatrix <<-
                     hetcalls@peakPosMatrix
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@peakAmpMatrix <<-
                     hetcalls@peakAmpMatrix
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@primarySeq <<-
                     hetcalls@primarySeq
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@secondarySeq <<-
                     hetcalls@secondarySeq
                 ### ----------------------------------------------------------------
                 ### Updating AASeqs
                 ### ----------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
-                                               SangerConsensusSet@geneticCode)
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                                               SangerAlignment@geneticCode)
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@primaryAASeqS1 <<-
                     AASeqResult[["primaryAASeqS1"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@primaryAASeqS2 <<-
                     AASeqResult[["primaryAASeqS2"]]
-                SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                SangerAlignment@contigList[[contigIndex]]@
                     reverseReadsList[[singleReadIndex]]@primaryAASeqS3 <<-
                     AASeqResult[["primaryAASeqS3"]]
                 ### ----------------------------------------------------------------
                 ### Updating reactive values
                 ### ----------------------------------------------------------------
                 sequenceParam[["primarySeq"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      reverseReadsList[[singleReadIndex]]@primarySeq)
                 sequenceParam[["secondarySeq"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      reverseReadsList[[singleReadIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      reverseReadsList[[singleReadIndex]]@primaryAASeqS1)
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      reverseReadsList[[singleReadIndex]]@primaryAASeqS2)
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerConsensusSet@consensusReadsList[[consensusReadIndex]]@
+                    as.character(SangerAlignment@contigList[[contigIndex]]@
                                      reverseReadsList[[singleReadIndex]]@primaryAASeqS3)
             }
             # message(">>>>>>>>>>>> 'MakeBaseCalls' finished")

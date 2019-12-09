@@ -873,6 +873,7 @@ SangerContigServer <- function(input, output, session) {
     ### observeEvent: Button Contig re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
+        shinyjs::disable("closeUI")
         shinyjs::disable("recalculateButton")
         message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start recalculating contig")
@@ -903,8 +904,8 @@ SangerContigServer <- function(input, output, session) {
         contigParam[["indelsDF"]] <<- SangerContig@indelsDF
         contigParam[["stopCodonsDF"]] <<- SangerContig@stopCodonsDF
         contigParam[["secondaryPeakDF"]] <<- SangerContig@secondaryPeakDF
-        shinyjs::enable("closeUI")
         shinyjs::enable("recalculateButton")
+        shinyjs::enable("closeUI")
     })
     ### ------------------------------------------------------------------------
     ### observeEvent: Button chromatogram parameters re-calculating UI
