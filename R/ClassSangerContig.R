@@ -1,10 +1,10 @@
 #' @title SangerContig
 #'
-#' @description  An S4 class for storing multiple single reads to build up new
-#'  consensus read
+#' @description  An S4 class for storing multiple single reads to build up a
+#'  sanger contig
 #'
 #' @slot parentDirectory
-#' @slot consensusReadName .
+#' @slot contigName .
 #' @slot suffixForwardRegExp .
 #' @slot suffixReverseRegExp .
 #' @slot forwardReadsList
@@ -17,7 +17,7 @@
 #' @slot geneticCode
 #' @slot acceptStopCodons
 #' @slot readingFrame
-#' @slot consensusRead
+#' @slot contigSeq
 #' @slot alignment
 #' @slot differencesDF
 #' @slot distanceMatrix
@@ -36,30 +36,30 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' consensusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+#' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' A_chloroticConsensusReads <- new("SangerContig",
-#'                                  parentDirectory       = inputFilesParentDir,
-#'                                  consensusReadName    = consensusReadName,
-#'                                  suffixForwardRegExp   = suffixForwardRegExp,
-#'                                  suffixReverseRegExp   = suffixReverseRegExp,
-#'                                  refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                                  TrimmingMethod        = "M2",
-#'                                  M1TrimmingCutoff      = NULL,
-#'                                  M2CutoffQualityScore  = 40,
-#'                                  M2SlidingWindowSize   = 10,
-#'                                  baseNumPerRow         = 100,
-#'                                  heightPerRow          = 200,
-#'                                  signalRatioCutoff     = 0.33,
-#'                                  showTrimmed           = TRUE)
+#' A_chloroticContig <- new("SangerContig",
+#'                           parentDirectory       = inputFilesParentDir,
+#'                           contigName            = contigName,
+#'                           suffixForwardRegExp   = suffixForwardRegExp,
+#'                           suffixReverseRegExp   = suffixReverseRegExp,
+#'                           refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                           TrimmingMethod        = "M2",
+#'                           M1TrimmingCutoff      = NULL,
+#'                           M2CutoffQualityScore  = 40,
+#'                           M2SlidingWindowSize   = 10,
+#'                           baseNumPerRow         = 100,
+#'                           heightPerRow          = 200,
+#'                           signalRatioCutoff     = 0.33,
+#'                           showTrimmed           = TRUE)
 setClass("SangerContig",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerContig'
          ### -------------------------------------------------------------------
          representation(
              parentDirectory           = "character",
-             consensusReadName        = "character",
+             contigName                = "character",
              suffixForwardRegExp       = "character",
              suffixReverseRegExp       = "character",
              forwardReadsList          = "list",
@@ -72,7 +72,7 @@ setClass("SangerContig",
              geneticCode               = "character",
              acceptStopCodons          = "logical",
              readingFrame              = "numeric",
-             consensusRead             = "DNAString",
+             contigSeq                 = "DNAString",
              alignment                 = "DNAStringSet",
              differencesDF             = "data.frame",
              distanceMatrix            = "matrix",
@@ -90,17 +90,17 @@ setMethod("initialize",
           "SangerContig",
           function(.Object, ...,
                    parentDirectory        = parentDirectory,
-                   consensusReadName     = consensusReadName,
+                   contigName             = contigName,
                    suffixForwardRegExp    = suffixForwardRegExp,
                    suffixReverseRegExp    = suffixReverseRegExp,
-                   TrimmingMethod        = "M1",
-                   M1TrimmingCutoff      = 0.0001,
-                   M2CutoffQualityScore  = NULL,
-                   M2SlidingWindowSize   = NULL,
-                   baseNumPerRow         = 100,
-                   heightPerRow          = 200,
-                   signalRatioCutoff     = 0.33,
-                   showTrimmed           = TRUE,
+                   TrimmingMethod         = "M1",
+                   M1TrimmingCutoff       = 0.0001,
+                   M2CutoffQualityScore   = NULL,
+                   M2SlidingWindowSize    = NULL,
+                   baseNumPerRow          = 100,
+                   heightPerRow           = 200,
+                   signalRatioCutoff      = 0.33,
+                   showTrimmed            = TRUE,
                    refAminoAcidSeq        = "",
                    minReadsNum            = 2,
                    minReadLength          = 20,
@@ -123,15 +123,15 @@ setMethod("initialize",
     ### 'forwardAllReads' & 'reverseAllReads' files prechecking
     ### ------------------------------------------------------------------------
     parentDirFiles <- list.files(parentDirectory)
-    consensusSubGroupFiles <-
-        parentDirFiles[grepl(consensusReadName,
+    contigSubGroupFiles <-
+        parentDirFiles[grepl(contigName,
                              parentDirFiles, fixed=TRUE)]
     forwardSelectInputFiles <-
-        consensusSubGroupFiles[grepl(suffixForwardRegExp,
-                                     consensusSubGroupFiles)]
+        contigSubGroupFiles[grepl(suffixForwardRegExp,
+                                     contigSubGroupFiles)]
     reverseSelectInputFiles <-
-        consensusSubGroupFiles[grepl(suffixReverseRegExp,
-                                     consensusSubGroupFiles)]
+        contigSubGroupFiles[grepl(suffixReverseRegExp,
+                                     contigSubGroupFiles)]
     forwardAllReads <- lapply(parentDirectory, file.path,
                               forwardSelectInputFiles)
     reverseAllReads <- lapply(parentDirectory, file.path,
@@ -192,7 +192,7 @@ setMethod("initialize",
     errors <- checkShowTrimmed (showTrimmed, errors)
 
     ##### ----------------------------------------------------------------------
-    ##### Input parameter prechecking for ConsensusRead parameter
+    ##### Input parameter prechecking for contigSeq parameter
     ##### ----------------------------------------------------------------------
     errors <- checkMinReadsNum(minReadsNum, errors)
     errors <- checkMinReadLength(minReadLength, errors)
@@ -238,15 +238,13 @@ setMethod("initialize",
                                    heightPerRow = heightPerRow,
                                    signalRatioCutoff = signalRatioCutoff,
                                    showTrimmed = showTrimmed)
+        CSResult <- calculateContigSeq (forwardReadsList, reverseReadsList,
+                                        refAminoAcidSeq, minFractionCall,
+                                        maxFractionLost, geneticCode,
+                                        acceptStopCodons, readingFrame,
+                                        processorsNum)
 
-        CSResult<-
-            calculateConsensusRead (forwardReadsList, reverseReadsList,
-                                    refAminoAcidSeq, minFractionCall,
-                                    maxFractionLost, geneticCode,
-                                    acceptStopCodons, readingFrame,
-                                    processorsNum)
-
-        consensusGapfree <- CSResult$consensusGapfree
+        contigGapfree <- CSResult$consensusGapfree
         diffsDf <- CSResult$diffsDf
         aln2 <- CSResult$aln2
         dist <- CSResult$dist
@@ -259,7 +257,7 @@ setMethod("initialize",
     }
     callNextMethod(.Object, ...,
                    parentDirectory        = parentDirectory,
-                   consensusReadName     = consensusReadName,
+                   contigName             = contigName,
                    suffixForwardRegExp    = suffixForwardRegExp,
                    suffixReverseRegExp    = suffixReverseRegExp,
                    forwardReadsList       = forwardReadsList,
@@ -272,7 +270,7 @@ setMethod("initialize",
                    geneticCode            = geneticCode,
                    acceptStopCodons       = acceptStopCodons,
                    readingFrame           = readingFrame,
-                   consensusRead          = consensusGapfree,
+                   contigSeq              = contigGapfree,
                    differencesDF          = diffsDf,
                    alignment              = aln2,
                    distanceMatrix         = dist,
@@ -281,4 +279,3 @@ setMethod("initialize",
                    stopCodonsDF           = stopsDf,
                    secondaryPeakDF        = spDf)
 })
-

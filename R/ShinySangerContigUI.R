@@ -17,7 +17,7 @@ SangerContigUI <- dashboardPage(
         sidebarMenu(
             id = "sidebar_menu",
             menuItem(text = "Consensus Read",
-                     tabName = "Sanger Consensus Read Overview",
+                     tabName = "Sanger Contig Overview",
                      icon=icon("dashboard")),
             sidebarMenuOutput("singleReadMenu")
         )
@@ -59,7 +59,7 @@ SangerContigUI <- dashboardPage(
         tags$script(HTML('
             $(document).ready(function() {
             $("header").find("nav").append(\'<span id="rightHeader"
-            class="myClass"> Sanger Consensus Read Overview </span>\');
+            class="myClass"> Sanger Contig Overview </span>\');
             })
         ')),
 
@@ -131,7 +131,7 @@ SangerContigUI <- dashboardPage(
         ### Pop-up notification style changing
         ### --------------------------------------------------------------------
         tags$style(HTML(".sidebar-menu li a
-                        [data-value='Sanger Consensus Read Overview']
+                        [data-value='Sanger Contig Overview']
                         { font-size: 18px; font-weight: bold }")),
         tags$style(HTML(".sidebar-menu ul li a
                         { font-size: 15px}")),

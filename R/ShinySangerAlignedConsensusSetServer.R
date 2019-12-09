@@ -277,9 +277,9 @@ alignedConsensusSetServer <- function(input, output, session) {
                     sidebar_menu[[4]] == "Read" &&
                     sidebar_menu[[5]] == "Overview") {
                     message(">>>>>>>> Inside '", input$sidebar_menu, "'")
-                    consensusParam[["consensusReadName"]] <<-
+                    consensusParam[["contigName"]] <<-
                         SangerConsensusSet@
-                        consensusReadsList[[consensusReadIndex]]@consensusReadName
+                        consensusReadsList[[consensusReadIndex]]@contigName
                     consensusParam[["consensusRead"]] <<-
                         as.character(SangerConsensusSet@
                                          consensusReadsList[[consensusReadIndex]]@consensusRead)
@@ -361,7 +361,7 @@ alignedConsensusSetServer <- function(input, output, session) {
                                                            font-weight: bold;"),
                                        ),
                                        column(9,
-                                              h4(consensusParam[["consensusReadName"]]),
+                                              h4(consensusParam[["contigName"]]),
                                        )
                                 ),
                                 column(12,
@@ -1622,9 +1622,9 @@ alignedConsensusSetServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         consensusReadIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(consensusReadIndex)) {
-            consensusParam[["consensusReadName"]] <<-
+            consensusParam[["contigName"]] <<-
                 SangerConsensusSet@
-                consensusReadsList[[consensusReadIndex]]@consensusReadName
+                consensusReadsList[[consensusReadIndex]]@contigName
             consensusParam[["alignment"]] <-
                 SangerConsensusSet@
                 consensusReadsList[[consensusReadIndex]]@alignment
@@ -1632,7 +1632,7 @@ alignedConsensusSetServer <- function(input, output, session) {
             browseSeqHTML <-
                 file.path(shinyDirectory, "BrowseSeqs_html",
                           paste0(sidebar_menu[[1]], "_",
-                                 consensusParam[["consensusReadName"]],
+                                 consensusParam[["contigName"]],
                                  "_Alignment_BrowseSeqs.html"))
             if (!dir.exists(file.path(shinyDirectory, "BrowseSeqs_html"))) {
                 dir.create(file.path(shinyDirectory, "BrowseSeqs_html"))

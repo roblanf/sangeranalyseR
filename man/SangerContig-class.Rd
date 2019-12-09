@@ -5,13 +5,13 @@
 \alias{SangerContig-class}
 \title{SangerContig}
 \description{
-An S4 class for storing multiple single reads to build up new
- consensus read
+An S4 class for storing multiple single reads to build up a
+ sanger contig
 }
 \section{Slots}{
 
 \describe{
-\item{\code{consensusReadName}}{.}
+\item{\code{contigName}}{.}
 
 \item{\code{suffixForwardRegExp}}{.}
 
@@ -23,23 +23,23 @@ An S4 class for storing multiple single reads to build up new
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-consensusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-A_chloroticConsensusReads <- new("SangerContig",
-                                 parentDirectory       = inputFilesParentDir,
-                                 consensusReadName    = consensusReadName,
-                                 suffixForwardRegExp   = suffixForwardRegExp,
-                                 suffixReverseRegExp   = suffixReverseRegExp,
-                                 refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-                                 TrimmingMethod        = "M2",
-                                 M1TrimmingCutoff      = NULL,
-                                 M2CutoffQualityScore  = 40,
-                                 M2SlidingWindowSize   = 10,
-                                 baseNumPerRow         = 100,
-                                 heightPerRow          = 200,
-                                 signalRatioCutoff     = 0.33,
-                                 showTrimmed           = TRUE)
+A_chloroticContig <- new("SangerContig",
+                          parentDirectory       = inputFilesParentDir,
+                          contigName            = contigName,
+                          suffixForwardRegExp   = suffixForwardRegExp,
+                          suffixReverseRegExp   = suffixReverseRegExp,
+                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
+                          TrimmingMethod        = "M2",
+                          M1TrimmingCutoff      = NULL,
+                          M2CutoffQualityScore  = 40,
+                          M2SlidingWindowSize   = 10,
+                          baseNumPerRow         = 100,
+                          heightPerRow          = 200,
+                          signalRatioCutoff     = 0.33,
+                          showTrimmed           = TRUE)
 }
 \author{
 Kuan-Hao Chao

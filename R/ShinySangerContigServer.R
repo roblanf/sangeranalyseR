@@ -104,7 +104,7 @@ SangerContigServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         singleReadIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        if (input$sidebar_menu == "Sanger Consensus Read Overview") {
+        if (input$sidebar_menu == "Sanger Contig Overview") {
             message(">>>>>>>> Inside '", input$sidebar_menu, "'")
             ### ------------------------------------------------------------
             ### First assign the ChromatogramParam parameter
@@ -163,7 +163,7 @@ SangerContigServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerContig@consensusReadName),
+                                      h4(SangerContig@contigName),
                                )
                         ),
                         column(12,
@@ -877,14 +877,14 @@ SangerContigServer <- function(input, output, session) {
         message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start recalculating consensus read (SC")
         CSResult<-
-            calculateConsensusRead (SangerContig@forwardReadsList,
-                                    SangerContig@reverseReadsList,
-                                    SangerContig@refAminoAcidSeq,
-                                    SangerContig@minFractionCall,
-                                    SangerContig@maxFractionLost,
-                                    SangerContig@geneticCode,
-                                    SangerContig@acceptStopCodons,
-                                    SangerContig@readingFrame)
+            calculateContigSeq (SangerContig@forwardReadsList,
+                                SangerContig@reverseReadsList,
+                                SangerContig@refAminoAcidSeq,
+                                SangerContig@minFractionCall,
+                                SangerContig@maxFractionLost,
+                                SangerContig@geneticCode,
+                                SangerContig@acceptStopCodons,
+                                SangerContig@readingFrame)
 
         SangerContig@consensusRead <<- CSResult$consensusGapfree
         SangerContig@differencesDF <<- CSResult$diffsDf
@@ -1167,7 +1167,7 @@ SangerContigServer <- function(input, output, session) {
     })
 
     ############################################################################
-    ### SangerContig (Function for Sanger Consensus Read Overview)
+    ### SangerContig (Function for Sanger Contig Overview)
     ############################################################################
     ### ------------------------------------------------------------------------
     ### Valuebox for basic information
@@ -1250,13 +1250,13 @@ SangerContigServer <- function(input, output, session) {
     output$consensusAlignmentHTML <- renderUI({
         browseSeqHTML <-
             file.path(shinyDirectory,
-                      paste0(SangerContig@consensusReadName,
+                      paste0(SangerContig@contigName,
                              "_Alignment_BrowseSeqs.html"))
         BrowseSeqs(DNAStringSet(consensusParam[["alignment"]]),
                    openURL=FALSE, htmlFile=browseSeqHTML)
         includeHTML(
             file.path(shinyDirectory,
-                      paste0(SangerContig@consensusReadName,
+                      paste0(SangerContig@contigName,
                              "_Alignment_BrowseSeqs.html")))
     })
     ### ------------------------------------------------------------------------

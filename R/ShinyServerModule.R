@@ -117,7 +117,7 @@ M2inside_calculate_trimming <- function(qualityPhredScores,
 ### ============================================================================
 ### Calculating consensus read for one read set.
 ### ============================================================================
-calculateConsensusRead <- function(forwardReadsList, reverseReadsList,
+calculateContigSeq <- function(forwardReadsList, reverseReadsList,
                                    refAminoAcidSeq, minFractionCall,
                                    maxFractionLost, geneticCode,
                                    acceptStopCodons, readingFrame,
