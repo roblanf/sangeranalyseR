@@ -291,7 +291,7 @@ alignConsensusReads <- function(SangerContigList,
     ### --------------------------------------------------------------------
     SangerContigDNAList <-
         sapply(SangerContigList, function(SangerContig) {
-            as.character(SangerContig@consensusRead)
+            as.character(SangerContig@contigSeq)
         })
 
     SangerContigDNASet <- DNAStringSet(SangerContigDNAList)
@@ -382,7 +382,7 @@ dynamicMenuSideBarSC <- function(input, output, session,
     })
     # Select consensus Read Menu first
     isolate({updateTabItems(session, "sidebar_menu",
-                            "Sanger Consensus Read Overview")})
+                            "Sanger Contig Overview")})
 }
 
 dynamicMenuSideBarSCSet <- function(input, output, session, SangerCSetParam) {

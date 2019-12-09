@@ -2,25 +2,25 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' consensusReadName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
+#' contigName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' A_chloroticConsensusReads <- SangerContig(
-#'                                  parentDirectory       = inputFilesParentDir,
-#'                                  consensusReadName    = consensusReadName,
-#'                                  suffixForwardRegExp   = suffixForwardRegExp,
-#'                                  suffixReverseRegExp   = suffixReverseRegExp,
-#'                                  refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                                  TrimmingMethod        = "M1",
-#'                                  M1TrimmingCutoff      = 0.0001,
-#'                                  M2CutoffQualityScore  = NULL,
-#'                                  M2SlidingWindowSize   = NULL,
-#'                                  baseNumPerRow         = 80,
-#'                                  heightPerRow          = 200,
-#'                                  signalRatioCutoff     = 0.33,
-#'                                  showTrimmed           = FALSE)
-#' RShinyCS <- launchAppConsensusRead(list(A_chloroticConsensusReads))
-launchAppConsensusRead <- function(SangerContig, outputDir = NULL) {
+#' A_chloroticContig <- SangerContig(
+#'                            parentDirectory       = inputFilesParentDir,
+#'                            contigName            = contigName,
+#'                            suffixForwardRegExp   = suffixForwardRegExp,
+#'                            suffixReverseRegExp   = suffixReverseRegExp,
+#'                            refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                            TrimmingMethod        = "M1",
+#'                            M1TrimmingCutoff      = 0.0001,
+#'                            M2CutoffQualityScore  = NULL,
+#'                            M2SlidingWindowSize   = NULL,
+#'                            baseNumPerRow         = 80,
+#'                            heightPerRow          = 200,
+#'                            signalRatioCutoff     = 0.33,
+#'                            showTrimmed           = FALSE)
+#' RShinyCS <- launchAppSangerContig(list(A_chloroticContig))
+launchAppSangerContig <- function(SangerContig, outputDir = NULL) {
     ### ------------------------------------------------------------------------
     ### Checking SangerContig input parameter is a list containing
     ### one S4 object.
@@ -30,7 +30,7 @@ launchAppConsensusRead <- function(SangerContig, outputDir = NULL) {
         suppressWarnings(dir.create(outputDir))
     }
     if (dir.exists(outputDir)) {
-        shinyOptions(SangerContig = SangerContig)
+        shinyOptions(sangerContig = SangerContig)
         shinyOptions(shinyDirectory = outputDir)
         newSangerContig <- shinyApp(SangerContigUI, SangerContigServer,
                                            options = SangerContig)

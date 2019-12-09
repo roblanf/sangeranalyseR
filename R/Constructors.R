@@ -127,12 +127,12 @@
 #' @example
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' consensusReadName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
+#' contigName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' A_chloroticConsensusReads <- SangerContig(
 #'                                parentDirectory       = inputFilesParentDir,
-#'                                consensusReadName    = consensusReadName,
+#'                                contigName            = contigName,
 #'                                suffixForwardRegExp   = suffixForwardRegExp,
 #'                                suffixReverseRegExp   = suffixReverseRegExp,
 #'                                TrimmingMethod        = "M2",
@@ -144,7 +144,7 @@
 #'                                signalRatioCutoff     = 0.33,
 #'                                showTrimmed           = TRUE)
 SangerContig <- function(parentDirectory        = character(0),
-                         consensusReadName     = character(0),
+                         contigName             = character(0),
                          suffixForwardRegExp    = character(0),
                          suffixReverseRegExp    = character(0),
                          TrimmingMethod         = "M1",
@@ -166,7 +166,7 @@ SangerContig <- function(parentDirectory        = character(0),
                          processorsNum          = 1) {
     newConsensusReads <- new("SangerContig",
                              parentDirectory        = parentDirectory,
-                             consensusReadName     = consensusReadName,
+                             contigName             = contigName,
                              suffixForwardRegExp    = suffixForwardRegExp,
                              suffixReverseRegExp    = suffixReverseRegExp,
                              TrimmingMethod         = TrimmingMethod,

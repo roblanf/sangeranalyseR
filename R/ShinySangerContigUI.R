@@ -16,7 +16,7 @@ SangerContigUI <- dashboardPage(
         useShinyjs(debug = TRUE),
         sidebarMenu(
             id = "sidebar_menu",
-            menuItem(text = "Consensus Read",
+            menuItem(text = "Contig",
                      tabName = "Sanger Contig Overview",
                      icon=icon("dashboard")),
             sidebarMenuOutput("singleReadMenu")

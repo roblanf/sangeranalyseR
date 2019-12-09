@@ -1,5 +1,5 @@
 ### ============================================================================
-### R shiny consensusRead server function
+### R shiny contigSeq server function
 ### ============================================================================
 SangerContigServer <- function(input, output, session) {
     # Suppress Warning
@@ -8,7 +8,7 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### SangerContig parameters initialization.
     ### ------------------------------------------------------------------------
-    SangerContig <- getShinyOption("SangerContig")
+    SangerContig <- getShinyOption("sangerContig")
     shinyDirectory <- getShinyOption("shinyDirectory")
     SangerContig <- SangerContig[[1]]
 
@@ -48,9 +48,9 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### SangerContig reactiveValue
     ### ------------------------------------------------------------------------
-    consensusParam <-
+    contigParam <-
         reactiveValues(
-            consensusRead   = SangerContig@consensusRead,
+            contigSeq   = SangerContig@contigSeq,
             differencesDF   = SangerContig@differencesDF,
             alignment       = as.character(SangerContig@alignment),
             distanceMatrix  = SangerContig@distanceMatrix,
@@ -124,7 +124,7 @@ SangerContigServer <- function(input, output, session) {
                     fluidRow(
                         column(width = 12,
                                actionBttn("recalculateButton",
-                                          "Re-calculate Consensus Read",
+                                          "Re-calculate Contig",
                                           icon = icon("calculator"),
                                           style = "simple", color = "danger",
                                           block = TRUE, size = "lg")
@@ -227,7 +227,7 @@ SangerContigServer <- function(input, output, session) {
                     ################################################
                     # If it is null
                     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                    box(title = tags$p("Consensus Read Parameters",
+                    box(title = tags$p("Contig Parameters",
                                        style = "font-size: 24px;
                                        font-weight: bold;"),
                         collapsible = TRUE,
@@ -259,10 +259,10 @@ SangerContigServer <- function(input, output, session) {
                         column(width = 2,
                                tags$p("Tri-nucleotide:",
                                       style = "font-size: 15px;
-                                       font-weight: bold;"),
+                                      font-weight: bold;"),
                                tags$p("Amino Acid : ",
                                       style = "font-size: 15px;
-                                       font-weight: bold;"),
+                                      font-weight: bold;"),
                                tags$p("('*' : stop codon) ",
                                       style = "font-size: 12px;
                                        font-weight: italic;"),
@@ -279,7 +279,7 @@ SangerContigServer <- function(input, output, session) {
                 ),
 
                 box(title = tags$p(tagList(icon("dot-circle"),
-                                           "Consensus Read Results: "),
+                                           "Contig Results: "),
                                    style = "font-size: 26px;
                                        font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
@@ -291,7 +291,7 @@ SangerContigServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               htmlOutput("consensusAlignmentHTML"),
+                               htmlOutput("contigAlignmentHTML"),
                         ),
                     ),
                     box(title = tags$p("Differences Data frame",
@@ -865,17 +865,17 @@ SangerContigServer <- function(input, output, session) {
         ### --------------------------------------------------------------------
         saveRDS(SangerContig, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
-        NEW_SANGER_CONSENSUS_READ <<- readRDS(file=newS4Object)
+        NEW_SANGER_CONTIG <<- readRDS(file=newS4Object)
         shinyjs::enable("saveS4")
         shinyjs::enable("closeUI")
     })
     ### ------------------------------------------------------------------------
-    ### observeEvent: Button Consensus read re-calculating UI
+    ### observeEvent: Button Contig re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
         shinyjs::disable("recalculateButton")
         message("@@@@@@@ 'Reactive button' has been clicked")
-        message("######## Start recalculating consensus read (SC")
+        message("######## Start recalculating contig")
         CSResult<-
             calculateContigSeq (SangerContig@forwardReadsList,
                                 SangerContig@reverseReadsList,
@@ -886,7 +886,7 @@ SangerContigServer <- function(input, output, session) {
                                 SangerContig@acceptStopCodons,
                                 SangerContig@readingFrame)
 
-        SangerContig@consensusRead <<- CSResult$consensusGapfree
+        SangerContig@contigSeq <<- CSResult$consensusGapfree
         SangerContig@differencesDF <<- CSResult$diffsDf
         SangerContig@alignment <<- CSResult$aln2
         SangerContig@distanceMatrix <<- CSResult$dist
@@ -895,19 +895,19 @@ SangerContigServer <- function(input, output, session) {
         SangerContig@stopCodonsDF <<- CSResult$stopsDf
         SangerContig@secondaryPeakDF <<- CSResult$spDf
 
-        consensusParam[["consensusRead"]] <<- SangerContig@consensusRead
-        consensusParam[["differencesDF"]] <<- SangerContig@differencesDF
-        consensusParam[["alignment"]] <<- as.character(SangerContig@alignment)
-        consensusParam[["distanceMatrix"]] <<-SangerContig@distanceMatrix
-        consensusParam[["dendrogram"]] <<- SangerContig@dendrogram
-        consensusParam[["indelsDF"]] <<- SangerContig@indelsDF
-        consensusParam[["stopCodonsDF"]] <<- SangerContig@stopCodonsDF
-        consensusParam[["secondaryPeakDF"]] <<- SangerContig@secondaryPeakDF
+        contigParam[["contigSeq"]] <<- SangerContig@contigSeq
+        contigParam[["differencesDF"]] <<- SangerContig@differencesDF
+        contigParam[["alignment"]] <<- as.character(SangerContig@alignment)
+        contigParam[["distanceMatrix"]] <<-SangerContig@distanceMatrix
+        contigParam[["dendrogram"]] <<- SangerContig@dendrogram
+        contigParam[["indelsDF"]] <<- SangerContig@indelsDF
+        contigParam[["stopCodonsDF"]] <<- SangerContig@stopCodonsDF
+        contigParam[["secondaryPeakDF"]] <<- SangerContig@secondaryPeakDF
         shinyjs::enable("closeUI")
         shinyjs::enable("recalculateButton")
     })
     ### ------------------------------------------------------------------------
-    ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
+    ### observeEvent: Button chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$saveChromatogramParam, {
         ## !!!!! Update !!!!
@@ -951,7 +951,7 @@ SangerContigServer <- function(input, output, session) {
         }
     })
     ### ------------------------------------------------------------------------
-    ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
+    ### observeEvent: Button trimming parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$startTrimmingButton, {
         ## !!!!! Update !!!!
@@ -1189,7 +1189,7 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$geneticCodeDF <- renderExcel({
         suppressMessages(
-            excelTable(data =  t(data.frame(SangerContig@geneticCode)),
+            excelTable(data = t(data.frame(SangerContig@geneticCode)),
                        defaultColWidth = 50, editable = FALSE, rowResize = FALSE,
                        columnResize = FALSE, allowInsertRow = FALSE,
                        allowInsertColumn = FALSE, allowDeleteRow = FALSE,
@@ -1247,12 +1247,12 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### Alignment
     ### ------------------------------------------------------------------------
-    output$consensusAlignmentHTML <- renderUI({
+    output$contigAlignmentHTML <- renderUI({
         browseSeqHTML <-
             file.path(shinyDirectory,
                       paste0(SangerContig@contigName,
                              "_Alignment_BrowseSeqs.html"))
-        BrowseSeqs(DNAStringSet(consensusParam[["alignment"]]),
+        BrowseSeqs(DNAStringSet(contigParam[["alignment"]]),
                    openURL=FALSE, htmlFile=browseSeqHTML)
         includeHTML(
             file.path(shinyDirectory,
@@ -1263,7 +1263,7 @@ SangerContigServer <- function(input, output, session) {
     ### Difference
     ### ------------------------------------------------------------------------
     output$SCDifferencesDFUI <- renderUI({
-        if (all(dim(consensusParam[["differencesDF"]]) == c(0,0))) {
+        if (all(dim(contigParam[["differencesDF"]]) == c(0,0))) {
             h4("*** 'Differences' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
@@ -1271,23 +1271,23 @@ SangerContigServer <- function(input, output, session) {
         }
     })
     output$SCDifferencesDF = renderDataTable({
-        consensusParam[["differencesDF"]]
+        contigParam[["differencesDF"]]
     })
     ### ------------------------------------------------------------------------
     ### dendrogram
     ### ------------------------------------------------------------------------
     output$dendrogramPlot <- renderPlot({
-        # plot(consensusParam[["dendrogram"]][[2]])
-        ggdendrogram(consensusParam[["dendrogram"]][[2]], rotate = TRUE)
+        # plot(contigParam[["dendrogram"]][[2]])
+        ggdendrogram(contigParam[["dendrogram"]][[2]], rotate = TRUE)
     })
     output$dendrogramDF <- renderDataTable({
-        consensusParam[["dendrogram"]][[1]]
+        contigParam[["dendrogram"]][[1]]
     })
     ### ------------------------------------------------------------------------
     ### Distance
     ### ------------------------------------------------------------------------
     output$SCDistanceMatrixPlotUI <- renderUI({
-        if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
+        if (all(dim(contigParam[["distanceMatrix"]]) == c(0,0))) {
             h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
                style="font-weight: bold; font-style: italic;")
         } else {
@@ -1297,12 +1297,12 @@ SangerContigServer <- function(input, output, session) {
     output$SCDistanceMatrixPlot <- renderPlotly({
         plot_ly(x = SangerReadBFN,
                 y = SangerReadBFN,
-                z = consensusParam[["distanceMatrix"]],
+                z = contigParam[["distanceMatrix"]],
                 colors = colorRamp(c("white", "#32a852")),
                 type = "heatmap")
     })
     output$SCDistanceMatrixUI <- renderUI({
-        if (all(dim(consensusParam[["distanceMatrix"]]) == c(0,0))) {
+        if (all(dim(contigParam[["distanceMatrix"]]) == c(0,0))) {
             h4("*** 'Distance' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
@@ -1310,13 +1310,13 @@ SangerContigServer <- function(input, output, session) {
         }
     })
     output$SCDistanceMatrix = renderDataTable({
-        consensusParam[["distanceMatrix"]]
+        contigParam[["distanceMatrix"]]
     })
     ### ------------------------------------------------------------------------
     ### Indels
     ### ------------------------------------------------------------------------
     output$SCIndelsDFUI <- renderUI({
-        if (all(dim(consensusParam[["indelsDF"]]) == c(0,0))) {
+        if (all(dim(contigParam[["indelsDF"]]) == c(0,0))) {
             h4("*** 'Indels' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
@@ -1325,13 +1325,13 @@ SangerContigServer <- function(input, output, session) {
         }
     })
     output$SCIndelsDF <- renderDataTable({
-        consensusParam[["indelsDF"]]
+        contigParam[["indelsDF"]]
     })
     ### ------------------------------------------------------------------------
     ### StopCodons
     ### ------------------------------------------------------------------------
     output$SCStopCodonsDFUI <- renderUI({
-        if (all(dim(consensusParam[["stopCodonsDF"]]) == c(0,0))) {
+        if (all(dim(contigParam[["stopCodonsDF"]]) == c(0,0))) {
             h4("*** 'Stop Codons' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")
         } else {
@@ -1339,7 +1339,7 @@ SangerContigServer <- function(input, output, session) {
         }
     })
     output$SCStopCodonsDF <- renderDataTable({
-        consensusParam[["stopCodonsDF"]]
+        contigParam[["stopCodonsDF"]]
     })
     ############################################################################
     ### SangerRead (Function for singel read)
