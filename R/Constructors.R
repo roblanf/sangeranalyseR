@@ -33,7 +33,7 @@
 #' #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 #' #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' #' SangerAlignedConsensusSet <- SangerAlignedConsensusSet(
+#' #' SangerAlignment <- SangerAlignment(
 #' #'                                parentDirectory       = rawDataDir,
 #' #'                                suffixForwardRegExp   = suffixForwardRegExp,
 #' #'                                suffixReverseRegExp   = suffixReverseRegExp,
@@ -46,7 +46,7 @@
 #' #'                                heightPerRow          = 200,
 #' #'                                signalRatioCutoff     = 0.33,
 #' #'                                showTrimmed           = TRUE)
-#' SangerAlignedConsensusSet <- function(parentDirectory        = character(0),
+#' SangerAlignment <- function(parentDirectory        = character(0),
 #'                                       consensusReadName      = character(0),
 #'                                       suffixForwardRegExp    = character(0),
 #'                                       suffixReverseRegExp    = character(0),
@@ -67,7 +67,7 @@
 #'                                       acceptStopCodons       = TRUE,
 #'                                       readingFrame           = 1,
 #'                                       processorsNum          = 1) {
-#'     newAlignedConsensusSet <- new("SangerAlignedConsensusSet",
+#'     newAlignedConsensusSet <- new("SangerAlignment",
 #'                                   parentDirectory        = parentDirectory,
 #'                                   consensusReadName     = consensusReadName,
 #'                                   suffixForwardRegExp    = suffixForwardRegExp,

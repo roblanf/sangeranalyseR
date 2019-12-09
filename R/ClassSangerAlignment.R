@@ -1,7 +1,7 @@
 #' @export
 setOldClass("phylo")
 
-#' @title SangerAlignedConsensusSet
+#' @title SangerAlignment
 #'
 #' @description  An S4 class for storing multiple single consensus reads to
 #'
@@ -17,11 +17,11 @@ setOldClass("phylo")
 #' @slot alignmentSCSet .
 #' @slot alignmentTreeSCSet .
 #'
-#' @name SangerAlignedConsensusSet-class
+#' @name SangerAlignment-class
 #'
-#' @rdname SangerAlignedConsensusSet-class
+#' @rdname SangerAlignment-class
 #'
-#' @exportClass SangerAlignedConsensusSet
+#' @exportClass SangerAlignment
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
@@ -29,7 +29,7 @@ setOldClass("phylo")
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
+#' SangerAlignment <- new("SangerAlignment",
 #'                                parentDirectory       = rawDataDir,
 #'                                suffixForwardRegExp   = suffixForwardRegExp,
 #'                                suffixReverseRegExp   = suffixReverseRegExp,
@@ -42,14 +42,14 @@ setOldClass("phylo")
 #'                                heightPerRow          = 200,
 #'                                signalRatioCutoff     = 0.33,
 #'                                showTrimmed           = TRUE)
-setClass("SangerAlignedConsensusSet",
+setClass("SangerAlignment",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
          #  1. Naming: XXXXX_F[0-9]*.ab1 / XXXXX_R[0-9]*.ab1
          #        For same consensus reads, XXXXX must be same.
          #  2. Users can set
          ### -------------------------------------------------------------------
-         ### Input type of each variable of 'SangerAlignedConsensusSet'
+         ### Input type of each variable of 'SangerAlignment'
          ### -------------------------------------------------------------------
          representation(
              parentDirectory             = "character",
@@ -70,7 +70,7 @@ setClass("SangerAlignedConsensusSet",
 ### Overwrite initialize for 'SangerContig' (New constructor)
 ### ============================================================================
 setMethod("initialize",
-          "SangerAlignedConsensusSet",
+          "SangerAlignment",
           function(.Object, ...,
                    parentDirectory        = parentDirectory,
                    suffixForwardRegExp    = "_[F]_[0-9]*.ab1",

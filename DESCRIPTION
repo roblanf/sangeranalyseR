@@ -39,11 +39,11 @@ VignetteBuilder: knitr
 Suggests: BiocStyle, knitr, rmarkdown, testthat
 Collate: 
     'AllGenerics.R'
-    'ClassQualityReport.R'
-    'ClassSangerRead.R'
-    'ClassAlignedConsensusSet.R'
     'ClassBaseCall.R'
     'ClassChromatogramParam.R'
+    'ClassQualityReport.R'
+    'ClassSangerRead.R'
+    'ClassSangerAlignment.R'
     'ClassSangerContig.R'
     'Constructors.R'
     'LoadMessage.R'

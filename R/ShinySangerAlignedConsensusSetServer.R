@@ -1,13 +1,13 @@
 ### ============================================================================
-### R shiny alignedConsensusSet server function
+### R shiny SangerAlignment server function
 ### ============================================================================
-alignedConsensusSetServer <- function(input, output, session) {
+SangerAlignmentServer <- function(input, output, session) {
     # Suppress Warning
     options(warn = -1)
     ### ------------------------------------------------------------------------
-    ### AlignedConsensusSet parameters initialization.
+    ### SangerAlignment parameters initialization.
     ### ------------------------------------------------------------------------
-    SangerConsensusSet <- getShinyOption("SangerAlignedConsensusSet")
+    SangerConsensusSet <- getShinyOption("SangerAlignment")
     shinyDirectory <- getShinyOption("shinyDirectory")
     SangerConsensusSet <- SangerConsensusSet[[1]]
 
@@ -1106,7 +1106,7 @@ alignedConsensusSetServer <- function(input, output, session) {
         shinyjs::disable("saveS4")
         message("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory,
-                                 "SangerAlignedConsensusSet.Rda")
+                                 "SangerAlignment.Rda")
         showNotification(
             ui = column(12,
                         tags$p(tagList(icon("dot-circle"),

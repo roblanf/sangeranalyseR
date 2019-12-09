@@ -46,7 +46,7 @@ launchAppSangerContig <- function(SangerContig, outputDir = NULL) {
 #' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' SangerAlignedConsensusSet <- new("SangerAlignedConsensusSet",
+#' SangerAlignment <- new("SangerAlignment",
 #'                                  parentoutputDir       = rawDataDir,
 #'                                  suffixForwardRegExp   = suffixForwardRegExp,
 #'                                  suffixReverseRegExp   = suffixReverseRegExp,
@@ -59,11 +59,11 @@ launchAppSangerContig <- function(SangerContig, outputDir = NULL) {
 #'                                  heightPerRow          = 200,
 #'                                  signalRatioCutoff     = 0.23,
 #'                                  showTrimmed           = FALSE)
-#' RShinyCSSet <- launchAppAlignedConsensusSet(list(SangerAlignedConsensusSet))
-launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet,
+#' RShinyCSSet <- launchAppSangerAlignment(list(SangerAlignment))
+launchAppSangerAlignment <- function(SangerAlignment,
                                          outputDir = NULL) {
     ### ------------------------------------------------------------------------
-    ### Checking AlignedConsensusSet input parameter is a list containing
+    ### Checking SangerAlignment input parameter is a list containing
     ### one S4 object.
     ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
@@ -71,13 +71,11 @@ launchAppAlignedConsensusSet <- function(SangerAlignedConsensusSet,
         suppressWarnings(dir.create(outputDir))
     }
     if (dir.exists(outputDir)) {
-        shinyOptions(SangerAlignedConsensusSet = SangerAlignedConsensusSet)
+        shinyOptions(SangerAlignment = SangerAlignment)
         shinyOptions(shinyDirectory = outputDir)
-        newSangerAlignedConsensusSet <- shinyApp(alignedConsensusSetUI,
-                                                 alignedConsensusSetServer,
-                                                 options =
-                                                     SangerAlignedConsensusSet)
-        return(newSangerAlignedConsensusSet)
+        newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer,
+                                       options = SangerAlignment)
+        return(newSangerAlignment)
     } else {
         stop("'", outputDir, "' is not valid. Please check again")
     }

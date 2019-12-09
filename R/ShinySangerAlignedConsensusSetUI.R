@@ -1,7 +1,7 @@
 ### ============================================================================
-### R shiny alignedConsensusSet UI function
+### R shiny SangerAlignment UI function
 ### ============================================================================
-alignedConsensusSetUI <- dashboardPage(
+SangerAlignmentUI <- dashboardPage(
     skin = "green",
     dashboardHeader(
         title = "sangeranalyseR",
