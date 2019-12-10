@@ -1,3 +1,7 @@
+<!-- badges: start -->
+  [![Travis build status](https://travis-ci.org/roblanf/sangeranalyseR.svg?branch=master)](https://travis-ci.org/roblanf/sangeranalyseR)
+<!-- badges: end -->
+  
 sangeranalyseR
 ==============
 This package impelements functions to analyse Sanger sequencing reads, especially those from the ABI platform, in R.

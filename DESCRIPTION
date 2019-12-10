@@ -36,7 +36,11 @@ Depends:
     tools
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
-Suggests: BiocStyle, knitr, rmarkdown, testthat
+Suggests: 
+    BiocStyle,
+    knitr,
+    rmarkdown,
+    testthat (>= 2.1.0)
 Collate: 
     'AllGenerics.R'
     'ClassBaseCall.R'
