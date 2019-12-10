@@ -39,13 +39,13 @@ dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
             forwardReadFeature <- SangerAlignmentParam[[i]]$forwardReadFeature
             reverseReadFeature <- SangerAlignmentParam[[i]]$reverseReadFeature
             fmenuSub_list <- sapply(1:forwardReadNum, function(j) {
-                list(menuSubItem(text = paste0(i, " CR - ", forwardReadFeature[j]),
-                                 tabName = paste0(i, " CR - ", forwardReadFeature[j]),
+                list(menuSubItem(text = paste0(i, " - ", forwardReadFeature[j]),
+                                 tabName = paste0(i, " Contig - ", forwardReadFeature[j]),
                                  icon = icon("minus")))
             })
             rmenuSub_list <- sapply(1:reverseReadNum, function(j) {
-                list(menuSubItem(text = paste0(i, " CR - ", reverseReadFeature[j]),
-                                 tabName = paste0(i, " CR - ", reverseReadFeature[j]),
+                list(menuSubItem(text = paste0(i, " - ", reverseReadFeature[j]),
+                                 tabName = paste0(i, " Contig - ", reverseReadFeature[j]),
                                  icon = icon("minus")))
             })
             fmenu_list <- menuItem(text = "Forward Reads",
@@ -58,10 +58,9 @@ dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
             SangerCSMenuSubItem <- list(fmenu_list, rmenu_list)
 
             SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerAlignmentParam[[i]]$SCName, "Overview"),
-                                                      tabName = paste0(i, " Sanger Consensus Read Overview"),
+                                                      tabName = paste0(i, " Sanger Contig Overview Page"),
                                                       icon = icon("align-left"))),
                                      SangerCSMenuSubItem)
-
             SangerAlignmentParam[[i]]$SCName
             list(menuItem(text = SangerAlignmentParam[[i]]$SCName,
                           tabName = SangerAlignmentParam[[i]]$SCName,
@@ -70,7 +69,8 @@ dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
         sidebarMenu(.list = menu_list)
     })
     # Select consensus Read Menu first
-    isolate({updateTabItems(session, "sidebar_menu", "Sanger Alignment Overview")})
+    isolate({updateTabItems(session, "sidebar_menu",
+                            "Contigs Alignment Overview Page .")})
 }
 
 ### ============================================================================

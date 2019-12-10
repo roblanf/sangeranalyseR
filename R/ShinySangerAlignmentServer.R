@@ -16,7 +16,7 @@ SangerAlignmentServer <- function(input, output, session) {
         ### SangerContig-related parameters initialization.
         ### --------------------------------------------------------------------
         # readFeature
-        SCName <- paste0(i, " Consensus Read")
+        SCName <- paste0(i, " Contig")
         # Forward & reverse reads list
         SangerReadFReadList <-
             SangerAlignment@contigList[[i]]@forwardReadList
@@ -106,13 +106,9 @@ SangerAlignmentServer <- function(input, output, session) {
     ############################################################################
     output$aligned_contigSeq_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        contigIndex <- strtoi(sidebar_menu[[1]])
-        readIndex <- strtoi(sidebar_menu[[4]])
-        directionParam <- sidebar_menu[[5]]
-        message(input$sidebar_menu)
-        if (input$sidebar_menu == "Sanger Alignment Overview") {
+        if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
             h1(input$sidebar_menu)
-            message(">>>>>>>> Inside 'Sanger Alignment Overview'")
+            message(">>>>>>>> Inside 'Contigs Alignment Overview Page _'")
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p("Input Parameters: ",
@@ -124,8 +120,7 @@ SangerAlignmentServer <- function(input, output, session) {
                     fluidRow(
                         column(width = 12,
                                actionBttn("recalculateButtonSA",
-                                          "Re-calculate
-                                          Aligned Consensus Reads",
+                                          "Re-calculate Contigs Alignment",
                                           icon = icon("calculator"),
                                           style = "simple", color = "danger",
                                           block = TRUE, size = "lg")
@@ -193,7 +188,7 @@ SangerAlignmentServer <- function(input, output, session) {
                         column(12,
                                column(3,
                                       tags$p(tagList(icon("caret-right"),
-                                                     "Consensus Read Number: "),
+                                                     "Contigs Number: "),
                                              style = "font-size: 20px;
                                                    font-weight: bold;"),
                                ),
@@ -230,13 +225,13 @@ SangerAlignmentServer <- function(input, output, session) {
                     ),
                 ),
                 box(title = tags$p(tagList(icon("dot-circle"),
-                                           "Consensus Readset Results: "),
+                                           "SangerAlignment Results: "),
                                    style = "font-size: 26px;
                                                    font-weight: bold;"),
                     solidHeader = TRUE, collapsible = TRUE,
                     status = "success", width = 12,
                     tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                    box(title = tags$p("Consensus Reads Alignment",
+                    box(title = tags$p("Contigs Alignment",
                                        style = "font-size: 24px;
                                                    font-weight: bold;"),
                         collapsible = TRUE,
@@ -245,7 +240,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                htmlOutput("sangerAlignmentAlignmentHTML"),
                         ),
                     ),
-                    box(title = tags$p("Consensus Reads Tree",
+                    box(title = tags$p("Contigs Tree",
                                        style = "font-size: 24px;
                                                    font-weight: bold;"),
                         collapsible = TRUE,
@@ -258,16 +253,15 @@ SangerAlignmentServer <- function(input, output, session) {
                     ),
                 ),
             )
-
-
-
-
         } else {
+            contigIndex <- strtoi(sidebar_menu[[1]])
+            readIndex <- strtoi(sidebar_menu[[4]])
+            directionParam <- sidebar_menu[[5]]
             if (!is.na(contigIndex)) {
                 if (sidebar_menu[[2]] == "Sanger" &&
-                    sidebar_menu[[3]] == "Consensus" &&
-                    sidebar_menu[[4]] == "Read" &&
-                    sidebar_menu[[5]] == "Overview") {
+                    sidebar_menu[[3]] == "Contig" &&
+                    sidebar_menu[[4]] == "Overview" &&
+                    sidebar_menu[[5]] == "Page") {
                     message(">>>>>>>> Inside '", input$sidebar_menu, "'")
                     contigParam[["contigName"]] <<-
                         SangerAlignment@
@@ -309,7 +303,7 @@ SangerAlignmentServer <- function(input, output, session) {
                             fluidRow(
                                 column(width = 12,
                                        actionBttn("recalculateButton",
-                                                  "Re-calculate Consensus Read",
+                                                  "Re-calculate Contig",
                                                   icon = icon("calculator"),
                                                   style = "simple",
                                                   color = "danger",
@@ -428,7 +422,7 @@ SangerAlignmentServer <- function(input, output, session) {
                             #### Add this after having reference sample ####
                             ################################################
                             tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                            box(title = tags$p("Consensus Read Parameters",
+                            box(title = tags$p("Contig Parameters",
                                                style = "font-size: 24px;
                                                            font-weight: bold;"),
                                 collapsible = TRUE,
@@ -580,7 +574,7 @@ SangerAlignmentServer <- function(input, output, session) {
                     )
                 )
 
-                } else if (sidebar_menu[[2]] == "CR" &&
+                } else if (sidebar_menu[[2]] == "Contig" &&
                            sidebar_menu[[3]] == "-" &&
                            !is.na(readIndex) &&
                            (directionParam == "Forward" ||
@@ -1117,7 +1111,7 @@ SangerAlignmentServer <- function(input, output, session) {
             closeButton = TRUE, id = "saveNotification",
             type = "message", duration = 10)
         ### --------------------------------------------------------------------
-        ### Save SangerConsensus quality S4 object
+        ### Save SangerContig quality S4 object
         ### --------------------------------------------------------------------
         saveRDS(SangerAlignment, file=newS4Object)
         message("New S4 object is store as: ", newS4Object)
@@ -1126,14 +1120,14 @@ SangerAlignmentServer <- function(input, output, session) {
         shinyjs::enable("closeUI")
     })
     ### ------------------------------------------------------------------------
-    ### observeEvent: Button Consensus reads re-calculating (SA) UI
+    ### observeEvent: Button contigs alignment re-calculating (SA) UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButtonSA, {
         shinyjs::disable("closeUI")
         shinyjs::disable("recalculateButtonSA")
         message("######## Reactive button clicked !!!")
         message("######## Start re-aligning contigs")
-        if (input$sidebar_menu == "Sanger Alignment Overview") {
+        if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
             CSSetResult <-
                 alignContigs (SangerAlignment@contigList,
                                      SangerAlignment@geneticCode,
@@ -1153,7 +1147,7 @@ SangerAlignmentServer <- function(input, output, session) {
         shinyjs::enable("closeUI")
     })
     ### ------------------------------------------------------------------------
-    ### observeEvent: Button Consensus read re-calculating (SA) UI
+    ### observeEvent: Button SangerContig re-calculating (SA) UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
         shinyjs::disable("closeUI")
@@ -1443,7 +1437,7 @@ SangerAlignmentServer <- function(input, output, session) {
         }
     })
     ### ------------------------------------------------------------------------
-    ### observeEvent: Button Consensus chromatogram parameters re-calculating UI
+    ### observeEvent: Button chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$saveChromatogramParam, {
         message("@@@@@@@ 'Reactive button' has been clicked")
@@ -1501,26 +1495,26 @@ SangerAlignmentServer <- function(input, output, session) {
 
 
     ############################################################################
-    ### SangerAlignment (Function for Sanger Consensus Read Set Overview)
+    ### SangerAlignment
     ############################################################################
     ### ------------------------------------------------------------------------
     ### Alignment
     ### ------------------------------------------------------------------------
     output$sangerAlignmentAlignmentHTML<-renderUI({
-        if (input$sidebar_menu == "Sanger Alignment Overview") {
+        if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
             browseSeqHTML <-
                 file.path(shinyDirectory,
-                          "Consensus_Readset_Alignment_BrowseSeqs.html")
+                          "_SangerAlignment_BrowseSeqs.html")
             BrowseSeqs(DNAStringSet(sangerAlignmentParam[["contigsAlignment"]]) ,
                        openURL=FALSE, htmlFile=browseSeqHTML)
             includeHTML(browseSeqHTML)
         }
     })
     ### ------------------------------------------------------------------------
-    ### Consensus Reads Tree
+    ### Contigs Tree
     ### ------------------------------------------------------------------------
     output$SATreePlot <- renderPlot({
-        if (input$sidebar_menu == "Sanger Alignment Overview") {
+        if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
             plot(sangerAlignmentParam[["contigsTree"]])
         }
     })
@@ -1596,7 +1590,7 @@ SangerAlignmentServer <- function(input, output, session) {
 
 
     ############################################################################
-    ### SangerContig (Function for Sanger Consensus Read Overview)
+    ### SangerContig
     ############################################################################
     valueBoxSAMinReadsNum (input, output, SangerAlignment, session)
     valueBoxSAMinReadLength (input, output, SangerAlignment, session)
@@ -2071,7 +2065,7 @@ SangerAlignmentServer <- function(input, output, session) {
         contigIndex <- strtoi(sidebar_menu[[1]])
         readIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (sidebar_menu[[2]] == "CR" &&
+        if (sidebar_menu[[2]] == "Contig" &&
             sidebar_menu[[3]] == "-" &&
             !is.na(readIndex) &&
             (directionParam == "Forward" ||
@@ -2121,7 +2115,7 @@ SangerAlignmentServer <- function(input, output, session) {
         contigIndex <- strtoi(sidebar_menu[[1]])
         readIndex <- strtoi(sidebar_menu[[4]])
         directionParam <- sidebar_menu[[5]]
-        if (sidebar_menu[[2]] == "CR" &&
+        if (sidebar_menu[[2]] == "Contig" &&
             sidebar_menu[[3]] == "-" &&
             !is.na(readIndex) &&
             (directionParam == "Forward" ||
@@ -2179,7 +2173,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                   signalRatioCutoff = as.numeric(
                                       ChromatogramParam[["signalRatioCutoff"]]))
                 ### ----------------------------------------------------------------
-                ### Update 'SangerConsensus'!
+                ### Update 'SangerContig'!
                 ### ----------------------------------------------------------------
                 SangerAlignment@contigList[[contigIndex]]@
                     forwardReadList[[readIndex]]@peakPosMatrix <<-
@@ -2239,7 +2233,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                   signalRatioCutoff = as.numeric(
                                       ChromatogramParam[["signalRatioCutoff"]]))
                 ### ----------------------------------------------------------------
-                ### Update 'SangerConsensus'!
+                ### Update 'SangerContig'!
                 ### ----------------------------------------------------------------
                 SangerAlignment@contigList[[contigIndex]]@
                     reverseReadList[[readIndex]]@peakPosMatrix <<-
