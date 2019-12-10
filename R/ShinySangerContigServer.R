@@ -146,7 +146,7 @@ SangerContigServer <- function(input, output, session) {
                         column(12,
                                column(3,
                                       tags$p(tagList(icon("caret-right"),
-                                                     "Consenesus Read Name: "),
+                                                     "Contig Name: "),
                                              style = "font-size: 20px;
                                        font-weight: bold;"),
                                ),
@@ -832,7 +832,7 @@ SangerContigServer <- function(input, output, session) {
         shinyjs::disable("closeUI")
         shinyjs::disable("recalculateButton")
         message("@@@@@@@ 'Reactive button' has been clicked")
-        message("######## Start recalculating contig")
+        message("######## Start to recalculate contig")
         CSResult<-
             calculateContigSeq (SangerContig@forwardReadList,
                                 SangerContig@reverseReadList,
@@ -858,6 +858,7 @@ SangerContigServer <- function(input, output, session) {
         contigParam[["indelsDF"]] <<- SangerContig@indelsDF
         contigParam[["stopCodonsDF"]] <<- SangerContig@stopCodonsDF
         contigParam[["secondaryPeakDF"]] <<- SangerContig@secondaryPeakDF
+        message("######## Finish recalculating contig")
         shinyjs::enable("recalculateButton")
         shinyjs::enable("closeUI")
     })

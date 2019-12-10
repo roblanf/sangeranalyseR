@@ -1,3 +1,6 @@
+### ============================================================================
+### Global helper functions
+### ============================================================================
 getProcessors <- function(processors) {
     sysinf <- Sys.info()
     if (!is.null(sysinf)){
@@ -28,8 +31,88 @@ getProcessors <- function(processors) {
         return(processors)
     }
 }
+suppressPlotlyMessage <- function(p) {
+    suppressMessages(plotly_build(p))
+}
 
+# <---------------------------------------------------------------------------->
 
+### ============================================================================
+### SangerAlignment related helper functions
+### ============================================================================
+### ----------------------------------------------------------------------------
+### Aligning SangerContigs (SangerAlignment)
+### ----------------------------------------------------------------------------
+alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
+                         minFractionCallSA, maxFractionLostSA, processorsNum) {
+    ### ------------------------------------------------------------------------
+    ### Creating SangerContigList DNAStringSet
+    ### ------------------------------------------------------------------------
+    SangerContigDNAList <-
+        sapply(SangerContigList, function(SangerContig) {
+            as.character(SangerContig@contigSeq)
+        })
+    SangerContigDNASet <- DNAStringSet(SangerContigDNAList)
+    ### ------------------------------------------------------------------------
+    ### Aligning consensus reads
+    ### ------------------------------------------------------------------------
+    if(length(SangerContigDNASet) > 1) {
+        message("Aligning consensus reads ... ")
+        if(refAminoAcidSeq != ""){
+            aln = AlignTranslation(SangerContigDNASet,
+                                   geneticCode = geneticCode,
+                                   processors = processorsNum,
+                                   verbose = FALSE)
+        }else{
+            aln = AlignSeqs(SangerContigDNASet, processors = processorsNum,
+                            verbose = FALSE)
+        }
+        # Making a rough NJ tree. Labels are rows in the summary df
+        neat.labels = match(names(aln),
+                            as.character(names(SangerContigDNASet)))
+        aln2 = aln
+        names(aln2) = neat.labels
+
+        aln.bin = as.DNAbin(aln2)
+
+        aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
+        # Making a rough NJ tree. Labels are rows in the summary df
+        #    (If tree cannot be created ==> NULL)
+        aln.tree = NULL
+        try({
+            aln.tree = bionjs(aln.dist)
+            aln.tree$tip.label <- names(aln)
+            # deal with -ve branches
+            # This is not necessarily accurate, but it is good enough to
+            # judge seuqences using the tree
+            aln.tree$edge.length[which(aln.tree$edge.length<0)] =
+                abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])
+        },
+        silent = TRUE
+        )
+
+        # Get consensus read and add to alignment result
+        consensus = ConsensusSequence(aln,
+                                      minInformation = minFractionCallSA,
+                                      includeTerminalGaps = TRUE,
+                                      ignoreNonBases = TRUE,
+                                      threshold = maxFractionLostSA,
+                                      noConsensusChar = "-",
+                                      ambiguity = TRUE)[[1]]
+    } else {
+        aln = NULL
+        aln.tree = NULL
+    }
+    return(list("consensus" = consensus,
+                "aln"       = aln,
+                "aln.tree"  = aln.tree))
+}
+
+# <---------------------------------------------------------------------------->
+
+### ============================================================================
+### SangerContig related helper functions
+### ============================================================================
 getIndelDf <- function(indelList){
     r = lapply(indelList, indelRow)
     indelDf = data.frame(matrix(unlist(r), byrow = T, nrow = length(indelList)))
@@ -37,15 +120,12 @@ getIndelDf <- function(indelList){
     names(indelDf) = c('read', 'insertions', 'deletions', 'distance')
     return(indelDf)
 }
-
-
 indelRow <- function(row){
     nIns = length(row$insertions)
     nDel = length(row$deletions)
     dist = row$distance
     return(c(nIns, nDel, dist))
 }
-
 nPairwiseDiffs <- function(pattern, subject){
     # pairwise differences assuming pattern and subject are aligned
     comp = compareStrings(pattern, subject)
@@ -53,7 +133,6 @@ nPairwiseDiffs <- function(pattern, subject){
     ps = str_count(comp, '\\+')
     return(c(qs, ps))
 }
-
 countCoincidentSp <- function(aln, processorsNum){
     # make a data frame of columns in the alignment that have
     # more than one secondary peak
@@ -69,8 +148,6 @@ countCoincidentSp <- function(aln, processorsNum){
         return(NULL)
     }
 }
-
-
 oneAmbiguousColumn <- function(i, aln){
     ambiguous = names(IUPAC_CODE_MAP)[5:length(names(IUPAC_CODE_MAP))]
     col = as.character(subseq(aln, i, i))
@@ -80,34 +157,172 @@ oneAmbiguousColumn <- function(i, aln){
         return(c(i, amb, str))
     }
 }
+### ----------------------------------------------------------------------------
+### Calculating SangerContig
+### ----------------------------------------------------------------------------
+calculateContigSeq <- function(forwardReadsList, forwardReadList,
+                               refAminoAcidSeq, minFractionCall,
+                               maxFractionLost, geneticCode,
+                               acceptStopCodons, readingFrame,
+                               processorsNum) {
+    ### ------------------------------------------------------------------------
+    ### forward & reverse character reads list string creation
+    ### ------------------------------------------------------------------------
+    fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
+        trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
+        trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
+        primaryDNA <- as.character(forwardRead@primarySeq)
+        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+    })
+    rRDNAStringSet <- sapply(forwardReadList, function(reverseRead) {
+        trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
+        trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
+        primaryDNA <- as.character(reverseRead@primarySeq)
+        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+    })
 
+    ### --------------------------------------------------------------------
+    ### DNAStringSet storing forward & reverse reads ! (Origin)
+    # ### --------------------------------------------------------------------
+    frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),
+                                unlist(rRDNAStringSet)))
+    frReadFeatureList <- c(rep("Forward Reads", length(fRDNAStringSet)),
+                           rep("Reverse Reads", length(rRDNAStringSet)))
 
-countStopSodons <- function(sequence, readingFrame = 1, geneticCode = GENETIC_CODE){
-    l = length(sequence) + 1 - readingFrame
-    if(l < 3){
-        sprintf("Cannot calculate stop codons on sequence of length %d",
-                        " in reading frame %d",length(sequence), readingFrame)
-        # return(NULL)
-        error <- paste("\nCannot calculate stop codons on sequence of length ",
-                       length(sequence), " in reading frame ", readingFrame,
-                       ".\n", sep = "")
+    if(length(frReadSet) < 2) {
+        error <- paste("\n'Valid abif files should be more than 2.\n",
+                       sep = "")
         stop(error)
     }
-    # this comes almost straight from the BioStrings manual
-    tri = trinucleotideFrequency(sequence[readingFrame:length(sequence)], step=3)
-    names(tri) <- geneticCode[names(tri)]
-    freqs = sapply(split(tri, names(tri)), sum)
-    stops = freqs["*"]
-    return(as.numeric(stops))
-}
+    processorsNum <- getProcessors(processorsNum)
 
-suppressPlotlyMessage <- function(p) {
-    suppressMessages(plotly_build(p))
-}
+    ### --------------------------------------------------------------------
+    ### Amino acid reference sequence CorrectFrameshifts correction
+    ### --------------------------------------------------------------------
+    if (refAminoAcidSeq != "") {
+        message("Correcting frameshifts in reads using amino acid",
+                "reference sequence")
+        # My test refAminoAcidSeq data
+        # no_N_string <- str_replace_all(frReadSet[1], "N", "T")
+        # example.dna <- DNAStringSet(c(`IGHV1-18*01`=no_N_string))
+        # refAminoAcidSeq <- translate(example.dna)
+        # Verbose should be FALSE, but I get error when calling it
+        corrected =
+            CorrectFrameshifts(myXStringSet = frReadSet,
+                               myAAStringSet = AAStringSet(refAminoAcidSeq),
+                               geneticCode = geneticCode,
+                               type = 'both',
+                               processors = processorsNum)
+        frReadSet = corrected$sequences
+        indels = getIndelDf(corrected$indels)
+        stops = as.numeric(unlist(mclapply(frReadSet, countStopSodons,
+                                           readingFrame, geneticCode,
+                                           mc.cores = processorsNum)))
+        stopsDf = data.frame("read" = names(frReadSet),
+                             "stop.codons" = stops)
+        frReadSetLen = unlist(lapply(frReadSet, function(x) length(x)))
+        frReadSet = frReadSet[which(frReadSetLen>0)]
+    } else {
+        indels = data.frame()
+        stopsDf = data.frame()
+    }
+    if(length(frReadSet) < 2) {
+        error <- paste("\n'After running 'CorrectFrameshifts' function, ",
+                       "forward and reverse reads should be more than 2.\n",
+                       sep = "")
+        stop(error)
+    }
+    ### --------------------------------------------------------------------
+    ### Reads with stop codons elimination
+    ### --------------------------------------------------------------------
+    ### ----------------------------------------------------------------
+    ### Remove reads with stop codons
+    ### ----------------------------------------------------------------
+    if (!acceptStopCodons) {
+        print("Removing reads with stop codons")
+        if(refAminoAcidSeq == ""){ # otherwise we already did it above
+            stops =
+                as.numeric(unlist(mclapply(frReadSet,
+                                           countStopSodons,
+                                           readingFrame, geneticCode,
+                                           mc.cores = processorsNum)))
+            stopsDf = data.frame("read" = names(frReadSet),
+                                 "stopCodons" = stops)
+        }
+        old_length = length(frReadSet)
+        frReadSet = frReadSet[which(stops==0)]
+        # Modify
+        message(old_length - length(frReadSet),
+                "reads with stop codons removed")
+    }
 
-### ============================================================================
+    if(length(frReadSet) < 2) {
+        error <- paste("\n'After removing reads with stop codons, ",
+                       "forward and reverse reads should be more than 2.\n",
+                       sep = "")
+        stop(error)
+    }
+
+    ### --------------------------------------------------------------------
+    ### Start aligning reads
+    ### --------------------------------------------------------------------
+    if (refAminoAcidSeq != "") {
+        aln = AlignTranslation(frReadSet, geneticCode = geneticCode,
+                               processors = processorsNum, verbose = FALSE)
+    } else {
+        aln = AlignSeqs(frReadSet,
+                        processors = processorsNum, verbose = FALSE)
+    }
+    names(aln) = paste(1:length(aln), "Read",
+                       basename(names(aln)), sep="_")
+    consensus = ConsensusSequence(aln,
+                                  minInformation = minFractionCall,
+                                  includeTerminalGaps = TRUE,
+                                  ignoreNonBases = TRUE,
+                                  threshold = maxFractionLost,
+                                  noConsensusChar = "-",
+                                  ambiguity = TRUE
+    )[[1]]
+
+    diffs = mclapply(aln, nPairwiseDiffs,
+                     subject = consensus, mc.cores = processorsNum)
+    diffs = do.call(rbind, diffs)
+    diffsDf = data.frame("name" = names(aln),
+                         "pairwise.diffs.to.consensus" = diffs[,1],
+                         "unused.chars" = diffs[,2])
+    rownames(diffsDf) = NULL
+
+    # get a dendrogram
+    dist = DistanceMatrix(aln, correction = "Jukes-Cantor",
+                          penalizeGapLetterMatches = FALSE,
+                          processors = processorsNum, verbose = FALSE)
+    dend = IdClusters(dist, type = "both",
+                      showPlot = FALSE,
+                      processors = processorsNum, verbose = FALSE)
+
+    # add consensus to alignment
+    aln2 = c(aln, DNAStringSet(consensus))
+    names(aln2)[length(aln2)] = "Consensus"
+    # strip gaps from consensus (must be an easier way!!)
+    consensusGapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
+
+    # count columns in the alignment with >1 coincident secondary peaks
+    spDf = countCoincidentSp(aln, processors = processorsNum)
+    if (is.null(spDf)) {
+        spDf = data.frame()
+    }
+    return(list("consensusGapfree" = consensusGapfree,
+                "diffsDf"          = diffsDf,
+                "aln2"             = aln2,
+                "dist"             = dist,
+                "dend"             = dend,
+                "indels"           = indels,
+                "stopsDf"          = stopsDf,
+                "spDf"             = spDf))
+}
+### ----------------------------------------------------------------------------
 ### MakeBaseCalls related function
-### ============================================================================
+### ----------------------------------------------------------------------------
 MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
                                 qualityPhredScoresRaw,
                                 signalRatioCutoff, readFeature) {
@@ -204,7 +419,74 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
                 "primarySeq" = primarySeq,
                 "secondarySeq" = secondarySeq))
 }
+getpeaks <- function(trace) {
+    r <- rle(trace)
+    indexes <- which(rep(diff(sign(diff(c(-Inf, r$values, -Inf)))) == -2,
+                         times = r$lengths))
+    cbind(indexes, trace[indexes])
+}
+peakvalues <- function(x, pstart, pstop) {
+    region <- x[x[,1] > pstart & x[,1] < pstop, ,drop=FALSE]
+    if (length(region[,1]) == 0) return(c(0, NA))
+    else return(c(max(region[,2], na.rm=TRUE), region[which.max(region[,2]),1]))
+}
+### ----------------------------------------------------------------------------
+### chromatogram related function
+### ----------------------------------------------------------------------------
+chromatogramRowNum <- function(width, rawLength, trimmedLength, showTrimmed) {
+    if (showTrimmed) {
+        numplots = ceiling(rawLength / width)
+    } else {
+        numplots = ceiling(trimmedLength / width)
+    }
+}
 
+# <---------------------------------------------------------------------------->
+
+### ============================================================================
+### SangerRead related helper functions
+### ============================================================================
+SetCharStyleList <- function(AASeqDF, selectChar, colorCode) {
+    stopIndex <- AASeqDF %>% `==`(selectChar) %>% which()
+    stopExcelIndex <- int2col(stopIndex)
+    stopExcelIndexName <- paste0(stopExcelIndex, "1")
+    styleList <-
+        as.list(rep(paste('background-color:', colorCode,
+                          "; font-weight: bold;"), length(stopExcelIndex)))
+    if (length(stopIndex) != 0) {
+        names(styleList) <- stopExcelIndexName
+    }
+    return(styleList)
+}
+SetAllStyleList <- function(AASeqDF, colorCode) {
+    Index <- strtoi(names(AASeqDF))
+    ExcelIndex <- int2col(Index)
+    ExcelIndexName <- paste0(ExcelIndex, "1")
+    styleList <-
+        as.list(rep(paste('background-color:', colorCode,
+                          "; font-weight: bold;"), length(ExcelIndex)))
+    names(styleList) <- ExcelIndexName
+    return(styleList)
+}
+countStopSodons <- function(sequence,
+                            readingFrame = 1, geneticCode = GENETIC_CODE){
+    l = length(sequence) + 1 - readingFrame
+    if(l < 3){
+        sprintf("Cannot calculate stop codons on sequence of length %d",
+                " in reading frame %d",length(sequence), readingFrame)
+        # return(NULL)
+        error <- paste("\nCannot calculate stop codons on sequence of length ",
+                       length(sequence), " in reading frame ", readingFrame,
+                       ".\n", sep = "")
+        stop(error)
+    }
+    # this comes almost straight from the BioStrings manual
+    tri = trinucleotideFrequency(sequence[readingFrame:length(sequence)], step=3)
+    names(tri) <- geneticCode[names(tri)]
+    freqs = sapply(split(tri, names(tri)), sum)
+    stops = freqs["*"]
+    return(as.numeric(stops))
+}
 calculateAASeq <- function(primarySeq, geneticCode) {
     primaryAASeqS1 =
         suppressWarnings(translate(primarySeq,
@@ -231,48 +513,9 @@ calculateAASeq <- function(primarySeq, geneticCode) {
                 "primaryAASeqS2" = primaryAASeqS2,
                 "primaryAASeqS3" = primaryAASeqS3))
 }
-
-getpeaks <- function(trace) {
-    r <- rle(trace)
-    indexes <- which(rep(diff(sign(diff(c(-Inf, r$values, -Inf)))) == -2,
-                         times = r$lengths))
-    cbind(indexes, trace[indexes])
-}
-
-peakvalues <- function(x, pstart, pstop) {
-    region <- x[x[,1] > pstart & x[,1] < pstop, ,drop=FALSE]
-    if (length(region[,1]) == 0) return(c(0, NA))
-    else return(c(max(region[,2], na.rm=TRUE), region[which.max(region[,2]),1]))
-}
-
-SetCharStyleList <- function(AASeqDF, selectChar, colorCode) {
-    stopIndex <- AASeqDF %>% `==`(selectChar) %>% which()
-    stopExcelIndex <- int2col(stopIndex)
-    stopExcelIndexName <- paste0(stopExcelIndex, "1")
-    styleList <-
-        as.list(rep(paste('background-color:', colorCode,
-                          "; font-weight: bold;"), length(stopExcelIndex)))
-    if (length(stopIndex) != 0) {
-        names(styleList) <- stopExcelIndexName
-    }
-    return(styleList)
-}
-
-SetAllStyleList <- function(AASeqDF, colorCode) {
-    Index <- strtoi(names(AASeqDF))
-    ExcelIndex <- int2col(Index)
-    ExcelIndexName <- paste0(ExcelIndex, "1")
-    styleList <-
-        as.list(rep(paste('background-color:', colorCode,
-                          "; font-weight: bold;"), length(ExcelIndex)))
-    names(styleList) <- ExcelIndexName
-    return(styleList)
-}
-
-
-### ============================================================================
+### ----------------------------------------------------------------------------
 ### Quality trimming related parameter
-### ============================================================================
+### ----------------------------------------------------------------------------
 M1inside_calculate_trimming <- function(qualityPhredScores,
                                         qualityBaseScores,
                                         M1TrimmingCutoff) {
@@ -341,7 +584,6 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
              "trimmedMinQualityScore" = trimmedMinQualityScore,
              "remainingRatio" = remainingRatio))
 }
-
 M2inside_calculate_trimming <- function(qualityPhredScores, qualityBaseScores,
                                         M2CutoffQualityScore, M2SlidingWindowSize) {
     rawSeqLength <- length(qualityBaseScores)
@@ -387,247 +629,4 @@ M2inside_calculate_trimming <- function(qualityPhredScores, qualityBaseScores,
                 "remainingRatio" = remainingRatio))
 }
 
-### ============================================================================
-### Calculating SangerContig
-### ============================================================================
-calculateContigSeq <- function(forwardReadsList, forwardReadList,
-                               refAminoAcidSeq, minFractionCall,
-                               maxFractionLost, geneticCode,
-                               acceptStopCodons, readingFrame,
-                               processorsNum) {
-    ### ------------------------------------------------------------------------
-    ### forward & reverse character reads list string creation
-    ### ------------------------------------------------------------------------
-    fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
-        trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
-        trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
-        primaryDNA <- as.character(forwardRead@primarySeq)
-        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
-    })
-    rRDNAStringSet <- sapply(forwardReadList, function(reverseRead) {
-        trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
-        trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
-        primaryDNA <- as.character(reverseRead@primarySeq)
-        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
-    })
 
-    ### --------------------------------------------------------------------
-    ### DNAStringSet storing forward & reverse reads ! (Origin)
-    # ### --------------------------------------------------------------------
-    frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),
-                                unlist(rRDNAStringSet)))
-    frReadFeatureList <- c(rep("Forward Reads", length(fRDNAStringSet)),
-                           rep("Reverse Reads", length(rRDNAStringSet)))
-
-    if(length(frReadSet) < 2) {
-        error <- paste("\n'Valid abif files should be more than 2.\n",
-                       sep = "")
-        stop(error)
-    }
-    processorsNum <- getProcessors(processorsNum)
-
-    ### --------------------------------------------------------------------
-    ### Amino acid reference sequence CorrectFrameshifts correction
-    ### --------------------------------------------------------------------
-    if (refAminoAcidSeq != "") {
-        message("Correcting frameshifts in reads using amino acid",
-                "reference sequence")
-        # My test refAminoAcidSeq data
-        # no_N_string <- str_replace_all(frReadSet[1], "N", "T")
-        # example.dna <- DNAStringSet(c(`IGHV1-18*01`=no_N_string))
-        # refAminoAcidSeq <- translate(example.dna)
-        # Verbose should be FALSE, but I get error when calling it
-        corrected =
-            CorrectFrameshifts(myXStringSet = frReadSet,
-                               myAAStringSet = AAStringSet(refAminoAcidSeq),
-                               geneticCode = geneticCode,
-                               type = 'both',
-                               processors = processorsNum)
-        frReadSet = corrected$sequences
-        indels = getIndelDf(corrected$indels)
-        stops = as.numeric(unlist(mclapply(frReadSet, countStopSodons,
-                                           readingFrame, geneticCode,
-                                           mc.cores = processorsNum)))
-        stopsDf = data.frame("read" = names(frReadSet),
-                             "stop.codons" = stops)
-        frReadSetLen = unlist(lapply(frReadSet, function(x) length(x)))
-        frReadSet = frReadSet[which(frReadSetLen>0)]
-    } else {
-        indels = data.frame()
-        stopsDf = data.frame()
-    }
-    if(length(frReadSet) < 2) {
-        error <- paste("\n'After running 'CorrectFrameshifts' function, ",
-                       "forward and reverse reads should be more than 2.\n",
-                       sep = "")
-        stop(error)
-    }
-
-    ### --------------------------------------------------------------------
-    ### Reads with stop codons elimination
-    ### --------------------------------------------------------------------
-    ### ----------------------------------------------------------------
-    ### Remove reads with stop codons
-    ### ----------------------------------------------------------------
-    if (!acceptStopCodons) {
-        print("Removing reads with stop codons")
-        if(refAminoAcidSeq == ""){ # otherwise we already did it above
-            stops =
-                as.numeric(unlist(mclapply(frReadSet,
-                                           countStopSodons,
-                                           readingFrame, geneticCode,
-                                           mc.cores = processorsNum)))
-            stopsDf = data.frame("read" = names(frReadSet),
-                                 "stopCodons" = stops)
-        }
-        old_length = length(frReadSet)
-        frReadSet = frReadSet[which(stops==0)]
-        # Modify
-        message(old_length - length(frReadSet),
-                "reads with stop codons removed")
-    }
-
-    if(length(frReadSet) < 2) {
-        error <- paste("\n'After removing reads with stop codons, ",
-                       "forward and reverse reads should be more than 2.\n",
-                       sep = "")
-        stop(error)
-    }
-
-    ### --------------------------------------------------------------------
-    ### Start aligning reads
-    ### --------------------------------------------------------------------
-    if (refAminoAcidSeq != "") {
-        aln = AlignTranslation(frReadSet, geneticCode = geneticCode,
-                               processors = processorsNum, verbose = FALSE)
-    } else {
-        aln = AlignSeqs(frReadSet,
-                        processors = processorsNum, verbose = FALSE)
-    }
-    names(aln) = paste(1:length(aln), "Read",
-                       basename(names(aln)), sep="_")
-    consensus = ConsensusSequence(aln,
-                                  minInformation = minFractionCall,
-                                  includeTerminalGaps = TRUE,
-                                  ignoreNonBases = TRUE,
-                                  threshold = maxFractionLost,
-                                  noConsensusChar = "-",
-                                  ambiguity = TRUE
-    )[[1]]
-
-    diffs = mclapply(aln, nPairwiseDiffs,
-                     subject = consensus, mc.cores = processorsNum)
-    diffs = do.call(rbind, diffs)
-    diffsDf = data.frame("name" = names(aln),
-                         "pairwise.diffs.to.consensus" = diffs[,1],
-                         "unused.chars" = diffs[,2])
-    rownames(diffsDf) = NULL
-
-    # get a dendrogram
-    dist = DistanceMatrix(aln, correction = "Jukes-Cantor",
-                          penalizeGapLetterMatches = FALSE,
-                          processors = processorsNum, verbose = FALSE)
-    dend = IdClusters(dist, type = "both",
-                      showPlot = FALSE,
-                      processors = processorsNum, verbose = FALSE)
-
-    # add consensus to alignment
-    aln2 = c(aln, DNAStringSet(consensus))
-    names(aln2)[length(aln2)] = "Consensus"
-    # strip gaps from consensus (must be an easier way!!)
-    consensusGapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
-
-    # count columns in the alignment with >1 coincident secondary peaks
-    spDf = countCoincidentSp(aln, processors = processorsNum)
-    if (is.null(spDf)) {
-        spDf = data.frame()
-    }
-    return(list("consensusGapfree" = consensusGapfree,
-                "diffsDf"          = diffsDf,
-                "aln2"             = aln2,
-                "dist"             = dist,
-                "dend"             = dend,
-                "indels"           = indels,
-                "stopsDf"          = stopsDf,
-                "spDf"             = spDf))
-}
-
-### ============================================================================
-### Aligning SangerContigs (SangerAlignment)
-### ============================================================================
-alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
-                         minFractionCallSA, maxFractionLostSA, processorsNum) {
-    ### ------------------------------------------------------------------------
-    ### Creating SangerContigList DNAStringSet
-    ### ------------------------------------------------------------------------
-    SangerContigDNAList <-
-        sapply(SangerContigList, function(SangerContig) {
-            as.character(SangerContig@contigSeq)
-        })
-    SangerContigDNASet <- DNAStringSet(SangerContigDNAList)
-    ### ------------------------------------------------------------------------
-    ### Aligning consensus reads
-    ### ------------------------------------------------------------------------
-    if(length(SangerContigDNASet) > 1) {
-        message("Aligning consensus reads ... ")
-        if(refAminoAcidSeq != ""){
-            aln = AlignTranslation(SangerContigDNASet,
-                                   geneticCode = geneticCode,
-                                   processors = processorsNum,
-                                   verbose = FALSE)
-        }else{
-            aln = AlignSeqs(SangerContigDNASet, processors = processorsNum,
-                            verbose = FALSE)
-        }
-        # Making a rough NJ tree. Labels are rows in the summary df
-        neat.labels = match(names(aln),
-                            as.character(names(SangerContigDNASet)))
-        aln2 = aln
-        names(aln2) = neat.labels
-
-        aln.bin = as.DNAbin(aln2)
-
-        aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
-        # Making a rough NJ tree. Labels are rows in the summary df
-        #    (If tree cannot be created ==> NULL)
-        aln.tree = NULL
-        try({
-            aln.tree = bionjs(aln.dist)
-            aln.tree$tip.label <- names(aln)
-            # deal with -ve branches
-            # This is not necessarily accurate, but it is good enough to
-            # judge seuqences using the tree
-            aln.tree$edge.length[which(aln.tree$edge.length<0)] =
-                abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])
-        },
-        silent = TRUE
-        )
-
-        # Get consensus read and add to alignment result
-        consensus = ConsensusSequence(aln,
-                                      minInformation = minFractionCallSA,
-                                      includeTerminalGaps = TRUE,
-                                      ignoreNonBases = TRUE,
-                                      threshold = maxFractionLostSA,
-                                      noConsensusChar = "-",
-                                      ambiguity = TRUE)[[1]]
-    } else {
-        aln = NULL
-        aln.tree = NULL
-    }
-    return(list("consensus" = consensus,
-                "aln"       = aln,
-                "aln.tree"  = aln.tree))
-}
-
-
-### ============================================================================
-### chromatogram row number counting
-### ============================================================================
-chromatogramRowNum <- function(width, rawLength, trimmedLength, showTrimmed) {
-    if (showTrimmed) {
-        numplots = ceiling(rawLength / width)
-    } else {
-        numplots = ceiling(trimmedLength / width)
-    }
-}
