@@ -106,9 +106,12 @@ setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
     ### ------------------------------------------------------------------------
     ### selection can be 'all', 'alignment' 'allReads' 'contig'
     ### ------------------------------------------------------------------------
-    consensusReadName = obj@consensusReadName
-    message("Start to write '", consensusReadName,
-            "' to FASTA format ...")
+    if (selection != "all" && selection != "alignment" &&
+        selection != "allReads" && selection != "contig") {
+        stop("\nSelection must be 'all', 'alignment', 'allReads' or 'contig'.")
+    }
+    contigName = obj@contigName
+    message("Start to write '", contigName, "' to FASTA format ...")
     ### ------------------------------------------------------------------------
     ### Writing alignment result to FASTA file (Exclude consensus read)
     ### ------------------------------------------------------------------------
@@ -118,23 +121,24 @@ setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
         alignmentObject$Consensus <- NULL
         writeXStringSet(alignmentObject,
                         file.path(outputDir,
-                                  paste0(consensusReadName, "_alignment.fa")))
+                                  paste0(contigName, "_reads_alignment.fa")),
+                        compress = compress,
+                        compression_level = compression_level)
     }
-
 
     ### ------------------------------------------------------------------------
     ### Writing all single read into FASTA file
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "allReads") {
         message("\n    >> Writing all single reads to FASTA ...")
-        fRDNAStringSet <- sapply(obj@forwardReadsList, function(forwardRead) {
+        fRDNAStringSet <- sapply(obj@forwardReadList, function(forwardRead) {
             trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
             trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
             primaryDNA <- as.character(forwardRead@primarySeq)
             substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
         })
         names(fRDNAStringSet) <- basename(names(fRDNAStringSet))
-        rRDNAStringSet <- sapply(obj@reverseReadsList, function(reverseRead) {
+        rRDNAStringSet <- sapply(obj@reverseReadList, function(reverseRead) {
             trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
             trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
             primaryDNA <- as.character(reverseRead@primarySeq)
@@ -145,10 +149,11 @@ setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
                                     unlist(rRDNAStringSet)))
         writeXStringSet(frReadSet,
                         file.path(outputDir,
-                                  paste0(consensusReadName,
-                                         "_all_trimmed_reads.fa")))
+                                  paste0(contigName,
+                                         "_all_trimmed_reads.fa")),
+                        compress = compress,
+                        compression_level = compression_level)
     }
-
 
     ### ------------------------------------------------------------------------
     ### Writing consensus read into FASTA file
@@ -156,11 +161,12 @@ setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
     if (selection == "all" || selection == "contig") {
         message("\n    >> Writing consensus read to FASTA ...")
 
-        writeTarget <- DNAStringSet(obj@consensusRead)
-        names(writeTarget) <- paste0(consensusReadName, "_contig")
+        writeTarget <- DNAStringSet(obj@contigSeq)
+        names(writeTarget) <- paste0(contigName, "_contig")
         writeXStringSet(writeTarget,
-                        file.path(outputDir,
-                                  paste0(consensusReadName, "_contig.fa")))
+                        file.path(outputDir,paste0(contigName, "_contig.fa")),
+                        compress = compress,
+                        compression_level = compression_level)
     }
-    message("\nFinish writing '", consensusReadName, "' to FASTA format")
+    message("\nFinish writing '", contigName, "' to FASTA format")
 })

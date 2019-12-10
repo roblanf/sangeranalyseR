@@ -55,7 +55,7 @@ A_chloroticaRead <- new("SangerRead",
                         M1TrimmingCutoff      = 0.0001,
                         M2CutoffQualityScore  = NULL,
                         M2SlidingWindowSize   = NULL,
-                        baseNumPerRow         = NULL,
+                        baseNumPerRow         = 100,
                         heightPerRow          = 200,
                         signalRatioCutoff     = 0.33,
                         showTrimmed           = TRUE)
