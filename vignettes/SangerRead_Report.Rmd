@@ -22,6 +22,10 @@ vignette: >
 
 # sangeranalyseR 'SangerRead' Report
 
+```{r}
+library(sangeranalyseR)
+```
+
 ## Basic Project Information:
 
 <details><summary>CLICK ME</summary>
@@ -71,12 +75,17 @@ vignette: >
   <li>**Trimmed Min Quality Score**: <span class="tab">*`r params$SangerRead@QualityReport@trimmedMinQualityScore`*</span></li>
   
   <li>**Remaining Read Ratio**: <span class="tab">*`r params$SangerRead@QualityReport@remainingRatio`*</span></li>
-  
-  <li>**Phred Scores**:  <span class="tab">*`r params$SangerRead@QualityReport@qualityPhredScores`*</span></li>
+
 </ul>
+
+```{r}
+qualityBasePlot(params$SangerRead)
+```
 
 </details>
 
+  
+  <li>**Phred Scores**:  <span class="tab">*`r params$SangerRead@QualityReport@qualityPhredScores`*</span></li>
 --- 
 
 ## Chromatogram
