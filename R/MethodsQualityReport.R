@@ -1,35 +1,49 @@
 ### ============================================================================
 ### Plotting quality for each base for "QualityReport" S4 object
 ### ============================================================================
-setMethod("preQualityBasePlot",  "QualityReport", function(object){
-    readFeature <- object@readFeature
+setMethod("preQualityBasePlot",  "QualityReport", function(object, readFeature){
+    # trimmedStartPos = object@trimmedStartPos
+    # trimmedFinishPos = object@trimmedFinishPos
+    # readLen = length(object@qualityPhredScores)
+    #
+    # qualityPlotDf<- data.frame(1:length(object@qualityPhredScores),
+    #                            object@qualityPhredScores)
+    # colnames(qualityPlotDf) <- c("Index", "Score")
+    #
+    # p <- ggplot(as.data.frame(qualityPlotDf),
+    #            aes(Index, Score)) +
+    #         geom_point() + theme_bw() +
+    #         xlab("Base Index") + ylab("Phred Quality Score") +
+    #         geom_vline(xintercept = trimmedStartPos,
+    #                    color = "red", size=1) +
+    #         geom_vline(xintercept = trimmedFinishPos,
+    #                    color = "red", size=1) +
+    #         ggtitle(paste(readFeature, " Quality Trimming Percentage Plot")) +
+    #         theme(axis.text.x = element_text(angle = 90, hjust = 1),
+    #               plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+    #               axis.title.x = element_text(size = 10),
+    #               axis.title.y = element_text(size = 10),
+    #               legend.position="top",
+    #               legend.text = element_text(size = 6),
+    #               legend.title = element_blank())
     trimmedStartPos = object@trimmedStartPos
     trimmedFinishPos = object@trimmedFinishPos
-    readLen = length(object@qualityPhredScores)
-
-    qualityPlotDf<- data.frame(1:length(object@qualityPhredScores),
-                               object@qualityPhredScores)
+    qualityPhredScores = object@qualityPhredScores
+    readLen = length(qualityPhredScores)
+    qualityPlotDf<- data.frame(1:length(qualityPhredScores),
+                               qualityPhredScores)
     colnames(qualityPlotDf) <- c("Index", "Score")
-
-    p <- ggplot(as.data.frame(qualityPlotDf),
-               aes(Index, Score)) +
-            geom_point() + theme_bw() +
-            xlab("Base Index") + ylab("Phred Quality Score") +
-            geom_vline(xintercept = trimmedStartPos,
-                       color = "red", size=1) +
-            geom_vline(xintercept = trimmedFinishPos,
-                       color = "red", size=1) +
-            ggtitle(paste(readFeature, " Quality Trimming Percentage Plot")) +
-            theme(axis.text.x = element_text(angle = 90, hjust = 1),
-                  plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
-                  axis.title.x = element_text(size = 10),
-                  axis.title.y = element_text(size = 10),
-                  legend.position="top",
-                  legend.text = element_text(size = 6),
-                  legend.title = element_blank())
+    x <- list(
+        title = "Base Pair Index"
+        # titlefont = f
+    )
+    y <- list(
+        title = "Phred Quality Score"
+        # titlefont = f
+    )
+    p <- QualityBasePlotly(trimmedStartPos, trimmedFinishPos,
+                           readLen, qualityPlotDf, x,  y)
 })
-
-
 
 ### ============================================================================
 ### Plotting trimmed and remaining ratio for "QualityReport" S4 object

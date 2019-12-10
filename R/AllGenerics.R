@@ -13,6 +13,11 @@ setGeneric("preTrimmingRatioPlot", function(object) {
 setGeneric("preQualityBasePlot", function(object) {
     standardGeneric("preQualityBasePlot")
 })
+#' @export
+setGeneric("preQualityBasePlot", function(object,
+                                          readFeature = "Forward Read") {
+    standardGeneric("preQualityBasePlot")
+})
 
 
 ### ============================================================================

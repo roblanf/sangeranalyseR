@@ -181,9 +181,9 @@ calculateContigSeq <- function(forwardReadsList, forwardReadList,
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
     })
 
-    ### --------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     ### DNAStringSet storing forward & reverse reads ! (Origin)
-    # ### --------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),
                                 unlist(rRDNAStringSet)))
     frReadFeatureList <- c(rep("Forward Reads", length(fRDNAStringSet)),
@@ -196,9 +196,9 @@ calculateContigSeq <- function(forwardReadsList, forwardReadList,
     }
     processorsNum <- getProcessors(processorsNum)
 
-    ### --------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     ### Amino acid reference sequence CorrectFrameshifts correction
-    ### --------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     if (refAminoAcidSeq != "") {
         message("Correcting frameshifts in reads using amino acid",
                 "reference sequence")
@@ -232,12 +232,12 @@ calculateContigSeq <- function(forwardReadsList, forwardReadList,
                        sep = "")
         stop(error)
     }
-    ### --------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     ### Reads with stop codons elimination
-    ### --------------------------------------------------------------------
-    ### ----------------------------------------------------------------
+    ### ------------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     ### Remove reads with stop codons
-    ### ----------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     if (!acceptStopCodons) {
         print("Removing reads with stop codons")
         if(refAminoAcidSeq == ""){ # otherwise we already did it above
@@ -263,9 +263,9 @@ calculateContigSeq <- function(forwardReadsList, forwardReadList,
         stop(error)
     }
 
-    ### --------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     ### Start aligning reads
-    ### --------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     if (refAminoAcidSeq != "") {
         aln = AlignTranslation(frReadSet, geneticCode = geneticCode,
                                processors = processorsNum, verbose = FALSE)
@@ -362,10 +362,10 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
            is.na(Tpeak[2])) {
             next #rare case where no peak found
         }
-        ### ----------------------------------------------------------
+        ### --------------------------------------------------------------------
         ### My modification here: Tracking BaseCall index
         ###     Add qualtiy score when making basecall
-        ### ----------------------------------------------------------
+        ### --------------------------------------------------------------------
         indexBaseCall <- c(indexBaseCall, i)
         signals <- c(Apeak[1], Cpeak[1], Gpeak[1], Tpeak[1])
 
@@ -485,7 +485,7 @@ countStopSodons <- function(sequence,
         stop(error)
     }
     # this comes almost straight from the BioStrings manual
-    tri = trinucleotideFrequency(sequence[readingFrame:length(sequence)], step=3)
+    tri = trinucleotideFrequency(sequence[readingFrame:length(sequence)],step=3)
     names(tri) <- geneticCode[names(tri)]
     freqs = sapply(split(tri, names(tri)), sum)
     stops = freqs["*"]
@@ -573,7 +573,8 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
         trimmedFinishPos = 2
     }
     trimmedSeqLength = trimmedFinishPos - trimmedStartPos
-    trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
+    trimmedQualityPhredScore <-
+        qualityPhredScores[trimmedStartPos:trimmedFinishPos]
     trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
     trimmedMinQualityScore <- min(trimmedQualityPhredScore)
     remainingRatio = trimmedSeqLength / rawSeqLength
@@ -588,8 +589,10 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
              "trimmedMinQualityScore" = trimmedMinQualityScore,
              "remainingRatio" = remainingRatio))
 }
-M2inside_calculate_trimming <- function(qualityPhredScores, qualityBaseScores,
-                                        M2CutoffQualityScore, M2SlidingWindowSize) {
+M2inside_calculate_trimming <-function(qualityPhredScores,
+                                       qualityBaseScores,
+                                       M2CutoffQualityScore,
+                                       M2SlidingWindowSize) {
     rawSeqLength <- length(qualityBaseScores)
     rawMeanQualityScore <- mean(qualityPhredScores)
     rawMinQualityScore <- min(qualityPhredScores)
@@ -616,7 +619,8 @@ M2inside_calculate_trimming <- function(qualityPhredScores, qualityBaseScores,
             trimmedStartPos <- 1
             trimmedFinishPos <- 2
         }
-        trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
+        trimmedQualityPhredScore <-
+            qualityPhredScores[trimmedStartPos:trimmedFinishPos]
         trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
         trimmedMinQualityScore <- min(trimmedQualityPhredScore)
         trimmedSeqLength = trimmedFinishPos - trimmedStartPos
@@ -633,4 +637,72 @@ M2inside_calculate_trimming <- function(qualityPhredScores, qualityBaseScores,
                 "remainingRatio" = remainingRatio))
 }
 
+### ----------------------------------------------------------------------------
+### Quality score base pair plot functions
+### ----------------------------------------------------------------------------
+QualityBasePlotly <- function(trimmedStartPos, trimmedFinishPos,
+                              readLen, qualityPlotDf, x,  y) {
+    p <- suppressPlotlyMessage(
+        plot_ly(data=qualityPlotDf,
+                x=~Index) %>%
+            add_markers(y=~Score,
+                        text = ~paste("BP Index : ",
+                                      Index,
+                                      '<sup>th</sup><br>Phred Quality Score :',
+                                      Score),
+                        name = 'Quality Each BP') %>%
+            add_trace(x=seq(trimmedStartPos,
+                            trimmedFinishPos,
+                            len=trimmedFinishPos-trimmedStartPos+1),
+                      y=rep(70, trimmedFinishPos-trimmedStartPos+1),
+                      mode="lines", hoverinfo="text",
+                      text=paste("Trimmed Reads BP length:",
+                                 trimmedFinishPos-trimmedStartPos+1,
+                                 "BPs <br>",
+                                 "Trimmed Reads BP ratio:",
+                                 round((trimmedFinishPos - trimmedStartPos+1)/
+                                           readLen * 100,
+                                       digits=2),
+                                 "%"),
+                      line = list(width = 12),
+                      name = 'Trimmed Read') %>%
+            add_trace(x=seq(0,readLen,len=readLen),
+                      y=rep(80, readLen), mode="lines", hoverinfo="text",
+                      text=paste("Whole Reads BP length:",
+                                 readLen,
+                                 "BPs <br>",
+                                 "Trimmed Reads BP ratio: 100 %"),
+                      line = list(width = 12),
+                      name = 'Whole Read') %>%
+            layout(xaxis = x, yaxis = y,
+                   shapes = list(vline(trimmedStartPos),
+                                 vline(trimmedFinishPos)),
+                   legend = list(orientation = 'h',
+                                 xanchor = "center",
+                                 x = 0.5, y = 1.1)) %>%
+            add_annotations(
+                text = "Trimming Strat <br> BP Index",
+                x = trimmedStartPos + 40,
+                y = 15,
+                showarrow=FALSE
+            ) %>%
+            add_annotations(
+                text = "Trimming End <br> BP Index",
+                x = trimmedFinishPos - 40,
+                y = 15,
+                showarrow=FALSE
+            ))
+    return(p)
+}
 
+vline <- function(x = 0, color = "red") {
+    list(
+        type = "line",
+        y0 = 0,
+        y1 = 1,
+        yref = "paper",
+        x0 = x,
+        x1 = x,
+        line = list(color = color)
+    )
+}

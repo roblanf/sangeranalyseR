@@ -8,7 +8,7 @@
 #' @importFrom shinydashboard
 #' @importFrom data.table tstrsplit
 #' @importFrom shinyjs useShinyjs html
-#' @importFrom plotly
+#' @importFrom plotly orca
 #' @importFrom DECIPHER AlignSeqs AlignTranslation ConsensusSequence
 #'               CorrectFrameshifts DistanceMatrix IdClusters RemoveGaps
 #' @importFrom Biostrings DNAStringSet GENETIC_CODE trinucleotideFrequency

@@ -570,7 +570,14 @@ qualityQualityBasePlotDisplay <- function(input, output, session,
         title = "Phred Quality Score"
         # titlefont = f
     )
-    suppressPlotlyMessage(
+    p <- QualityBasePlotly(trimmedStartPos, trimmedFinishPos,
+                           readLen, qualityPlotDf, x,  y)
+    p
+}
+
+QualityBasePlotly <- function(trimmedStartPos, trimmedFinishPos,
+                              readLen, qualityPlotDf, x,  y) {
+    p <- suppressPlotlyMessage(
         plot_ly(data=qualityPlotDf,
                 x=~Index) %>%
             add_markers(y=~Score,
@@ -620,7 +627,9 @@ qualityQualityBasePlotDisplay <- function(input, output, session,
                 y = 15,
                 showarrow=FALSE
             ))
+    return(p)
 }
+
 vline <- function(x = 0, color = "red") {
     list(
         type = "line",
