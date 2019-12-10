@@ -20,20 +20,34 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
-
 # sangeranalyseR 'SangerRead' Report
 
-## Basic Parameters:
-* Output Directory: `r params$outputDir`
-* Input Filename:  `r params$SangerRead@readFileName`
-* Read Feature: `r params$SangerRead@readFeature`
+## Basic Project Information:
 
-## Quality Trimming
 <details><summary>CLICK ME</summary>
 
 <ul style="list-style-type:disc;">
-  <li>**Trimming Method**:  <span class="tab">*`r params$SangerRead@QualityReport@TrimmingMethod`*</span></li>
-  
+  <li>**Output Directory : **  <span class="tab">*`r params$outputDir`*</span></li>
+
+  <li>**Input Directory : **  <span class="tab"><i>`r dirname(params$SangerRead@readFileName)`</i></span></li>
+
+  <li>**Input Filename : **  <span class="tab"><i>`r basename(params$SangerRead@readFileName)`</i></span></li>
+
+  <li>**Read Feature : **  <span class="tab">*`r params$SangerRead@readFeature`*</span></li>
+</ul>
+
+</details>
+
+## Quality Trimming
+
+<details><summary>CLICK ME</summary>
+
+<ul style="list-style-type:disc;">
+
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M1"){"<li>**Trimming Method**: <span class='tab'><i> Method 1 'Logarithmic Scale Trimming' </i></span></li>"}`
+
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){"<li>**Trimming Method**: <span class='tab'><i> Method 2 'Logarithmic Scale Sliding Window Trimming' </i></span></li>"}`
+
 `r if(params$SangerRead@QualityReport@TrimmingMethod == "M1"){paste("<li>**M1 Trimming Cutoffe**: <span class='tab'><i>", params$SangerRead@QualityReport@M1TrimmingCutoff, "</i></span></li>")}`
 
 `r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){paste("<li>**M2 Cutoff Quality Score**: <span class='tab'><i>", params$SangerRead@QualityReport@M2CutoffQualityScore, "</i></span></li>")}`
@@ -59,7 +73,6 @@ vignette: >
   <li>**Remaining Read Ratio**: <span class="tab">*`r params$SangerRead@QualityReport@remainingRatio`*</span></li>
   
   <li>**Phred Scores**:  <span class="tab">*`r params$SangerRead@QualityReport@qualityPhredScores`*</span></li>
-  
 </ul>
 
 </details>
@@ -90,9 +103,20 @@ print(params$SangerRead@readFileName)
 
 
 
-
-
-
 <style>
+
+
+li{
+    margin-top: 16px;
+}
+
+li:first-child {
+    margin-top:0;
+}
+
 .tab {position:absolute;left:350px; }
+
+}
 </style>
+
+
