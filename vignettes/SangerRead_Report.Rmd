@@ -21,21 +21,56 @@ vignette: >
 ---
 
 
-# sangeranalyseR Report
+# sangeranalyseR 'SangerRead' Report
 
-## Contig
-### Basic Parameters:
+## Basic Parameters:
 * Output Directory: `r params$outputDir`
 * Input Filename:  `r params$SangerRead@readFileName`
 * Read Feature: `r params$SangerRead@readFeature`
 
+## Quality Trimming
+<details><summary>CLICK ME</summary>
+
+<ul style="list-style-type:disc;">
+  <li>**Trimming Method**:  <span class="tab">*`r params$SangerRead@QualityReport@TrimmingMethod`*</span></li>
+  
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M1"){paste("<li>**M1 Trimming Cutoffe**: <span class='tab'><i>", params$SangerRead@QualityReport@M1TrimmingCutoff, "</i></span></li>")}`
+
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){paste("<li>**M2 Cutoff Quality Score**: <span class='tab'><i>", params$SangerRead@QualityReport@M2CutoffQualityScore, "</i></span></li>")}`
+
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){paste("<li>**M2 Cutoff Quality Score**: <span class='tab'><i>", params$SangerRead@QualityReport@M2SlidingWindowSize, "</i></span></li>")}`
+
+  <li>**Raw Sequence Length**:  <span class="tab">*`r params$SangerRead@QualityReport@rawSeqLength`*</span></li>
+  
+  <li>**Trimmed Sequence Length**:  <span class="tab">*`r params$SangerRead@QualityReport@trimmedSeqLength`*</span></li>
+  
+  <li>**Trimmed Start Point**:  <span class="tab">*`r params$SangerRead@QualityReport@trimmedStartPos`*</span></li>
+  
+  <li>**Trimmed End Point**:  <span class="tab">*`r params$SangerRead@QualityReport@trimmedFinishPos`*</span></li>
+  
+  <li>**Raw Mean Quality Score**:  <span class="tab">*`r params$SangerRead@QualityReport@rawMeanQualityScore`*</span></li>
+
+  <li>**Trimmed Mean Quality Score**:  <span class="tab">*`r params$SangerRead@QualityReport@trimmedMeanQualityScore`*</span></li>
+  
+  <li>**Raw Min Quality Score**:  <span class="tab">*`r params$SangerRead@QualityReport@rawMinQualityScore`*</span></li>
+  
+  <li>**Trimmed Min Quality Score**: <span class="tab">*`r params$SangerRead@QualityReport@trimmedMinQualityScore`*</span></li>
+  
+  <li>**Remaining Read Ratio**: <span class="tab">*`r params$SangerRead@QualityReport@remainingRatio`*</span></li>
+  
+  <li>**Phred Scores**:  <span class="tab">*`r params$SangerRead@QualityReport@qualityPhredScores`*</span></li>
+  
+</ul>
+
+</details>
+
+--- 
+
+## Chromatogram
+<details><summary>CLICK ME</summary>
+</details>
 
 
-
-## Forward Reads
-
-
-## Reverse Reads
 
 
 
@@ -57,3 +92,7 @@ print(params$SangerRead@readFileName)
 
 
 
+
+<style>
+.tab {position:absolute;left:350px; }
+</style>
