@@ -68,10 +68,6 @@ setGeneric("writeFASTA", function(obj,outputDir = tempdir(),
                                   compression_level = NA) {
     standardGeneric("writeFASTA")
 })
-
-### ============================================================================
-### Write FASTA
-### ============================================================================
 #' @export
 setGeneric("writeFASTA", function(obj,outputDir = tempdir(),
                                   compress  = FALSE,
@@ -81,6 +77,18 @@ setGeneric("writeFASTA", function(obj,outputDir = tempdir(),
 })
 
 
+### ============================================================================
+### Run Shiny app
+### ============================================================================
+#' @export
+setGeneric("launchAppSangerContig", function(obj, outputDir = NULL) {
+    standardGeneric("launchAppSangerContig")
+})
+
+#' @export
+setGeneric("launchAppSangerAlignment", function(obj, outputDir = NULL) {
+    standardGeneric("launchAppSangerAlignment")
+})
 
 #' @export
 setClassUnion("numericORNULL", c("numeric", "NULL"))

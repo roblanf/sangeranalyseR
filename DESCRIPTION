@@ -55,7 +55,6 @@ Collate:
     'MethodSangerContig.R'
     'MethodSangerRead.R'
     'MethodsQualityReport.R'
-    'ShinyLaunchApp.R'
     'ShinySangerAlignmentServer.R'
     'ShinySangerAlignmentUI.R'
     'ShinySangerContigServer.R'

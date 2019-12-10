@@ -85,3 +85,41 @@ setMethod("writeFASTA", "SangerAlignment", function(obj, outputDir, compress,
 
     message("\nFinish writing 'SangerAlignment' to FASTA format")
 })
+
+#' @examples
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' newAlignment <- SangerAlignment(
+#'                     parentDirectory       = rawDataDir,
+#'                     suffixForwardRegExp   = suffixForwardRegExp,
+#'                     suffixReverseRegExp   = suffixReverseRegExp,
+#'                     refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                     TrimmingMethod        = "M1",
+#'                     M1TrimmingCutoff      = 0.0001,
+#'                     M2CutoffQualityScore  = NULL,
+#'                     M2SlidingWindowSize   = NULL,
+#'                     baseNumPerRow         = 100,
+#'                     heightPerRow          = 200,
+#'                     signalRatioCutoff     = 0.33,
+#'                     showTrimmed           = TRUE)
+#' RShinyCSSet <- launchAppSangerAlignment(newAlignment)
+setMethod("launchAppSangerAlignment", "SangerAlignment",
+          function(obj, outputDir = NULL) {
+              ### ------------------------------------------------------------------------
+              ### Checking SangerAlignment input parameter is a list containing
+              ### one S4 object.
+              ### ------------------------------------------------------------------------
+              if (is.null(outputDir)) {
+                  outputDir <- tempdir()
+                  suppressWarnings(dir.create(outputDir))
+              }
+              if (dir.exists(outputDir)) {
+                  shinyOptions(sangerAlignment = list(obj))
+                  shinyOptions(shinyDirectory = outputDir)
+                  newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer)
+                  return(newSangerAlignment)
+              } else {
+                  stop("'", outputDir, "' is not valid. Please check again")
+              }
+})
