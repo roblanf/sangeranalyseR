@@ -236,3 +236,6 @@ setMethod("initialize",
                              QualityReport       = QualityReport,
                              ChromatogramParam   = ChromatogramParam)
           })
+
+
+

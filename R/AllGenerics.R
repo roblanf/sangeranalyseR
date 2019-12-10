@@ -91,6 +91,12 @@ setGeneric("launchAppSangerAlignment", function(obj, outputDir = NULL) {
 })
 
 #' @export
+setGeneric("generateReport", function(obj, outputDir = NULL,
+                                      showChromatogram = TRUE) {
+    standardGeneric("generateReport")
+})
+
+#' @export
 setClassUnion("numericORNULL", c("numeric", "NULL"))
 
 #' #' @export

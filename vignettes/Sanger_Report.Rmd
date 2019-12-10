@@ -1,0 +1,42 @@
+---
+title: "sangeranalyseR"
+author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+    code_folding: show
+    fig_caption: yes
+  BiocStyle::pdf_document: default
+#bibliography: bibliography.bib
+params:
+  SangerRead: NULL
+  showChromatogram: FALSE
+fontsize: 14pt
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+---
+
+
+# collapsible markdown?
+
+<details><summary>CLICK ME</summary>
+## yes, even hidden code blocks!
+```{r}
+print(params$SangerRead@readFileName)
+```
+</details>
+
+# Second
+`r if(params$showChromatogram){"# Show chromatogram !!!"}`
+
+
+
+
+
+
+
+
+

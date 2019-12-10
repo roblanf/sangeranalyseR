@@ -101,3 +101,29 @@ setMethod("writeFASTA", "SangerRead", function(obj, outputDir, compress,
                     compression_level = compression_level)
     message("\n >> '", outputFilename, "' is written")
 })
+
+setMethod("generateReport", "SangerRead", function(obj, outputDir,
+                                                   showChromatogram) {
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir))
+    }
+    # file.copy(template, to = paste0(output, '.Rmd'))
+    # output_format <- .advanced_argument('output_format',
+    #                                     'BiocStyle::html_document', ...)
+    # outputIsHTML <- output_format %in% c('html_document',
+    #                                      'rmarkdown::html_document',
+    #                                      'knitrBootstrap::bootstrap_document', 'BiocStyle::html_document')
+
+    rootDir <- system.file(package = "sangeranalyseR")
+    originRmd <- file.path(rootDir, "vignettes", "Sanger_Report.Rmd")
+    outputRmd <- file.path(outputDir, "Sanger_Report.Rmd")
+    file.copy(from = originRmd, to = outputRmd)
+
+
+    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/Sanger_Report.Rmd",
+                  output_dir = outputDir,
+                  params = list(SangerRead = obj,
+                                showChromatogram = showChromatogram))
+    # A_chloroticaRead@readFileName
+})

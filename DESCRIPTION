@@ -33,13 +33,13 @@ Depends:
     ggdendro,
     shinyWidgets,
     openxlsx,
-    tools
+    tools,
+    rmarkdown
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: 
     BiocStyle,
     knitr,
-    rmarkdown,
     testthat (>= 2.1.0)
 Collate: 
     'AllGenerics.R'
