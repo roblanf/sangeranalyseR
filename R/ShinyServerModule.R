@@ -1,366 +1,10 @@
-M1inside_calculate_trimming <- function(qualityPhredScores,
-                                        qualityBaseScores,
-                                        M1TrimmingCutoff) {
-    rawSeqLength <- length(qualityBaseScores)
-    rawMeanQualityScore <- mean(qualityPhredScores)
-    rawMinQualityScore <- min(qualityPhredScores)
-    start = FALSE
-    trimmedStartPos = 0
-    qualityBaseScoresCutOff = M1TrimmingCutoff - qualityBaseScores
-    ### ------------------------------------------------------------------------
-    ### calculate cummulative score
-    ### if cumulative value < 0, set it to 0
-    ### the BioPython implementation always trims the first base,
-    ### this implementation does not.
-    ### ------------------------------------------------------------------------
-    score = qualityBaseScoresCutOff[1]
-    if(score < 0){
-        score = 0
-    }else{
-        trimmedStartPos = 1
-        start = TRUE
-    }
-    cummul_score = c(score)
-    ### ------------------------------------------------------------------------
-    ### trimmedStartPos = value when cummulative score is first > 0
-    ### ------------------------------------------------------------------------
-    ### ------------------------------------------------------------------------
-    ### trimmedFinishPos = index of highest cummulative score,
-    ### marking the end of sequence segment with highest cummulative score
-    ### ------------------------------------------------------------------------
-    for(i in 2:length(qualityBaseScoresCutOff)){
-        score = cummul_score[length(cummul_score)] + qualityBaseScoresCutOff[i]
-        if (score <= 0) {
-            cummul_score = c(cummul_score, 0)
-        }else{
-            cummul_score = c(cummul_score, score)
-            if(start == FALSE){
-                trimmedStartPos = i
-                start = TRUE
-            }
-        }
-        trimmedFinishPos = which.max(cummul_score)
-    }
-    ### ------------------------------------------------------------------------
-    ### fix an edge case, where all scores are worse than the cutoff
-    ### in this case you wouldn't want to keep any bases at all
-    ### ------------------------------------------------------------------------
-    if(sum(cummul_score)==0){trimmedFinishPos = 0}
-    if (trimmedFinishPos - trimmedStartPos == 0) {
-        trimmedStartPos = 1
-        trimmedFinishPos = 2
-    }
-    trimmedSeqLength = trimmedFinishPos - trimmedStartPos
-    trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
-    trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
-    trimmedMinQualityScore <- min(trimmedQualityPhredScore)
-    remainingRatio = trimmedSeqLength / rawSeqLength
-
-    return(c("rawSeqLength" = rawSeqLength,
-             "rawMeanQualityScore" = rawMeanQualityScore,
-             "rawMinQualityScore" = rawMinQualityScore,
-             "trimmedStartPos" = trimmedStartPos,
-             "trimmedFinishPos" = trimmedFinishPos,
-             "trimmedSeqLength" = trimmedSeqLength,
-             "trimmedMeanQualityScore" = trimmedMeanQualityScore,
-             "trimmedMinQualityScore" = trimmedMinQualityScore,
-             "remainingRatio" = remainingRatio))
-}
-
-M2inside_calculate_trimming <- function(qualityPhredScores,
-                                      qualityBaseScores,
-                                      M2CutoffQualityScore,
-                                      M2SlidingWindowSize) {
-    rawSeqLength <- length(qualityBaseScores)
-    rawMeanQualityScore <- mean(qualityPhredScores)
-    rawMinQualityScore <- min(qualityPhredScores)
-    qualityPbCutoff <- 10** (M2CutoffQualityScore / (-10.0))
-    remainingIndex <- c()
-    if (M2SlidingWindowSize > 20 || M2SlidingWindowSize < 0 ||
-        M2SlidingWindowSize%%1!=0 ||
-        M2CutoffQualityScore > 60 || M2CutoffQualityScore < 0 ||
-        M2CutoffQualityScore%%1!=0) {
-        trimmedStartPos = NULL
-        trimmedFinishPos = NULL
-    } else {
-        for (i in 1:(rawSeqLength-M2SlidingWindowSize+1)) {
-            meanSLidingWindow <-
-                mean(qualityBaseScores[i:(i+M2SlidingWindowSize-1)])
-            if (meanSLidingWindow < qualityPbCutoff) {
-                remainingIndex <- c(remainingIndex, i)
-                # or ==> i + floor(M2SlidingWindowSize/3)
-            }
-        }
-        trimmedStartPos = remainingIndex[1]
-        trimmedFinishPos = remainingIndex[length(remainingIndex)]
-        if (is.null(trimmedStartPos) || is.null(trimmedFinishPos)) {
-            trimmedStartPos <- 1
-            trimmedFinishPos <- 2
-        }
-        trimmedQualityPhredScore <- qualityPhredScores[trimmedStartPos:trimmedFinishPos]
-        trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
-        trimmedMinQualityScore <- min(trimmedQualityPhredScore)
-        trimmedSeqLength = trimmedFinishPos - trimmedStartPos
-        remainingRatio = trimmedSeqLength / rawSeqLength
-    }
-    return(list("rawSeqLength" = rawSeqLength,
-                "rawMeanQualityScore" = rawMeanQualityScore,
-                "rawMinQualityScore" = rawMinQualityScore,
-                "trimmedStartPos" = trimmedStartPos,
-                "trimmedFinishPos" = trimmedFinishPos,
-                "trimmedSeqLength" = trimmedSeqLength,
-                "trimmedMeanQualityScore" = trimmedMeanQualityScore,
-                "trimmedMinQualityScore" = trimmedMinQualityScore,
-                "remainingRatio" = remainingRatio))
-}
-
-### ============================================================================
-### Calculating consensus read for one read set.
-### ============================================================================
-calculateContigSeq <- function(forwardReadsList, forwardReadList,
-                                   refAminoAcidSeq, minFractionCall,
-                                   maxFractionLost, geneticCode,
-                                   acceptStopCodons, readingFrame,
-                                   processorsNum) {
-    ### ------------------------------------------------------------------------
-    ### forward & reverse character reads list string creation
-    ### ------------------------------------------------------------------------
-    fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
-        trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
-        trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
-        primaryDNA <- as.character(forwardRead@primarySeq)
-        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
-    })
-    rRDNAStringSet <- sapply(forwardReadList, function(reverseRead) {
-        trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
-        trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
-        primaryDNA <- as.character(reverseRead@primarySeq)
-        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
-    })
-
-    ### --------------------------------------------------------------------
-    ### DNAStringSet storing forward & reverse reads ! (Origin)
-    # ### --------------------------------------------------------------------
-    frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),
-                                unlist(rRDNAStringSet)))
-    frReadFeatureList <- c(rep("Forward Reads", length(fRDNAStringSet)),
-                           rep("Reverse Reads", length(rRDNAStringSet)))
-
-    if(length(frReadSet) < 2) {
-        error <- paste("\n'Valid abif files should be more than 2.\n",
-                       sep = "")
-        stop(error)
-    }
-    processorsNum <- getProcessors(processorsNum)
-
-    ### --------------------------------------------------------------------
-    ### Amino acid reference sequence CorrectFrameshifts correction
-    ### --------------------------------------------------------------------
-    if (refAminoAcidSeq != "") {
-        message("Correcting frameshifts in reads using amino acid",
-                "reference sequence")
-        # My test refAminoAcidSeq data
-        # no_N_string <- str_replace_all(frReadSet[1], "N", "T")
-        # example.dna <- DNAStringSet(c(`IGHV1-18*01`=no_N_string))
-        # refAminoAcidSeq <- translate(example.dna)
-        # Verbose should be FALSE, but I get error when calling it
-        corrected =
-            CorrectFrameshifts(myXStringSet = frReadSet,
-                               myAAStringSet = AAStringSet(refAminoAcidSeq),
-                               geneticCode = geneticCode,
-                               type = 'both',
-                               processors = processorsNum)
-        frReadSet = corrected$sequences
-        indels = getIndelDf(corrected$indels)
-        stops = as.numeric(unlist(mclapply(frReadSet, countStopSodons,
-                                           readingFrame, geneticCode,
-                                           mc.cores = processorsNum)))
-        stopsDf = data.frame("read" = names(frReadSet),
-                             "stop.codons" = stops)
-        frReadSetLen = unlist(lapply(frReadSet, function(x) length(x)))
-        frReadSet = frReadSet[which(frReadSetLen>0)]
-    } else {
-        indels = data.frame()
-        stopsDf = data.frame()
-    }
-    if(length(frReadSet) < 2) {
-        error <- paste("\n'After running 'CorrectFrameshifts' function, ",
-                       "forward and reverse reads should be more than 2.\n",
-                       sep = "")
-        stop(error)
-    }
-
-    ### --------------------------------------------------------------------
-    ### Reads with stop codons elimination
-    ### --------------------------------------------------------------------
-    ### ----------------------------------------------------------------
-    ### Remove reads with stop codons
-    ### ----------------------------------------------------------------
-    if (!acceptStopCodons) {
-        print("Removing reads with stop codons")
-        if(refAminoAcidSeq == ""){ # otherwise we already did it above
-            stops =
-                as.numeric(unlist(mclapply(frReadSet,
-                                           countStopSodons,
-                                           readingFrame, geneticCode,
-                                           mc.cores = processorsNum)))
-            stopsDf = data.frame("read" = names(frReadSet),
-                                 "stopCodons" = stops)
-        }
-        old_length = length(frReadSet)
-        frReadSet = frReadSet[which(stops==0)]
-        # Modify
-        message(old_length - length(frReadSet),
-                "reads with stop codons removed")
-    }
-
-    if(length(frReadSet) < 2) {
-        error <- paste("\n'After removing reads with stop codons, ",
-                       "forward and reverse reads should be more than 2.\n",
-                       sep = "")
-        stop(error)
-    }
-
-    ### --------------------------------------------------------------------
-    ### Start aligning reads
-    ### --------------------------------------------------------------------
-    if (refAminoAcidSeq != "") {
-        aln = AlignTranslation(frReadSet, geneticCode = geneticCode,
-                               processors = processorsNum, verbose = FALSE)
-    } else {
-        aln = AlignSeqs(frReadSet,
-                        processors = processorsNum, verbose = FALSE)
-    }
-    names(aln) = paste(1:length(aln), "Read",
-                       basename(names(aln)), sep="_")
-    consensus = ConsensusSequence(aln,
-                                  minInformation = minFractionCall,
-                                  includeTerminalGaps = TRUE,
-                                  ignoreNonBases = TRUE,
-                                  threshold = maxFractionLost,
-                                  noConsensusChar = "-",
-                                  ambiguity = TRUE
-    )[[1]]
-
-    diffs = mclapply(aln, nPairwiseDiffs,
-                     subject = consensus, mc.cores = processorsNum)
-    diffs = do.call(rbind, diffs)
-    diffsDf = data.frame("name" = names(aln),
-                         "pairwise.diffs.to.consensus" = diffs[,1],
-                         "unused.chars" = diffs[,2])
-    rownames(diffsDf) = NULL
-
-    # get a dendrogram
-    dist = DistanceMatrix(aln, correction = "Jukes-Cantor",
-                          penalizeGapLetterMatches = FALSE,
-                          processors = processorsNum, verbose = FALSE)
-    dend = IdClusters(dist, type = "both",
-                      showPlot = FALSE,
-                      processors = processorsNum, verbose = FALSE)
-
-    # add consensus to alignment
-    aln2 = c(aln, DNAStringSet(consensus))
-    names(aln2)[length(aln2)] = "Consensus"
-    # strip gaps from consensus (must be an easier way!!)
-    consensusGapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
-
-    # count columns in the alignment with >1 coincident secondary peaks
-    spDf = countCoincidentSp(aln, processors = processorsNum)
-    if (is.null(spDf)) {
-        spDf = data.frame()
-    }
-    return(list("consensusGapfree" = consensusGapfree,
-                "diffsDf"          = diffsDf,
-                "aln2"             = aln2,
-                "dist"             = dist,
-                "dend"             = dend,
-                "indels"           = indels,
-                "stopsDf"          = stopsDf,
-                "spDf"             = spDf))
-}
-
-### ============================================================================
-### Aligning consensus reads into a new consensus read for all reads
-### ============================================================================
-alignContigs <- function(SangerContigList,
-                                geneticCode, refAminoAcidSeq,
-                                minFractionCallSA, maxFractionLostSA,
-                                processorsNum) {
-    ### --------------------------------------------------------------------
-    ### Creating SangerContigList DNAStringSet
-    ### --------------------------------------------------------------------
-    SangerContigDNAList <-
-        sapply(SangerContigList, function(SangerContig) {
-            as.character(SangerContig@contigSeq)
-        })
-
-    SangerContigDNASet <- DNAStringSet(SangerContigDNAList)
-
-    ### --------------------------------------------------------------------
-    ### Aligning consensus reads
-    ### --------------------------------------------------------------------
-    if(length(SangerContigDNASet) > 1) {
-        message("Aligning consensus reads ... ")
-        if(refAminoAcidSeq != ""){
-            aln = AlignTranslation(SangerContigDNASet,
-                                   geneticCode = geneticCode,
-                                   processors = processorsNum,
-                                   verbose = FALSE)
-        }else{
-            aln = AlignSeqs(SangerContigDNASet,
-                            processors = processorsNum,
-                            verbose = FALSE)
-        }
-
-        # Making a rough NJ tree. Labels are rows in the summary df
-        neat.labels = match(names(aln),
-                            as.character(names(SangerContigDNASet))
-        )
-        aln2 = aln
-        names(aln2) = neat.labels
-
-
-        aln.bin = as.DNAbin(aln2)
-
-        aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
-
-        # Making a rough NJ tree. Labels are rows in the summary df
-        #    (If tree cannot be created ==> NULL)
-        aln.tree = NULL
-        try({
-            aln.tree = bionjs(aln.dist)
-            aln.tree$tip.label <- names(aln)
-            # deal with -ve branches
-            # This is not necessarily accurate, but it is good enough to judge seuqences using the tree
-            aln.tree$edge.length[which(aln.tree$edge.length<0)] = abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])            },
-            silent = TRUE
-        )
-
-        # Get consensus read and add to alignment result
-        consensus = ConsensusSequence(aln,
-                                      minInformation = minFractionCallSA,
-                                      includeTerminalGaps = TRUE,
-                                      ignoreNonBases = TRUE,
-                                      threshold = maxFractionLostSA,
-                                      noConsensusChar = "-",
-                                      ambiguity = TRUE
-        )[[1]]
-    } else {
-        aln = NULL
-        aln.tree = NULL
-    }
-    return(list("consensus" = consensus,
-                "aln"       = aln,
-                "aln.tree"  = aln.tree))
-}
 ### ============================================================================
 ### Adding dynamic menu to sidebar.
 ### ============================================================================
-dynamicMenuSideBarSA <- function(input, output, session,
+dynamicMenuSideBarSC <- function(input, output, session,
                                   forwardReadNum, reverseReadNum,
                                   forwardReadFeature, reverseReadFeature) {
     output$singleReadMenu <- renderMenu({
-
         fmenuSub_list <- sapply(1:forwardReadNum, function(i) {
             list(menuSubItem(text = forwardReadFeature[i],
                           tabName = forwardReadFeature[i],
@@ -432,7 +76,7 @@ dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
 ### ============================================================================
 ### observeEvent: Adding dynamic rightHeader text
 ### ============================================================================
-observeEventDynamicHeaderSA <- function(input, output, session, trimmedRV) {
+observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV) {
     observeEvent(input$sidebar_menu, {
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
         message("menuItem: ", menuItem)
@@ -440,27 +84,6 @@ observeEventDynamicHeaderSA <- function(input, output, session, trimmedRV) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
     })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # observeEventDynamicHeaderSA <- function(input, output, session, trimmedRV,
 #                                            SangerAlignmentParam) {
@@ -491,118 +114,11 @@ observeEventDynamicHeaderSA <- function(input, output, session, trimmedRV) {
 #     })
 # }
 
-### ============================================================================
-### valueBox: SAMinReadsNum
-### ============================================================================
-valueBoxSAMinReadsNum <- function(input, output, SAMinReadsNum, session) {
-    output$SAMinReadsNum <- renderUI({
-        valueBox(
-            subtitle = tags$p("MinReadsNum",
-                              style = "font-size: 15px;
-                                            font-weight: bold;"),
-            value = tags$p(strtoi(SAMinReadsNum),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 12,
-        )
-    })
-}
 
 ### ============================================================================
-### valueBox: SAMinReadLength
+### valueBox for SangerAlignment
 ### ============================================================================
-valueBoxSAMinReadLength <- function(input, output, SAMinReadLength, session) {
-    output$SAMinReadLength <- renderUI({
-        valueBox(
-            subtitle = tags$p("MinReadLength",
-                              style = "font-size: 15px;
-                                            font-weight: bold;"),
-            value = tags$p(strtoi(SAMinReadLength),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 12,
-        )
-    })
-}
-
-### ============================================================================
-### valueBox: SAMinFractionCall
-### ============================================================================
-valueBoxSAMinFractionCall <- function(input, output, SAMinFractionCall, session) {
-    output$SAMinFractionCall <- renderUI({
-        valueBox(
-            subtitle = tags$p("MinFractionCall",
-                              style = "font-size: 15px;
-                                            font-weight: bold;"),
-            value = tags$p(as.numeric(SAMinFractionCall),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 12,
-        )
-    })
-}
-
-### ============================================================================
-### valueBox: SAMaxFractionLost
-### ============================================================================
-valueBoxSAMaxFractionLost <- function(input, output, SAMaxFractionLost, session) {
-    output$SAMaxFractionLost <- renderUI({
-        valueBox(
-            subtitle = tags$p("MaxFractionLost",
-                              style = "font-size: 15px;
-                                            font-weight: bold;"),
-            value = tags$p(as.numeric(SAMaxFractionLost),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 12,
-        )
-    })
-}
-
-### ============================================================================
-### valueBox: SAAcceptStopCodons
-### ============================================================================
-valueBoxSAAcceptStopCodons <- function(input, output, SAAcceptStopCodons, session) {
-    output$SAAcceptStopCodons <- renderUI({
-        valueBox(
-            subtitle = tags$p("AcceptStopCodons",
-                              style = "font-size: 15px;
-                                            font-weight: bold;"),
-            value = tags$p(SAAcceptStopCodons,
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 12,
-        )
-    })
-}
-
-### ============================================================================
-### valueBox: SAReadingFrame
-### ============================================================================
-valueBoxSAReadingFrame <- function(input, output, SAReadingFrame, session) {
-    output$SAReadingFrame <- renderUI({
-        valueBox(
-            subtitle = tags$p("ReadingFrame",
-                              style = "font-size: 15px;
-                                            font-weight: bold;"),
-            value = tags$p(strtoi(SAReadingFrame),
-                           style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
-            color = "olive",
-            width = 12,
-        )
-    })
-}
-
-### ============================================================================
-### valueBox: SAMinReadsNum
-### ============================================================================
-valueBoxSAMinReadsNumCSSet <- function(input, output, SangerConsensusSet, session) {
+valueBoxSAMinReadsNum <- function(input, output, SangerConsensusSet, session) {
     output$SAMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
@@ -621,11 +137,7 @@ valueBoxSAMinReadsNumCSSet <- function(input, output, SangerConsensusSet, sessio
         }
     })
 }
-
-### ============================================================================
-### valueBox: SAMinReadLength
-### ============================================================================
-valueBoxSAMinReadLengthCSSet <- function(input, output, SangerConsensusSet, session) {
+valueBoxSAMinReadLength <- function(input, output, SangerConsensusSet, session) {
     output$SAMinReadLength <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
@@ -644,11 +156,7 @@ valueBoxSAMinReadLengthCSSet <- function(input, output, SangerConsensusSet, sess
         }
     })
 }
-
-### ============================================================================
-### valueBox: SAMinFractionCall
-### ============================================================================
-valueBoxSAMinFractionCallCSSet <- function(input, output, SangerConsensusSet, session) {
+valueBoxSAMinFractionCall <- function(input, output, SangerConsensusSet, session) {
     output$SAMinFractionCall <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
@@ -667,11 +175,7 @@ valueBoxSAMinFractionCallCSSet <- function(input, output, SangerConsensusSet, se
         }
     })
 }
-
-### ============================================================================
-### valueBox: SAMaxFractionLost
-### ============================================================================
-valueBoxSAMaxFractionLostCSSet <- function(input, output, SangerConsensusSet, session) {
+valueBoxSAMaxFractionLost <- function(input, output, SangerConsensusSet, session) {
     output$SAMaxFractionLost <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
@@ -690,11 +194,7 @@ valueBoxSAMaxFractionLostCSSet <- function(input, output, SangerConsensusSet, se
         }
     })
 }
-
-### ============================================================================
-### valueBox: SAAcceptStopCodons
-### ============================================================================
-valueBoxSAAcceptStopCodonsCSSet <- function(input, output, SangerConsensusSet, session) {
+valueBoxSAAcceptStopCodons <- function(input, output, SangerConsensusSet, session) {
     output$SAAcceptStopCodons <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
@@ -713,11 +213,7 @@ valueBoxSAAcceptStopCodonsCSSet <- function(input, output, SangerConsensusSet, s
         }
     })
 }
-
-### ============================================================================
-### valueBox: SAReadingFrame
-### ============================================================================
-valueBoxSAReadingFrameCSSet <- function(input, output, SangerConsensusSet, session) {
+valueBoxSAReadingFrame <- function(input, output, SangerConsensusSet, session) {
     output$SAReadingFrame <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
@@ -739,11 +235,99 @@ valueBoxSAReadingFrameCSSet <- function(input, output, SangerConsensusSet, sessi
     })
 }
 
-################################################################################
-### Each Read
-################################################################################
 ### ============================================================================
-### valueBox: Change M1TrimmingCutoff
+### valueBox for SangerContig
+### ============================================================================
+valueBoxSCMinReadsNum <- function(input, output, SCMinReadsNum, session) {
+    output$SCMinReadsNum <- renderUI({
+        valueBox(
+            subtitle = tags$p("MinReadsNum",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(SCMinReadsNum),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+valueBoxSCMinReadLength <- function(input, output, SCMinReadLength, session) {
+    output$SCMinReadLength <- renderUI({
+        valueBox(
+            subtitle = tags$p("MinReadLength",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(strtoi(SCMinReadLength),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+valueBoxSCMinFractionCall <- function(input, output,
+                                      SCMinFractionCall, session) {
+    output$SCMinFractionCall <- renderUI({
+        valueBox(
+            subtitle = tags$p("MinFractionCall",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(as.numeric(SCMinFractionCall),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+valueBoxSCMaxFractionLost <- function(input, output,
+                                      SCMaxFractionLost, session) {
+    output$SCMaxFractionLost <- renderUI({
+        valueBox(
+            subtitle = tags$p("MaxFractionLost",
+                              style = "font-size: 15px;
+                                      font-weight: bold;"),
+            value = tags$p(as.numeric(SCMaxFractionLost),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+valueBoxSCAcceptStopCodons <- function(input, output,
+                                       SCAcceptStopCodons, session) {
+    output$SCAcceptStopCodons <- renderUI({
+        valueBox(
+            subtitle = tags$p("AcceptStopCodons",
+                              style = "font-size: 15px;
+                                       font-weight: bold;"),
+            value = tags$p(SCAcceptStopCodons,
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
+    output$SCReadingFrame <- renderUI({
+        valueBox(
+            subtitle = tags$p("ReadingFrame",
+                              style = "font-size: 15px;
+                                      font-weight: bold;"),
+            value = tags$p(strtoi(SCReadingFrame),
+                           style = "font-size: 29px;"),
+            icon = icon("cut", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+
+### ============================================================================
+### valueBox for SangerRead
 ### ============================================================================
 valueBoxM1TrimmingCutoff <- function(input, output, session) {
     output$M1TrimmingCutoff <- renderUI({
@@ -770,10 +354,6 @@ valueBoxM1TrimmingCutoff <- function(input, output, session) {
         }
     })
 }
-
-### ============================================================================
-### valueBox: Change M2CutoffQualityScore
-### ============================================================================
 valueBoxM2CutoffQualityScore <- function(input, output, session) {
     output$M2CutoffQualityScore <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -800,10 +380,6 @@ valueBoxM2CutoffQualityScore <- function(input, output, session) {
         }
     })
 }
-
-### ============================================================================
-### valueBox: Change M2SlidingWindowSize
-### ============================================================================
 valueBoxM2SlidingWindowSize <- function(input, output, session) {
     output$M2SlidingWindowSize <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -830,10 +406,6 @@ valueBoxM2SlidingWindowSize <- function(input, output, session) {
         }
     })
 }
-
-### ============================================================================
-### valueBox: Change rawSeqLength
-### ============================================================================
 valueBoxRawSeqLength <- function(input, output, session, trimmedRV) {
     output$rawSeqLength <- renderUI({
         valueBox(
@@ -847,10 +419,6 @@ valueBoxRawSeqLength <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change rawMeanQualityScore
-### ============================================================================
 valueBoxRawMeanQualityScore <- function(input, output, session, trimmedRV) {
     output$rawMeanQualityScore <- renderUI({
         valueBox(
@@ -864,10 +432,6 @@ valueBoxRawMeanQualityScore <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change rawMinQualityScore
-### ============================================================================
 valueBoxRawMinQualityScore <- function(input, output, session, trimmedRV) {
     output$rawMinQualityScore <- renderUI({
         valueBox(
@@ -881,10 +445,6 @@ valueBoxRawMinQualityScore <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change trimmedStartPos
-### ============================================================================
 valueBoxTrimmedStartPos <- function(input, output, session, trimmedRV) {
     output$trimmedStartPos <- renderUI({
         valueBox(
@@ -898,10 +458,6 @@ valueBoxTrimmedStartPos <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change trimmedFinishPos
-### ============================================================================
 valueBoxTrimmedFinishPos <- function(input, output, session, trimmedRV) {
     output$trimmedFinishPos <- renderUI({
         valueBox(
@@ -915,10 +471,6 @@ valueBoxTrimmedFinishPos <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change trimmedSeqLength
-### ============================================================================
 valueBoxTrimmedSeqLength <- function(input, output, session, trimmedRV) {
     output$trimmedSeqLength <- renderUI({
         valueBox(
@@ -932,10 +484,6 @@ valueBoxTrimmedSeqLength <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change trimmedMeanQualityScore
-### ============================================================================
 valueBoxTrimmedMeanQualityScore <- function(input, output, session, trimmedRV) {
     output$trimmedMeanQualityScore <- renderUI({
         valueBox(
@@ -949,10 +497,6 @@ valueBoxTrimmedMeanQualityScore <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change trimmedMinQualityScore
-### ============================================================================
 valueBoxTrimmedMinQualityScore <- function(input, output, session, trimmedRV) {
     output$trimmedMinQualityScore <- renderUI({
         valueBox(
@@ -966,10 +510,6 @@ valueBoxTrimmedMinQualityScore <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change remainingRatio
-### ============================================================================
 valueBoxRemainingRatio <- function(input, output, session, trimmedRV) {
     output$remainingRatio <- renderUI({
         valueBox(
@@ -984,10 +524,6 @@ valueBoxRemainingRatio <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change trimmedStartPos
-### ============================================================================
 valueBoxChromTrimmedStartPos <- function(input, output, session, trimmedRV) {
     output$ChromatogramtrimmedStartPos <- renderUI({
         valueBox(
@@ -1001,10 +537,6 @@ valueBoxChromTrimmedStartPos <- function(input, output, session, trimmedRV) {
         )
     })
 }
-
-### ============================================================================
-### valueBox: Change trimmedFinishPos
-### ============================================================================
 valueBoxChromTrimmedFinishPos <- function(input, output, session, trimmedRV) {
     output$ChromatogramtrimmedFinishPos <- renderUI({
         valueBox(
@@ -1020,83 +552,7 @@ valueBoxChromTrimmedFinishPos <- function(input, output, session, trimmedRV) {
 }
 
 ### ============================================================================
-### qualityTrimmingRatioPlot
-### ============================================================================
-qualityTrimmingRatioPlotDisplay <- function(input, output, session,
-                                            trimmedRV, qualityPhredScores) {
-    trimmedStartPos = trimmedRV[["trimmedStartPos"]]
-    trimmedFinishPos = trimmedRV[["trimmedFinishPos"]]
-    readLen = length(qualityPhredScores)
-    stepRatio = 1 / readLen
-    trimmedStartPos / readLen
-    trimmedFinishPos / readLen
-    trimmedPer <- c()
-    remainingPer <- c()
-    for (i in 1:trimmedStartPos) {
-        if (i != trimmedStartPos) {
-            trimmedPer <- c(trimmedPer, stepRatio)
-        }
-    }
-    for (i in trimmedStartPos:trimmedFinishPos) {
-        trimmedPer <- c(trimmedPer, 0)
-    }
-    for (i in trimmedFinishPos:readLen) {
-        if (i != trimmedFinishPos) {
-            trimmedPer <- c(trimmedPer, stepRatio)
-        }
-    }
-    trimmedPer <- cumsum(trimmedPer)
-    remainingPer = 1 - trimmedPer
-    PerData <- data.frame(1:length(trimmedPer),
-                          trimmedPer, remainingPer)
-    colnames(PerData) <- c("Base",
-                           "Trimmed Ratio",
-                           "Remaining Ratio")
-    # Change font setting
-    # f <- list(
-    #     family = "Courier New, monospace",
-    #     size = 18,
-    #     color = "#7f7f7f"
-    # )
-    x <- list(
-        title = "Base Pair Index"
-        # titlefont = f
-    )
-    y <- list(
-        title = "Read Ratio"
-    )
-    PerDataPlot <- melt(PerData, id.vars = c("Base"))
-    suppressPlotlyMessage(
-        plot_ly(data=PerDataPlot,
-                x=~Base,
-                y=~value,
-                mode="markers",
-                color = ~variable,
-                text = ~paste("BP Index : ",
-                              Base, '<sup>th</sup><br>Read Ratio :',
-                              round(value*100, digits = 2), '%')) %>%
-            layout(xaxis = x, yaxis = y, legend = list(orientation = 'h',
-                                                       xanchor = "center",  # use center of legend as anchor
-                                                       x = 0.5, y = 1.1)) %>%
-            add_annotations(
-                text = "Trimmed Ratio (Each BP)",
-                x = (trimmedStartPos + trimmedFinishPos) / 2,
-                y = ((trimmedPer[1] + trimmedPer[length(trimmedPer)]) / 2)
-                + 0.06,
-                showarrow=FALSE
-            ) %>%
-            add_annotations(
-                text = "Remaining Ratio (Each BP)",
-                x = (trimmedStartPos+trimmedFinishPos) / 2,
-                y = ((remainingPer[1] + remainingPer[length(remainingPer)]) / 2)
-                - 0.06,
-                showarrow=FALSE
-            ))
-}
-
-
-### ============================================================================
-### qualityQualityBasePlot
+### Plotting : qualityQualityBasePlot
 ### ============================================================================
 qualityQualityBasePlotDisplay <- function(input, output, session,
                                           trimmedRV, qualityPhredScores) {
@@ -1165,20 +621,6 @@ qualityQualityBasePlotDisplay <- function(input, output, session,
                 showarrow=FALSE
             ))
 }
-
-### ============================================================================
-### chromatogram row number counting
-### ============================================================================
-# chromatogramRowNum <- function(obj, width) {
-chromatogramRowNum <- function(width, rawLength, trimmedLength, showTrimmed) {
-    if (showTrimmed) {
-        numplots = ceiling(rawLength / width)
-    } else {
-        numplots = ceiling(trimmedLength / width)
-    }
-}
-
-
 vline <- function(x = 0, color = "red") {
     list(
         type = "line",
@@ -1190,9 +632,6 @@ vline <- function(x = 0, color = "red") {
         line = list(color = color)
     )
 }
-
-
-
 
 ### ============================================================================
 ### SangerRead Sequence Render Function (DNA / AA) dynamic

@@ -653,13 +653,6 @@ SangerContigServer <- function(input, output, session) {
                         tags$hr(
                             style = ("border-top: 6px double #A9A9A9;")),
                         fluidRow(
-                            box(title = tags$p("Cumulative Ratio Plot",
-                                               style = "font-size: 21px;
-                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                plotlyOutput("qualityTrimmingRatioPlot") %>%
-                                    withSpinner()),
                             box(title = tags$p("Base Pairs Quality Plot",
                                                style = "font-size: 21px;
                                            font-weight: bold;"),
@@ -878,7 +871,7 @@ SangerContigServer <- function(input, output, session) {
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         ### --------------------------------------------------------------------
-        ### Update ChromatogramBasePerRow
+        ### Update Chromatogram parameters
         ### --------------------------------------------------------------------
         if (!is.na(strtoi(readIndex))) {
             if (directionParam == "Forward") {
@@ -915,7 +908,6 @@ SangerContigServer <- function(input, output, session) {
     ### observeEvent: Button trimming parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$startTrimmingButton, {
-        ## !!!!! Update !!!!
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1127,6 +1119,8 @@ SangerContigServer <- function(input, output, session) {
         }
     })
 
+# <============================================================================>
+
     ############################################################################
     ### SangerContig (Function for Sanger Contig Overview)
     ############################################################################
@@ -1302,6 +1296,9 @@ SangerContigServer <- function(input, output, session) {
     output$SCStopCodonsDF <- renderDataTable({
         contigParam[["stopCodonsDF"]]
     })
+
+# <============================================================================>
+
     ############################################################################
     ### SangerRead (Function for singel read)
     ############################################################################
@@ -1388,7 +1385,6 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$primarySeqTrimmedDF <- renderExcel({
         ## !!!!! Update !!!!
-        message(">>>>>>>>>>>> Update primarySeqTrimmedDF! ")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1402,7 +1398,6 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$secondSeqTrimmedDF <- renderExcel({
         ## !!!!! Update !!!!
-        message(">>>>>>>>>>>> Update secondSeqTrimmedDF! ")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1415,7 +1410,6 @@ SangerContigServer <- function(input, output, session) {
     ### Quality Score Trimmed dataframe
     ### ------------------------------------------------------------------------
     output$qualityScoreTrimmedDF <- renderExcel({
-        message(">>>>>>>>>>>> Update qualityScoreTrimmedDF! ")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1558,25 +1552,6 @@ SangerContigServer <- function(input, output, session) {
     valueBoxTrimmedMinQualityScore (input, output, session, trimmedRV)
     valueBoxRemainingRatio (input, output, session, trimmedRV)
 
-    output$qualityTrimmingRatioPlot <- renderPlotly({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        readIndex <- strtoi(sidebar_menu[[1]])
-        directionParam <- sidebar_menu[[2]]
-
-        if (!is.na(strtoi(readIndex))) {
-            if (directionParam == "Forward") {
-                qualityPhredScores <- SangerContig@
-                    forwardReadList[[readIndex]]@
-                    QualityReport@qualityPhredScores
-            } else if (directionParam == "Reverse") {
-                qualityPhredScores <- SangerContig@
-                    reverseReadList[[readIndex]]@
-                    QualityReport@qualityPhredScores
-            }
-            qualityTrimmingRatioPlotDisplay(input, output,session,
-                                            trimmedRV, qualityPhredScores)
-        }
-    })
     output$qualityQualityBasePlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readIndex <- strtoi(sidebar_menu[[1]])

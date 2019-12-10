@@ -955,13 +955,6 @@ SangerAlignmentServer <- function(input, output, session) {
                                 tags$hr(
                                     style = ("border-top: 6px double #A9A9A9;")),
                                 fluidRow(
-                                    box(title = tags$p("Cumulative Ratio Plot",
-                                                       style = "font-size: 21px;
-                                                           font-weight: bold;"),
-                                        collapsible = TRUE,
-                                        status = "success", width = 12,
-                                        plotlyOutput("qualityTrimmingRatioPlot") %>%
-                                            withSpinner()),
                                     box(title = tags$p("Base Pairs Quality Plot",
                                                        style = "font-size: 21px;
                                                            font-weight: bold;"),
@@ -1605,12 +1598,12 @@ SangerAlignmentServer <- function(input, output, session) {
     ############################################################################
     ### SangerContig (Function for Sanger Consensus Read Overview)
     ############################################################################
-    valueBoxSAMinReadsNumCSSet (input, output, SangerAlignment, session)
-    valueBoxSAMinReadLengthCSSet (input, output, SangerAlignment, session)
-    valueBoxSAMinFractionCallCSSet (input, output, SangerAlignment, session)
-    valueBoxSAMaxFractionLostCSSet (input, output, SangerAlignment, session)
-    valueBoxSAAcceptStopCodonsCSSet (input, output, SangerAlignment, session)
-    valueBoxSAReadingFrameCSSet (input, output, SangerAlignment, session)
+    valueBoxSAMinReadsNum (input, output, SangerAlignment, session)
+    valueBoxSAMinReadLength (input, output, SangerAlignment, session)
+    valueBoxSAMinFractionCall (input, output, SangerAlignment, session)
+    valueBoxSAMaxFractionLost (input, output, SangerAlignment, session)
+    valueBoxSAAcceptStopCodons (input, output, SangerAlignment, session)
+    valueBoxSAReadingFrame (input, output, SangerAlignment, session)
     ### ------------------------------------------------------------------------
     ### Alignment
     ### ------------------------------------------------------------------------
@@ -2046,28 +2039,6 @@ SangerAlignmentServer <- function(input, output, session) {
     valueBoxTrimmedMinQualityScore (input, output, session, trimmedRV)
     valueBoxRemainingRatio (input, output, session, trimmedRV)
 
-    output$qualityTrimmingRatioPlot <- renderPlotly({
-        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        contigIndex <- strtoi(sidebar_menu[[1]])
-        readIndex <- strtoi(sidebar_menu[[4]])
-        directionParam <- sidebar_menu[[5]]
-        if (!is.na(contigIndex) &&
-            !is.na(readIndex)) {
-            if (directionParam == "Forward") {
-                qualityPhredScores <-
-                    SangerAlignment@contigList[[contigIndex]]@
-                    forwardReadList[[readIndex]]@
-                    QualityReport@qualityPhredScores
-            } else if (directionParam == "Reverse") {
-                qualityPhredScores <-
-                    SangerAlignment@contigList[[contigIndex]]@
-                    reverseReadList[[readIndex]]@
-                    QualityReport@qualityPhredScores
-            }
-            qualityTrimmingRatioPlotDisplay(input, output,session,
-                                            trimmedRV, qualityPhredScores)
-        }
-    })
     output$qualityQualityBasePlot <- renderPlotly({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])

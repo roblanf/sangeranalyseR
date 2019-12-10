@@ -33,7 +33,6 @@ An S4 class for storing multiple single consensus reads to
 
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 newAlignment <- new("SangerAlignment",
