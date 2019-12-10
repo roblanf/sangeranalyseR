@@ -11,6 +11,7 @@ output:
 #bibliography: bibliography.bib
 params:
   SangerRead: NULL
+  outputDir: ""
   showChromatogram: FALSE
 fontsize: 14pt
 vignette: >
@@ -20,7 +21,23 @@ vignette: >
 ---
 
 
-# collapsible markdown?
+# sangeranalyseR Report
+
+## Contig
+### Basic Parameters:
+* Output Directory: `r params$outputDir`
+* Input Filename:  `r params$SangerRead@readFileName`
+* Read Feature: `r params$SangerRead@readFeature`
+
+
+
+
+## Forward Reads
+
+
+## Reverse Reads
+
+
 
 <details><summary>CLICK ME</summary>
 ## yes, even hidden code blocks!

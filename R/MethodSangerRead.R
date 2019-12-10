@@ -121,9 +121,10 @@ setMethod("generateReport", "SangerRead", function(obj, outputDir,
     file.copy(from = originRmd, to = outputRmd)
 
 
-    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/Sanger_Report.Rmd",
+    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerRead_Report.Rmd",
                   output_dir = outputDir,
                   params = list(SangerRead = obj,
+                                outputDir = outputDir,
                                 showChromatogram = showChromatogram))
     # A_chloroticaRead@readFileName
 })

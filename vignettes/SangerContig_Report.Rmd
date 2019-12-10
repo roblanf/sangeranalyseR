@@ -1,0 +1,62 @@
+---
+title: "sangeranalyseR"
+author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+    code_folding: show
+    fig_caption: yes
+  BiocStyle::pdf_document: default
+#bibliography: bibliography.bib
+params:
+  SangerRead: NULL
+  outputDir: ""
+  showChromatogram: FALSE
+fontsize: 14pt
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+---
+
+
+# sangeranalyseR Report
+
+## Contig
+### Basic Parameters:
+* Output Directory: `r params$outputDir`
+* Input Parent Directory:  `r params$SangerRead@parentDirectory`
+* Contig Name: `r params$SangerRead@contigName`
+* Trimming Method: `r params$SangerRead@contigName`
+* Forward Reads Suffix Regular Expression: `r params$SangerRead@suffixForwardRegExp`
+* Forward Read Number: `r length(params$SangerRead@forwardReadList)`
+* Reverse Reads Suffic Regular Expression: `r params$SangerRead@suffixReverseRegExp`
+* Reverse Read Number: `r length(params$SangerRead@reverseReadList)`
+
+
+## Forward Reads
+
+
+## Reverse Reads
+
+
+
+<details><summary>CLICK ME</summary>
+## yes, even hidden code blocks!
+```{r}
+print(params$SangerRead@readFileName)
+```
+</details>
+
+# Second
+`r if(params$showChromatogram){"# Show chromatogram !!!"}`
+
+
+
+
+
+
+
+
+
