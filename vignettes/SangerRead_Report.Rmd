@@ -20,6 +20,12 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
+<style>
+.jexcel_content { 
+    height: 100 px !important;
+}
+</style>
+
 # sangeranalyseR 'SangerRead' Report
 
 ```{r}
@@ -62,14 +68,37 @@ kable(data.frame(t(frame))) %>%
 --- 
 
 ## Amino Acids Sequence
+<details><summary>CLICK ME</summary>
 ```{r}
 library(knitr)
 Primary_Sequence <- (strsplit(as.character(params$SangerRead@primaryAASeqS1), "")[[1]])
+# 
+# kable(data.frame(t(Primary_Sequence))) %>%
+#   kable_styling() %>%
+#   scroll_box(width = "100%", height = "100%")
 
-kable(data.frame(t(Primary_Sequence))) %>%
-  kable_styling() %>%
-  scroll_box(width = "100%", height = "100%")
+primarySeq <- unlist(strsplit(
+        as.character(params$SangerRead@primaryAASeqS1), ""))
+primarySeqDF <- data.frame(
+        t(data.frame(primarySeq)), stringsAsFactors = FALSE)
+colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
+rownames(primarySeqDF) <- NULL
+AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
+TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
+CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
+GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
+styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+excelTable()
+suppressMessages(
+    excelTable(data = primarySeqDF, defaultColWidth = 30,
+               editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList)
+)
 ```
+</details>
 
 --- 
 
@@ -115,47 +144,54 @@ qualityBasePlot(params$SangerRead)
 
 </details>
 
+
+
   
 --- 
 
 ## Chromatogram
 <details><summary>CLICK ME</summary>
-</details>
 
+<ul style="list-style-type:disc;">
 
+  <li>**Signal Ratio Cutoff**:  <span class="tab">*`r params$SangerRead@ChromatogramParam@signalRatioCutoff`*</span></li>
 
+  <li>**Base Number Per Row**:  <span class="tab">*`r params$SangerRead@ChromatogramParam@baseNumPerRow`*</span></li>
 
+  <li>**Height Per Row**:  <span class="tab">*`r params$SangerRead@ChromatogramParam@heightPerRow`*</span></li>
+  
+  <li>**Show Trimmed Region**:  <span class="tab">*`r params$SangerRead@ChromatogramParam@showTrimmed`*</span></li>
+  
+</ul>
 
-<details><summary>CLICK ME</summary>
-## yes, even hidden code blocks!
 ```{r}
-print(params$SangerRead@readFileName)
+hetcalls <- MakeBaseCalls(params$SangerRead,
+                          signalRatioCutoff = params$SangerRead@ChromatogramParam@signalRatioCutoff)
+chromatogram(hetcalls,
+             width = strtoi(params$SangerRead@ChromatogramParam@baseNumPerRow) - 20,
+             height = round(params$SangerRead@ChromatogramParam@heightPerRow * 2.6 / 200, 2),
+             trim5 = params$SangerRead@QualityReport@trimmedStartPos,
+             trim3 = (params$SangerRead@QualityReport@rawSeqLength - params$SangerRead@QualityReport@trimmedFinishPos),
+             showtrim = params$SangerRead@ChromatogramParam@showTrimmed,
+             showcalls = "both", filename = file.path(params$outputDir, paste0(basename(params$SangerRead@readFileName), "_chromatogram.pdf")))
 ```
+
+<img src="`r file.path(params$outputDir, paste0(basename(params$SangerRead@readFileName), "_chromatogram.pdf"))`" alt="some text"  width="100%" height="100%">
+
 </details>
-
-# Second
-`r if(params$showChromatogram){"# Show chromatogram !!!"}`
-
-
 
 
 
 
 
 <style>
-
-
 li{
     margin-top: 16px;
 }
-
 li:first-child {
     margin-top:0;
 }
-
 .tab {position:absolute;left:350px; }
-
-}
 </style>
 
 

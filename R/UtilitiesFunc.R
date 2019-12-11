@@ -326,7 +326,7 @@ calculateContigSeq <- function(forwardReadsList, forwardReadList,
 MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
                                 qualityPhredScoresRaw,
                                 signalRatioCutoff, readFeature) {
-    message("     * Making basecall !!")
+    message("          * Making basecall !!")
     #get peaks for each base
     Apeaks <- getpeaks(traceMatrix[,1])
     Cpeaks <- getpeaks(traceMatrix[,2])
@@ -416,7 +416,7 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     }
     peakPosMatrix <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     peakAmpMatrix <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
-    message("     * Updating slots in 'SangerRead' instance !!")
+    message("          * Updating slots in 'SangerRead' instance !!")
     return(list("qualityPhredScores" = qualityPhredScores,
                 "peakPosMatrix" = peakPosMatrix,
                 "peakAmpMatrix" = peakAmpMatrix,
