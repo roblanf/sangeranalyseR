@@ -5,7 +5,7 @@ date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
 output: 
   BiocStyle::html_document:
     toc_float: true
-    code_folding: show
+    code_folding: hide
     fig_caption: yes
   BiocStyle::pdf_document: default
 #bibliography: bibliography.bib
@@ -41,6 +41,37 @@ library(sangeranalyseR)
 </ul>
 
 </details>
+
+--- 
+
+## DNA Seqence
+<details><summary>CLICK ME</summary>
+```{r}
+library(knitr)
+Primary_Sequence <- (strsplit(as.character(params$SangerRead@primarySeq), "")[[1]])
+Secondary_Sequence <- (strsplit(as.character(params$SangerRead@secondarySeq), "")[[1]])
+Quality_Phred_Scores <- params$SangerRead@QualityReport@qualityPhredScores
+frame <- data.frame(Primary_Sequence, Secondary_Sequence, Quality_Phred_Scores)
+
+kable(data.frame(t(frame))) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "100%")
+```
+</details>
+
+--- 
+
+## Amino Acids Sequence
+```{r}
+library(knitr)
+Primary_Sequence <- (strsplit(as.character(params$SangerRead@primaryAASeqS1), "")[[1]])
+
+kable(data.frame(t(Primary_Sequence))) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "100%")
+```
+
+--- 
 
 ## Quality Trimming
 
@@ -85,7 +116,6 @@ qualityBasePlot(params$SangerRead)
 </details>
 
   
-  <li>**Phred Scores**:  <span class="tab">*`r params$SangerRead@QualityReport@qualityPhredScores`*</span></li>
 --- 
 
 ## Chromatogram

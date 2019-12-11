@@ -160,3 +160,27 @@
 #     y <- unstrsplit(sort(unique(IRanges:::regroupBySupergroup(yy, x))))
 #     names(IUPAC_CODE_MAP)[match(y, IUPAC_CODE_MAP)]
 # }
+
+
+primarySeqVec <- t(strsplit(as.character(A_chloroticaRead@primarySeq), "")[[1]])
+secondarySeqVec<- t(strsplit(as.character(A_chloroticaRead@secondarySeq), "")[[1]])
+
+kk <- data.frame(primarySeqVec, secondarySeqVec)
+
+datframeparam <- t(data.frame(primarySeqVec, secondarySeqVec))
+
+
+iris[1:10, ] %>%
+    mutate_if(is.numeric, function(x) {
+        cell_spec(x, bold = T,
+                  background = "red",
+                  color = spec_color(x, end = 1))
+    }) %>%
+    kable(escape = F, align = "c") %>%
+    kable_styling(c("striped", "condensed"), full_width = F)
+
+
+
+
+
+
