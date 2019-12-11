@@ -219,24 +219,23 @@ setMethod("generateReport", "SangerContig", function(obj, outputDir) {
     }
 
     # obj <- A_chloroticContig
-    outputDirSR <- file.path(outputDir, "SangerRead_Report")
-    if (!dir.exists(outputDirSR)) {
-        suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
+    outputDirSC <- file.path(outputDir, obj@contigName)
+    if (!dir.exists(outputDirSC)) {
+        suppressWarnings(dir.create(outputDirSC, recursive = TRUE))
     }
-
-    allSangerRead <- c(obj@forwardReadList, obj@reverseReadList)
-
-    outputFN <- sapply(allSangerRead, generateReport, outputDir)
-
-    outputDirSC <- file.path(outputDir, "SangerRead_Report")
 
     rootDir <- system.file(package = "sangeranalyseR")
     originRmd <- file.path(rootDir, "vignettes", "SangerContig_Report.Rmd")
-    outputRmd <- file.path(outputDirSC, "Sanger_Report.Rmd")
+    outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
+
+    allSangerRead <- c(obj@forwardReadList, obj@reverseReadList)
+
+    outputFN <- sapply(allSangerRead, generateReport, outputDir, outputHtml)
 
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerContig_Report.Rmd",
                   output_dir = outputDirSC,
                   params = list(SangerContig = obj,
                                 outputDir = outputDir,
                                 outputFN = outputFN))
+    return(outputHtml)
 })

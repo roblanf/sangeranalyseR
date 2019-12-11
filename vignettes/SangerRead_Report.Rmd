@@ -1,5 +1,5 @@
 ---
-title: "sangeranalyseR"
+title: "'SangerRead' Report"
 author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -12,12 +12,16 @@ params:
   SangerRead: NULL
   outputDir: ""
   showChromatogram: FALSE
+  navigationContig: FALSE
+  navigationContigFN: NULL
 fontsize: 14pt
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   %\usepackage[utf8]{inputenc}
 ---
+
+
 <script>
 details.description[open] summary::after {
   content: attr(data-open);
@@ -28,13 +32,12 @@ details.description:not([open]) summary::after {
 }
 </script>
 
-# 'SangerRead' Report
 
 ```{r echo=FALSE}
 library(sangeranalyseR)
 ```
 
-## Basic Project Information:
+# Basic Project Information:
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
@@ -52,7 +55,7 @@ library(sangeranalyseR)
 
 --- 
 
-## DNA Seqence
+# DNA Seqence
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <div style="overflow: scroll;">
@@ -116,7 +119,7 @@ suppressWarnings(suppressMessages(
 
 ---
 
-## Amino Acids Sequence
+# Amino Acids Sequence
 
 <details class="description"> <summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <div style="overflow: scroll;">
@@ -189,7 +192,7 @@ suppressWarnings(suppressMessages(
 
 --- 
 
-## Quality Trimming
+# Quality Trimming
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
@@ -233,7 +236,7 @@ qualityBasePlot(params$SangerRead)
   
 --- 
 
-## Chromatogram
+# Chromatogram
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
 <ul style="list-style-type:disc;">
@@ -264,6 +267,9 @@ chromatogram(hetcalls,
 <img src="`r file.path(params$outputDir, sub('\\.ab1$', '', basename(params$SangerRead@readFileName)), "Chromatogram.pdf")`" alt="some text"  width="100%" height="100%">
 
 </details>
+
+
+`r if(!is.null(params$navigationContigFN)){paste0("[Back to Contig !!!](", params$navigationContigFN, ")" )}`
 
 
 

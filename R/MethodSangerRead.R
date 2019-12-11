@@ -102,7 +102,8 @@ setMethod("writeFASTA", "SangerRead", function(obj, outputDir, compress,
     message("\n >> '", outputFilename, "' is written")
 })
 
-setMethod("generateReport", "SangerRead", function(obj, outputDir) {
+setMethod("generateReport", "SangerRead",
+          function(obj, outputDir, navigationContigFN) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
@@ -111,8 +112,8 @@ setMethod("generateReport", "SangerRead", function(obj, outputDir) {
     readName <- sub('\\.ab1$', '', basename(obj@readFileName))
     message("@@ readName: ", readName)
     outputDirSR <- file.path(outputDir, readName)
-    if (is.null(outputDirSR)) {
-        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+    if (!dir.exists(outputDirSR)) {
+        suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
     }
     # file.copy(template, to = paste0(output, '.Rmd'))
     # output_format <- .advanced_argument('output_format',
@@ -122,12 +123,13 @@ setMethod("generateReport", "SangerRead", function(obj, outputDir) {
     #                                      'knitrBootstrap::bootstrap_document', 'BiocStyle::html_document')
 
     rootDir <- system.file(package = "sangeranalyseR")
-    originRmd <- file.path(rootDir, "vignettes", "Sanger_Report.Rmd")
-    outputRmd <- file.path(outputDirSR, "Sanger_Report.Rmd")
+    originRmd <- file.path(rootDir, "vignettes", "SangerContig_Report.Rmd")
+    outputHtml <- file.path(outputDirSR, "SangerRead_Report.html")
 
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerRead_Report.Rmd",
-                  output_dir = outputDirSR,
+                  output_file = outputHtml,
                   params = list(SangerRead = obj,
-                                outputDir = outputDir))
-    return(outputRmd)
+                                outputDir = outputDir,
+                                navigationContigFN = navigationContigFN))
+    return(outputHtml)
 })

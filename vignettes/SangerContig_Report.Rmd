@@ -1,5 +1,5 @@
 ---
-title: "sangeranalyseR"
+title: "'SangerContig' Report"
 author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -28,13 +28,12 @@ details.description:not([open]) summary::after {
 }
 </script>
 
-# 'SangerContig' Report
 
 ```{r echo=FALSE}
 library(sangeranalyseR)
 ```
 
-## Basic Information:
+# Basic Information:
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
 <ul style="list-style-type:disc;">
@@ -58,7 +57,7 @@ library(sangeranalyseR)
 
 </details>
 
-## 'SangerContig' Input Parameters :
+# 'SangerContig' Input Parameters :
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
 <ul style="list-style-type:disc;">
@@ -76,8 +75,10 @@ library(sangeranalyseR)
 </ul>
 </details>
 
-## Forward Read
-params$SangerContig
+# Forward Read
+`r params$outputFN[[1]]`: [I'm an inline-style link](`r params$outputFN[[1]]`)
+
+`r params$outputFN[[2]]`: [I'm an inline-style link 2](`r params$outputFN[[2]]`)
 
 <style>
 li{
@@ -114,10 +115,3 @@ padding-left: 10px;
   color: #383838;
 }
 </style>
-
-
-
-
-
-
-
