@@ -102,11 +102,17 @@ setMethod("writeFASTA", "SangerRead", function(obj, outputDir, compress,
     message("\n >> '", outputFilename, "' is written")
 })
 
-setMethod("generateReport", "SangerRead", function(obj, outputDir,
-                                                   showChromatogram) {
+setMethod("generateReport", "SangerRead", function(obj, outputDir) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
-        suppressWarnings(dir.create(outputDir))
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+    }
+
+    readName <- sub('\\.ab1$', '', basename(obj@readFileName))
+    message("@@ readName: ", readName)
+    outputDirSR <- file.path(outputDir, readName)
+    if (is.null(outputDirSR)) {
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
     # file.copy(template, to = paste0(output, '.Rmd'))
     # output_format <- .advanced_argument('output_format',
@@ -117,13 +123,11 @@ setMethod("generateReport", "SangerRead", function(obj, outputDir,
 
     rootDir <- system.file(package = "sangeranalyseR")
     originRmd <- file.path(rootDir, "vignettes", "Sanger_Report.Rmd")
-    outputRmd <- file.path(outputDir, "Sanger_Report.Rmd")
-    file.copy(from = originRmd, to = outputRmd)
+    outputRmd <- file.path(outputDirSR, "Sanger_Report.Rmd")
 
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerRead_Report.Rmd",
-                  output_dir = outputDir,
+                  output_dir = outputDirSR,
                   params = list(SangerRead = obj,
-                                outputDir = outputDir,
-                                showChromatogram = showChromatogram))
-    # A_chloroticaRead@readFileName
+                                outputDir = outputDir))
+    return(outputRmd)
 })

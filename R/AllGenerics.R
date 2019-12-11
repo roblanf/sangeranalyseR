@@ -96,8 +96,7 @@ setGeneric("launchAppSangerAlignment", function(obj, outputDir = NULL) {
 })
 
 #' @export
-setGeneric("generateReport", function(obj, outputDir = NULL,
-                                      showChromatogram = TRUE) {
+setGeneric("generateReport", function(obj, outputDir = NULL) {
     standardGeneric("generateReport")
 })
 

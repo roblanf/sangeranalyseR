@@ -5,54 +5,115 @@ date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
 output: 
   BiocStyle::html_document:
     toc_float: true
-    code_folding: show
     fig_caption: yes
   BiocStyle::pdf_document: default
 #bibliography: bibliography.bib
 params:
-  SangerRead: NULL
+  SangerContig: NULL
   outputDir: ""
-  showChromatogram: FALSE
+  outputFN: NULL
 fontsize: 14pt
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   %\usepackage[utf8]{inputenc}
 ---
+<script>
+details.description[open] summary::after {
+  content: attr(data-open);
+}
 
+details.description:not([open]) summary::after {
+  content: attr(data-close);
+}
+</script>
 
-# sangeranalyseR Report
+# 'SangerContig' Report
 
-## Contig
-### Basic Parameters:
-* Output Directory: `r params$outputDir`
-* Input Parent Directory:  `r params$SangerRead@parentDirectory`
-* Contig Name: `r params$SangerRead@contigName`
-* Trimming Method: `r params$SangerRead@contigName`
-* Forward Reads Suffix Regular Expression: `r params$SangerRead@suffixForwardRegExp`
-* Forward Read Number: `r length(params$SangerRead@forwardReadList)`
-* Reverse Reads Suffic Regular Expression: `r params$SangerRead@suffixReverseRegExp`
-* Reverse Read Number: `r length(params$SangerRead@reverseReadList)`
-
-
-## Forward Reads
-
-
-## Reverse Reads
-
-
-
-<details><summary>CLICK ME</summary>
-## yes, even hidden code blocks!
-```{r}
-print(params$SangerRead@readFileName)
+```{r echo=FALSE}
+library(sangeranalyseR)
 ```
+
+## Basic Information:
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+
+<ul style="list-style-type:disc;">
+  <li>**Output Directory : **  <span class="tab">*`r params$outputDir`*</span></li>
+
+  <li>**Input Parent Directory : **  <span class="tab"><i>`r dirname(params$SangerContig@parentDirectory)`</i></span></li>
+
+  <li>**Contig Name : **  <span class="tab"><i>`r basename(params$SangerContig@contigName)`</i></span></li>
+
+  <li>**Trimming Method : **  <span class="tab">*`r params$SangerContig@forwardReadList[[1]]@QualityReport@TrimmingMethod`*</span></li>
+  
+  <li>**Forward Reads Suffix Regex : **  <span class="tab">*`r params$SangerContig@suffixForwardRegExp`*</span></li>
+
+  <li>**Forward Read Number : **  <span class="tab">*`r length(params$SangerContig@forwardReadList)`*</span></li>
+
+  <li>**Reverse Reads Suffic Regex : **  <span class="tab">*`r params$SangerContig@suffixReverseRegExp`*</span></li>
+  
+  <li>**Reverse Read Number : **  <span class="tab">*`r length(params$SangerContig@reverseReadList)`*</span></li>
+  
+</ul>
+
 </details>
 
-# Second
-`r if(params$showChromatogram){"# Show chromatogram !!!"}`
+## 'SangerContig' Input Parameters :
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
+<ul style="list-style-type:disc;">
+  <li>**Minimum Read Number : **  <span class="tab">*`r params$SangerContig@minReadsNum`*</span></li>
+  
+  <li>**Minimum Fraction Call : **  <span class="tab">*`r params$SangerContig@minFractionCall`*</span></li>
 
+  <li>**Maximum Fraction Lost : **  <span class="tab">*`r params$SangerContig@maxFractionLost`*</span></li>  
+  
+  <li>**Accept Stop Codons : **  <span class="tab">*`r params$SangerContig@acceptStopCodons`*</span></li>  
+  
+  <li>**Reading Frame : **  <span class="tab">*`r params$SangerContig@readingFrame`*</span></li>  
+  <li>**Reading Frame : **  <span class="tab">*`r params$SangerContig@readingFrame`*</span></li> 
+
+</ul>
+</details>
+
+## Forward Read
+params$SangerContig
+
+<style>
+li{
+    margin-top: 16px;
+}
+li:first-child {
+    margin-top:0;
+}
+.tab {position:absolute;left:380px; }
+
+.jexcel_content { 
+    height: 60px !important;
+}
+
+details.description[open] summary::after {
+  content: attr(data-open);
+  color: #d45050;
+  border-bottom: 2px solid #d45050;
+}
+
+details.description:not([open]) summary::after {
+  content: attr(data-close);
+  color: #4c9c6b;
+  border-bottom: 2px solid #4c9c6b;
+}
+
+.description {
+border-left: 4px solid #d3d6db;
+padding-left: 10px;
+}
+.description summary{
+  font-weight: bold;
+  font-size: 10px;
+  color: #383838;
+}
+</style>
 
 
 

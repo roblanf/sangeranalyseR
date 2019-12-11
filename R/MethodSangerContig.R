@@ -192,7 +192,7 @@ setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
 #'                                  signalRatioCutoff     = 0.33,
 #'                                  showTrimmed           = TRUE)
 #' RShinyCS <- launchAppSangerContig(A_chloroticContig)
-setMethod("launchAppSangerContig","SangerContig",
+setMethod("launchAppSangerContig", "SangerContig",
           function(obj, outputDir = NULL) {
               ### ------------------------------------------------------------------------
               ### Checking SangerContig input parameter is a list containing
@@ -210,4 +210,33 @@ setMethod("launchAppSangerContig","SangerContig",
               } else {
                   stop("'", outputDir, "' is not valid. Please check again")
               }
+})
+
+setMethod("generateReport", "SangerContig", function(obj, outputDir) {
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir))
+    }
+
+    # obj <- A_chloroticContig
+    outputDirSR <- file.path(outputDir, "SangerRead_Report")
+    if (!dir.exists(outputDirSR)) {
+        suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
+    }
+
+    allSangerRead <- c(obj@forwardReadList, obj@reverseReadList)
+
+    outputFN <- sapply(allSangerRead, generateReport, outputDir)
+
+    outputDirSC <- file.path(outputDir, "SangerRead_Report")
+
+    rootDir <- system.file(package = "sangeranalyseR")
+    originRmd <- file.path(rootDir, "vignettes", "SangerContig_Report.Rmd")
+    outputRmd <- file.path(outputDirSC, "Sanger_Report.Rmd")
+
+    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerContig_Report.Rmd",
+                  output_dir = outputDirSC,
+                  params = list(SangerContig = obj,
+                                outputDir = outputDir,
+                                outputFN = outputFN))
 })
