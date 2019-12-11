@@ -18,8 +18,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
   %\usepackage[utf8]{inputenc}
 ---
+<script>
+details.description[open] summary::after {
+  content: attr(data-open);
+}
 
-# sangeranalyseR 'SangerRead' Report
+details.description:not([open]) summary::after {
+  content: attr(data-close);
+}
+</script>
+
+# 'SangerRead' Report
 
 ```{r echo=FALSE}
 library(sangeranalyseR)
@@ -27,7 +36,7 @@ library(sangeranalyseR)
 
 ## Basic Project Information:
 
-<details><summary>CLICK ME</summary>
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
 <ul style="list-style-type:disc;">
   <li>**Output Directory : **  <span class="tab">*`r params$outputDir`*</span></li>
@@ -45,7 +54,8 @@ library(sangeranalyseR)
 
 ## DNA Seqence
 
-<details><summary>CLICK ME</summary>
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<div style="overflow: scroll;">
 <h3> Primary Sequence </h3>
 ```{r echo=FALSE, warning=FALSE}
 primarySeq <- unlist(strsplit(as.character(params$SangerRead@primarySeq), ""))
@@ -57,14 +67,14 @@ TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
 CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
 GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
 styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
-suppressMessages(
+suppressWarnings(suppressMessages(
     excelTable(data = primarySeqDF, defaultColWidth = 30,
                editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
                style = styleList, loadingSpin = TRUE)
-)
+))
 ```
 <h3> Secondary Sequence </h3>
 ```{r echo=FALSE, warning=FALSE}
@@ -77,14 +87,14 @@ TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
 CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
 GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
 styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
-suppressMessages(
+suppressWarnings(suppressMessages(
     excelTable(data = secondarySeqDF, defaultColWidth = 30,
                editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
                style = styleList, loadingSpin = TRUE)
-)
+))
 ```
 <h3> Phred Quality Scores </h3>
 ```{r echo=FALSE, warning=FALSE}
@@ -92,22 +102,24 @@ PhredScoreDF <- data.frame(t(data.frame(params$SangerRead@QualityReport@qualityP
 colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
 rownames(PhredScoreDF) <- NULL
 styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
-suppressMessages(
+suppressWarnings(suppressMessages(
     excelTable(data = PhredScoreDF, defaultColWidth = 30, editable = FALSE,
                rowResize = FALSE, columnResize = FALSE,
                allowInsertRow = FALSE, allowInsertColumn = FALSE,
                allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
                style = styleList, allowRenameColumn = FALSE,
                loadingSpin = TRUE)
-)
+))
 ```
+</div>
 </details>
 
 ---
 
 ## Amino Acids Sequence
 
-<details> <summary>CLICK ME</summary>
+<details class="description"> <summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<div style="overflow: scroll;">
 <h3> Amino Acids Sequence frameshit 0 </h3>
 ```{r echo=FALSE, warning=FALSE}
 AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS1))
@@ -118,14 +130,14 @@ width <- rep(90, length(AAStringDF))
 styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
 styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
 styleList <- c(styleList1, styleList2)
-suppressMessages(
+suppressWarnings(suppressMessages(
     excelTable(data = AAStringDF, columns = data.frame(width = width),
                defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
                style = styleList)
-)
+))
 ```
 <h3> Amino Acids Sequence frameshit 1  </h3>
 ```{r echo=FALSE, warning=FALSE}
@@ -140,14 +152,14 @@ styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
 styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
 styleList <- c(styleList1, styleList2)
 styleList[['A1']] <- 'background-color: black;'
-suppressMessages(
+suppressWarnings(suppressMessages(
     excelTable(data = AAStringDF, columns = data.frame(width = width),
                defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
                style = styleList)
-)
+))
 ```
 <h3> Amino Acids Sequence frameshit 2 </h3>
 ```{r echo=FALSE, warning=FALSE}
@@ -163,22 +175,23 @@ styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
 styleList <- c(styleList1, styleList2)
 styleList[['A1']] <- 'background-color: black;'
 styleList[['B1']] <- 'background-color: black;'
-suppressMessages(
+suppressWarnings(suppressMessages(
     excelTable(data = AAStringDF, columns = data.frame(width = width),
                defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
                style = styleList)
-)
+))
 ```
+</div>
 </details>
 
 --- 
 
 ## Quality Trimming
 
-<details><summary>CLICK ME</summary>
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
 <ul style="list-style-type:disc;">
 
@@ -211,17 +224,17 @@ suppressMessages(
   <li>**Remaining Read Ratio**: <span class="tab">*`r params$SangerRead@QualityReport@remainingRatio`*</span></li>
 
 </ul>
-
+<div style="overflow: scroll;">
 ```{r echo=FALSE}
 qualityBasePlot(params$SangerRead)
 ```
-
+<div>
 </details>
   
 --- 
 
 ## Chromatogram
-<details><summary>CLICK ME</summary>
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
 <ul style="list-style-type:disc;">
 
@@ -268,6 +281,28 @@ li:first-child {
     height: 60px !important;
 }
 
+details.description[open] summary::after {
+  content: attr(data-open);
+  color: #d45050;
+  border-bottom: 2px solid #d45050;
+}
+
+details.description:not([open]) summary::after {
+  content: attr(data-close);
+  color: #4c9c6b;
+  border-bottom: 2px solid #4c9c6b;
+}
+
+.description {
+border-left: 4px solid #d3d6db;
+padding-left: 10px;
+}
+.description summary{
+  font-weight: bold;
+  font-size: 10px;
+  color: #383838;
+}
 </style>
+
 
 
