@@ -44,10 +44,10 @@ library(sangeranalyseR)
 --- 
 
 ## DNA Seqence
-<details><summary>CLICK ME</summary>
 
-### Primary Sequence
-```{r echo=FALSE}
+<details><summary>CLICK ME</summary>
+<h3> Primary Sequence </h3>
+```{r echo=FALSE, warning=FALSE}
 primarySeq <- unlist(strsplit(as.character(params$SangerRead@primarySeq), ""))
 primarySeqDF <- data.frame(t(data.frame(primarySeq)), stringsAsFactors = FALSE)
 colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
@@ -66,9 +66,8 @@ suppressMessages(
                style = styleList, loadingSpin = TRUE)
 )
 ```
-
-### Secondary Sequence
-```{r echo=FALSE}
+<h3> Secondary Sequence </h3>
+```{r echo=FALSE, warning=FALSE}
 secondarySeq <-unlist(strsplit(as.character(params$SangerRead@secondarySeq), ""))
 secondarySeqDF <- data.frame(t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
 colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
@@ -87,9 +86,8 @@ suppressMessages(
                style = styleList, loadingSpin = TRUE)
 )
 ```
-
-### Phred Quality Scores 
-```{r echo=FALSE}
+<h3> Phred Quality Scores </h3>
+```{r echo=FALSE, warning=FALSE}
 PhredScoreDF <- data.frame(t(data.frame(params$SangerRead@QualityReport@qualityPhredScores)), stringsAsFactors = FALSE)
 colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
 rownames(PhredScoreDF) <- NULL
@@ -103,17 +101,15 @@ suppressMessages(
                loadingSpin = TRUE)
 )
 ```
-
 </details>
 
---- 
+---
 
 ## Amino Acids Sequence
 
-<details><summary>CLICK ME</summary>
-
-### Amino Acids Sequence frameshit 0
-```{r echo=FALSE}
+<details> <summary>CLICK ME</summary>
+<h3> Amino Acids Sequence frameshit 0 </h3>
+```{r echo=FALSE, warning=FALSE}
 AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS1))
 AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
 colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
@@ -131,9 +127,8 @@ suppressMessages(
                style = styleList)
 )
 ```
-
-### Amino Acids Sequence frameshit 1
-```{r echo=FALSE}
+<h3> Amino Acids Sequence frameshit 1  </h3>
+```{r echo=FALSE, warning=FALSE}
 AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS2))
 AAString <- rbind(NA, AAString)
 AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
@@ -154,9 +149,8 @@ suppressMessages(
                style = styleList)
 )
 ```
-
-### Amino Acids Sequence frameshit 2
-```{r echo=FALSE}
+<h3> Amino Acids Sequence frameshit 2 </h3>
+```{r echo=FALSE, warning=FALSE}
 AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS3))
 AAString <- rbind(NA, NA, AAString)
 AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
@@ -178,7 +172,6 @@ suppressMessages(
                style = styleList)
 )
 ```
-
 </details>
 
 --- 
