@@ -5,7 +5,6 @@ date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
 output: 
   BiocStyle::html_document:
     toc_float: true
-    code_folding: hide
     fig_caption: yes
   BiocStyle::pdf_document: default
 #bibliography: bibliography.bib
@@ -20,15 +19,9 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
-<style>
-.jexcel_content { 
-    height: 100 px !important;
-}
-</style>
-
 # sangeranalyseR 'SangerRead' Report
 
-```{r}
+```{r echo=FALSE}
 library(sangeranalyseR)
 ```
 
@@ -52,35 +45,11 @@ library(sangeranalyseR)
 
 ## DNA Seqence
 <details><summary>CLICK ME</summary>
-```{r}
-library(knitr)
-Primary_Sequence <- (strsplit(as.character(params$SangerRead@primarySeq), "")[[1]])
-Secondary_Sequence <- (strsplit(as.character(params$SangerRead@secondarySeq), "")[[1]])
-Quality_Phred_Scores <- params$SangerRead@QualityReport@qualityPhredScores
-frame <- data.frame(Primary_Sequence, Secondary_Sequence, Quality_Phred_Scores)
 
-kable(data.frame(t(frame))) %>%
-  kable_styling() %>%
-  scroll_box(width = "100%", height = "100%")
-```
-</details>
-
---- 
-
-## Amino Acids Sequence
-<details><summary>CLICK ME</summary>
-```{r}
-library(knitr)
-Primary_Sequence <- (strsplit(as.character(params$SangerRead@primaryAASeqS1), "")[[1]])
-# 
-# kable(data.frame(t(Primary_Sequence))) %>%
-#   kable_styling() %>%
-#   scroll_box(width = "100%", height = "100%")
-
-primarySeq <- unlist(strsplit(
-        as.character(params$SangerRead@primaryAASeqS1), ""))
-primarySeqDF <- data.frame(
-        t(data.frame(primarySeq)), stringsAsFactors = FALSE)
+### Primary Sequence
+```{r echo=FALSE}
+primarySeq <- unlist(strsplit(as.character(params$SangerRead@primarySeq), ""))
+primarySeqDF <- data.frame(t(data.frame(primarySeq)), stringsAsFactors = FALSE)
 colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
 rownames(primarySeqDF) <- NULL
 AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
@@ -88,16 +57,128 @@ TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
 CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
 GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
 styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
-excelTable()
 suppressMessages(
     excelTable(data = primarySeqDF, defaultColWidth = 30,
                editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList, loadingSpin = TRUE)
+)
+```
+
+### Secondary Sequence
+```{r echo=FALSE}
+secondarySeq <-unlist(strsplit(as.character(params$SangerRead@secondarySeq), ""))
+secondarySeqDF <- data.frame(t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
+colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
+rownames(secondarySeqDF) <- NULL
+AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
+TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
+CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
+GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
+styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+suppressMessages(
+    excelTable(data = secondarySeqDF, defaultColWidth = 30,
+               editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList, loadingSpin = TRUE)
+)
+```
+
+### Phred Quality Scores 
+```{r echo=FALSE}
+PhredScoreDF <- data.frame(t(data.frame(params$SangerRead@QualityReport@qualityPhredScores)), stringsAsFactors = FALSE)
+colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+rownames(PhredScoreDF) <- NULL
+styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
+suppressMessages(
+    excelTable(data = PhredScoreDF, defaultColWidth = 30, editable = FALSE,
+               rowResize = FALSE, columnResize = FALSE,
+               allowInsertRow = FALSE, allowInsertColumn = FALSE,
+               allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
+               style = styleList, allowRenameColumn = FALSE,
+               loadingSpin = TRUE)
+)
+```
+
+</details>
+
+--- 
+
+## Amino Acids Sequence
+
+<details><summary>CLICK ME</summary>
+
+### Amino Acids Sequence frameshit 0
+```{r echo=FALSE}
+AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS1))
+AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+rownames(AAStringDF) <- NULL
+width <- rep(90, length(AAStringDF))
+styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+styleList <- c(styleList1, styleList2)
+suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
                style = styleList)
 )
 ```
+
+### Amino Acids Sequence frameshit 1
+```{r echo=FALSE}
+AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS2))
+AAString <- rbind(NA, AAString)
+AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+rownames(AAStringDF) <- NULL
+width <- rep(90, length(AAStringDF) - 1)
+width <- c(30, width)
+styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+styleList <- c(styleList1, styleList2)
+styleList[['A1']] <- 'background-color: black;'
+suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList)
+)
+```
+
+### Amino Acids Sequence frameshit 2
+```{r echo=FALSE}
+AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS3))
+AAString <- rbind(NA, NA, AAString)
+AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+rownames(AAStringDF) <- NULL
+width <- rep(90, length(AAStringDF) - 2)
+width <- c(30, 30, width)
+styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+styleList <- c(styleList1, styleList2)
+styleList[['A1']] <- 'background-color: black;'
+styleList[['B1']] <- 'background-color: black;'
+suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList)
+)
+```
+
 </details>
 
 --- 
@@ -138,14 +219,11 @@ suppressMessages(
 
 </ul>
 
-```{r}
+```{r echo=FALSE}
 qualityBasePlot(params$SangerRead)
 ```
 
 </details>
-
-
-
   
 --- 
 
@@ -164,7 +242,7 @@ qualityBasePlot(params$SangerRead)
   
 </ul>
 
-```{r}
+```{r echo=FALSE}
 hetcalls <- MakeBaseCalls(params$SangerRead,
                           signalRatioCutoff = params$SangerRead@ChromatogramParam@signalRatioCutoff)
 chromatogram(hetcalls,
@@ -192,6 +270,11 @@ li:first-child {
     margin-top:0;
 }
 .tab {position:absolute;left:350px; }
+
+.jexcel_content { 
+    height: 60px !important;
+}
+
 </style>
 
 
