@@ -80,10 +80,40 @@ library(sangeranalyseR)
 
 ---
 
+# Contig Sequence:
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<h3> Primary Sequence </h3>
+<div style="overflow: scroll;">
+```{r echo=FALSE, warning=FALSE}
+contigSeq <- unlist(strsplit(as.character(params$SangerContig@contigSeq), ""))
+contigSeqDF <- data.frame(t(data.frame(contigSeq)), stringsAsFactors = FALSE)
+colnames(contigSeqDF) <- substr(colnames(contigSeqDF), 2, 100)
+rownames(contigSeqDF) <- NULL
+AstyleList <- SetCharStyleList(contigSeqDF, "A", "#1eff00")
+TstyleList <- SetCharStyleList(contigSeqDF, "T", "#ff7a7a")
+CstyleList <- SetCharStyleList(contigSeqDF, "C", "#7ac3ff")
+GstyleList <- SetCharStyleList(contigSeqDF, "G", "#c9c9c9")
+styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+suppressWarnings(suppressMessages(
+    excelTable(data = contigSeqDF, defaultColWidth = 30,
+               editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList, loadingSpin = TRUE)
+))
+```
+<div style="overflow: scroll;">
+</details>
+
+---
+
 # Reference Amino Sequence :
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <h3> Genetic Code </h3>
+<div style="overflow: scroll;">
 ```{r echo=FALSE, warning=FALSE}
 suppressWarnings(suppressMessages(
       excelTable(data = t(data.frame(params$SangerContig@geneticCode)),
@@ -93,8 +123,10 @@ suppressWarnings(suppressMessages(
                  allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
 ))
 ```
+</div>
 
 <h3> Reference Amino Acid Sequence </h3>
+<div style="overflow: scroll;">
 ```{r echo=FALSE, warning=FALSE}
 refAminoAcidSeqVec <- strsplit(params$SangerContig@refAminoAcidSeq, "")[[1]]
     names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
@@ -107,8 +139,100 @@ refAminoAcidSeqVec <- strsplit(params$SangerContig@refAminoAcidSeq, "")[[1]]
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     ))
 ```
+</div>
 </details>
 
+---
+
+# Contig Results:
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<h3> Reads Alignment </h3>
+```{r results='asis', echo=FALSE, warning=FALSE}
+browseSeqHTML <- file.path(params$outputDir, "Reads_Alignment_BrowseSeqs.html")
+BrowseSeqs(DNAStringSet(params$SangerContig@alignment),
+           openURL=FALSE, htmlFile=browseSeqHTML)
+shiny::includeHTML(browseSeqHTML)
+```
+<br>
+<h3> Difference Data Frame </h3>
+<div style="overflow: scroll;">
+```{r results='asis', echo=FALSE, warning=FALSE}
+if (all(dim(params$SangerContig@differencesDF) == c(0,0))) {
+    cat("<h4 style='font-weight: bold; font-style: italic;'> 'Differences' data frame is empty. </h4>")
+} else {
+    params$SangerContig@differencesDF %>%
+      kable() %>%
+      kable_styling()
+}
+```
+</div>
+<br>
+<h3> Distance Matrix </h3>
+<div style="overflow: scroll;">
+```{r results='asis', echo=FALSE, warning=FALSE}
+if (all(dim(params$SangerContig@distanceMatrix) == c(0,0))) {
+    cat("<h4 style='font-weight: bold; font-style: italic;'> 'Distance' Matrix is empty. </h4>")
+} else {
+    params$SangerContig@distanceMatrix %>%
+      kable() %>%
+      kable_styling()
+}
+```
+</div>
+<br>
+<h3> Dendrogram </h3>
+<div style="overflow: scroll;">
+```{r results='asis', echo=FALSE, warning=FALSE}
+ggdendrogram(params$SangerContig@dendrogram[[2]], rotate = TRUE)
+```
+</div>
+<div style="overflow: scroll;">
+```{r echo=FALSE, warning=FALSE}
+params$SangerContig@dendrogram[[1]] %>%
+    kable() %>%
+    kable_styling()
+```
+</div>
+<br>
+<h3> Indels Data Frame </h3>
+<div style="overflow: scroll;">
+```{r results='asis', echo=FALSE, warning=FALSE}
+if (all(dim(params$SangerContig@indelsDF) == c(0,0))) {
+    cat("<h4 style='font-weight: bold; font-style: italic;'> 'indelsDF' Data Frame is empty. </h4>")
+} else {
+    params$SangerContig@indelsDF %>%
+      kable() %>%
+      kable_styling()
+}
+```
+</div>
+<br>
+<h3> Stop Codons </h3>
+<div style="overflow: scroll;">
+```{r results='asis', echo=FALSE, warning=FALSE}
+if (all(dim(params$SangerContig@stopCodonsDF) == c(0,0))) {
+    cat("<h4 style='font-weight: bold; font-style: italic;'> 'stopCodonsDF' Data Frame is empty. </h4>")
+} else {
+    params$SangerContig@stopCodonsDF %>%
+      kable() %>%
+      kable_styling()
+}
+```
+</div>
+<br>
+<h3> Secondary Peak Data Frame </h3>
+<div style="overflow: scroll;">
+```{r results='asis', echo=FALSE, warning=FALSE}
+if (all(dim(params$SangerContig@secondaryPeakDF) == c(0,0))) {
+    cat("<p style='font-weight: bold; font-style: italic;'> 'secondaryPeakDF' Data Frame is empty. </p>")
+} else {
+    params$SangerContig@secondaryPeakDF %>%
+      kable() %>%
+      kable_styling()
+}
+```
+</div>
+</details>
 
 ---
 
@@ -197,5 +321,9 @@ padding-left: 10px;
   font-weight: bold;
   font-size: 10px;
   color: #383838;
+}
+
+span {
+  white-space:nowrap;
 }
 </style>
