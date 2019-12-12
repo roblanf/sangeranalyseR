@@ -29,6 +29,7 @@ details.description:not([open]) summary::after {
 }
 </script>
 
+<p> Current position : </p>
 
 ```{r echo=FALSE}
 library(sangeranalyseR)
@@ -58,6 +59,8 @@ library(sangeranalyseR)
 
 </details>
 
+---
+
 # 'SangerContig' Input Parameters :
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
@@ -76,26 +79,41 @@ library(sangeranalyseR)
 </ul>
 </details>
 
-# Forward Reads
+---
 
+# Forward Read Reports
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<ul style="list-style-type:disc;">
 ```{r, results='asis', echo=FALSE, warning=FALSE}
 for (i in 1:length(params$forwardReadFN)){
-   cat('\n<div class="row">')
-   cat('<a role="button" class="btn btn-success" href="', params$forwardReadFN[[i]], '">Go to</a>\n') 
-   cat('\n</div>') 
+   cat('<li style = "margin-top: 35px; font-weight: bold">')
+   cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', params$forwardReadFN[[i]], '">')
+   cat(paste0('Go to "', basename(params$SangerContig@forwardReadList[[i]]@readFileName), '" Report'))
+   cat('</a>\n') 
+   cat('</li>')
 }
 ```
+</ul>
+</details>
 
-# Reverse Reads
+---
 
+# Reverse Read Reports
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<ul style="list-style-type:disc;">
 ```{r, results='asis', echo=FALSE, warning=FALSE}
 for (i in 1:length(params$reverseReadFN)){
-   cat('\n<div class="row">')
-   cat('<a role="button" class="btn btn-success" href="', params$reverseReadFN[[i]], '">Go to</a>\n') 
-   cat('\n</div>') 
+   cat('<li style = "margin-top: 35px; font-weight: bold">')
+   cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', params$reverseReadFN[[i]], '">')
+   cat(paste0('Go to "', basename(params$SangerContig@reverseReadList[[i]]@readFileName), '" Report'))
+   cat('</a>\n') 
+   cat('</li>')
 }
 ```
-
+</ul>
+</details>
 
 
 <style>
