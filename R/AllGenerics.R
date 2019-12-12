@@ -96,22 +96,23 @@ setGeneric("launchAppSangerAlignment", function(obj, outputDir = NULL) {
 })
 
 #' @export
-setGeneric("generateReport", function(obj, outputDir = NULL) {
+setGeneric("generateReport", function(obj, outputDir = NULL, ...) {
     standardGeneric("generateReport")
 })
-
-#' @export
-setGeneric("generateReport", function(obj, outputDir = NULL,
-                                      navigationContigFN = NULL) {
-    standardGeneric("generateReport")
-})
-
-#' @export
-setGeneric("generateReport", function(obj, outputDir = NULL,
-                                      navigationContigFN = NULL,
-                                      navigationAlignmentFN = NULL) {
-    standardGeneric("generateReport")
-})
+#'
+#' #' @export
+#' setGeneric("generateReportSangerContig", function(obj, outputDir = NULL,
+#'                                       navigationContigFN = NULL,
+#'                                       includeSangerRead = TRUE) {
+#'     standardGeneric("generateReportSangerContig")
+#' })
+#'
+#' #' @export
+#' setGeneric("generateReportSangerRead", function(obj, outputDir = NULL,
+#'                                       navigationContigFN = NULL,
+#'                                       navigationAlignmentFN = NULL) {
+#'     standardGeneric("generateReportSangerRead")
+#' })
 
 
 #' @export

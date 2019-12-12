@@ -212,8 +212,9 @@ setMethod("launchAppSangerContig", "SangerContig",
               }
 })
 
-setMethod("generateReport", "SangerContig", function(obj, outputDir,
-                                                     navigationAlignmentFN) {
+setMethod("generateReport", "SangerContig",
+          function(obj, outputDir, navigationAlignmentFN = NULL,
+                   includeSangerRead = TRUE) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir))
@@ -232,15 +233,19 @@ setMethod("generateReport", "SangerContig", function(obj, outputDir,
     reverseReads <- obj@reverseReadList
 
     message("navigationAlignmentFN (SangerContig): ", navigationAlignmentFN)
-    forwardReadFN <- sapply(forwardReads, generateReport,
-                            outputDir = outputDirSC,
-                            navigationContigFN = outputHtml,
-                            navigationAlignmentFN = navigationAlignmentFN)
-    reverseReadFN <- sapply(reverseReads, generateReport,
-                            outputDir = outputDirSC,
-                            navigationContigFN = outputHtml,
-                            navigationAlignmentFN = navigationAlignmentFN)
-
+    if(includeSangerRead) {
+        forwardReadFN <- sapply(forwardReads, generateReport,
+                                outputDir = outputDirSC,
+                                navigationContigFN = outputHtml,
+                                navigationAlignmentFN = navigationAlignmentFN)
+        reverseReadFN <- sapply(reverseReads, generateReport,
+                                outputDir = outputDirSC,
+                                navigationContigFN = outputHtml,
+                                navigationAlignmentFN = navigationAlignmentFN)
+    } else {
+        forwardReadFN = NULL
+        reverseReadFN = NULL
+    }
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerContig_Report.Rmd",
                   output_dir = outputDirSC,
                   params = list(SangerContig = obj,

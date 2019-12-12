@@ -23,8 +23,6 @@ vignette: >
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<h1>`r params$navigationAlignmentFN`</h1>
-
 <div style="margin-left:50px; padding-left:-50;margin-top:50px; margin-bottom:50px; border-left: 4px solid #d3d6db;">
 `r if(!is.null(params$navigationAlignmentFN)){ "<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerAlignment Level</p>" }`
 <p style = "font-size: 15px; font-weight: bold; margin-left:-20px"><i class="fa fa-arrow-circle-right" style="margin-right: 10px; color: green"></i>SangerContig Level</p>
@@ -87,15 +85,22 @@ library(sangeranalyseR)
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <ul style="list-style-type:disc;">
 ```{r, results='asis', echo=FALSE, warning=FALSE}
-for (i in 1:length(params$forwardReadFN)){
-   cat('<li style = "margin-top: 35px; font-weight: bold">')
-   cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', params$forwardReadFN[[i]], '">')
-   cat(paste0('Go to "', basename(params$SangerContig@forwardReadList[[i]]@readFileName), '" Report'))
-   cat('</a>\n') 
-   cat('</li>')
+if (!is.null(params$forwardReadFN)) {
+  for (i in 1:length(params$forwardReadFN)){
+      cat('<li style = "margin-top: 35px; font-weight: bold">')
+      cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', params$forwardReadFN[[i]], '">')
+      cat(paste0('Go to "', basename(params$SangerContig@forwardReadList[[i]]@readFileName), '" Report'))
+      cat('</a>\n') 
+      cat('</li>')
+  }
 }
 ```
 </ul>
+```{r, results='asis', echo=FALSE, warning=FALSE}
+if (is.null(params$forwardReadFN)) {
+    cat("<p style='font-size: 13px; font-weight:bold'> 'includeSangerRead' is 'FALSE'. Forward reads are not included in this report. </p>")
+}
+```
 </details>
 
 ---
@@ -105,17 +110,27 @@ for (i in 1:length(params$forwardReadFN)){
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <ul style="list-style-type:disc;">
 ```{r, results='asis', echo=FALSE, warning=FALSE}
-for (i in 1:length(params$reverseReadFN)){
-   cat('<li style = "margin-top: 35px; font-weight: bold">')
-   cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', params$reverseReadFN[[i]], '">')
-   cat(paste0('Go to "', basename(params$SangerContig@reverseReadList[[i]]@readFileName), '" Report'))
-   cat('</a>\n') 
-   cat('</li>')
+if (!is.null(params$reverseReadFN)) {
+  for (i in 1:length(params$reverseReadFN)){
+      cat('<li style = "margin-top: 35px; font-weight: bold">')
+      cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', params$reverseReadFN[[i]], '">')
+      cat(paste0('Go to "', basename(params$SangerContig@reverseReadList[[i]]@readFileName), '" Report'))
+      cat('</a>\n') 
+      cat('</li>')
+  }
 }
 ```
 </ul>
+```{r, results='asis', echo=FALSE, warning=FALSE}
+if (is.null(params$reverseReadFN)) {
+    cat("<p style='font-size: 13px; font-weight:bold'> 'includeSangerRead' is 'FALSE'. Reverse reads are not included in this report. </p>")
+}
+```
 </details>
 
+---
+
+`r if(!is.null(params$navigationAlignmentFN)){paste0('<br><br><a style="margin-left:-20px" href="', params$navigationAlignmentFN, '" class="btn btn-success btn-block btn-lg active" role="button">Back to \'SangerAlignment Report\'</a>')}`
 
 <style>
 li{

@@ -125,7 +125,10 @@ setMethod("launchAppSangerAlignment", "SangerAlignment",
 })
 
 
-setMethod("generateReport", "SangerAlignment", function(obj, outputDir) {
+setMethod("generateReport", "SangerAlignment",
+          function(obj, outputDir,
+                   includeSangerContig = TRUE,
+                   includeSangerRead = TRUE) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir))
@@ -139,38 +142,24 @@ setMethod("generateReport", "SangerAlignment", function(obj, outputDir) {
     outputHtml <- file.path(outputDirSA, "SangerAlignment_Report.html")
 
     # Start for loop
-    contigsFN <- sapply(obj@contigList, function (objContig) {
-        message("!!! outputHtml: ", outputHtml)
-        outputDirSC <- file.path(outputDirSA, objContig@contigName)
-        if (!dir.exists(outputDirSC)) {
-            suppressWarnings(dir.create(outputDirSC, recursive = TRUE))
-        }
-        generateReport(objContig, outputDir = outputDirSA,
-                       navigationAlignmentFN = outputHtml)
-    })
-
+    if (includeSangerContig) {
+        contigsFN <- sapply(obj@contigList, function (objContig) {
+            message("!!! outputHtml: ", outputHtml)
+            outputDirSC <- file.path(outputDirSA, objContig@contigName)
+            if (!dir.exists(outputDirSC)) {
+                suppressWarnings(dir.create(outputDirSC, recursive = TRUE))
+            }
+            generateReport(objContig, outputDir = outputDirSA,
+                           navigationAlignmentFN = outputHtml,
+                           includeSangerRead = includeSangerRead)
+        })
+    } else {
+        contigsFN <- NULL
+    }
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerAlignment_Report.Rmd",
                   output_dir = outputDirSA,
                   params = list(SangerAlignment = obj,
                                 outputDir = outputDir,
                                 contigsFN = contigsFN))
-
-
-    # rootDir <- system.file(package = "sangeranalyseR")
-    # originRmd <- file.path(rootDir, "vignettes", "SangerContig_Report.Rmd")
-    # outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
-    #
-    # forwardReads <- objContig@forwardReadList
-    # reverseReads <- objContig@reverseReadList
-    #
-    # forwardReadFN <- sapply(forwardReads, generateReport, outputDir, outputHtml)
-    # reverseReadFN <- sapply(reverseReads, generateReport, outputDir, outputHtml)
-    #
-    # res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerContig_Report.Rmd",
-    #               output_dir = outputDirSC,
-    #               params = list(SangerContig = objContig,
-    #                             outputDir = outputDir,
-    #                             forwardReadFN = forwardReadFN,
-    #                             reverseReadFN = reverseReadFN))
     return(contigsFN)
 })

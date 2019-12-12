@@ -103,9 +103,8 @@ setMethod("writeFASTA", "SangerRead", function(obj, outputDir, compress,
 })
 
 setMethod("generateReport", "SangerRead",
-          function(obj, outputDir, navigationContigFN, navigationAlignmentFN,
-                   showDNASeqence = TRUE, showAASequence = TRUE,
-                   showQualityTrimming = TRUE, showChromatogram = TRUE) {
+          function(obj, outputDir, navigationContigFN = NULL,
+                   navigationAlignmentFN = NULL) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
@@ -133,10 +132,6 @@ setMethod("generateReport", "SangerRead",
                   params = list(SangerRead = obj,
                                 outputDir = outputDir,
                                 navigationContigFN = navigationContigFN,
-                                navigationAlignmentFN = navigationAlignmentFN,
-                                showDNASeqence = showDNASeqence,
-                                showAASequence = showAASequence,
-                                showQualityTrimming = showQualityTrimming,
-                                showChromatogram = showChromatogram))
+                                navigationAlignmentFN = navigationAlignmentFN))
     return(outputHtml)
 })
