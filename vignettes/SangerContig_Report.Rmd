@@ -13,6 +13,7 @@ params:
   outputDir: ""
   forwardReadFN: NULL
   reverseReadFN: NULL
+  navigationAlignmentFN: NULL
 fontsize: 14pt
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
@@ -29,11 +30,18 @@ details.description:not([open]) summary::after {
 }
 </script>
 
-<p> Current position : </p>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div style="margin-left:50px; padding-left:-50;margin-top:50px; margin-bottom:50px; border-left: 4px solid #d3d6db;">
+`r if(!is.null(params$navigationAlignmentFN)){ "<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerAlignment Level</p>" }`
+<p style = "font-size: 15px; font-weight: bold; margin-left:-20px"><i class="fa fa-arrow-circle-right" style="margin-right: 10px; color: green"></i>SangerContig Level</p>
+<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerRead Level</p>
+</div>
 
 ```{r echo=FALSE}
 library(sangeranalyseR)
 ```
+
 
 # Basic Information:
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
