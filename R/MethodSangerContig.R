@@ -228,14 +228,17 @@ setMethod("generateReport", "SangerContig", function(obj, outputDir) {
     originRmd <- file.path(rootDir, "vignettes", "SangerContig_Report.Rmd")
     outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
 
-    allSangerRead <- c(obj@forwardReadList, obj@reverseReadList)
+    forwardReads <- obj@forwardReadList
+    reverseReads <- obj@reverseReadList
 
-    outputFN <- sapply(allSangerRead, generateReport, outputDir, outputHtml)
+    forwardReadFN <- sapply(forwardReads, generateReport, outputDir, outputHtml)
+    reverseReadFN <- sapply(reverseReads, generateReport, outputDir, outputHtml)
 
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerContig_Report.Rmd",
                   output_dir = outputDirSC,
                   params = list(SangerContig = obj,
                                 outputDir = outputDir,
-                                outputFN = outputFN))
+                                forwardReadFN = forwardReadFN,
+                                reverseReadFN = reverseReadFN))
     return(outputHtml)
 })

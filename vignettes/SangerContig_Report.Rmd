@@ -11,7 +11,8 @@ output:
 params:
   SangerContig: NULL
   outputDir: ""
-  outputFN: NULL
+  forwardReadFN: NULL
+  reverseReadFN: NULL
 fontsize: 14pt
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
@@ -75,10 +76,27 @@ library(sangeranalyseR)
 </ul>
 </details>
 
-# Forward Read
-`r params$outputFN[[1]]`: [I'm an inline-style link](`r params$outputFN[[1]]`)
+# Forward Reads
 
-`r params$outputFN[[2]]`: [I'm an inline-style link 2](`r params$outputFN[[2]]`)
+```{r, results='asis', echo=FALSE, warning=FALSE}
+for (i in 1:length(params$forwardReadFN)){
+   cat('\n<div class="row">')
+   cat('<a role="button" class="btn btn-success" href="', params$forwardReadFN[[i]], '">Go to</a>\n') 
+   cat('\n</div>') 
+}
+```
+
+# Reverse Reads
+
+```{r, results='asis', echo=FALSE, warning=FALSE}
+for (i in 1:length(params$reverseReadFN)){
+   cat('\n<div class="row">')
+   cat('<a role="button" class="btn btn-success" href="', params$reverseReadFN[[i]], '">Go to</a>\n') 
+   cat('\n</div>') 
+}
+```
+
+
 
 <style>
 li{
