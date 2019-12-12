@@ -103,7 +103,7 @@ setMethod("writeFASTA", "SangerRead", function(obj, outputDir, compress,
 })
 
 setMethod("generateReport", "SangerRead",
-          function(obj, outputDir, navigationContigFN) {
+          function(obj, outputDir, navigationContigFN, navigationAlignmentFN) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
@@ -130,6 +130,7 @@ setMethod("generateReport", "SangerRead",
                   output_file = outputHtml,
                   params = list(SangerRead = obj,
                                 outputDir = outputDir,
-                                navigationContigFN = navigationContigFN))
+                                navigationContigFN = navigationContigFN,
+                                navigationAlignmentFN = navigationAlignmentFN))
     return(outputHtml)
 })

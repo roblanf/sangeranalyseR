@@ -107,6 +107,14 @@ setGeneric("generateReport", function(obj, outputDir = NULL,
 })
 
 #' @export
+setGeneric("generateReport", function(obj, outputDir = NULL,
+                                      navigationContigFN = NULL,
+                                      navigationAlignmentFN = NULL) {
+    standardGeneric("generateReport")
+})
+
+
+#' @export
 setClassUnion("numericORNULL", c("numeric", "NULL"))
 
 #' #' @export

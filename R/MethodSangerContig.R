@@ -212,13 +212,13 @@ setMethod("launchAppSangerContig", "SangerContig",
               }
 })
 
-setMethod("generateReport", "SangerContig", function(obj, outputDir) {
+setMethod("generateReport", "SangerContig", function(obj, outputDir,
+                                                     navigationAlignmentFN) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir))
     }
 
-    # obj <- A_chloroticContig
     outputDirSC <- file.path(outputDir, obj@contigName)
     if (!dir.exists(outputDirSC)) {
         suppressWarnings(dir.create(outputDirSC, recursive = TRUE))
@@ -231,14 +231,17 @@ setMethod("generateReport", "SangerContig", function(obj, outputDir) {
     forwardReads <- obj@forwardReadList
     reverseReads <- obj@reverseReadList
 
-    forwardReadFN <- sapply(forwardReads, generateReport, outputDir, outputHtml)
-    reverseReadFN <- sapply(reverseReads, generateReport, outputDir, outputHtml)
+    forwardReadFN <- sapply(forwardReads, generateReport,
+                            outputDirSC, outputHtml, navigationAlignmentFN)
+    reverseReadFN <- sapply(reverseReads, generateReport,
+                            outputDirSC, outputHtml, navigationAlignmentFN)
 
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerContig_Report.Rmd",
                   output_dir = outputDirSC,
                   params = list(SangerContig = obj,
                                 outputDir = outputDir,
                                 forwardReadFN = forwardReadFN,
-                                reverseReadFN = reverseReadFN))
+                                reverseReadFN = reverseReadFN,
+                                navigationAlignmentFN = navigationAlignmentFN))
     return(outputHtml)
 })

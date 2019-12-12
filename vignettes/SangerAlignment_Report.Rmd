@@ -1,0 +1,22 @@
+---
+title: "'SangerContig' Report"
+author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+    fig_caption: yes
+  BiocStyle::pdf_document: default
+#bibliography: bibliography.bib
+params:
+  SangerContig: NULL
+  outputDir: ""
+  forwardReadFN: NULL
+  reverseReadFN: NULL
+  navigationAlignmentFN: NULL
+fontsize: 14pt
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+---

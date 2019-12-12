@@ -123,3 +123,53 @@ setMethod("launchAppSangerAlignment", "SangerAlignment",
                   stop("'", outputDir, "' is not valid. Please check again")
               }
 })
+
+
+setMethod("generateReport", "SangerAlignment", function(obj, outputDir) {
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir))
+    }
+
+    outputDirSA <- file.path(outputDir, "SangerAlignment")
+    if (!dir.exists(outputDirSA)) {
+        suppressWarnings(dir.create(outputDirSA, recursive = TRUE))
+    }
+
+    outputHtml <- file.path(outputDirSA, "SangerAlignment_Report.html")
+
+    # Start for loop
+    contigsFN <- sapply(obj@contigList, function (objContig) {
+        outputDirSC <- file.path(outputDirSA, objContig@contigName)
+        if (!dir.exists(outputDirSC)) {
+            suppressWarnings(dir.create(outputDirSC, recursive = TRUE))
+        }
+        generateReport(objContig, outputDirSA, outputHtml)
+    })
+
+    # res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerAlignment_Report.Rmd",
+    #               output_dir = outputDirSC,
+    #               params = list(SangerContig = objContig,
+    #                             outputDir = outputDir,
+    #                             forwardReadFN = forwardReadFN,
+    #                             reverseReadFN = reverseReadFN))
+
+
+    # rootDir <- system.file(package = "sangeranalyseR")
+    # originRmd <- file.path(rootDir, "vignettes", "SangerContig_Report.Rmd")
+    # outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
+    #
+    # forwardReads <- objContig@forwardReadList
+    # reverseReads <- objContig@reverseReadList
+    #
+    # forwardReadFN <- sapply(forwardReads, generateReport, outputDir, outputHtml)
+    # reverseReadFN <- sapply(reverseReads, generateReport, outputDir, outputHtml)
+    #
+    # res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerContig_Report.Rmd",
+    #               output_dir = outputDirSC,
+    #               params = list(SangerContig = objContig,
+    #                             outputDir = outputDir,
+    #                             forwardReadFN = forwardReadFN,
+    #                             reverseReadFN = reverseReadFN))
+    return(contigsFN)
+})
