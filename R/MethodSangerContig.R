@@ -231,10 +231,15 @@ setMethod("generateReport", "SangerContig", function(obj, outputDir,
     forwardReads <- obj@forwardReadList
     reverseReads <- obj@reverseReadList
 
+    message("navigationAlignmentFN (SangerContig): ", navigationAlignmentFN)
     forwardReadFN <- sapply(forwardReads, generateReport,
-                            outputDirSC, outputHtml, navigationAlignmentFN)
+                            outputDir = outputDirSC,
+                            navigationContigFN = outputHtml,
+                            navigationAlignmentFN = navigationAlignmentFN)
     reverseReadFN <- sapply(reverseReads, generateReport,
-                            outputDirSC, outputHtml, navigationAlignmentFN)
+                            outputDir = outputDirSC,
+                            navigationContigFN = outputHtml,
+                            navigationAlignmentFN = navigationAlignmentFN)
 
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerContig_Report.Rmd",
                   output_dir = outputDirSC,

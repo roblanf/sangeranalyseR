@@ -20,17 +20,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
   %\usepackage[utf8]{inputenc}
 ---
-<script>
-details.description[open] summary::after {
-  content: attr(data-open);
-}
-
-details.description:not([open]) summary::after {
-  content: attr(data-close);
-}
-</script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<h1>`r params$navigationAlignmentFN`</h1>
 
 <div style="margin-left:50px; padding-left:-50;margin-top:50px; margin-bottom:50px; border-left: 4px solid #d3d6db;">
 `r if(!is.null(params$navigationAlignmentFN)){ "<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerAlignment Level</p>" }`
