@@ -79,7 +79,7 @@ suppressWarnings(suppressMessages(
                style = styleList, loadingSpin = TRUE)
 ))
 ```
-<div style="overflow: scroll;">
+</div>
 </details>
 
 ---
@@ -87,12 +87,14 @@ suppressWarnings(suppressMessages(
 # Contigs Alignment
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<div style='overflow: scroll;'>
 ```{r results='asis', echo=FALSE, warning=FALSE}
 browseSeqHTML <- file.path(params$outputDir, "Contigs_Alignment_BrowseSeqs.html")
 BrowseSeqs(DNAStringSet(params$SangerAlignment@contigsAlignment),
            openURL=FALSE, htmlFile=browseSeqHTML)
 shiny::includeHTML(browseSeqHTML)
 ```
+</div>
 </details>
 
 ---
@@ -173,5 +175,9 @@ padding-left: 10px;
 
 span {
   white-space:nowrap;
+}
+
+pre {
+  display: inline-block;
 }
 </style>

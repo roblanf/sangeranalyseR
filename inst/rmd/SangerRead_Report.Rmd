@@ -38,7 +38,7 @@ library(sangeranalyseR)
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <div style="overflow: scroll;">
 <ul style="list-style-type:disc;">
-  <li>**Output Directory : **  <span>*`r params$outputDir`*</span></li>
+  <li>**Output Directory : **  <span><i>`r params$outputDir`</i></span></li>
 
   <li>**Input Directory : **  <span><i>`r dirname(params$SangerRead@readFileName)`</i></span></li>
 
@@ -259,14 +259,14 @@ chromatogram(hetcalls,
              trim5 = params$SangerRead@QualityReport@trimmedStartPos,
              trim3 = (params$SangerRead@QualityReport@rawSeqLength - params$SangerRead@QualityReport@trimmedFinishPos),
              showtrim = params$SangerRead@ChromatogramParam@showTrimmed,
-             showcalls = "both", filename = file.path(params$outputDir, sub('\\.ab1$', '', basename(params$SangerRead@readFileName)), "Chromatogram.pdf"))
+             showcalls = "both", filename = file.path(params$outputDir, "Chromatogram.pdf"))
 ```
 
 <br>
 <br>
-[Click Here to Open Chromatogram in New Page ](`r file.path(params$outputDir, sub('\\.ab1$', '', basename(params$SangerRead@readFileName)), "Chromatogram.pdf")`)
+[Click Here to Open Chromatogram in New Page ](`r file.path(params$outputDir, "Chromatogram.pdf")`)
 
-![Alt](`r file.path(params$outputDir, sub('\\.ab1$', '', basename(params$SangerRead@readFileName)), "Chromatogram.pdf")`){width=100% height=500px}.
+![Alt](`r file.path(params$outputDir, "Chromatogram.pdf")`){width=100% height=500px}.
 
 </details>
 

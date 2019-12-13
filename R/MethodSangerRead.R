@@ -119,9 +119,9 @@ setMethod("generateReport", "SangerRead",
     originRmd <- file.path(rootDir, "rmd", "SangerContig_Report.Rmd")
     outputHtml <- file.path(outputDirSR, "SangerRead_Report.html")
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/inst/rmd/SangerRead_Report.Rmd",
-                  output_file = outputHtml,
+                  output_dir = outputDirSR,
                   params = list(SangerRead = obj,
-                                outputDir = outputDir,
+                                outputDir = outputDirSR,
                                 navigationContigFN = navigationContigFN,
                                 navigationAlignmentFN = navigationAlignmentFN))
     return(outputHtml)

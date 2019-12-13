@@ -245,7 +245,7 @@ setMethod("generateReport", "SangerContig",
         forwardReadFN = NULL
         reverseReadFN = NULL
     }
-    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/inst/rmd/TRY.Rmd",
+    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/inst/rmd/SangerContig_Report.Rmd",
                   output_dir = outputDirSC,
                   params = list(SangerContig = obj,
                                 outputDir = outputDirSC,

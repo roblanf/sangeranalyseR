@@ -21,6 +21,8 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
+
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div style="margin-left:50px; padding-left:-50;margin-top:50px; margin-bottom:50px; border-left: 4px solid #d3d6db;">
@@ -148,12 +150,14 @@ refAminoAcidSeqVec <- strsplit(params$SangerContig@refAminoAcidSeq, "")[[1]]
 # Contig Results:
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <h3> Reads Alignment </h3>
+<div style="overflow: scroll;">
 ```{r results='asis', echo=FALSE, warning=FALSE}
 browseSeqHTML <- file.path(params$outputDir, "Reads_Alignment_BrowseSeqs.html")
 BrowseSeqs(DNAStringSet(params$SangerContig@alignment),
            openURL=FALSE, htmlFile=browseSeqHTML)
 shiny::includeHTML(browseSeqHTML)
 ```
+</div>
 <br>
 <h3> Difference Data Frame </h3>
 <div style="overflow: scroll;">
@@ -327,5 +331,8 @@ padding-left: 10px;
 
 span {
   white-space:nowrap;
+}
+pre {
+  display: inline-block;
 }
 </style>

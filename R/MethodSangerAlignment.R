@@ -160,7 +160,7 @@ setMethod("generateReport", "SangerAlignment",
     res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/inst/rmd/SangerAlignment_Report.Rmd",
                   output_dir = outputDirSA,
                   params = list(SangerAlignment = obj,
-                                outputDir = outputDir,
+                                outputDir = outputDirSA,
                                 contigsFN = contigsFN))
     return(contigsFN)
 })
