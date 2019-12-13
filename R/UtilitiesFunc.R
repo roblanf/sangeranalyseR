@@ -392,13 +392,13 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
             primary <- c(primary, Bases[1])
             Bases2 <- Bases[2:4]
             sortedBase2<- sort(Bases2[!is.na(Bases2)])
-            secondaryLetter <-
-                mergeIUPACLettersInside(paste(sortedBase2, collapse=""))
-            message("secondaryLetter: ", secondaryLetter)
+            # message("Collapse: ", paste(sortedBase2, collapse=""))
+            dicValue <- paste(sortedBase2, collapse="")
+            secondaryLetter <- names(IUPAC_CODE_MAP[IUPAC_CODE_MAP == dicValue])
+            # secondaryLetter <-
+            #     mergeIUPACLetters(paste(sortedBase2, collapse=""))
+            # message("secondaryLetter: ", secondaryLetter)
             secondary <- c(secondary, secondaryLetter)
-            # secondary <- c(secondary,
-            #                mergeIUPACLetters(paste(sort(Bases2[!is.na(Bases2)]),
-            #                                        collapse="")))
         }
         else {
             primary <- c(primary, Bases[1])
@@ -455,95 +455,6 @@ IUPAC_CODE_MAP <- c(
     B="CGT",
     N="ACGT"
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-mergeIUPACLettersInside <- function(x)
-{
-    if (!is.character(x) || any(is.na(x)) || any(nchar(x) == 0))
-        stop("'x' must be a vector of non-empty character strings")
-    x <- CharacterList(strsplit(toupper(x), "", fixed=TRUE))
-
-    yy <- unname(IUPAC_CODE_MAP[unlist(x, use.names=FALSE)])
-    if (any(is.na(yy)))
-        stop("some strings in 'x' contain non IUPAC letters")
-    yy <- CharacterList(strsplit(yy, "", fixed=TRUE))
-    y <- unstrsplit(sort(unique(regroupBySupergroupInside(yy, x))))
-    names(IUPAC_CODE_MAP)[match(y, IUPAC_CODE_MAP)]
-}
-
-regroupBySupergroupInside <- function(x, supergroups)
-{
-    # supergroups <- PartitioningByEnd(supergroups)
-    # x_breakpoints <- end(PartitioningByEnd(x))
-    # ans_breakpoints <- x_breakpoints[end(supergroups)]
-    # nleading0s <- length(supergroups) - length(ans_breakpoints)
-    # if (nleading0s != 0L)
-    #     ans_breakpoints <- c(rep.int(0L, nleading0s), ans_breakpoints)
-    # ans_partitioning <- PartitioningByEnd(ans_breakpoints,
-    #                                       names=names(supergroups))
-    # if (is(x, "PartitioningByEnd"))
-    #     return(ans_partitioning)
-    # reGroup <- relist(unlist(x, use.names=FALSE), skeleton = ans_partitioning@end)
-    # return(reGroup)
-    message("x: ", x)
-    message("typeof(supergroups): ", typeof(supergroups))
-    message("supergroups: ", supergroups[[1]])
-
-
-    supergroups <- PartitioningByEnd(supergroups)
-    x_breakpoints <- end(PartitioningByEnd(x))
-    ans_breakpoints <- x_breakpoints[end(supergroups)]
-
-    message("ans_breakpoints: ", ans_breakpoints)
-
-    nleading0s <- length(supergroups) - length(ans_breakpoints)
-    if (nleading0s != 0L)
-        ans_breakpoints <- c(rep.int(0L, nleading0s), ans_breakpoints)
-    ans_partitioning <- PartitioningByEnd(ans_breakpoints,
-                                          names=names(supergroups))
-    if (is(x, "PartitioningByEnd"))
-        return(ans_partitioning)
-    relistInside(unlist(x, use.names=FALSE), ans_partitioning)
-}
-
-
-relistInside <- function(flesh, skeleton)
-{
-    ans_class <- relistToClass(flesh)
-    skeleton_len <- length(skeleton)
-    if (skeleton_len == 0L) {
-        flesh_len2 <- 0L
-    } else {
-        flesh_len2 <- end(skeleton)[skeleton_len]
-    }
-    if (NROW(flesh) != flesh_len2)
-        stop("shape of 'skeleton' is not compatible with 'NROW(flesh)'")
-    if (extends(ans_class, "CompressedList"))
-        return(newCompressedList0(ans_class, flesh, skeleton))
-    if (!extends(ans_class, "SimpleList"))
-        stop("don't know how to split or relist a ", class(flesh),
-             " object as a ", ans_class, " object")
-    listData <- lapply(skeleton, function(i) extractROWS(flesh, i))
-    S4Vectors:::new_SimpleList_from_list(ans_class, listData)
-}
 
 ### ----------------------------------------------------------------------------
 ### chromatogram related function
