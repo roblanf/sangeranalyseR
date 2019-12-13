@@ -434,6 +434,117 @@ peakvalues <- function(x, pstart, pstop) {
     if (length(region[,1]) == 0) return(c(0, NA))
     else return(c(max(region[,2], na.rm=TRUE), region[which.max(region[,2]),1]))
 }
+
+### ----------------------------------------------------------------------------
+### MakeBasecall secondary peak finding helper function
+### ----------------------------------------------------------------------------
+IUPAC_CODE_MAP <- c(
+    A="A",
+    C="C",
+    G="G",
+    T="T",
+    M="AC",
+    R="AG",
+    W="AT",
+    S="CG",
+    Y="CT",
+    K="GT",
+    V="ACG",
+    H="ACT",
+    D="AGT",
+    B="CGT",
+    N="ACGT"
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mergeIUPACLettersInside <- function(x)
+{
+    if (!is.character(x) || any(is.na(x)) || any(nchar(x) == 0))
+        stop("'x' must be a vector of non-empty character strings")
+    x <- CharacterList(strsplit(toupper(x), "", fixed=TRUE))
+
+    yy <- unname(IUPAC_CODE_MAP[unlist(x, use.names=FALSE)])
+    if (any(is.na(yy)))
+        stop("some strings in 'x' contain non IUPAC letters")
+    yy <- CharacterList(strsplit(yy, "", fixed=TRUE))
+    y <- unstrsplit(sort(unique(regroupBySupergroupInside(yy, x))))
+    names(IUPAC_CODE_MAP)[match(y, IUPAC_CODE_MAP)]
+}
+
+regroupBySupergroupInside <- function(x, supergroups)
+{
+    # supergroups <- PartitioningByEnd(supergroups)
+    # x_breakpoints <- end(PartitioningByEnd(x))
+    # ans_breakpoints <- x_breakpoints[end(supergroups)]
+    # nleading0s <- length(supergroups) - length(ans_breakpoints)
+    # if (nleading0s != 0L)
+    #     ans_breakpoints <- c(rep.int(0L, nleading0s), ans_breakpoints)
+    # ans_partitioning <- PartitioningByEnd(ans_breakpoints,
+    #                                       names=names(supergroups))
+    # if (is(x, "PartitioningByEnd"))
+    #     return(ans_partitioning)
+    # reGroup <- relist(unlist(x, use.names=FALSE), skeleton = ans_partitioning@end)
+    # return(reGroup)
+    message("x: ", x)
+    message("typeof(supergroups): ", typeof(supergroups))
+    message("supergroups: ", supergroups[[1]])
+
+
+    supergroups <- PartitioningByEnd(supergroups)
+    x_breakpoints <- end(PartitioningByEnd(x))
+    ans_breakpoints <- x_breakpoints[end(supergroups)]
+
+    message("ans_breakpoints: ", ans_breakpoints)
+
+    nleading0s <- length(supergroups) - length(ans_breakpoints)
+    if (nleading0s != 0L)
+        ans_breakpoints <- c(rep.int(0L, nleading0s), ans_breakpoints)
+    ans_partitioning <- PartitioningByEnd(ans_breakpoints,
+                                          names=names(supergroups))
+    if (is(x, "PartitioningByEnd"))
+        return(ans_partitioning)
+    relistInside(unlist(x, use.names=FALSE), ans_partitioning)
+}
+
+
+relistInside <- function(flesh, skeleton)
+{
+    ans_class <- relistToClass(flesh)
+    skeleton_len <- length(skeleton)
+    if (skeleton_len == 0L) {
+        flesh_len2 <- 0L
+    } else {
+        flesh_len2 <- end(skeleton)[skeleton_len]
+    }
+    if (NROW(flesh) != flesh_len2)
+        stop("shape of 'skeleton' is not compatible with 'NROW(flesh)'")
+    if (extends(ans_class, "CompressedList"))
+        return(newCompressedList0(ans_class, flesh, skeleton))
+    if (!extends(ans_class, "SimpleList"))
+        stop("don't know how to split or relist a ", class(flesh),
+             " object as a ", ans_class, " object")
+    listData <- lapply(skeleton, function(i) extractROWS(flesh, i))
+    S4Vectors:::new_SimpleList_from_list(ans_class, listData)
+}
+
 ### ----------------------------------------------------------------------------
 ### chromatogram related function
 ### ----------------------------------------------------------------------------
