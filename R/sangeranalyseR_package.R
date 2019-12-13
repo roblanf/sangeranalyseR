@@ -24,4 +24,3 @@
 #' @importFrom tools file_ext
 #' @importFrom rmarkdown render
 #' @importFrom kableExtra
-

@@ -393,7 +393,8 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
             Bases2 <- Bases[2:4]
             sortedBase2<- sort(Bases2[!is.na(Bases2)])
             secondaryLetter <-
-                mergeIUPACLetters(paste(sortedBase2, collapse=""))
+                mergeIUPACLettersInside(paste(sortedBase2, collapse=""))
+            message("secondaryLetter: ", secondaryLetter)
             secondary <- c(secondary, secondaryLetter)
             # secondary <- c(secondary,
             #                mergeIUPACLetters(paste(sort(Bases2[!is.na(Bases2)]),
