@@ -125,7 +125,7 @@ setMethod("launchAppSangerAlignment", "SangerAlignment",
 })
 
 
-setMethod("generateReport", "SangerAlignment",
+setMethod("generateReportSA", "SangerAlignment",
           function(obj, outputDir,
                    includeSangerContig = TRUE,
                    includeSangerRead = TRUE) {

@@ -17,29 +17,45 @@ An S4 class extending sangerseq S4 class
 \section{Slots}{
 
 \describe{
-\item{\code{readFeature}}{.}
+\item{\code{readFeature}}{The direction of the Sanger read. The value must be
+\code{"Forward Read"} or \code{"Reverse Read"}.}
 
-\item{\code{readFeature}}{.}
+\item{\code{readFileName}}{The filename of the target ABIF file.}
 
-\item{\code{readFileName}}{.}
+\item{\code{abifRawData}}{A S4 class containing all fields in the ABIF file. It is
+defined in sangerseqR package.}
 
-\item{\code{abifRawData}}{.}
+\item{\code{QualityReport}}{A S4 class containing quality trimming related inputs
+and trimming results.}
 
-\item{\code{QualityReport}}{.}
+\item{\code{ChromatogramParam}}{A S4 class containing chromatogram inputs.}
 
-\item{\code{ChromatogramParam}}{.}
+\item{\code{primaryAASeqS1}}{A polypeptide translated from primary DNA sequence
+starting from the first nucleic acid.}
 
-\item{\code{primaryAASeq}}{.}
+\item{\code{primaryAASeqS2}}{A polypeptide translated from primary DNA sequence
+starting from the second nucleic acid.}
 
-\item{\code{geneticCode}}{.}
+\item{\code{primaryAASeqS3}}{A polypeptide translated from primary DNA sequence
+starting from the third nucleic acid.}
 
-\item{\code{primarySeqRaw}}{.}
+\item{\code{geneticCode}}{Named character vector in the same format as GENETIC_CODE
+(the default), which represents the standard genetic code. This is the
+code with which the function will attempt to translate your DNA
+sequences. You can get an appropriate vector with the getGeneticCode()
+function. The default is the standard code.}
 
-\item{\code{secondarySeqRaw}}{.}
+\item{\code{primarySeqRaw}}{The raw primary sequence from sangerseq class in
+sangerseqR package before base calling.}
 
-\item{\code{peakPosMatrixRaw}}{.}
+\item{\code{secondarySeqRaw}}{The raw secondary sequence from sangerseq class in
+sangerseqR package before base calling.}
 
-\item{\code{peakAmpMatrixRaw}}{.}
+\item{\code{peakPosMatrixRaw}}{The raw peak position matrix from sangerseq class in
+sangerseqR package before base calling.}
+
+\item{\code{peakAmpMatrixRaw}}{The raw peak amplitude matrix from sangerseq class in
+sangerseqR package before base calling.}
 }}
 
 \examples{

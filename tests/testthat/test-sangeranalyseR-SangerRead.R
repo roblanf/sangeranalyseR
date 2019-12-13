@@ -101,3 +101,43 @@ test_that("SangerRead Make Base Call 2", {
     expect_equal(baseCall2@QualityReport@trimmedMinQualityScore, 13)
     expect_equal(baseCall2@QualityReport@remainingRatio, 0.6566952, tolerance=1e-6)
 })
+
+test_that("SangerRead update quality trimming parameters", {
+    trimmedSangerRead <- updateQualityParam(sangerRead,
+                                            TrimmingMethod       = "M1",
+                                            M1TrimmingCutoff     = 0.000001,
+                                            M2CutoffQualityScore = NULL,
+                                            M2SlidingWindowSize  = NULL)
+    expect_type(trimmedSangerRead, "S4")
+    expect_s4_class(trimmedSangerRead, "SangerRead")
+    expect_equal(trimmedSangerRead@readFeature, "Forward Read")
+    expect_equal(basename(trimmedSangerRead@readFileName), "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
+    expect_equal(as.character(trimmedSangerRead@primarySeq), "CACTTTATATTTTATTCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGGATTACGTCTTGAACGAATTCCCCTGTTTGTCTGAGCTGTGCTAATTACAGTTGTTCTTCTACTTCTATCTTTACCAGTGCTAGCAGGTGCCATTACCATACTTCTTACCGACCGAAACCTCAATACTTCATTCTTTGATCCTGCCGGTGGTGGAGACCCCATCCTCTACTAGCACTTATTCTGATTTTTAGATCACCCTGATGTTGAGTCATACTGAATTCCTGA")
+    expect_equal(as.character(trimmedSangerRead@secondarySeq), "TACTTTATATTTTATTCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGGATTACGTCTTGAACGAATTCCCCTGTTTGTCTGAGCTGTGCTAATTACAGTTGTTCTTCTACTTCTATCTTTACCAGTGCTAGCAGGTGCCATTACCATACTTCTTACCGACCGAAACCTCAATACTTCATTCTTTGATCCTGCCGGTGGTGGAGACCCCATCCTCTACTAGCACTTATTCTGATTTTTCGATCACCCTGATGTTGAGTCATAGTGAATTCCTGA")
+    expect_equal(as.character(trimmedSangerRead@primaryAASeqS1), "HFIFYSGRLSRNGWSRYKTSNSNRAKTTRSVPGQRPTIQYYRYCTRICNNLLSSNACIHRGIRKLAFTFNTWSPRYSIPSTQQHEILTTSPITDPFSVLCGGRKRRWYGVNCLSASSKKSCPRRPVCRFSHLFPSFSGCVFYSRGY*FYHHSY*YALKRITS*TNSPVCLSCANYSCSSTSIFTSASRCHYHTSYRPKPQYFIL*SCRWWRPHPLLALILIFRSP*C*VILNS*")
+    expect_equal(as.character(trimmedSangerRead@primaryAASeqS2), "TLYFILGV*AGMVGAGIRLLIRIELRQPGAFLGRDQLYNTIVTAHAFVIIFFLVMPVFIGGFGNWLLPLILGAPDIAFPRLNNMRF*LLPPSLILLVSSAAVEKGAGTG*TVYPPLARNLAHAGPSVDLAIFSLHLAGASSILGAINFITTVINMR*RGLRLERIPLFV*AVLITVVLLLLSLPVLAGAITILLTDRNLNTSFFDPAGGGDPILY*HLF*FLDHPDVESY*IP")
+    expect_equal(as.character(trimmedSangerRead@primaryAASeqS3), "LYILFWASEQEWLEPV*DF*FESS*DNQERSWAETNYTILSLLHTHL**SSF**CLYSSGDSETGFYL*YLEPPI*HSLDSTT*DSDYFPHH*SF*CPLRR*KKALVRGELFIRL*QEILPTQARL*I*PSFPFI*RVRLLF*GLLILSPQLLICVEEDYVLNEFPCLSELC*LQLFFYFYLYQC*QVPLPYFLPTETSILHSLILPVVETPSSTSTYSDF*ITLMLSHTEFL")
+    expect_equal(trimmedSangerRead@ChromatogramParam@baseNumPerRow, 100)
+    expect_equal(trimmedSangerRead@ChromatogramParam@heightPerRow, 200)
+    expect_equal(trimmedSangerRead@ChromatogramParam@signalRatioCutoff, 0.33)
+    expect_equal(trimmedSangerRead@ChromatogramParam@showTrimmed, TRUE)
+
+    expect_equal(trimmedSangerRead@QualityReport@TrimmingMethod, "M1")
+    expect_equal(trimmedSangerRead@QualityReport@M1TrimmingCutoff, 0.000001, tolerance=1e-10)
+    expect_equal(trimmedSangerRead@QualityReport@M2CutoffQualityScore, NULL)
+    expect_equal(trimmedSangerRead@QualityReport@M2SlidingWindowSize, NULL)
+    expect_equal(length(trimmedSangerRead@QualityReport@qualityPhredScoresRaw), 703)
+    expect_equal(length(trimmedSangerRead@QualityReport@qualityPhredScores), 702)
+    expect_equal(length(trimmedSangerRead@QualityReport@qualityBaseScores), 702)
+
+    expect_equal(trimmedSangerRead@QualityReport@rawSeqLength, 702)
+    expect_equal(trimmedSangerRead@QualityReport@trimmedSeqLength, 364)
+    expect_equal(trimmedSangerRead@QualityReport@trimmedStartPos, 34)
+    expect_equal(trimmedSangerRead@QualityReport@trimmedFinishPos, 398)
+    expect_equal(trimmedSangerRead@QualityReport@rawMeanQualityScore, 52.87607, tolerance=1e-6)
+    expect_equal(trimmedSangerRead@QualityReport@trimmedMeanQualityScore, 59, tolerance=1e-6)
+    expect_equal(trimmedSangerRead@QualityReport@rawMinQualityScore, 1)
+    expect_equal(trimmedSangerRead@QualityReport@trimmedMinQualityScore, 15)
+    expect_equal(trimmedSangerRead@QualityReport@remainingRatio, 0.5185185, tolerance=1e-6)
+})
+

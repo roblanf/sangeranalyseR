@@ -212,9 +212,9 @@ setMethod("launchAppSangerContig", "SangerContig",
               }
 })
 
-setMethod("generateReport", "SangerContig",
-          function(obj, outputDir, navigationAlignmentFN = NULL,
-                   includeSangerRead = TRUE) {
+setMethod("generateReportSC", "SangerContig",
+          function(obj, outputDir, includeSangerRead = TRUE,
+                   navigationAlignmentFN = NULL) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir))

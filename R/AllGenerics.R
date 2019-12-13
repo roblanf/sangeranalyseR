@@ -57,21 +57,13 @@ setGeneric("MakeBaseCalls", function(obj, signalRatioCutoff = 0.33) {
 })
 
 ### ============================================================================
-### Create report
-### ============================================================================
-#' @export
-setGeneric("createReport", function(obj) {
-    standardGeneric("createReport")
-})
-
-### ============================================================================
 ### Write FASTA
 ### ============================================================================
 #' @export
-setGeneric("writeFASTA", function(obj,outputDir = tempdir(),
-                                  compress  = FALSE,
-                                  compression_level = NA) {
-    standardGeneric("writeFASTA")
+setGeneric("writeFastaSR", function(obj,outputDir = tempdir(),
+                                    compress  = FALSE,
+                                    compression_level = NA) {
+    standardGeneric("writeFastaSR")
 })
 #' @export
 setGeneric("writeFASTA", function(obj,outputDir = tempdir(),
@@ -95,10 +87,26 @@ setGeneric("launchAppSangerAlignment", function(obj, outputDir = NULL) {
     standardGeneric("launchAppSangerAlignment")
 })
 
+
+### ============================================================================
+### Generate Report
+### ============================================================================
 #' @export
-setGeneric("generateReport", function(obj, outputDir = NULL, ...) {
-    standardGeneric("generateReport")
+setGeneric("generateReportSR", function(obj, outputDir = NULL, ...) {
+    standardGeneric("generateReportSR")
 })
+#' @export
+setGeneric("generateReportSC", function(obj, outputDir = NULL,
+                                        includeSangerRead = TRUE, ...) {
+    standardGeneric("generateReportSC")
+})
+#' @export
+setGeneric("generateReportSA", function(obj, outputDir = NULL,
+                                        includeSangerContig = TRUE,
+                                        includeSangerRead = TRUE) {
+    standardGeneric("generateReportSA")
+})
+
 #'
 #' #' @export
 #' setGeneric("generateReportSangerContig", function(obj, outputDir = NULL,

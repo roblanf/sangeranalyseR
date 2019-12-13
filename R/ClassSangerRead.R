@@ -2,18 +2,33 @@
 #'
 #' @description  An S4 class extending sangerseq S4 class
 #'
-#' @slot readFeature .
-#' @slot readFeature .
-#' @slot readFileName .
-#' @slot abifRawData .
-#' @slot QualityReport .
-#' @slot ChromatogramParam .
-#' @slot primaryAASeq .
-#' @slot geneticCode .
-#' @slot primarySeqRaw .
-#' @slot secondarySeqRaw .
-#' @slot peakPosMatrixRaw .
-#' @slot peakAmpMatrixRaw .
+#' @slot readFeature The direction of the Sanger read. The value must be
+#'       \code{"Forward Read"} or \code{"Reverse Read"}.
+#' @slot readFileName The filename of the target ABIF file.
+#' @slot abifRawData A S4 class containing all fields in the ABIF file. It is
+#'       defined in sangerseqR package.
+#' @slot QualityReport A S4 class containing quality trimming related inputs
+#'       and trimming results.
+#' @slot ChromatogramParam A S4 class containing chromatogram inputs.
+#' @slot primaryAASeqS1 A polypeptide translated from primary DNA sequence
+#'       starting from the first nucleic acid.
+#' @slot primaryAASeqS2 A polypeptide translated from primary DNA sequence
+#'       starting from the second nucleic acid.
+#' @slot primaryAASeqS3 A polypeptide translated from primary DNA sequence
+#'       starting from the third nucleic acid.
+#' @slot geneticCode Named character vector in the same format as GENETIC_CODE
+#'       (the default), which represents the standard genetic code. This is the
+#'       code with which the function will attempt to translate your DNA
+#'       sequences. You can get an appropriate vector with the getGeneticCode()
+#'       function. The default is the standard code.
+#' @slot primarySeqRaw The raw primary sequence from sangerseq class in
+#'       sangerseqR package before base calling.
+#' @slot secondarySeqRaw The raw secondary sequence from sangerseq class in
+#'       sangerseqR package before base calling.
+#' @slot peakPosMatrixRaw The raw peak position matrix from sangerseq class in
+#'       sangerseqR package before base calling.
+#' @slot peakAmpMatrixRaw The raw peak amplitude matrix from sangerseq class in
+#'       sangerseqR package before base calling.
 #'
 #' @name SangerRead-class
 #'
@@ -142,30 +157,13 @@ setMethod("initialize",
                   peakAmpMatrixRaw    = readSangerseq@peakAmpMatrix
                   peakAmpMatrix       = readSangerseq@peakAmpMatrix
 
-                  # qualityBaseScoresRaw <- 10** (qualityPhredScoresRaw / (-10.0))
-
-                  ### ----------------------------------------------------------
-                  ### After Here, if 'MakeBaseCall' is called, we need to
-                  ###    update parameters !!
-                  ### ===== Update Once ========================================
-                  ### 'primarySeqID', 'secondarySeqID'
-                  ### 'primarySeq', 'QualityReport@qualityScoresID',
-                  ### 'QualityReport@qualityPhredScores',
-                  ### 'QualityReport@qualityBaseScores'
-                  ### ===== Update everytime ===================================
-                  ### 'secondarySeq',
-                  ### 'peakPosMatrix', 'peakAmpMatrix',
-                  ### ----------------------------------------------------------
-
                   ### ----------------------------------------------------------
                   ### Definition of 'PCON.1' & 'PCON.2'
                   ##### PCON.1: char => Per-base quality values (edited)
                   ##### PCON.2: char => Per-base quality values
                   ### ----------------------------------------------------------
-
-
                   ### ----------------------------------------------------------
-                  ### Running 'MakeBaseCall' !! Remember to update parameters !!
+                  ### 1. Running 'MakeBaseCall'! Remember to update parameters!
                   ### ----------------------------------------------------------
                   MBCResult <-
                       MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
@@ -173,7 +171,7 @@ setMethod("initialize",
                                            signalRatioCutoff, readFeature)
 
                   ### ==========================================================
-                  ### Update Once (Only during creation)
+                  ### 2. Update Once (Only during creation)
                   ###    Basecall primary seq length will be same !
                   ### ==========================================================
                   qualityPhredScores <- MBCResult[["qualityPhredScores"]]
@@ -190,7 +188,7 @@ setMethod("initialize",
                           M2SlidingWindowSize = M2SlidingWindowSize)
 
                   ### ==========================================================
-                  ### Update everytime (whenever 'signalRatioCutoff' is changed)
+                  ### 3. Update everytime (whenever 'signalRatioCutoff' changed)
                   ### ==========================================================
                   primarySeq <- MBCResult[["primarySeq"]]
                   secondarySeq <- MBCResult[["secondarySeq"]]
@@ -236,6 +234,3 @@ setMethod("initialize",
                              QualityReport       = QualityReport,
                              ChromatogramParam   = ChromatogramParam)
           })
-
-
-

@@ -33,7 +33,7 @@ vignette: >
 library(sangeranalyseR)
 ```
 
-# Basic Project Information:
+# Basic Information:
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <div style="overflow: scroll;">
@@ -198,29 +198,29 @@ suppressWarnings(suppressMessages(
 
 `r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){"<li>**Trimming Method**: <span class='tab'><i> Method 2 'Logarithmic Scale Sliding Window Trimming' </i></span></li>"}`
 
-`r if(params$SangerRead@QualityReport@TrimmingMethod == "M1"){paste("<li>**M1 Trimming Cutoffe**: <span class='tab'><i>", params$SangerRead@QualityReport@M1TrimmingCutoff, "</i></span></li>")}`
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M1"){paste("<li>**M1 Trimming Cutoff**: <span class='tab'><i>", params$SangerRead@QualityReport@M1TrimmingCutoff, "</i></span></li>")}`
 
 `r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){paste("<li>**M2 Cutoff Quality Score**: <span class='tab'><i>", params$SangerRead@QualityReport@M2CutoffQualityScore, "</i></span></li>")}`
 
 `r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){paste("<li>**M2 Cutoff Quality Score**: <span class='tab'><i>", params$SangerRead@QualityReport@M2SlidingWindowSize, "</i></span></li>")}`
 
-  <li>**Raw Sequence Length**:  <span class="tab">*`r params$SangerRead@QualityReport@rawSeqLength`*</span></li>
+  <li>**Raw Sequence Length**:  <span class="tab"><i>`r params$SangerRead@QualityReport@rawSeqLength`</i></span></li>
   
-  <li>**Trimmed Sequence Length**:  <span class="tab">*`r params$SangerRead@QualityReport@trimmedSeqLength`*</span></li>
+  <li>**Trimmed Sequence Length**:  <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedSeqLength`</i></span></li>
   
-  <li>**Trimmed Start Point**:  <span class="tab">*`r params$SangerRead@QualityReport@trimmedStartPos`*</span></li>
+  <li>**Trimmed Start Point**:  <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedStartPos`</i></span></li>
   
-  <li>**Trimmed End Point**:  <span class="tab">*`r params$SangerRead@QualityReport@trimmedFinishPos`*</span></li>
+  <li>**Trimmed End Point**:  <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedFinishPos`</i></span></li>
   
-  <li>**Raw Mean Quality Score**:  <span class="tab">*`r params$SangerRead@QualityReport@rawMeanQualityScore`*</span></li>
+  <li>**Raw Mean Quality Score**:  <span class="tab"><i>`r params$SangerRead@QualityReport@rawMeanQualityScore`</i></span></li>
 
-  <li>**Trimmed Mean Quality Score**:  <span class="tab">*`r params$SangerRead@QualityReport@trimmedMeanQualityScore`*</span></li>
+  <li>**Trimmed Mean Quality Score**:  <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedMeanQualityScore`</i></span></li>
   
-  <li>**Raw Min Quality Score**:  <span class="tab">*`r params$SangerRead@QualityReport@rawMinQualityScore`*</span></li>
+  <li>**Raw Min Quality Score**:  <span class="tab"><i>`r params$SangerRead@QualityReport@rawMinQualityScore`</i></span></li>
   
-  <li>**Trimmed Min Quality Score**: <span class="tab">*`r params$SangerRead@QualityReport@trimmedMinQualityScore`*</span></li>
+  <li>**Trimmed Min Quality Score**: <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedMinQualityScore`</i></span></li>
   
-  <li>**Remaining Read Ratio**: <span class="tab">*`r params$SangerRead@QualityReport@remainingRatio`*</span></li>
+  <li>**Remaining Read Ratio**: <span class="tab"><i>`r round(params$SangerRead@QualityReport@remainingRatio * 100, 2)` %</i></span></li>
 
 </ul>
 <div style="overflow: scroll;">

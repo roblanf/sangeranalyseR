@@ -1,18 +1,4 @@
 ### ============================================================================
-### Plotting trimmed and remaining ratio for "SangerRead" S4 object
-### ============================================================================
-#' @example
-#' load("data/A_chloroticaRead.RDdata")
-#' trimmingRatioPlot(A_chloroticaRead)
-setMethod("trimmingRatioPlot",  "SangerRead", function(object){
-    QualityReportObject = object@QualityReport
-    plotting <- preTrimmingRatioPlot(QualityReportObject)
-    plotting
-})
-
-
-
-### ============================================================================
 ### Plotting quality for each base for "SangerRead" S4 object
 ### ============================================================================
 #' @example
@@ -63,7 +49,7 @@ setMethod("updateQualityParam",  "SangerRead",
           })
 
 setMethod("MakeBaseCalls", "SangerRead",
-          function(obj, signalRatioCutoff=.33) {
+          function(obj, signalRatioCutoff) {
               traceMatrix <- obj@traceMatrix
               peakPosMatrixRaw <- obj@peakPosMatrixRaw
               qualityPhredScoresRaw <- obj@QualityReport@qualityPhredScoresRaw
@@ -82,13 +68,8 @@ setMethod("MakeBaseCalls", "SangerRead",
               return(obj)
           })
 
-
-setMethod("createReport", "SangerRead",
-          function(obj) {
-})
-
-setMethod("writeFASTA", "SangerRead", function(obj, outputDir, compress,
-                                                     compression_level) {
+setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
+                                                 compression_level) {
     message("Start writing '", obj@readFileName, "' to FASTA format ...")
     fastaFilename <- gsub(file_ext(basename(obj@readFileName)), "fa",
                           basename(obj@readFileName))
@@ -102,9 +83,9 @@ setMethod("writeFASTA", "SangerRead", function(obj, outputDir, compress,
     message("\n >> '", outputFilename, "' is written")
 })
 
-setMethod("generateReport", "SangerRead",
-          function(obj, outputDir, navigationContigFN = NULL,
-                   navigationAlignmentFN = NULL) {
+setMethod("generateReportSR", "SangerRead",
+          function(obj, outputDir,
+                   navigationContigFN = NULL,navigationAlignmentFN = NULL) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))

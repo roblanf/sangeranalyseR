@@ -93,7 +93,6 @@ setMethod("initialize",
                   ### ----------------------------------------------------------
                   ### Prechecking success.
                   ### ----------------------------------------------------------
-
                   # calculate base score
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
