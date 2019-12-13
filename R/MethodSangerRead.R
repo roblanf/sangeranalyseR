@@ -111,23 +111,14 @@ setMethod("generateReport", "SangerRead",
     }
 
     readName <- sub('\\.ab1$', '', basename(obj@readFileName))
-    message("@@ readName: ", readName)
     outputDirSR <- file.path(outputDir, readName)
     if (!dir.exists(outputDirSR)) {
         suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
     }
-    # file.copy(template, to = paste0(output, '.Rmd'))
-    # output_format <- .advanced_argument('output_format',
-    #                                     'BiocStyle::html_document', ...)
-    # outputIsHTML <- output_format %in% c('html_document',
-    #                                      'rmarkdown::html_document',
-    #                                      'knitrBootstrap::bootstrap_document', 'BiocStyle::html_document')
-
     rootDir <- system.file(package = "sangeranalyseR")
-    originRmd <- file.path(rootDir, "vignettes", "SangerContig_Report.Rmd")
+    originRmd <- file.path(rootDir, "rmd", "SangerContig_Report.Rmd")
     outputHtml <- file.path(outputDirSR, "SangerRead_Report.html")
-
-    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerRead_Report.Rmd",
+    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/inst/rmd/SangerRead_Report.Rmd",
                   output_file = outputHtml,
                   params = list(SangerRead = obj,
                                 outputDir = outputDir,

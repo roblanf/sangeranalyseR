@@ -226,13 +226,12 @@ setMethod("generateReport", "SangerContig",
     }
 
     rootDir <- system.file(package = "sangeranalyseR")
-    originRmd <- file.path(rootDir, "vignettes", "SangerContig_Report.Rmd")
+    originRmd <- file.path(rootDir, "rmd", "SangerContig_Report.Rmd")
     outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
 
     forwardReads <- obj@forwardReadList
     reverseReads <- obj@reverseReadList
 
-    message("navigationAlignmentFN (SangerContig): ", navigationAlignmentFN)
     if(includeSangerRead) {
         forwardReadFN <- sapply(forwardReads, generateReport,
                                 outputDir = outputDirSC,
@@ -246,10 +245,10 @@ setMethod("generateReport", "SangerContig",
         forwardReadFN = NULL
         reverseReadFN = NULL
     }
-    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerContig_Report.Rmd",
+    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/inst/rmd/SangerContig_Report.Rmd",
                   output_dir = outputDirSC,
                   params = list(SangerContig = obj,
-                                outputDir = outputDir,
+                                outputDir = outputDirSC,
                                 forwardReadFN = forwardReadFN,
                                 reverseReadFN = reverseReadFN,
                                 navigationAlignmentFN = navigationAlignmentFN))

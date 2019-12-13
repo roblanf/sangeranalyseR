@@ -388,8 +388,7 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
            | length(Bases[!is.na(Bases)]) == 0) {
             primary <- c(primary, "N")
             secondary <- c(secondary, "N")
-        }
-        else if(length(Bases[!is.na(Bases)]) > 1) {
+        } else if (length(Bases[!is.na(Bases)]) > 1) {
             primary <- c(primary, Bases[1])
             Bases2 <- Bases[2:4]
             sortedBase2<- sort(Bases2[!is.na(Bases2)])

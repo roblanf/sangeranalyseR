@@ -163,12 +163,3 @@
 
 
 
-
-
-# fileConn<-file("/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerRead_Report.Rmd")
-# readLines(fileConn)
-# writeLines(c("Hello","World"), fileConn)
-# close(fileConn)
-
-
-

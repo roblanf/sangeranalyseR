@@ -138,7 +138,8 @@ setMethod("generateReport", "SangerAlignment",
     if (!dir.exists(outputDirSA)) {
         suppressWarnings(dir.create(outputDirSA, recursive = TRUE))
     }
-
+    rootDir <- system.file(package = "sangeranalyseR")
+    originRmd <- file.path(rootDir, "rmd", "SangerAlignment_Report.Rmd")
     outputHtml <- file.path(outputDirSA, "SangerAlignment_Report.html")
 
     # Start for loop
@@ -156,7 +157,7 @@ setMethod("generateReport", "SangerAlignment",
     } else {
         contigsFN <- NULL
     }
-    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/vignettes/SangerAlignment_Report.Rmd",
+    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/inst/rmd/SangerAlignment_Report.Rmd",
                   output_dir = outputDirSA,
                   params = list(SangerAlignment = obj,
                                 outputDir = outputDir,
