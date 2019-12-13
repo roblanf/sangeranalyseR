@@ -111,7 +111,9 @@ plot(params$SangerAlignment@contigsTree)
 
 ---
 
-# Contigs Reports
+<br>
+<br>
+<h1 style="font-weight: bold; color:"><i style="margin-left: 20px" class="fa fa-chevron-circle-right"></i> Contigs Reports </h1>
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <ul style="list-style-type:disc;">

@@ -241,7 +241,9 @@ if (all(dim(params$SangerContig@secondaryPeakDF) == c(0,0))) {
 
 ---
 
-# Forward Read Reports
+<br>
+<br>
+<h1 style="font-weight: bold"><i style="margin-left: 20px" class="fa fa-chevron-circle-right"></i> Forward Read Reports </h1>
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <ul style="list-style-type:disc;">
@@ -266,7 +268,7 @@ if (is.null(params$forwardReadFN)) {
 
 ---
 
-# Reverse Read Reports
+<h1 style="font-weight: bold"><i style="margin-left: 20px" class="fa fa-chevron-circle-right"></i> Reverse Read Reports </h1>
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <ul style="list-style-type:disc;">

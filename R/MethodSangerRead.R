@@ -109,16 +109,15 @@ setMethod("generateReport", "SangerRead",
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
-
     readName <- sub('\\.ab1$', '', basename(obj@readFileName))
     outputDirSR <- file.path(outputDir, readName)
     if (!dir.exists(outputDirSR)) {
         suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
     }
     rootDir <- system.file(package = "sangeranalyseR")
-    originRmd <- file.path(rootDir, "rmd", "SangerContig_Report.Rmd")
+    originRmd <- file.path(rootDir, "rmd", "SangerRead_Report.Rmd")
     outputHtml <- file.path(outputDirSR, "SangerRead_Report.html")
-    res <- render(input = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR/inst/rmd/SangerRead_Report.Rmd",
+    res <- render(input = originRmd,
                   output_dir = outputDirSR,
                   params = list(SangerRead = obj,
                                 outputDir = outputDirSR,
