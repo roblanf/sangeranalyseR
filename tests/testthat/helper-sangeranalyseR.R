@@ -1,12 +1,3 @@
-# inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-# A_chloroticaFdReadFN <- file.path(inputFilesPath,
-#                                   "Allolobophora_chlorotica",
-#                                   "RBNII384-13[C_LepFolF,C_LepFolR]_R_2.ab1")
-# A_chloroticaRead <- new("SangerRead",
-#                         readFeature           = "Forward Read",
-#                         readFileName          = A_chloroticaFdReadFN)
-
-
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFdReadFN <- file.path(inputFilesPath,
                                   "Allolobophora_chlorotica",
@@ -23,3 +14,4 @@ A_chloroticaRead <- new("SangerRead",
                         heightPerRow          = 200,
                         signalRatioCutoff     = 0.33,
                         showTrimmed           = TRUE)
+
