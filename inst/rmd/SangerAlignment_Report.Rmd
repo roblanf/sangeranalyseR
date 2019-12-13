@@ -33,24 +33,24 @@ library(sangeranalyseR)
 
 # Basic Information:
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
-
+<div style="overflow: scroll;">
 <ul style="list-style-type:disc;">
-  <li>**Output Directory : **  <span class="tab">*`r params$outputDir`*</span></li>
+  <li>**Output Directory : **  <span>*`r params$outputDir`*</span></li>
 
-  <li>**Input Parent Directory : **  <span class="tab"><i>`r dirname(params$SangerAlignment@parentDirectory)`</i></span></li>
+  <li>**Input Parent Directory : **  <span><i>`r dirname(params$SangerAlignment@parentDirectory)`</i></span></li>
 
-  <li>**Trimming Method : **  <span class="tab">*`r params$SangerAlignment@contigList[[1]]@forwardReadList[[1]]@QualityReport@TrimmingMethod`*</span></li>
+  <li>**Trimming Method : **  <span>*`r params$SangerAlignment@contigList[[1]]@forwardReadList[[1]]@QualityReport@TrimmingMethod`*</span></li>
   
-  <li>**Forward Reads Suffix Regex : **  <span class="tab">*`r params$SangerAlignment@suffixForwardRegExp`*</span></li>
+  <li>**Forward Reads Suffix Regex : **  <span>*`r params$SangerAlignment@suffixForwardRegExp`*</span></li>
 
-  <li>**Reverse Reads Suffic Regex : **  <span class="tab">*`r params$SangerAlignment@suffixReverseRegExp`*</span></li>
+  <li>**Reverse Reads Suffic Regex : **  <span>*`r params$SangerAlignment@suffixReverseRegExp`*</span></li>
   
-  <li>**Minimum Fraction Call (SA) : **  <span class="tab">*`r params$SangerAlignment@minFractionCallSA`*</span></li>
+  <li>**Minimum Fraction Call (SA) : **  <span>*`r params$SangerAlignment@minFractionCallSA`*</span></li>
   
-  <li>**Maximum Fraction Lost (SA) : **  <span class="tab">*`r params$SangerAlignment@maxFractionLostSA`*</span></li>
+  <li>**Maximum Fraction Lost (SA) : **  <span>*`r params$SangerAlignment@maxFractionLostSA`*</span></li>
   
 </ul>
-
+</div>
 </details>
 
 ---
@@ -142,6 +142,7 @@ li{
 li:first-child {
     margin-top:0;
 }
+
 .tab {position:absolute;left:380px; }
 
 .jexcel_content { 

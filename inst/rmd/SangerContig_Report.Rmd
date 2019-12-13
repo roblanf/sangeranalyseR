@@ -36,33 +36,33 @@ library(sangeranalyseR)
 
 # Basic Information:
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
-
+<div style="overflow: scroll;">
 <ul style="list-style-type:disc;">
-  <li>**Output Directory : **  <span class="tab">*`r params$outputDir`*</span></li>
+  <li>**Output Directory : **  <span>*`r params$outputDir`*</span></li>
 
-  <li>**Input Parent Directory : **  <span class="tab"><i>`r dirname(params$SangerContig@parentDirectory)`</i></span></li>
+  <li>**Input Parent Directory : **  <span><i>`r dirname(params$SangerContig@parentDirectory)`</i></span></li>
 
-  <li>**Contig Name : **  <span class="tab"><i>`r basename(params$SangerContig@contigName)`</i></span></li>
+  <li>**Contig Name : **  <span><i>`r basename(params$SangerContig@contigName)`</i></span></li>
 
-  <li>**Trimming Method : **  <span class="tab">*`r params$SangerContig@forwardReadList[[1]]@QualityReport@TrimmingMethod`*</span></li>
+  <li>**Trimming Method : **  <span>*`r params$SangerContig@forwardReadList[[1]]@QualityReport@TrimmingMethod`*</span></li>
   
-  <li>**Forward Reads Suffix Regex : **  <span class="tab">*`r params$SangerContig@suffixForwardRegExp`*</span></li>
+  <li>**Forward Reads Suffix Regex : **  <span>*`r params$SangerContig@suffixForwardRegExp`*</span></li>
 
-  <li>**Forward Read Number : **  <span class="tab">*`r length(params$SangerContig@forwardReadList)`*</span></li>
+  <li>**Forward Read Number : **  <span>*`r length(params$SangerContig@forwardReadList)`*</span></li>
 
-  <li>**Reverse Reads Suffic Regex : **  <span class="tab">*`r params$SangerContig@suffixReverseRegExp`*</span></li>
+  <li>**Reverse Reads Suffic Regex : **  <span>*`r params$SangerContig@suffixReverseRegExp`*</span></li>
   
-  <li>**Reverse Read Number : **  <span class="tab">*`r length(params$SangerContig@reverseReadList)`*</span></li>
+  <li>**Reverse Read Number : **  <span>*`r length(params$SangerContig@reverseReadList)`*</span></li>
   
 </ul>
-
+</div>
 </details>
 
 ---
 
 # 'SangerContig' Input Parameters :
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
-
+<div style="overflow: scroll;">
 <ul style="list-style-type:disc;">
   <li>**Minimum Read Number : **  <span class="tab">*`r params$SangerContig@minReadsNum`*</span></li>
   
@@ -76,6 +76,7 @@ library(sangeranalyseR)
   
   <li>**Reading Frame : **  <span class="tab">*`r params$SangerContig@readingFrame`*</span></li>  
 </ul>
+</div>
 </details>
 
 ---
@@ -295,6 +296,7 @@ li{
 li:first-child {
     margin-top:0;
 }
+
 .tab {position:absolute;left:380px; }
 
 .jexcel_content { 
