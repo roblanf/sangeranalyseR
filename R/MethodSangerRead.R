@@ -51,18 +51,32 @@ setMethod("updateQualityParam",  "SangerRead",
 
 setMethod("MakeBaseCalls", "SangerRead",
           function(obj, signalRatioCutoff) {
-              traceMatrix <- obj@traceMatrix
-              peakPosMatrixRaw <- obj@peakPosMatrixRaw
-              qualityPhredScoresRaw <- obj@QualityReport@qualityPhredScoresRaw
-              readFeature <- obj@readFeature
-              MBCResult <- MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
-                                                qualityPhredScoresRaw,
-                                                signalRatioCutoff, readFeature)
-              obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
-              obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
-              obj@primarySeq <- MBCResult[["primarySeq"]]
-              obj@secondarySeq <- MBCResult[["secondarySeq"]]
-              return(obj)
+              errors <- character(0)
+              errors <- checkSignalRatioCutoff(signalRatioCutoff, errors)
+              if (length(errors) == 0) {
+                  traceMatrix <- obj@traceMatrix
+                  peakPosMatrixRaw <- obj@peakPosMatrixRaw
+                  qualityPhredScoresRaw <- obj@QualityReport@qualityPhredScoresRaw
+                  readFeature <- obj@readFeature
+                  MBCResult <-
+                      MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
+                                           qualityPhredScoresRaw,
+                                           signalRatioCutoff, readFeature)
+                  obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
+                  obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
+                  obj@primarySeq <- MBCResult[["primarySeq"]]
+                  obj@secondarySeq <- MBCResult[["secondarySeq"]]
+
+                  AASeqResult <-
+                      calculateAASeq (obj@primarySeq, obj@geneticCode)
+                  obj@primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
+                  obj@primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
+                  obj@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+                  obj@ChromatogramParam@signalRatioCutoff <- signalRatioCutoff
+                  return(obj)
+              } else {
+                  stop(errors)
+              }
 })
 
 setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,

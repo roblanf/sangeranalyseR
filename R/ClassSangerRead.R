@@ -185,7 +185,7 @@ setMethod("initialize",
                   ChromatogramParam <- new("ChromatogramParam",
                                            baseNumPerRow     = baseNumPerRow,
                                            heightPerRow      = heightPerRow,
-                                           signalRatioCutoff =signalRatioCutoff,
+                                           signalRatioCutoff = signalRatioCutoff,
                                            showTrimmed       = showTrimmed)
 
                   AASeqResult <- calculateAASeq (primarySeq, geneticCode)
