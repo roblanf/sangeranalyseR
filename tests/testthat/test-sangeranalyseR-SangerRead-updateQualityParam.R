@@ -177,4 +177,3 @@ test_that("SangerRead update quality trimming parameters 6 (bigger than 1).", {
                  "Your input M1TrimmingCutoff is: '1.0001' is invalid.'M1TrimmingCutoff' shouldbe between 0 and 1.", fixed = TRUE)
 })
 
-
