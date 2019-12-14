@@ -391,7 +391,7 @@ valueBoxM2SlidingWindowSize <- function(input, output, session) {
                 strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
                 inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
             } else {
-                inputM2SlidingWindowSizeText <- 5
+                inputM2SlidingWindowSizeText <- 10
             }
             valueBox(
                 # strtoi(input$M2CutoffQualityScoreText

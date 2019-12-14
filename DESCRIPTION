@@ -62,7 +62,6 @@ Collate:
     'ShinySangerContigServer.R'
     'ShinySangerContigUI.R'
     'ShinyServerModule.R'
-    'TRY.R'
     'UtilitiesFunc.R'
     'UtilitiesFuncInputChecker.R'
     'sangeranalyseR_package.R'

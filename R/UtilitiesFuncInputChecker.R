@@ -94,7 +94,7 @@ checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
                 msg <- paste("\nYour input M2SlidingWindowSize is: '",
                              M2SlidingWindowSize, "' is invalid.",
                              "'M2SlidingWindowSize' should",
-                             "be between 0 and 20.\n", sep = "")
+                             "be between 0 and 40.\n", sep = "")
                 errors <- c(errors, msg)
             }
         }

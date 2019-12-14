@@ -1251,7 +1251,7 @@ SangerAlignmentServer <- function(input, output, session) {
                     strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
                     inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
                 } else {
-                    inputM2SlidingWindowSizeText <- 5
+                    inputM2SlidingWindowSizeText <- 10
                 }
                 if (directionParam == "Forward") {
                     trimmingPos <-
@@ -1259,9 +1259,6 @@ SangerAlignmentServer <- function(input, output, session) {
                             SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadList[[readIndex]]@QualityReport@
                                 qualityPhredScores,
-                            SangerAlignment@contigList[[contigIndex]]@
-                                forwardReadList[[readIndex]]@QualityReport@
-                                qualityBaseScores,
                             strtoi(inputM2CutoffQualityScoreText),
                             strtoi(inputM2SlidingWindowSizeText)
                         )
@@ -1285,9 +1282,6 @@ SangerAlignmentServer <- function(input, output, session) {
                             SangerAlignment@contigList[[contigIndex]]@
                                 reverseReadList[[readIndex]]@QualityReport@
                                 qualityPhredScores,
-                            SangerAlignment@contigList[[contigIndex]]@
-                                reverseReadList[[readIndex]]@QualityReport@
-                                qualityBaseScores,
                             strtoi(inputM2CutoffQualityScoreText),
                             strtoi(inputM2SlidingWindowSizeText)
                         )
@@ -1965,7 +1959,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 QualityReport@M2SlidingWindowSize )) {
                         SangerAlignment@contigList[[contigIndex]]@
                             forwardReadList[[readIndex]]@
-                            QualityReport@M2SlidingWindowSize <<-  5
+                            QualityReport@M2SlidingWindowSize <<-  10
                     }
                 } else if (directionParam == "Reverse") {
                     if (is.null(SangerAlignment@contigList[[contigIndex]]@
@@ -1980,7 +1974,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 QualityReport@M2SlidingWindowSize )) {
                         SangerAlignment@contigList[[contigIndex]]@
                             reverseReadList[[readIndex]]@
-                            QualityReport@M2SlidingWindowSize <<-  5
+                            QualityReport@M2SlidingWindowSize <<-  10
                     }
                 }
                 fluidRow(

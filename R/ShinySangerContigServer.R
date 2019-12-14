@@ -968,7 +968,7 @@ SangerContigServer <- function(input, output, session) {
                     strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
                     inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
                 } else {
-                    inputM2SlidingWindowSizeText <- 5
+                    inputM2SlidingWindowSizeText <- 10
                 }
                 if (directionParam == "Forward") {
                     ### ------------------------------------------------------------
@@ -978,8 +978,6 @@ SangerContigServer <- function(input, output, session) {
                         M2inside_calculate_trimming(
                             SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@qualityPhredScores,
-                            SangerContig@forwardReadList[[readIndex]]@
-                                QualityReport@qualityBaseScores,
                             strtoi(inputM2CutoffQualityScoreText),
                             strtoi(inputM2SlidingWindowSizeText))
                     SangerContig@forwardReadList[[readIndex]]@
@@ -1002,8 +1000,6 @@ SangerContigServer <- function(input, output, session) {
                         M2inside_calculate_trimming(
                             SangerContig@reverseReadList[[readIndex]]@
                                 QualityReport@qualityPhredScores,
-                            SangerContig@reverseReadList[[readIndex]]@
-                                QualityReport@qualityBaseScores,
                             strtoi(inputM2CutoffQualityScoreText),
                             strtoi(inputM2SlidingWindowSizeText))
                     SangerContig@reverseReadList[[readIndex]]@
@@ -1491,7 +1487,7 @@ SangerContigServer <- function(input, output, session) {
                     if (is.null(SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@M2SlidingWindowSize )) {
                         SangerContig@forwardReadList[[readIndex]]@
-                            QualityReport@M2SlidingWindowSize <<-  5
+                            QualityReport@M2SlidingWindowSize <<-  10
                     }
                 } else if (directionParam == "Reverse") {
                     if (is.null(SangerContig@reverseReadList[[readIndex]]@
@@ -1502,7 +1498,7 @@ SangerContigServer <- function(input, output, session) {
                     if (is.null(SangerContig@reverseReadList[[readIndex]]@
                                 QualityReport@M2SlidingWindowSize )) {
                         SangerContig@reverseReadList[[readIndex]]@
-                            QualityReport@M2SlidingWindowSize <<-  5
+                            QualityReport@M2SlidingWindowSize <<-  10
                     }
                 }
                 fluidRow(

@@ -612,10 +612,9 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
              "remainingRatio" = remainingRatio))
 }
 M2inside_calculate_trimming <-function(qualityPhredScores,
-                                       qualityBaseScores,
                                        M2CutoffQualityScore,
                                        M2SlidingWindowSize) {
-    rawSeqLength <- length(qualityBaseScores)
+    rawSeqLength <- length(qualityPhredScores)
     rawMeanQualityScore <- mean(qualityPhredScores)
     rawMinQualityScore <- min(qualityPhredScores)
     if (M2SlidingWindowSize > 40 || M2SlidingWindowSize < 0 ||

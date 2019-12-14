@@ -17,7 +17,7 @@
 #' @slot TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
 #' @slot M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @slot M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
-#' @slot M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{5}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
+#' @slot M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #'
 #' @name QualityReport-class
 #'
@@ -35,7 +35,7 @@
 #'                         readFileName          = A_chloroticaFdReadFN,
 #'                         TrimmingMethod        = "M2",
 #'                         M1TrimmingCutoff      = NULL,
-#'                         M2CutoffQualityScore  = 40,
+#'                         M2CutoffQualityScore  = 20,
 #'                         M2SlidingWindowSize   = 10)
 #' "@@"(A_chloroticaRead, QualityReport)
 setClass("QualityReport",
@@ -119,7 +119,6 @@ setMethod("initialize",
                       ### ------------------------------------------------------
                       trimmingPos <-
                           M2inside_calculate_trimming(qualityPhredScores,
-                                                      qualityBaseScores,
                                                       M2CutoffQualityScore,
                                                       M2SlidingWindowSize)
                   }

@@ -79,8 +79,7 @@ setMethod("updateQualityParam",  "QualityReport",
                                                       M1TrimmingCutoff)
                   } else if (TrimmingMethod == "M2") {
                       trimmingPos <-
-                          M2inside_calculate_trimming(qualityBaseScores,
-                                                      TrimmingMethod,
+                          M2inside_calculate_trimming(qualityPhredScores,
                                                       M2CutoffQualityScore,
                                                       M2SlidingWindowSize)
                   }

@@ -40,7 +40,7 @@ An S4 class storing quality related inputs and results in a SangerRead S4 object
 
 \item{\code{M2CutoffQualityScore}}{The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.}
 
-\item{\code{M2SlidingWindowSize}}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{5}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
+\item{\code{M2SlidingWindowSize}}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
 }}
 
 \examples{
@@ -53,7 +53,7 @@ A_chloroticaRead <-
                         readFileName          = A_chloroticaFdReadFN,
                         TrimmingMethod        = "M2",
                         M1TrimmingCutoff      = NULL,
-                        M2CutoffQualityScore  = 40,
+                        M2CutoffQualityScore  = 20,
                         M2SlidingWindowSize   = 10)
 "@"(A_chloroticaRead, QualityReport)
 }
