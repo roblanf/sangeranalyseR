@@ -1,0 +1,119 @@
+---
+title: "sangeranalyseR"
+author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+    code_folding: show
+    fig_caption: yes
+  BiocStyle::pdf_document: default
+#bibliography: bibliography.bib
+fontsize: 14pt
+vignette: >
+  %\VignetteIndexEntry{sangeranalyseR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+  %\VignettePackage{sangeranalyseR}
+---
+```{r style, echo=FALSE, results="asis", message=FALSE}
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+```{r}
+library(sangeranalyseR)
+```
+
+# Introduction
+
+# SangerRead
+
+## Create Sanger Object 
+```{r}
+inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
+
+A_chloroticaFdReadFN <- file.path(inputFilesPath,                                                 
+                                  "Allolobophora_chlorotica",
+                                  "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
+```
+```{r}
+singleRead <- SangerRead(readFeature           = "Forward Read",
+                         readFileName          = A_chloroticaFdReadFN)
+```
+
+## Write FASTA file
+```{r}
+writeFastaSR(singleRead)
+```
+
+## Generate Report
+```{r}
+generateReportSR(singleRead)
+```
+
+# SangerContig
+
+## Create Sanger Object 
+```{r}
+rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
+contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+```
+```{r}
+sangerContig <- SangerContig(parentDirectory      = inputFilesParentDir,
+                             contigName           = contigName,
+                             suffixForwardRegExp  = suffixForwardRegExp,
+                             suffixReverseRegExp  = suffixReverseRegExp)
+```
+
+## Launch Shiny App 
+```{r}
+launchAppSC(sangerContig)
+```
+
+## Write FASTA file
+```{r}
+writeFastaSC(sangerContig)
+```
+
+## Generate Report
+```{r}
+generateReportSC(sangerContig)
+```
+
+# SangerAlignment
+
+## Create Sanger Object 
+```{r}
+inputFilesParentDir <- system.file("extdata", package = "sangeranalyseR")
+suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+```
+
+```{r}
+# setOldClass("phylo")
+sangerAlignment <- SangerSangerAlignment(parentDirectory = inputFilesParentDir,
+                                         suffixForwardRegExp = suffixForwardRegExp,
+                                         suffixReverseRegExp = suffixReverseRegExp,)
+```
+
+## Launch Shiny App 
+```{r}
+launchAppSA(sangerAlignment)
+```
+
+## Write FASTA file
+```{r}
+writeFastaSA(sangerAlignment)
+```
+
+## Generate Report
+```{r}
+generateReportSA(sangerAlignment)
+```
