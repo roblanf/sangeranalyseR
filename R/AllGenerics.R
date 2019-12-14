@@ -60,17 +60,24 @@ setGeneric("MakeBaseCalls", function(obj, signalRatioCutoff = 0.33) {
 ### Write FASTA
 ### ============================================================================
 #' @export
-setGeneric("writeFastaSR", function(obj,outputDir = tempdir(),
+setGeneric("writeFastaSA", function(obj,outputDir = NULL,
                                     compress  = FALSE,
-                                    compression_level = NA) {
-    standardGeneric("writeFastaSR")
+                                    compression_level = NA,
+                                    selection = "all") {
+    standardGeneric("writeFastaSA")
 })
 #' @export
-setGeneric("writeFASTA", function(obj,outputDir = tempdir(),
+setGeneric("writeFastaSC", function(obj,outputDir = NULL,
+                                    compress  = FALSE,
+                                    compression_level = NA,
+                                    selection = "all") {
+    standardGeneric("writeFastaSC")
+})
+#' @export
+setGeneric("writeFastaSR", function(obj,outputDir = NULL,
                                   compress  = FALSE,
-                                  compression_level = NA,
-                                  selection = "all") {
-    standardGeneric("writeFASTA")
+                                  compression_level = NA) {
+    standardGeneric("writeFastaSR")
 })
 
 

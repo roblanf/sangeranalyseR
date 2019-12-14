@@ -92,6 +92,11 @@ setMethod("MakeBaseCalls", "SangerRead",
 
 setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
                                                  compression_level) {
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        message(">>> outputDir : ", outputDir)
+    }
     message("Start writing '", obj@readFileName, "' to FASTA format ...")
     fastaFilename <- gsub(file_ext(basename(obj@readFileName)), "fa",
                           basename(obj@readFileName))
@@ -105,6 +110,7 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
     message("\n >> '", outputFilename, "' is written")
     return(outputFilename)
 })
+
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {
@@ -114,6 +120,7 @@ setMethod("generateReportSR", "SangerRead",
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        message(">>> outputDir : ", outputDir)
     }
     readName <- sub('\\.ab1$', '', basename(obj@readFileName))
     outputDirSR <- file.path(outputDir, readName)

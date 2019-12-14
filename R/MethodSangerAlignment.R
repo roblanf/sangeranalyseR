@@ -1,4 +1,42 @@
-setMethod("writeFASTA", "SangerAlignment", function(obj, outputDir, compress,
+#' @examples
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' newAlignment <- SangerAlignment(
+#'                     parentDirectory       = rawDataDir,
+#'                     suffixForwardRegExp   = suffixForwardRegExp,
+#'                     suffixReverseRegExp   = suffixReverseRegExp,
+#'                     refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                     TrimmingMethod        = "M1",
+#'                     M1TrimmingCutoff      = 0.0001,
+#'                     M2CutoffQualityScore  = NULL,
+#'                     M2SlidingWindowSize   = NULL,
+#'                     baseNumPerRow         = 100,
+#'                     heightPerRow          = 200,
+#'                     signalRatioCutoff     = 0.33,
+#'                     showTrimmed           = TRUE)
+#' RShinyCSSet <- launchAppSA(newAlignment)
+setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
+    ### ------------------------------------------------------------------------
+    ### Checking SangerAlignment input parameter is a list containing
+    ### one S4 object.
+    ### ------------------------------------------------------------------------
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        message(">>> outputDir : ", outputDir)
+    }
+    if (dir.exists(outputDir)) {
+        shinyOptions(sangerAlignment = list(obj))
+        shinyOptions(shinyDirectory = outputDir)
+        newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer)
+        return(newSangerAlignment)
+    } else {
+        stop("'", outputDir, "' is not valid. Please check again")
+    }
+})
+
+setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
                                                  compression_level,
                                                  selection = "all") {
     ### ------------------------------------------------------------------------
@@ -9,6 +47,11 @@ setMethod("writeFASTA", "SangerAlignment", function(obj, outputDir, compress,
         selection != "allReads") {
         stop(paste0("\nSelection must be 'all', ",
                     "'alignment' 'contigs','consensusRead' or 'allReads'."))
+    }
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        message(">>> outputDir : ", outputDir)
     }
     message("Start to write 'SangerAlignment' to FASTA format ...")
     ### ------------------------------------------------------------------------
@@ -86,57 +129,17 @@ setMethod("writeFASTA", "SangerAlignment", function(obj, outputDir, compress,
     message("\nFinish writing 'SangerAlignment' to FASTA format")
 })
 
-#' @examples
-#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' newAlignment <- SangerAlignment(
-#'                     parentDirectory       = rawDataDir,
-#'                     suffixForwardRegExp   = suffixForwardRegExp,
-#'                     suffixReverseRegExp   = suffixReverseRegExp,
-#'                     refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                     TrimmingMethod        = "M1",
-#'                     M1TrimmingCutoff      = 0.0001,
-#'                     M2CutoffQualityScore  = NULL,
-#'                     M2SlidingWindowSize   = NULL,
-#'                     baseNumPerRow         = 100,
-#'                     heightPerRow          = 200,
-#'                     signalRatioCutoff     = 0.33,
-#'                     showTrimmed           = TRUE)
-#' RShinyCSSet <- launchAppSA(newAlignment)
-setMethod("launchAppSA", "SangerAlignment",
-          function(obj, outputDir = NULL) {
-              ### ------------------------------------------------------------------------
-              ### Checking SangerAlignment input parameter is a list containing
-              ### one S4 object.
-              ### ------------------------------------------------------------------------
-              if (is.null(outputDir)) {
-                  outputDir <- tempdir()
-                  suppressWarnings(dir.create(outputDir))
-              }
-              if (dir.exists(outputDir)) {
-                  shinyOptions(sangerAlignment = list(obj))
-                  shinyOptions(shinyDirectory = outputDir)
-                  newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer)
-                  return(newSangerAlignment)
-              } else {
-                  stop("'", outputDir, "' is not valid. Please check again")
-              }
-})
-
-
 setMethod("generateReportSA", "SangerAlignment",
           function(obj, outputDir,
                    includeSangerContig = TRUE,
                    includeSangerRead = TRUE) {
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
-    ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
-        suppressWarnings(dir.create(outputDir))
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        message(">>> outputDir : ", outputDir)
     }
-
     ### ------------------------------------------------------------------------
     ### Make sure the directory is exist (SangerAlignment level)
     ###  => SangerContig, SangerRead level directory will be created recursively

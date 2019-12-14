@@ -1495,7 +1495,12 @@ SangerAlignmentServer <- function(input, output, session) {
                           "_SangerAlignment_BrowseSeqs.html")
             BrowseSeqs(DNAStringSet(sangerAlignmentParam[["contigsAlignment"]]) ,
                        openURL=FALSE, htmlFile=browseSeqHTML)
-            includeHTML(browseSeqHTML)
+            column(width = 12,
+                   includeHTML(browseSeqHTML),
+                   style = paste("height:100%; ",
+                                 "overflow-y: hidden;",
+                                 "overflow-x: scroll;")
+            )
         }
     })
     ### ------------------------------------------------------------------------
@@ -1610,7 +1615,12 @@ SangerAlignmentServer <- function(input, output, session) {
             }
             BrowseSeqs(DNAStringSet(contigParam[["alignment"]]),
                        openURL=FALSE, htmlFile=browseSeqHTML)
-            includeHTML(browseSeqHTML)
+            column(width = 12,
+                   includeHTML(browseSeqHTML),
+                   style = paste("height:100%; ",
+                                 "overflow-y: hidden;",
+                                 "overflow-x: scroll;")
+            )
         }
     })
     ### ------------------------------------------------------------------------

@@ -1,26 +1,3 @@
-### ============================================================================
-### Plotting quality for each base for "SangerContig" S4 object
-### ============================================================================
-#' @example
-#' load("data/A_chloroticaConsensusRead.RDdata")
-#' qualityBasePlot(A_chloroticaConsensusRead)
-setMethod("qualityBasePlot",  "SangerContig", function(object){
-    ### ------------------------------------------------------------------------
-    ### Quality base plot for forward read
-    ### ------------------------------------------------------------------------
-    fdQualityReportObject = object@forwardReadSangerseq@QualityReport
-    fdPlotting <- preQualityBasePlot(fdQualityReportObject)
-
-    ### ------------------------------------------------------------------------
-    ### Grid plotting for forward and reverse reads
-    ### ------------------------------------------------------------------------
-    rvQualityReportObject = object@reverseReadSangerseq@QualityReport
-    rvPlotting <- preQualityBasePlot(rvQualityReportObject)
-
-    grid.arrange(fdPlotting, rvPlotting, ncol=2)
-})
-
-
 ## =============================================================================
 ## Updating quality parameters for SangerContig object.
 ## =============================================================================
@@ -86,7 +63,7 @@ setMethod("updateQualityParam",  "SangerContig",
     }
 })
 
-setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
+setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
                                                         compression_level,
                                                         selection = "all") {
     ### ------------------------------------------------------------------------
@@ -95,6 +72,11 @@ setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
     if (selection != "all" && selection != "alignment" &&
         selection != "allReads" && selection != "contig") {
         stop("\nSelection must be 'all', 'alignment', 'allReads' or 'contig'.")
+    }
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        message(">>> outputDir : ", outputDir)
     }
     contigName = obj@contigName
     message("Start to write '", contigName, "' to FASTA format ...")
@@ -184,7 +166,8 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
     ### --------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
-        suppressWarnings(dir.create(outputDir))
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        message(">>> outputDir : ", outputDir)
     }
     if (dir.exists(outputDir)) {
         shinyOptions(sangerContig = list(obj))
@@ -205,9 +188,9 @@ setMethod("generateReportSC", "SangerContig",
     ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
-        suppressWarnings(dir.create(outputDir))
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        message(">>> outputDir : ", outputDir)
     }
-
     ### ------------------------------------------------------------------------
     ### Make sure the directory is exist (SangerContig level)
     ###  => SangerRead level directory will be created recursively

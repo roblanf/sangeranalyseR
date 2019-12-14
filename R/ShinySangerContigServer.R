@@ -1202,10 +1202,15 @@ SangerContigServer <- function(input, output, session) {
                              "_Alignment_BrowseSeqs.html"))
         BrowseSeqs(DNAStringSet(contigParam[["alignment"]]),
                    openURL=FALSE, htmlFile=browseSeqHTML)
-        includeHTML(
-            file.path(shinyDirectory,
-                      paste0(SangerContig@contigName,
-                             "_Alignment_BrowseSeqs.html")))
+        column(width = 12,
+               includeHTML(
+                   file.path(shinyDirectory,
+                             paste0(SangerContig@contigName,
+                                    "_Alignment_BrowseSeqs.html"))),
+               style = paste("height:100%; ",
+                             "overflow-y: hidden;",
+                             "overflow-x: scroll;")
+        )
     })
     ### ------------------------------------------------------------------------
     ### Difference

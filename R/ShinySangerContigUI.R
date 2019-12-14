@@ -102,6 +102,13 @@ SangerContigUI <- dashboardPage(
             tags$style(type="text/css",
                        ".shiny-output-error { visibility: hidden; }",
                        ".shiny-output-error:before { visibility: hidden; }"
+            ),
+            ### ----------------------------------------------------------------
+            ### Set style for alignment result
+            ### ----------------------------------------------------------------
+            tags$style(type="text/css",
+                       "span { white-space:nowrap; }",
+                       "pre { display: inline-block; }"
             )
         ),
 
