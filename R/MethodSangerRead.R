@@ -92,6 +92,7 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
                     compress = compress,
                     compression_level = compression_level)
     message("\n >> '", outputFilename, "' is written")
+    return(outputFilename)
 })
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,

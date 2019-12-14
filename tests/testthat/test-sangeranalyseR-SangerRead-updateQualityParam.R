@@ -261,29 +261,19 @@ test_that("SangerRead update quality trimming parameters 8 (Update from M1 to M2
 })
 
 test_that("SangerRead update quality trimming parameters 9 (M2CutoffQualityScore bigger than threashold)", {
-    trimmedSangerRead9 <- updateQualityParam(sangerRead,
-                                             TrimmingMethod       = "M2",
-                                             M1TrimmingCutoff     = NULL,
-                                             M2CutoffQualityScore = 61,
-                                             M2SlidingWindowSize  = 40)
     expect_error(updateQualityParam(sangerRead,
                                     TrimmingMethod       = "M2",
                                     M1TrimmingCutoff     = NULL,
                                     M2CutoffQualityScore = 61,
                                     M2SlidingWindowSize  = 41),
-                 "\nYour input M2CutoffQualityScore is: '61' is invalid.'M2CutoffQualityScore' shouldbe between 0 and 60.\n", fixed = TRUE)
+                 "\nYour input M2CutoffQualityScore is: '61' is invalid.'M2CutoffQualityScore' shouldbe between 0 and 60.\n\nYour input M2SlidingWindowSize is: '41' is invalid.'M2SlidingWindowSize' shouldbe between 0 and 40.\n", fixed = TRUE)
 })
 
-test_that("SangerRead update quality trimming parameters 9 (M2SlidingWindowSize bigger than threashold)", {
-    trimmedSangerRead9 <- updateQualityParam(sangerRead,
-                                             TrimmingMethod       = "M2",
-                                             M1TrimmingCutoff     = NULL,
-                                             M2CutoffQualityScore = 60,
-                                             M2SlidingWindowSize  = 41)
+test_that("SangerRead update quality trimming parameters 10 (M2CutoffQualityScore smaller than threashold)", {
     expect_error(updateQualityParam(sangerRead,
                                     TrimmingMethod       = "M2",
                                     M1TrimmingCutoff     = NULL,
-                                    M2CutoffQualityScore = 61,
-                                    M2SlidingWindowSize  = 41),
-                 "\nYour input M2SlidingWindowSize is: '41' is invalid.'M2SlidingWindowSize' shouldbe between 0 and 40.\n", fixed = TRUE)
+                                    M2CutoffQualityScore = -1,
+                                    M2SlidingWindowSize  = -1),
+                 "\nYour input M2CutoffQualityScore is: '-1' is invalid.'M2CutoffQualityScore' shouldbe between 0 and 60.\n\nYour input M2SlidingWindowSize is: '-1' is invalid.'M2SlidingWindowSize' shouldbe between 0 and 40.\n", fixed = TRUE)
 })
