@@ -3,22 +3,22 @@
 #' @description  An S4 class for storing multiple single reads to build up a
 #'  sanger contig
 #'
-#' @slot parentDirectory
-#' @slot contigName .
-#' @slot suffixForwardRegExp .
-#' @slot suffixReverseRegExp .
-#' @slot forwardReadList
-#' @slot reverseReadList
-#' @slot minReadsNum
-#' @slot minReadLength
-#' @slot refAminoAcidSeq
-#' @slot minFractionCall
-#' @slot maxFractionLost
-#' @slot geneticCode
-#' @slot acceptStopCodons
-#' @slot readingFrame
-#' @slot contigSeq
-#' @slot alignment
+#' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
+#' @slot contigName The contig name of all the reads in \code{parentDirectory}.
+#' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.
+#' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.
+#' @slot forwardReadList The list of SangerRead S4 instance which are all forward reads.
+#' @slot reverseReadList The list of SangerRead S4 instance which are all reverse reads.
+#' @slot minReadsNum The minimum number of reads required to make a consensus sequence, must be 2 or more. The default value is \code{2}.
+#' @slot minReadLength Reads shorter than this will not be included in the readset. The default \code{20} means that all reads with length of 20 or more will be included. Note that this is the length of a read after it has been trimmed.
+#' @slot refAminoAcidSeq An amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand. The default value is \code{""}.
+#' @slot minFractionCall Minimum fraction of the sequences required to call a consensus sequence at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.
+#' @slot maxFractionLost Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.
+#' @slot geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
+#' @slot acceptStopCodons The logical value \code{TRUE} or \code{FALSE}. \code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; \code{FALSE}: reject reads with stop codons. If \code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).
+#' @slot readingFrame \code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{ref.aa.seq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
+#' @slot contigSeq The consensus read of all SangerRead S4 instance in DNAString object.
+#' @slot alignment The alignment of all SangerRead S4 instance in DNAStringSet object.
 #' @slot differencesDF
 #' @slot distanceMatrix
 #' @slot dendrogram

@@ -31,21 +31,21 @@ sangeranalyseR is an R package for analysing Sanger sequencing reads, especially
 The [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) provides S4 classes for importing Sanger sequencing files into R environment. 
 
 ### S4 Classes
-There are three main S4 classes in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are **'SangerSingleRead'**, **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Each of them stores different level of input parameters and results in Sanger sequencing data analysis. **Figure 1** shows the hierarchy of these three S4 classes.
+There are three main S4 classes in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are **'SangerRead'**, **'SangerContig'** and **'SangerAlignment'**. Each of them stores different level of input parameters and results in Sanger sequencing data analysis. **Figure 1** shows the hierarchy of these three S4 classes.
 
 ```{r, out.width = "2000px",fig.cap="\\label{fig:figs} S4 class hierarchy", echo=FALSE}
 knitr::include_graphics("figure/Figure_1_S4_Class_Hierarchy.png")
 ```
 
-* **'SangerSingleRead'** extends from 'sangerseq' class and stores raw data 'abif' class in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html) as well as essential information including quality trimming and chromatogram parameters. It corresponds to a single ABIF file in Sanger sequencing. 
+* **'SangerRead'** extends from 'sangerseq' class and stores raw data 'abif' class in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html) as well as essential information including quality trimming and chromatogram parameters. It corresponds to a single ABIF file in Sanger sequencing. 
 
-* **'SangerConsensusRead'** contains two lists of 'SangerSingleRead' which are forward and reverse read list as well as the alignment results. We call the aligned single reads "a consensus read". It corresponds to a contig in Sanger sequencing. In the following documentation, we will say "the reads in **'SangerConsensusRead'**" which means all the single reads that are in the specified consensus group.
+* **'SangerContig'** contains two lists of 'SangerRead' which are forward and reverse read list as well as the alignment results. We call the aligned single reads "a consensus read". It corresponds to a contig in Sanger sequencing. In the following documentation, we will say "the reads in **'SangerContig'**" which means all the single reads that are in the specified consensus group.
 
-* **'AlignedConsensusSet'** contains a list of 'SangerConsensusRead' and the alignment results for all consensus reads. We call the aligned consensus reads "an aligned-consensus read". It corresponds to a rebuild genome fragment in Sanger sequencing. In the following documentation, we will say "the consensus reads in **'AlignedConsensusSet'**" which means all the consensus reads from each consensus group.
+* **'SangerAlignment'** contains a list of 'SangerContig' and the alignment results for all consensus reads. We call the aligned consensus reads "an aligned-consensus read". It corresponds to a rebuild genome fragment in Sanger sequencing. In the following documentation, we will say "the consensus reads in **'SangerAlignment'**" which means all the consensus reads from each consensus group.
 
 
 ### Interactive Shiny App
-We build two local interactive Shiny app for users to explore their created **'SangerConsensusRead'** and **'AlignedConsensusSet'**. Inside the Shiny app, users can change the input parameters for quality trimming, chromatogram and rebuild consensus read etc. Information displayed on the UI is dynamic based on user input. Furthermore, all changed parameters and results can be saved to a new S4 instance and be exported as an *RDS* file.
+We build two local interactive Shiny app for users to explore their created **'SangerContig'** and **'SangerAlignment'**. Inside the Shiny app, users can change the input parameters for quality trimming, chromatogram and rebuild consensus read etc. Information displayed on the UI is dynamic based on user input. Furthermore, all changed parameters and results can be saved to a new S4 instance and be exported as an *RDS* file.
 
 ## System Requirement
 >>> After uploading to Bioconductor
@@ -64,15 +64,15 @@ Press install button on RStudio to install sangeranalyseR.
 
 
 # S4 Classes
-## SangerSingleRead
-**"SangerSingleRead"** S4 class corresponds to a single ABIF file in Sanger sequencing. We will show how to create a **"SangerSingleRead"** instance and the slots in this class.
+## SangerRead
+**"SangerRead"** S4 class corresponds to a single ABIF file in Sanger sequencing. We will show how to create a **"SangerRead"** instance and the slots in this class.
 
 ### ABIF Filename Regulation
-**Figure 2** below shows the filename regulation of input raw ABIF file which is going to be used as input to create **"SangerSingleRead"**. All raw ABIF files must be *forward* or *reverse* and the reason there is a **[*Number Index*]** in the suffix is that later we are going to create **"SangerConsensusRead"** S4 instance. There are no range restriction on **[*Number Index*]** here. But in **"SangerConsensusRead"** section, all reads in the same consensus group that are going to be aligned must be indexed properly. More details please refer to next section. 
+**Figure 2** below shows the filename regulation of input raw ABIF file which is going to be used as input to create **"SangerRead"**. All raw ABIF files must be *forward* or *reverse* and the reason there is a **[*Number Index*]** in the suffix is that later we are going to create **"SangerContig"** S4 instance. There are no range restriction on **[*Number Index*]** here. But in **"SangerContig"** section, all reads in the same consensus group that are going to be aligned must be indexed properly. More details please refer to next section. 
 
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerSingleRead'", echo=FALSE}
-knitr::include_graphics("figure/Figure_2_SangerSingleRead_filename_regulation.png")
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerRead'", echo=FALSE}
+knitr::include_graphics("figure/Figure_2_SangerRead_filename_regulation.png")
 ```
 
 Here is an example of getting the absolute filename of a raw ABIF file. We will show the meaning of **[*Consensus Read Name*]**, **[*F,R*]** and **[*Number Index*]** with true data.
@@ -99,9 +99,9 @@ library(sangeranalyseR)
 
 
 
-Then, we can create **'SangerSingleRead'** S4 instance by running *"new"* function.
+Then, we can create **'SangerRead'** S4 instance by running *"new"* function.
 ```{r}
-singleReadNew <- new("SangerSingleRead",
+singleReadNew <- new("SangerRead",
                      readFeature           = "Forward Read",
                      readFileName          = A_chloroticaFdReadFN,
                      TrimmingMethod        = "M2",
@@ -114,9 +114,9 @@ singleReadNew <- new("SangerSingleRead",
                      showTrimmed           = TRUE)
 ```
 
-Moreover, we also create a constructor wrapper function for **'SangerSingleRead'**. The instance created by new and constructor functions are same. The constructor function makes creating **'SangerSingleRead'** S4 instance more intuitive.
+Moreover, we also create a constructor wrapper function for **'SangerRead'**. The instance created by new and constructor functions are same. The constructor function makes creating **'SangerRead'** S4 instance more intuitive.
 ```{r}
- singleReadCtor <- SangerSingleRead(readFeature           = "Forward Read",
+ singleReadCtor <- SangerRead(readFeature           = "Forward Read",
                                     readFileName          = A_chloroticaFdReadFN,
                                     geneticCode           = GENETIC_CODE,
                                     TrimmingMethod        = "M2",
@@ -144,7 +144,7 @@ There are two read trimming methods for users to choose from. The Method 1 (M1) 
 
 Method 2 (M2) is similar to "Trimmomatic"(Bolger et al.) SLIDINGWINDOW trimming method. We take the average logarithmic quality score in the sliding window size and if the average quality score is smaller than the cutoff quality score, then the first base pair of the sliding window will be the trimming start point.
 
-* **`TrimmingMethod`** : Specify the read trimming method for this SangerSingleRead. The value must be *"M1"* (the default) or *'M2'*.
+* **`TrimmingMethod`** : Specify the read trimming method for this SangerRead. The value must be *"M1"* (the default) or *'M2'*.
 * **`M1TrimmingCutoff`** : The trimming cutoff for the Method 1. If `TrimmingMethod` is *"M1"*, then the default value is *"0.0001"*. Otherwise, the value must be *"NULL"*
 * **`M2CutoffQualityScore`** : The trimming cutoff quality score for the Method 2. If `TrimmingMethod` is *"M2"*, then the default value is *"20"*. Otherwise, the value must be *"NULL"*. It works with `M2SlidingWindowSize`.
 * **`M2SlidingWindowSize`** : The trimming sliding window size for the Method 2. If `TrimmingMethod` is *"M2"*, then the default value is *"5"*. Otherwise, the value must be *"NULL"*. It works with `M2CutoffQualityScore`.
@@ -158,17 +158,17 @@ These parameters are used for drawing chromatogram in Shiny app.
 * **`signalRatioCutoff`** : The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is *"0.33"*.
 * **`showTrimmed`** : The logical value storing whether to show trimmed base pairs in chromatogram. The default value is *"TRUE"*.
 
-### Slots in **'SangerSingleRead'**
+### Slots in **'SangerRead'**
 
-**'SangerSingleRead'** inherits 'sangerseq' class. It contains all slots in 'sangerseq', so every function that uses 'sangerseq' as input can be replaced by **'SangerSingleRead'**. For example, we can use **'SangerSingleRead'** to run *"chromatogram"*, *'makeBaseCalls'* functions in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html).
-For inherited slots in **'SangerSingleRead'**, please refer to [sangerseqR reference manual](https://bioconductor.org/packages/release/bioc/manuals/sangerseqR/man/sangerseqR.pdf). Here, we show all the slots in **'SangerSingleRead'**
+**'SangerRead'** inherits 'sangerseq' class. It contains all slots in 'sangerseq', so every function that uses 'sangerseq' as input can be replaced by **'SangerRead'**. For example, we can use **'SangerRead'** to run *"chromatogram"*, *'makeBaseCalls'* functions in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html).
+For inherited slots in **'SangerRead'**, please refer to [sangerseqR reference manual](https://bioconductor.org/packages/release/bioc/manuals/sangerseqR/man/sangerseqR.pdf). Here, we show all the slots in **'SangerRead'**
 
 
 ```{r }
 slotNames(singleReadCtor)
 ```
 
-There are two special slots in **'SangerSingleRead'** which are S4 classes defined in this R package.
+There are two special slots in **'SangerRead'** which are S4 classes defined in this R package.
 
 * **`QualityReport`** : Storing quality-related parameters and trimmed results.
 * **`ChromatogramParam`** : Storing chromatogram-related parameters for Shiny app.
@@ -183,20 +183,20 @@ slotNames(singleReadCtor@ChromatogramParam)
 ```
 
 
-## SangerConsensusRead
-**"SangerConsensusRead"** S4 class corresponds to to a contig in Sanger sequencing. It contains all the single reads, the alignment results and the created consensus read etc. We will show how to create a **"SangerConsensusRead"** instance and the slots in this class.
+## SangerContig
+**"SangerContig"** S4 class corresponds to to a contig in Sanger sequencing. It contains all the single reads, the alignment results and the created consensus read etc. We will show how to create a **"SangerContig"** instance and the slots in this class.
 
 ### ABIF Filename Regulation & Input directory regulation
 
-Before creating a **"SangerConsensusRead"** S4 instance, we need to prepare a  directory storing all raw ABIF files in the same consensus group with valid filenames. **Figure 3** shows the directory hierarchy of **"SangerConsensusRead"**.
+Before creating a **"SangerContig"** S4 instance, we need to prepare a  directory storing all raw ABIF files in the same consensus group with valid filenames. **Figure 3** shows the directory hierarchy of **"SangerContig"**.
 
-```{r, out.width = "600px", fig.cap="\\label{fig:figs}'SangerConsensusRead' directory hierarchy", echo=FALSE}
-knitr::include_graphics("figure/Figure_3_SangerConsensusRead_file_structure.png")
+```{r, out.width = "600px", fig.cap="\\label{fig:figs}'SangerContig' directory hierarchy", echo=FALSE}
+knitr::include_graphics("figure/Figure_3_SangerContig_file_structure.png")
 ```
-The `parentDirectory` stores the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in **Figure 4**. The filename regulation for each raw ABIF files are same as filename regulation in **"SangerSingleRead"**; however, users have to pay attention to the [*Number Index*]. The **[*Number Index*]** of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
+The `parentDirectory` stores the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in **Figure 4**. The filename regulation for each raw ABIF files are same as filename regulation in **"SangerRead"**; however, users have to pay attention to the [*Number Index*]. The **[*Number Index*]** of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerConsensusRead'", echo=FALSE}
-knitr::include_graphics("figure/Figure_4_SangerConsensusRead_filename_regulation.png")
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerContig'", echo=FALSE}
+knitr::include_graphics("figure/Figure_4_SangerContig_filename_regulation.png")
 ```
 
 Now, after preparing valid directory, we start to define the parameters. First, we need to define the absolute parent directory, the consensus read name and suffix regular expression for forward as well as reverse read.
@@ -211,9 +211,9 @@ suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 
 ### S4 Instance Creation Example
 
-Now we create the **'SangerConsensusRead'** S4 instance by running *"new"* function. In this example, we provide a reference amino acids sequence and choose Method 1 (M1) *"Logarithmic Scale Trimming"* as our quality trimming approach.
+Now we create the **'SangerContig'** S4 instance by running *"new"* function. In this example, we provide a reference amino acids sequence and choose Method 1 (M1) *"Logarithmic Scale Trimming"* as our quality trimming approach.
 ```{r}
-consensusReadsRef <- new("SangerConsensusRead",
+consensusReadsRef <- new("SangerContig",
                          parentDirectory       = inputFilesParentDir,
                          consensusReadName    = consensusReadName,
                          suffixForwardRegExp   = suffixForwardRegExp,
@@ -230,9 +230,9 @@ consensusReadsRef <- new("SangerConsensusRead",
 ```
 
 
-Same as the previous **'SangerSingleRead'**, we also create a constructor wrapper function for **'SangerConsensusRead'**. The instance created by new and constructor functions are same. In this example, we do not provide a reference amino acids sequence and choose Method 2 (M2) *"Logarithmic Scale Sliding Window Trimming"* as our quality trimming approach.
+Same as the previous **'SangerRead'**, we also create a constructor wrapper function for **'SangerContig'**. The instance created by new and constructor functions are same. In this example, we do not provide a reference amino acids sequence and choose Method 2 (M2) *"Logarithmic Scale Sliding Window Trimming"* as our quality trimming approach.
 ``` {r eval=FALSE}
-consensusReadsNoRef <- SangerConsensusRead(
+consensusReadsNoRef <- SangerContig(
                               parentDirectory       = inputFilesParentDir,
                               consensusReadName    = consensusReadName,
                               suffixForwardRegExp   = suffixForwardRegExp,
@@ -248,44 +248,44 @@ consensusReadsNoRef <- SangerConsensusRead(
 ```
 
 ### Inputs Definition
-The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"**. The **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** are same as the input of **'SangerSingleRead'**. By default, all reads will use the same parameters and users can use the local Shiny app that we provide to explore and change these input parameters. The Shiny app will be discussed in next section.
+The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"**. The **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** are same as the input of **'SangerRead'**. By default, all reads will use the same parameters and users can use the local Shiny app that we provide to explore and change these input parameters. The Shiny app will be discussed in next section.
 
-For more input details, please refer to the **'SangerSingleRead'** section and sangeranalyseR reference manul. Here, we will only show the "Basic Parameters".
+For more input details, please refer to the **'SangerRead'** section and sangeranalyseR reference manul. Here, we will only show the "Basic Parameters".
 
 #### Basic Parameters
 
 * **`inputFilesParentDir`** : The absolute parent directory storing all raw ABIF files. There is no restrictions about this directory but the existance of this directory will be checked.
 * **`consensusReadName`** : The consensus read name for the target reads that are going to be aligned into a consensus read.
-* **`suffixForwardRegExp`** : The suffix regular expression for forward reads in **'SangerConsensusRead'**.
-* **`suffixReverseRegExp`** : The suffix regular expression for reverse reads in **'SangerConsensusRead'**.
+* **`suffixForwardRegExp`** : The suffix regular expression for forward reads in **'SangerContig'**.
+* **`suffixReverseRegExp`** : The suffix regular expression for reverse reads in **'SangerContig'**.
 
 ### Slots Definition
 
-Here, we show all the slots in **'SangerConsensusRead'**. For more details about the meaning of each slot, please refer to sangeranalyseR reference manual.
+Here, we show all the slots in **'SangerContig'**. For more details about the meaning of each slot, please refer to sangeranalyseR reference manual.
 
 ```{r }
 slotNames(consensusReadsRef)
 ```
 
 
-## AlignedConsensusSet
+## SangerAlignment
 
-**"AlignedConsensusSet"** S4 class corresponds to a rebuild genome fragment in Sanger sequencing. It contains all the single reads, the alignment results and the created consensus read etc. We will show how to create a **"AlignedConsensusSet"** instance and the slots in this class.
+**"SangerAlignment"** S4 class corresponds to a rebuild genome fragment in Sanger sequencing. It contains all the single reads, the alignment results and the created consensus read etc. We will show how to create a **"SangerAlignment"** instance and the slots in this class.
 
 ### ABIF Filename Regulation & Input directory regulation
-Before creating a **"AlignedConsensusSet"** S4 instance, we need to prepare a directory storing all raw ABIF files. **Figure 5** shows the directory hierarchy of **"AlignedConsensusSet"**. 
+Before creating a **"SangerAlignment"** S4 instance, we need to prepare a directory storing all raw ABIF files. **Figure 5** shows the directory hierarchy of **"SangerAlignment"**. 
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' directory hierarchy", echo=FALSE}
-knitr::include_graphics("figure/Figure_5_AlignedConsensusSet_file_structure.png")
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'SangerAlignment' directory hierarchy", echo=FALSE}
+knitr::include_graphics("figure/Figure_5_SangerAlignment_file_structure.png")
 ```
 
-The `parentDirectory` is same as **"SangerConsensusRead"** which is the absolute file path storing all raw ABIF files. The difference is that raw ABIF files do not need to be in the first layer inside `parentDirectory`; in other words, it is allowed to have some middle directories separating the ABIF files. **Figure 6** shows the  **"AlignedConsensusSet"** filename regulation and grouping strategy. The ABIF files with the same **[*Consensus Read Name*]** will be categorized into the same group and for each group, a **"SangerConsensusRead"** will be created. **"AlignedConsensusSet"** will be created by these **"SangerConsensusRead"**.
+The `parentDirectory` is same as **"SangerContig"** which is the absolute file path storing all raw ABIF files. The difference is that raw ABIF files do not need to be in the first layer inside `parentDirectory`; in other words, it is allowed to have some middle directories separating the ABIF files. **Figure 6** shows the  **"SangerAlignment"** filename regulation and grouping strategy. The ABIF files with the same **[*Consensus Read Name*]** will be categorized into the same group and for each group, a **"SangerContig"** will be created. **"SangerAlignment"** will be created by these **"SangerContig"**.
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'AlignedConsensusSet' filename regulation", echo=FALSE}
-knitr::include_graphics("figure/Figure_6_AlignedConsensusSet_filename_regulation.png")
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'SangerAlignment' filename regulation", echo=FALSE}
+knitr::include_graphics("figure/Figure_6_SangerAlignment_filename_regulation.png")
 ```
 
-Here is an example. Users only need to define the `parentDirectory`, foward and reverse reads regular expression suffix, and program will recursively search all the root ABIF files inside the `parentDirectory` with the valid filename regulation. These three parameters are the important inputs for creating **"AlignedConsensusSet"**. 
+Here is an example. Users only need to define the `parentDirectory`, foward and reverse reads regular expression suffix, and program will recursively search all the root ABIF files inside the `parentDirectory` with the valid filename regulation. These three parameters are the important inputs for creating **"SangerAlignment"**. 
 
 ```{r}
 inputFilesParentDir <- system.file("extdata", package = "sangeranalyseR")
@@ -295,11 +295,11 @@ suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 
 ### S4 Instance Creation Example
 
-After defining `parentDirectory`, `suffixForwardRegExp`, and `suffixReverseRegExp`, we can create the **"AlignedConsensusSet"**.  
+After defining `parentDirectory`, `suffixForwardRegExp`, and `suffixReverseRegExp`, we can create the **"SangerAlignment"**.  
 ```{r echo = T, results = 'hide', eval= FALSE}
 setOldClass("phylo")
 
-alignedConsensusRef <- new("SangerAlignedConsensusSet",
+alignedConsensusRef <- new("SangerSangerAlignment",
                            parentDirectory       = inputFilesParentDir,
                            suffixForwardRegExp   = suffixForwardRegExp,
                            suffixReverseRegExp   = suffixReverseRegExp,
@@ -316,12 +316,12 @@ alignedConsensusRef <- new("SangerAlignedConsensusSet",
 ```
 
 ### Inputs Definition
-The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** which are same as **'SangerConsensusRead'**. By default, all **'SangerConsensusRead'** in **'AlignedConsensus'** will use the same trimming and chromatogram parameters. We provide Shiny app for users to explore and change these input parameters. Shiny app will be discussed in next section.
+The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** which are same as **'SangerContig'**. By default, all **'SangerContig'** in **'AlignedConsensus'** will use the same trimming and chromatogram parameters. We provide Shiny app for users to explore and change these input parameters. Shiny app will be discussed in next section.
 
-For more input details, please refer to **'SangerSingleRead'**, **'SangerConsensusRead'** and sangeranalyseR reference manul.
+For more input details, please refer to **'SangerRead'**, **'SangerContig'** and sangeranalyseR reference manul.
 
 ### Slots Definition
-Here, we show all the slots in **'AlignedConsensusSet'**. For more details about the meaning of each slot, please refer to sangeranalyseR reference manual.
+Here, we show all the slots in **'SangerAlignment'**. For more details about the meaning of each slot, please refer to sangeranalyseR reference manual.
 ```{r , eval= FALSE}
 slotNames(alignedConsensusRef)
 ```
@@ -329,24 +329,24 @@ slotNames(alignedConsensusRef)
 
 # Shiny App
 
-In sangeranalyseR, we create two interactive Shiny apps which are **'*SangerConsensusRead App*'** and **'*AlignedConsensusSet App*'** for users to check Sanger sequencing data results. These two Shiny apps can be run locally in current R environment. Users need to create a **'SangerConsensusRead'** or an **'AlignedConsensusSet'** S4 instance mentioned above first and use them as input to start the Shiny app. Inside the Shiny app, users can change the input parameters for quality trimming, base calling, chromatogram plotting etc. The results displayed in the app are dynamic based on user input. In this section, we are going to show how to run the Shiny apps.
+In sangeranalyseR, we create two interactive Shiny apps which are **'*SangerContig App*'** and **'*SangerAlignment App*'** for users to check Sanger sequencing data results. These two Shiny apps can be run locally in current R environment. Users need to create a **'SangerContig'** or an **'SangerAlignment'** S4 instance mentioned above first and use them as input to start the Shiny app. Inside the Shiny app, users can change the input parameters for quality trimming, base calling, chromatogram plotting etc. The results displayed in the app are dynamic based on user input. In this section, we are going to show how to run the Shiny apps.
 
-## SangerConsensusRead App
+## SangerContig App
 
-To run **'*SangerConsensusRead App*'**, users have to create a **SangerConsensusRead** instance first. Notice that the input of this function is **"****SangerConsensusRead** instance in a list**"**.
+To run **'*SangerContig App*'**, users have to create a **SangerContig** instance first. Notice that the input of this function is **"****SangerContig** instance in a list**"**.
 Now, we execute the `launchAppConsensusRead` function and create a `RShinySCR` Shiny object.
 ```{r }
 RShinySCR <- launchAppConsensusRead(list(consensusReadsRef))
 ```
-Run the `RShinySCR` in R console to trigger the **'*SangerConsensusRead App*'**. There are two layers in **"SangerConsensusRead"** which are ***"Consensus Read Overview Page"*** and ***"Single Read Page"***
+Run the `RShinySCR` in R console to trigger the **'*SangerContig App*'**. There are two layers in **"SangerContig"** which are ***"Consensus Read Overview Page"*** and ***"Single Read Page"***
 
 ### "Consensus Read Overview Page"
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Initial page for 'SangerConsensusRead App'", echo=FALSE}
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Initial page for 'SangerContig App'", echo=FALSE}
 knitr::include_graphics("figure/Figure_7_.png")
 ```
 
 
-**Figure 7** is the initial page of **'*SangerConsensusRead App*'** which is the **"Consensus Read Overview page"**. In this page, users can see basic information of this consensus read. Notice that there is a red "*Re-calculate consensus read button*". It is highly suggested to click the button before checking the results in order to get the updated information.
+**Figure 7** is the initial page of **'*SangerContig App*'** which is the **"Consensus Read Overview page"**. In this page, users can see basic information of this consensus read. Notice that there is a red "*Re-calculate consensus read button*". It is highly suggested to click the button before checking the results in order to get the updated information.
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} 'Alignment' & 'Difference Data Frame' results", echo=FALSE}
 knitr::include_graphics("figure/Figure_8_.png")
@@ -356,7 +356,7 @@ The information provided in this page includes : *"input parameters"*, *"genetic
 
 ### "Single Read Page"
 
-All reads in **'SangerConsensusRead'** are in *forward* or *reverse* direction. In addition to **"Consensus Read Overview Page"**, there are also two expendable tabs, **"Forward Reads"** and **"Reverse Reads"** storing the corresponding reads in the left-hand side navigation panel. In this example, there are one read in each tab and **Figure 9** shows the **"1 Forward Read page"**. 
+All reads in **'SangerContig'** are in *forward* or *reverse* direction. In addition to **"Consensus Read Overview Page"**, there are also two expendable tabs, **"Forward Reads"** and **"Reverse Reads"** storing the corresponding reads in the left-hand side navigation panel. In this example, there are one read in each tab and **Figure 9** shows the **"1 Forward Read page"**. 
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Initial page for 'Single Read Page'", echo=FALSE}
 knitr::include_graphics("figure/Figure_9_.png")
@@ -416,27 +416,27 @@ To let user browse the trimmed primary/secondary sequences without finding **"Tr
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Save notification popup", echo=FALSE}
 knitr::include_graphics("figure/Figure_20_.png")
 ```
-We have updated the trimming and chromatogram parameters for each read. Now, we need to click "*Re-calculate consensus read button*" to do alignment again. Last but not least, we can save all data into a new **'SangerConsensusRead'** S4 instance by clicking "*Save S4 Object button*". New S4 instance would be saved in ***Rda*** format. Users can run `readRDS` function to load it into current R environment. **Figure 20** shows some hints in the save notification popup.
+We have updated the trimming and chromatogram parameters for each read. Now, we need to click "*Re-calculate consensus read button*" to do alignment again. Last but not least, we can save all data into a new **'SangerContig'** S4 instance by clicking "*Save S4 Object button*". New S4 instance would be saved in ***Rda*** format. Users can run `readRDS` function to load it into current R environment. **Figure 20** shows some hints in the save notification popup.
 
-## AlignedConsensusSet App
+## SangerAlignment App
 
-To run **'*AlignedConsensusSet App*'**, users have to create a **AlignedConsensusSet** instance first. Notice that the input of this function is **"****AlignedConsensusSet** instance in a list**"**.
+To run **'*SangerAlignment App*'**, users have to create a **SangerAlignment** instance first. Notice that the input of this function is **"****SangerAlignment** instance in a list**"**.
 Now, we execute the `launchAppConsensusRead` function and create a `RShinySCR` Shiny object.
 
 ```{r eval= FALSE}
-RShinyACS <- launchAppAlignedConsensusSet(list(alignedConsensusRef))
+RShinyACS <- launchAppSangerAlignment(list(alignedConsensusRef))
 ```
 
-Run `RShinyACS` in R console to trigger the **'*AlignedConsensusSet App*'**. There are three layers in **"AlignedConsensusSet App"** which are ***"Aligned Consensus Set Overview Page"***, ***"Consensus Read Overview Page"*** and ***"Single Read Page"***.
+Run `RShinyACS` in R console to trigger the **'*SangerAlignment App*'**. There are three layers in **"SangerAlignment App"** which are ***"Aligned Consensus Set Overview Page"***, ***"Consensus Read Overview Page"*** and ***"Single Read Page"***.
 
 ### "Aligned Consensus Set Overview Page"
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Initial page for 'AlignedConsensusSet App'", echo=FALSE}
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Initial page for 'SangerAlignment App'", echo=FALSE}
 knitr::include_graphics("figure/Figure_21_.png")
 ```
-**Figure 21** is the initial page and the toppest layer of **'*AlignedConsensusSet App*'**. It provides basic information of **AlignedConsensusSet**, alignment result and classification tree. After updating all the trimmed reads, users need to remember to click "*Re-calculate Algined Consensus Reads button*" to do alignment again. From the left-hand side panel, we can clearly see the hierarchy of the **AlignedConsensusSet** S4 instance and easily access to all reads in it.
+**Figure 21** is the initial page and the toppest layer of **'*SangerAlignment App*'**. It provides basic information of **SangerAlignment**, alignment result and classification tree. After updating all the trimmed reads, users need to remember to click "*Re-calculate Algined Consensus Reads button*" to do alignment again. From the left-hand side panel, we can clearly see the hierarchy of the **SangerAlignment** S4 instance and easily access to all reads in it.
 
-```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Alignment result for all consensus reads from each 'SangerConsensusRead'", echo=FALSE}
+```{r, out.width = "2000px", fig.cap="\\label{fig:figs}Alignment result for all consensus reads from each 'SangerContig'", echo=FALSE}
 knitr::include_graphics("figure/Figure_22_.png")
 ```
 
@@ -446,10 +446,10 @@ knitr::include_graphics("figure/Figure_23_.png")
 Here we show alignment result in **Figure 22** and classification tree in **Figure 23**.
 
 ### "Consensus Read Overview Page"
-This page is same as **"*Consensus Read Overview Page*"** in **'*SangerConsensusRead App*'**. Please refer to the previous to **'*SangerConsensusRead App*'** section.
+This page is same as **"*Consensus Read Overview Page*"** in **'*SangerContig App*'**. Please refer to the previous to **'*SangerContig App*'** section.
 
 ### "Single Read Page"
-This page is same as **"*Single Read Page*"** in **'*SangerConsensusRead App*'**. Please refer to the previous to **'*SangerConsensusRead App*'** section.
+This page is same as **"*Single Read Page*"** in **'*SangerContig App*'**. Please refer to the previous to **'*SangerContig App*'** section.
 
 # Conclusion
 

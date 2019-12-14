@@ -1,22 +1,22 @@
 #' @title QualityReport
 #'
 #' @description  An S4 class for quality report for a SangerRead S4 object
-#' @slot qualityPhredScoresRaw .
-#' @slot qualityPhredScores .
-#' @slot qualityBaseScores .
-#' @slot rawSeqLength .
-#' @slot trimmedSeqLength .
-#' @slot trimmedStartPos .
-#' @slot trimmedFinishPos .
-#' @slot rawMeanQualityScore .
-#' @slot trimmedMeanQualityScore .
-#' @slot rawMinQualityScore .
-#' @slot trimmedMinQualityScore .
-#' @slot remainingRatio .
-#' @slot TrimmingMethod .
-#' @slot M1TrimmingCutoff .
-#' @slot M2CutoffQualityScore .
-#' @slot M2SlidingWindowSize .
+#' @slot qualityPhredScoresRaw The Phred quality scores of each base pairs from abif class PCON.2 in sangerseqR package before base calling.
+#' @slot qualityPhredScores The Phred quality scores of each base pairs after base calling.
+#' @slot qualityBaseScores The probability of incorrect base call of each base pairs. They are calculated from \code{qualityPhredScores}.
+#' @slot rawSeqLength The number of nucleotides of raw primary DNA sequence.
+#' @slot trimmedSeqLength The number of nucleotides of trimeed  primary DNA sequence.
+#' @slot trimmedStartPos The base pair index of trimming start point from 5' end of the sequence.
+#' @slot trimmedFinishPos The base pair index of trimming finish point from 3' end of the sequence.
+#' @slot rawMeanQualityScore The mean quality score of the primary sequence after base calling. In other words, it is the mean of \code{qualityPhredScores}.
+#' @slot trimmedMeanQualityScore The mean quality score of the trimmed primary sequence after base calling.
+#' @slot rawMinQualityScore The minimum quality score of the primary sequence after base calling.
+#' @slot trimmedMinQualityScore The minimum quality score of the trimmed primary sequence after base calling.
+#' @slot remainingRatio The remaining sequence length ratio after trimming.
+#' @slot TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
+#' @slot M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
+#' @slot M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
+#' @slot M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{5}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #'
 #' @name QualityReport-class
 #'
