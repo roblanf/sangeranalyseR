@@ -39,7 +39,7 @@ library(sangeranalyseR)
 
   <li>**Input Parent Directory : **  <span><i>`r dirname(params$SangerAlignment@parentDirectory)`</i></span></li>
 
-  <li>**Trimming Method : **  <span>*`r params$SangerAlignment@contigList[[1]]@trimmingMethodSA`*</span></li>
+  <li>**Trimming Method : **  <span>*`r params$SangerAlignment@contigList[[1]]@trimmingMethodSC`*</span></li>
   
   <li>**Forward Reads Suffix Regex : **  <span>*`r params$SangerAlignment@suffixForwardRegExp`*</span></li>
 

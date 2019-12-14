@@ -24,8 +24,8 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
-        message(">>> outputDir : ", outputDir)
     }
+    message(">>> outputDir : ", outputDir)
     if (dir.exists(outputDir)) {
         shinyOptions(sangerAlignment = list(obj))
         shinyOptions(shinyDirectory = outputDir)
@@ -48,11 +48,14 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
         stop(paste0("\nSelection must be 'all', ",
                     "'alignment' 'contigs','consensusRead' or 'allReads'."))
     }
+    ### ------------------------------------------------------------------------
+    ### Make sure the input directory is not NULL
+    ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
-        message(">>> outputDir : ", outputDir)
     }
+    message(">>> outputDir : ", outputDir)
     message("Start to write 'SangerAlignment' to FASTA format ...")
     ### ------------------------------------------------------------------------
     ### Writing 'contigs alignment' result to FASTA file
@@ -135,11 +138,12 @@ setMethod("generateReportSA", "SangerAlignment",
                    includeSangerRead = TRUE) {
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
+    ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
-        message(">>> outputDir : ", outputDir)
     }
+    message(">>> outputDir : ", outputDir)
     ### ------------------------------------------------------------------------
     ### Make sure the directory is exist (SangerAlignment level)
     ###  => SangerContig, SangerRead level directory will be created recursively

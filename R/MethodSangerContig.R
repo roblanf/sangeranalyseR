@@ -63,9 +63,50 @@ setMethod("updateQualityParam",  "SangerContig",
     }
 })
 
+#' @examples
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
+#' contigName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
+#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
+#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' A_chloroticContig <- SangerContig(
+#'                                  parentDirectory       = inputFilesParentDir,
+#'                                  contigName            = contigName,
+#'                                  suffixForwardRegExp   = suffixForwardRegExp,
+#'                                  suffixReverseRegExp   = suffixReverseRegExp,
+#'                                  TrimmingMethod        = "M1",
+#'                                  M1TrimmingCutoff      = 0.0001,
+#'                                  M2CutoffQualityScore  = NULL,
+#'                                  M2SlidingWindowSize   = NULL,
+#'                                  baseNumPerRow         = 100,
+#'                                  heightPerRow          = 200,
+#'                                  signalRatioCutoff     = 0.33,
+#'                                  showTrimmed           = TRUE)
+#' RShinyCS <- launchAppSC(A_chloroticContig)
+setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
+    ### --------------------------------------------------------------
+    ### Checking SangerContig input parameter is a list containing
+    ### one S4 object.
+    ### --------------------------------------------------------------
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir, recursive = TRUE))
+    }
+    message(">>> outputDir : ", outputDir)
+    if (dir.exists(outputDir)) {
+        shinyOptions(sangerContig = list(obj))
+        shinyOptions(shinyDirectory = outputDir)
+        newSangerContig <-
+            shinyApp(SangerContigUI, SangerContigServer)
+        return(newSangerContig)
+    } else {
+        stop("'", outputDir, "' is not valid. Please check again")
+    }
+})
+
 setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
-                                                        compression_level,
-                                                        selection = "all") {
+                                                   compression_level,
+                                                   selection = "all") {
     ### ------------------------------------------------------------------------
     ### selection can be 'all', 'alignment' 'allReads' 'contig'
     ### ------------------------------------------------------------------------
@@ -76,8 +117,8 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
-        message(">>> outputDir : ", outputDir)
     }
+    message(">>> outputDir : ", outputDir)
     contigName = obj@contigName
     message("Start to write '", contigName, "' to FASTA format ...")
     ### ------------------------------------------------------------------------
@@ -139,47 +180,6 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
     message("\nFinish writing '", contigName, "' to FASTA format")
 })
 
-#' @examples
-#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' contigName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
-#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' A_chloroticContig <- SangerContig(
-#'                                  parentDirectory       = inputFilesParentDir,
-#'                                  contigName            = contigName,
-#'                                  suffixForwardRegExp   = suffixForwardRegExp,
-#'                                  suffixReverseRegExp   = suffixReverseRegExp,
-#'                                  TrimmingMethod        = "M1",
-#'                                  M1TrimmingCutoff      = 0.0001,
-#'                                  M2CutoffQualityScore  = NULL,
-#'                                  M2SlidingWindowSize   = NULL,
-#'                                  baseNumPerRow         = 100,
-#'                                  heightPerRow          = 200,
-#'                                  signalRatioCutoff     = 0.33,
-#'                                  showTrimmed           = TRUE)
-#' RShinyCS <- launchAppSC(A_chloroticContig)
-setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
-    ### --------------------------------------------------------------
-    ### Checking SangerContig input parameter is a list containing
-    ### one S4 object.
-    ### --------------------------------------------------------------
-    if (is.null(outputDir)) {
-        outputDir <- tempdir()
-        suppressWarnings(dir.create(outputDir, recursive = TRUE))
-        message(">>> outputDir : ", outputDir)
-    }
-    if (dir.exists(outputDir)) {
-        shinyOptions(sangerContig = list(obj))
-        shinyOptions(shinyDirectory = outputDir)
-        newSangerContig <-
-            shinyApp(SangerContigUI, SangerContigServer)
-        return(newSangerContig)
-    } else {
-        stop("'", outputDir, "' is not valid. Please check again")
-    }
-})
-
 setMethod("generateReportSC", "SangerContig",
           function(obj, outputDir, includeSangerRead = TRUE,
                    navigationAlignmentFN = NULL) {
@@ -189,8 +189,8 @@ setMethod("generateReportSC", "SangerContig",
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
-        message(">>> outputDir : ", outputDir)
     }
+    message(">>> outputDir : ", outputDir)
     ### ------------------------------------------------------------------------
     ### Make sure the directory is exist (SangerContig level)
     ###  => SangerRead level directory will be created recursively

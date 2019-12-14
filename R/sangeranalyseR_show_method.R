@@ -15,6 +15,12 @@ setMethod('show', 'SangerContig', function(object){
         " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
         " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
         "    Trimming Method SC : ", object@trimmingMethodSC, "\n",
+        "         'minReadsNum' : ", object@minReadsNum, "\n",
+        "       'minReadLength' : ", object@minReadLength, "\n",
+        "     'minFractionCall' : ", object@minFractionCall, "\n",
+        "     'maxFractionLost' : ", object@maxFractionLost, "\n",
+        "    'acceptStopCodons' : ", object@acceptStopCodons, "\n",
+        "        'readingFrame' : ", object@readingFrame, "\n",
         "       Contig Sequence : ", as.character(object@contigSeq), "\n"
     )
 })
@@ -24,6 +30,9 @@ setMethod('show', 'SangerAlignment', function(object){
         "      Parent Directory : ", object@parentDirectory, "\n",
         " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
         " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
+        "    'trimmingMethodSA' : ", object@trimmingMethodSA, "\n",
+        "   'minFractionCallSA' : ", object@minFractionCallSA, "\n",
+        "   'maxFractionLostSA' : ", object@maxFractionLostSA, "\n",
         "     Contigs Consensus : ", as.character(object@contigsConsensus), "\n"
     )
 })
