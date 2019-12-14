@@ -964,7 +964,7 @@ SangerContigServer <- function(input, output, session) {
                 }
                 if (!is.na(strtoi(input$M2SlidingWindowSizeText)) &&
                     strtoi(input$M2SlidingWindowSizeText) > 0 &&
-                    strtoi(input$M2SlidingWindowSizeText) <= 20 &&
+                    strtoi(input$M2SlidingWindowSizeText) <= 40 &&
                     strtoi(input$M2SlidingWindowSizeText) %% 1 ==0) {
                     inputM2SlidingWindowSizeText <- input$M2SlidingWindowSizeText
                 } else {

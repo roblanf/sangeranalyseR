@@ -618,34 +618,48 @@ M2inside_calculate_trimming <-function(qualityPhredScores,
     rawSeqLength <- length(qualityBaseScores)
     rawMeanQualityScore <- mean(qualityPhredScores)
     rawMinQualityScore <- min(qualityPhredScores)
-    qualityPbCutoff <- 10** (M2CutoffQualityScore / (-10.0))
-    remainingIndex <- c()
-    if (M2SlidingWindowSize > 20 || M2SlidingWindowSize < 0 ||
+    if (M2SlidingWindowSize > 40 || M2SlidingWindowSize < 0 ||
         M2SlidingWindowSize%%1!=0 ||
         M2CutoffQualityScore > 60 || M2CutoffQualityScore < 0 ||
         M2CutoffQualityScore%%1!=0) {
         trimmedStartPos = NULL
         trimmedFinishPos = NULL
     } else {
+        ### ------------------------------------------------------------------------
+        ### Find the trimming start point
+        ###  First window that the average score is bigger than threshold score.
+        ###  (Whole window will be kept)
+        ### ------------------------------------------------------------------------
+        totalThresholdScore <- M2CutoffQualityScore * M2SlidingWindowSize
+        trimmedStartPos = 1
+        trimmedFinishPos = 2
         for (i in 1:(rawSeqLength-M2SlidingWindowSize+1)) {
-            meanSLidingWindow <-
-                mean(qualityBaseScores[i:(i+M2SlidingWindowSize-1)])
-            if (meanSLidingWindow < qualityPbCutoff) {
-                remainingIndex <- c(remainingIndex, i)
-                # or ==> i + floor(M2SlidingWindowSize/3)
+            totalScore <-
+                sum(qualityPhredScores[i:(i+M2SlidingWindowSize-1)])
+            if (totalScore > totalThresholdScore) {
+                trimmedStartPos = i
+                break
             }
         }
-        trimmedStartPos = remainingIndex[1]
-        trimmedFinishPos = remainingIndex[length(remainingIndex)]
-        if (is.null(trimmedStartPos) || is.null(trimmedFinishPos)) {
-            trimmedStartPos <- 1
-            trimmedFinishPos <- 2
+        for (i in (trimmedStartPos+M2SlidingWindowSize-1):(rawSeqLength-M2SlidingWindowSize+1)) {
+            totalScore <-
+                sum(qualityPhredScores[i:(i+M2SlidingWindowSize-1)])
+            if (totalScore < totalThresholdScore) {
+                # Keep all base pairs in the previous window.
+                trimmedFinishPos = i + M2SlidingWindowSize - 2
+                break
+            }
         }
+        if (trimmedStartPos == (rawSeqLength-M2SlidingWindowSize+1) ||
+            trimmedStartPos == trimmedFinishPos) {
+            trimmedStartPos = 1
+            trimmedFinishPos = 2
+        }
+        trimmedSeqLength = trimmedFinishPos - trimmedStartPos
         trimmedQualityPhredScore <-
-            qualityPhredScores[trimmedStartPos:trimmedFinishPos]
+            qualityPhredScores[(trimmedStartPos+1):trimmedFinishPos]
         trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
         trimmedMinQualityScore <- min(trimmedQualityPhredScore)
-        trimmedSeqLength = trimmedFinishPos - trimmedStartPos
         remainingRatio = trimmedSeqLength / rawSeqLength
     }
     return(list("rawSeqLength" = rawSeqLength,
