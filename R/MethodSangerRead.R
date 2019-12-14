@@ -41,12 +41,23 @@ setMethod("updateQualityParam",  "SangerRead",
               ### Updating SangerRead quality parameters
               ###   Trimming parameters is checked in 'QualityReport' method
               ### --------------------------------------------------------------
-              object@QualityReport <- updateQualityParam(object@QualityReport,
-                                                         TrimmingMethod,
-                                                         M1TrimmingCutoff,
-                                                         M2CutoffQualityScore,
-                                                         M2SlidingWindowSize)
-              return(object)
+              errors <- character()
+              errors <- checkTrimParam(TrimmingMethod,
+                                       M1TrimmingCutoff,
+                                       M2CutoffQualityScore,
+                                       M2SlidingWindowSize,
+                                       errors)
+              if (length(errors) == 0) {
+                  object@QualityReport <-
+                      updateQualityParam(object@QualityReport,
+                                         TrimmingMethod,
+                                         M1TrimmingCutoff,
+                                         M2CutoffQualityScore,
+                                         M2SlidingWindowSize)
+                  return(object)
+              } else {
+                  stop(errors)
+              }
           })
 
 setMethod("MakeBaseCalls", "SangerRead",

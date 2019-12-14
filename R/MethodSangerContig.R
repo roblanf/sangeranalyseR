@@ -53,27 +53,38 @@ setMethod("updateQualityParam",  "SangerContig",
     ### Updating forward read quality parameters
     ### Quality parameters is checked in 'QualityReport' method
     ### ------------------------------------------------------------------------
-    # qualityBaseScoresFD <-
-    #     object@forwardReadSangerseq@QualityReport@qualityBaseScores
-    object@forwardReadSangerseq <-
-        updateQualityParam(object@forwardReadSangerseq,
-                           TrimmingMethod,
-                           M1TrimmingCutoff,
-                           M2CutoffQualityScore,
-                           M2SlidingWindowSize)
-    ### ------------------------------------------------------------------------
-    ### Updating reverse read quality parameters
-    ### Quality parameters is checked in 'QualityReport' method
-    ### ------------------------------------------------------------------------
-    object@reverseReadSangerseq <-
-        updateQualityParam(object@reverseReadSangerseq,
-                           TrimmingMethod,
-                           M1TrimmingCutoff,
-                           M2CutoffQualityScore,
-                           M2SlidingWindowSize)
-    return(object)
+    errors <- character()
+    errors <- checkTrimParam(TrimmingMethod,
+                             M1TrimmingCutoff,
+                             M2CutoffQualityScore,
+                             M2SlidingWindowSize,
+                             errors)
+    if (length(errors) == 0) {
+        newForwardReadList <- sapply(object@forwardReadList,
+                                     function(forwardRead) {
+            forwardRead <-
+                updateQualityParam(forwardRead,
+                                   TrimmingMethod         = TrimmingMethod,
+                                   M1TrimmingCutoff       = M1TrimmingCutoff,
+                                   M2CutoffQualityScore   = M2CutoffQualityScore,
+                                   M2SlidingWindowSize    = M2SlidingWindowSize)
+        })
+        object@forwardReadList <- newForwardReadList
+        newReverseReadList <- sapply(object@reverseReadList,
+                                     function(reverseRead) {
+            updforwardRead <-
+                updateQualityParam(reverseRead,
+                                   TrimmingMethod         = TrimmingMethod,
+                                   M1TrimmingCutoff       = M1TrimmingCutoff,
+                                   M2CutoffQualityScore   = M2CutoffQualityScore,
+                                   M2SlidingWindowSize    = M2SlidingWindowSize)
+        })
+        object@reverseReadList <- newReverseReadList
+        return(object)
+    } else {
+        stop(errors)
+    }
 })
-
 
 setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
                                                         compression_level,

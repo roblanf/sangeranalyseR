@@ -113,4 +113,4 @@ setMethod("updateQualityParam",  "QualityReport",
               } else {
                   stop(errors)
               }
-          })
+})
