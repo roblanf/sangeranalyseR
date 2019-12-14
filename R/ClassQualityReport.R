@@ -1,6 +1,7 @@
 #' @title QualityReport
 #'
-#' @description  An S4 class for quality report for a SangerRead S4 object
+#' @description  An S4 class storing quality related inputs and results in a SangerRead S4 object.
+#'
 #' @slot qualityPhredScoresRaw The Phred quality scores of each base pairs from abif class PCON.2 in sangerseqR package before base calling.
 #' @slot qualityPhredScores The Phred quality scores of each base pairs after base calling.
 #' @slot qualityBaseScores The probability of incorrect base call of each base pairs. They are calculated from \code{qualityPhredScores}.

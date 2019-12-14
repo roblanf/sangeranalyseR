@@ -1,7 +1,6 @@
 #' @title SangerContig
 #'
-#' @description  An S4 class for storing multiple single reads to build up a
-#'  sanger contig
+#' @description  An S4 class containing forward and reverse SangerRead lists and alignment, consensus read results which corresponds to a contig in Sanger sequencing.
 #'
 #' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
 #' @slot contigName The contig name of all the reads in \code{parentDirectory}.
@@ -16,15 +15,15 @@
 #' @slot maxFractionLost Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.
 #' @slot geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @slot acceptStopCodons The logical value \code{TRUE} or \code{FALSE}. \code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; \code{FALSE}: reject reads with stop codons. If \code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).
-#' @slot readingFrame \code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{ref.aa.seq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
+#' @slot readingFrame \code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
 #' @slot contigSeq The consensus read of all SangerRead S4 instance in DNAString object.
-#' @slot alignment The alignment of all SangerRead S4 instance in DNAStringSet object.
-#' @slot differencesDF
-#' @slot distanceMatrix
-#' @slot dendrogram
-#' @slot indelsDF
-#' @slot stopCodonsDF
-#' @slot secondaryPeakDF
+#' @slot alignment The alignment of all SangerRead S4 instance with the called consensus sequence in DNAStringSet object. Users can use BrowseSeqs() to view the alignment.
+#' @slot differencesDF A data frame of the number of pairwise differences between each read and the consensus sequence, as well as the number of bases in each input read that did not contribute to the consensus sequence. It can assist in detecting incorrect reads, or reads with a lot of errors.
+#' @slot distanceMatrix A distance matrix of genetic distances (corrected with the JC model) between all of the input reads.
+#' @slot dendrogram A list storing cluster groups in a data frame and a dendrogram object depicting the distance.matrix. Users can use plot() to see the dendrogram.
+#' @slot indelsDF If users specified a reference sequence via \code{refAminoAcidSeq}, then this will be a data frame describing the number of indels and deletions that were made to each of the input reads in order to correct frameshift mutations.
+#' @slot stopCodonsDF If users specified a reference sequence via \code{refAminoAcidSeq}, then this will be a data frame describing the number of stop codons in each read.
+#' @slot secondaryPeakDF A data frame with one row for each column in the alignment that contained more than one secondary peak. The data frame has three columns: the column number of the alignment; the number of secondary peaks in that column; and the bases (with IUPAC ambiguity codes representing secondary peak calls) in that column represented as a string.
 #'
 #' @name SangerContig-class
 #'

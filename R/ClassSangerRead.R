@@ -1,6 +1,6 @@
 #' @title SangerRead
 #'
-#' @description  An S4 class extending sangerseq S4 class
+#' @description  An S4 class extending sangerseq S4 class which corresponds to a single ABIF file in Sanger sequencing.
 #'
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @slot readFileName The filename of the target ABIF file.
@@ -186,7 +186,7 @@ setMethod("initialize",
                   ChromatogramParam <- new("ChromatogramParam",
                                            baseNumPerRow     = baseNumPerRow,
                                            heightPerRow      = heightPerRow,
-                                           signalRatioCutoff = signalRatioCutoff,
+                                           signalRatioCutoff =signalRatioCutoff,
                                            showTrimmed       = showTrimmed)
 
                   AASeqResult <- calculateAASeq (primarySeq, geneticCode)
