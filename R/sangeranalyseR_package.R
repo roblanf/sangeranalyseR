@@ -12,7 +12,7 @@
 #' @importFrom DECIPHER AlignSeqs AlignTranslation ConsensusSequence
 #'               CorrectFrameshifts DistanceMatrix IdClusters RemoveGaps
 #' @importFrom Biostrings DNAStringSet GENETIC_CODE trinucleotideFrequency
-#'               reverseComplement translate mergeIUPACLetters
+#'               reverseComplement translate writeXStringSet
 #' @importFrom DT dataTableOutput
 #' @importFrom zeallot
 #' @importFrom excelR

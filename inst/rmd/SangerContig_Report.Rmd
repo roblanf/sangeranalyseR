@@ -46,7 +46,7 @@ library(sangeranalyseR)
 
   <li>**Contig Name : **  <span><i>`r basename(params$SangerContig@contigName)`</i></span></li>
 
-  <li>**Trimming Method : **  <span>*`r params$SangerContig@forwardReadList[[1]]@QualityReport@TrimmingMethod`*</span></li>
+  <li>**Trimming Method : **  <span>*`r params$SangerContig@trimmingMethodSC`*</span></li>
   
   <li>**Forward Reads Suffix Regex : **  <span>*`r params$SangerContig@suffixForwardRegExp`*</span></li>
 

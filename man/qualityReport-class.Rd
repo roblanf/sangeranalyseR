@@ -5,42 +5,42 @@
 \alias{QualityReport-class}
 \title{QualityReport}
 \description{
-An S4 class for quality report for a SangerRead S4 object
+An S4 class storing quality related inputs and results in a SangerRead S4 object.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{qualityPhredScoresRaw}}{.}
+\item{\code{qualityPhredScoresRaw}}{The Phred quality scores of each base pairs from abif class PCON.2 in sangerseqR package before base calling.}
 
-\item{\code{qualityPhredScores}}{.}
+\item{\code{qualityPhredScores}}{The Phred quality scores of each base pairs after base calling.}
 
-\item{\code{qualityBaseScores}}{.}
+\item{\code{qualityBaseScores}}{The probability of incorrect base call of each base pairs. They are calculated from \code{qualityPhredScores}.}
 
-\item{\code{rawSeqLength}}{.}
+\item{\code{rawSeqLength}}{The number of nucleotides of raw primary DNA sequence.}
 
-\item{\code{trimmedSeqLength}}{.}
+\item{\code{trimmedSeqLength}}{The number of nucleotides of trimeed  primary DNA sequence.}
 
-\item{\code{trimmedStartPos}}{.}
+\item{\code{trimmedStartPos}}{The base pair index of trimming start point from 5' end of the sequence.}
 
-\item{\code{trimmedFinishPos}}{.}
+\item{\code{trimmedFinishPos}}{The base pair index of trimming finish point from 3' end of the sequence.}
 
-\item{\code{rawMeanQualityScore}}{.}
+\item{\code{rawMeanQualityScore}}{The mean quality score of the primary sequence after base calling. In other words, it is the mean of \code{qualityPhredScores}.}
 
-\item{\code{trimmedMeanQualityScore}}{.}
+\item{\code{trimmedMeanQualityScore}}{The mean quality score of the trimmed primary sequence after base calling.}
 
-\item{\code{rawMinQualityScore}}{.}
+\item{\code{rawMinQualityScore}}{The minimum quality score of the primary sequence after base calling.}
 
-\item{\code{trimmedMinQualityScore}}{.}
+\item{\code{trimmedMinQualityScore}}{The minimum quality score of the trimmed primary sequence after base calling.}
 
-\item{\code{remainingRatio}}{.}
+\item{\code{remainingRatio}}{The remaining sequence length ratio after trimming.}
 
-\item{\code{TrimmingMethod}}{.}
+\item{\code{TrimmingMethod}}{The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.}
 
-\item{\code{M1TrimmingCutoff}}{.}
+\item{\code{M1TrimmingCutoff}}{The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.}
 
-\item{\code{M2CutoffQualityScore}}{.}
+\item{\code{M2CutoffQualityScore}}{The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.}
 
-\item{\code{M2SlidingWindowSize}}{.}
+\item{\code{M2SlidingWindowSize}}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{5}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
 }}
 
 \examples{

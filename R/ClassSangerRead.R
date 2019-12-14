@@ -28,24 +28,24 @@
 #' A_chloroticaFdFN <- file.path(inputFilesPath,
 #'                               "Allolobophora_chlorotica",
 #'                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
-#' A_chloroticaRead <- new("SangerRead",
-#'                         readFeature           = "Forward Read",
-#'                         readFileName          = A_chloroticaFdFN,
-#'                         geneticCode           = GENETIC_CODE,
-#'                         TrimmingMethod        = "M1",
-#'                         M1TrimmingCutoff      = 0.0001,
-#'                         M2CutoffQualityScore  = NULL,
-#'                         M2SlidingWindowSize   = NULL,
-#'                         baseNumPerRow         = 100,
-#'                         heightPerRow          = 200,
-#'                         signalRatioCutoff     = 0.33,
-#'                         showTrimmed           = TRUE)
+#' sangerRead <- new("SangerRead",
+#'                    readFeature           = "Forward Read",
+#'                    readFileName          = A_chloroticaFdFN,
+#'                    geneticCode           = GENETIC_CODE,
+#'                    TrimmingMethod        = "M1",
+#'                    M1TrimmingCutoff      = 0.0001,
+#'                    M2CutoffQualityScore  = NULL,
+#'                    M2SlidingWindowSize   = NULL,
+#'                    baseNumPerRow         = 100,
+#'                    heightPerRow          = 200,
+#'                    signalRatioCutoff     = 0.33,
+#'                    showTrimmed           = TRUE)
 setClass(
     "SangerRead",
-    ### -------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     ### Input type of each variable of 'SangerMergeReads'.
     ###     * Inherit from 'sangerseq' from sangerseqR.
-    ### -------------------------------------------------------------------
+    ### ------------------------------------------------------------------------
     contains="sangerseq",
     slots=c(readFeature         = "character",
             readFileName        = "character",
@@ -62,7 +62,6 @@ setClass(
             peakAmpMatrixRaw    = "matrix"
             )
 ) -> SangerRead
-
 
 ### ============================================================================
 ### Overwrite initialize for SangerRead (New constructor)

@@ -10,8 +10,7 @@ SangerContigServer <- function(input, output, session) {
     SangerContig <- getShinyOption("sangerContig")
     shinyDirectory <- getShinyOption("shinyDirectory")
     SangerContig <- SangerContig[[1]]
-    trimmingMethod <- SangerContig@forwardReadList[[1]]@
-        QualityReport@TrimmingMethod
+    trimmingMethod <- SangerContig@trimmingMethodSC
     if (trimmingMethod == "M1") {
         trimmingMethodName = "Method 1:
                                'Logarithmic Scale Trimming'"
@@ -913,8 +912,7 @@ SangerContigServer <- function(input, output, session) {
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(readIndex))) {
-            if (SangerContig@forwardReadList[[1]]@
-                QualityReport@TrimmingMethod == "M1") {
+            if (SangerContig@trimmingMethodSC == "M1") {
                 if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
                     as.numeric(input$M1TrimmingCutoffText) > 0 &&
                     as.numeric(input$M1TrimmingCutoffText) <= 1) {
@@ -922,7 +920,6 @@ SangerContigServer <- function(input, output, session) {
                 } else {
                     inputM1TrimmingCutoffText <- 0.0001
                 }
-
                 if (directionParam == "Forward") {
                     ### --------------------------------------------------------
                     ### Start M1 trimming calculation
@@ -956,8 +953,7 @@ SangerContigServer <- function(input, output, session) {
                         SangerContig@reverseReadList[[readIndex]]@
                         QualityReport@M1TrimmingCutoff
                 }
-            } else if (SangerContig@forwardReadList[[1]]@
-                       QualityReport@TrimmingMethod == "M2") {
+            } else if (SangerContig@trimmingMethodSC == "M2") {
                 if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
                     strtoi(input$M2CutoffQualityScoreText) > 0 &&
                     strtoi(input$M2CutoffQualityScoreText) <= 60 &&
@@ -1459,8 +1455,7 @@ SangerContigServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(readIndex))) {
             ## For method, everyone is same, so just pick forward one.
-            if (SangerContig@forwardReadList[[1]]@
-                QualityReport@TrimmingMethod == "M1") {
+            if (SangerContig@trimmingMethodSC == "M1") {
                 if (directionParam == "Forward") {
                     if (is.null(SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@M1TrimmingCutoff)) {
@@ -1486,8 +1481,7 @@ SangerContigServer <- function(input, output, session) {
                            ),
                     ),
                 )
-            } else if (SangerContig@forwardReadList[[1]]@
-                       QualityReport@TrimmingMethod == "M2") {
+            } else if (SangerContig@trimmingMethodSC == "M2") {
                 if (directionParam == "Forward") {
                     if (is.null(SangerContig@forwardReadList[[readIndex]]@
                                 QualityReport@M2CutoffQualityScore)) {

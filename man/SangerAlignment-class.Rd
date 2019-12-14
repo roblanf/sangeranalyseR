@@ -5,49 +5,53 @@
 \alias{SangerAlignment-class}
 \title{SangerAlignment}
 \description{
-An S4 class for storing multiple single consensus reads to
+An S4 class containing SangerContigs lists and contigs alignment results which corresponds to a final alignment in Sanger sequencing.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{parentDirectory}}{.}
+\item{\code{parentDirectory}}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.}
 
-\item{\code{suffixReverseRegExp}}{.}
+\item{\code{suffixForwardRegExp}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.}
 
-\item{\code{minFractionCallSA}}{.}
+\item{\code{suffixReverseRegExp}}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.}
 
-\item{\code{maxFractionLostSA}}{.}
+\item{\code{trimmingMethodSA}}{The read trimming method for all SangerRead S4 instances in SangerAlignment. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerReads must have the same trimming method.}
 
-\item{\code{geneticCode}}{.}
+\item{\code{minFractionCallSA}}{Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.}
 
-\item{\code{refAminoAcidSeq}}{.}
+\item{\code{maxFractionLostSA}}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.}
 
-\item{\code{contigList}}{.}
+\item{\code{geneticCode}}{Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
 
-\item{\code{contigsConsensus}}{.}
+\item{\code{refAminoAcidSeq}}{An amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand. The default value is \code{""}.}
 
-\item{\code{contigsAlignment}}{.}
+\item{\code{contigList}}{A list storing all SangerContigs S4 instances.}
 
-\item{\code{contigsTree}}{.}
+\item{\code{contigsConsensus}}{The consensus read of all SangerContig S4 instances in DNAString object.}
+
+\item{\code{contigsAlignment}}{The alignment of all SangerContig S4 instances with the called consensus sequence in DNAStringSet object. Users can use BrowseSeqs() to view the alignment.}
+
+\item{\code{contigsTree}}{A phylo instance returned by bionj function in ape package. It can be used to draw the tree.}
 }}
 
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-newAlignment <- new("SangerAlignment",
-                    parentDirectory       = rawDataDir,
-                    suffixForwardRegExp   = suffixForwardRegExp,
-                    suffixReverseRegExp   = suffixReverseRegExp,
-                    refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-                    TrimmingMethod        = "M2",
-                    M1TrimmingCutoff      = NULL,
-                    M2CutoffQualityScore  = 40,
-                    M2SlidingWindowSize   = 10,
-                    baseNumPerRow         = 100,
-                    heightPerRow          = 200,
-                    signalRatioCutoff     = 0.33,
-                    showTrimmed           = TRUE)
+sangerAlignment <- new("SangerAlignment",
+                        parentDirectory       = rawDataDir,
+                        suffixForwardRegExp   = suffixForwardRegExp,
+                        suffixReverseRegExp   = suffixReverseRegExp,
+                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                        TrimmingMethod        = "M2",
+                        M1TrimmingCutoff      = NULL,
+                        M2CutoffQualityScore  = 40,
+                        M2SlidingWindowSize   = 10,
+                        baseNumPerRow         = 100,
+                        heightPerRow          = 200,
+                        signalRatioCutoff     = 0.33,
+                        showTrimmed           = TRUE)
 }
 \author{
 Kuan-Hao Chao

@@ -5,19 +5,56 @@
 \alias{SangerContig-class}
 \title{SangerContig}
 \description{
-An S4 class for storing multiple single reads to build up a
- sanger contig
+An S4 class containing forward and reverse SangerRead lists and alignment, consensus read results which corresponds to a contig in Sanger sequencing.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{contigName}}{.}
+\item{\code{parentDirectory}}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.}
 
-\item{\code{suffixForwardRegExp}}{.}
+\item{\code{contigName}}{The contig name of all the reads in \code{parentDirectory}.}
 
-\item{\code{suffixReverseRegExp}}{.}
+\item{\code{suffixForwardRegExp}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.}
 
-\item{\code{secondaryPeakDF}}{}
+\item{\code{suffixReverseRegExp}}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.}
+
+\item{\code{forwardReadList}}{The list of SangerRead S4 instances which are all forward reads.}
+
+\item{\code{reverseReadList}}{The list of SangerRead S4 instances which are all reverse reads.}
+
+\item{\code{trimmingMethodSC}}{The read trimming method for all SangerRead S4 instances in SangerContig. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerRead must have the same trimming method.}
+
+\item{\code{minReadsNum}}{The minimum number of reads required to make a consensus sequence, must be 2 or more. The default value is \code{2}.}
+
+\item{\code{minReadLength}}{Reads shorter than this will not be included in the readset. The default \code{20} means that all reads with length of 20 or more will be included. Note that this is the length of a read after it has been trimmed.}
+
+\item{\code{refAminoAcidSeq}}{An amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand. The default value is \code{""}.}
+
+\item{\code{minFractionCall}}{Minimum fraction of the sequences required to call a consensus sequence for SangerContig at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.}
+
+\item{\code{maxFractionLost}}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerContig (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.}
+
+\item{\code{geneticCode}}{Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
+
+\item{\code{acceptStopCodons}}{The logical value \code{TRUE} or \code{FALSE}. \code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; \code{FALSE}: reject reads with stop codons. If \code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).}
+
+\item{\code{readingFrame}}{\code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.}
+
+\item{\code{contigSeq}}{The consensus read of all SangerRead S4 instances in DNAString object.}
+
+\item{\code{alignment}}{The alignment of all SangerRead S4 instances with the called consensus sequence in DNAStringSet object. Users can use BrowseSeqs() to view the alignment.}
+
+\item{\code{differencesDF}}{A data frame of the number of pairwise differences between each read and the consensus sequence, as well as the number of bases in each input read that did not contribute to the consensus sequence. It can assist in detecting incorrect reads, or reads with a lot of errors.}
+
+\item{\code{distanceMatrix}}{A distance matrix of genetic distances (corrected with the JC model) between all of the input reads.}
+
+\item{\code{dendrogram}}{A list storing cluster groups in a data frame and a dendrogram object depicting the distance.matrix. Users can use plot() to see the dendrogram.}
+
+\item{\code{indelsDF}}{If users specified a reference sequence via \code{refAminoAcidSeq}, then this will be a data frame describing the number of indels and deletions that were made to each of the input reads in order to correct frameshift mutations.}
+
+\item{\code{stopCodonsDF}}{If users specified a reference sequence via \code{refAminoAcidSeq}, then this will be a data frame describing the number of stop codons in each read.}
+
+\item{\code{secondaryPeakDF}}{A data frame with one row for each column in the alignment that contained more than one secondary peak. The data frame has three columns: the column number of the alignment; the number of secondary peaks in that column; and the bases (with IUPAC ambiguity codes representing secondary peak calls) in that column represented as a string.}
 }}
 
 \examples{
@@ -26,20 +63,20 @@ inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
 contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-A_chloroticContig <- new("SangerContig",
-                          parentDirectory       = inputFilesParentDir,
-                          contigName            = contigName,
-                          suffixForwardRegExp   = suffixForwardRegExp,
-                          suffixReverseRegExp   = suffixReverseRegExp,
-                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-                          TrimmingMethod        = "M2",
-                          M1TrimmingCutoff      = NULL,
-                          M2CutoffQualityScore  = 40,
-                          M2SlidingWindowSize   = 10,
-                          baseNumPerRow         = 100,
-                          heightPerRow          = 200,
-                          signalRatioCutoff     = 0.33,
-                          showTrimmed           = TRUE)
+sangerContig <- new("SangerContig",
+                     parentDirectory       = inputFilesParentDir,
+                     contigName            = contigName,
+                     suffixForwardRegExp   = suffixForwardRegExp,
+                     suffixReverseRegExp   = suffixReverseRegExp,
+                     refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                     TrimmingMethod        = "M2",
+                     M1TrimmingCutoff      = NULL,
+                     M2CutoffQualityScore  = 40,
+                     M2SlidingWindowSize   = 10,
+                     baseNumPerRow         = 100,
+                     heightPerRow          = 200,
+                     signalRatioCutoff     = 0.33,
+                     showTrimmed           = TRUE)
 }
 \author{
 Kuan-Hao Chao

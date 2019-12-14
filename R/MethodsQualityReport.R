@@ -1,5 +1,5 @@
 ### ============================================================================
-### Plotting quality for each base for "QualityReport" S4 object
+### Preplotting quality for each base for "QualityReport" S4 object
 ### ============================================================================
 setMethod("preQualityBasePlot",  "QualityReport", function(object, readFeature){
     trimmedStartPos = object@trimmedStartPos
@@ -84,23 +84,32 @@ setMethod("updateQualityParam",  "QualityReport",
                                                       M2CutoffQualityScore,
                                                       M2SlidingWindowSize)
                   }
-                  ### --------------------------------------------------------------
+                  ### ----------------------------------------------------------
                   ### Updating QualityReport quality parameters
-                  ### --------------------------------------------------------------
+                  ### ----------------------------------------------------------
                   object@TrimmingMethod <- TrimmingMethod
                   object@M1TrimmingCutoff <- M1TrimmingCutoff
                   object@M2CutoffQualityScore <- M2CutoffQualityScore
                   object@M2SlidingWindowSize <- M2SlidingWindowSize
 
-                  object@rawSeqLength <- trimmingPos[["rawSeqLength"]]
-                  object@rawMeanQualityScore <- trimmingPos[["rawMeanQualityScore"]]
-                  object@rawMinQualityScore <- trimmingPos[["rawMinQualityScore"]]
-                  object@trimmedStartPos <- trimmingPos[["trimmedStartPos"]]
-                  object@trimmedFinishPos <- trimmingPos[["trimmedFinishPos"]]
-                  object@trimmedSeqLength <- trimmingPos[["trimmedSeqLength"]]
-                  object@trimmedMeanQualityScore <- trimmingPos[["trimmedMeanQualityScore"]]
-                  object@trimmedMinQualityScore <- trimmingPos[["trimmedMinQualityScore"]]
-                  object@remainingRatio <- trimmingPos[["remainingRatio"]]
+                  object@rawSeqLength <-
+                      trimmingPos[["rawSeqLength"]]
+                  object@rawMeanQualityScore <-
+                      trimmingPos[["rawMeanQualityScore"]]
+                  object@rawMinQualityScore <-
+                      trimmingPos[["rawMinQualityScore"]]
+                  object@trimmedStartPos <-
+                      trimmingPos[["trimmedStartPos"]]
+                  object@trimmedFinishPos <-
+                      trimmingPos[["trimmedFinishPos"]]
+                  object@trimmedSeqLength <-
+                      trimmingPos[["trimmedSeqLength"]]
+                  object@trimmedMeanQualityScore <-
+                      trimmingPos[["trimmedMeanQualityScore"]]
+                  object@trimmedMinQualityScore <-
+                      trimmingPos[["trimmedMinQualityScore"]]
+                  object@remainingRatio <-
+                      trimmingPos[["remainingRatio"]]
                   return(object)
               } else {
                   stop(errors)

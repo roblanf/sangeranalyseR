@@ -1,31 +1,4 @@
 ### ============================================================================
-### Plotting trimmed and remaining ratio for "SangerContig" S4 object
-### ============================================================================
-#' @example
-#' load("data/A_chloroticaConsensusRead.RDdata")
-#' trimmingRatioPlot(A_chloroticaConsensusRead)
-setMethod("trimmingRatioPlot",  "SangerContig", function(object){
-    ### ------------------------------------------------------------------------
-    ### Trimmed ratio plot for forward read
-    ### ------------------------------------------------------------------------
-    fdQualityReportObject = object@forwardReadSangerseq@QualityReport
-    fdPlotting <- preTrimmingRatioPlot(fdQualityReportObject)
-
-    ### ------------------------------------------------------------------------
-    ### Trimmed ratio plot for reverse read
-    ### ------------------------------------------------------------------------
-    rvQualityReportObject = object@reverseReadSangerseq@QualityReport
-    rvPlotting <- preTrimmingRatioPlot(rvQualityReportObject)
-
-    ### ------------------------------------------------------------------------
-    ### Grid plotting for forward and reverse reads
-    ### ------------------------------------------------------------------------
-    grid.arrange(fdPlotting, rvPlotting, ncol=2)
-})
-
-
-
-### ============================================================================
 ### Plotting quality for each base for "SangerContig" S4 object
 ### ============================================================================
 #' @example
@@ -48,9 +21,9 @@ setMethod("qualityBasePlot",  "SangerContig", function(object){
 })
 
 
-## ============================================================================
+## =============================================================================
 ## Updating quality parameters for SangerContig object.
-## ============================================================================
+## =============================================================================
 #' @example
 #' load("data/A_chloroticaConsensusRead.RDdata")
 #' trimmingRatioPlot(A_chloroticaConsensusRead)
@@ -78,6 +51,7 @@ setMethod("updateQualityParam",  "SangerContig",
                    M2SlidingWindowSize    = NULL){
     ### ------------------------------------------------------------------------
     ### Updating forward read quality parameters
+    ### Quality parameters is checked in 'QualityReport' method
     ### ------------------------------------------------------------------------
     # qualityBaseScoresFD <-
     #     object@forwardReadSangerseq@QualityReport@qualityBaseScores
@@ -87,9 +61,9 @@ setMethod("updateQualityParam",  "SangerContig",
                            M1TrimmingCutoff,
                            M2CutoffQualityScore,
                            M2SlidingWindowSize)
-
     ### ------------------------------------------------------------------------
     ### Updating reverse read quality parameters
+    ### Quality parameters is checked in 'QualityReport' method
     ### ------------------------------------------------------------------------
     object@reverseReadSangerseq <-
         updateQualityParam(object@reverseReadSangerseq,
@@ -191,35 +165,42 @@ setMethod("writeFASTA", "SangerContig", function(obj, outputDir, compress,
 #'                                  heightPerRow          = 200,
 #'                                  signalRatioCutoff     = 0.33,
 #'                                  showTrimmed           = TRUE)
-#' RShinyCS <- launchAppSangerContig(A_chloroticContig)
-setMethod("launchAppSangerContig", "SangerContig",
-          function(obj, outputDir = NULL) {
-              ### ------------------------------------------------------------------------
-              ### Checking SangerContig input parameter is a list containing
-              ### one S4 object.
-              ### ------------------------------------------------------------------------
-              if (is.null(outputDir)) {
-                  outputDir <- tempdir()
-                  suppressWarnings(dir.create(outputDir))
-              }
-              if (dir.exists(outputDir)) {
-                  shinyOptions(sangerContig = list(obj))
-                  shinyOptions(shinyDirectory = outputDir)
-                  newSangerContig <- shinyApp(SangerContigUI, SangerContigServer)
-                  return(newSangerContig)
-              } else {
-                  stop("'", outputDir, "' is not valid. Please check again")
-              }
+#' RShinyCS <- launchAppSC(A_chloroticContig)
+setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
+    ### --------------------------------------------------------------
+    ### Checking SangerContig input parameter is a list containing
+    ### one S4 object.
+    ### --------------------------------------------------------------
+    if (is.null(outputDir)) {
+        outputDir <- tempdir()
+        suppressWarnings(dir.create(outputDir))
+    }
+    if (dir.exists(outputDir)) {
+        shinyOptions(sangerContig = list(obj))
+        shinyOptions(shinyDirectory = outputDir)
+        newSangerContig <-
+            shinyApp(SangerContigUI, SangerContigServer)
+        return(newSangerContig)
+    } else {
+        stop("'", outputDir, "' is not valid. Please check again")
+    }
 })
 
 setMethod("generateReportSC", "SangerContig",
           function(obj, outputDir, includeSangerRead = TRUE,
                    navigationAlignmentFN = NULL) {
+    ### ------------------------------------------------------------------------
+    ### Make sure the input directory is not NULL
+    ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir))
     }
 
+    ### ------------------------------------------------------------------------
+    ### Make sure the directory is exist (SangerContig level)
+    ###  => SangerRead level directory will be created recursively
+    ### ------------------------------------------------------------------------
     outputDirSC <- file.path(outputDir, obj@contigName)
     if (!dir.exists(outputDirSC)) {
         suppressWarnings(dir.create(outputDirSC, recursive = TRUE))
@@ -233,11 +214,11 @@ setMethod("generateReportSC", "SangerContig",
     reverseReads <- obj@reverseReadList
 
     if(includeSangerRead) {
-        forwardReadFN <- sapply(forwardReads, generateReport,
+        forwardReadFN <- sapply(forwardReads, generateReportSR,
                                 outputDir = outputDirSC,
                                 navigationContigFN = outputHtml,
                                 navigationAlignmentFN = navigationAlignmentFN)
-        reverseReadFN <- sapply(reverseReads, generateReport,
+        reverseReadFN <- sapply(reverseReads, generateReportSR,
                                 outputDir = outputDirSC,
                                 navigationContigFN = outputHtml,
                                 navigationAlignmentFN = navigationAlignmentFN)

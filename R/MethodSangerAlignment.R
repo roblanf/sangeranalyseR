@@ -103,8 +103,8 @@ setMethod("writeFASTA", "SangerAlignment", function(obj, outputDir, compress,
 #'                     heightPerRow          = 200,
 #'                     signalRatioCutoff     = 0.33,
 #'                     showTrimmed           = TRUE)
-#' RShinyCSSet <- launchAppSangerAlignment(newAlignment)
-setMethod("launchAppSangerAlignment", "SangerAlignment",
+#' RShinyCSSet <- launchAppSA(newAlignment)
+setMethod("launchAppSA", "SangerAlignment",
           function(obj, outputDir = NULL) {
               ### ------------------------------------------------------------------------
               ### Checking SangerAlignment input parameter is a list containing
@@ -129,11 +129,18 @@ setMethod("generateReportSA", "SangerAlignment",
           function(obj, outputDir,
                    includeSangerContig = TRUE,
                    includeSangerRead = TRUE) {
+    ### ------------------------------------------------------------------------
+    ### Make sure the input directory is not NULL
+    ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir))
     }
 
+    ### ------------------------------------------------------------------------
+    ### Make sure the directory is exist (SangerAlignment level)
+    ###  => SangerContig, SangerRead level directory will be created recursively
+    ### ------------------------------------------------------------------------
     outputDirSA <- file.path(outputDir, "SangerAlignment")
     if (!dir.exists(outputDirSA)) {
         suppressWarnings(dir.create(outputDirSA, recursive = TRUE))
@@ -146,13 +153,9 @@ setMethod("generateReportSA", "SangerAlignment",
     if (includeSangerContig) {
         contigsFN <- sapply(obj@contigList, function (objContig) {
             message("!!! outputHtml: ", outputHtml)
-            outputDirSC <- file.path(outputDirSA, objContig@contigName)
-            if (!dir.exists(outputDirSC)) {
-                suppressWarnings(dir.create(outputDirSC, recursive = TRUE))
-            }
-            generateReport(objContig, outputDir = outputDirSA,
-                           navigationAlignmentFN = outputHtml,
-                           includeSangerRead = includeSangerRead)
+            generateReportSC(objContig, outputDir = outputDirSA,
+                             navigationAlignmentFN = outputHtml,
+                             includeSangerRead = includeSangerRead)
         })
     } else {
         contigsFN <- NULL

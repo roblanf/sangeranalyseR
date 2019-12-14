@@ -78,13 +78,13 @@ setGeneric("writeFASTA", function(obj,outputDir = tempdir(),
 ### Run Shiny app
 ### ============================================================================
 #' @export
-setGeneric("launchAppSangerContig", function(obj, outputDir = NULL) {
-    standardGeneric("launchAppSangerContig")
+setGeneric("launchAppSC", function(obj, outputDir = NULL) {
+    standardGeneric("launchAppSC")
 })
 
 #' @export
-setGeneric("launchAppSangerAlignment", function(obj, outputDir = NULL) {
-    standardGeneric("launchAppSangerAlignment")
+setGeneric("launchAppSA", function(obj, outputDir = NULL) {
+    standardGeneric("launchAppSA")
 })
 
 

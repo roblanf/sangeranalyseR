@@ -5,18 +5,18 @@
 \alias{ChromatogramParam-class}
 \title{ChromatogramParam}
 \description{
-An S4 class for chromatogram parameter
+An S4 class storing chromatogram related inputs in a SangerRead S4 object.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{baseNumPerRow}}{.}
+\item{\code{baseNumPerRow}}{It defines maximum base pairs in each row. The default value is \code{100}.}
 
-\item{\code{heightPerRow}}{.}
+\item{\code{heightPerRow}}{It defines the height of each row in chromatogram. The default value is \code{200}.}
 
-\item{\code{signalRatioCutoff}}{.}
+\item{\code{signalRatioCutoff}}{The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.}
 
-\item{\code{showTrimmed}}{.}
+\item{\code{showTrimmed}}{The logical value storing whether to show trimmed base pairs in chromatogram. The default value is \code{TRUE}.}
 }}
 
 \examples{

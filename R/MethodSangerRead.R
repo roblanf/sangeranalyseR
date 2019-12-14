@@ -39,6 +39,7 @@ setMethod("updateQualityParam",  "SangerRead",
                    M2SlidingWindowSize    = NULL){
               ### --------------------------------------------------------------
               ### Updating SangerRead quality parameters
+              ###   Trimming parameters is checked in 'QualityReport' method
               ### --------------------------------------------------------------
               object@QualityReport <- updateQualityParam(object@QualityReport,
                                                          TrimmingMethod,
@@ -57,23 +58,19 @@ setMethod("MakeBaseCalls", "SangerRead",
               MBCResult <- MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                                 qualityPhredScoresRaw,
                                                 signalRatioCutoff, readFeature)
-              # Length won't change, so we don't need to update !
-              # obj@QualityReport@qualityPhredScores <-
-              #     MBCResult[["qualityPhredScores"]]
-
               obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
               obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
               obj@primarySeq <- MBCResult[["primarySeq"]]
               obj@secondarySeq <- MBCResult[["secondarySeq"]]
               return(obj)
-          })
+})
 
 setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
                                                  compression_level) {
     message("Start writing '", obj@readFileName, "' to FASTA format ...")
     fastaFilename <- gsub(file_ext(basename(obj@readFileName)), "fa",
                           basename(obj@readFileName))
-    outputFilename = file.path(outputDir, fastaFilename)
+    outputFilename <- file.path(outputDir, fastaFilename)
     writeTarget <- DNAStringSet(obj@primarySeq)
     names(writeTarget) <- basename(obj@readFileName)
     writeXStringSet(writeTarget,
@@ -82,16 +79,21 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
                     compression_level = compression_level)
     message("\n >> '", outputFilename, "' is written")
 })
-
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
-                   navigationContigFN = NULL,navigationAlignmentFN = NULL) {
+                   navigationContigFN = NULL, navigationAlignmentFN = NULL) {
+    ### ------------------------------------------------------------------------
+    ### Make sure the input directory is not NULL
+    ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
     readName <- sub('\\.ab1$', '', basename(obj@readFileName))
     outputDirSR <- file.path(outputDir, readName)
+    ### ------------------------------------------------------------------------
+    ### Make sure the directory is exist (SangerRead level)
+    ### ------------------------------------------------------------------------
     if (!dir.exists(outputDirSR)) {
         suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
     }

@@ -46,14 +46,13 @@ checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
             errors <- c(errors, msg)
         } else {
             # Ristriction about M1TrimmingCutoff !
-            # if (M2CutoffQualityScore > 60 || M2CutoffQualityScore < 0 ||
-            #     M2CutoffQualityScore%%1!=0) {
-            #     msg <- paste("\n'Your input M2CutoffQualityScore is: ",
-            #                  M2CutoffQualityScore, "' is invalid.",
-            #                  "'M2CutoffQualityScore' should",
-            #                  "be between 0 and 60.\n", sep = "")
-            #     errors <- c(errors, msg)
-            # }
+            if (M1TrimmingCutoff > 1 || M1TrimmingCutoff < 0) {
+                msg <- paste("\n'Your input M1TrimmingCutoff is: ",
+                             M2CutoffQualityScore, "' is invalid.",
+                             "'M1TrimmingCutoff' should",
+                             "be between 0 and 1.\n", sep = "")
+                errors <- c(errors, msg)
+            }
         }
         if (!is.null(M2CutoffQualityScore)) {
             msg<- paste("\n'M2CutoffQualityScore' must be null",
