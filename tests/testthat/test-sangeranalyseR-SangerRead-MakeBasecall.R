@@ -26,7 +26,7 @@ test_that("SangerRead Initial test", {
     expect_equal(sangerRead@QualityReport@trimmedStartPos, 16)
     expect_equal(sangerRead@QualityReport@trimmedFinishPos, 477)
     expect_equal(sangerRead@QualityReport@rawMeanQualityScore, 52.87607, tolerance=1e-6)
-    expect_equal(sangerRead@QualityReport@trimmedMeanQualityScore, 58.20779, tolerance=1e-6)
+    expect_equal(sangerRead@QualityReport@trimmedMeanQualityScore, 58.21041, tolerance=1e-6)
     expect_equal(sangerRead@QualityReport@rawMinQualityScore, 1)
     expect_equal(sangerRead@QualityReport@trimmedMinQualityScore, 13)
     expect_equal(sangerRead@QualityReport@remainingRatio, 0.6566952, tolerance=1e-6)
@@ -61,7 +61,7 @@ test_that("SangerRead Make Base Call 1 (normal value)", {
     expect_equal(baseCall@QualityReport@trimmedStartPos, 16)
     expect_equal(baseCall@QualityReport@trimmedFinishPos, 477)
     expect_equal(baseCall@QualityReport@rawMeanQualityScore, 52.87607, tolerance=1e-6)
-    expect_equal(baseCall@QualityReport@trimmedMeanQualityScore, 58.20779, tolerance=1e-6)
+    expect_equal(baseCall@QualityReport@trimmedMeanQualityScore, 58.21041, tolerance=1e-6)
     expect_equal(baseCall@QualityReport@rawMinQualityScore, 1)
     expect_equal(baseCall@QualityReport@trimmedMinQualityScore, 13)
     expect_equal(baseCall@QualityReport@remainingRatio, 0.6566952, tolerance=1e-6)
@@ -96,7 +96,7 @@ test_that("SangerRead Make Base Call 2 (small value)", {
     expect_equal(baseCall2@QualityReport@trimmedStartPos, 16)
     expect_equal(baseCall2@QualityReport@trimmedFinishPos, 477)
     expect_equal(baseCall2@QualityReport@rawMeanQualityScore, 52.87607, tolerance=1e-6)
-    expect_equal(baseCall2@QualityReport@trimmedMeanQualityScore, 58.20779, tolerance=1e-6)
+    expect_equal(baseCall2@QualityReport@trimmedMeanQualityScore, 58.21041, tolerance=1e-6)
     expect_equal(baseCall2@QualityReport@rawMinQualityScore, 1)
     expect_equal(baseCall2@QualityReport@trimmedMinQualityScore, 13)
     expect_equal(baseCall2@QualityReport@remainingRatio, 0.6566952, tolerance=1e-6)
@@ -131,7 +131,7 @@ test_that("SangerRead Make Base Call 3 (equal to 1)", {
     expect_equal(baseCall3@QualityReport@trimmedStartPos, 16)
     expect_equal(baseCall3@QualityReport@trimmedFinishPos, 477)
     expect_equal(baseCall3@QualityReport@rawMeanQualityScore, 52.87607, tolerance=1e-6)
-    expect_equal(baseCall3@QualityReport@trimmedMeanQualityScore, 58.20779, tolerance=1e-6)
+    expect_equal(baseCall3@QualityReport@trimmedMeanQualityScore, 58.21041, tolerance=1e-6)
     expect_equal(baseCall3@QualityReport@rawMinQualityScore, 1)
     expect_equal(baseCall3@QualityReport@trimmedMinQualityScore, 13)
     expect_equal(baseCall3@QualityReport@remainingRatio, 0.6566952, tolerance=1e-6)
@@ -171,7 +171,7 @@ test_that("SangerRead Make Base Call 5 (equal to 0)", {
     expect_equal(baseCall5@QualityReport@trimmedStartPos, 16)
     expect_equal(baseCall5@QualityReport@trimmedFinishPos, 477)
     expect_equal(baseCall5@QualityReport@rawMeanQualityScore, 52.87607, tolerance=1e-6)
-    expect_equal(baseCall5@QualityReport@trimmedMeanQualityScore, 58.20779, tolerance=1e-6)
+    expect_equal(baseCall5@QualityReport@trimmedMeanQualityScore, 58.21041, tolerance=1e-6)
     expect_equal(baseCall5@QualityReport@rawMinQualityScore, 1)
     expect_equal(baseCall5@QualityReport@trimmedMinQualityScore, 13)
     expect_equal(baseCall5@QualityReport@remainingRatio, 0.6566952, tolerance=1e-6)
@@ -181,6 +181,3 @@ test_that("SangerRead Make Base Call 6 (smaller than 0)", {
     expect_error(MakeBaseCalls(sangerRead, signalRatioCutoff = -0.01),
                  "'signalRatioCutoff' must be between 0 and 1.", fixed = TRUE)
 })
-
-
-

@@ -596,7 +596,7 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
     }
     trimmedSeqLength = trimmedFinishPos - trimmedStartPos
     trimmedQualityPhredScore <-
-        qualityPhredScores[trimmedStartPos:trimmedFinishPos]
+        qualityPhredScores[(trimmedStartPos+1):trimmedFinishPos]
     trimmedMeanQualityScore <- mean(trimmedQualityPhredScore)
     trimmedMinQualityScore <- min(trimmedQualityPhredScore)
     remainingRatio = trimmedSeqLength / rawSeqLength

@@ -47,8 +47,8 @@ checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
         } else {
             # Ristriction about M1TrimmingCutoff !
             if (M1TrimmingCutoff > 1 || M1TrimmingCutoff < 0) {
-                msg <- paste("\n'Your input M1TrimmingCutoff is: ",
-                             M2CutoffQualityScore, "' is invalid.",
+                msg <- paste("\nYour input M1TrimmingCutoff is: '",
+                             M1TrimmingCutoff, "' is invalid.",
                              "'M1TrimmingCutoff' should",
                              "be between 0 and 1.\n", sep = "")
                 errors <- c(errors, msg)
@@ -77,7 +77,7 @@ checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
         } else {
             if (M2CutoffQualityScore > 60 || M2CutoffQualityScore < 0 ||
                 M2CutoffQualityScore%%1!=0) {
-                msg <- paste("\n'Your input M2CutoffQualityScore is: ",
+                msg <- paste("\nYour input M2CutoffQualityScore is: '",
                              M2CutoffQualityScore, "' is invalid.",
                              "'M2CutoffQualityScore' should",
                              "be between 0 and 60.\n", sep = "")
@@ -91,7 +91,7 @@ checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
         } else {
             if (M2SlidingWindowSize > 20 || M2SlidingWindowSize < 0 ||
                 M2SlidingWindowSize%%1!=0) {
-                msg <- paste("\n'Your input M2SlidingWindowSize is: ",
+                msg <- paste("\nYour input M2SlidingWindowSize is: '",
                              M2SlidingWindowSize, "' is invalid.",
                              "'M2SlidingWindowSize' should",
                              "be between 0 and 20.\n", sep = "")
