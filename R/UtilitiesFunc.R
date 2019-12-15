@@ -601,15 +601,15 @@ M1inside_calculate_trimming <- function(qualityPhredScores,
     trimmedMinQualityScore <- min(trimmedQualityPhredScore)
     remainingRatio = trimmedSeqLength / rawSeqLength
 
-    return(c("rawSeqLength" = rawSeqLength,
-             "rawMeanQualityScore" = rawMeanQualityScore,
-             "rawMinQualityScore" = rawMinQualityScore,
-             "trimmedStartPos" = trimmedStartPos,
-             "trimmedFinishPos" = trimmedFinishPos,
-             "trimmedSeqLength" = trimmedSeqLength,
-             "trimmedMeanQualityScore" = trimmedMeanQualityScore,
-             "trimmedMinQualityScore" = trimmedMinQualityScore,
-             "remainingRatio" = remainingRatio))
+    return(list("rawSeqLength" = rawSeqLength,
+                "rawMeanQualityScore" = rawMeanQualityScore,
+                "rawMinQualityScore" = rawMinQualityScore,
+                "trimmedStartPos" = trimmedStartPos,
+                "trimmedFinishPos" = trimmedFinishPos,
+                "trimmedSeqLength" = trimmedSeqLength,
+                "trimmedMeanQualityScore" = trimmedMeanQualityScore,
+                "trimmedMinQualityScore" = trimmedMinQualityScore,
+                "remainingRatio" = remainingRatio))
 }
 M2inside_calculate_trimming <-function(qualityPhredScores,
                                        M2CutoffQualityScore,

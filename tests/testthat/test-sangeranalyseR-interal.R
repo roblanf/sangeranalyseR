@@ -74,13 +74,13 @@ test_that("'MakeBaseCallsInside' function test - reverse", {
     expect_equal(as.character(baseCallRes$secondarySeq), "CAGCAGTAGGTGTTGGTAGAGGATGGGGTCTCCACCACCGGCAGGATCAAAGAATGAAGTATTGCGGTTTCGGTCGGTAAGAAGTATGGTAATGGCACCTGCTAGCACTGGTAAAGATAGAAGTAGAAGAACAACTGTAATTAGCACAGCTCAGACAAACAGGGGAATTCGTTCAAGACGTAATCCTCTTCAACGCATATTAATAACTGTGGTGATAAAATTAATAGCCCCTAGAATAGAAGACGCACCCGCTAAATGAAGGGAAAAGATGGCTAAATCTACAGACGGGCCTGCGTGGGCAAGATTTCTTGCTAGAGGCGGATAAACAGTTCACCCCGTACCAGCGCCTTTTTCTACCGCCGCAGAGGACACTAAAAGGATCAGTGATGGGGGAAGTAGTCAGAATCTCATGTTGTTGAGTCGAGGGAATGCTATATCGGGGGCTCCAAGTATTAAAGGTAAAAGCCAGTTTCCGAATCCCCCGATGAATACAGGCATTACTAGAAAGAAGATTATTACAAATGCGTGTGCAGTAACGATAGTATTGTATAGTTGGTCTCTGCCCAGGAACGCTCCTGGTTGTCTTAGCTCGATTCGAATTAGAAGTCTTATACCGGCTCCAACCATTCCTGCTCAGACGCCCAGAATAAAATATAAAGTTCCAATATCTTTATGATTTGTTGACCACTGGCCGTCGATGTACAA")
 })
 
-test_that("'M1inside_calculate_trimming' function test", {
+test_that("'M1inside_calculate_trimming' function test 1", {
     qualityPhredScores <- sangerRead@QualityReport@qualityPhredScores
     qualityBaseScores <- sangerRead@QualityReport@qualityBaseScores
     M1TrimmingCutoff <- sangerRead@QualityReport@M1TrimmingCutoff
     m1Trimming <- M1inside_calculate_trimming(qualityPhredScores,
                                               qualityBaseScores,
-                                              M1TrimmingCutoff)
+                                              0.0001)
     expect_equal(m1Trimming[["rawSeqLength"]], 702)
     expect_equal(m1Trimming[["rawMeanQualityScore"]], 52.87607, , tolerance=1e-6)
     expect_equal(m1Trimming[["rawMinQualityScore"]], 1)
@@ -91,3 +91,93 @@ test_that("'M1inside_calculate_trimming' function test", {
     expect_equal(m1Trimming[["trimmedMinQualityScore"]], 13)
     expect_equal(m1Trimming[["remainingRatio"]], 0.6566952, tolerance=1e-6)
 })
+
+
+test_that("'M1inside_calculate_trimming' function test 2", {
+    qualityPhredScores <- sangerRead@QualityReport@qualityPhredScores
+    qualityBaseScores <- sangerRead@QualityReport@qualityBaseScores
+    M1TrimmingCutoff <- sangerRead@QualityReport@M1TrimmingCutoff
+    m1Trimming <- M1inside_calculate_trimming(qualityPhredScores,
+                                              qualityBaseScores,
+                                              0.01)
+    expect_equal(m1Trimming[["rawSeqLength"]], 702)
+    expect_equal(m1Trimming[["rawMeanQualityScore"]], 52.87607, , tolerance=1e-6)
+    expect_equal(m1Trimming[["rawMinQualityScore"]], 1)
+    expect_equal(m1Trimming[["trimmedStartPos"]], 8)
+    expect_equal(m1Trimming[["trimmedFinishPos"]], 679)
+    expect_equal(m1Trimming[["trimmedSeqLength"]], 671)
+    expect_equal(m1Trimming[["trimmedMeanQualityScore"]], 54.48286, tolerance=1e-6)
+    expect_equal(m1Trimming[["trimmedMinQualityScore"]], 8)
+    expect_equal(m1Trimming[["remainingRatio"]], 0.9558405, tolerance=1e-6)
+})
+
+test_that("'M1inside_calculate_trimming' function test 3", {
+    qualityPhredScores <- sangerRead@QualityReport@qualityPhredScores
+    qualityBaseScores <- sangerRead@QualityReport@qualityBaseScores
+    M1TrimmingCutoff <- sangerRead@QualityReport@M1TrimmingCutoff
+    m1Trimming <- M1inside_calculate_trimming(qualityPhredScores,
+                                              qualityBaseScores,
+                                              1)
+    expect_equal(m1Trimming[["rawSeqLength"]], 702)
+    expect_equal(m1Trimming[["rawMeanQualityScore"]], 52.87607, , tolerance=1e-6)
+    expect_equal(m1Trimming[["rawMinQualityScore"]], 1)
+    expect_equal(m1Trimming[["trimmedStartPos"]], 1)
+    expect_equal(m1Trimming[["trimmedFinishPos"]], 702)
+    expect_equal(m1Trimming[["trimmedSeqLength"]], 701)
+    expect_equal(m1Trimming[["trimmedMeanQualityScore"]], 52.94864, tolerance=1e-6)
+    expect_equal(m1Trimming[["trimmedMinQualityScore"]], 1)
+    expect_equal(m1Trimming[["remainingRatio"]], 0.9985755, tolerance=1e-6)
+})
+
+test_that("'M1inside_calculate_trimming' function test 4", {
+    qualityPhredScores <- sangerRead@QualityReport@qualityPhredScores
+    qualityBaseScores <- sangerRead@QualityReport@qualityBaseScores
+    M1TrimmingCutoff <- sangerRead@QualityReport@M1TrimmingCutoff
+    m1Trimming <- M1inside_calculate_trimming(qualityPhredScores,
+                                              qualityBaseScores,
+                                              0)
+    expect_equal(m1Trimming[["rawSeqLength"]], 702)
+    expect_equal(m1Trimming[["rawMeanQualityScore"]], 52.87607, , tolerance=1e-6)
+    expect_equal(m1Trimming[["rawMinQualityScore"]], 1)
+    expect_equal(m1Trimming[["trimmedStartPos"]], 1)
+    expect_equal(m1Trimming[["trimmedFinishPos"]], 2)
+    expect_equal(m1Trimming[["trimmedSeqLength"]], 1)
+    expect_equal(m1Trimming[["trimmedMeanQualityScore"]], 4, tolerance=1e-6)
+    expect_equal(m1Trimming[["trimmedMinQualityScore"]], 4)
+    expect_equal(m1Trimming[["remainingRatio"]], 0.001424501, tolerance=1e-6)
+})
+
+test_that("'M2inside_calculate_trimming' function test 1", {
+    qualityPhredScores <- sangerRead@QualityReport@qualityPhredScores
+    m2Trimming <- M2inside_calculate_trimming(qualityPhredScores,
+                                              40,
+                                              14)
+
+    expect_equal(m2Trimming[["rawSeqLength"]], 702)
+    expect_equal(m2Trimming[["rawMeanQualityScore"]], 52.87607, , tolerance=1e-6)
+    expect_equal(m2Trimming[["rawMinQualityScore"]], 1)
+    expect_equal(m2Trimming[["trimmedStartPos"]], 21)
+    expect_equal(m2Trimming[["trimmedFinishPos"]], 650)
+    expect_equal(m2Trimming[["trimmedSeqLength"]], 629)
+    expect_equal(m2Trimming[["trimmedMeanQualityScore"]], 55.80445, tolerance=1e-6)
+    expect_equal(m2Trimming[["trimmedMinQualityScore"]], 15)
+    expect_equal(m2Trimming[["remainingRatio"]], 0.8960114, tolerance=1e-6)
+})
+
+test_that("'M2inside_calculate_trimming' function test 2", {
+    qualityPhredScores <- sangerRead@QualityReport@qualityPhredScores
+    m2Trimming <- M2inside_calculate_trimming(qualityPhredScores,
+                                              45,
+                                              12)
+
+    expect_equal(m2Trimming[["rawSeqLength"]], 702)
+    expect_equal(m2Trimming[["rawMeanQualityScore"]], 52.87607, , tolerance=1e-6)
+    expect_equal(m2Trimming[["rawMinQualityScore"]], 1)
+    expect_equal(m2Trimming[["trimmedStartPos"]], 37)
+    expect_equal(m2Trimming[["trimmedFinishPos"]], 573)
+    expect_equal(m2Trimming[["trimmedSeqLength"]], 536)
+    expect_equal(m2Trimming[["trimmedMeanQualityScore"]], 57.6791, tolerance=1e-6)
+    expect_equal(m2Trimming[["trimmedMinQualityScore"]], 19)
+    expect_equal(m2Trimming[["remainingRatio"]], 0.7635328, tolerance=1e-6)
+})
+
