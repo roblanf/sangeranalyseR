@@ -1,3 +1,6 @@
+#' @title launchAppSA
+#' @name SangerAlignment-class-launchAppSA
+#' @rdname SangerAlignment-class-launchAppSA
 #' @examples
 #' load("data/sangerAlignment.RData")
 #' RShinySA <- launchAppSA(sangerAlignment)
@@ -25,6 +28,9 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
 ## =============================================================================
 ## Writing primary sequence into FASTA format
 ## =============================================================================
+#' @title writeFastaSA
+#' @name SangerAlignment-class-writeFastaSA
+#' @rdname SangerAlignment-class-writeFastaSA
 #' @examples
 #' load("data/sangerAlignment.RData")
 #' writeFastaSA(sangerAlignment)
@@ -127,6 +133,9 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
 ## =============================================================================
 ## Generating report for SangerContig
 ## =============================================================================
+#' @title generateReportSA
+#' @name SangerAlignment-class-generateReportSA
+#' @rdname SangerAlignment-class-generateReportSA
 #' @examples
 #' load("data/sangerAlignment.RData")
 #' generateReportSA(sangerAlignment)

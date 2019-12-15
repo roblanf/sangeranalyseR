@@ -22,6 +22,9 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object, readFeature){
 ### ============================================================================
 ### Plotting quality of each base pair for "QualityReport" S4 object
 ### ============================================================================
+#' @title qualityBasePlot
+#' @name QualityReport-class-qualityBasePlot
+#' @rdname QualityReport-class-qualityBasePlot
 #' @examples
 #' load("data/qualityReport.RData")
 #' qualityBasePlot(qualityReport)
@@ -33,6 +36,9 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 ## =============================================================================
 ## Updating quality parameters for QualityReport object.
 ## =============================================================================
+#' @title updateQualityParam
+#' @name QualityReport-class-updateQualityParam
+#' @rdname QualityReport-class-updateQualityParam
 #' @examples
 #' load("data/sangerRead.RData")
 #' updateQualityParam(qualityReport,

@@ -24,6 +24,10 @@
 #' @param readingFrame \code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
 #' @param processorsNum The number of processors to use, or NULL (the default) for all available processors.
 #'
+#' @title SangerAlignment
+#' @name Constructor-SangerAlignment
+#' @rdname Constructor-SangerAlignment
+#'
 #' @return SangerAlignment
 #' @export
 #' @author Kuan-Hao Chao
@@ -120,6 +124,10 @@ SangerAlignment <- function(parentDirectory        = character(0),
 #' @param readingFrame \code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
 #' @param processorsNum The number of processors to use, or NULL (the default) for all available processors.
 #'
+#' @title SangerContig
+#' @name Constructor-SangerContig
+#' @rdname Constructor-SangerContig
+#'
 #' @return SangerContig
 #' @export
 #' @author Kuan-Hao Chao
@@ -206,6 +214,10 @@ SangerContig <- function(parentDirectory        = character(0),
 #' @param heightPerRow It defines the height of each row in chromatogram. The default value is \code{200}.
 #' @param signalRatioCutoff The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.
 #' @param showTrimmed The logical value storing whether to show trimmed base pairs in chromatogram. The default value is \code{TRUE}.
+#'
+#' @title SangerRead
+#' @name Constructor-SangerRead
+#' @rdname Constructor-SangerRead
 #'
 #' @return SangerRead
 #' @export

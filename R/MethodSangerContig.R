@@ -1,6 +1,9 @@
 ## =============================================================================
 ## Updating quality parameters for SangerContig object.
 ## =============================================================================
+#' @title updateQualityParam
+#' @name SangerContig-class-updateQualityParam
+#' @rdname SangerContig-class-updateQualityParam
 #' @examples
 #' load("data/sangerContig.RData")
 #' updateQualityParam(sangerContig,
@@ -51,6 +54,9 @@ setMethod("updateQualityParam",  "SangerContig",
     }
 })
 
+#' @title launchAppSC
+#' @name SangerContig-class-launchAppSC
+#' @rdname SangerContig-class-launchAppSC
 #' @examples
 #' load("data/sangerContig.RData")
 #' RShinySC <- launchAppSC(sangerContig)
@@ -78,6 +84,9 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
 ## =============================================================================
 ## Writing primary sequence into FASTA format
 ## =============================================================================
+#' @title writeFastaSC
+#' @name SangerContig-class-writeFastaSC
+#' @rdname SangerContig-class-writeFastaSC
 #' @examples
 #' load("data/sangerContig.RData")
 #' writeFastaSC(sangerContig)
@@ -160,6 +169,9 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
 ## =============================================================================
 ## Generating report for SangerContig
 ## =============================================================================
+#' @title generateReportSC
+#' @name SangerContig-class-generateReportSC
+#' @rdname SangerContig-class-generateReportSC
 #' @examples
 #' load("data/sangerContig.RData")
 #' generateReportSC(sangerContig)

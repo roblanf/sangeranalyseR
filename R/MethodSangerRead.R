@@ -1,6 +1,9 @@
 ### ============================================================================
 ### Plotting quality for each base for "SangerRead" S4 object
 ### ============================================================================
+#' @title qualityBasePlot
+#' @name SangerRead-class-qualityBasePlot
+#' @rdname SangerRead-class-qualityBasePlot
 #' @examples
 #' load("data/sangerRead.RData")
 #' qualityBasePlot(sangerRead)
@@ -13,6 +16,9 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 ## =============================================================================
 ## Updating quality parameters for SangerRead object.
 ## =============================================================================
+#' @title updateQualityParam
+#' @name SangerRead-class-updateQualityParam
+#' @rdname SangerRead-class-updateQualityParam
 #' @examples
 #' load("data/sangerRead.RData")
 #' updateQualityParam(sangerRead,
@@ -52,6 +58,9 @@ setMethod("updateQualityParam",  "SangerRead",
 ## =============================================================================
 ## Base calling for primarySeq in SangerRead
 ## =============================================================================
+#' @title MakeBaseCalls
+#' @name SangerRead-class-MakeBaseCalls
+#' @rdname SangerRead-class-MakeBaseCalls
 #' @examples
 #' load("data/sangerRead.RData")
 #' MakeBaseCalls(sangerRead, signalRatioCutoff = 0.22)
@@ -88,6 +97,9 @@ setMethod("MakeBaseCalls", "SangerRead",
 ## =============================================================================
 ## Writing primary sequence into FASTA format
 ## =============================================================================
+#' @title writeFastaSR
+#' @name SangerRead-class-writeFastaSR
+#' @rdname SangerRead-class-writeFastaSR
 #' @examples
 #' load("data/sangerRead.RData")
 #' writeFastaSR(sangerRead)
@@ -116,6 +128,9 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 ## =============================================================================
 ## Generating report for SangerRead
 ## =============================================================================
+#' @title generateReportSR
+#' @name SangerRead-class-generateReportSR
+#' @rdname SangerRead-class-generateReportSR
 #' @examples
 #' load("data/sangerRead.RData")
 #' generateReportSR(sangerRead)
