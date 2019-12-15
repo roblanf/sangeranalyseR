@@ -16,8 +16,4 @@ sangerReadR <- new("SangerRead",
                    signalRatioCutoff     = 0.33,
                    showTrimmed           = TRUE)
 
-traceMatrixR <- sangerReadR@traceMatrix
-peakPosMatrixRawR <- sangerReadR@peakPosMatrixRaw
-qualityPhredScoresRawR <- sangerReadR@QualityReport@qualityPhredScoresRaw
-signalRatioCutoffR <- sangerReadR@ChromatogramParam@signalRatioCutoff
-readFeatureR <- sangerReadR@readFeature
+

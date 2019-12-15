@@ -17,12 +17,5 @@ sangerContig <- new("SangerContig",
                     heightPerRow          = 200,
                     signalRatioCutoff     = 0.33,
                     showTrimmed           = TRUE)
-forwardReadList <- sangerContig@forwardReadList
-reverseReadList <- sangerContig@reverseReadList
-refAminoAcidSeq <- sangerContig@refAminoAcidSeq
-minFractionCall <- sangerContig@minFractionCall
-maxFractionLost <- sangerContig@maxFractionLost
-geneticCode <- sangerContig@geneticCode
-acceptStopCodons <- sangerContig@acceptStopCodons
-readingFrame <- sangerContig@readingFrame
+
 

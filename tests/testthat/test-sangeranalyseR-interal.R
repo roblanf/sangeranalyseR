@@ -6,6 +6,11 @@ test_that("'getProcessors' test", {
 })
 
 test_that("'alignContigs' function test", {
+    contigList <- sangerAlignment@contigList
+    geneticCode <- sangerAlignment@geneticCode
+    refAminoAcidSeq <- sangerAlignment@refAminoAcidSeq
+    minFractionCallSA <- sangerAlignment@minFractionCallSA
+    maxFractionLostSA <- sangerAlignment@maxFractionLostSA
     alignContigs <- alignContigs (contigList, geneticCode,
                                   refAminoAcidSeq, minFractionCallSA,
                                   maxFractionLostSA, 1)
@@ -19,6 +24,14 @@ test_that("'alignContigs' function test", {
 })
 
 test_that("'calculateContigSeq' function test", {
+    forwardReadList <- sangerContig@forwardReadList
+    reverseReadList <- sangerContig@reverseReadList
+    refAminoAcidSeq <- sangerContig@refAminoAcidSeq
+    minFractionCall <- sangerContig@minFractionCall
+    maxFractionLost <- sangerContig@maxFractionLost
+    geneticCode <- sangerContig@geneticCode
+    acceptStopCodons <- sangerContig@acceptStopCodons
+    readingFrame <- sangerContig@readingFrame
     contigSeq <- calculateContigSeq (forwardReadList, reverseReadList,
                                      refAminoAcidSeq, minFractionCall,
                                      maxFractionLost, geneticCode,
@@ -32,6 +45,11 @@ test_that("'calculateContigSeq' function test", {
 })
 
 test_that("'MakeBaseCallsInside' function test - forward", {
+    traceMatrixF <- sangerRead@traceMatrix
+    peakPosMatrixRawF <- sangerRead@peakPosMatrixRaw
+    qualityPhredScoresRawF <- sangerRead@QualityReport@qualityPhredScoresRaw
+    signalRatioCutoffF <- sangerRead@ChromatogramParam@signalRatioCutoff
+    readFeatureF <- sangerRead@readFeature
     baseCallRes <- MakeBaseCallsInside (traceMatrixF, peakPosMatrixRawF,
                                         qualityPhredScoresRawF,
                                         signalRatioCutoffF, readFeatureF)
@@ -42,6 +60,11 @@ test_that("'MakeBaseCallsInside' function test - forward", {
 })
 
 test_that("'MakeBaseCallsInside' function test - reverse", {
+    traceMatrixR <- sangerReadR@traceMatrix
+    peakPosMatrixRawR <- sangerReadR@peakPosMatrixRaw
+    qualityPhredScoresRawR <- sangerReadR@QualityReport@qualityPhredScoresRaw
+    signalRatioCutoffR <- sangerReadR@ChromatogramParam@signalRatioCutoff
+    readFeatureR <- sangerReadR@readFeature
     baseCallRes <- MakeBaseCallsInside (traceMatrixR, peakPosMatrixRawR,
                                         qualityPhredScoresRawR,
                                         signalRatioCutoffR, readFeatureR)
@@ -49,4 +72,22 @@ test_that("'MakeBaseCallsInside' function test - reverse", {
     expect_equal(length(baseCallRes$secondarySeq), length(sangerReadR@secondarySeq))
     expect_equal(as.character(baseCallRes$primarySeq), "CCGTAGTAGGTGTTGGTAGAGGATGGGGTCTCCACCACCGGCAGGATCAAAGAATGAAGTATTGAGGTTTCGGTCGGTAAGAAGTATGGTAATGGCACCTGCTAGCACTGGTAAAGATAGAAGTAGAAGAACAACTGTAATTAGCACAGCTCAGACAAACAGGGGAATTCGTTCAAGACGTAATCCTCTTCAACGCATATTAATAACTGTGGTGATAAAATTAATAGCCCCTAGAATAGAAGACGCACCCGCTAAATGAAGGGAAAAGATGGCTAAATCTACAGACGGGCCTGCGTGGGCAAGATTTCTTGCTAGAGGCGGATAAACAGTTCACCCCGTACCAGCGCCTTTTTCTACCGCCGCAGAGGACACTAAAAGGATCAGTGATGGGGGAAGTAGTCAGAATCTCATGTTGTTGAGTCGAGGGAATGCTATATCGGGGGCTCCAAGTATTAAAGGTAAAAGCCAGTTTCCGAATCCCCCGATGAATACAGGCATTACTAGAAAGAAGATTATTACAAATGCGTGTGCAGTAACGATAGTATTGTATAGTTGGTCTCTGCCCAGGAACGCTCCTGGTTGTCTTAGCTCGATTCGAATTAGAAGTCTTATACCGGCTCCAACCATTCCTGCTCAGACGCCCAGAATAAAATATAAAGTTCCAATATCTTTATGATTTGTTGACCACTGGCCGTCGATATACAA")
     expect_equal(as.character(baseCallRes$secondarySeq), "CAGCAGTAGGTGTTGGTAGAGGATGGGGTCTCCACCACCGGCAGGATCAAAGAATGAAGTATTGCGGTTTCGGTCGGTAAGAAGTATGGTAATGGCACCTGCTAGCACTGGTAAAGATAGAAGTAGAAGAACAACTGTAATTAGCACAGCTCAGACAAACAGGGGAATTCGTTCAAGACGTAATCCTCTTCAACGCATATTAATAACTGTGGTGATAAAATTAATAGCCCCTAGAATAGAAGACGCACCCGCTAAATGAAGGGAAAAGATGGCTAAATCTACAGACGGGCCTGCGTGGGCAAGATTTCTTGCTAGAGGCGGATAAACAGTTCACCCCGTACCAGCGCCTTTTTCTACCGCCGCAGAGGACACTAAAAGGATCAGTGATGGGGGAAGTAGTCAGAATCTCATGTTGTTGAGTCGAGGGAATGCTATATCGGGGGCTCCAAGTATTAAAGGTAAAAGCCAGTTTCCGAATCCCCCGATGAATACAGGCATTACTAGAAAGAAGATTATTACAAATGCGTGTGCAGTAACGATAGTATTGTATAGTTGGTCTCTGCCCAGGAACGCTCCTGGTTGTCTTAGCTCGATTCGAATTAGAAGTCTTATACCGGCTCCAACCATTCCTGCTCAGACGCCCAGAATAAAATATAAAGTTCCAATATCTTTATGATTTGTTGACCACTGGCCGTCGATGTACAA")
+})
+
+test_that("'M1inside_calculate_trimming' function test", {
+    qualityPhredScores <- sangerRead@QualityReport@qualityPhredScores
+    qualityBaseScores <- sangerRead@QualityReport@qualityBaseScores
+    M1TrimmingCutoff <- sangerRead@QualityReport@M1TrimmingCutoff
+    m1Trimming <- M1inside_calculate_trimming(qualityPhredScores,
+                                              qualityBaseScores,
+                                              M1TrimmingCutoff)
+    expect_equal(m1Trimming[["rawSeqLength"]], 702)
+    expect_equal(m1Trimming[["rawMeanQualityScore"]], 52.87607, , tolerance=1e-6)
+    expect_equal(m1Trimming[["rawMinQualityScore"]], 1)
+    expect_equal(m1Trimming[["trimmedStartPos"]], 16)
+    expect_equal(m1Trimming[["trimmedFinishPos"]], 477)
+    expect_equal(m1Trimming[["trimmedSeqLength"]], 461)
+    expect_equal(m1Trimming[["trimmedMeanQualityScore"]], 58.21041, tolerance=1e-6)
+    expect_equal(m1Trimming[["trimmedMinQualityScore"]], 13)
+    expect_equal(m1Trimming[["remainingRatio"]], 0.6566952, tolerance=1e-6)
 })

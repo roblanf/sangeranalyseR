@@ -16,9 +16,5 @@ sangerAlignment <- new("SangerAlignment",
                        signalRatioCutoff     = 0.33,
                        showTrimmed           = TRUE)
 
-contigList <- sangerAlignment@contigList
-geneticCode <- sangerAlignment@geneticCode
-refAminoAcidSeq <- sangerAlignment@refAminoAcidSeq
-minFractionCallSA <- sangerAlignment@minFractionCallSA
-maxFractionLostSA <- sangerAlignment@maxFractionLostSA
+
 
