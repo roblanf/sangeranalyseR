@@ -11,22 +11,20 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object, readFeature){
     colnames(qualityPlotDf) <- c("Index", "Score")
     x <- list(
         title = "Base Pair Index"
-        # titlefont = f
     )
     y <- list(
         title = "Phred Quality Score"
-        # titlefont = f
     )
     p <- QualityBasePlotly(trimmedStartPos, trimmedFinishPos,
                            readLen, qualityPlotDf, x,  y)
 })
 
 ### ============================================================================
-### Plotting quality for each base for "QualityReport" S4 object
+### Plotting quality of each base pair for "QualityReport" S4 object
 ### ============================================================================
-#' @example
-#' load("data/A_chloroticaRead.RDdata")
-#' qualityBasePlot(A_chloroticaSingleRead@QualityReport)
+#' @examples
+#' load("data/qualityReport.RData")
+#' qualityBasePlot(qualityReport)
 setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
     plotting
@@ -35,25 +33,13 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 ## =============================================================================
 ## Updating quality parameters for QualityReport object.
 ## =============================================================================
-#' @example
-#' load("data/A_chloroticaRead.RDdata")
-#' QualityReport <- A_chloroticaSingleRead@QualityReport
-#' trimmingRatioPlot(QualityReport)
-#' qualityBasePlot(QualityReport)
-#' "@@"(QualityReport, TrimmingMethod)
-#' "@@"(QualityReport, M1TrimmingCutoff)
-#' "@@"(QualityReport, M2CutoffQualityScore)
-#' "@@"(QualityReport, M2SlidingWindowSize)
-#'
-#' QualityReport <- updateQualityParam(QualityReport, "M1", 0.0001, NULL, NULL)
-#'
-#' trimmingRatioPlot(QualityReport)
-#' qualityBasePlot(QualityReport)
-#' qualityBasePlot(QualityReport)
-#' "@@"(QualityReport, TrimmingMethod)
-#' "@@"(QualityReport, M1TrimmingCutoff)
-#' "@@"(QualityReport, M2CutoffQualityScore)
-#' "@@"(QualityReport, M2SlidingWindowSize)
+#' @examples
+#' load("data/sangerRead.RData")
+#' updateQualityParam(qualityReport,
+#'                    TrimmingMethod         = "M2",
+#'                    M1TrimmingCutoff       = NULL,
+#'                    M2CutoffQualityScore   = 30,
+#'                    M2SlidingWindowSize    = 15)
 setMethod("updateQualityParam",  "QualityReport",
           function(object,
                    TrimmingMethod         = "M1",

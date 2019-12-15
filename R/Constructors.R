@@ -27,7 +27,7 @@
 #' @return SangerAlignment
 #' @export
 #' @author Kuan-Hao Chao
-#' @example
+#' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
@@ -123,7 +123,7 @@ SangerAlignment <- function(parentDirectory        = character(0),
 #' @return SangerContig
 #' @export
 #' @author Kuan-Hao Chao
-#' @example
+#' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
@@ -210,7 +210,7 @@ SangerContig <- function(parentDirectory        = character(0),
 #' @return SangerRead
 #' @export
 #' @author Kuan-Hao Chao
-#' @example
+#' @examples
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFdFN <- file.path(inputFilesPath,
 #'                               "Allolobophora_chlorotica",

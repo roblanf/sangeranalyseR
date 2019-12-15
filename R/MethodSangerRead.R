@@ -1,9 +1,9 @@
 ### ============================================================================
 ### Plotting quality for each base for "SangerRead" S4 object
 ### ============================================================================
-#' @example
-#' load("data/A_chloroticaRead.RDdata")
-#' qualityBasePlot(A_chloroticaRead)
+#' @examples
+#' load("data/sangerRead.RData")
+#' qualityBasePlot(sangerRead)
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     QualityReportObject = object@QualityReport
     plotting <- preQualityBasePlot(QualityReportObject)
@@ -13,24 +13,13 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 ## =============================================================================
 ## Updating quality parameters for SangerRead object.
 ## =============================================================================
-#' @example
-#' load("data/A_chloroticaRead.RDdata")
-#' trimmingRatioPlot(A_chloroticaRead)
-#' qualityBasePlot(A_chloroticaRead)
-#' A_chloroticaRead@QualityReport@TrimmingMethod
-#' A_chloroticaRead@QualityReport@M1TrimmingCutoff
-#' A_chloroticaRead@QualityReport@M2CutoffQualityScore
-#' A_chloroticaRead@QualityReport@M2SlidingWindowSize
-#'
-#' A_chloroticaRead <- updateQualityParam(A_chloroticaRead,
-#'                                              "M1", 0.0001, NULL, NULL)
-#'
-#' trimmingRatioPlot(A_chloroticaRead)
-#' qualityBasePlot(A_chloroticaRead)
-#' A_chloroticaRead@QualityReport@TrimmingMethod
-#' A_chloroticaRead@QualityReport@M1TrimmingCutoff
-#' A_chloroticaRead@QualityReport@M2CutoffQualityScore
-#' A_chloroticaRead@QualityReport@M2SlidingWindowSize
+#' @examples
+#' load("data/sangerRead.RData")
+#' updateQualityParam(sangerRead,
+#'                    TrimmingMethod         = "M2",
+#'                    M1TrimmingCutoff       = NULL,
+#'                    M2CutoffQualityScore   = 40,
+#'                    M2SlidingWindowSize    = 15)
 setMethod("updateQualityParam",  "SangerRead",
           function(object,
                    TrimmingMethod         = "M1",
@@ -60,6 +49,12 @@ setMethod("updateQualityParam",  "SangerRead",
               }
           })
 
+## =============================================================================
+## Base calling for primarySeq in SangerRead
+## =============================================================================
+#' @examples
+#' load("data/sangerRead.RData")
+#' MakeBaseCalls(sangerRead, signalRatioCutoff = 0.22)
 setMethod("MakeBaseCalls", "SangerRead",
           function(obj, signalRatioCutoff) {
               errors <- character(0)
@@ -90,6 +85,12 @@ setMethod("MakeBaseCalls", "SangerRead",
               }
 })
 
+## =============================================================================
+## Writing primary sequence into FASTA format
+## =============================================================================
+#' @examples
+#' load("data/sangerRead.RData")
+#' writeFastaSR(sangerRead)
 setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
                                                  compression_level) {
     if (is.null(outputDir)) {
@@ -111,6 +112,13 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
     return(outputFilename)
 })
 
+
+## =============================================================================
+## Generating report for SangerRead
+## =============================================================================
+#' @examples
+#' load("data/sangerRead.RData")
+#' generateReportSR(sangerRead)
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {

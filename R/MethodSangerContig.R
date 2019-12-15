@@ -1,25 +1,13 @@
 ## =============================================================================
 ## Updating quality parameters for SangerContig object.
 ## =============================================================================
-#' @example
-#' load("data/A_chloroticaConsensusRead.RDdata")
-#' trimmingRatioPlot(A_chloroticaConsensusRead)
-#' qualityBasePlot(A_chloroticaConsensusRead)
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@TrimmingMethod
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M1TrimmingCutoff
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2CutoffQualityScore
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2SlidingWindowSize
-#'
-#' A_chloroticaConsensusRead <-
-#'                 updateQualityParam(A_chloroticaConsensusRead,
-#'                                    "M1", 0.0001, NULL, NULL)
-#'
-#' trimmingRatioPlot(A_chloroticaConsensusRead)
-#' qualityBasePlot(A_chloroticaConsensusRead)
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@TrimmingMethod
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M1TrimmingCutoff
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2CutoffQualityScore
-#' A_chloroticaConsensusRead@forwardReadSangerseq@QualityReport@M2SlidingWindowSize
+#' @examples
+#' load("data/sangerContig.RData")
+#' updateQualityParam(sangerContig,
+#'                    TrimmingMethod         = "M2",
+#'                    M1TrimmingCutoff       = NULL,
+#'                    M2CutoffQualityScore   = 40,
+#'                    M2SlidingWindowSize    = 15)
 setMethod("updateQualityParam",  "SangerContig",
           function(object,
                    TrimmingMethod         = "M1",
@@ -64,25 +52,7 @@ setMethod("updateQualityParam",  "SangerContig",
 })
 
 #' @examples
-#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
-#' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' sangerContig <- SangerContig(
-#'                      parentDirectory       = parentDir,
-#'                      contigName            = contigName,
-#'                      suffixForwardRegExp   = suffixForwardRegExp,
-#'                      suffixReverseRegExp   = suffixReverseRegExp,
-#'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                      TrimmingMethod        = "M2",
-#'                      M1TrimmingCutoff      = NULL,
-#'                      M2CutoffQualityScore  = 20,
-#'                      M2SlidingWindowSize   = 10,
-#'                      baseNumPerRow         = 100,
-#'                      heightPerRow          = 200,
-#'                      signalRatioCutoff     = 0.33,
-#'                      showTrimmed           = TRUE)
+#' load("data/sangerContig.RData")
 #' RShinySC <- launchAppSC(sangerContig)
 setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
     ### --------------------------------------------------------------
@@ -105,6 +75,12 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
     }
 })
 
+## =============================================================================
+## Writing primary sequence into FASTA format
+## =============================================================================
+#' @examples
+#' load("data/sangerContig.RData")
+#' writeFastaSC(sangerContig)
 setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
                                                    compression_level,
                                                    selection = "all") {
@@ -181,6 +157,12 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
     message("\nFinish writing '", contigName, "' to FASTA format")
 })
 
+## =============================================================================
+## Generating report for SangerContig
+## =============================================================================
+#' @examples
+#' load("data/sangerContig.RData")
+#' generateReportSC(sangerContig)
 setMethod("generateReportSC", "SangerContig",
           function(obj, outputDir, includeSangerRead = TRUE,
                    navigationAlignmentFN = NULL) {

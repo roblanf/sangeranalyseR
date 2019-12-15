@@ -23,6 +23,7 @@
 #' @exportClass SangerRead
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R
+#' @import sangerseqR
 #' @examples
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFdFN <- file.path(inputFilesPath,
@@ -44,7 +45,7 @@
 setClass(
     "SangerRead",
     ### ------------------------------------------------------------------------
-    ### Input type of each variable of 'SangerMergeReads'.
+    ### Input type of each variable of 'SangerContig'.
     ###     * Inherit from 'sangerseq' from sangerseqR.
     ### ------------------------------------------------------------------------
     contains="sangerseq",
@@ -62,7 +63,7 @@ setClass(
             peakPosMatrixRaw    = "matrix",
             peakAmpMatrixRaw    = "matrix"
             )
-) -> SangerRead
+)
 
 ### ============================================================================
 ### Overwrite initialize for SangerRead (New constructor)

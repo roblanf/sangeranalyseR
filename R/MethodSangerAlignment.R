@@ -1,21 +1,5 @@
 #' @examples
-#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
-#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' sangerAlignment <- SangerAlignment(
-#'                        parentDirectory       = parentDir,
-#'                        suffixForwardRegExp   = suffixForwardRegExp,
-#'                        suffixReverseRegExp   = suffixReverseRegExp,
-#'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                        TrimmingMethod        = "M1",
-#'                        M1TrimmingCutoff      = 0.0001,
-#'                        M2CutoffQualityScore  = NULL,
-#'                        M2SlidingWindowSize   = NULL,
-#'                        baseNumPerRow         = 100,
-#'                        heightPerRow          = 200,
-#'                        signalRatioCutoff     = 0.33,
-#'                        showTrimmed           = TRUE)
+#' load("data/sangerAlignment.RData")
 #' RShinySA <- launchAppSA(sangerAlignment)
 setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
     ### ------------------------------------------------------------------------
@@ -38,6 +22,12 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
     }
 })
 
+## =============================================================================
+## Writing primary sequence into FASTA format
+## =============================================================================
+#' @examples
+#' load("data/sangerAlignment.RData")
+#' writeFastaSA(sangerAlignment)
 setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
                                                  compression_level,
                                                  selection = "all") {
@@ -134,6 +124,12 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
     message("\nFinish writing 'SangerAlignment' to FASTA format")
 })
 
+## =============================================================================
+## Generating report for SangerContig
+## =============================================================================
+#' @examples
+#' load("data/sangerAlignment.RData")
+#' generateReportSA(sangerAlignment)
 setMethod("generateReportSA", "SangerAlignment",
           function(obj, outputDir,
                    includeSangerContig = TRUE,

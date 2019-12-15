@@ -1,11 +1,11 @@
 #' sangeranalyseR-package
 #'
 #' @name sangeranalyseR
-#' @importFrom sangerseqR read.abif sangerseq primarySeq chromatogram
+#' @importFrom sangerseqR sangerseq read.abif primarySeq chromatogram
 #' @importFrom ggplot2 ggplot
 #' @importFrom gridExtra grid.arrange
-#' @importFrom shiny shinyApp
-#' @importFrom shinydashboard
+#' @import shiny
+#' @importFrom shinydashboard dashboardPage
 #' @importFrom data.table tstrsplit
 #' @importFrom shinyjs useShinyjs html
 #' @importFrom plotly orca
