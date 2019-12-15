@@ -219,34 +219,37 @@ setMethod("initialize",
         ### "SangerRead" S4 class creation (forward list)
         ### --------------------------------------------------------------------
         forwardReadList <- sapply(forwardAllReads[[1]], SangerRead,
-                                   readFeature = "Forward Read",
-                                   TrimmingMethod = TrimmingMethod,
-                                   M1TrimmingCutoff = M1TrimmingCutoff,
+                                   readFeature          = "Forward Read",
+                                   TrimmingMethod       = TrimmingMethod,
+                                   M1TrimmingCutoff     = M1TrimmingCutoff,
                                    M2CutoffQualityScore = M2CutoffQualityScore,
-                                   M2SlidingWindowSize = M2SlidingWindowSize,
-                                   baseNumPerRow = baseNumPerRow,
-                                   heightPerRow = heightPerRow,
-                                   signalRatioCutoff = signalRatioCutoff,
-                                   showTrimmed = showTrimmed)
+                                   M2SlidingWindowSize  = M2SlidingWindowSize,
+                                   baseNumPerRow        = baseNumPerRow,
+                                   heightPerRow         = heightPerRow,
+                                   signalRatioCutoff    = signalRatioCutoff,
+                                   showTrimmed          = showTrimmed)
         ### --------------------------------------------------------------------
         ### "SangerRead" S4 class creation (reverse list)
         ### --------------------------------------------------------------------
         reverseReadList <- sapply(reverseAllReads[[1]], SangerRead,
-                                   readFeature = "Reverse Read",
-                                   TrimmingMethod = TrimmingMethod,
-                                   M1TrimmingCutoff = M1TrimmingCutoff,
+                                   readFeature          = "Reverse Read",
+                                   TrimmingMethod       = TrimmingMethod,
+                                   M1TrimmingCutoff     = M1TrimmingCutoff,
                                    M2CutoffQualityScore = M2CutoffQualityScore,
-                                   M2SlidingWindowSize = M2SlidingWindowSize,
-                                   baseNumPerRow = baseNumPerRow,
-                                   heightPerRow = heightPerRow,
-                                   signalRatioCutoff = signalRatioCutoff,
-                                   showTrimmed = showTrimmed)
-        CSResult <- calculateContigSeq (forwardReadList, reverseReadList,
-                                        refAminoAcidSeq, minFractionCall,
-                                        maxFractionLost, geneticCode,
-                                        acceptStopCodons, readingFrame,
-                                        processorsNum)
-
+                                   M2SlidingWindowSize  = M2SlidingWindowSize,
+                                   baseNumPerRow        = baseNumPerRow,
+                                   heightPerRow         = heightPerRow,
+                                   signalRatioCutoff    = signalRatioCutoff,
+                                   showTrimmed          = showTrimmed)
+        CSResult <- calculateContigSeq (forwardReadList  = forwardReadList,
+                                        reverseReadList  = reverseReadList,
+                                        refAminoAcidSeq  = refAminoAcidSeq,
+                                        minFractionCall  = minFractionCall,
+                                        maxFractionLost  = maxFractionLost,
+                                        geneticCode      = geneticCode,
+                                        acceptStopCodons = acceptStopCodons,
+                                        readingFrame     = readingFrame,
+                                        processorsNum    = processorsNum)
         contigGapfree <- CSResult$consensusGapfree
         diffsDf <- CSResult$diffsDf
         aln2 <- CSResult$aln2

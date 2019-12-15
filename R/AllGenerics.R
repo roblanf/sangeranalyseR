@@ -19,9 +19,8 @@ setGeneric("preQualityBasePlot", function(object,
     standardGeneric("preQualityBasePlot")
 })
 
-
 ### ============================================================================
-### Defined in QualityReport, SangerRead, SangerMergeReads
+### Defined in QualityReport, SangerRead, SangerContig
 ### ============================================================================
 #' @export
 setGeneric("trimmingRatioPlot", function(object) {
@@ -29,7 +28,7 @@ setGeneric("trimmingRatioPlot", function(object) {
 })
 
 ### ============================================================================
-### Defined in QualityReport, SangerRead, SangerMergeReads
+### Defined in QualityReport, SangerRead, SangerContig
 ### ============================================================================
 #' @export
 setGeneric("qualityBasePlot", function(object) {
@@ -37,7 +36,7 @@ setGeneric("qualityBasePlot", function(object) {
 })
 
 ### ============================================================================
-### Defined in QualityReport, SangerRead, SangerMergeReads
+### Defined in QualityReport, SangerRead, SangerContig
 ### ============================================================================
 #' @export
 setGeneric("updateQualityParam", function(object,
@@ -57,7 +56,7 @@ setGeneric("MakeBaseCalls", function(obj, signalRatioCutoff = 0.33) {
 })
 
 ### ============================================================================
-### Write FASTA
+### Defined in SangerRead, SangerContig, SangerAlignment
 ### ============================================================================
 #' @export
 setGeneric("writeFastaSA", function(obj,outputDir = NULL,
@@ -80,9 +79,8 @@ setGeneric("writeFastaSR", function(obj,outputDir = NULL,
     standardGeneric("writeFastaSR")
 })
 
-
 ### ============================================================================
-### Run Shiny app
+### Defined in SangerContig, SangerAlignment
 ### ============================================================================
 #' @export
 setGeneric("launchAppSC", function(obj, outputDir = NULL) {
@@ -94,9 +92,8 @@ setGeneric("launchAppSA", function(obj, outputDir = NULL) {
     standardGeneric("launchAppSA")
 })
 
-
 ### ============================================================================
-### Generate Report
+### Defined in SangerRead, SangerContig, SangerAlignment
 ### ============================================================================
 #' @export
 setGeneric("generateReportSR", function(obj, outputDir = NULL, ...) {
@@ -114,27 +111,6 @@ setGeneric("generateReportSA", function(obj, outputDir = NULL,
     standardGeneric("generateReportSA")
 })
 
-#'
-#' #' @export
-#' setGeneric("generateReportSangerContig", function(obj, outputDir = NULL,
-#'                                       navigationContigFN = NULL,
-#'                                       includeSangerRead = TRUE) {
-#'     standardGeneric("generateReportSangerContig")
-#' })
-#'
-#' #' @export
-#' setGeneric("generateReportSangerRead", function(obj, outputDir = NULL,
-#'                                       navigationContigFN = NULL,
-#'                                       navigationAlignmentFN = NULL) {
-#'     standardGeneric("generateReportSangerRead")
-#' })
-
 
 #' @export
 setClassUnion("numericORNULL", c("numeric", "NULL"))
-
-#' #' @export
-#' setClassUnion("DNAStringORNULL", c("DNAString", "NULL"))
-#'
-#' #' @export
-#' setClassUnion("matrixORNULL", c("matrix", "NULL"))

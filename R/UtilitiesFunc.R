@@ -160,7 +160,7 @@ oneAmbiguousColumn <- function(i, aln){
 ### ----------------------------------------------------------------------------
 ### Calculating SangerContig
 ### ----------------------------------------------------------------------------
-calculateContigSeq <- function(forwardReadsList, forwardReadList,
+calculateContigSeq <- function(forwardReadList, reverseReadList,
                                refAminoAcidSeq, minFractionCall,
                                maxFractionLost, geneticCode,
                                acceptStopCodons, readingFrame,
@@ -168,13 +168,13 @@ calculateContigSeq <- function(forwardReadsList, forwardReadList,
     ### ------------------------------------------------------------------------
     ### forward & reverse character reads list string creation
     ### ------------------------------------------------------------------------
-    fRDNAStringSet <- sapply(forwardReadsList, function(forwardRead) {
+    fRDNAStringSet <- sapply(forwardReadList, function(forwardRead) {
         trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
         trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
         primaryDNA <- as.character(forwardRead@primarySeq)
         substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
     })
-    rRDNAStringSet <- sapply(forwardReadList, function(reverseRead) {
+    rRDNAStringSet <- sapply(reverseReadList, function(reverseRead) {
         trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
         trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
         primaryDNA <- as.character(reverseRead@primarySeq)

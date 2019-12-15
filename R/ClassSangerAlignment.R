@@ -169,17 +169,29 @@ setMethod("initialize",
                        insideDirName<- dirname(eachConsRead)
                        insideContigName <- basename(eachConsRead)
                        SangerContig(
-                           file.path(parentDirectory, insideDirName),
-                           insideContigName, suffixForwardRegExp,
-                           suffixReverseRegExp,TrimmingMethod, M1TrimmingCutoff,
-                           M2CutoffQualityScore, M2SlidingWindowSize,
-                           baseNumPerRow, heightPerRow, signalRatioCutoff,
-                           showTrimmed, refAminoAcidSeq, minReadsNum,
-                           minReadLength, minFractionCall, maxFractionLost,
-                           geneticCode, acceptStopCodons,
-                           readingFrame, processorsNum)
+                           parentDirectory      =
+                               file.path(parentDirectory, insideDirName),
+                           contigName           = insideContigName,
+                           suffixForwardRegExp  = suffixForwardRegExp,
+                           suffixReverseRegExp  = suffixReverseRegExp,
+                           TrimmingMethod       = TrimmingMethod,
+                           M1TrimmingCutoff     = M1TrimmingCutoff,
+                           M2CutoffQualityScore = M2CutoffQualityScore,
+                           M2SlidingWindowSize  = M2SlidingWindowSize,
+                           baseNumPerRow        = baseNumPerRow,
+                           heightPerRow         = heightPerRow,
+                           signalRatioCutoff    = signalRatioCutoff,
+                           showTrimmed          = showTrimmed,
+                           refAminoAcidSeq      = refAminoAcidSeq,
+                           minReadsNum          = minReadsNum,
+                           minReadLength        = minReadLength,
+                           minFractionCall      = minFractionCall,
+                           maxFractionLost      = maxFractionLost,
+                           geneticCode          = geneticCode,
+                           acceptStopCodons     = acceptStopCodons,
+                           readingFrame         = readingFrame,
+                           processorsNum        = processorsNum)
                    })
-
         acResult <- alignContigs(SangerContigList, geneticCode, refAminoAcidSeq,
                                  minFractionCallSA, maxFractionLostSA,
                                  processorsNum)
@@ -201,7 +213,6 @@ setMethod("initialize",
                    contigsConsensus      = consensus,
                    refAminoAcidSeq       = refAminoAcidSeq,
                    contigsAlignment      = aln,
-                   contigsTree           = aln.tree
-                   )
+                   contigsTree           = aln.tree)
 })
 

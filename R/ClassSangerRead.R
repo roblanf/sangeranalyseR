@@ -125,7 +125,6 @@ setMethod("initialize",
                   primarySeq = readSangerseq@primarySeq
                   secondarySeqRaw = readSangerseq@secondarySeq
                   secondarySeq = readSangerseq@secondarySeq
-
                   if (readFeature == "Reverse Read") {
                       primarySeqRaw =
                           reverseComplement(readSangerseq@primarySeq)
@@ -136,12 +135,11 @@ setMethod("initialize",
                       secondarySeq =
                           reverseComplement(readSangerseq@secondarySeq)
                   }
-
-                  traceMatrix         = readSangerseq@traceMatrix
-                  peakPosMatrixRaw    = readSangerseq@peakPosMatrix
-                  peakPosMatrix       = readSangerseq@peakPosMatrix
-                  peakAmpMatrixRaw    = readSangerseq@peakAmpMatrix
-                  peakAmpMatrix       = readSangerseq@peakAmpMatrix
+                  traceMatrix      <- readSangerseq@traceMatrix
+                  peakPosMatrixRaw <- readSangerseq@peakPosMatrix
+                  peakPosMatrix    <- readSangerseq@peakPosMatrix
+                  peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
+                  peakAmpMatrix    <- readSangerseq@peakAmpMatrix
 
                   ### ----------------------------------------------------------
                   ### Definition of 'PCON.1' & 'PCON.2'
@@ -167,11 +165,11 @@ setMethod("initialize",
                   QualityReport <-
                       new("QualityReport",
                           qualityPhredScoresRaw = abifRawData@data$PCON.2,
-                          qualityPhredScores = qualityPhredScores,
-                          TrimmingMethod = TrimmingMethod,
-                          M1TrimmingCutoff = M1TrimmingCutoff,
-                          M2CutoffQualityScore = M2CutoffQualityScore,
-                          M2SlidingWindowSize = M2SlidingWindowSize)
+                          qualityPhredScores    = qualityPhredScores,
+                          TrimmingMethod        = TrimmingMethod,
+                          M1TrimmingCutoff      = M1TrimmingCutoff,
+                          M2CutoffQualityScore  = M2CutoffQualityScore,
+                          M2SlidingWindowSize   = M2SlidingWindowSize)
 
                   ### ==========================================================
                   ### 3. Update everytime (whenever 'signalRatioCutoff' changed)
@@ -184,16 +182,15 @@ setMethod("initialize",
                   ##### 'QualityReport' & 'ChromatogramParam' creation
                   ### ----------------------------------------------------------
                   ChromatogramParam <- new("ChromatogramParam",
-                                           baseNumPerRow     = baseNumPerRow,
-                                           heightPerRow      = heightPerRow,
-                                           signalRatioCutoff = signalRatioCutoff,
-                                           showTrimmed       = showTrimmed)
+                                          baseNumPerRow     = baseNumPerRow,
+                                          heightPerRow      = heightPerRow,
+                                          signalRatioCutoff = signalRatioCutoff,
+                                          showTrimmed       = showTrimmed)
 
-                  AASeqResult <- calculateAASeq (primarySeq, geneticCode)
+                  AASeqResult    <- calculateAASeq (primarySeq, geneticCode)
                   primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
                   primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
                   primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-                  ### ==========================================================
                   ### ==========================================================
               } else {
                   stop(errors)
