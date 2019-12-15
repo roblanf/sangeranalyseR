@@ -25,3 +25,4 @@ maxFractionLost <- sangerContig@maxFractionLost
 geneticCode <- sangerContig@geneticCode
 acceptStopCodons <- sangerContig@acceptStopCodons
 readingFrame <- sangerContig@readingFrame
+
