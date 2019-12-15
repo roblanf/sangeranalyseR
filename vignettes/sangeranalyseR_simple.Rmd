@@ -41,8 +41,9 @@ In this documentation, we intoduce analysis steps in three levels and main featu
 # **SangerRead**
 **'SangerRead'** extends from 'sangerseq' class and stores raw data 'abif' class in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html) as well as essential information including quality trimming and chromatogram parameters. It corresponds to a single ABIF file in Sanger sequencing. 
 
-## Create Sanger Object 
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
+<h2> 2.1 &nbsp;&nbsp;&nbsp;&nbsp; Create Sanger Object </h2>
 First step is to create **'SangerRead'** object. Here, we find the the abosulte file path and assign to `A_chloroticaFdReadFN`.
 ```{r}
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
@@ -58,13 +59,17 @@ singleRead <- SangerRead(readFeature   = "Forward Read",
                          readFileName  = A_chloroticaFdReadFN)
 ```
 
-# Trimmed Read Visualization
+<h2> 2.2 &nbsp;&nbsp;&nbsp;&nbsp; Trimmed Read Visualization </h2>
+
 Second step is to visualize the trimmed read result. `SangerRead` constructor function uses default trimming parameters. `qualityBasePlot` triggers a plot_ly interactive plot for users to check the trimmed read result. 
+
+<div style="overflow: scroll;">
 ```{r}
 qualityBasePlot(singleRead)
 ```
+</div>
 
-# Update Trimming Parameters
+<h2> 2.3 &nbsp;&nbsp;&nbsp;&nbsp; Update Trimming Parameters </h2>
 Third step is to change the trimming parameters. If users are not satisfied with the trimming results, they can run `updateQualityParam` function to change the trimming parameters inside the **'SangerRead'** object.
 ```{r}
 updateQualityParam(singleRead,
@@ -74,22 +79,29 @@ updateQualityParam(singleRead,
                    M2SlidingWindowSize    = NULL)
 ```
 
-## Write FASTA file
+<h2> 2.4 &nbsp;&nbsp;&nbsp;&nbsp; Write FASTA file </h2>
 Fourth step is to export DNA sequence to FATA file. `writeFastaSR` let users to write read in **'SangerRead'** object to file in FASTA format.
 ```{r}
 writeFastaSR(singleRead)
 ```
 
-## Generate Report
+<h2> 2.5 &nbsp;&nbsp;&nbsp;&nbsp; Generate Report </h2>
 Fifth step is to create a html report for **'SangerRead'** object.
 ```{r eval=FALSE}
 generateReportSR(singleRead)
 ```
 
+</details>
+
+---
+
+
 # **SangerContig**
 **'SangerContig'** contains two lists of 'SangerRead' which are forward and reverse read list as well as the alignment results. It corresponds to a contig in Sanger sequencing.
 
-## Create Sanger Object 
+<details class="description"> <summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+
+<h2> 3.1 &nbsp;&nbsp;&nbsp;&nbsp;  Create Sanger Object </h2>
 First step is to prepare all reads in the same directory and define the project parameters.  
 `inputFilesParentDir` is the directory storing all raw ABIF files. 
 `contigName` is the name of contigs. All targets share the same contig name.
@@ -110,31 +122,34 @@ sangerContig <- SangerContig(parentDirectory      = inputFilesParentDir,
                              suffixReverseRegExp  = suffixReverseRegExp)
 ```
 
-## Launch Shiny App 
-
+<h2> 3.2 &nbsp;&nbsp;&nbsp;&nbsp; Launch Shiny App </h2>
 Second step is to trigger **'SangerContig'** Shiny app. By running `SangerContig` constructor function, all forward and reverse reads in this contig share the same trimming parameter by default. It is inconvenient for users to check reads one by one through R command; therefore, we provide a local shiny app to let users easily browse and change parameters in each read in the **'SangerContig'** object.
 ```{r eval=FALSE}
 launchAppSC(sangerContig)
 ```
 
-## Write FASTA file
+<h2> 3.3 &nbsp;&nbsp;&nbsp;&nbsp; Write FASTA file </h2>
 Third step is to export DNA sequence to FATA file. After changing trimming parameters in each read, users can run `writeFastaSC` function to write results into text file in FASTA format.
 ```{r}
 writeFastaSC(sangerContig)
 ```
 
-## Generate Report
-
+<h2> 3.4 &nbsp;&nbsp;&nbsp;&nbsp; Generate Report </h2>
 Fourth step is to create a thorough report. Users can create a static html report for the **'SangerContig'** object.
 ```{r eval=FALSE}
 generateReportSC(sangerContig)
 ```
 
+</details>
+
+---
+
 # **SangerAlignment**
 **'SangerAlignment'** contains a list of 'SangerContig' and the alignment results for all contigs. It corresponds to a rebuild DNA sequence fragment in Sanger sequencing. 
 
-## Create Sanger Object 
+<details class="description"> <summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
+<h2> 4.1 &nbsp;&nbsp;&nbsp;&nbsp; Create Sanger Object </h2>
 First step is to prepare all reads in the same directory and define the project parameters.  
 `inputFilesParentDir` is the directory storing all raw ABIF files. 
 `suffixForwardRegExp` is the regular expression for forward read suffix.
@@ -152,23 +167,50 @@ sangerAlignment <- SangerAlignment(parentDirectory = inputFilesParentDir,
                                          suffixReverseRegExp = suffixReverseRegExp,)
 ```
 
-## Launch Shiny App
-
+<h2> 4.2 &nbsp;&nbsp;&nbsp;&nbsp; Launch Shiny App </h2>
 Second step is to run `launchAppSA` to trigger the local **'SangerAlignment'** Shiny app. Users can easily browse all **'SangerContig'** object in **'SangerAlignment'** and change read parameters in each **'SangerContig'** object.
 
 ```{r eval=FALSE}
 launchAppSA(sangerAlignment)
 ```
 
-## Write FASTA file
-
+<h2> 4.3 &nbsp;&nbsp;&nbsp;&nbsp; Write FASTA file </h2>
 Third step is to run `writeFastaSC` function to write results into text file in FASTA format.
 ```{r  eval=FALSE}
 writeFastaSA(sangerAlignment)
 ```
 
-## Generate Report
+<h2> 4.4 &nbsp;&nbsp;&nbsp;&nbsp; Generate Report </h2>
 Fourth step is to create a thorough report. Users can create a static html report for the **'SangerAlignment'** object.
 ```{r eval=FALSE}
 generateReportSA(sangerAlignment)
 ```
+
+</details>
+
+---
+
+
+<style>
+details.description[open] summary::after {
+  content: attr(data-open);
+  color: #d45050;
+  border-bottom: 2px solid #d45050;
+}
+
+details.description:not([open]) summary::after {
+  content: attr(data-close);
+  color: #4c9c6b;
+  border-bottom: 2px solid #4c9c6b;
+}
+
+.description {
+border-left: 4px solid #d3d6db;
+padding-left: 10px;
+}
+.description summary{
+  font-weight: bold;
+  font-size: 10px;
+  color: #383838;
+}
+</style>
