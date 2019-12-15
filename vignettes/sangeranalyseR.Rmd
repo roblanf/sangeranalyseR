@@ -1,5 +1,5 @@
 ---
-title: "sangeranalyseR"
+title: "sangeranalyseR: An R package for Sanger sequencing data analysis"
 author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -79,8 +79,9 @@ Here is an example of getting the absolute filename of a raw ABIF file. We will 
 ```{r}
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 
-A_chloroticaFdReadFN <- file.path(inputFilesPath,                                                 
+A_chloroticaFdReadFN <- file.path(inputFilesPath,                                       
                                   "Allolobophora_chlorotica",
+                                  "RBNII", 
                                   "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
 print(A_chloroticaFdReadFN)
 ```
@@ -117,16 +118,16 @@ singleReadNew <- new("SangerRead",
 Moreover, we also create a constructor wrapper function for **'SangerRead'**. The instance created by new and constructor functions are same. The constructor function makes creating **'SangerRead'** S4 instance more intuitive.
 ```{r}
  singleReadCtor <- SangerRead(readFeature           = "Forward Read",
-                                    readFileName          = A_chloroticaFdReadFN,
-                                    geneticCode           = GENETIC_CODE,
-                                    TrimmingMethod        = "M2",
-                                    M1TrimmingCutoff      = NULL,
-                                    M2CutoffQualityScore  = 40,
-                                    M2SlidingWindowSize   = 10,
-                                    baseNumPerRow         = 100,
-                                    heightPerRow          = 200,
-                                    signalRatioCutoff     = 0.33,
-                                    showTrimmed           = TRUE)
+                              readFileName          = A_chloroticaFdReadFN,
+                              geneticCode           = GENETIC_CODE,
+                              TrimmingMethod        = "M2",
+                              M1TrimmingCutoff      = NULL,
+                              M2CutoffQualityScore  = 40,
+                              M2SlidingWindowSize   = 10,
+                              baseNumPerRow         = 100,
+                              heightPerRow          = 200,
+                              signalRatioCutoff     = 0.33,
+                              showTrimmed           = TRUE)
 ```
 
 ### Inputs Definition
@@ -202,8 +203,8 @@ knitr::include_graphics("figure/Figure_4_SangerContig_filename_regulation.png")
 Now, after preparing valid directory, we start to define the parameters. First, we need to define the absolute parent directory, the consensus read name and suffix regular expression for forward as well as reverse read.
 ```{r}
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-consensusReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
+contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 ```
@@ -213,28 +214,28 @@ suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 
 Now we create the **'SangerContig'** S4 instance by running *"new"* function. In this example, we provide a reference amino acids sequence and choose Method 1 (M1) *"Logarithmic Scale Trimming"* as our quality trimming approach.
 ```{r}
-consensusReadsRef <- new("SangerContig",
-                         parentDirectory       = inputFilesParentDir,
-                         consensusReadName    = consensusReadName,
-                         suffixForwardRegExp   = suffixForwardRegExp,
-                         suffixReverseRegExp   = suffixReverseRegExp,
-                         refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-                         TrimmingMethod        = "M1",
-                         M1TrimmingCutoff      = 0.0002,
-                         M2CutoffQualityScore  = NULL,
-                         M2SlidingWindowSize   = NULL,
-                         baseNumPerRow         = 100,
-                         heightPerRow          = 200,
-                         signalRatioCutoff     = 0.33,
-                         showTrimmed           = TRUE)
+contigsRef <- new("SangerContig",
+                  parentDirectory       = inputFilesParentDir,
+                  contigName            = contigName,
+                  suffixForwardRegExp   = suffixForwardRegExp,
+                  suffixReverseRegExp   = suffixReverseRegExp,
+                  refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                  TrimmingMethod        = "M1",
+                  M1TrimmingCutoff      = 0.0002,
+                  M2CutoffQualityScore  = NULL,
+                  M2SlidingWindowSize   = NULL,
+                  baseNumPerRow         = 100,
+                  heightPerRow          = 200,
+                  signalRatioCutoff     = 0.33,
+                  showTrimmed           = TRUE)
 ```
 
 
 Same as the previous **'SangerRead'**, we also create a constructor wrapper function for **'SangerContig'**. The instance created by new and constructor functions are same. In this example, we do not provide a reference amino acids sequence and choose Method 2 (M2) *"Logarithmic Scale Sliding Window Trimming"* as our quality trimming approach.
 ``` {r eval=FALSE}
-consensusReadsNoRef <- SangerContig(
+contigsNoRef <- SangerContig(
                               parentDirectory       = inputFilesParentDir,
-                              consensusReadName    = consensusReadName,
+                              contigName            = contigName,
                               suffixForwardRegExp   = suffixForwardRegExp,
                               suffixReverseRegExp   = suffixReverseRegExp,
                               TrimmingMethod        = "M2",
@@ -255,7 +256,7 @@ For more input details, please refer to the **'SangerRead'** section and sangera
 #### Basic Parameters
 
 * **`inputFilesParentDir`** : The absolute parent directory storing all raw ABIF files. There is no restrictions about this directory but the existance of this directory will be checked.
-* **`consensusReadName`** : The consensus read name for the target reads that are going to be aligned into a consensus read.
+* **`contigName`** : The consensus read name for the target reads that are going to be aligned into a consensus read.
 * **`suffixForwardRegExp`** : The suffix regular expression for forward reads in **'SangerContig'**.
 * **`suffixReverseRegExp`** : The suffix regular expression for reverse reads in **'SangerContig'**.
 
@@ -264,7 +265,7 @@ For more input details, please refer to the **'SangerRead'** section and sangera
 Here, we show all the slots in **'SangerContig'**. For more details about the meaning of each slot, please refer to sangeranalyseR reference manual.
 
 ```{r }
-slotNames(consensusReadsRef)
+slotNames(contigsRef)
 ```
 
 
@@ -334,9 +335,9 @@ In sangeranalyseR, we create two interactive Shiny apps which are **'*SangerCont
 ## SangerContig App
 
 To run **'*SangerContig App*'**, users have to create a **SangerContig** instance first. Notice that the input of this function is **"****SangerContig** instance in a list**"**.
-Now, we execute the `launchAppConsensusRead` function and create a `RShinySCR` Shiny object.
+Now, we execute the `launchAppcontig` function and create a `RShinySCR` Shiny object.
 ```{r }
-RShinySCR <- launchAppConsensusRead(list(consensusReadsRef))
+RShinySCR <- launchAppSC(contigsRef)
 ```
 Run the `RShinySCR` in R console to trigger the **'*SangerContig App*'**. There are two layers in **"SangerContig"** which are ***"Consensus Read Overview Page"*** and ***"Single Read Page"***
 
@@ -421,10 +422,10 @@ We have updated the trimming and chromatogram parameters for each read. Now, we 
 ## SangerAlignment App
 
 To run **'*SangerAlignment App*'**, users have to create a **SangerAlignment** instance first. Notice that the input of this function is **"****SangerAlignment** instance in a list**"**.
-Now, we execute the `launchAppConsensusRead` function and create a `RShinySCR` Shiny object.
+Now, we execute the `launchAppSC` function and create a `RShinySCR` Shiny object.
 
 ```{r eval= FALSE}
-RShinyACS <- launchAppSangerAlignment(list(alignedConsensusRef))
+RShinyACS <- launchAppSA(alignedConsensusRef)
 ```
 
 Run `RShinyACS` in R console to trigger the **'*SangerAlignment App*'**. There are three layers in **"SangerAlignment App"** which are ***"Aligned Consensus Set Overview Page"***, ***"Consensus Read Overview Page"*** and ***"Single Read Page"***.

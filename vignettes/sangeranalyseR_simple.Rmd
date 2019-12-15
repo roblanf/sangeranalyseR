@@ -53,7 +53,7 @@ singleRead <- SangerRead(readFeature   = "Forward Read",
                          readFileName  = A_chloroticaFdReadFN)
 ```
 
-<h2> 2.2 &nbsp;&nbsp;&nbsp;&nbsp; Trimmed Read Visualization </h2>
+<h2> 2.2 &nbsp;&nbsp;&nbsp;&nbsp; Visualize Trimmed Read </h2>
 
 Second step is to visualize the trimmed read. `qualityBasePlot` triggers a [plot_ly](https://plot.ly/r/) interactive plot for users to check the result of the trimmed read.
 
