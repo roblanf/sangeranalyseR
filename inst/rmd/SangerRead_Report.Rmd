@@ -264,6 +264,9 @@ chromatogram(hetcalls,
 
 <br>
 <br>
+```{r}
+print(getwd())
+```
 [Click Here to Open Chromatogram in New Page ](`r file.path(params$outputDir, "Chromatogram.pdf")`)
 
 ![Alt](`r file.path(params$outputDir, "Chromatogram.pdf")`){width=100% height=500px}.
