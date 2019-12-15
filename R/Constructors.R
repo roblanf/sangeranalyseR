@@ -29,21 +29,22 @@
 #' @author Kuan-Hao Chao
 #' @example
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' newAlignment <- SangerAlignment(
-#'                     parentDirectory       = rawDataDir,
-#'                     suffixForwardRegExp   = suffixForwardRegExp,
-#'                     suffixReverseRegExp   = suffixReverseRegExp,
-#'                     refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                     TrimmingMethod        = "M2",
-#'                     M1TrimmingCutoff      = NULL,
-#'                     M2CutoffQualityScore  = 20,
-#'                     M2SlidingWindowSize   = 10,
-#'                     baseNumPerRow         = 100,
-#'                     heightPerRow          = 200,
-#'                     signalRatioCutoff     = 0.33,
-#'                     showTrimmed           = TRUE)
+#' sangerAlignment <- SangerAlignment(
+#'                        parentDirectory       = parentDir,
+#'                        suffixForwardRegExp   = suffixForwardRegExp,
+#'                        suffixReverseRegExp   = suffixReverseRegExp,
+#'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                        TrimmingMethod        = "M1",
+#'                        M1TrimmingCutoff      = 0.0001,
+#'                        M2CutoffQualityScore  = NULL,
+#'                        M2SlidingWindowSize   = NULL,
+#'                        baseNumPerRow         = 100,
+#'                        heightPerRow          = 200,
+#'                        signalRatioCutoff     = 0.33,
+#'                        showTrimmed           = TRUE)
 SangerAlignment <- function(parentDirectory        = character(0),
                             suffixForwardRegExp    = character(0),
                             suffixReverseRegExp    = character(0),
@@ -124,23 +125,24 @@ SangerAlignment <- function(parentDirectory        = character(0),
 #' @author Kuan-Hao Chao
 #' @example
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
-#' contigName <- "RBNII395-13[C_LepFolF,C_LepFolR]"
+#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
+#' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' A_chloroticContig <- SangerContig(
-#'                          parentDirectory       = inputFilesParentDir,
-#'                          contigName            = contigName,
-#'                          suffixForwardRegExp   = suffixForwardRegExp,
-#'                          suffixReverseRegExp   = suffixReverseRegExp,
-#'                          TrimmingMethod        = "M2",
-#'                          M1TrimmingCutoff      = NULL,
-#'                          M2CutoffQualityScore  = 20,
-#'                          M2SlidingWindowSize   = 10,
-#'                          baseNumPerRow         = 100,
-#'                          heightPerRow          = 200,
-#'                          signalRatioCutoff     = 0.33,
-#'                          showTrimmed           = TRUE)
+#' sangerContig <- SangerContig(
+#'                      parentDirectory       = parentDir,
+#'                      contigName            = contigName,
+#'                      suffixForwardRegExp   = suffixForwardRegExp,
+#'                      suffixReverseRegExp   = suffixReverseRegExp,
+#'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                      TrimmingMethod        = "M2",
+#'                      M1TrimmingCutoff      = NULL,
+#'                      M2CutoffQualityScore  = 20,
+#'                      M2SlidingWindowSize   = 10,
+#'                      baseNumPerRow         = 100,
+#'                      heightPerRow          = 200,
+#'                      signalRatioCutoff     = 0.33,
+#'                      showTrimmed           = TRUE)
 SangerContig <- function(parentDirectory        = character(0),
                          contigName             = character(0),
                          suffixForwardRegExp    = character(0),
@@ -210,22 +212,22 @@ SangerContig <- function(parentDirectory        = character(0),
 #' @author Kuan-Hao Chao
 #' @example
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-#' A_chloroticaFdReadFN <-
-#'             file.path(inputFilesPath,
-#'                       "Allolobophora_chlorotica",
-#'                       "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
-#' A_chloroticaRead <- SangerRead(
-#'                         readFeature           = "Forward Read",
-#'                         readFileName          = A_chloroticaFdReadFN,
-#'                         geneticCode           = GENETIC_CODE,
-#'                         TrimmingMethod        = "M2",
-#'                         M1TrimmingCutoff      = NULL,
-#'                         M2CutoffQualityScore  = 40,
-#'                         M2SlidingWindowSize   = 10,
-#'                         baseNumPerRow         = 100,
-#'                         heightPerRow          = 200,
-#'                         signalRatioCutoff     = 0.33,
-#'                         showTrimmed           = TRUE)
+#' A_chloroticaFdFN <- file.path(inputFilesPath,
+#'                               "Allolobophora_chlorotica",
+#'                               "ACHLO",
+#'                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
+#' sangerRead <- SangerRead(
+#'                    readFeature           = "Forward Read",
+#'                    readFileName          = A_chloroticaFdFN,
+#'                    geneticCode           = GENETIC_CODE,
+#'                    TrimmingMethod        = "M1",
+#'                    M1TrimmingCutoff      = 0.0001,
+#'                    M2CutoffQualityScore  = NULL,
+#'                    M2SlidingWindowSize   = NULL,
+#'                    baseNumPerRow         = 100,
+#'                    heightPerRow          = 200,
+#'                    signalRatioCutoff     = 0.33,
+#'                    showTrimmed           = TRUE)
 SangerRead <- function(readFeature           = character(0),
                        readFileName          = character(0),
                        geneticCode           = GENETIC_CODE,

@@ -60,6 +60,7 @@ library(sangeranalyseR)
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <h3> Primary Sequence </h3>
 <div style="overflow: scroll;">
+<br>
 ```{r echo=FALSE, warning=FALSE}
 contigSeqsCon <- unlist(strsplit(as.character(params$SangerAlignment@contigsConsensus), ""))
 contigSeqsConDF <- data.frame(t(data.frame(contigSeqsCon)), stringsAsFactors = FALSE)

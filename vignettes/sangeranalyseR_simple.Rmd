@@ -43,6 +43,7 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 
 A_chloroticaFdReadFN <- file.path(inputFilesPath, 
                           "Allolobophora_chlorotica",
+                          "RBNII",
                           "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
 ```
 
@@ -104,7 +105,7 @@ First step is to prepare all reads in the same directory and define the project 
 
 ```{r}
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
+inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
@@ -152,14 +153,15 @@ First step is to prepare all reads in the same directory and define the project 
 * `suffixReverseRegExp` is the regular expression for reverse read suffix. 
 
 ```{r}
-inputFilesParentDir <- system.file("extdata", package="sangeranalyseR")
+rawDir <- system.file("extdata", package="sangeranalyseR")
+parentDir <- file.path(rawDir, "Allolobophora_chlorotica", "RBNII")
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 ```
 Users can create ***'SangerAlignment'*** instance by running `SangerAlignment` constructor function.
 ```{r  eval=FALSE}
 sangerAlignment <- 
-        SangerAlignment(parentDirectory = inputFilesParentDir,
+        SangerAlignment(parentDirectory = parentDir,
                         suffixForwardRegExp = suffixForwardRegExp,
                         suffixReverseRegExp = suffixReverseRegExp,)
 ```

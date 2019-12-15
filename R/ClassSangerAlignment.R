@@ -27,11 +27,11 @@ setOldClass("phylo")
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' inputDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
+#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' sangerAlignment <- new("SangerAlignment",
-#'                        parentDirectory       = inputDir,
+#'                        parentDirectory       = parentDir,
 #'                        suffixForwardRegExp   = suffixForwardRegExp,
 #'                        suffixReverseRegExp   = suffixReverseRegExp,
 #'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",

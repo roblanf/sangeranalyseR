@@ -1,21 +1,22 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
-#' newAlignment <- SangerAlignment(
-#'                     parentDirectory       = rawDataDir,
-#'                     suffixForwardRegExp   = suffixForwardRegExp,
-#'                     suffixReverseRegExp   = suffixReverseRegExp,
-#'                     refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                     TrimmingMethod        = "M1",
-#'                     M1TrimmingCutoff      = 0.0001,
-#'                     M2CutoffQualityScore  = NULL,
-#'                     M2SlidingWindowSize   = NULL,
-#'                     baseNumPerRow         = 100,
-#'                     heightPerRow          = 200,
-#'                     signalRatioCutoff     = 0.33,
-#'                     showTrimmed           = TRUE)
-#' RShinyCSSet <- launchAppSA(newAlignment)
+#' sangerAlignment <- SangerAlignment(
+#'                        parentDirectory       = parentDir,
+#'                        suffixForwardRegExp   = suffixForwardRegExp,
+#'                        suffixReverseRegExp   = suffixReverseRegExp,
+#'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                        TrimmingMethod        = "M1",
+#'                        M1TrimmingCutoff      = 0.0001,
+#'                        M2CutoffQualityScore  = NULL,
+#'                        M2SlidingWindowSize   = NULL,
+#'                        baseNumPerRow         = 100,
+#'                        heightPerRow          = 200,
+#'                        signalRatioCutoff     = 0.33,
+#'                        showTrimmed           = TRUE)
+#' RShinySA <- launchAppSA(sangerAlignment)
 setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
     ### ------------------------------------------------------------------------
     ### Checking SangerAlignment input parameter is a list containing
@@ -26,6 +27,7 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
     message(">>> outputDir : ", outputDir)
+
     if (dir.exists(outputDir)) {
         shinyOptions(sangerAlignment = list(obj))
         shinyOptions(shinyDirectory = outputDir)
@@ -172,5 +174,5 @@ setMethod("generateReportSA", "SangerAlignment",
                   params = list(SangerAlignment = obj,
                                 outputDir = outputDirSA,
                                 contigsFN = contigsFN))
-    return(contigsFN)
+    return(outputHtml)
 })

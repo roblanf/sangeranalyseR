@@ -130,8 +130,9 @@ suppressWarnings(suppressMessages(
 
 <h3> Reference Amino Acid Sequence </h3>
 <div style="overflow: scroll;">
-```{r echo=FALSE, warning=FALSE}
-refAminoAcidSeqVec <- strsplit(params$SangerContig@refAminoAcidSeq, "")[[1]]
+```{r results='asis', echo=FALSE, warning=FALSE}
+if (params$SangerContig@refAminoAcidSeq != "") {
+  refAminoAcidSeqVec <- strsplit(params$SangerContig@refAminoAcidSeq, "")[[1]]
     names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
     suppressWarnings(suppressMessages(
         excelTable(data =
@@ -141,6 +142,10 @@ refAminoAcidSeqVec <- strsplit(params$SangerContig@refAminoAcidSeq, "")[[1]]
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
     ))
+} else {
+      cat("<p style='font-size: 13px; font-weight:bold'> 'refAminoAcidSeq' is empty. There are no 'refAminoAcidSeq' in this SangerContig. </p>")
+}
+
 ```
 </div>
 </details>
