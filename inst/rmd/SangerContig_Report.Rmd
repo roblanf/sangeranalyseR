@@ -251,7 +251,7 @@ if (all(dim(params$SangerContig@secondaryPeakDF) == c(0,0))) {
 if (!is.null(params$forwardReadFN)) {
   for (i in 1:length(params$forwardReadFN)){
       cat('<li style = "margin-top: 35px; font-weight: bold">')
-      cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', params$forwardReadFN[[i]], '">')
+      cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', file.path(".", basename(dirname(params$forwardReadFN[[i]])), basename(params$forwardReadFN[[i]])), '">')
       cat(paste0('Go to Read: "', basename(params$SangerContig@forwardReadList[[i]]@readFileName), '" Report'))
       cat('</a>\n') 
       cat('</li>')
@@ -276,7 +276,7 @@ if (is.null(params$forwardReadFN)) {
 if (!is.null(params$reverseReadFN)) {
   for (i in 1:length(params$reverseReadFN)){
       cat('<li style = "margin-top: 35px; font-weight: bold">')
-      cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', params$reverseReadFN[[i]], '">')
+      cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', file.path(".", basename(dirname(params$reverseReadFN[[i]])), basename(params$reverseReadFN[[i]])), '">')
       cat(paste0('Go to Read: "', basename(params$SangerContig@reverseReadList[[i]]@readFileName), '" Report'))
       cat('</a>\n') 
       cat('</li>')
@@ -293,7 +293,7 @@ if (is.null(params$reverseReadFN)) {
 
 ---
 
-`r if(!is.null(params$navigationAlignmentFN)){paste0('<br><br><a style="margin-left:-20px" href="', params$navigationAlignmentFN, '" class="btn btn-success btn-block btn-lg active" role="button">Back to \'SangerAlignment Report\'</a>')}`
+`r if(!is.null(params$navigationAlignmentFN)){paste0('<br><br><a style="margin-left:-20px" href="', file.path("..", basename(params$navigationAlignmentFN)), '" class="btn btn-success btn-block btn-lg active" role="button">Back to \'SangerAlignment Report\'</a>')}`
 
 <style>
 li{

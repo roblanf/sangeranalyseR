@@ -121,7 +121,7 @@ plot(params$SangerAlignment@contigsTree)
 if (!is.null(params$contigsFN)) {
   for (i in 1:length(params$contigsFN)){
       cat('<li style = "margin-top: 35px; font-weight: bold">')
-      cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="', params$contigsFN[[i]], '">')
+      cat('<a style = "margin-top: -10px" role="button" class="btn btn-info" href="',   file.path(".", basename(dirname(params$contigsFN[[i]])), basename(params$contigsFN[[i]])), '">')
       cat(paste0('Go to Contig: "', basename(params$SangerAlignment@contigList[[i]]@contigName), '" Report'))
       cat('</a>\n') 
       cat('</li>')
