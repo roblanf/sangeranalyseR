@@ -1,5 +1,5 @@
 ---
-title: "sangeranalyseR"
+title: "An Introduction to sangeranalyseR"
 author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -29,10 +29,17 @@ library(sangeranalyseR)
 ```
 
 # Introduction
+[sangeranalyseR](https://github.com/roblanf/sangeranalyseR) is an R package for analysing Sanger sequencing reads, especially those from ABIF platform, in pure R environment. 
+There are three levels in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are *'SangerRead'*, *'SangerContig'* and *'SangerAlignment'*. Users can choose which level to start the analysis.
+
+In this documentation, we intoduce analysis steps in three levels and main features with examples.
+
 
 # SangerRead
+**'SangerRead'** extends from 'sangerseq' class and stores raw data 'abif' class in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html) as well as essential information including quality trimming and chromatogram parameters. It corresponds to a single ABIF file in Sanger sequencing. 
 
 ## Create Sanger Object 
+
 ```{r}
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 
@@ -51,11 +58,12 @@ writeFastaSR(singleRead)
 ```
 
 ## Generate Report
-```{r}
+```{r eval=FALSE}
 generateReportSR(singleRead)
 ```
 
 # SangerContig
+**'SangerContig'** contains two lists of 'SangerRead' which are forward and reverse read list as well as the alignment results. It corresponds to a contig in Sanger sequencing.
 
 ## Create Sanger Object 
 ```{r}
@@ -73,7 +81,7 @@ sangerContig <- SangerContig(parentDirectory      = inputFilesParentDir,
 ```
 
 ## Launch Shiny App 
-```{r}
+```{r eval=FALSE}
 launchAppSC(sangerContig)
 ```
 
@@ -83,11 +91,12 @@ writeFastaSC(sangerContig)
 ```
 
 ## Generate Report
-```{r}
+```{r eval=FALSE}
 generateReportSC(sangerContig)
 ```
 
 # SangerAlignment
+**'SangerAlignment'** contains a list of 'SangerContig' and the alignment results for all contigs. It corresponds to a rebuild DNA sequence fragment in Sanger sequencing. 
 
 ## Create Sanger Object 
 ```{r}
@@ -96,24 +105,23 @@ suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 ```
 
-```{r}
-# setOldClass("phylo")
-sangerAlignment <- SangerSangerAlignment(parentDirectory = inputFilesParentDir,
+```{r  eval=FALSE}
+sangerAlignment <- SangerAlignment(parentDirectory = inputFilesParentDir,
                                          suffixForwardRegExp = suffixForwardRegExp,
                                          suffixReverseRegExp = suffixReverseRegExp,)
 ```
 
 ## Launch Shiny App 
-```{r}
+```{r eval=FALSE}
 launchAppSA(sangerAlignment)
 ```
 
 ## Write FASTA file
-```{r}
+```{r  eval=FALSE}
 writeFastaSA(sangerAlignment)
 ```
 
 ## Generate Report
-```{r}
+```{r eval=FALSE}
 generateReportSA(sangerAlignment)
 ```
