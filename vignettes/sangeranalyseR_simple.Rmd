@@ -29,31 +29,24 @@ library(sangeranalyseR)
 ```
 
 # Introduction
-[sangeranalyseR](https://github.com/roblanf/sangeranalyseR) is an R package for analysing Sanger sequencing reads, especially those from ABIF platform, in pure R environment. There are three levels in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are *'SangerRead'*, *'SangerContig'* and *'SangerAlignment'*. Users can choose which level to start the analysis. 
-
-We provide local Shiny apps to let users browse and change trimming parameters as well as chromatogram parameters. 
-
-Final html reports for all Sanger analysis result. 
-
-In this documentation, we intoduce analysis steps in three levels and main features with examples.
-
+[sangeranalyseR](https://github.com/roblanf/sangeranalyseR) is an R package for analysing Sanger sequencing reads, especially those from ABIF platform, in pure R environment. There are three levels in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are ***'SangerRead'***, ***'SangerContig'*** and ***'SangerAlignment'***. Users can choose which level to start the analysis. In this documentation, we intoduce analysis workflow step by step in these three levels with examples.
 
 # **SangerRead**
-**'SangerRead'** extends from 'sangerseq' class and stores raw data 'abif' class in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html) as well as essential information including quality trimming and chromatogram parameters. It corresponds to a single ABIF file in Sanger sequencing. 
+***'SangerRead'*** extends from 'sangerseq' class and stores 'abif' class in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html) as well as essential information including quality trimming and chromatogram parameters. It corresponds to a single ABIF file in Sanger sequencing. 
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
-<h2> 2.1 &nbsp;&nbsp;&nbsp;&nbsp; Create Sanger Object </h2>
-First step is to create **'SangerRead'** object. Here, we find the the abosulte file path and assign to `A_chloroticaFdReadFN`.
+<h2> 2.1 &nbsp;&nbsp;&nbsp;&nbsp; Create **SangerRead** Instance </h2>
+First step is to create a ***'SangerRead'*** instance. Here, we find the the abosulte file path and assign it to `A_chloroticaFdReadFN`.
 ```{r}
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 
 A_chloroticaFdReadFN <- file.path(inputFilesPath, 
-                                  "Allolobophora_chlorotica",
-                                  "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
+                          "Allolobophora_chlorotica",
+                          "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
 ```
 
-Now we can create the **'SangerRead'** object by running `SangerRead` constructor function. 
+Now we can create a **'SangerRead'** instance by running `SangerRead` constructor function. 
 ```{r}
 singleRead <- SangerRead(readFeature   = "Forward Read",
                          readFileName  = A_chloroticaFdReadFN)
@@ -61,7 +54,7 @@ singleRead <- SangerRead(readFeature   = "Forward Read",
 
 <h2> 2.2 &nbsp;&nbsp;&nbsp;&nbsp; Trimmed Read Visualization </h2>
 
-Second step is to visualize the trimmed read result. `SangerRead` constructor function uses default trimming parameters. `qualityBasePlot` triggers a plot_ly interactive plot for users to check the trimmed read result. 
+Second step is to visualize the trimmed read. `qualityBasePlot` triggers a [plot_ly](https://plot.ly/r/) interactive plot for users to check the result of the trimmed read.
 
 <div style="overflow: scroll;">
 ```{r}
@@ -70,8 +63,8 @@ qualityBasePlot(singleRead)
 </div>
 
 <h2> 2.3 &nbsp;&nbsp;&nbsp;&nbsp; Update Trimming Parameters </h2>
-Third step is to change the trimming parameters. If users are not satisfied with the trimming results, they can run `updateQualityParam` function to change the trimming parameters inside the **'SangerRead'** object.
-```{r}
+Third step is to change trimming parameters. `SangerRead` constructor function uses default trimming parameters. If users are not satisfied with the trimming result, they can run `updateQualityParam` function to change the trimming parameters inside the ***'SangerRead'*** instance.
+```{r  results="hide"}
 updateQualityParam(singleRead,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0003,
@@ -80,13 +73,13 @@ updateQualityParam(singleRead,
 ```
 
 <h2> 2.4 &nbsp;&nbsp;&nbsp;&nbsp; Write FASTA file </h2>
-Fourth step is to export DNA sequence to FATA file. `writeFastaSR` let users to write read in **'SangerRead'** object to file in FASTA format.
+Fourth step is to export DNA sequence to FATA file. `writeFastaSR` let users to write read in ***'SangerRead'*** instance to file in FASTA format.
 ```{r}
 writeFastaSR(singleRead)
 ```
 
 <h2> 2.5 &nbsp;&nbsp;&nbsp;&nbsp; Generate Report </h2>
-Fifth step is to create a html report for **'SangerRead'** object.
+Fifth step is to create a static html report for ***'SangerRead'*** instance by running `generateReportSR` function
 ```{r eval=FALSE}
 generateReportSR(singleRead)
 ```
@@ -97,16 +90,18 @@ generateReportSR(singleRead)
 
 
 # **SangerContig**
-**'SangerContig'** contains two lists of 'SangerRead' which are forward and reverse read list as well as the alignment results. It corresponds to a contig in Sanger sequencing.
+***'SangerContig'*** contains two lists of ***'SangerRead'*** which are forward and reverse read list. It also contains alignment results and consensus read. It corresponds to a contig in Sanger sequencing.
 
 <details class="description"> <summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
-<h2> 3.1 &nbsp;&nbsp;&nbsp;&nbsp;  Create Sanger Object </h2>
+<h2> 3.1 &nbsp;&nbsp;&nbsp;&nbsp;  Create **SangerContig** Instance </h2>
 First step is to prepare all reads in the same directory and define the project parameters.  
-`inputFilesParentDir` is the directory storing all raw ABIF files. 
-`contigName` is the name of contigs. All targets share the same contig name.
-`suffixForwardRegExp` is the regular expression for forward read suffix.
-`suffixReverseRegExp` is the regular expression for reverse read suffix. 
+
+* `inputFilesParentDir` is the directory storing all raw ABIF files. 
+* `contigName` is the name of contigs. All targets share the same contig name.
+* `suffixForwardRegExp` is the regular expression for forward read suffix.
+* `suffixReverseRegExp` is the regular expression for reverse read suffix. 
+
 ```{r}
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
@@ -114,7 +109,7 @@ contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 ```
-Then users can create **'SangerContig'** object by running `SangerContig` constructor function.
+After defining parameters, users can create ***'SangerContig'*** instance by running `SangerContig` constructor function.
 ```{r}
 sangerContig <- SangerContig(parentDirectory      = inputFilesParentDir,
                              contigName           = contigName,
@@ -123,7 +118,7 @@ sangerContig <- SangerContig(parentDirectory      = inputFilesParentDir,
 ```
 
 <h2> 3.2 &nbsp;&nbsp;&nbsp;&nbsp; Launch Shiny App </h2>
-Second step is to trigger **'SangerContig'** Shiny app. By running `SangerContig` constructor function, all forward and reverse reads in this contig share the same trimming parameter by default. It is inconvenient for users to check reads one by one through R command; therefore, we provide a local shiny app to let users easily browse and change parameters in each read in the **'SangerContig'** object.
+Second step is to trigger ***'SangerContig'*** Shiny app. In `SangerContig` constructor function, all forward and reverse reads in this contig share the same trimming parameter by default. It is inconvenient for users to check reads one by one through R command; therefore, we provide a local Shiny app to let users easily browse and change parameters in each read in the ***'SangerContig'*** instance.
 ```{r eval=FALSE}
 launchAppSC(sangerContig)
 ```
@@ -135,7 +130,7 @@ writeFastaSC(sangerContig)
 ```
 
 <h2> 3.4 &nbsp;&nbsp;&nbsp;&nbsp; Generate Report </h2>
-Fourth step is to create a thorough report. Users can create a static html report for the **'SangerContig'** object.
+Fourth step is to create a report. Users can create a static html report for the ***'SangerContig'*** instance by running `generateReportSC` function.
 ```{r eval=FALSE}
 generateReportSC(sangerContig)
 ```
@@ -145,30 +140,32 @@ generateReportSC(sangerContig)
 ---
 
 # **SangerAlignment**
-**'SangerAlignment'** contains a list of 'SangerContig' and the alignment results for all contigs. It corresponds to a rebuild DNA sequence fragment in Sanger sequencing. 
+***'SangerAlignment'*** contains a list of ***'SangerContig'*** and the alignment results for all contigs. It corresponds to a rebuild DNA sequence fragment in Sanger sequencing. 
 
 <details class="description"> <summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
-<h2> 4.1 &nbsp;&nbsp;&nbsp;&nbsp; Create Sanger Object </h2>
+<h2> 4.1 &nbsp;&nbsp;&nbsp;&nbsp; Create **SangerAlignment** Instance </h2>
 First step is to prepare all reads in the same directory and define the project parameters.  
-`inputFilesParentDir` is the directory storing all raw ABIF files. 
-`suffixForwardRegExp` is the regular expression for forward read suffix.
-`suffixReverseRegExp` is the regular expression for reverse read suffix. 
+
+* `inputFilesParentDir` is the directory storing all raw ABIF files. 
+* `suffixForwardRegExp` is the regular expression for forward read suffix.
+* `suffixReverseRegExp` is the regular expression for reverse read suffix. 
 
 ```{r}
-inputFilesParentDir <- system.file("extdata", package = "sangeranalyseR")
+inputFilesParentDir <- system.file("extdata", package="sangeranalyseR")
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 ```
-Users can create **'SangerAlignment'** object by running `SangerAlignment` constructor function.
+Users can create ***'SangerAlignment'*** instance by running `SangerAlignment` constructor function.
 ```{r  eval=FALSE}
-sangerAlignment <- SangerAlignment(parentDirectory = inputFilesParentDir,
-                                         suffixForwardRegExp = suffixForwardRegExp,
-                                         suffixReverseRegExp = suffixReverseRegExp,)
+sangerAlignment <- 
+        SangerAlignment(parentDirectory = inputFilesParentDir,
+                        suffixForwardRegExp = suffixForwardRegExp,
+                        suffixReverseRegExp = suffixReverseRegExp,)
 ```
 
 <h2> 4.2 &nbsp;&nbsp;&nbsp;&nbsp; Launch Shiny App </h2>
-Second step is to run `launchAppSA` to trigger the local **'SangerAlignment'** Shiny app. Users can easily browse all **'SangerContig'** object in **'SangerAlignment'** and change read parameters in each **'SangerContig'** object.
+Second step is to run `launchAppSA` to trigger the local ***'SangerAlignment'*** Shiny app. Users can easily browse all ***'SangerContig'*** instance in ***'SangerAlignment'*** and change ***'SangerRead'*** trimming parameters in each ***'SangerContig'*** instance.
 
 ```{r eval=FALSE}
 launchAppSA(sangerAlignment)
@@ -181,7 +178,7 @@ writeFastaSA(sangerAlignment)
 ```
 
 <h2> 4.4 &nbsp;&nbsp;&nbsp;&nbsp; Generate Report </h2>
-Fourth step is to create a thorough report. Users can create a static html report for the **'SangerAlignment'** object.
+Fourth step is to create a report. Users can create a static html report for the ***'SangerAlignment'*** instance by running `generateReportSA` function.
 ```{r eval=FALSE}
 generateReportSA(sangerAlignment)
 ```
