@@ -9,7 +9,7 @@ output:
     fig_caption: yes
   BiocStyle::pdf_document: default
 #bibliography: bibliography.bib
-fontsize: 14pt
+fontsize: 14 pt
 vignette: >
   %\VignetteIndexEntry{sangeranalyseR}
   %\VignetteEngine{knitr::rmarkdown}
@@ -26,7 +26,7 @@ knitr::opts_chunk$set(tidy = FALSE,
 
 # Introduction
 [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) is an R package for analysing Sanger sequencing reads, especially those from the ABIF platform, in pure R environment. We create three main S4 R classes which are in hierarchy to store user inputs and data analysis results. Furthermore, in order to let users check and change some essential parameters of each read easily, we provide two local interactive Shiny apps that visualize the created S4 instance. 
-New S4 instance can be saved with new parameters given in Shiny apps. Other main features include exporting FASTA file and generating thorough report.
+New S4 instance can be saved with the new parameters given in Shiny apps. Other main features include exporting FASTA file and generating thorough report.
 
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
@@ -35,12 +35,12 @@ New S4 instance can be saved with new parameters given in Shiny apps. Other main
 
 The [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) provides S4 classes for importing Sanger sequencing files into R environment. 
 
->>> New
+>>> Add
 
 <h3> &nbsp; 1.1.1 &nbsp;&nbsp;&nbsp;&nbsp; S4 Classes </h3>
 There are three main S4 classes in [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) which are ***'SangerRead'***, ***'SangerContig'*** and ***'SangerAlignment'***. Each of them stores different level of input parameters and results in Sanger sequencing data analysis. **Figure 1** shows the hierarchy of these three S4 classes.
 
-```{r, out.width = "2000px",fig.cap="\\label{fig:figs} S4 class hierarchy", echo=FALSE}
+```{r, out.width = "2000px",fig.cap="\\label{fig:figs} S4 class hierarchy tree", echo=FALSE}
 knitr::include_graphics("figure/Figure_1_S4_Class_Hierarchy.png")
 ```
 
@@ -52,7 +52,7 @@ knitr::include_graphics("figure/Figure_1_S4_Class_Hierarchy.png")
 
 <h3> &nbsp; 1.1.2 &nbsp;&nbsp;&nbsp;&nbsp; Interactive Shiny App </h3>
 
-We build two local interactive Shiny app for users to explore their created ***'SangerContig'*** and ***'SangerAlignment'***. Inside the Shiny app, users can change the input parameters for quality trimming, chromatogram and rebuild consensus read etc. Information displayed on the UI is dynamic based on user input. Furthermore, all changed parameters and results can be saved to a new S4 instance and be exported as an *RDS* file.
+We build two local interactive Shiny apps for users to explore their created ***'SangerContig'*** and ***'SangerAlignment'***. Inside the Shiny app, users can change the input parameters for quality trimming, chromatogram and rebuild consensus read etc. Information displayed on the UI is dynamic based on user input. Furthermore, all changed parameters and results can be saved to a new S4 instance and be exported as an *RDS* file.
 
 <h2> 1.2 &nbsp;&nbsp;&nbsp;&nbsp; System Requirement </h2>
 
@@ -62,8 +62,7 @@ We build two local interactive Shiny app for users to explore their created ***'
 
 <h3> &nbsp; 1.3.1 &nbsp;&nbsp;&nbsp;&nbsp; Installing from GitHub using devtools </h3>
 
-For now, users need to git clone the newest commit in the 'develop' branch on github. 
-Press install button on RStudio to install sangeranalyseR.
+For now, users need to git clone the newest commit in the 'develop' branch on github. Click install button on RStudio to install [sangeranalyseR](https://github.com/roblanf/sangeranalyseR)
 
 <h3> &nbsp; 1.3.1 &nbsp;&nbsp;&nbsp;&nbsp; Installing from Bioconductor </h3>
 
@@ -72,18 +71,16 @@ Press install button on RStudio to install sangeranalyseR.
 </details>
 
 
-# S4 Classes
+# **SangerRead** Analysis Workflow
+***'SangerRead'*** S4 class corresponds to a single ABIF file in Sanger sequencing. It is in the lowest level of class hierarchy tree in **Figure 1**.
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
-
-<h2> 2.1 &nbsp;&nbsp;&nbsp;&nbsp; SangerRead </h2>
-
-**"SangerRead"** S4 class corresponds to a single ABIF file in Sanger sequencing. We will show how to create a **"SangerRead"** instance and the slots in this class.
+<h2> 2.1 &nbsp;&nbsp;&nbsp;&nbsp; **SangerRead** Class Creation </h2>
 
 <details class="description2"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <h3> &nbsp; 2.1.1 &nbsp;&nbsp;&nbsp;&nbsp; ABIF Filename Regulation </h3>
 
-**Figure 2** below shows the filename regulation of input raw ABIF file which is going to be used as input to create **"SangerRead"**. All raw ABIF files must be *forward* or *reverse* and the reason there is a **[*Number Index*]** in the suffix is that later we are going to create **"SangerContig"** S4 instance. There are no range restriction on **[*Number Index*]** here. But in **"SangerContig"** section, all reads in the same consensus group that are going to be aligned must be indexed properly. More details please refer to next section. 
+**Figure 2** below shows the filename regulation of input raw ABIF file which is going to be used to create ***'SangerRead'***. All raw ABIF files must be *forward* or *reverse* and the reason there is a **[*Number Index*]** in the suffix is that later we are going to create ***'SangerContig'*** S4 instance. There are no range restriction on **[*Number Index*]** here. But in ***'SangerContig'*** section, all reads that are going to be aligned in the same consensus group must be indexed properly. More details please refer to **2.2.1**. 
 
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerRead'", echo=FALSE}
@@ -92,12 +89,14 @@ knitr::include_graphics("figure/Figure_2_SangerRead_filename_regulation.png")
 
 Here is an example of getting the absolute filename of a raw ABIF file. We will show the meaning of **[*Consensus Read Name*]**, **[*F,R*]** and **[*Number Index*]** with true data.
 ```{r}
-inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
+inputFilesPath <- system.file("extdata/", 
+                              package = "sangeranalyseR")
 
-A_chloroticaFdReadFN <- file.path(inputFilesPath,                                       
-                                  "Allolobophora_chlorotica",
-                                  "RBNII", 
-                                  "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
+A_chloroticaFdReadFN <- 
+          file.path(inputFilesPath,
+                    "Allolobophora_chlorotica",
+                    "RBNII", 
+                    "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1")
 print(A_chloroticaFdReadFN)
 ```
 In this example, the absolute filename is "RBNII396-13[C_LepFolF,C_LepFolR]_F_1.ab1" and it is a valid name. 
@@ -113,34 +112,34 @@ First, we load [sangeranalyseR](https://github.com/roblanf/sangeranalyseR) into 
 ```{r}
 library(sangeranalyseR)
 ```
-Then, we can create ***'SangerRead'*** S4 instance by running *"new"* function.
+Then, we can create ***'SangerRead'*** S4 instance by running `new` function.
 ```{r}
 singleReadNew <- new("SangerRead",
-                     readFeature           = "Forward Read",
-                     readFileName          = A_chloroticaFdReadFN,
-                     TrimmingMethod        = "M2",
-                     M1TrimmingCutoff      = NULL,
-                     M2CutoffQualityScore  = 40,
-                     M2SlidingWindowSize   = 10,
-                     baseNumPerRow         = 100,
-                     heightPerRow          = 200,
-                     signalRatioCutoff     = 0.33,
-                     showTrimmed           = TRUE)
+                     readFeature = "Forward Read",
+                     readFileName = A_chloroticaFdReadFN,
+                     TrimmingMethod = "M2",
+                     M1TrimmingCutoff = NULL,
+                     M2CutoffQualityScore = 40,
+                     M2SlidingWindowSize = 10,
+                     baseNumPerRow = 100,
+                     heightPerRow = 200,
+                     signalRatioCutoff = 0.33,
+                     showTrimmed = TRUE)
 ```
 
-Moreover, we also create a constructor wrapper function for ***'SangerRead'***. The instance created by new and constructor functions are same. The constructor function makes creating ***'SangerRead'*** S4 instance more intuitive.
+We also create a constructor wrapper function for ***'SangerRead'***. The instance created by new and constructor functions are same. The constructor function makes creating ***'SangerRead'*** S4 instance more intuitive.
 ```{r}
- singleReadCtor <- SangerRead(readFeature           = "Forward Read",
-                              readFileName          = A_chloroticaFdReadFN,
-                              geneticCode           = GENETIC_CODE,
-                              TrimmingMethod        = "M2",
-                              M1TrimmingCutoff      = NULL,
-                              M2CutoffQualityScore  = 40,
-                              M2SlidingWindowSize   = 10,
-                              baseNumPerRow         = 100,
-                              heightPerRow          = 200,
-                              signalRatioCutoff     = 0.33,
-                              showTrimmed           = TRUE)
+ singleReadCtor <- SangerRead(readFeature = "Forward Read",
+                              readFileName = A_chloroticaFdReadFN,
+                              geneticCode = GENETIC_CODE,
+                              TrimmingMethod = "M2",
+                              M1TrimmingCutoff = NULL,
+                              M2CutoffQualityScore = 40,
+                              M2SlidingWindowSize = 10,
+                              baseNumPerRow = 100,
+                              heightPerRow = 200,
+                              signalRatioCutoff = 0.33,
+                              showTrimmed = TRUE)
 ```
 
 <h3> &nbsp; 2.1.3 &nbsp;&nbsp;&nbsp;&nbsp; Inputs Definition </h3>
@@ -161,6 +160,8 @@ There are two read trimming methods for users to choose from. The Method 1 (M1) 
 
 Method 2 (M2) is similar to "Trimmomatic"(Bolger et al.) SLIDINGWINDOW trimming method. We take the average logarithmic quality score in the sliding window size and if the average quality score is smaller than the cutoff quality score, then the first base pair of the sliding window will be the trimming start point.
 
+>>> Modify
+
 * **`TrimmingMethod`** : Specify the read trimming method for this SangerRead. The value must be *"M1"* (the default) or *'M2'*.
 * **`M1TrimmingCutoff`** : The trimming cutoff for the Method 1. If `TrimmingMethod` is *"M1"*, then the default value is *"0.0001"*. Otherwise, the value must be *"NULL"*
 * **`M2CutoffQualityScore`** : The trimming cutoff quality score for the Method 2. If `TrimmingMethod` is *"M2"*, then the default value is *"20"*. Otherwise, the value must be *"NULL"*. It works with `M2SlidingWindowSize`.
@@ -180,8 +181,7 @@ These parameters are used for drawing chromatogram in Shiny app.
 <h3> &nbsp; 2.1.4 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Slots in ***'SangerRead'*** x </h3>
 
 
-***'SangerRead'*** inherits 'sangerseq' class. It contains all slots in 'sangerseq', so every function that uses 'sangerseq' as input can be replaced by ***'SangerRead'***. For example, we can use ***'SangerRead'*** to run *"chromatogram"*, *'makeBaseCalls'* functions in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html).
-For inherited slots in ***'SangerRead'***, please refer to [sangerseqR reference manual](https://bioconductor.org/packages/release/bioc/manuals/sangerseqR/man/sangerseqR.pdf). Here, we show all the slots in ***'SangerRead'***
+***'SangerRead'*** inherits 'sangerseq' class. It contains all slots in 'sangerseq', so every function that uses 'sangerseq' as input can be replaced by ***'SangerRead'***. For example, we can use ***'SangerRead'*** to run *`chromatogram`*, *`makeBaseCalls`* functions in [sangerseqR](https://bioconductor.org/packages/release/bioc/html/sangerseqR.html). For inherited slots in ***'SangerRead'***, please refer to [sangerseqR reference manual](https://bioconductor.org/packages/release/bioc/manuals/sangerseqR/man/sangerseqR.pdf). Here, we show all the slots in ***'SangerRead'***
 
 
 ```{r }
@@ -204,19 +204,31 @@ slotNames(singleReadCtor@ChromatogramParam)
 
 </details>
 
-<h2> 2.2 &nbsp;&nbsp;&nbsp;&nbsp; SangerContig </h2>
+</details>
 
-**"SangerContig"** S4 class corresponds to to a contig in Sanger sequencing. It contains all the single reads, the alignment results and the created consensus read etc. We will show how to create a **"SangerContig"** instance and the slots in this class.
+
+
+
+
+
+
+
+# **SangerContig** Analysis Workflow
+
+***'SangerContig'*** S4 class corresponds to to a contig in Sanger sequencing. It contains all the single reads, the alignment results and the created consensus read etc. In **Figure 1**, it is in the second level of class hierarchy tree.
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<h2> 2.1 &nbsp;&nbsp;&nbsp;&nbsp; **SangerContig** Class Creation </h2>
 
 <details class="description2"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <h3> &nbsp; 2.2.1 &nbsp;&nbsp;&nbsp;&nbsp; ABIF Filename Regulation & Input directory regulation </h3>
 
-Before creating a **"SangerContig"** S4 instance, we need to prepare a  directory storing all raw ABIF files in the same consensus group with valid filenames. **Figure 3** shows the directory hierarchy of **"SangerContig"**.
+Before creating a ***'SangerContig'*** S4 instance, we need to prepare a  directory storing all raw ABIF files in the same consensus group with valid filenames. **Figure 3** shows the directory hierarchy of ***'SangerContig'***.
 
 ```{r, out.width = "600px", fig.cap="\\label{fig:figs}'SangerContig' directory hierarchy", echo=FALSE}
 knitr::include_graphics("figure/Figure_3_SangerContig_file_structure.png")
 ```
-The `parentDirectory` stores the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in **Figure 4**. The filename regulation for each raw ABIF files are same as filename regulation in **"SangerRead"**; however, users have to pay attention to the [*Number Index*]. The **[*Number Index*]** of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
+The `parentDirectory` stores the absolute file path. The only requirement of this file directory is that it must exist. As for the raw ABIF files in `parentDirectory`, users have to follow the regulation in **Figure 4**. The filename regulation for each raw ABIF files are same as filename regulation in ***'SangerRead'***; however, users have to pay attention to the **[*Number Index*]**. The **[*Number Index*]** of raw ABIF files must to be indexed in *1*, *2*, *3* ... order. Furthermore, all forward reads should be indexed first, and then reverse reads.
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs} Filename regulation for 'SangerContig'", echo=FALSE}
 knitr::include_graphics("figure/Figure_4_SangerContig_filename_regulation.png")
@@ -234,7 +246,7 @@ suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 
 <h3> &nbsp; 2.2.2 &nbsp;&nbsp;&nbsp;&nbsp; S4 Instance Creation Example </h3>
 
-Now we create the ***'SangerContig'*** S4 instance by running *"new"* function. In this example, we provide a reference amino acids sequence and choose Method 1 (M1) *"Logarithmic Scale Trimming"* as our quality trimming approach.
+Now we create the ***'SangerContig'*** S4 instance by running `new` function. In this example, we provide a reference amino acids sequence and choose Method 1 (M1) *"Logarithmic Scale Trimming"* as our quality trimming approach.
 ```{r}
 contigsRef <- new("SangerContig",
                   parentDirectory       = inputFilesParentDir,
@@ -274,7 +286,7 @@ contigsNoRef <- SangerContig(
 
 The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"**. The **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** are same as the input of ***'SangerRead'***. By default, all reads will use the same parameters and users can use the local Shiny app that we provide to explore and change these input parameters. The Shiny app will be discussed in next section.
 
-For more input details, please refer to the ***'SangerRead'*** section and sangeranalyseR reference manul. Here, we will only show the "Basic Parameters".
+For more input details, please refer to the ***'SangerRead'*** section and [sangeranalyseR reference manul](). Here, we will only show the "Basic Parameters".
 
 <h4> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Basic Parameters </h4>
 
@@ -285,7 +297,7 @@ For more input details, please refer to the ***'SangerRead'*** section and sange
 
 <h3> &nbsp; 2.2.4 &nbsp;&nbsp;&nbsp;&nbsp; Slots Definition </h3>
 
-Here, we show all the slots in ***'SangerContig'***. For more details about the meaning of each slot, please refer to sangeranalyseR reference manual.
+Here, we show all the slots in ***'SangerContig'***. For more details about the meaning of each slot, please refer to [sangeranalyseR reference manual]().
 
 ```{r }
 slotNames(contigsRef)
@@ -293,9 +305,17 @@ slotNames(contigsRef)
 
 </details>
 
-<h2> 2.3 &nbsp;&nbsp;&nbsp;&nbsp; SangerAlignment </h2>
+</details>
 
-**"SangerAlignment"** S4 class corresponds to a rebuild genome fragment in Sanger sequencing. It contains all the single reads, the alignment results and the created consensus read etc. We will show how to create a **"SangerAlignment"** instance and the slots in this class.
+
+
+
+# **SangerAlignment** Analysis Workflow
+
+**"SangerAlignment"** S4 class corresponds to a rebuild genome fragment in Sanger sequencing. It is in the highest level of class hierarchy tree in **Figure 1**.
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<h2> 2.1 &nbsp;&nbsp;&nbsp;&nbsp; **SangerAlignment** Class Creation </h2>
 
 <details class="description2"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <h3> &nbsp; 2.3.1 &nbsp;&nbsp;&nbsp;&nbsp; ABIF Filename Regulation & Input directory regulation </h3>
@@ -306,7 +326,7 @@ Before creating a **"SangerAlignment"** S4 instance, we need to prepare a direct
 knitr::include_graphics("figure/Figure_5_SangerAlignment_file_structure.png")
 ```
 
-The `parentDirectory` is same as **"SangerContig"** which is the absolute file path storing all raw ABIF files. The difference is that raw ABIF files do not need to be in the first layer inside `parentDirectory`; in other words, it is allowed to have some middle directories separating the ABIF files. **Figure 6** shows the  **"SangerAlignment"** filename regulation and grouping strategy. The ABIF files with the same **[*Consensus Read Name*]** will be categorized into the same group and for each group, a **"SangerContig"** will be created. **"SangerAlignment"** will be created by these **"SangerContig"**.
+The `parentDirectory` is same as ***'SangerContig'*** which is the absolute file path storing all raw ABIF files. The difference is that raw ABIF files do not need to be in the first layer inside `parentDirectory`; in other words, it is allowed to have some middle directories separating the ABIF files. **Figure 6** shows the  **"SangerAlignment"** filename regulation and grouping strategy. The ABIF files with the same **[*Consensus Read Name*]** will be categorized into the same group and for each group, a ***'SangerContig'*** will be created. **"SangerAlignment"** will be created by these ***'SangerContig'***.
 
 ```{r, out.width = "2000px", fig.cap="\\label{fig:figs}'SangerAlignment' filename regulation", echo=FALSE}
 knitr::include_graphics("figure/Figure_6_SangerAlignment_filename_regulation.png")
@@ -344,25 +364,37 @@ alignedConsensusRef <- new("SangerSangerAlignment",
 
 <h3> &nbsp; 2.3.3 &nbsp;&nbsp;&nbsp;&nbsp; Inputs Definition </h3>
 
-The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** which are same as ***'SangerContig'***. By default, all ***'SangerContig'*** in **'AlignedConsensus'** will use the same trimming and chromatogram parameters. We provide Shiny app for users to explore and change these input parameters. Shiny app will be discussed in next section.
+The inputs of new and constructor methods are same. Both of their input parameters can be divied into three main categories: **"Basic Parameters"**, **"Quality Trimming Related Parameters"** and **"Chromatogram Related Parameters"** which are same as ***'SangerContig'***. By default, all ***'SangerContig'*** in **'AlignedConsensus'** will use the same trimming and chromatogram parameters. We provide Shiny apps for users to explore and change these input parameters. Shiny app will be discussed in next section.
 
-For more input details, please refer to ***'SangerRead'***, ***'SangerContig'*** and sangeranalyseR reference manul.
+For more input details, please refer to ***'SangerRead'***, ***'SangerContig'*** and [sangeranalyseR reference manul]().
 
 <h3> &nbsp; 2.3.4 &nbsp;&nbsp;&nbsp;&nbsp; Slots Definition </h3>
 
-Here, we show all the slots in ***'SangerAlignment'***. For more details about the meaning of each slot, please refer to sangeranalyseR reference manual.
+Here, we show all the slots in ***'SangerAlignment'***. For more details about the meaning of each slot, please refer to [sangeranalyseR reference manual]().
 ```{r , eval= FALSE}
 slotNames(alignedConsensusRef)
 ```
 
-</detials>
 </details>
+
+</details>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 # Shiny App
 
-In sangeranalyseR, we create two interactive Shiny apps which are **'*SangerContig App*'** and **'*SangerAlignment App*'** for users to check Sanger sequencing data results. These two Shiny apps can be run locally in current R environment. Users need to create a ***'SangerContig'*** or an ***'SangerAlignment'*** S4 instance mentioned above first and use them as input to start the Shiny app. Inside the Shiny app, users can change the input parameters for quality trimming, base calling, chromatogram plotting etc. The results displayed in the app are dynamic based on user input. In this section, we are going to show how to run the Shiny apps.
+In [sangeranalyseR](https://github.com/roblanf/sangeranalyseR), we create two interactive Shiny apps which are **'*SangerContig App*'** and **'*SangerAlignment App*'** for users to check Sanger sequencing data results. These two Shiny apps can be run locally in current R environment. Users need to create a ***'SangerContig'*** or an ***'SangerAlignment'*** S4 instance mentioned above first and use them as input to start the Shiny app. Inside the Shiny app, users can change the input parameters for quality trimming, base calling, chromatogram plotting etc. The results displayed in the app are dynamic based on user input. In this section, we are going to show how to run the Shiny apps.
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 
@@ -373,7 +405,7 @@ Now, we execute the `launchAppcontig` function and create a `RShinySCR` Shiny ob
 ```{r }
 RShinySCR <- launchAppSC(contigsRef)
 ```
-Run the `RShinySCR` in R console to trigger the **'*SangerContig App*'**. There are two layers in **"SangerContig"** which are ***"Consensus Read Overview Page"*** and ***"Single Read Page"***
+Run the `RShinySCR` in R console to trigger the **'*SangerContig App*'**. There are two layers in ***'SangerContig'*** which are ***"Consensus Read Overview Page"*** and ***"Single Read Page"***
 
 <details class="description2"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <h3> 3.1.1 &nbsp;&nbsp;&nbsp;&nbsp; "Consensus Read Overview Page" </h3>
@@ -549,6 +581,14 @@ padding-left: 10px;
   font-weight: bold;
   font-size: 8px;
   color: #383838;
+}
+
+pre {
+  font-size: 10px
+}
+
+code.r{
+  font-size: 10px;
 }
 </style>
 
