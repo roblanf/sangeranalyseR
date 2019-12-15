@@ -59,12 +59,12 @@ An S4 class containing forward and reverse SangerRead lists and alignment, conse
 
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica")
+parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 sangerContig <- new("SangerContig",
-                     parentDirectory       = inputFilesParentDir,
+                     parentDirectory       = parentDir,
                      contigName            = contigName,
                      suffixForwardRegExp   = suffixForwardRegExp,
                      suffixReverseRegExp   = suffixReverseRegExp,

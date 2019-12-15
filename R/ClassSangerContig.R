@@ -110,7 +110,7 @@ setMethod("initialize",
                    geneticCode            = GENETIC_CODE,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
-                   processorsNum          = 1) {
+                   processorsNum          = NULL) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
@@ -212,6 +212,7 @@ setMethod("initialize",
     ### Prechecking success. Start to create multiple reads.
     ### ------------------------------------------------------------------------
     if (length(errors) == 0) {
+        processorsNum <- getProcessors (processorsNum)
         trimmingMethodSC = TrimmingMethod
         # sapply to create SangerRead list.
         ### --------------------------------------------------------------------

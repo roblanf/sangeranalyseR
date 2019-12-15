@@ -48,6 +48,7 @@ An S4 class extending sangerseq S4 class which corresponds to a single ABIF file
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFdFN <- file.path(inputFilesPath,
                               "Allolobophora_chlorotica",
+                              "ACHLO",
                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 sangerRead <- new("SangerRead",
                    readFeature           = "Forward Read",

@@ -175,7 +175,7 @@ checkAcceptStopCodons <- function(acceptStopCodons, errors) {
 }
 
 checkProcessorsNum <- function(processorsNum, errors) {
-    if (!(processorsNum %% 1 == 0)) {
+    if (!(processorsNum %% 1 == 0) && !is.null(processorsNum)) {
         msg <- paste("\n'processorsNum' must be integer.\n", sep = "")
         errors <- c(errors, msg)
     }

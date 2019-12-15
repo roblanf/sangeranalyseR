@@ -66,7 +66,7 @@ SangerAlignment <- function(parentDirectory        = character(0),
                             readingFrame           = 1,
                             minFractionCallSA      = 0.5,
                             maxFractionLostSA      = 0.5,
-                            processorsNum          = 1) {
+                            processorsNum          = NULL) {
     newAlignment <- new("SangerAlignment",
                         parentDirectory        = parentDirectory,
                         suffixForwardRegExp    = suffixForwardRegExp,
@@ -163,7 +163,7 @@ SangerContig <- function(parentDirectory        = character(0),
                          geneticCode            = GENETIC_CODE,
                          acceptStopCodons       = TRUE,
                          readingFrame           = 1,
-                         processorsNum          = 1) {
+                         processorsNum          = NULL) {
     newContig <- new("SangerContig",
                      parentDirectory        = parentDirectory,
                      contigName             = contigName,

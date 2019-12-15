@@ -95,7 +95,7 @@ setMethod("initialize",
                    readingFrame           = 1,
                    minFractionCallSA      = 0.5,
                    maxFractionLostSA      = 0.5,
-                   processorsNum          = 1) {
+                   processorsNum          = NULL) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
@@ -137,6 +137,7 @@ setMethod("initialize",
     errors <- checkProcessorsNum(processorsNum, errors)
 
     if (length(errors) == 0) {
+        processorsNum <- getProcessors (processorsNum)
         trimmingMethodSA = TrimmingMethod
         ### --------------------------------------------------------------------
         ### Automatically finding contig name by forward&reverse suffix
