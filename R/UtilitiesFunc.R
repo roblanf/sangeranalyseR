@@ -160,7 +160,7 @@ oneAmbiguousColumn <- function(i, aln){
 ### ----------------------------------------------------------------------------
 ### Calculating SangerContig
 ### ----------------------------------------------------------------------------
-calculateContigSeq <- function(forwardReadList, reverseReadList,
+calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                refAminoAcidSeq, minFractionCall,
                                maxFractionLost, geneticCode,
                                acceptStopCodons, readingFrame,
@@ -169,16 +169,26 @@ calculateContigSeq <- function(forwardReadList, reverseReadList,
     ### forward & reverse character reads list string creation
     ### ------------------------------------------------------------------------
     fRDNAStringSet <- sapply(forwardReadList, function(forwardRead) {
-        trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
-        trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
+        if (inputSource != "FASTA") {
+            trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
+            trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
+        }
         primaryDNA <- as.character(forwardRead@primarySeq)
-        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+        if (inputSource != "FASTA") {
+            primaryDNA <- substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+        }
+        return(primaryDNA)
     })
     rRDNAStringSet <- sapply(reverseReadList, function(reverseRead) {
-        trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
-        trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
+        if (inputSource != "FASTA") {
+            trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
+            trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
+        }
         primaryDNA <- as.character(reverseRead@primarySeq)
-        substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+        if (inputSource != "FASTA") {
+            primaryDNA <- substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+        }
+        return(primaryDNA)
     })
 
     ### ------------------------------------------------------------------------

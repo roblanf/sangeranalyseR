@@ -66,14 +66,14 @@
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-#' suffixForwardRegExp <- "_[F]_[0-9]*.fa"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.fa"
+#' suffixForwardRegExpFa <- "_[F]_[0-9]*.fa"
+#' suffixReverseRegExpFa <- "_[R]_[0-9]*.fa"
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
 #'                       fastaFileName         = fastaFN,
 #'                       contigName            = contigName,
-#'                       suffixForwardRegExp   = suffixForwardRegExp,
-#'                       suffixReverseRegExp   = suffixReverseRegExp,
+#'                       suffixForwardRegExp   = suffixForwardRegExpFa,
+#'                       suffixReverseRegExp   = suffixReverseRegExpFa,
 #'                       refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
 #'                       )
 setClass("SangerContig",
@@ -301,7 +301,7 @@ setMethod("initialize",
             reverseSelectNames <-
                 contigSubGroupNames[grepl(suffixReverseRegExp,
                                           contigSubGroupNames)]
-            trimmingMethodSC <- character(0)
+            trimmingMethodSC <- ""
             # sapply to create SangerRead list.
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
@@ -324,7 +324,8 @@ setMethod("initialize",
                            geneticCode   = geneticCode)
             })
         }
-        CSResult <- calculateContigSeq (forwardReadList  = forwardReadList,
+        CSResult <- calculateContigSeq (inputSource      = inputSource,
+                                        forwardReadList  = forwardReadList,
                                         reverseReadList  = reverseReadList,
                                         refAminoAcidSeq  = refAminoAcidSeq,
                                         minFractionCall  = minFractionCall,

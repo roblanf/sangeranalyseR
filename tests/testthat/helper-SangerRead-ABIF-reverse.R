@@ -1,11 +1,11 @@
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-A_chloroticaFdReadFNR <- file.path(inputFilesPath,
-                                   "Allolobophora_chlorotica",
-                                   "ACHLO",
-                                   "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.ab1")
+SRab1RFN <- file.path(inputFilesPath,
+                      "Allolobophora_chlorotica",
+                      "ACHLO",
+                      "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.ab1")
 sangerReadR <- new("SangerRead",
                    readFeature           = "Forward Read",
-                   readFileName          = A_chloroticaFdReadFNR,
+                   readFileName          = SRab1RFN,
                    geneticCode           = GENETIC_CODE,
                    TrimmingMethod        = "M1",
                    M1TrimmingCutoff      = 0.0001,

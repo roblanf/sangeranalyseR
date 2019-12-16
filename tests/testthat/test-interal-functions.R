@@ -32,7 +32,8 @@ test_that("'calculateContigSeq' function test", {
     geneticCode <- sangerContig@geneticCode
     acceptStopCodons <- sangerContig@acceptStopCodons
     readingFrame <- sangerContig@readingFrame
-    contigSeq <- calculateContigSeq (forwardReadList, reverseReadList,
+    contigSeq <- calculateContigSeq (inputSource = "ABIF",
+                                     forwardReadList, reverseReadList,
                                      refAminoAcidSeq, minFractionCall,
                                      maxFractionLost, geneticCode,
                                      acceptStopCodons, readingFrame,

@@ -25,7 +25,7 @@ test_that("SangerRead update quality trimming parameters 10 (M2CutoffQualityScor
     expect_error(new("SangerRead",
                      inputSource   = "FASTA",
                      readFeature   = "Forward Read",
-                     readFileName  = A_chloroticaFNfa,
+                     readFileName  = SRfastaFFN,
                      fastaReadName = "Random_read_name",
                      geneticCode   = GENETIC_CODE),
                  "The name 'Random_read_name' is not in the 'ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa' FASTA file", fixed = TRUE)
