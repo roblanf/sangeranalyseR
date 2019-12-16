@@ -2,6 +2,7 @@
 #'
 #' @description  An S4 class containing forward and reverse SangerRead lists and alignment, consensus read results which corresponds to a contig in Sanger sequencing.
 #'
+#' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
 #' @slot contigName The contig name of all the reads in \code{parentDirectory}.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.
@@ -34,12 +35,14 @@
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
+#' ## Input From ABIF file format
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' sangerContig <- new("SangerContig",
+#'                      inputSource           = "ABIF",
 #'                      parentDirectory       = parentDir,
 #'                      contigName            = contigName,
 #'                      suffixForwardRegExp   = suffixForwardRegExp,
@@ -53,35 +56,48 @@
 #'                      heightPerRow          = 200,
 #'                      signalRatioCutoff     = 0.33,
 #'                      showTrimmed           = TRUE)
+#'
+#' ## Input From FASTA file format
+#' parentDir <- file.path(inputFilesPath,
+#'                        "fasta",
+#'                        "SangerContig",
+#'                        "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
+#' sangerContigFa <- new("SangerContig",
+#'                       inputSource           = "FASTA",
+#'                       parentDirectory       = parentDir,
+#'                       contigName            = contigName,
+#'                       suffixForwardRegExp   = suffixForwardRegExp,
+#'                       suffixReverseRegExp   = suffixReverseRegExp,
+#'                       refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
+#'                       )
 setClass("SangerContig",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerContig'
          ### -------------------------------------------------------------------
-         representation(
-             parentDirectory           = "character",
-             contigName                = "character",
-             suffixForwardRegExp       = "character",
-             suffixReverseRegExp       = "character",
-             forwardReadList           = "list",
-             reverseReadList           = "list",
-             trimmingMethodSC          = "character",
-             minReadsNum               = "numeric",
-             minReadLength             = "numeric",
-             refAminoAcidSeq           = "character",
-             minFractionCall           = "numeric",
-             maxFractionLost           = "numeric",
-             geneticCode               = "character",
-             acceptStopCodons          = "logical",
-             readingFrame              = "numeric",
-             contigSeq                 = "DNAString",
-             alignment                 = "DNAStringSet",
-             differencesDF             = "data.frame",
-             distanceMatrix            = "matrix",
-             dendrogram                = "list",
-             indelsDF                  = "data.frame",
-             stopCodonsDF              = "data.frame",
-             secondaryPeakDF           = "data.frame"
-             ),
+         representation(inputSource               = "character",
+                        parentDirectory           = "character",
+                        contigName                = "character",
+                        suffixForwardRegExp       = "character",
+                        suffixReverseRegExp       = "character",
+                        forwardReadList           = "list",
+                        reverseReadList           = "list",
+                        trimmingMethodSC          = "character",
+                        minReadsNum               = "numeric",
+                        minReadLength             = "numeric",
+                        refAminoAcidSeq           = "character",
+                        minFractionCall           = "numeric",
+                        maxFractionLost           = "numeric",
+                        geneticCode               = "character",
+                        acceptStopCodons          = "logical",
+                        readingFrame              = "numeric",
+                        contigSeq                 = "DNAString",
+                        alignment                 = "DNAStringSet",
+                        differencesDF             = "data.frame",
+                        distanceMatrix            = "matrix",
+                        dendrogram                = "list",
+                        indelsDF                  = "data.frame",
+                        stopCodonsDF              = "data.frame",
+                        secondaryPeakDF           = "data.frame"),
 )
 
 ### ============================================================================
@@ -90,6 +106,7 @@ setClass("SangerContig",
 setMethod("initialize",
           "SangerContig",
           function(.Object, ...,
+                   inputSource            = "ABIF",
                    parentDirectory        = parentDirectory,
                    contigName             = contigName,
                    suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
@@ -115,153 +132,158 @@ setMethod("initialize",
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
     errors <- character()
-    ### ------------------------------------------------------------------------
-    ### 'parentDirectory' prechecking
-    ### ------------------------------------------------------------------------
+    errors <- checkInputSource (inputSource, errors)
     errors <- checkParentDirectory (parentDirectory, errors)
-
-    ### ------------------------------------------------------------------------
-    ### 'forwardAllReads' & 'reverseAllReads' files prechecking
-    ### ------------------------------------------------------------------------
-    parentDirFiles <- list.files(parentDirectory)
-    contigSubGroupFiles <-
-        parentDirFiles[grepl(contigName,
-                             parentDirFiles, fixed=TRUE)]
-    forwardSelectInputFiles <-
-        contigSubGroupFiles[grepl(suffixForwardRegExp,
-                                     contigSubGroupFiles)]
-    reverseSelectInputFiles <-
-        contigSubGroupFiles[grepl(suffixReverseRegExp,
-                                     contigSubGroupFiles)]
-    forwardAllReads <- lapply(parentDirectory, file.path,
-                              forwardSelectInputFiles)
-    reverseAllReads <- lapply(parentDirectory, file.path,
-                              reverseSelectInputFiles)
-
-    ### ------------------------------------------------------------------------
-    ### 'forwardNumber' + 'reverseNumber' number > 2
-    ### ------------------------------------------------------------------------
-    forwardNumber <- length(forwardAllReads[[1]])
-    reverseNumber <- length(reverseAllReads[[1]])
-    if ((forwardNumber + reverseNumber) < 2) {
-        msg <- paste("\n'Number of total reads has to be more than two.",
-                     sep = "")
-        errors <- c(errors, msg)
-    }
-
-    ### ------------------------------------------------------------------------
-    ### 'forwardAllReads'  files prechecking (must exist)
-    ### ------------------------------------------------------------------------
-    forwardAllErrorMsg <- sapply(c(forwardAllReads[[1]]), function(filePath) {
-        if (!file.exists(filePath)) {
-            msg <- paste("\n'", filePath, "' forward read file does ",
-                         "not exist.\n", sep = "")
-            return(msg)
-        }
-        return()
-    })
-    errors <- c(errors, unlist(forwardAllErrorMsg), use.names = FALSE)
-
-    ### ------------------------------------------------------------------------
-    ### 'reverseAllReads'  files prechecking (must exist)
-    ### ------------------------------------------------------------------------
-    reverseAllErrorMsg <- sapply(c(reverseAllReads[[1]]), function(filePath) {
-        if (!file.exists(filePath)) {
-            msg <- paste("\n'", filePath, "'",
-                         " reverse read file does not exist.\n", sep = "")
-            return(msg)
-        }
-        return()
-    })
-    errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
-
-    ### ------------------------------------------------------------------------
-    ### Input parameter prechecking for TrimmingMethod.
-    ### ------------------------------------------------------------------------
-    errors <- checkTrimParam(TrimmingMethod,
-                             M1TrimmingCutoff,
-                             M2CutoffQualityScore,
-                             M2SlidingWindowSize,
-                             errors)
-
-    ##### ----------------------------------------------------------------------
-    ##### Input parameter prechecking for ChromatogramParam
-    ##### ----------------------------------------------------------------------
-    errors <- checkBaseNumPerRow (baseNumPerRow, errors)
-    errors <- checkHeightPerRow (baseNumPerRow, errors)
-    errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
-    errors <- checkShowTrimmed (showTrimmed, errors)
-
-    ##### ----------------------------------------------------------------------
-    ##### Input parameter prechecking for contigSeq parameter
-    ##### ----------------------------------------------------------------------
-    errors <- checkMinReadsNum(minReadsNum, errors)
-    errors <- checkMinReadLength(minReadLength, errors)
-    errors <- checkMinFractionCall(minFractionCall, errors)
-    errors <- checkMaxFractionLost(maxFractionLost, errors)
-    errors <- checkGeneticCode(geneticCode, errors)
-    errors <- checkAcceptStopCodons(acceptStopCodons, errors)
-    errors <- checkReadingFrame(readingFrame, errors)
-
-    ##### ----------------------------------------------------------------------
-    ##### Input parameter prechecking for processorsNum
-    ##### ----------------------------------------------------------------------
-    errors <- checkProcessorsNum(processorsNum, errors)
-
-    ### ------------------------------------------------------------------------
-    ### Prechecking success. Start to create multiple reads.
-    ### ------------------------------------------------------------------------
     if (length(errors) == 0) {
-        processorsNum <- getProcessors (processorsNum)
-        trimmingMethodSC = TrimmingMethod
-        # sapply to create SangerRead list.
-        ### --------------------------------------------------------------------
-        ### "SangerRead" S4 class creation (forward list)
-        ### --------------------------------------------------------------------
-        forwardReadList <- sapply(forwardAllReads[[1]], SangerRead,
-                                   readFeature          = "Forward Read",
-                                   TrimmingMethod       = TrimmingMethod,
-                                   M1TrimmingCutoff     = M1TrimmingCutoff,
-                                   M2CutoffQualityScore = M2CutoffQualityScore,
-                                   M2SlidingWindowSize  = M2SlidingWindowSize,
-                                   baseNumPerRow        = baseNumPerRow,
-                                   heightPerRow         = heightPerRow,
-                                   signalRatioCutoff    = signalRatioCutoff,
-                                   showTrimmed          = showTrimmed)
-        ### --------------------------------------------------------------------
-        ### "SangerRead" S4 class creation (reverse list)
-        ### --------------------------------------------------------------------
-        reverseReadList <- sapply(reverseAllReads[[1]], SangerRead,
-                                   readFeature          = "Reverse Read",
-                                   TrimmingMethod       = TrimmingMethod,
-                                   M1TrimmingCutoff     = M1TrimmingCutoff,
-                                   M2CutoffQualityScore = M2CutoffQualityScore,
-                                   M2SlidingWindowSize  = M2SlidingWindowSize,
-                                   baseNumPerRow        = baseNumPerRow,
-                                   heightPerRow         = heightPerRow,
-                                   signalRatioCutoff    = signalRatioCutoff,
-                                   showTrimmed          = showTrimmed)
-        CSResult <- calculateContigSeq (forwardReadList  = forwardReadList,
-                                        reverseReadList  = reverseReadList,
-                                        refAminoAcidSeq  = refAminoAcidSeq,
-                                        minFractionCall  = minFractionCall,
-                                        maxFractionLost  = maxFractionLost,
-                                        geneticCode      = geneticCode,
-                                        acceptStopCodons = acceptStopCodons,
-                                        readingFrame     = readingFrame,
-                                        processorsNum    = processorsNum)
-        contigGapfree <- CSResult$consensusGapfree
-        diffsDf <- CSResult$diffsDf
-        aln2 <- CSResult$aln2
-        dist <- CSResult$dist
-        dend <- CSResult$dend
-        indels <- CSResult$indels
-        stopsDf <- CSResult$stopsDf
-        spDf <- CSResult$spDf
+        if (inputSource == "ABIF") {
+            ### ------------------------------------------------------------------------
+            ### 'forwardAllReads' & 'reverseAllReads' files prechecking
+            ### ------------------------------------------------------------------------
+            parentDirFiles <- list.files(parentDirectory)
+            contigSubGroupFiles <-
+                parentDirFiles[grepl(contigName,
+                                     parentDirFiles, fixed=TRUE)]
+            forwardSelectInputFiles <-
+                contigSubGroupFiles[grepl(suffixForwardRegExp,
+                                          contigSubGroupFiles)]
+            reverseSelectInputFiles <-
+                contigSubGroupFiles[grepl(suffixReverseRegExp,
+                                          contigSubGroupFiles)]
+            forwardAllReads <- lapply(parentDirectory, file.path,
+                                      forwardSelectInputFiles)
+            reverseAllReads <- lapply(parentDirectory, file.path,
+                                      reverseSelectInputFiles)
+
+            ### ------------------------------------------------------------------------
+            ### 'forwardNumber' + 'reverseNumber' number > 2
+            ### ------------------------------------------------------------------------
+            forwardNumber <- length(forwardAllReads[[1]])
+            reverseNumber <- length(reverseAllReads[[1]])
+            if ((forwardNumber + reverseNumber) < 2) {
+                msg <- paste("\n'Number of total reads has to be more than two.",
+                             sep = "")
+                errors <- c(errors, msg)
+            }
+
+            ### ------------------------------------------------------------------------
+            ### 'forwardAllReads'  files prechecking (must exist)
+            ### ------------------------------------------------------------------------
+            forwardAllErrorMsg <- sapply(c(forwardAllReads[[1]]), function(filePath) {
+                if (!file.exists(filePath)) {
+                    msg <- paste("\n'", filePath, "' forward read file does ",
+                                 "not exist.\n", sep = "")
+                    return(msg)
+                }
+                return()
+            })
+            errors <- c(errors, unlist(forwardAllErrorMsg), use.names = FALSE)
+
+            ### ------------------------------------------------------------------------
+            ### 'reverseAllReads'  files prechecking (must exist)
+            ### ------------------------------------------------------------------------
+            reverseAllErrorMsg <- sapply(c(reverseAllReads[[1]]), function(filePath) {
+                if (!file.exists(filePath)) {
+                    msg <- paste("\n'", filePath, "'",
+                                 " reverse read file does not exist.\n", sep = "")
+                    return(msg)
+                }
+                return()
+            })
+            errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
+
+            ### ------------------------------------------------------------------------
+            ### Input parameter prechecking for TrimmingMethod.
+            ### ------------------------------------------------------------------------
+            errors <- checkTrimParam(TrimmingMethod,
+                                     M1TrimmingCutoff,
+                                     M2CutoffQualityScore,
+                                     M2SlidingWindowSize,
+                                     errors)
+
+            ##### ----------------------------------------------------------------------
+            ##### Input parameter prechecking for ChromatogramParam
+            ##### ----------------------------------------------------------------------
+            errors <- checkBaseNumPerRow (baseNumPerRow, errors)
+            errors <- checkHeightPerRow (baseNumPerRow, errors)
+            errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
+            errors <- checkShowTrimmed (showTrimmed, errors)
+
+            ##### ----------------------------------------------------------------------
+            ##### Input parameter prechecking for contigSeq parameter
+            ##### ----------------------------------------------------------------------
+            errors <- checkMinReadsNum(minReadsNum, errors)
+            errors <- checkMinReadLength(minReadLength, errors)
+            errors <- checkMinFractionCall(minFractionCall, errors)
+            errors <- checkMaxFractionLost(maxFractionLost, errors)
+            errors <- checkGeneticCode(geneticCode, errors)
+            errors <- checkAcceptStopCodons(acceptStopCodons, errors)
+            errors <- checkReadingFrame(readingFrame, errors)
+
+            ##### ----------------------------------------------------------------------
+            ##### Input parameter prechecking for processorsNum
+            ##### ----------------------------------------------------------------------
+            errors <- checkProcessorsNum(processorsNum, errors)
+
+            ### ------------------------------------------------------------------------
+            ### Prechecking success. Start to create multiple reads.
+            ### ------------------------------------------------------------------------
+            if (length(errors) != 0) {
+                stop(errors)
+            }
+            processorsNum <- getProcessors (processorsNum)
+            trimmingMethodSC = TrimmingMethod
+            # sapply to create SangerRead list.
+            ### --------------------------------------------------------------------
+            ### "SangerRead" S4 class creation (forward list)
+            ### --------------------------------------------------------------------
+            forwardReadList <- sapply(forwardAllReads[[1]], SangerRead,
+                                      readFeature          = "Forward Read",
+                                      TrimmingMethod       = TrimmingMethod,
+                                      M1TrimmingCutoff     = M1TrimmingCutoff,
+                                      M2CutoffQualityScore = M2CutoffQualityScore,
+                                      M2SlidingWindowSize  = M2SlidingWindowSize,
+                                      baseNumPerRow        = baseNumPerRow,
+                                      heightPerRow         = heightPerRow,
+                                      signalRatioCutoff    = signalRatioCutoff,
+                                      showTrimmed          = showTrimmed)
+            ### --------------------------------------------------------------------
+            ### "SangerRead" S4 class creation (reverse list)
+            ### --------------------------------------------------------------------
+            reverseReadList <- sapply(reverseAllReads[[1]], SangerRead,
+                                      readFeature          = "Reverse Read",
+                                      TrimmingMethod       = TrimmingMethod,
+                                      M1TrimmingCutoff     = M1TrimmingCutoff,
+                                      M2CutoffQualityScore = M2CutoffQualityScore,
+                                      M2SlidingWindowSize  = M2SlidingWindowSize,
+                                      baseNumPerRow        = baseNumPerRow,
+                                      heightPerRow         = heightPerRow,
+                                      signalRatioCutoff    = signalRatioCutoff,
+                                      showTrimmed          = showTrimmed)
+            CSResult <- calculateContigSeq (forwardReadList  = forwardReadList,
+                                            reverseReadList  = reverseReadList,
+                                            refAminoAcidSeq  = refAminoAcidSeq,
+                                            minFractionCall  = minFractionCall,
+                                            maxFractionLost  = maxFractionLost,
+                                            geneticCode      = geneticCode,
+                                            acceptStopCodons = acceptStopCodons,
+                                            readingFrame     = readingFrame,
+                                            processorsNum    = processorsNum)
+            contigGapfree <- CSResult$consensusGapfree
+            diffsDf <- CSResult$diffsDf
+            aln2 <- CSResult$aln2
+            dist <- CSResult$dist
+            dend <- CSResult$dend
+            indels <- CSResult$indels
+            stopsDf <- CSResult$stopsDf
+            spDf <- CSResult$spDf
+        } else if (inputSource == "FASTA") {
+
+        }
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
+                   inputSource            = inputSource,
                    parentDirectory        = parentDirectory,
                    contigName             = contigName,
                    suffixForwardRegExp    = suffixForwardRegExp,

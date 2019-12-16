@@ -97,168 +97,170 @@ setMethod("initialize",
                    heightPerRow         = 200,
                    signalRatioCutoff    = 0.33,
                    showTrimmed          = TRUE) {
-              ### --------------------------------------------------------------
-              ### Input parameter prechecking
-              ### --------------------------------------------------------------
-              errors <- character()
-              errors <- checkInputSource (inputSource, errors)
-              errors <- checkReadFeature (readFeature, errors)
-              errors <- checkReadFileName (readFileName, inputSource, errors)
-              errors <- checkGeneticCode (geneticCode, errors)
+    ### ------------------------------------------------------------------------
+    ### Input parameter prechecking
+    ### ------------------------------------------------------------------------
+    errors <- character()
+    errors <- checkInputSource (inputSource, errors)
+    errors <- checkReadFeature (readFeature, errors)
+    errors <- checkReadFileName (readFileName, inputSource, errors)
+    errors <- checkGeneticCode (geneticCode, errors)
+    ### ------------------------------------------------------------------------
+    ### Prechecking success. Start to create 'SangerRead'
+    ### ------------------------------------------------------------------------
+    if (length(errors) == 0) {
+        if (inputSource == "ABIF") {
+            ##### --------------------------------------------------------------
+            ##### Inside prechecking.
+            ##### --------------------------------------------------------------
+            ##### --------------------------------------------------------------
+            ##### Input parameter prechecking for TrimmingMethod. [abif only]
+            ##### --------------------------------------------------------------
+            errors <- checkTrimParam(TrimmingMethod,
+                                     M1TrimmingCutoff,
+                                     M2CutoffQualityScore,
+                                     M2SlidingWindowSize,
+                                     errors)
+            ##### --------------------------------------------------------------
+            ##### Input parameter prechecking for ChromatogramParam. [abif only]
+            ##### --------------------------------------------------------------
+            errors <- checkBaseNumPerRow(baseNumPerRow, errors)
+            errors <- checkHeightPerRow(baseNumPerRow, errors)
+            errors <- checkSignalRatioCutoff(signalRatioCutoff,errors)
+            errors <- checkShowTrimmed(showTrimmed, errors)
+            if(length(errors) != 0) {
+                stop(errors)
+            }
+            message(readFeature, " read: Creating abif & sangerseq ...")
+            message("    * Creating ", readFeature , " raw abif ...")
+            abifRawData = read.abif(readFileName)
+            message("    * Creating ",
+                    readFeature , " raw sangerseq ...")
+            readSangerseq = sangerseq(abifRawData)
+            primarySeqID = readSangerseq@primarySeqID
+            secondarySeqID = readSangerseq@secondarySeqID
 
-              ##### ------------------------------------------------------------
-              ##### Input parameter prechecking for TrimmingMethod.
-              ##### ------------------------------------------------------------
-              errors <- checkTrimParam(TrimmingMethod,
-                                       M1TrimmingCutoff,
-                                       M2CutoffQualityScore,
-                                       M2SlidingWindowSize,
-                                       errors)
+            ### ----------------------------------------------------------------
+            ### With non-raw & raw primarySeq / secondarySeq
+            ### ----------------------------------------------------------------
+            primarySeqRaw = readSangerseq@primarySeq
+            primarySeq = readSangerseq@primarySeq
+            secondarySeqRaw = readSangerseq@secondarySeq
+            secondarySeq = readSangerseq@secondarySeq
+            if (readFeature == "Reverse Read") {
+                primarySeqRaw =
+                    reverseComplement(readSangerseq@primarySeq)
+                primarySeq =
+                    reverseComplement(readSangerseq@primarySeq)
+                secondarySeqRaw =
+                    reverseComplement(readSangerseq@secondarySeq)
+                secondarySeq =
+                    reverseComplement(readSangerseq@secondarySeq)
+            }
+            traceMatrix      <- readSangerseq@traceMatrix
+            peakPosMatrixRaw <- readSangerseq@peakPosMatrix
+            peakPosMatrix    <- readSangerseq@peakPosMatrix
+            peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
+            peakAmpMatrix    <- readSangerseq@peakAmpMatrix
 
-              ##### ------------------------------------------------------------
-              ##### Input parameter prechecking for ChromatogramParam
-              ##### ------------------------------------------------------------
-              errors <- checkBaseNumPerRow (baseNumPerRow, errors)
-              errors <- checkHeightPerRow (baseNumPerRow, errors)
-              errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
-              errors <- checkShowTrimmed (showTrimmed, errors)
+            ### ----------------------------------------------------------------
+            ### Definition of 'PCON.1' & 'PCON.2'
+            ##### PCON.1: char => Per-base quality values (edited)
+            ##### PCON.2: char => Per-base quality values
+            ### ----------------------------------------------------------------
+            ### ----------------------------------------------------------------
+            ### 1. Running 'MakeBaseCall'!
+            ### ----------------------------------------------------------------
+            MBCResult <-
+                MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
+                                     abifRawData@data$PCON.2,
+                                     signalRatioCutoff, readFeature)
 
-              ### --------------------------------------------------------------
-              ### Prechecking success. Start to create 'SangerRead'
-              ### --------------------------------------------------------------
-              if (length(errors) == 0) {
-                  message(readFeature, " read: Creating abif & sangerseq ...")
-                  message("    * Creating ", readFeature , " raw abif ...")
+            ### ================================================================
+            ### 2. Update Once (Only during creation)
+            ###    Basecall primary seq length will be same !
+            ### ================================================================
+            qualityPhredScores <- MBCResult[["qualityPhredScores"]]
+            ### ----------------------------------------------------------------
+            ##### 'QualityReport' creation
+            ### ----------------------------------------------------------------
+            QualityReport <-
+                new("QualityReport",
+                    qualityPhredScoresRaw = abifRawData@data$PCON.2,
+                    qualityPhredScores    = qualityPhredScores,
+                    TrimmingMethod        = TrimmingMethod,
+                    M1TrimmingCutoff      = M1TrimmingCutoff,
+                    M2CutoffQualityScore  = M2CutoffQualityScore,
+                    M2SlidingWindowSize   = M2SlidingWindowSize)
 
-                  if (inputSource == "ABIF") {
-                      abifRawData = read.abif(readFileName)
-                      message("    * Creating ",
-                              readFeature , " raw sangerseq ...")
-                      readSangerseq = sangerseq(abifRawData)
-                      primarySeqID = readSangerseq@primarySeqID
-                      secondarySeqID = readSangerseq@secondarySeqID
-
-                      ### ------------------------------------------------------
-                      ### With non-raw & raw primarySeq / secondarySeq
-                      ### ------------------------------------------------------
-                      primarySeqRaw = readSangerseq@primarySeq
-                      primarySeq = readSangerseq@primarySeq
-                      secondarySeqRaw = readSangerseq@secondarySeq
-                      secondarySeq = readSangerseq@secondarySeq
-                      if (readFeature == "Reverse Read") {
-                          primarySeqRaw =
-                              reverseComplement(readSangerseq@primarySeq)
-                          primarySeq =
-                              reverseComplement(readSangerseq@primarySeq)
-                          secondarySeqRaw =
-                              reverseComplement(readSangerseq@secondarySeq)
-                          secondarySeq =
-                              reverseComplement(readSangerseq@secondarySeq)
-                      }
-                      traceMatrix      <- readSangerseq@traceMatrix
-                      peakPosMatrixRaw <- readSangerseq@peakPosMatrix
-                      peakPosMatrix    <- readSangerseq@peakPosMatrix
-                      peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
-                      peakAmpMatrix    <- readSangerseq@peakAmpMatrix
-
-                      ### ------------------------------------------------------
-                      ### Definition of 'PCON.1' & 'PCON.2'
-                      ##### PCON.1: char => Per-base quality values (edited)
-                      ##### PCON.2: char => Per-base quality values
-                      ### ------------------------------------------------------
-                      ### ------------------------------------------------------
-                      ### 1. Running 'MakeBaseCall'!
-                      ### ------------------------------------------------------
-                      MBCResult <-
-                          MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
-                                               abifRawData@data$PCON.2,
-                                               signalRatioCutoff, readFeature)
-
-                      ### ======================================================
-                      ### 2. Update Once (Only during creation)
-                      ###    Basecall primary seq length will be same !
-                      ### ======================================================
-                      qualityPhredScores <- MBCResult[["qualityPhredScores"]]
-                      ### ------------------------------------------------------
-                      ##### 'QualityReport' creation
-                      ### ------------------------------------------------------
-                      QualityReport <-
-                          new("QualityReport",
-                              qualityPhredScoresRaw = abifRawData@data$PCON.2,
-                              qualityPhredScores    = qualityPhredScores,
-                              TrimmingMethod        = TrimmingMethod,
-                              M1TrimmingCutoff      = M1TrimmingCutoff,
-                              M2CutoffQualityScore  = M2CutoffQualityScore,
-                              M2SlidingWindowSize   = M2SlidingWindowSize)
-
-                      ### ======================================================
-                      ### 3. Update everytime
-                      ### ======================================================
-                      primarySeq <- MBCResult[["primarySeq"]]
-                      secondarySeq <- MBCResult[["secondarySeq"]]
-                      peakPosMatrix <- MBCResult[["peakPosMatrix"]]
-                      peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
-                      ### ------------------------------------------------------
-                      ##### 'QualityReport' & 'ChromatogramParam' creation
-                      ### ------------------------------------------------------
-                      ChromatogramParam <-
-                          new("ChromatogramParam",
-                              baseNumPerRow     = baseNumPerRow,
-                              heightPerRow      = heightPerRow,
-                              signalRatioCutoff = signalRatioCutoff,
-                              showTrimmed       = showTrimmed)
-                  } else if (inputSource == "FASTA") {
-                      abifRawData <- NULL
-                      primarySeqID <- "From fasta file"
-                      secondarySeqID <- ""
-                      primarySeqRaw <- DNAString()
-                      readFasta <- read.fasta(readFileName, as.string = TRUE)
-                      if (names(readFasta) != basename(readFileName)) {
-                          stop("FASTA read name has to be same with '",
-                               basename(readFileName), "'")
-                      }
-                      primarySeq <- DNAString(as.character(readFasta))
-                      if (readFeature == "Reverse Read") {
-                          primarySeq <- reverseComplement(primarySeq)
-                      }
-                      secondarySeqRaw   <- DNAString()
-                      secondarySeq      <- DNAString()
-                      traceMatrix       <- matrix()
-                      peakPosMatrixRaw  <- matrix()
-                      peakPosMatrix     <- matrix()
-                      peakAmpMatrixRaw  <- matrix()
-                      peakAmpMatrix     <- matrix()
-                      QualityReport     <- NULL
-                      ChromatogramParam <- NULL
-                  }
-                  AASeqResult    <- calculateAASeq (primarySeq, geneticCode)
-                  primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
-                  primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
-                  primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-                  ### ==========================================================
-              } else {
-                  stop(errors)
-              }
-              callNextMethod(.Object, ...,
-                             inputSource         = inputSource,
-                             readFeature         = readFeature,
-                             readFileName        = readFileName,
-                             geneticCode         = geneticCode,
-                             primarySeqID        = primarySeqID,
-                             primarySeqRaw       = primarySeqRaw,
-                             primarySeq          = primarySeq,
-                             secondarySeqID      = secondarySeqID,
-                             secondarySeqRaw     = secondarySeqRaw,
-                             secondarySeq        = secondarySeq,
-                             primaryAASeqS1      = primaryAASeqS1,
-                             primaryAASeqS2      = primaryAASeqS2,
-                             primaryAASeqS3      = primaryAASeqS3,
-                             traceMatrix         = traceMatrix,
-                             peakPosMatrix       = peakPosMatrix,
-                             peakPosMatrixRaw    = peakPosMatrixRaw,
-                             peakAmpMatrix       = peakAmpMatrix,
-                             peakAmpMatrixRaw    = peakAmpMatrixRaw,
-                             abifRawData         = abifRawData,
-                             QualityReport       = QualityReport,
-                             ChromatogramParam   = ChromatogramParam)
-          })
+            ### ================================================================
+            ### 3. Update everytime
+            ### ================================================================
+            primarySeq <- MBCResult[["primarySeq"]]
+            secondarySeq <- MBCResult[["secondarySeq"]]
+            peakPosMatrix <- MBCResult[["peakPosMatrix"]]
+            peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
+            ### ----------------------------------------------------------------
+            ##### 'QualityReport' & 'ChromatogramParam' creation
+            ### ----------------------------------------------------------------
+            ChromatogramParam <-
+                new("ChromatogramParam",
+                    baseNumPerRow     = baseNumPerRow,
+                    heightPerRow      = heightPerRow,
+                    signalRatioCutoff = signalRatioCutoff,
+                    showTrimmed       = showTrimmed)
+        } else if (inputSource == "FASTA") {
+            abifRawData <- NULL
+            primarySeqID <- "From fasta file"
+            secondarySeqID <- ""
+            primarySeqRaw <- DNAString()
+            readFasta <- read.fasta(readFileName, as.string = TRUE)
+            if (names(readFasta) != basename(readFileName)) {
+                stop("FASTA read name has to be same with '",
+                     basename(readFileName), "'")
+            }
+            primarySeq <- DNAString(as.character(readFasta))
+            if (readFeature == "Reverse Read") {
+                primarySeq <- reverseComplement(primarySeq)
+            }
+            secondarySeqRaw   <- DNAString()
+            secondarySeq      <- DNAString()
+            traceMatrix       <- matrix()
+            peakPosMatrixRaw  <- matrix()
+            peakPosMatrix     <- matrix()
+            peakAmpMatrixRaw  <- matrix()
+            peakAmpMatrix     <- matrix()
+            QualityReport     <- NULL
+            ChromatogramParam <- NULL
+        }
+        AASeqResult    <- calculateAASeq (primarySeq, geneticCode)
+        primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
+        primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
+        primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+        ### ====================================================================
+    } else {
+        stop(errors)
+    }
+    callNextMethod(.Object, ...,
+                   inputSource         = inputSource,
+                   readFeature         = readFeature,
+                   readFileName        = readFileName,
+                   geneticCode         = geneticCode,
+                   primarySeqID        = primarySeqID,
+                   primarySeqRaw       = primarySeqRaw,
+                   primarySeq          = primarySeq,
+                   secondarySeqID      = secondarySeqID,
+                   secondarySeqRaw     = secondarySeqRaw,
+                   secondarySeq        = secondarySeq,
+                   primaryAASeqS1      = primaryAASeqS1,
+                   primaryAASeqS2      = primaryAASeqS2,
+                   primaryAASeqS3      = primaryAASeqS3,
+                   traceMatrix         = traceMatrix,
+                   peakPosMatrix       = peakPosMatrix,
+                   peakPosMatrixRaw    = peakPosMatrixRaw,
+                   peakAmpMatrix       = peakAmpMatrix,
+                   peakAmpMatrixRaw    = peakAmpMatrixRaw,
+                   abifRawData         = abifRawData,
+                   QualityReport       = QualityReport,
+                   ChromatogramParam   = ChromatogramParam)
+})
