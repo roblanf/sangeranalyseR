@@ -3,6 +3,10 @@
 #' @description  An S4 class containing forward and reverse SangerRead lists and alignment, consensus read results which corresponds to a contig in Sanger sequencing.
 #'
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
+#' @slot fastaFileName          = "",
+#'
+#'
+#'
 #' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
 #' @slot contigName The contig name of all the reads in \code{parentDirectory}.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.
@@ -58,13 +62,14 @@
 #'                      showTrimmed           = TRUE)
 #'
 #' ## Input From FASTA file format
-#' parentDir <- file.path(inputFilesPath,
-#'                        "fasta",
-#'                        "SangerContig",
-#'                        "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
+#' fastaFN <- file.path(inputFilesPath, "fasta",
+#'                      "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
+#' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+#' suffixForwardRegExp <- "_[F]_[0-9]*.fa"
+#' suffixReverseRegExp <- "_[R]_[0-9]*.fa"
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
-#'                       parentDirectory       = parentDir,
+#'                       fastaFileName         = fastaFN,
 #'                       contigName            = contigName,
 #'                       suffixForwardRegExp   = suffixForwardRegExp,
 #'                       suffixReverseRegExp   = suffixReverseRegExp,
@@ -75,10 +80,12 @@ setClass("SangerContig",
          ### Input type of each variable of 'SangerContig'
          ### -------------------------------------------------------------------
          representation(inputSource               = "character",
+                        fastaFileName             = "character",
                         parentDirectory           = "character",
                         contigName                = "character",
                         suffixForwardRegExp       = "character",
                         suffixReverseRegExp       = "character",
+                        geneticCode               = "character",
                         forwardReadList           = "list",
                         reverseReadList           = "list",
                         trimmingMethodSC          = "character",
@@ -87,7 +94,6 @@ setClass("SangerContig",
                         refAminoAcidSeq           = "character",
                         minFractionCall           = "numeric",
                         maxFractionLost           = "numeric",
-                        geneticCode               = "character",
                         acceptStopCodons          = "logical",
                         readingFrame              = "numeric",
                         contigSeq                 = "DNAString",
@@ -107,10 +113,12 @@ setMethod("initialize",
           "SangerContig",
           function(.Object, ...,
                    inputSource            = "ABIF",
-                   parentDirectory        = parentDirectory,
-                   contigName             = contigName,
+                   fastaFileName          = "",
+                   parentDirectory        = "",
+                   contigName             = "",
                    suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
                    suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
+                   geneticCode            = GENETIC_CODE,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
                    M2CutoffQualityScore   = NULL,
@@ -124,7 +132,6 @@ setMethod("initialize",
                    minReadLength          = 20,
                    minFractionCall        = 0.5,
                    maxFractionLost        = 0.5,
-                   geneticCode            = GENETIC_CODE,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
                    processorsNum          = NULL) {
@@ -136,9 +143,10 @@ setMethod("initialize",
     errors <- checkParentDirectory (parentDirectory, errors)
     if (length(errors) == 0) {
         if (inputSource == "ABIF") {
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### 'forwardAllReads' & 'reverseAllReads' files prechecking
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
+            fastaFileName <- ""
             parentDirFiles <- list.files(parentDirectory)
             contigSubGroupFiles <-
                 parentDirFiles[grepl(contigName,
@@ -154,21 +162,21 @@ setMethod("initialize",
             reverseAllReads <- lapply(parentDirectory, file.path,
                                       reverseSelectInputFiles)
 
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### 'forwardNumber' + 'reverseNumber' number > 2
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             forwardNumber <- length(forwardAllReads[[1]])
             reverseNumber <- length(reverseAllReads[[1]])
             if ((forwardNumber + reverseNumber) < 2) {
-                msg <- paste("\n'Number of total reads has to be more than two.",
-                             sep = "")
+                msg <- "\n'Number of total reads has to be more than two."
                 errors <- c(errors, msg)
             }
 
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### 'forwardAllReads'  files prechecking (must exist)
-            ### ------------------------------------------------------------------------
-            forwardAllErrorMsg <- sapply(c(forwardAllReads[[1]]), function(filePath) {
+            ### ----------------------------------------------------------------
+            forwardAllErrorMsg <- sapply(c(forwardAllReads[[1]]),
+                                         function(filePath) {
                 if (!file.exists(filePath)) {
                     msg <- paste("\n'", filePath, "' forward read file does ",
                                  "not exist.\n", sep = "")
@@ -178,39 +186,41 @@ setMethod("initialize",
             })
             errors <- c(errors, unlist(forwardAllErrorMsg), use.names = FALSE)
 
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### 'reverseAllReads'  files prechecking (must exist)
-            ### ------------------------------------------------------------------------
-            reverseAllErrorMsg <- sapply(c(reverseAllReads[[1]]), function(filePath) {
+            ### ----------------------------------------------------------------
+            reverseAllErrorMsg <- sapply(c(reverseAllReads[[1]]),
+                                         function(filePath) {
                 if (!file.exists(filePath)) {
                     msg <- paste("\n'", filePath, "'",
-                                 " reverse read file does not exist.\n", sep = "")
+                                 " reverse read file does not exist.\n",
+                                 sep = "")
                     return(msg)
                 }
                 return()
             })
             errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
 
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### Input parameter prechecking for TrimmingMethod.
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             errors <- checkTrimParam(TrimmingMethod,
                                      M1TrimmingCutoff,
                                      M2CutoffQualityScore,
                                      M2SlidingWindowSize,
                                      errors)
 
-            ##### ----------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ##### Input parameter prechecking for ChromatogramParam
-            ##### ----------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             errors <- checkBaseNumPerRow (baseNumPerRow, errors)
             errors <- checkHeightPerRow (baseNumPerRow, errors)
             errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
             errors <- checkShowTrimmed (showTrimmed, errors)
 
-            ##### ----------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ##### Input parameter prechecking for contigSeq parameter
-            ##### ----------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             errors <- checkMinReadsNum(minReadsNum, errors)
             errors <- checkMinReadLength(minReadLength, errors)
             errors <- checkMinFractionCall(minFractionCall, errors)
@@ -219,23 +229,23 @@ setMethod("initialize",
             errors <- checkAcceptStopCodons(acceptStopCodons, errors)
             errors <- checkReadingFrame(readingFrame, errors)
 
-            ##### ----------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ##### Input parameter prechecking for processorsNum
-            ##### ----------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             errors <- checkProcessorsNum(processorsNum, errors)
 
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### Prechecking success. Start to create multiple reads.
-            ### ------------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             if (length(errors) != 0) {
                 stop(errors)
             }
             processorsNum <- getProcessors (processorsNum)
             trimmingMethodSC = TrimmingMethod
             # sapply to create SangerRead list.
-            ### --------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
-            ### --------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             forwardReadList <- sapply(forwardAllReads[[1]], SangerRead,
                                       readFeature          = "Forward Read",
                                       TrimmingMethod       = TrimmingMethod,
@@ -246,9 +256,9 @@ setMethod("initialize",
                                       heightPerRow         = heightPerRow,
                                       signalRatioCutoff    = signalRatioCutoff,
                                       showTrimmed          = showTrimmed)
-            ### --------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
-            ### --------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             reverseReadList <- sapply(reverseAllReads[[1]], SangerRead,
                                       readFeature          = "Reverse Read",
                                       TrimmingMethod       = TrimmingMethod,
@@ -278,12 +288,111 @@ setMethod("initialize",
             spDf <- CSResult$spDf
         } else if (inputSource == "FASTA") {
 
+
+            fastaFileName <- fastaFN
+
+
+
+
+
+
+
+
+
+            errors <- checkFastaFileName(fastaFileName, errors)
+            if(length(errors) != 0) {
+                stop(errors)
+            }
+            parentDirectory <- ""
+            readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+            fastaNames <- names(readFasta)
+            ### ----------------------------------------------------------------
+            ### Find names with the given contigName
+            ### ----------------------------------------------------------------
+            contigSubGroupNames <-
+                fastaNames[grepl(contigName, fastaNames, fixed=TRUE)]
+            ### ----------------------------------------------------------------
+            ### Among them, find the forward names
+            ### ----------------------------------------------------------------
+            forwardSelectNames <-
+                contigSubGroupNames[grepl(suffixForwardRegExp,
+                                          contigSubGroupNames)]
+            ### ----------------------------------------------------------------
+            ### Among them, find the reverse names
+            ### ----------------------------------------------------------------
+            reverseSelectNames <-
+                contigSubGroupNames[grepl(suffixReverseRegExp,
+                                          contigSubGroupNames)]
+
+            forwardFasta <- sapply(forwardSelectNames, function(forwardName) {
+                DNAString(as.character(readFasta[[forwardName]]))
+            })
+
+            reverseFasta <- sapply(reverseSelectNames, function(reverseName) {
+                DNAString(as.character(readFasta[[reverseName]]))
+            })
+            forwardNumber <- length(forwardFasta)
+            reverseNumber <- length(reverseFasta)
+
+
+            if ((forwardNumber + reverseNumber) < 2) {
+                stop("\n'Number of total reads has to be more than two.")
+            }
+
+            processorsNum <- getProcessors (processorsNum)
+            trimmingMethodSC <- ""
+            # sapply to create SangerRead list.
+            ### ----------------------------------------------------------------
+            ### "SangerRead" S4 class creation (forward list)
+            ### ----------------------------------------------------------------
+            forwardReadList <- sapply(forwardFasta, SangerRead,
+                                      readFeature          = "Forward Read")
+            ### ----------------------------------------------------------------
+            ### "SangerRead" S4 class creation (reverse list)
+            ### ----------------------------------------------------------------
+            reverseReadList <- sapply(reverseFasta, SangerRead,
+                                      readFeature          = "Reverse Read")
+
+            CSResult <- calculateContigSeq (forwardReadList  = forwardReadList,
+                                            reverseReadList  = reverseReadList,
+                                            refAminoAcidSeq  = refAminoAcidSeq,
+                                            minFractionCall  = minFractionCall,
+                                            maxFractionLost  = maxFractionLost,
+                                            geneticCode      = geneticCode,
+                                            acceptStopCodons = acceptStopCodons,
+                                            readingFrame     = readingFrame,
+                                            processorsNum    = processorsNum)
+            contigGapfree <- CSResult$consensusGapfree
+            diffsDf <- CSResult$diffsDf
+            aln2 <- CSResult$aln2
+            dist <- CSResult$dist
+            dend <- CSResult$dend
+            indels <- CSResult$indels
+            stopsDf <- CSResult$stopsDf
+            spDf <- CSResult$spDf
+
+
+            # parentDir
+            #
+            #
+            # parentDirectory        = parentDirectory,
+            # contigName             = contigName,
+            # suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
+            # suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
+            # geneticCode            = GENETIC_CODE,
+
+
+
+
+
+
         }
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
                    inputSource            = inputSource,
+                   fastaFileName          = "",
                    parentDirectory        = parentDirectory,
                    contigName             = contigName,
                    suffixForwardRegExp    = suffixForwardRegExp,

@@ -40,15 +40,16 @@ An S4 class extending sangerseq S4 class which corresponds to a single ABIF file
 }}
 
 \examples{
+## Input From ABIF file format
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-A_chloroticaFdFN <- file.path(inputFilesPath,
+A_chloroticaFN <- file.path(inputFilesPath,
                               "Allolobophora_chlorotica",
                               "ACHLO",
                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 sangerRead <- new("SangerRead",
                    inputSource           = "ABIF",
                    readFeature           = "Forward Read",
-                   readFileName          = A_chloroticaFdFN,
+                   readFileName          = A_chloroticaFN,
                    geneticCode           = GENETIC_CODE,
                    TrimmingMethod        = "M1",
                    M1TrimmingCutoff      = 0.0001,
@@ -58,6 +59,17 @@ sangerRead <- new("SangerRead",
                    heightPerRow          = 200,
                    signalRatioCutoff     = 0.33,
                    showTrimmed           = TRUE)
+
+## Input From FASTA file format
+A_chloroticaFNfa <- file.path(inputFilesPath,
+                              "fasta",
+                              "SangerRead",
+                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
+sangerReadFa <- new("SangerRead",
+                     inputSource  = "FASTA",
+                     readFeature  = "Forward Read",
+                     readFileName = A_chloroticaFNfa,
+                     geneticCode  = GENETIC_CODE)
 }
 \author{
 Kuan-Hao Chao

@@ -1,3 +1,20 @@
+checkFastaFileName <- function(fastaFileName, errors) {
+    if (!file.exists(fastaFileName)) {
+        cat ("fastaFileName", fastaFileName)
+        msg <- paste("\n'", fastaFileName, "'",
+                     " file does not exist.\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    if (is.na(str_extract(basename(fastaFileName), ".fa$")) &&
+        is.na(str_extract(basename(fastaFileName), ".fasta$"))) {
+        msg <- paste("\n'", fastaFileName, "'",
+                     " file extension must be '.fa' or '.fasta'.\n",
+                     sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
 checkReadFileName <- function(readFileName, inputSource, errors) {
     if (!file.exists(readFileName)) {
         cat ("readFileName", readFileName)

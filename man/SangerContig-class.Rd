@@ -10,6 +10,8 @@ An S4 class containing forward and reverse SangerRead lists and alignment, conse
 \section{Slots}{
 
 \describe{
+\item{\code{inputSource}}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
+
 \item{\code{parentDirectory}}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.}
 
 \item{\code{contigName}}{The contig name of all the reads in \code{parentDirectory}.}
@@ -58,12 +60,14 @@ An S4 class containing forward and reverse SangerRead lists and alignment, conse
 }}
 
 \examples{
+## Input From ABIF file format
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 sangerContig <- new("SangerContig",
+                     inputSource           = "ABIF",
                      parentDirectory       = parentDir,
                      contigName            = contigName,
                      suffixForwardRegExp   = suffixForwardRegExp,
@@ -77,6 +81,20 @@ sangerContig <- new("SangerContig",
                      heightPerRow          = 200,
                      signalRatioCutoff     = 0.33,
                      showTrimmed           = TRUE)
+
+## Input From FASTA file format
+parentDir <- file.path(inputFilesPath,
+                       "fasta",
+                       "SangerContig",
+                       "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
+sangerContigFa <- new("SangerContig",
+                      inputSource           = "FASTA",
+                      parentDirectory       = parentDir,
+                      contigName            = contigName,
+                      suffixForwardRegExp   = suffixForwardRegExp,
+                      suffixReverseRegExp   = suffixReverseRegExp,
+                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
+                      )
 }
 \author{
 Kuan-Hao Chao

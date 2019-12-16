@@ -29,9 +29,9 @@
 #' ## Input From ABIF file format
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFN <- file.path(inputFilesPath,
-#'                               "Allolobophora_chlorotica",
-#'                               "ACHLO",
-#'                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
+#'                             "Allolobophora_chlorotica",
+#'                             "ACHLO",
+#'                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 #' sangerRead <- new("SangerRead",
 #'                    inputSource           = "ABIF",
 #'                    readFeature           = "Forward Read",
@@ -51,11 +51,13 @@
 #'                               "fasta",
 #'                               "SangerRead",
 #'                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
+#' fastaReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa"
 #' sangerReadFa <- new("SangerRead",
-#'                      inputSource  = "FASTA",
-#'                      readFeature  = "Forward Read",
-#'                      readFileName = A_chloroticaFNfa,
-#'                      geneticCode  = GENETIC_CODE)
+#'                      inputSource   = "FASTA",
+#'                      readFeature   = "Forward Read",
+#'                      readFileName  = A_chloroticaFNfa,
+#'                      fastaReadName = fastaReadName,
+#'                      geneticCode   = GENETIC_CODE)
 setClass(
     "SangerRead",
     ### ------------------------------------------------------------------------
@@ -64,15 +66,16 @@ setClass(
     ### ------------------------------------------------------------------------
     contains="sangerseq",
     slots=c(inputSource         = "character",
+            fastaReadName       = "character",
             readFeature         = "character",
             readFileName        = "character",
+            geneticCode         = "character",
             abifRawData         = "abifORNULL",
             QualityReport       = "QualityReportORNULL",
             ChromatogramParam   = "ChromatogramParamORNULL",
             primaryAASeqS1      = "AAString",
             primaryAASeqS2      = "AAString",
             primaryAASeqS3      = "AAString",
-            geneticCode         = "character",
             primarySeqRaw       = "DNAString",
             secondarySeqRaw     = "DNAString",
             peakPosMatrixRaw    = "matrix",
@@ -86,6 +89,7 @@ setMethod("initialize",
           "SangerRead",
           function(.Object, ...,
                    inputSource          = "ABIF",
+                   fastaReadName        = character(0),
                    readFeature          = character(0),
                    readFileName         = character(0),
                    geneticCode          = GENETIC_CODE,
@@ -134,8 +138,7 @@ setMethod("initialize",
             message(readFeature, " read: Creating abif & sangerseq ...")
             message("    * Creating ", readFeature , " raw abif ...")
             abifRawData = read.abif(readFileName)
-            message("    * Creating ",
-                    readFeature , " raw sangerseq ...")
+            message("    * Creating ", readFeature , " raw sangerseq ...")
             readSangerseq = sangerseq(abifRawData)
             primarySeqID = readSangerseq@primarySeqID
             secondarySeqID = readSangerseq@secondarySeqID
@@ -215,11 +218,16 @@ setMethod("initialize",
             secondarySeqID <- ""
             primarySeqRaw <- DNAString()
             readFasta <- read.fasta(readFileName, as.string = TRUE)
-            if (names(readFasta) != basename(readFileName)) {
-                stop("FASTA read name has to be same with '",
-                     basename(readFileName), "'")
+            ### ----------------------------------------------------------------
+            ### Get the Target Filename !!
+            ### ----------------------------------------------------------------
+            fastaName <- names(readFasta)
+            targetFastaName <- fastaName[fastaName == fastaReadName]
+            if(isEmpty(targetFastaName)) {
+                stop(paste0("The name '", fastaReadName,
+                            "' is not in the '", readFileName,"' FASTA file"))
             }
-            primarySeq <- DNAString(as.character(readFasta))
+            primarySeq <- DNAString(as.character(readFasta[[targetFastaName]]))
             if (readFeature == "Reverse Read") {
                 primarySeq <- reverseComplement(primarySeq)
             }
@@ -243,6 +251,7 @@ setMethod("initialize",
     }
     callNextMethod(.Object, ...,
                    inputSource         = inputSource,
+                   fastaReadName       = fastaReadName,
                    readFeature         = readFeature,
                    readFileName        = readFileName,
                    geneticCode         = geneticCode,
