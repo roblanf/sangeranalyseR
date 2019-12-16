@@ -94,11 +94,12 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
                                                    compression_level,
                                                    selection = "all") {
     ### ------------------------------------------------------------------------
-    ### selection can be 'all', 'alignment' 'allReads' 'contig'
+    ### selection can be 'all', 'reads_alignment' 'reads_unalignment' 'contig'
     ### ------------------------------------------------------------------------
-    if (selection != "all" && selection != "alignment" &&
-        selection != "allReads" && selection != "contig") {
-        stop("\nSelection must be 'all', 'alignment', 'allReads' or 'contig'.")
+    if (selection != "all" && selection != "reads_alignment" &&
+        selection != "reads_unalignment" && selection != "contig") {
+        stop("\nSelection must be 'all',
+             'reads_alignment', 'reads_unalignment' or 'contig'.")
     }
     if (is.null(outputDir)) {
         outputDir <- tempdir()
@@ -110,11 +111,16 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
     ### ------------------------------------------------------------------------
     ### Writing alignment result to FASTA file (Exclude consensus read)
     ### ------------------------------------------------------------------------
-    if (selection == "all" || selection == "alignment") {
+    if (selection == "all" || selection == "reads_alignment") {
         message("\n    >> Writing alignment to FASTA ...")
         alignmentObject = obj@alignment
         alignmentObject$Consensus <- NULL
-        writeXStringSet(alignmentObject,
+        writeAlignment <- append(alignmentObject, list(obj@contigSeq))
+        names(writeAlignment) <- sub("^[0-9]*_", "", names(writeAlignment))
+        names(writeAlignment)[length(writeAlignment)] <-
+            paste0(obj@contigName, "_contig")
+        names(writeAlignment)
+        writeXStringSet(writeAlignment,
                         file.path(outputDir,
                                   paste0(contigName, "_reads_alignment.fa")),
                         compress = compress,
@@ -124,7 +130,7 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
     ### ------------------------------------------------------------------------
     ### Writing all single read into FASTA file
     ### ------------------------------------------------------------------------
-    if (selection == "all" || selection == "allReads") {
+    if (selection == "all" || selection == "reads_unalignment") {
         message("\n    >> Writing all single reads to FASTA ...")
         fRDNAStringSet <- sapply(obj@forwardReadList, function(forwardRead) {
             trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
@@ -145,7 +151,7 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
         writeXStringSet(frReadSet,
                         file.path(outputDir,
                                   paste0(contigName,
-                                         "_all_trimmed_reads.fa")),
+                                         "_reads_unalignment.fa")),
                         compress = compress,
                         compression_level = compression_level)
     }

@@ -38,13 +38,12 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
                                                  compression_level,
                                                  selection = "all") {
     ### ------------------------------------------------------------------------
-    ### selection can be 'all', 'alignment' 'allReads' 'contig'
+    ### selection can be 'all', 'alignment' 'all_reads' 'contig'
     ### ------------------------------------------------------------------------
-    if (selection != "all" && selection != "alignment" &&
-        selection != "contigs" && selection != "consensusRead" &&
-        selection != "allReads") {
-        stop(paste0("\nSelection must be 'all', ",
-                    "'alignment' 'contigs','consensusRead' or 'allReads'."))
+    if (selection != "all" && selection != "contigs_alignment" &&
+        selection != "contigs_unalignment" && selection != "all_reads") {
+        stop(paste0("\nSelection must be 'all', 'contigs_alignment',",
+                    " 'contigs_unalignment' or 'all_reads'."))
     }
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
@@ -58,7 +57,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
     ### ------------------------------------------------------------------------
     ### Writing 'contigs alignment' result to FASTA file
     ### ------------------------------------------------------------------------
-    if (selection == "all" || selection == "alignment") {
+    if (selection == "all" || selection == "contigs_alignment") {
         message("\n    >> Writing 'alignment' to FASTA ...")
         alignmentObject = obj@contigsAlignment
         writeXStringSet(alignmentObject,
@@ -70,35 +69,35 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
     ### ------------------------------------------------------------------------
     ### Writing 'all contigs' to FASTA file
     ### ------------------------------------------------------------------------
-    if (selection == "all" || selection == "contigs") {
+    if (selection == "all" || selection == "contigs_unalignment") {
         message("\n    >> Writing 'contigs' to FASTA ...")
         contigsList <- sapply(obj@contigList, function(contig) {
             contig@contigSeq
         })
         contigsListDNASet<- DNAStringSet(contigsList)
         writeXStringSet(contigsListDNASet,
-                        file.path(outputDir, "Sanger_contigs.fa"),
+                        file.path(outputDir, "Sanger_contigs_unalignment.fa"),
                         compress = compress,
                         compression_level = compression_level)
     }
 
-    ### ------------------------------------------------------------------------
-    ### Writing 'contigs consensus read' to FASTA file
-    ### ------------------------------------------------------------------------
-    if (selection == "all" || selection == "consensusRead") {
-        message("\n    >> Writing 'consensusRead' to FASTA ...")
-        contigsConsensusDNASet<- DNAStringSet(obj@contigsConsensus)
-        names(contigsConsensusDNASet) <- "Sanger Consensus Read"
-        writeXStringSet(contigsConsensusDNASet,
-                        file.path(outputDir, "Sanger_consensus_read.fa"),
-                        compress = compress,
-                        compression_level = compression_level)
-    }
+    # ### ------------------------------------------------------------------------
+    # ### Writing 'contigs consensus read' to FASTA file
+    # ### ------------------------------------------------------------------------
+    # if (selection == "all" || selection == "consensusRead") {
+    #     message("\n    >> Writing 'consensusRead' to FASTA ...")
+    #     contigsConsensusDNASet<- DNAStringSet(obj@contigsConsensus)
+    #     names(contigsConsensusDNASet) <- "Sanger Consensus Read"
+    #     writeXStringSet(contigsConsensusDNASet,
+    #                     file.path(outputDir, "Sanger_consensus_read.fa"),
+    #                     compress = compress,
+    #                     compression_level = compression_level)
+    # }
 
     ### ------------------------------------------------------------------------
     ### Writing 'all reads' to FASTA file
     ### ------------------------------------------------------------------------
-    if (selection == "all" || selection == "allReads") {
+    if (selection == "all" || selection == "all_reads") {
         message("\n    >> Writing all single reads to FASTA ...")
         fRDNASet <- sapply(obj@contigList, function(contig) {
             fRDNAStringSet <- sapply(contig@forwardReadList, function(forwardRead) {
