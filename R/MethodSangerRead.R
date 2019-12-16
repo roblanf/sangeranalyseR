@@ -102,7 +102,7 @@ setMethod("MakeBaseCalls", "SangerRead",
 #' @rdname SangerRead-class-writeFastaSR
 #' @examples
 #' load("data/sangerRead.RData")
-#' writeFastaSR(sangerRead)
+#' writeFastaSR(sangerRead, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")
 setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
                                                  compression_level) {
     if (is.null(outputDir)) {

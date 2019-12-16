@@ -33,7 +33,7 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
 #' @rdname SangerAlignment-class-writeFastaSA
 #' @examples
 #' load("data/sangerAlignment.RData")
-#' writeFastaSA(sangerAlignment)
+#' writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")
 setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
                                                  compression_level,
                                                  selection = "all") {

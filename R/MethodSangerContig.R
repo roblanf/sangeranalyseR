@@ -89,7 +89,7 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
 #' @rdname SangerContig-class-writeFastaSC
 #' @examples
 #' load("data/sangerContig.RData")
-#' writeFastaSC(sangerContig)
+#' writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")
 setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
                                                    compression_level,
                                                    selection = "all") {
@@ -119,7 +119,6 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
         names(writeAlignment) <- sub("^[0-9]*_", "", names(writeAlignment))
         names(writeAlignment)[length(writeAlignment)] <-
             paste0(obj@contigName, "_contig")
-        names(writeAlignment)
         writeXStringSet(writeAlignment,
                         file.path(outputDir,
                                   paste0(contigName, "_reads_alignment.fa")),
