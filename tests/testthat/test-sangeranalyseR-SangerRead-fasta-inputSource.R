@@ -20,6 +20,17 @@ test_that("SangerRead - FASTA Initial test", {
     expect_equal(sangerReadFa@peakAmpMatrix, matrix())
 })
 
+
+test_that("SangerRead update quality trimming parameters 10 (M2CutoffQualityScore smaller than threashold)", {
+    expect_error(new("SangerRead",
+                     inputSource   = "FASTA",
+                     readFeature   = "Forward Read",
+                     readFileName  = A_chloroticaFNfa,
+                     fastaReadName = "Random_read_name",
+                     geneticCode   = GENETIC_CODE),
+                 "The name 'Random_read_name' is not in the 'ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa' FASTA file", fixed = TRUE)
+})
+
 test_that("SangerRead - FASTA functions test", {
     expect_message(qualityBasePlot(sangerReadFa),
                  paste("SangerRead with 'FASTA' inputSource",

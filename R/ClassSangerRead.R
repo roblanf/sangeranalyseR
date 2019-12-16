@@ -66,9 +66,9 @@ setClass(
     ### ------------------------------------------------------------------------
     contains="sangerseq",
     slots=c(inputSource         = "character",
-            fastaReadName       = "character",
             readFeature         = "character",
             readFileName        = "character",
+            fastaReadName       = "character",
             geneticCode         = "character",
             abifRawData         = "abifORNULL",
             QualityReport       = "QualityReportORNULL",
@@ -89,9 +89,9 @@ setMethod("initialize",
           "SangerRead",
           function(.Object, ...,
                    inputSource          = "ABIF",
-                   fastaReadName        = character(0),
                    readFeature          = character(0),
                    readFileName         = character(0),
+                   fastaReadName        = character(0),
                    geneticCode          = GENETIC_CODE,
                    TrimmingMethod       = "M1",
                    M1TrimmingCutoff     = 0.0001,
@@ -221,11 +221,11 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### Get the Target Filename !!
             ### ----------------------------------------------------------------
-            fastaName <- names(readFasta)
-            targetFastaName <- fastaName[fastaName == fastaReadName]
+            fastaNames <- names(readFasta)
+            targetFastaName <- fastaNames[fastaNames == fastaReadName]
             if(isEmpty(targetFastaName)) {
-                stop(paste0("The name '", fastaReadName,
-                            "' is not in the '", readFileName,"' FASTA file"))
+                stop(paste0("The name '", fastaReadName, "' is not in the '",
+                            basename(readFileName),"' FASTA file"))
             }
             primarySeq <- DNAString(as.character(readFasta[[targetFastaName]]))
             if (readFeature == "Reverse Read") {
