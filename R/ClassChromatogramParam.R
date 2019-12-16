@@ -62,3 +62,6 @@ setMethod("initialize",
                              signalRatioCutoff = signalRatioCutoff,
                              showTrimmed       = showTrimmed)
           })
+
+#' @export
+setClassUnion("ChromatogramParamORNULL", c("ChromatogramParam", "NULL"))

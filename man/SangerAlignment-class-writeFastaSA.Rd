@@ -13,5 +13,5 @@ writeFastaSA
 }
 \examples{
 load("data/sangerAlignment.RData")
-writeFastaSA(sangerAlignment)
+writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")
 }

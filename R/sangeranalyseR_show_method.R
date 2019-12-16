@@ -1,11 +1,19 @@
 # the show method:
 setMethod('show', 'SangerRead', function(object){
-    cat("SangerRead S4 instance\n",
-        "          Read Feature : ", object@readFeature, "\n",
-        "         Read FileName : ", basename(object@readFileName), "\n",
-        "      Primary Sequence : ", as.character(object@primarySeq), "\n",
-        "    Secondary Sequence : ", as.character(object@secondarySeq), "\n"
-    )
+    if (object@inputSource == "ABIF") {
+        cat("SangerRead S4 instance\n",
+            "          Read Feature : ", object@readFeature, "\n",
+            "         Read FileName : ", basename(object@readFileName), "\n",
+            "      Primary Sequence : ", as.character(object@primarySeq), "\n",
+            "    Secondary Sequence : ", as.character(object@secondarySeq), "\n"
+        )
+    } else if (object@inputSource == "FASTA") {
+        cat("SangerRead S4 instance\n",
+            "          Read Feature : ", object@readFeature, "\n",
+            "         Read FileName : ", basename(object@readFileName), "\n",
+            "      Primary Sequence : ", as.character(object@primarySeq), "\n"
+        )
+    }
 })
 
 setMethod('show', 'SangerContig', function(object){

@@ -1,15 +1,39 @@
-checkReadFileName <- function(readFileName, errors) {
+checkReadFileName <- function(readFileName, inputSource, errors) {
     if (!file.exists(readFileName)) {
         cat ("readFileName", readFileName)
         msg <- paste("\n'", readFileName, "'",
-                     " foward read file does not exist.\n", sep = "")
+                     " file does not exist.\n", sep = "")
         errors <- c(errors, msg)
     }
+    if (inputSource == "ABIF") {
+        if (is.na(str_extract(basename(readFileName), ".ab1$"))) {
+            msg <- paste("\n'", readFileName, "'",
+                         " file extension must be '.ab1'.\n", sep = "")
+            errors <- c(errors, msg)
+        }
+    } else if (inputSource == "FASTA") {
+        if (is.na(str_extract(basename(readFileName), ".fa$")) &&
+            is.na(str_extract(basename(readFileName), ".fasta$"))) {
+            msg <- paste("\n'", readFileName, "'",
+                         " file extension must be '.fa' or '.fasta'.\n",
+                         sep = "")
+            errors <- c(errors, msg)
+        }
+    }
+    return(errors)
 }
 
 ### ============================================================================
 ### QualityReport related: 'readFeature', 'qualityPhredScores'
 ### ============================================================================
+checkInputSource <- function(inputSource, errors) {
+    if (inputSource != "ABIF" && inputSource != "FASTA") {
+        msg <- paste("\n'inputSource' must be 'ABIF' or 'FASTA'\n", sep = "")
+        errors <- c(errors, msg)
+    }
+    return(errors)
+}
+
 checkReadFeature <- function(readFeature, errors) {
     if (readFeature != "Forward Read" && readFeature != "Reverse Read") {
         msg <- paste("\n'readFeature' must be

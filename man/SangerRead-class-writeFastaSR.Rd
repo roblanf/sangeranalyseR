@@ -13,5 +13,5 @@ writeFastaSR
 }
 \examples{
 load("data/sangerRead.RData")
-writeFastaSR(sangerRead)
+writeFastaSR(sangerRead, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")
 }

@@ -155,3 +155,5 @@ setMethod("initialize",
                              M2CutoffQualityScore    = M2CutoffQualityScore,
                              M2SlidingWindowSize     = M2SlidingWindowSize)
           })
+#' @export
+setClassUnion("QualityReportORNULL", c("QualityReport", "NULL"))

@@ -37,7 +37,8 @@ Depends:
     tools,
     rmarkdown,
     kableExtra,
-    IRanges
+    IRanges,
+    seqinr
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: 

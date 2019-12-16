@@ -10,6 +10,8 @@ An S4 class extending sangerseq S4 class which corresponds to a single ABIF file
 \section{Slots}{
 
 \describe{
+\item{\code{inputSource}}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
+
 \item{\code{readFeature}}{The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.}
 
 \item{\code{readFileName}}{The filename of the target ABIF file.}
@@ -44,6 +46,7 @@ A_chloroticaFdFN <- file.path(inputFilesPath,
                               "ACHLO",
                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 sangerRead <- new("SangerRead",
+                   inputSource           = "ABIF",
                    readFeature           = "Forward Read",
                    readFileName          = A_chloroticaFdFN,
                    geneticCode           = GENETIC_CODE,

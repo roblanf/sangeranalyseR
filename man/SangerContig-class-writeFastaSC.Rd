@@ -13,5 +13,5 @@ writeFastaSC
 }
 \examples{
 load("data/sangerContig.RData")
-writeFastaSC(sangerContig)
+writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")
 }
