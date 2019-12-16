@@ -5,6 +5,7 @@
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @slot readFileName The filename of the target ABIF file.
+#' @slot fastaReadName
 #' @slot abifRawData A S4 class containing all fields in the ABIF file. It is defined in sangerseqR package.
 #' @slot QualityReport A S4 class containing quality trimming related inputs and trimming results.
 #' @slot ChromatogramParam A S4 class containing chromatogram inputs.
@@ -47,6 +48,7 @@
 #'                    showTrimmed           = TRUE)
 #'
 #' ## Input From FASTA file format
+#' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFNfa <- file.path(inputFilesPath,
 #'                               "fasta",
 #'                               "SangerRead",
@@ -89,9 +91,9 @@ setMethod("initialize",
           "SangerRead",
           function(.Object, ...,
                    inputSource          = "ABIF",
-                   readFeature          = character(0),
-                   readFileName         = character(0),
-                   fastaReadName        = character(0),
+                   readFeature          = "",
+                   readFileName         = "",
+                   fastaReadName        = "",
                    geneticCode          = GENETIC_CODE,
                    TrimmingMethod       = "M1",
                    M1TrimmingCutoff     = 0.0001,

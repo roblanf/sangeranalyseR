@@ -265,3 +265,4 @@ checkShowTrimmed <- function(showTrimmed, errors) {
     }
     return(errors)
 }
+

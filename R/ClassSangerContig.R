@@ -62,7 +62,8 @@
 #'                      showTrimmed           = TRUE)
 #'
 #' ## Input From FASTA file format
-#' fastaFN <- file.path(inputFilesPath, "fasta",
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 #' suffixForwardRegExp <- "_[F]_[0-9]*.fa"
@@ -140,13 +141,13 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     errors <- character()
     errors <- checkInputSource (inputSource, errors)
-    errors <- checkParentDirectory (parentDirectory, errors)
     if (length(errors) == 0) {
+        processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
+            errors <- checkParentDirectory (parentDirectory, errors)
             ### ----------------------------------------------------------------
             ### 'forwardAllReads' & 'reverseAllReads' files prechecking
             ### ----------------------------------------------------------------
-            fastaFileName <- ""
             parentDirFiles <- list.files(parentDirectory)
             contigSubGroupFiles <-
                 parentDirFiles[grepl(contigName,
@@ -240,70 +241,47 @@ setMethod("initialize",
             if (length(errors) != 0) {
                 stop(errors)
             }
-            processorsNum <- getProcessors (processorsNum)
             trimmingMethodSC = TrimmingMethod
             # sapply to create SangerRead list.
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
-            forwardReadList <- sapply(forwardAllReads[[1]], SangerRead,
-                                      readFeature          = "Forward Read",
-                                      TrimmingMethod       = TrimmingMethod,
-                                      M1TrimmingCutoff     = M1TrimmingCutoff,
-                                      M2CutoffQualityScore = M2CutoffQualityScore,
-                                      M2SlidingWindowSize  = M2SlidingWindowSize,
-                                      baseNumPerRow        = baseNumPerRow,
-                                      heightPerRow         = heightPerRow,
-                                      signalRatioCutoff    = signalRatioCutoff,
-                                      showTrimmed          = showTrimmed)
+            forwardReadList <- sapply(forwardAllReads[[1]], function(forwardN){
+                SangerRead(inputSource          = inputSource,
+                           readFeature          = "Forward Read",
+                           readFileName         = forwardN,
+                           geneticCode          = geneticCode,
+                           TrimmingMethod       = TrimmingMethod,
+                           M1TrimmingCutoff     = M1TrimmingCutoff,
+                           M2CutoffQualityScore = M2CutoffQualityScore,
+                           M2SlidingWindowSize  = M2SlidingWindowSize,
+                           baseNumPerRow        = baseNumPerRow,
+                           heightPerRow         = heightPerRow,
+                           signalRatioCutoff    = signalRatioCutoff,
+                           showTrimmed          = showTrimmed)
+            })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
-            reverseReadList <- sapply(reverseAllReads[[1]], SangerRead,
-                                      readFeature          = "Reverse Read",
-                                      TrimmingMethod       = TrimmingMethod,
-                                      M1TrimmingCutoff     = M1TrimmingCutoff,
-                                      M2CutoffQualityScore = M2CutoffQualityScore,
-                                      M2SlidingWindowSize  = M2SlidingWindowSize,
-                                      baseNumPerRow        = baseNumPerRow,
-                                      heightPerRow         = heightPerRow,
-                                      signalRatioCutoff    = signalRatioCutoff,
-                                      showTrimmed          = showTrimmed)
-            CSResult <- calculateContigSeq (forwardReadList  = forwardReadList,
-                                            reverseReadList  = reverseReadList,
-                                            refAminoAcidSeq  = refAminoAcidSeq,
-                                            minFractionCall  = minFractionCall,
-                                            maxFractionLost  = maxFractionLost,
-                                            geneticCode      = geneticCode,
-                                            acceptStopCodons = acceptStopCodons,
-                                            readingFrame     = readingFrame,
-                                            processorsNum    = processorsNum)
-            contigGapfree <- CSResult$consensusGapfree
-            diffsDf <- CSResult$diffsDf
-            aln2 <- CSResult$aln2
-            dist <- CSResult$dist
-            dend <- CSResult$dend
-            indels <- CSResult$indels
-            stopsDf <- CSResult$stopsDf
-            spDf <- CSResult$spDf
+            reverseReadList <- sapply(reverseAllReads[[1]], function(reverseN){
+                SangerRead(inputSource          = inputSource,
+                           readFeature          = "Reverse Read",
+                           readFileName         = reverseN,
+                           geneticCode          = geneticCode,
+                           TrimmingMethod       = TrimmingMethod,
+                           M1TrimmingCutoff     = M1TrimmingCutoff,
+                           M2CutoffQualityScore = M2CutoffQualityScore,
+                           M2SlidingWindowSize  = M2SlidingWindowSize,
+                           baseNumPerRow        = baseNumPerRow,
+                           heightPerRow         = heightPerRow,
+                           signalRatioCutoff    = signalRatioCutoff,
+                           showTrimmed          = showTrimmed)
+            })
         } else if (inputSource == "FASTA") {
-
-
-            fastaFileName <- fastaFN
-
-
-
-
-
-
-
-
-
             errors <- checkFastaFileName(fastaFileName, errors)
             if(length(errors) != 0) {
                 stop(errors)
             }
-            parentDirectory <- ""
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             fastaNames <- names(readFasta)
             ### ----------------------------------------------------------------
@@ -323,76 +301,52 @@ setMethod("initialize",
             reverseSelectNames <-
                 contigSubGroupNames[grepl(suffixReverseRegExp,
                                           contigSubGroupNames)]
-
-            forwardFasta <- sapply(forwardSelectNames, function(forwardName) {
-                DNAString(as.character(readFasta[[forwardName]]))
-            })
-
-            reverseFasta <- sapply(reverseSelectNames, function(reverseName) {
-                DNAString(as.character(readFasta[[reverseName]]))
-            })
-            forwardNumber <- length(forwardFasta)
-            reverseNumber <- length(reverseFasta)
-
-
-            if ((forwardNumber + reverseNumber) < 2) {
-                stop("\n'Number of total reads has to be more than two.")
-            }
-
-            processorsNum <- getProcessors (processorsNum)
-            trimmingMethodSC <- ""
+            trimmingMethodSC <- character(0)
             # sapply to create SangerRead list.
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
-            forwardReadList <- sapply(forwardFasta, SangerRead,
-                                      readFeature          = "Forward Read")
+            forwardReadList <- sapply(forwardSelectNames, function(forwardName){
+                SangerRead(inputSource   = inputSource,
+                           readFeature   = "Forward Read",
+                           readFileName  = fastaFileName,
+                           fastaReadName = forwardName,
+                           geneticCode   = geneticCode)
+            })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
-            reverseReadList <- sapply(reverseFasta, SangerRead,
-                                      readFeature          = "Reverse Read")
-
-            CSResult <- calculateContigSeq (forwardReadList  = forwardReadList,
-                                            reverseReadList  = reverseReadList,
-                                            refAminoAcidSeq  = refAminoAcidSeq,
-                                            minFractionCall  = minFractionCall,
-                                            maxFractionLost  = maxFractionLost,
-                                            geneticCode      = geneticCode,
-                                            acceptStopCodons = acceptStopCodons,
-                                            readingFrame     = readingFrame,
-                                            processorsNum    = processorsNum)
-            contigGapfree <- CSResult$consensusGapfree
-            diffsDf <- CSResult$diffsDf
-            aln2 <- CSResult$aln2
-            dist <- CSResult$dist
-            dend <- CSResult$dend
-            indels <- CSResult$indels
-            stopsDf <- CSResult$stopsDf
-            spDf <- CSResult$spDf
-
-
-            # parentDir
-            #
-            #
-            # parentDirectory        = parentDirectory,
-            # contigName             = contigName,
-            # suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
-            # suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
-            # geneticCode            = GENETIC_CODE,
-
-
-
-
-
-
+            reverseReadList <- sapply(reverseSelectNames, function(reverseName){
+                SangerRead(inputSource   = inputSource,
+                           readFeature   = "Reverse Read",
+                           readFileName  = fastaFileName,
+                           fastaReadName = reverseName,
+                           geneticCode   = geneticCode)
+            })
         }
+        CSResult <- calculateContigSeq (forwardReadList  = forwardReadList,
+                                        reverseReadList  = reverseReadList,
+                                        refAminoAcidSeq  = refAminoAcidSeq,
+                                        minFractionCall  = minFractionCall,
+                                        maxFractionLost  = maxFractionLost,
+                                        geneticCode      = geneticCode,
+                                        acceptStopCodons = acceptStopCodons,
+                                        readingFrame     = readingFrame,
+                                        processorsNum    = processorsNum)
+        contigGapfree <- CSResult$consensusGapfree
+        diffsDf <- CSResult$diffsDf
+        aln2 <- CSResult$aln2
+        dist <- CSResult$dist
+        dend <- CSResult$dend
+        indels <- CSResult$indels
+        stopsDf <- CSResult$stopsDf
+        spDf <- CSResult$spDf
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
                    inputSource            = inputSource,
-                   fastaFileName          = "",
+                   fastaFileName          = fastaFileName,
                    parentDirectory        = parentDirectory,
                    contigName             = contigName,
                    suffixForwardRegExp    = suffixForwardRegExp,
