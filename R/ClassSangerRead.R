@@ -26,6 +26,7 @@
 #' @include ClassQualityReport.R
 #' @import sangerseqR
 #' @examples
+#' ## Input From ABIF file format
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFN <- file.path(inputFilesPath,
 #'                               "Allolobophora_chlorotica",
@@ -45,15 +46,16 @@
 #'                    signalRatioCutoff     = 0.33,
 #'                    showTrimmed           = TRUE)
 #'
+#' ## Input From FASTA file format
 #' A_chloroticaFNfa <- file.path(inputFilesPath,
 #'                               "fasta",
 #'                               "SangerRead",
 #'                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
-#' sangerRead <- new("SangerRead",
-#'                    inputSource           = "FASTA",
-#'                    readFeature           = "Forward Read",
-#'                    readFileName          = A_chloroticaFNfa,
-#'                    geneticCode           = GENETIC_CODE)
+#' sangerReadFa <- new("SangerRead",
+#'                      inputSource  = "FASTA",
+#'                      readFeature  = "Forward Read",
+#'                      readFileName = A_chloroticaFNfa,
+#'                      geneticCode  = GENETIC_CODE)
 setClass(
     "SangerRead",
     ### ------------------------------------------------------------------------
@@ -130,14 +132,15 @@ setMethod("initialize",
 
                   if (inputSource == "ABIF") {
                       abifRawData = read.abif(readFileName)
-                      message("    * Creating ", readFeature , " raw sangerseq ...")
+                      message("    * Creating ",
+                              readFeature , " raw sangerseq ...")
                       readSangerseq = sangerseq(abifRawData)
                       primarySeqID = readSangerseq@primarySeqID
                       secondarySeqID = readSangerseq@secondarySeqID
 
-                      ### ----------------------------------------------------------
+                      ### ------------------------------------------------------
                       ### With non-raw & raw primarySeq / secondarySeq
-                      ### ----------------------------------------------------------
+                      ### ------------------------------------------------------
                       primarySeqRaw = readSangerseq@primarySeq
                       primarySeq = readSangerseq@primarySeq
                       secondarySeqRaw = readSangerseq@secondarySeq
@@ -158,27 +161,27 @@ setMethod("initialize",
                       peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
                       peakAmpMatrix    <- readSangerseq@peakAmpMatrix
 
-                      ### ----------------------------------------------------------
+                      ### ------------------------------------------------------
                       ### Definition of 'PCON.1' & 'PCON.2'
                       ##### PCON.1: char => Per-base quality values (edited)
                       ##### PCON.2: char => Per-base quality values
-                      ### ----------------------------------------------------------
-                      ### ----------------------------------------------------------
-                      ### 1. Running 'MakeBaseCall'! Remember to update parameters!
-                      ### ----------------------------------------------------------
+                      ### ------------------------------------------------------
+                      ### ------------------------------------------------------
+                      ### 1. Running 'MakeBaseCall'!
+                      ### ------------------------------------------------------
                       MBCResult <-
                           MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                                abifRawData@data$PCON.2,
                                                signalRatioCutoff, readFeature)
 
-                      ### ==========================================================
+                      ### ======================================================
                       ### 2. Update Once (Only during creation)
                       ###    Basecall primary seq length will be same !
-                      ### ==========================================================
+                      ### ======================================================
                       qualityPhredScores <- MBCResult[["qualityPhredScores"]]
-                      ### ----------------------------------------------------------
+                      ### ------------------------------------------------------
                       ##### 'QualityReport' creation
-                      ### ----------------------------------------------------------
+                      ### ------------------------------------------------------
                       QualityReport <-
                           new("QualityReport",
                               qualityPhredScoresRaw = abifRawData@data$PCON.2,
@@ -188,21 +191,22 @@ setMethod("initialize",
                               M2CutoffQualityScore  = M2CutoffQualityScore,
                               M2SlidingWindowSize   = M2SlidingWindowSize)
 
-                      ### ==========================================================
-                      ### 3. Update everytime (whenever 'signalRatioCutoff' changed)
-                      ### ==========================================================
+                      ### ======================================================
+                      ### 3. Update everytime
+                      ### ======================================================
                       primarySeq <- MBCResult[["primarySeq"]]
                       secondarySeq <- MBCResult[["secondarySeq"]]
                       peakPosMatrix <- MBCResult[["peakPosMatrix"]]
                       peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
-                      ### ----------------------------------------------------------
+                      ### ------------------------------------------------------
                       ##### 'QualityReport' & 'ChromatogramParam' creation
-                      ### ----------------------------------------------------------
-                      ChromatogramParam <- new("ChromatogramParam",
-                                               baseNumPerRow     = baseNumPerRow,
-                                               heightPerRow      = heightPerRow,
-                                               signalRatioCutoff = signalRatioCutoff,
-                                               showTrimmed       = showTrimmed)
+                      ### ------------------------------------------------------
+                      ChromatogramParam <-
+                          new("ChromatogramParam",
+                              baseNumPerRow     = baseNumPerRow,
+                              heightPerRow      = heightPerRow,
+                              signalRatioCutoff = signalRatioCutoff,
+                              showTrimmed       = showTrimmed)
                   } else if (inputSource == "FASTA") {
                       abifRawData <- NULL
                       primarySeqID <- "From fasta file"

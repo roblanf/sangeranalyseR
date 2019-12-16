@@ -8,9 +8,14 @@
 #' load("data/sangerRead.RData")
 #' qualityBasePlot(sangerRead)
 setMethod("qualityBasePlot",  "SangerRead", function(object){
-    QualityReportObject = object@QualityReport
-    plotting <- preQualityBasePlot(QualityReportObject)
-    plotting
+    if (object@inputSource == "ABIF") {
+        QualityReportObject = object@QualityReport
+        plotting <- preQualityBasePlot(QualityReportObject)
+        plotting
+    } else if (object@inputSource == "FASTA") {
+        message("SangerRead with 'FASTA' inputSource ",
+                "cannot plot quality plots")
+    }
 })
 
 ## =============================================================================
@@ -32,28 +37,33 @@ setMethod("updateQualityParam",  "SangerRead",
                    M1TrimmingCutoff       = 0.0001,
                    M2CutoffQualityScore   = NULL,
                    M2SlidingWindowSize    = NULL){
-              ### --------------------------------------------------------------
-              ### Updating SangerRead quality parameters
-              ###   Trimming parameters is checked in 'QualityReport' method
-              ### --------------------------------------------------------------
-              errors <- character()
-              errors <- checkTrimParam(TrimmingMethod,
-                                       M1TrimmingCutoff,
-                                       M2CutoffQualityScore,
-                                       M2SlidingWindowSize,
-                                       errors)
-              if (length(errors) == 0) {
-                  object@QualityReport <-
-                      updateQualityParam(object@QualityReport,
-                                         TrimmingMethod,
-                                         M1TrimmingCutoff,
-                                         M2CutoffQualityScore,
-                                         M2SlidingWindowSize)
-                  return(object)
-              } else {
-                  stop(errors)
-              }
-          })
+    if (object@inputSource == "ABIF") {
+        ### --------------------------------------------------------------
+        ### Updating SangerRead quality parameters
+        ###   Trimming parameters is checked in 'QualityReport' method
+        ### --------------------------------------------------------------
+        errors <- character()
+        errors <- checkTrimParam(TrimmingMethod,
+                                 M1TrimmingCutoff,
+                                 M2CutoffQualityScore,
+                                 M2SlidingWindowSize,
+                                 errors)
+        if (length(errors) == 0) {
+            object@QualityReport <-
+                updateQualityParam(object@QualityReport,
+                                   TrimmingMethod,
+                                   M1TrimmingCutoff,
+                                   M2CutoffQualityScore,
+                                   M2SlidingWindowSize)
+            return(object)
+        } else {
+            stop(errors)
+        }
+    } else if (object@inputSource == "FASTA") {
+        message("SangerRead with 'FASTA' inputSource ",
+                "cannot update quality parameters")
+    }
+})
 
 ## =============================================================================
 ## Base calling for primarySeq in SangerRead
@@ -64,34 +74,37 @@ setMethod("updateQualityParam",  "SangerRead",
 #' @examples
 #' load("data/sangerRead.RData")
 #' MakeBaseCalls(sangerRead, signalRatioCutoff = 0.22)
-setMethod("MakeBaseCalls", "SangerRead",
-          function(obj, signalRatioCutoff) {
-              errors <- character(0)
-              errors <- checkSignalRatioCutoff(signalRatioCutoff, errors)
-              if (length(errors) == 0) {
-                  traceMatrix <- obj@traceMatrix
-                  peakPosMatrixRaw <- obj@peakPosMatrixRaw
-                  qualityPhredScoresRaw <- obj@QualityReport@qualityPhredScoresRaw
-                  readFeature <- obj@readFeature
-                  MBCResult <-
-                      MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
-                                           qualityPhredScoresRaw,
-                                           signalRatioCutoff, readFeature)
-                  obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
-                  obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
-                  obj@primarySeq <- MBCResult[["primarySeq"]]
-                  obj@secondarySeq <- MBCResult[["secondarySeq"]]
+setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
+    if (obj@inputSource == "ABIF") {
+        errors <- character(0)
+        errors <- checkSignalRatioCutoff(signalRatioCutoff, errors)
+        if (length(errors) == 0) {
+            traceMatrix <- obj@traceMatrix
+            peakPosMatrixRaw <- obj@peakPosMatrixRaw
+            qualityPhredScoresRaw <- obj@QualityReport@qualityPhredScoresRaw
+            readFeature <- obj@readFeature
+            MBCResult <-
+                MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
+                                     qualityPhredScoresRaw,
+                                     signalRatioCutoff, readFeature)
+            obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
+            obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
+            obj@primarySeq <- MBCResult[["primarySeq"]]
+            obj@secondarySeq <- MBCResult[["secondarySeq"]]
 
-                  AASeqResult <-
-                      calculateAASeq (obj@primarySeq, obj@geneticCode)
-                  obj@primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
-                  obj@primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
-                  obj@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-                  obj@ChromatogramParam@signalRatioCutoff <- signalRatioCutoff
-                  return(obj)
-              } else {
-                  stop(errors)
-              }
+            AASeqResult <-
+                calculateAASeq (obj@primarySeq, obj@geneticCode)
+            obj@primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
+            obj@primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
+            obj@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+            obj@ChromatogramParam@signalRatioCutoff <- signalRatioCutoff
+            return(obj)
+        } else {
+            stop(errors)
+        }
+    } else if (obj@inputSource == "FASTA") {
+        message("SangerRead with 'FASTA' inputSource cannot do base calling")
+    }
 })
 
 ## =============================================================================
@@ -137,6 +150,7 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {
+    # Another Rmd for SangerRead with FASTA file source
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
     ### ------------------------------------------------------------------------
