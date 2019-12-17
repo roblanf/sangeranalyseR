@@ -141,6 +141,20 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     errors <- character()
     errors <- checkInputSource (inputSource, errors)
+    ### ------------------------------------------------------------------------
+    ### Input parameter prechecking for contigSeq parameter
+    ### ------------------------------------------------------------------------    errors <- checkMinReadsNum(minReadsNum, errors)
+    errors <- checkMinReadLength(minReadLength, errors)
+    errors <- checkMinFractionCall(minFractionCall, errors)
+    errors <- checkMaxFractionLost(maxFractionLost, errors)
+    errors <- checkGeneticCode(geneticCode, errors)
+    errors <- checkAcceptStopCodons(acceptStopCodons, errors)
+    errors <- checkReadingFrame(readingFrame, errors)
+    ### ------------------------------------------------------------------------
+    ### Input parameter prechecking for processorsNum
+    ### ------------------------------------------------------------------------
+    errors <- checkProcessorsNum(processorsNum, errors)
+
     if (length(errors) == 0) {
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
@@ -220,22 +234,6 @@ setMethod("initialize",
             errors <- checkShowTrimmed (showTrimmed, errors)
 
             ### ----------------------------------------------------------------
-            ##### Input parameter prechecking for contigSeq parameter
-            ### ----------------------------------------------------------------
-            errors <- checkMinReadsNum(minReadsNum, errors)
-            errors <- checkMinReadLength(minReadLength, errors)
-            errors <- checkMinFractionCall(minFractionCall, errors)
-            errors <- checkMaxFractionLost(maxFractionLost, errors)
-            errors <- checkGeneticCode(geneticCode, errors)
-            errors <- checkAcceptStopCodons(acceptStopCodons, errors)
-            errors <- checkReadingFrame(readingFrame, errors)
-
-            ### ----------------------------------------------------------------
-            ##### Input parameter prechecking for processorsNum
-            ### ----------------------------------------------------------------
-            errors <- checkProcessorsNum(processorsNum, errors)
-
-            ### ----------------------------------------------------------------
             ### Prechecking success. Start to create multiple reads.
             ### ----------------------------------------------------------------
             if (length(errors) != 0) {
@@ -247,35 +245,37 @@ setMethod("initialize",
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
             forwardReadList <- sapply(forwardAllReads[[1]], function(forwardN){
-                SangerRead(inputSource          = inputSource,
-                           readFeature          = "Forward Read",
-                           readFileName         = forwardN,
-                           geneticCode          = geneticCode,
-                           TrimmingMethod       = TrimmingMethod,
-                           M1TrimmingCutoff     = M1TrimmingCutoff,
-                           M2CutoffQualityScore = M2CutoffQualityScore,
-                           M2SlidingWindowSize  = M2SlidingWindowSize,
-                           baseNumPerRow        = baseNumPerRow,
-                           heightPerRow         = heightPerRow,
-                           signalRatioCutoff    = signalRatioCutoff,
-                           showTrimmed          = showTrimmed)
+                new("SangerRead",
+                    inputSource          = inputSource,
+                    readFeature          = "Forward Read",
+                    readFileName         = forwardN,
+                    geneticCode          = geneticCode,
+                    TrimmingMethod       = TrimmingMethod,
+                    M1TrimmingCutoff     = M1TrimmingCutoff,
+                    M2CutoffQualityScore = M2CutoffQualityScore,
+                    M2SlidingWindowSize  = M2SlidingWindowSize,
+                    baseNumPerRow        = baseNumPerRow,
+                    heightPerRow         = heightPerRow,
+                    signalRatioCutoff    = signalRatioCutoff,
+                    showTrimmed          = showTrimmed)
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
             reverseReadList <- sapply(reverseAllReads[[1]], function(reverseN){
-                SangerRead(inputSource          = inputSource,
-                           readFeature          = "Reverse Read",
-                           readFileName         = reverseN,
-                           geneticCode          = geneticCode,
-                           TrimmingMethod       = TrimmingMethod,
-                           M1TrimmingCutoff     = M1TrimmingCutoff,
-                           M2CutoffQualityScore = M2CutoffQualityScore,
-                           M2SlidingWindowSize  = M2SlidingWindowSize,
-                           baseNumPerRow        = baseNumPerRow,
-                           heightPerRow         = heightPerRow,
-                           signalRatioCutoff    = signalRatioCutoff,
-                           showTrimmed          = showTrimmed)
+                new("SangerRead",
+                    inputSource          = inputSource,
+                    readFeature          = "Reverse Read",
+                    readFileName         = reverseN,
+                    geneticCode          = geneticCode,
+                    TrimmingMethod       = TrimmingMethod,
+                    M1TrimmingCutoff     = M1TrimmingCutoff,
+                    M2CutoffQualityScore = M2CutoffQualityScore,
+                    M2SlidingWindowSize  = M2SlidingWindowSize,
+                    baseNumPerRow        = baseNumPerRow,
+                    heightPerRow         = heightPerRow,
+                    signalRatioCutoff    = signalRatioCutoff,
+                    showTrimmed          = showTrimmed)
             })
         } else if (inputSource == "FASTA") {
             errors <- checkFastaFileName(fastaFileName, errors)

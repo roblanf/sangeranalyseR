@@ -5,6 +5,10 @@ setOldClass("phylo")
 #'
 #' @description  An S4 class containing SangerContigs lists and contigs alignment results which corresponds to a final alignment in Sanger sequencing.
 #'
+#' @slot inputSource
+#' @slot fastaFileName
+#'
+#'
 #' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.
 #' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.
@@ -26,11 +30,13 @@ setOldClass("phylo")
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
+#' ## Input From ABIF file format
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' sangerAlignment <- new("SangerAlignment",
+#'                        inputSource           = "ABIF",
 #'                        parentDirectory       = parentDir,
 #'                        suffixForwardRegExp   = suffixForwardRegExp,
 #'                        suffixReverseRegExp   = suffixReverseRegExp,
@@ -43,6 +49,27 @@ setOldClass("phylo")
 #'                        heightPerRow          = 200,
 #'                        signalRatioCutoff     = 0.33,
 #'                        showTrimmed           = TRUE)
+#'
+#' ## Input From FASTA file format
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' fastaFN <- file.path(rawDataDir, "fasta",
+#'                      "SangerAlignment", "Sanger_all_reads.fa")
+#' suffixForwardRegExpFa <- "_[F]_[0-9]*"
+#' suffixReverseRegExpFa <- "_[R]_[0-9]*"
+#' sangerAlignmentFa <- new("SangerAlignment",
+#'                          inputSource           = "FASTA",
+#'                          fastaFileName         = fastaFN,
+#'                          suffixForwardRegExp   = suffixForwardRegExpFa,
+#'                          suffixReverseRegExp   = suffixReverseRegExpFa,
+#'                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                          TrimmingMethod        = "M1",
+#'                          M1TrimmingCutoff      = 0.0001,
+#'                          M2CutoffQualityScore  = NULL,
+#'                          M2SlidingWindowSize   = NULL,
+#'                          baseNumPerRow         = 100,
+#'                          heightPerRow          = 200,
+#'                          signalRatioCutoff     = 0.33,
+#'                          showTrimmed           = TRUE)
 setClass("SangerAlignment",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
@@ -52,20 +79,21 @@ setClass("SangerAlignment",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerAlignment'
          ### -------------------------------------------------------------------
-         representation(
-             parentDirectory             = "character",
-             suffixForwardRegExp         = "character",
-             suffixReverseRegExp         = "character",
-             trimmingMethodSA            = "character",
-             minFractionCallSA           = "numeric",
-             maxFractionLostSA           = "numeric",
-             geneticCode                 = "character",
-             refAminoAcidSeq             = "character",
-             contigList                  = "list",
-             contigsConsensus            = "DNAString",
-             contigsAlignment            = "DNAStringSet",
-             contigsTree                 = "phylo"
-             ),
+         representation(inputSource                 = "character",
+                        fastaFileName               = "character",
+                        parentDirectory             = "character",
+                        suffixForwardRegExp         = "character",
+                        suffixReverseRegExp         = "character",
+                        trimmingMethodSA            = "character",
+                        minFractionCallSA           = "numeric",
+                        maxFractionLostSA           = "numeric",
+                        geneticCode                 = "character",
+                        refAminoAcidSeq             = "character",
+                        contigList                  = "list",
+                        contigsConsensus            = "DNAString",
+                        contigsAlignment            = "DNAStringSet",
+                        contigsTree                 = "phylo"
+         ),
 )
 
 ### ============================================================================
@@ -74,7 +102,9 @@ setClass("SangerAlignment",
 setMethod("initialize",
           "SangerAlignment",
           function(.Object, ...,
-                   parentDirectory        = parentDirectory,
+                   inputSource            = "ABIF",
+                   fastaFileName          = "",
+                   parentDirectory        = "",
                    suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
                    suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
                    TrimmingMethod         = "M1",
@@ -100,29 +130,9 @@ setMethod("initialize",
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
     errors <- character()
-
-    ### ------------------------------------------------------------------------
-    ### 'parentDirectory' prechecking
-    ### ------------------------------------------------------------------------
-    errors <- checkParentDirectory (parentDirectory, errors)
-
-    ### ------------------------------------------------------------------------
-    ### Input parameter prechecking for TrimmingMethod.
-    ### ------------------------------------------------------------------------
-    errors <- checkTrimParam(TrimmingMethod, M1TrimmingCutoff,
-                             M2CutoffQualityScore, M2SlidingWindowSize, errors)
-
-    ##### ----------------------------------------------------------------------
-    ##### Input parameter prechecking for ChromatogramParam
-    ##### ----------------------------------------------------------------------
-    errors <- checkBaseNumPerRow (baseNumPerRow, errors)
-    errors <- checkHeightPerRow (baseNumPerRow, errors)
-    errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
-    errors <- checkShowTrimmed (showTrimmed, errors)
-
-    ##### ----------------------------------------------------------------------
+    ##### ------------------------------------------------------------------
     ##### Input parameter prechecking for SangerContig parameter
-    ##### ----------------------------------------------------------------------
+    ##### ------------------------------------------------------------------
     errors <- checkMinReadsNum(minReadsNum, errors)
     errors <- checkMinReadLength(minReadLength, errors)
     errors <- checkMinFractionCall(minFractionCall, errors)
@@ -130,7 +140,6 @@ setMethod("initialize",
     errors <- checkGeneticCode(geneticCode, errors)
     errors <- checkAcceptStopCodons(acceptStopCodons, errors)
     errors <- checkReadingFrame(readingFrame, errors)
-
     ##### ----------------------------------------------------------------------
     ##### Input parameter prechecking for processorsNum
     ##### ----------------------------------------------------------------------
@@ -138,63 +147,135 @@ setMethod("initialize",
 
     if (length(errors) == 0) {
         processorsNum <- getProcessors (processorsNum)
-        trimmingMethodSA = TrimmingMethod
-        ### --------------------------------------------------------------------
-        ### Automatically finding contig name by forward&reverse suffix
-        ### --------------------------------------------------------------------
-        parentDirFiles <- list.files(parentDirectory, recursive = TRUE)
-        forwardSelectInputFiles <- parentDirFiles[grepl(suffixForwardRegExp,
-                                                        parentDirFiles)]
-        reverseSelectInputFiles <- parentDirFiles[grepl(suffixReverseRegExp,
-                                                        parentDirFiles)]
+        if (inputSource == "ABIF") {
+            ### ----------------------------------------------------------------
+            ##### 'parentDirectory' prechecking
+            ### ----------------------------------------------------------------
+            errors <- checkParentDirectory (parentDirectory, errors)
+            ### ----------------------------------------------------------------
+            ##### Input parameter prechecking for TrimmingMethod.
+            ### ----------------------------------------------------------------
+            errors <- checkTrimParam(TrimmingMethod, M1TrimmingCutoff,
+                                     M2CutoffQualityScore,
+                                     M2SlidingWindowSize, errors)
+            ### ----------------------------------------------------------------
+            ##### Input parameter prechecking for ChromatogramParam
+            ### ----------------------------------------------------------------
+            errors <- checkBaseNumPerRow (baseNumPerRow, errors)
+            errors <- checkHeightPerRow (baseNumPerRow, errors)
+            errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
+            errors <- checkShowTrimmed (showTrimmed, errors)
+            if (length(errors) != 0) {
+                stop(errors)
+            }
+            trimmingMethodSA = TrimmingMethod
+            ### ----------------------------------------------------------------
+            ##### Automatically finding contig name by forward&reverse suffix
+            ### ----------------------------------------------------------------
+            parentDirFiles <- list.files(parentDirectory, recursive = TRUE)
+            forwardSelectInputFiles <- parentDirFiles[grepl(suffixForwardRegExp,
+                                                            parentDirFiles)]
+            reverseSelectInputFiles <- parentDirFiles[grepl(suffixReverseRegExp,
+                                                            parentDirFiles)]
 
-        # Find possible consensus Name for forward and reverse reads
-        forwardContigName <-
-            unlist(str_split(forwardSelectInputFiles, suffixForwardRegExp,
-                             n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
-        reverseContigName <-
-            unlist(str_split(reverseSelectInputFiles, suffixReverseRegExp,
-                             n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+            # Find possible consensus Name for forward and reverse reads
+            forwardContigName <-
+                unlist(str_split(forwardSelectInputFiles, suffixForwardRegExp,
+                                 n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+            reverseContigName <-
+                unlist(str_split(reverseSelectInputFiles, suffixReverseRegExp,
+                                 n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
 
-        contigName <- union(forwardContigName, reverseContigName)
-        contigNumber <- length(contigName)
+            contigName <- union(forwardContigName, reverseContigName)
+            contigNumber <- length(contigName)
 
-        # Create contig for all list of contigNumber
-        ### --------------------------------------------------------------------
-        ### Creating each SangerContig (store as SangerContigList)
-        ### --------------------------------------------------------------------
-        SangerContigList <-
-            sapply(contigName,
-                   function(eachConsRead) {
-                       insideDirName<- dirname(eachConsRead)
-                       insideContigName <- basename(eachConsRead)
-                       SangerContig(
-                           parentDirectory      =
-                               file.path(parentDirectory, insideDirName),
-                           contigName           = insideContigName,
-                           suffixForwardRegExp  = suffixForwardRegExp,
-                           suffixReverseRegExp  = suffixReverseRegExp,
-                           TrimmingMethod       = TrimmingMethod,
-                           M1TrimmingCutoff     = M1TrimmingCutoff,
-                           M2CutoffQualityScore = M2CutoffQualityScore,
-                           M2SlidingWindowSize  = M2SlidingWindowSize,
-                           baseNumPerRow        = baseNumPerRow,
-                           heightPerRow         = heightPerRow,
-                           signalRatioCutoff    = signalRatioCutoff,
-                           showTrimmed          = showTrimmed,
-                           refAminoAcidSeq      = refAminoAcidSeq,
-                           minReadsNum          = minReadsNum,
-                           minReadLength        = minReadLength,
-                           minFractionCall      = minFractionCall,
-                           maxFractionLost      = maxFractionLost,
-                           geneticCode          = geneticCode,
-                           acceptStopCodons     = acceptStopCodons,
-                           readingFrame         = readingFrame,
-                           processorsNum        = processorsNum)
-                   })
-        acResult <- alignContigs(SangerContigList, geneticCode, refAminoAcidSeq,
-                                 minFractionCallSA, maxFractionLostSA,
-                                 processorsNum)
+            # Create contig for all list of contigNumber
+            ### ----------------------------------------------------------------
+            ##### Creating each SangerContig (store as SangerContigList)
+            ### ----------------------------------------------------------------
+            SangerContigList <-
+                sapply(contigName,
+                       function(eachConsRead) {
+                           insideDirName<- dirname(eachConsRead)
+                           insideContigName <- basename(eachConsRead)
+                           new("SangerContig",
+                               inputSource          = inputSource,
+                               fastaFileName        = fastaFileName,
+                               parentDirectory      =
+                                   file.path(parentDirectory, insideDirName),
+                               contigName           = insideContigName,
+                               suffixForwardRegExp  = suffixForwardRegExp,
+                               suffixReverseRegExp  = suffixReverseRegExp,
+                               TrimmingMethod       = TrimmingMethod,
+                               M1TrimmingCutoff     = M1TrimmingCutoff,
+                               M2CutoffQualityScore = M2CutoffQualityScore,
+                               M2SlidingWindowSize  = M2SlidingWindowSize,
+                               baseNumPerRow        = baseNumPerRow,
+                               heightPerRow         = heightPerRow,
+                               signalRatioCutoff    = signalRatioCutoff,
+                               showTrimmed          = showTrimmed,
+                               refAminoAcidSeq      = refAminoAcidSeq,
+                               minReadsNum          = minReadsNum,
+                               minReadLength        = minReadLength,
+                               minFractionCall      = minFractionCall,
+                               maxFractionLost      = maxFractionLost,
+                               geneticCode          = geneticCode,
+                               acceptStopCodons     = acceptStopCodons,
+                               readingFrame         = readingFrame,
+                               processorsNum        = processorsNum)
+                       })
+            acResult <- alignContigs(SangerContigList, geneticCode,
+                                     refAminoAcidSeq, minFractionCallSA,
+                                     maxFractionLostSA, processorsNum)
+            consensus <- acResult[["consensus"]]
+            aln <- acResult[["aln"]]
+            aln.tree <- acResult[["aln.tree"]]
+        } else if (inputSource == "FASTA") {
+            errors <- checkFastaFileName(fastaFileName, errors)
+            if(length(errors) != 0) {
+                stop(errors)
+            }
+
+            trimmingMethodSA = ""
+
+
+            readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+            fastaNames <- names(readFasta)
+
+            forwardSelect <- fastaNames[grepl(suffixForwardRegExp, fastaNames)]
+            reverseSelect <- fastaNames[grepl(suffixReverseRegExp, fastaNames)]
+
+            # Find possible consensus Name for forward and reverse reads
+            forwardContigName <-
+                unlist(str_split(forwardSelect, suffixForwardRegExp,
+                                 n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+            reverseContigName <-
+                unlist(str_split(reverseSelect, suffixReverseRegExp,
+                                 n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+            contigNames <- union(forwardContigName, reverseContigName)
+            contigNumber <- length(contigNames)
+            SangerContigList <- sapply(contigNames, function(contigName) {
+                new("SangerContig",
+                    inputSource          = inputSource,
+                    fastaFileName        = fastaFileName,
+                    parentDirectory      = parentDirectory,
+                    contigName           = contigName,
+                    suffixForwardRegExp  = suffixForwardRegExp,
+                    suffixReverseRegExp  = suffixReverseRegExp,
+                    refAminoAcidSeq      = refAminoAcidSeq,
+                    minReadsNum          = minReadsNum,
+                    minReadLength        = minReadLength,
+                    minFractionCall      = minFractionCall,
+                    maxFractionLost      = maxFractionLost,
+                    geneticCode          = geneticCode,
+                    acceptStopCodons     = acceptStopCodons,
+                    readingFrame         = readingFrame,
+                    processorsNum        = processorsNum)
+            })
+        }
+        acResult <- alignContigs(SangerContigList, geneticCode,
+                                 refAminoAcidSeq, minFractionCallSA,
+                                 maxFractionLostSA, processorsNum)
         consensus <- acResult[["consensus"]]
         aln <- acResult[["aln"]]
         aln.tree <- acResult[["aln.tree"]]
@@ -202,6 +283,8 @@ setMethod("initialize",
         stop(errors)
     }
     callNextMethod(.Object, ...,
+                   inputSource           = inputSource,
+                   fastaFileName         = fastaFileName,
                    parentDirectory       = parentDirectory,
                    suffixForwardRegExp   = suffixForwardRegExp,
                    suffixReverseRegExp   = suffixReverseRegExp,

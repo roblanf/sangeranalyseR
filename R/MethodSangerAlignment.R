@@ -5,23 +5,29 @@
 #' load("data/sangerAlignment.RData")
 #' RShinySA <- launchAppSA(sangerAlignment)
 setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
-    ### ------------------------------------------------------------------------
-    ### Checking SangerAlignment input parameter is a list containing
-    ### one S4 object.
-    ### ------------------------------------------------------------------------
-    if (is.null(outputDir)) {
-        outputDir <- tempdir()
-        suppressWarnings(dir.create(outputDir, recursive = TRUE))
-    }
-    message(">>> outputDir : ", outputDir)
+    if (object@inputSource == "ABIF") {
+        ### ------------------------------------------------------------------------
+        ### Checking SangerAlignment input parameter is a list containing
+        ### one S4 object.
+        ### ------------------------------------------------------------------------
+        if (is.null(outputDir)) {
+            outputDir <- tempdir()
+            suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        }
+        message(">>> outputDir : ", outputDir)
 
-    if (dir.exists(outputDir)) {
-        shinyOptions(sangerAlignment = list(obj))
-        shinyOptions(shinyDirectory = outputDir)
-        newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer)
-        return(newSangerAlignment)
-    } else {
-        stop("'", outputDir, "' is not valid. Please check again")
+        if (dir.exists(outputDir)) {
+            shinyOptions(sangerAlignment = list(obj))
+            shinyOptions(shinyDirectory = outputDir)
+            newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer)
+            return(newSangerAlignment)
+        } else {
+            stop("'", outputDir, "' is not valid. Please check again")
+        }
+    } else if (object@inputSource == "FASTA") {
+        message("SangerAlignment with 'FASTA' inputSource ",
+                "cannot run Shiny app\n (You don't need to ",
+                "do trimming or base calling)")
     }
 })
 
@@ -101,20 +107,26 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
         message("\n    >> Writing all single reads to FASTA ...")
         fRDNASet <- sapply(obj@contigList, function(contig) {
             fRDNAStringSet <- sapply(contig@forwardReadList, function(forwardRead) {
-                trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
-                trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
                 primaryDNA <- as.character(forwardRead@primarySeq)
-                substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+                if (obj@inputSource == "ABIF") {
+                    trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
+                    trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
+                    primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
+                }
+                return(primaryDNA)
             })
             names(fRDNAStringSet) <- basename(names(fRDNAStringSet))
             fRDNAStringSet
         })
         rRDNASet <- sapply(obj@contigList, function(contig) {
             rRDNAStringSet <- sapply(contig@reverseReadList, function(reverseRead) {
-                trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
-                trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
-                primaryDNA <- as.character(reverseRead@primarySeq)
-                substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+                primaryDNA <- as.character(reverseComplement(reverseRead@primarySeq))
+                if (obj@inputSource == "ABIF") {
+                    trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
+                    trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
+                    primaryDNA <- substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+                }
+                return(primaryDNA)
             })
             names(rRDNAStringSet) <- basename(names(rRDNAStringSet))
             rRDNAStringSet
@@ -142,6 +154,18 @@ setMethod("generateReportSA", "SangerAlignment",
           function(obj, outputDir,
                    includeSangerContig = TRUE,
                    includeSangerRead = TRUE) {
+
+    # if (object@inputSource == "ABIF") {
+    #
+    # } else if (object@inputSource == "FASTA") {
+    #     message("SangerContig with 'FASTA' inputSource ",
+    #             "cannot run Shiny app\n (You don't need to ",
+    #             "do trimming or base calling)")
+    # }
+
+
+
+
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
     ### ------------------------------------------------------------------------

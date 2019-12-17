@@ -28,15 +28,12 @@
 #' @import sangerseqR
 #' @examples
 #' ## Input From ABIF file format
+#' # Forward Read
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFFN <- file.path(inputFilesPath,
 #'                              "Allolobophora_chlorotica",
 #'                              "ACHLO",
 #'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
-#' A_chloroticaRFN <- file.path(inputFilesPath,
-#'                              "Allolobophora_chlorotica",
-#'                              "ACHLO",
-#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.ab1")
 #' sangerReadF <- new("SangerRead",
 #'                     inputSource           = "ABIF",
 #'                     readFeature           = "Forward Read",
@@ -50,6 +47,12 @@
 #'                     heightPerRow          = 200,
 #'                     signalRatioCutoff     = 0.33,
 #'                     showTrimmed           = TRUE)
+#'
+#' # Reverse Read
+#' A_chloroticaRFN <- file.path(inputFilesPath,
+#'                              "Allolobophora_chlorotica",
+#'                              "ACHLO",
+#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.ab1")
 #' sangerReadR <- new("SangerRead",
 #'                     inputSource           = "ABIF",
 #'                     readFeature           = "Reverse Read",
@@ -65,23 +68,26 @@
 #'                     showTrimmed           = TRUE)
 #'
 #' ## Input From FASTA file format
+#' # Forward Read
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFFNfa <- file.path(inputFilesPath,
 #'                                "fasta",
 #'                                "SangerRead",
 #'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
-#' A_chloroticaRFNfa <- file.path(inputFilesPath,
-#'                                "fasta",
-#'                                "SangerRead",
-#'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.fa")
 #' readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1"
-#' readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2"
 #' sangerReadFfa <- new("SangerRead",
 #'                      inputSource   = "FASTA",
 #'                      readFeature   = "Forward Read",
 #'                      readFileName  = A_chloroticaFFNfa,
 #'                      fastaReadName = readNameFfa,
 #'                      geneticCode   = GENETIC_CODE)
+#' # Reverse Read
+#' A_chloroticaRFNfa <- file.path(inputFilesPath,
+#'                                "fasta",
+#'                                "SangerRead",
+#'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.fa")
+#' readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2"
+
 #' sangerReadRfa <- new("SangerRead",
 #'                      inputSource   = "FASTA",
 #'                      readFeature   = "Reverse Read",

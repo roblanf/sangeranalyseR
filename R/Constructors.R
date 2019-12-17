@@ -3,6 +3,10 @@
 ### ============================================================================
 #' @description
 #'
+#' @param inputSource
+#' @param fastaFileName
+#'
+#'
 #' @param parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.
 #' @param suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.
 #' @param suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.
@@ -37,6 +41,7 @@
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' sangerAlignment <- SangerAlignment(
+#'                        inputSource            = "ABIF",
 #'                        parentDirectory       = parentDir,
 #'                        suffixForwardRegExp   = suffixForwardRegExp,
 #'                        suffixReverseRegExp   = suffixReverseRegExp,
@@ -49,9 +54,11 @@
 #'                        heightPerRow          = 200,
 #'                        signalRatioCutoff     = 0.33,
 #'                        showTrimmed           = TRUE)
-SangerAlignment <- function(parentDirectory        = character(0),
-                            suffixForwardRegExp    = character(0),
-                            suffixReverseRegExp    = character(0),
+SangerAlignment <- function(inputSource            = "ABIF",
+                            fastaFileName          = "",
+                            parentDirectory        = "",
+                            suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
+                            suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
                             TrimmingMethod         = "M1",
                             M1TrimmingCutoff       = 0.0001,
                             M2CutoffQualityScore   = NULL,
@@ -72,6 +79,8 @@ SangerAlignment <- function(parentDirectory        = character(0),
                             maxFractionLostSA      = 0.5,
                             processorsNum          = NULL) {
     newAlignment <- new("SangerAlignment",
+                        inputSource            = inputSource,
+                        fastaFileName          = fastaFileName,
                         parentDirectory        = parentDirectory,
                         suffixForwardRegExp    = suffixForwardRegExp,
                         suffixReverseRegExp    = suffixReverseRegExp,
@@ -101,6 +110,10 @@ SangerAlignment <- function(parentDirectory        = character(0),
 ### Self-defined constructor for SangerContig
 ### ============================================================================
 #' @description
+
+#' @param inputSource
+#' @param fastaFileName
+#'
 #'
 #' @param parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
 #' @param contigName The contig name of all the reads in \code{parentDirectory}.
@@ -138,6 +151,7 @@ SangerAlignment <- function(parentDirectory        = character(0),
 #' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 #' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 #' sangerContig <- SangerContig(
+#'                      inputSource           = "ABIF",
 #'                      parentDirectory       = parentDir,
 #'                      contigName            = contigName,
 #'                      suffixForwardRegExp   = suffixForwardRegExp,
@@ -151,10 +165,12 @@ SangerAlignment <- function(parentDirectory        = character(0),
 #'                      heightPerRow          = 200,
 #'                      signalRatioCutoff     = 0.33,
 #'                      showTrimmed           = TRUE)
-SangerContig <- function(parentDirectory        = character(0),
-                         contigName             = character(0),
-                         suffixForwardRegExp    = character(0),
-                         suffixReverseRegExp    = character(0),
+SangerContig <- function(inputSource            = "ABIF",
+                         fastaFileName          = "",
+                         parentDirectory        = "",
+                         contigName             = "",
+                         suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
+                         suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
                          TrimmingMethod         = "M1",
                          M1TrimmingCutoff       = 0.0001,
                          M2CutoffQualityScore   = NULL,
@@ -173,6 +189,8 @@ SangerContig <- function(parentDirectory        = character(0),
                          readingFrame           = 1,
                          processorsNum          = NULL) {
     newContig <- new("SangerContig",
+                     inputSource            = inputSource,
+                     fastaFileName          = fastaFileName,
                      parentDirectory        = parentDirectory,
                      contigName             = contigName,
                      suffixForwardRegExp    = suffixForwardRegExp,
@@ -204,6 +222,9 @@ SangerContig <- function(parentDirectory        = character(0),
 ### ============================================================================
 #' @description
 #'
+#' @param inputSource
+#'
+#'
 #' @param readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @param readFileName The filename of the target ABIF file.
 #' @param TrimmingMethod TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
@@ -229,6 +250,7 @@ SangerContig <- function(parentDirectory        = character(0),
 #'                               "ACHLO",
 #'                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 #' sangerRead <- SangerRead(
+#'                    inputSource           = "ABIF",
 #'                    readFeature           = "Forward Read",
 #'                    readFileName          = A_chloroticaFdFN,
 #'                    geneticCode           = GENETIC_CODE,
@@ -240,10 +262,10 @@ SangerContig <- function(parentDirectory        = character(0),
 #'                    heightPerRow          = 200,
 #'                    signalRatioCutoff     = 0.33,
 #'                    showTrimmed           = TRUE)
-SangerRead <- function(inputSource           = character(0),
-                       readFeature           = character(0),
-                       readFileName          = character(0),
-                       fastaReadName         = character(0),
+SangerRead <- function(inputSource           = "ABIF",
+                       readFeature           = "",
+                       readFileName          = "",
+                       fastaReadName         = "",
                        geneticCode           = GENETIC_CODE,
                        TrimmingMethod        = "M1",
                        M1TrimmingCutoff      = 0.0001,
