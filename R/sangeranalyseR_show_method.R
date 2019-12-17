@@ -1,12 +1,18 @@
 # the show method:
 setMethod('show', 'SangerRead', function(object){
     if (object@inputSource == "ABIF") {
+        primaryDNA <- as.character(object@primarySeq)
+        secondaryDNA <- as.character(object@secondarySeq)
+        trimmedStartPos <- object@QualityReport@trimmedStartPos
+        trimmedFinishPos <- object@QualityReport@trimmedFinishPos
+        primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
+        secondaryDNA <- substr(secondaryDNA, trimmedStartPos+1,trimmedFinishPos)
         cat("SangerRead S4 instance\n",
             "          Input Source : ", object@inputSource, "\n",
             "          Read Feature : ", object@readFeature, "\n",
             "         Read FileName : ", basename(object@readFileName), "\n",
-            "      Primary Sequence : ", as.character(object@primarySeq), "\n",
-            "    Secondary Sequence : ", as.character(object@secondarySeq), "\n"
+            "      Primary Sequence : ", primaryDNA, "\n",
+            "    Secondary Sequence : ", secondaryDNA, "\n"
         )
     } else if (object@inputSource == "FASTA") {
         cat("SangerRead S4 instance\n",

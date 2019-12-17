@@ -169,23 +169,19 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     ### forward & reverse character reads list string creation
     ### ------------------------------------------------------------------------
     fRDNAStringSet <- sapply(forwardReadList, function(forwardRead) {
-        if (inputSource != "FASTA") {
+        primaryDNA <- as.character(forwardRead@primarySeq)
+        if (inputSource == "ABIF") {
             trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
             trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
-        }
-        primaryDNA <- as.character(forwardRead@primarySeq)
-        if (inputSource != "FASTA") {
             primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
         }
         return(primaryDNA)
     })
     rRDNAStringSet <- sapply(reverseReadList, function(reverseRead) {
-        if (inputSource != "FASTA") {
+        primaryDNA <- as.character(reverseRead@primarySeq)
+        if (inputSource == "ABIF") {
             trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
             trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
-        }
-        primaryDNA <- as.character(reverseRead@primarySeq)
-        if (inputSource != "FASTA") {
             primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
         }
         return(primaryDNA)

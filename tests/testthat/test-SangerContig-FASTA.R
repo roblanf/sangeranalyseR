@@ -1,3 +1,6 @@
+### ============================================================================
+### SangerContig ABIF Initial test
+### ============================================================================
 test_that("sangerContigFa Initial test", {
     expect_type(sangerContigFa, "S4")
     expect_s4_class(sangerContigFa, "SangerContig")
