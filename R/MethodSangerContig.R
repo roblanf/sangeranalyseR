@@ -163,12 +163,14 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
             ### ----------------------------------------------------------------
             ### Only read in ABIF file format needs to do trimming
             ### ----------------------------------------------------------------
-            primaryDNA <- as.character(reverseComplement(reverseRead@primarySeq))
+            primaryDNA <- as.character(reverseRead@primarySeq)
             if (obj@inputSource == "ABIF") {
+                # Trim first and then reverse complement
                 trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
                 trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
                 primaryDNA <- substr(primaryDNA,
                                      trimmedStartPos+1, trimmedFinishPos)
+                primaryDNA <- as.character(reverseComplement(DNAString(primaryDNA)))
             }
             return(primaryDNA)
         })
