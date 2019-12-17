@@ -10,7 +10,7 @@ An S4 class storing quality related inputs and results in a SangerRead S4 object
 \section{Slots}{
 
 \describe{
-\item{\code{qualityPhredScoresRaw}}{The Phred quality scores of each base pairs from abif class PCON.2 in sangerseqR package before base calling.}
+\item{\code{inputSource}}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
 
 \item{\code{qualityPhredScores}}{The Phred quality scores of each base pairs after base calling.}
 
@@ -50,11 +50,11 @@ A_chloroticaFdReadFN <- file.path(inputFilesPath,
                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 A_chloroticaRead <-
        SangerRead(readFeature           = "Forward Read",
-                        readFileName          = A_chloroticaFdReadFN,
-                        TrimmingMethod        = "M2",
-                        M1TrimmingCutoff      = NULL,
-                        M2CutoffQualityScore  = 20,
-                        M2SlidingWindowSize   = 10)
+                  readFileName          = A_chloroticaFdReadFN,
+                  TrimmingMethod        = "M2",
+                  M1TrimmingCutoff      = NULL,
+                  M2CutoffQualityScore  = 20,
+                  M2SlidingWindowSize   = 10)
 "@"(A_chloroticaRead, QualityReport)
 }
 \author{

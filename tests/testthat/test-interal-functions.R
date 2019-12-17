@@ -48,7 +48,7 @@ test_that("'calculateContigSeq' function test", {
 test_that("'MakeBaseCallsInside' function test - forward", {
     traceMatrixF <- sangerReadF@traceMatrix
     peakPosMatrixRawF <- sangerReadF@peakPosMatrixRaw
-    qualityPhredScoresRawF <- sangerReadF@QualityReport@qualityPhredScoresRaw
+    qualityPhredScoresRawF <- sangerReadF@abifRawData@data$PCON.2
     signalRatioCutoffF <- sangerReadF@ChromatogramParam@signalRatioCutoff
     readFeatureF <- sangerReadF@readFeature
     baseCallRes <- MakeBaseCallsInside (traceMatrixF, peakPosMatrixRawF,
@@ -63,7 +63,7 @@ test_that("'MakeBaseCallsInside' function test - forward", {
 test_that("'MakeBaseCallsInside' function test - reverse", {
     traceMatrixR <- sangerReadR@traceMatrix
     peakPosMatrixRawR <- sangerReadR@peakPosMatrixRaw
-    qualityPhredScoresRawR <- sangerReadR@QualityReport@qualityPhredScoresRaw
+    qualityPhredScoresRawR <- sangerReadR@abifRawData@data$PCON.2
     signalRatioCutoffR <- sangerReadR@ChromatogramParam@signalRatioCutoff
     readFeatureR <- sangerReadR@readFeature
     baseCallRes <- MakeBaseCallsInside (traceMatrixR, peakPosMatrixRawR,

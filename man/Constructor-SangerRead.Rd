@@ -5,13 +5,16 @@
 \alias{SangerRead}
 \title{SangerRead}
 \usage{
-SangerRead(readFeature = character(0), readFileName = character(0),
-  geneticCode = GENETIC_CODE, TrimmingMethod = "M1",
-  M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
-  M2SlidingWindowSize = NULL, baseNumPerRow = 100,
-  heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE)
+SangerRead(inputSource = "ABIF", readFeature = "", readFileName = "",
+  fastaReadName = "", geneticCode = GENETIC_CODE,
+  TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
+  M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
+  baseNumPerRow = 100, heightPerRow = 200, signalRatioCutoff = 0.33,
+  showTrimmed = TRUE)
 }
 \arguments{
+\item{inputSource}{}
+
 \item{readFeature}{The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.}
 
 \item{readFileName}{The filename of the target ABIF file.}
@@ -45,6 +48,7 @@ A_chloroticaFdFN <- file.path(inputFilesPath,
                               "ACHLO",
                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 sangerRead <- SangerRead(
+                   inputSource           = "ABIF",
                    readFeature           = "Forward Read",
                    readFileName          = A_chloroticaFdFN,
                    geneticCode           = GENETIC_CODE,

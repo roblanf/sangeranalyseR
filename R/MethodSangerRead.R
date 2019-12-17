@@ -81,7 +81,7 @@ setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
         if (length(errors) == 0) {
             traceMatrix <- obj@traceMatrix
             peakPosMatrixRaw <- obj@peakPosMatrixRaw
-            qualityPhredScoresRaw <- obj@QualityReport@qualityPhredScoresRaw
+            qualityPhredScoresRaw <- obj@abifRawData@data$PCON.2
             readFeature <- obj@readFeature
             MBCResult <-
                 MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,

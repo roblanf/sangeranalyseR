@@ -5,9 +5,10 @@
 \alias{SangerContig}
 \title{SangerContig}
 \usage{
-SangerContig(parentDirectory = character(0), contigName = character(0),
-  suffixForwardRegExp = character(0),
-  suffixReverseRegExp = character(0), TrimmingMethod = "M1",
+SangerContig(inputSource = "ABIF", fastaFileName = "",
+  parentDirectory = "", contigName = "",
+  suffixForwardRegExp = "_[F]_[0-9]*.ab1",
+  suffixReverseRegExp = "_[R]_[0-9]*.ab1", TrimmingMethod = "M1",
   M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
   M2SlidingWindowSize = NULL, baseNumPerRow = 100,
   heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE,
@@ -17,6 +18,8 @@ SangerContig(parentDirectory = character(0), contigName = character(0),
   readingFrame = 1, processorsNum = NULL)
 }
 \arguments{
+\item{fastaFileName}{}
+
 \item{parentDirectory}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.}
 
 \item{contigName}{The contig name of all the reads in \code{parentDirectory}.}
@@ -63,7 +66,7 @@ SangerContig(parentDirectory = character(0), contigName = character(0),
 SangerContig
 }
 \description{
-
+SangerContig
 }
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
@@ -72,6 +75,7 @@ contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 sangerContig <- SangerContig(
+                     inputSource           = "ABIF",
                      parentDirectory       = parentDir,
                      contigName            = contigName,
                      suffixForwardRegExp   = suffixForwardRegExp,

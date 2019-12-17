@@ -224,21 +224,12 @@ setMethod("initialize",
                                readingFrame         = readingFrame,
                                processorsNum        = processorsNum)
                        })
-            acResult <- alignContigs(SangerContigList, geneticCode,
-                                     refAminoAcidSeq, minFractionCallSA,
-                                     maxFractionLostSA, processorsNum)
-            consensus <- acResult[["consensus"]]
-            aln <- acResult[["aln"]]
-            aln.tree <- acResult[["aln.tree"]]
         } else if (inputSource == "FASTA") {
             errors <- checkFastaFileName(fastaFileName, errors)
             if(length(errors) != 0) {
                 stop(errors)
             }
-
             trimmingMethodSA = ""
-
-
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             fastaNames <- names(readFasta)
 

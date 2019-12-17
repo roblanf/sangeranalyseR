@@ -10,6 +10,8 @@ An S4 class containing SangerContigs lists and contigs alignment results which c
 \section{Slots}{
 
 \describe{
+\item{\code{fastaFileName}}{}
+
 \item{\code{parentDirectory}}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.}
 
 \item{\code{suffixForwardRegExp}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.}
@@ -36,11 +38,13 @@ An S4 class containing SangerContigs lists and contigs alignment results which c
 }}
 
 \examples{
+## Input From ABIF file format
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 sangerAlignment <- new("SangerAlignment",
+                       inputSource           = "ABIF",
                        parentDirectory       = parentDir,
                        suffixForwardRegExp   = suffixForwardRegExp,
                        suffixReverseRegExp   = suffixReverseRegExp,
@@ -53,6 +57,27 @@ sangerAlignment <- new("SangerAlignment",
                        heightPerRow          = 200,
                        signalRatioCutoff     = 0.33,
                        showTrimmed           = TRUE)
+
+## Input From FASTA file format
+rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+fastaFN <- file.path(rawDataDir, "fasta",
+                     "SangerAlignment", "Sanger_all_reads.fa")
+suffixForwardRegExpFa <- "_[F]_[0-9]*"
+suffixReverseRegExpFa <- "_[R]_[0-9]*"
+sangerAlignmentFa <- new("SangerAlignment",
+                         inputSource           = "FASTA",
+                         fastaFileName         = fastaFN,
+                         suffixForwardRegExp   = suffixForwardRegExpFa,
+                         suffixReverseRegExp   = suffixReverseRegExpFa,
+                         refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                         TrimmingMethod        = "M1",
+                         M1TrimmingCutoff      = 0.0001,
+                         M2CutoffQualityScore  = NULL,
+                         M2SlidingWindowSize   = NULL,
+                         baseNumPerRow         = 100,
+                         heightPerRow          = 200,
+                         signalRatioCutoff     = 0.33,
+                         showTrimmed           = TRUE)
 }
 \author{
 Kuan-Hao Chao

@@ -21,7 +21,6 @@ test_that("sangerReadF Initial test", {
     expect_equal(sangerReadF@QualityReport@M1TrimmingCutoff, 0.0001, tolerance=1e-6)
     expect_equal(sangerReadF@QualityReport@M2CutoffQualityScore, NULL)
     expect_equal(sangerReadF@QualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(sangerReadF@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(sangerReadF@QualityReport@qualityPhredScores), 702)
     expect_equal(length(sangerReadF@QualityReport@qualityBaseScores), 702)
 
@@ -59,7 +58,6 @@ test_that("sangerReadF Make Base Call 1 (normal value)", {
     expect_equal(baseCall@QualityReport@M1TrimmingCutoff, 0.0001, tolerance=1e-6)
     expect_equal(baseCall@QualityReport@M2CutoffQualityScore, NULL)
     expect_equal(baseCall@QualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(baseCall@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(baseCall@QualityReport@qualityPhredScores), 702)
     expect_equal(length(baseCall@QualityReport@qualityBaseScores), 702)
 
@@ -93,7 +91,6 @@ test_that("sangerReadF Make Base Call 2 (small value)", {
     expect_equal(baseCall2@QualityReport@M1TrimmingCutoff, 0.0001, tolerance=1e-6)
     expect_equal(baseCall2@QualityReport@M2CutoffQualityScore, NULL)
     expect_equal(baseCall2@QualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(baseCall2@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(baseCall2@QualityReport@qualityPhredScores), 702)
     expect_equal(length(baseCall2@QualityReport@qualityBaseScores), 702)
 
@@ -127,7 +124,6 @@ test_that("sangerReadF Make Base Call 3 (equal to 1)", {
     expect_equal(baseCall3@QualityReport@M1TrimmingCutoff, 0.0001, tolerance=1e-6)
     expect_equal(baseCall3@QualityReport@M2CutoffQualityScore, NULL)
     expect_equal(baseCall3@QualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(baseCall3@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(baseCall3@QualityReport@qualityPhredScores), 702)
     expect_equal(length(baseCall3@QualityReport@qualityBaseScores), 702)
 
@@ -165,7 +161,6 @@ test_that("sangerReadF Make Base Call 5 (equal to 0)", {
     expect_equal(baseCall5@QualityReport@M1TrimmingCutoff, 0.0001, tolerance=1e-6)
     expect_equal(baseCall5@QualityReport@M2CutoffQualityScore, NULL)
     expect_equal(baseCall5@QualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(baseCall5@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(baseCall5@QualityReport@qualityPhredScores), 702)
     expect_equal(length(baseCall5@QualityReport@qualityBaseScores), 702)
 
@@ -212,7 +207,6 @@ test_that("sangerReadF update quality trimming parameters 1 (smaller M1)", {
     expect_equal(trimmedsangerReadF@QualityReport@M1TrimmingCutoff, 0.000001, tolerance=1e-10)
     expect_equal(trimmedsangerReadF@QualityReport@M2CutoffQualityScore, NULL)
     expect_equal(trimmedsangerReadF@QualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(trimmedsangerReadF@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(trimmedsangerReadF@QualityReport@qualityPhredScores), 702)
     expect_equal(length(trimmedsangerReadF@QualityReport@qualityBaseScores), 702)
 
@@ -250,7 +244,6 @@ test_that("sangerReadF update quality trimming parameters 2 (bigger M1)", {
     expect_equal(trimmedsangerReadF2@QualityReport@M1TrimmingCutoff, 0.1, tolerance=1e-10)
     expect_equal(trimmedsangerReadF2@QualityReport@M2CutoffQualityScore, NULL)
     expect_equal(trimmedsangerReadF2@QualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(trimmedsangerReadF2@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(trimmedsangerReadF2@QualityReport@qualityPhredScores), 702)
     expect_equal(length(trimmedsangerReadF2@QualityReport@qualityBaseScores), 702)
 
@@ -289,7 +282,6 @@ test_that("sangerReadF update quality trimming parameters 3 (equal to 1). Only t
     expect_equal(trimmedsangerReadF3@QualityReport@M1TrimmingCutoff, 1, tolerance=1e-10)
     expect_equal(trimmedsangerReadF3@QualityReport@M2CutoffQualityScore, NULL)
     expect_equal(trimmedsangerReadF3@QualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(trimmedsangerReadF3@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(trimmedsangerReadF3@QualityReport@qualityPhredScores), 702)
     expect_equal(length(trimmedsangerReadF3@QualityReport@qualityBaseScores), 702)
 
@@ -328,7 +320,6 @@ test_that("sangerReadF update quality trimming parameters 4 (very small). All tr
     expect_equal(trimmedsangerReadF4@QualityReport@M1TrimmingCutoff, 0.000000001, tolerance=1e-10)
     expect_equal(trimmedsangerReadF4@QualityReport@M2CutoffQualityScore, NULL)
     expect_equal(trimmedsangerReadF4@QualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(trimmedsangerReadF4@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(trimmedsangerReadF4@QualityReport@qualityPhredScores), 702)
     expect_equal(length(trimmedsangerReadF4@QualityReport@qualityBaseScores), 702)
 
@@ -384,7 +375,6 @@ test_that("sangerReadF update quality trimming parameters 7 (Change from M1 to M
     expect_equal(trimmedsangerReadF7@QualityReport@M1TrimmingCutoff, NULL, tolerance=1e-10)
     expect_equal(trimmedsangerReadF7@QualityReport@M2CutoffQualityScore, 25, tolerance=1e-10)
     expect_equal(trimmedsangerReadF7@QualityReport@M2SlidingWindowSize, 10, tolerance=1e-10)
-    expect_equal(length(trimmedsangerReadF7@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(trimmedsangerReadF7@QualityReport@qualityPhredScores), 702)
     expect_equal(length(trimmedsangerReadF7@QualityReport@qualityBaseScores), 702)
 
@@ -427,7 +417,6 @@ test_that("sangerReadF update quality trimming parameters 8 (Update from M1 to M
     expect_equal(trimmedsangerReadF8@QualityReport@M1TrimmingCutoff, NULL)
     expect_equal(trimmedsangerReadF8@QualityReport@M2CutoffQualityScore, 30, tolerance=1e-10)
     expect_equal(trimmedsangerReadF8@QualityReport@M2SlidingWindowSize, 12, tolerance=1e-10)
-    expect_equal(length(trimmedsangerReadF8@QualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(trimmedsangerReadF8@QualityReport@qualityPhredScores), 702)
     expect_equal(length(trimmedsangerReadF8@QualityReport@qualityBaseScores), 702)
 

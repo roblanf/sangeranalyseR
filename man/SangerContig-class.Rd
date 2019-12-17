@@ -12,6 +12,8 @@ An S4 class containing forward and reverse SangerRead lists and alignment, conse
 \describe{
 \item{\code{inputSource}}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
 
+\item{\code{fastaFileName}}{= "",}
+
 \item{\code{parentDirectory}}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.}
 
 \item{\code{contigName}}{The contig name of all the reads in \code{parentDirectory}.}
@@ -73,26 +75,28 @@ sangerContig <- new("SangerContig",
                      suffixForwardRegExp   = suffixForwardRegExp,
                      suffixReverseRegExp   = suffixReverseRegExp,
                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-                     TrimmingMethod        = "M2",
-                     M1TrimmingCutoff      = NULL,
-                     M2CutoffQualityScore  = 20,
-                     M2SlidingWindowSize   = 10,
+                     TrimmingMethod        = "M1",
+                     M1TrimmingCutoff      = 0.0001,
+                     M2CutoffQualityScore  = NULL,
+                     M2SlidingWindowSize   = NULL,
                      baseNumPerRow         = 100,
                      heightPerRow          = 200,
                      signalRatioCutoff     = 0.33,
                      showTrimmed           = TRUE)
 
 ## Input From FASTA file format
-parentDir <- file.path(inputFilesPath,
-                       "fasta",
-                       "SangerContig",
-                       "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
+rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+fastaFN <- file.path(rawDataDir, "fasta",
+                     "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
+contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+suffixForwardRegExpFa <- "_[F]_[0-9]*"
+suffixReverseRegExpFa <- "_[R]_[0-9]*"
 sangerContigFa <- new("SangerContig",
                       inputSource           = "FASTA",
-                      parentDirectory       = parentDir,
+                      fastaFileName         = fastaFN,
                       contigName            = contigName,
-                      suffixForwardRegExp   = suffixForwardRegExp,
-                      suffixReverseRegExp   = suffixReverseRegExp,
+                      suffixForwardRegExp   = suffixForwardRegExpFa,
+                      suffixReverseRegExp   = suffixReverseRegExpFa,
                       refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
                       )
 }

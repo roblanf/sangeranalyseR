@@ -2,7 +2,7 @@
 #'
 #' @description  An S4 class storing quality related inputs and results in a SangerRead S4 object.
 #'
-#' @slot qualityPhredScoresRaw The Phred quality scores of each base pairs from abif class PCON.2 in sangerseqR package before base calling.
+#' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot qualityPhredScores The Phred quality scores of each base pairs after base calling.
 #' @slot qualityBaseScores The probability of incorrect base call of each base pairs. They are calculated from \code{qualityPhredScores}.
 #' @slot rawSeqLength The number of nucleotides of raw primary DNA sequence.
@@ -32,22 +32,22 @@
 #'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
 #' A_chloroticaRead <-
 #'        SangerRead(readFeature           = "Forward Read",
-#'                         readFileName          = A_chloroticaFdReadFN,
-#'                         TrimmingMethod        = "M2",
-#'                         M1TrimmingCutoff      = NULL,
-#'                         M2CutoffQualityScore  = 20,
-#'                         M2SlidingWindowSize   = 10)
+#'                   readFileName          = A_chloroticaFdReadFN,
+#'                   TrimmingMethod        = "M2",
+#'                   M1TrimmingCutoff      = NULL,
+#'                   M2CutoffQualityScore  = 20,
+#'                   M2SlidingWindowSize   = 10)
 #' "@@"(A_chloroticaRead, QualityReport)
 setClass("QualityReport",
          ### -------------------------------------------------------------------
          ### Input type of each variable
          ### -------------------------------------------------------------------
          representation(
+             readFeature             = "character",
              TrimmingMethod          = "character",
              M1TrimmingCutoff        = "numericORNULL",
              M2CutoffQualityScore    = "numericORNULL",
              M2SlidingWindowSize     = "numericORNULL",
-             qualityPhredScoresRaw   = "numeric",
              qualityPhredScores      = "numeric",
              qualityBaseScores       = "numeric",
              rawSeqLength            = "numeric",
@@ -70,7 +70,7 @@ setClass("QualityReport",
 setMethod("initialize",
           "QualityReport",
           function(.Object, ...,
-                   qualityPhredScoresRaw = numeric(0),
+                   readFeature           = "",
                    qualityPhredScores    = numeric(0),
                    TrimmingMethod        = "M1",
                    M1TrimmingCutoff      = 0.0001,
@@ -80,6 +80,7 @@ setMethod("initialize",
               ### Input parameter prechecking
               ### --------------------------------------------------------------
               errors <- character()
+              errors <- checkReadFeature (readFeature, errors)
               errors <- checkQualityPhredScores (qualityPhredScores, errors)
 
               ##### ------------------------------------------------------------
@@ -97,6 +98,9 @@ setMethod("initialize",
                   # calculate base score
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
+                  # if (readFeature == "Reverse Read") {
+                  #     qualityPhredScores <- rev(qualityPhredScores)
+                  # }
                   qualityBaseScores <- 10** (qualityPhredScores / (-10.0))
 
                   ### ----------------------------------------------------------
@@ -138,7 +142,7 @@ setMethod("initialize",
                   stop(errors)
               }
               callNextMethod(.Object, ...,
-                             qualityPhredScoresRaw   = qualityPhredScoresRaw,
+                             readFeature             = readFeature,
                              qualityPhredScores      = qualityPhredScores,
                              qualityBaseScores       = qualityBaseScores,
                              rawSeqLength            = rawSeqLength,

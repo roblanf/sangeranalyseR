@@ -5,9 +5,9 @@
 \alias{SangerAlignment}
 \title{SangerAlignment}
 \usage{
-SangerAlignment(parentDirectory = character(0),
-  suffixForwardRegExp = character(0),
-  suffixReverseRegExp = character(0), TrimmingMethod = "M1",
+SangerAlignment(inputSource = "ABIF", fastaFileName = "",
+  parentDirectory = "", suffixForwardRegExp = "_[F]_[0-9]*.ab1",
+  suffixReverseRegExp = "_[R]_[0-9]*.ab1", TrimmingMethod = "M1",
   M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
   M2SlidingWindowSize = NULL, baseNumPerRow = 100,
   heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE,
@@ -18,6 +18,8 @@ SangerAlignment(parentDirectory = character(0),
   processorsNum = NULL)
 }
 \arguments{
+\item{fastaFileName}{}
+
 \item{parentDirectory}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.}
 
 \item{suffixForwardRegExp}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.}
@@ -70,6 +72,7 @@ parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
 suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
 sangerAlignment <- SangerAlignment(
+                       inputSource            = "ABIF",
                        parentDirectory       = parentDir,
                        suffixForwardRegExp   = suffixForwardRegExp,
                        suffixReverseRegExp   = suffixReverseRegExp,

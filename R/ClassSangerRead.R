@@ -87,7 +87,6 @@
 #'                                "SangerRead",
 #'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.fa")
 #' readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2"
-
 #' sangerReadRfa <- new("SangerRead",
 #'                      inputSource   = "FASTA",
 #'                      readFeature   = "Reverse Read",
@@ -218,6 +217,7 @@ setMethod("initialize",
             ### ================================================================
             ### 2. Update Once (Only during creation)
             ###    Basecall primary seq length will be same !
+            ###    Quality Score is reversed in MakeBaseCallsInside function !!
             ### ================================================================
             qualityPhredScores <- MBCResult[["qualityPhredScores"]]
             ### ----------------------------------------------------------------
@@ -225,7 +225,7 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             QualityReport <-
                 new("QualityReport",
-                    qualityPhredScoresRaw = abifRawData@data$PCON.2,
+                    readFeature           = readFeature,
                     qualityPhredScores    = qualityPhredScores,
                     TrimmingMethod        = TrimmingMethod,
                     M1TrimmingCutoff      = M1TrimmingCutoff,

@@ -11,7 +11,6 @@ test_that("QualityReport update quality trimming parameters 1 (Smaller M1Trimmin
     expect_equal(newQualityReport@M1TrimmingCutoff, 0.000005, tolerance=1e-10)
     expect_equal(newQualityReport@M2CutoffQualityScore, NULL)
     expect_equal(newQualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(newQualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(newQualityReport@qualityPhredScores), 702)
     expect_equal(length(newQualityReport@qualityBaseScores), 702)
 
@@ -39,7 +38,6 @@ test_that("QualityReport update quality trimming parameters 2 (bigger M1Trimming
     expect_equal(newQualityReport@M1TrimmingCutoff, 0.4, tolerance=1e-10)
     expect_equal(newQualityReport@M2CutoffQualityScore, NULL)
     expect_equal(newQualityReport@M2SlidingWindowSize, NULL)
-    expect_equal(length(newQualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(newQualityReport@qualityPhredScores), 702)
     expect_equal(length(newQualityReport@qualityBaseScores), 702)
 
@@ -67,7 +65,6 @@ test_that("QualityReport update quality trimming parameters 3 (to M2)", {
     expect_equal(newQualityReport@M1TrimmingCutoff, NULL)
     expect_equal(newQualityReport@M2CutoffQualityScore, 30)
     expect_equal(newQualityReport@M2SlidingWindowSize, 10)
-    expect_equal(length(newQualityReport@qualityPhredScoresRaw), 703)
     expect_equal(length(newQualityReport@qualityPhredScores), 702)
     expect_equal(length(newQualityReport@qualityBaseScores), 702)
 
