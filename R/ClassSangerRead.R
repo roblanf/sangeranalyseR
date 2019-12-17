@@ -29,36 +29,64 @@
 #' @examples
 #' ## Input From ABIF file format
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-#' A_chloroticaFN <- file.path(inputFilesPath,
-#'                             "Allolobophora_chlorotica",
-#'                             "ACHLO",
-#'                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
-#' sangerRead <- new("SangerRead",
-#'                    inputSource           = "ABIF",
-#'                    readFeature           = "Forward Read",
-#'                    readFileName          = A_chloroticaFN,
-#'                    geneticCode           = GENETIC_CODE,
-#'                    TrimmingMethod        = "M1",
-#'                    M1TrimmingCutoff      = 0.0001,
-#'                    M2CutoffQualityScore  = NULL,
-#'                    M2SlidingWindowSize   = NULL,
-#'                    baseNumPerRow         = 100,
-#'                    heightPerRow          = 200,
-#'                    signalRatioCutoff     = 0.33,
-#'                    showTrimmed           = TRUE)
+#' A_chloroticaFFN <- file.path(inputFilesPath,
+#'                              "Allolobophora_chlorotica",
+#'                              "ACHLO",
+#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
+#' A_chloroticaRFN <- file.path(inputFilesPath,
+#'                              "Allolobophora_chlorotica",
+#'                              "ACHLO",
+#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.ab1")
+#' sangerReadF <- new("SangerRead",
+#'                     inputSource           = "ABIF",
+#'                     readFeature           = "Forward Read",
+#'                     readFileName          = A_chloroticaFFN,
+#'                     geneticCode           = GENETIC_CODE,
+#'                     TrimmingMethod        = "M1",
+#'                     M1TrimmingCutoff      = 0.0001,
+#'                     M2CutoffQualityScore  = NULL,
+#'                     M2SlidingWindowSize   = NULL,
+#'                     baseNumPerRow         = 100,
+#'                     heightPerRow          = 200,
+#'                     signalRatioCutoff     = 0.33,
+#'                     showTrimmed           = TRUE)
+#' sangerReadR <- new("SangerRead",
+#'                     inputSource           = "ABIF",
+#'                     readFeature           = "Reverse Read",
+#'                     readFileName          = A_chloroticaRFN,
+#'                     geneticCode           = GENETIC_CODE,
+#'                     TrimmingMethod        = "M1",
+#'                     M1TrimmingCutoff      = 0.0001,
+#'                     M2CutoffQualityScore  = NULL,
+#'                     M2SlidingWindowSize   = NULL,
+#'                     baseNumPerRow         = 100,
+#'                     heightPerRow          = 200,
+#'                     signalRatioCutoff     = 0.33,
+#'                     showTrimmed           = TRUE)
 #'
 #' ## Input From FASTA file format
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-#' A_chloroticaFNfa <- file.path(inputFilesPath,
-#'                               "fasta",
-#'                               "SangerRead",
-#'                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
-#' readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa"
+#' A_chloroticaFFNfa <- file.path(inputFilesPath,
+#'                                "fasta",
+#'                                "SangerRead",
+#'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
+#' A_chloroticaRFNfa <- file.path(inputFilesPath,
+#'                                "fasta",
+#'                                "SangerRead",
+#'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.fa")
+#' readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1"
+#' readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2"
 #' sangerReadFfa <- new("SangerRead",
 #'                      inputSource   = "FASTA",
 #'                      readFeature   = "Forward Read",
-#'                      readFileName  = A_chloroticaFNfa,
+#'                      readFileName  = A_chloroticaFFNfa,
 #'                      fastaReadName = readNameFfa,
+#'                      geneticCode   = GENETIC_CODE)
+#' sangerReadRfa <- new("SangerRead",
+#'                      inputSource   = "FASTA",
+#'                      readFeature   = "Reverse Read",
+#'                      readFileName  = A_chloroticaRFNfa,
+#'                      fastaReadName = readNameRfa,
 #'                      geneticCode   = GENETIC_CODE)
 setClass(
     "SangerRead",

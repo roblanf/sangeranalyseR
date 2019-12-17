@@ -166,6 +166,15 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {
+
+
+              # if (object@inputSource == "ABIF") {
+              #
+              # } else if (object@inputSource == "FASTA") {
+              #     message("SangerContig with 'FASTA' inputSource ",
+              #             "cannot run Shiny app\n (You don't need to ",
+              #             "do trimming or base calling)")
+              # }
     # Another Rmd for SangerRead with FASTA file source
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL

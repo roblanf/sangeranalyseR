@@ -11,46 +11,54 @@
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
 #'                    M2SlidingWindowSize    = 15)
-setMethod("updateQualityParam",  "SangerContig",
-          function(object,
+setMethod("updateQualityParam",  "SangerContig",function(object,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
                    M2CutoffQualityScore   = NULL,
                    M2SlidingWindowSize    = NULL){
-    ### ------------------------------------------------------------------------
-    ### Updating forward read quality parameters
-    ### Quality parameters is checked in 'QualityReport' method
-    ### ------------------------------------------------------------------------
-    errors <- character()
-    errors <- checkTrimParam(TrimmingMethod,
-                             M1TrimmingCutoff,
-                             M2CutoffQualityScore,
-                             M2SlidingWindowSize,
-                             errors)
-    if (length(errors) == 0) {
-        newForwardReadList <- sapply(object@forwardReadList,
-                                     function(forwardRead) {
-            forwardRead <-
-                updateQualityParam(forwardRead,
+    if (object@inputSource == "ABIF") {
+        ### --------------------------------------------------------------------
+        ### Updating forward read quality parameters
+        ### Quality parameters is checked in 'QualityReport' method
+        ### --------------------------------------------------------------------
+        errors <- character()
+        errors <- checkTrimParam(TrimmingMethod,
+                                 M1TrimmingCutoff,
+                                 M2CutoffQualityScore,
+                                 M2SlidingWindowSize,
+                                 errors)
+        if (length(errors) == 0) {
+            newForwardReadList <-
+                sapply(object@forwardReadList,
+                       function(forwardRead) {
+                           forwardRead <-
+                               updateQualityParam(
+                                   forwardRead,
                                    TrimmingMethod         = TrimmingMethod,
                                    M1TrimmingCutoff       = M1TrimmingCutoff,
                                    M2CutoffQualityScore   = M2CutoffQualityScore,
                                    M2SlidingWindowSize    = M2SlidingWindowSize)
-        })
-        object@forwardReadList <- newForwardReadList
-        newReverseReadList <- sapply(object@reverseReadList,
-                                     function(reverseRead) {
-            updforwardRead <-
-                updateQualityParam(reverseRead,
+                       })
+            object@forwardReadList <- newForwardReadList
+            newReverseReadList <-
+                sapply(object@reverseReadList,
+                       function(reverseRead) {
+                           updforwardRead <-
+                               updateQualityParam(
+                                   reverseRead,
                                    TrimmingMethod         = TrimmingMethod,
                                    M1TrimmingCutoff       = M1TrimmingCutoff,
                                    M2CutoffQualityScore   = M2CutoffQualityScore,
                                    M2SlidingWindowSize    = M2SlidingWindowSize)
-        })
-        object@reverseReadList <- newReverseReadList
-        return(object)
-    } else {
-        stop(errors)
+                       })
+            object@reverseReadList <- newReverseReadList
+            return(object)
+        } else {
+            stop(errors)
+        }
+    } else if (object@inputSource == "FASTA") {
+        message("SangerContig with 'FASTA' inputSource ",
+                "cannot update quality parameters")
     }
 })
 
@@ -61,23 +69,29 @@ setMethod("updateQualityParam",  "SangerContig",
 #' load("data/sangerContig.RData")
 #' RShinySC <- launchAppSC(sangerContig)
 setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
-    ### --------------------------------------------------------------
-    ### Checking SangerContig input parameter is a list containing
-    ### one S4 object.
-    ### --------------------------------------------------------------
-    if (is.null(outputDir)) {
-        outputDir <- tempdir()
-        suppressWarnings(dir.create(outputDir, recursive = TRUE))
-    }
-    message(">>> outputDir : ", outputDir)
-    if (dir.exists(outputDir)) {
-        shinyOptions(sangerContig = list(obj))
-        shinyOptions(shinyDirectory = outputDir)
-        newSangerContig <-
-            shinyApp(SangerContigUI, SangerContigServer)
-        return(newSangerContig)
-    } else {
-        stop("'", outputDir, "' is not valid. Please check again")
+    if (object@inputSource == "ABIF") {
+        ### --------------------------------------------------------------------
+        ### Checking SangerContig input parameter is a list containing
+        ### one S4 object.
+        ### --------------------------------------------------------------------
+        if (is.null(outputDir)) {
+            outputDir <- tempdir()
+            suppressWarnings(dir.create(outputDir, recursive = TRUE))
+        }
+        message(">>> outputDir : ", outputDir)
+        if (dir.exists(outputDir)) {
+            shinyOptions(sangerContig = list(obj))
+            shinyOptions(shinyDirectory = outputDir)
+            newSangerContig <-
+                shinyApp(SangerContigUI, SangerContigServer)
+            return(newSangerContig)
+        } else {
+            stop("'", outputDir, "' is not valid. Please check again")
+        }
+    } else if (object@inputSource == "FASTA") {
+        message("SangerContig with 'FASTA' inputSource ",
+                "cannot run Shiny app\n (You don't need to ",
+                "do trimming or base calling)")
     }
 })
 
@@ -132,18 +146,31 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
     if (selection == "all" || selection == "reads_unalignment") {
         message("\n    >> Writing all single reads to FASTA ...")
         fRDNAStringSet <- sapply(obj@forwardReadList, function(forwardRead) {
-            trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
-            trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
             primaryDNA <- as.character(forwardRead@primarySeq)
-            substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
+            ### ----------------------------------------------------------------
+            ### Only read in ABIF file format needs to do trimming
+            ### ----------------------------------------------------------------
+            if (obj@inputSource == "ABIF") {
+                trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
+                trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
+                primaryDNA <- substr(primaryDNA,
+                                     trimmedStartPos+1, trimmedFinishPos)
+            }
+            return(primaryDNA)
         })
         names(fRDNAStringSet) <- basename(names(fRDNAStringSet))
         rRDNAStringSet <- sapply(obj@reverseReadList, function(reverseRead) {
-            trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
-            trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
-            primaryDNA <- as.character(reverseRead@primarySeq)
-            substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
-            # Need to reverse back!
+            ### ----------------------------------------------------------------
+            ### Only read in ABIF file format needs to do trimming
+            ### ----------------------------------------------------------------
+            primaryDNA <- as.character(reverseComplement(reverseRead@primarySeq))
+            if (obj@inputSource == "ABIF") {
+                trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
+                trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
+                primaryDNA <- substr(primaryDNA,
+                                     trimmedStartPos+1, trimmedFinishPos)
+            }
+            return(primaryDNA)
         })
         names(rRDNAStringSet) <- basename(names(rRDNAStringSet))
         frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),
@@ -184,6 +211,22 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
 setMethod("generateReportSC", "SangerContig",
           function(obj, outputDir, includeSangerRead = TRUE,
                    navigationAlignmentFN = NULL) {
+
+
+
+
+
+    # if (object@inputSource == "ABIF") {
+    #
+    # } else if (object@inputSource == "FASTA") {
+    #     message("SangerContig with 'FASTA' inputSource ",
+    #             "cannot run Shiny app\n (You don't need to ",
+    #             "do trimming or base calling)")
+    # }
+
+
+
+
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
     ### ------------------------------------------------------------------------
