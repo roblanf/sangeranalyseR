@@ -466,7 +466,7 @@ test_that("sangerReadF writeFastaSR", {
     expect_true(file.exists(outputFasta))
     con = file(outputFasta, "r")
     line = readLines(con, n = 1)
-    expect_equal(line, ">ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
+    expect_equal(line, ">ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
     line = readLines(con, n = 1)
     expect_equal(line, "CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCT")
     line = readLines(con, n = 1)
