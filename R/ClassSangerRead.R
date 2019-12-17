@@ -53,12 +53,12 @@
 #'                               "fasta",
 #'                               "SangerRead",
 #'                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
-#' fastaReadName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa"
-#' sangerReadFa <- new("SangerRead",
+#' readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa"
+#' sangerReadFfa <- new("SangerRead",
 #'                      inputSource   = "FASTA",
 #'                      readFeature   = "Forward Read",
 #'                      readFileName  = A_chloroticaFNfa,
-#'                      fastaReadName = fastaReadName,
+#'                      fastaReadName = readNameFfa,
 #'                      geneticCode   = GENETIC_CODE)
 setClass(
     "SangerRead",

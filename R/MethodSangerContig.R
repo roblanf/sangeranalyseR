@@ -143,6 +143,7 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
             trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
             primaryDNA <- as.character(reverseRead@primarySeq)
             substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
+            # Need to reverse back!
         })
         names(rRDNAStringSet) <- basename(names(rRDNAStringSet))
         frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),

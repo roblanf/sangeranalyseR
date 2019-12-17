@@ -1,5 +1,5 @@
 test_that("QualityReport update quality trimming parameters 1 (Smaller M1TrimmingCutoff)", {
-    qualityReport <- sangerRead@QualityReport
+    qualityReport <- sangerReadF@QualityReport
     newQualityReport <- updateQualityParam(qualityReport,
                                            TrimmingMethod         = "M1",
                                            M1TrimmingCutoff       = 0.000005,
@@ -27,7 +27,7 @@ test_that("QualityReport update quality trimming parameters 1 (Smaller M1Trimmin
 })
 
 test_that("QualityReport update quality trimming parameters 2 (bigger M1TrimmingCutoff)", {
-    qualityReport <- sangerRead@QualityReport
+    qualityReport <- sangerReadF@QualityReport
     newQualityReport <- updateQualityParam(qualityReport,
                                            TrimmingMethod         = "M1",
                                            M1TrimmingCutoff       = 0.4,
@@ -55,7 +55,7 @@ test_that("QualityReport update quality trimming parameters 2 (bigger M1Trimming
 })
 
 test_that("QualityReport update quality trimming parameters 3 (to M2)", {
-    qualityReport <- sangerRead@QualityReport
+    qualityReport <- sangerReadF@QualityReport
     newQualityReport <- updateQualityParam(qualityReport,
                                            TrimmingMethod         = "M2",
                                            M1TrimmingCutoff       = NULL,
