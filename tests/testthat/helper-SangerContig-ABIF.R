@@ -19,3 +19,23 @@ sangerContig <- new("SangerContig",
                     signalRatioCutoff     = 0.33,
                     showTrimmed           = TRUE)
 
+inputFilesParentDir2 <- file.path(inputFilesPath, "Allolobophora_chlorotica", "RBNII")
+contigName2 <- "RBNII395-13[C_LepFolF,C_LepFolR]"
+
+sangerContig2 <- new("SangerContig",
+                    inputSource           = "ABIF",
+                    parentDirectory       = inputFilesParentDir2,
+                    contigName            = contigName2,
+                    suffixForwardRegExp   = suffixForwardRegExp,
+                    suffixReverseRegExp   = suffixReverseRegExp,
+                    refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                    TrimmingMethod        = "M1",
+                    M1TrimmingCutoff      = 0.0001,
+                    M2CutoffQualityScore  = NULL,
+                    M2SlidingWindowSize   = NULL,
+                    baseNumPerRow         = 100,
+                    heightPerRow          = 200,
+                    signalRatioCutoff     = 0.33,
+                    showTrimmed           = TRUE)
+
+
