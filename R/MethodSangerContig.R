@@ -135,14 +135,14 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
             trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
             trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
             primaryDNA <- as.character(forwardRead@primarySeq)
-            substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+            substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
         })
         names(fRDNAStringSet) <- basename(names(fRDNAStringSet))
         rRDNAStringSet <- sapply(obj@reverseReadList, function(reverseRead) {
             trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
             trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
             primaryDNA <- as.character(reverseRead@primarySeq)
-            substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+            substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
         })
         names(rRDNAStringSet) <- basename(names(rRDNAStringSet))
         frReadSet <- DNAStringSet(c(unlist(fRDNAStringSet),

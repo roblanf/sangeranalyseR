@@ -1,6 +1,7 @@
 test_that("SangerContig Initial test", {
     expect_type(sangerContig, "S4")
     expect_s4_class(sangerContig, "SangerContig")
+    expect_equal(sangerContig@inputSource, "ABIF")
     expect_equal(sangerContig@contigName, "ACHLO006-09[LCO1490_t1,HCO2198_t1]")
     expect_equal(sangerContig@suffixForwardRegExp, "_[F]_[0-9]*.ab1")
     expect_equal(sangerContig@suffixReverseRegExp, "_[R]_[0-9]*.ab1")

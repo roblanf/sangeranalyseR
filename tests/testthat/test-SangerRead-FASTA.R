@@ -1,23 +1,24 @@
 test_that("SangerRead - FASTA Initial test", {
-    expect_type(sangerReadFa, "S4")
-    expect_s4_class(sangerReadFa, "SangerRead")
-    expect_equal(sangerReadFa@readFeature, "Forward Read")
-    expect_equal(basename(sangerReadFa@readFileName), "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
-    expect_equal(as.character(sangerReadFa@primarySeq), "CACTTTATATTTTATTCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGGATTACGTCTTGAACGAATTCCCCTGTTTGTCTGAGCTGTGCTAATTACAGTTGTTCTTCTACTTCTATCTTTACCAGTGCTAGCAGGTGCCATTACCATACTTCTTACCGACCGAAACCTCAATACTTCATTCTTTGATCCTGCCGGTGGTGGAGACCCCATCCTCTACTAGCACTTATTCTGATTTTTAGATCACCCTGATGTTGAGTCATACTGAATTCCTGA")
-    expect_equal(as.character(sangerReadFa@secondarySeq), "")
-    expect_equal(as.character(sangerReadFa@primaryAASeqS1), "HFIFYSGRLSRNGWSRYKTSNSNRAKTTRSVPGQRPTIQYYRYCTRICNNLLSSNACIHRGIRKLAFTFNTWSPRYSIPSTQQHEILTTSPITDPFSVLCGGRKRRWYGVNCLSASSKKSCPRRPVCRFSHLFPSFSGCVFYSRGY*FYHHSY*YALKRITS*TNSPVCLSCANYSCSSTSIFTSASRCHYHTSYRPKPQYFIL*SCRWWRPHPLLALILIFRSP*C*VILNS*")
-    expect_equal(as.character(sangerReadFa@primaryAASeqS2), "TLYFILGV*AGMVGAGIRLLIRIELRQPGAFLGRDQLYNTIVTAHAFVIIFFLVMPVFIGGFGNWLLPLILGAPDIAFPRLNNMRF*LLPPSLILLVSSAAVEKGAGTG*TVYPPLARNLAHAGPSVDLAIFSLHLAGASSILGAINFITTVINMR*RGLRLERIPLFV*AVLITVVLLLLSLPVLAGAITILLTDRNLNTSFFDPAGGGDPILY*HLF*FLDHPDVESY*IP")
-    expect_equal(as.character(sangerReadFa@primaryAASeqS3), "LYILFWASEQEWLEPV*DF*FESS*DNQERSWAETNYTILSLLHTHL**SSF**CLYSSGDSETGFYL*YLEPPI*HSLDSTT*DSDYFPHH*SF*CPLRR*KKALVRGELFIRL*QEILPTQARL*I*PSFPFI*RVRLLF*GLLILSPQLLICVEEDYVLNEFPCLSELC*LQLFFYFYLYQC*QVPLPYFLPTETSILHSLILPVVETPSSTSTYSDF*ITLMLSHTEFL")
-    expect_equal(is.null(sangerReadFa@ChromatogramParam), TRUE)
-    expect_equal(is.null(sangerReadFa@QualityReport), TRUE)
-    expect_equal(is.null(sangerReadFa@abifRawData), TRUE)
-    expect_equal(as.character(sangerReadFa@primarySeqRaw), "")
-    expect_equal(as.character(sangerReadFa@secondarySeqRaw), "")
-    expect_equal(sangerReadFa@primarySeqID, "From fasta file")
-    expect_equal(sangerReadFa@secondarySeqID, "")
-    expect_equal(sangerReadFa@traceMatrix, matrix())
-    expect_equal(sangerReadFa@peakPosMatrix, matrix())
-    expect_equal(sangerReadFa@peakAmpMatrix, matrix())
+    expect_type(sangerReadFFa, "S4")
+    expect_s4_class(sangerReadFFa, "SangerRead")
+    expect_equal(sangerReadFFa@inputSource, "ABIF")
+    expect_equal(sangerReadFFa@readFeature, "Forward Read")
+    expect_equal(basename(sangerReadFFa@readFileName), "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
+    expect_equal(as.character(sangerReadFFa@primarySeq), "CACTTTATATTTTATTCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGGATTACGTCTTGAACGAATTCCCCTGTTTGTCTGAGCTGTGCTAATTACAGTTGTTCTTCTACTTCTATCTTTACCAGTGCTAGCAGGTGCCATTACCATACTTCTTACCGACCGAAACCTCAATACTTCATTCTTTGATCCTGCCGGTGGTGGAGACCCCATCCTCTACTAGCACTTATTCTGATTTTTAGATCACCCTGATGTTGAGTCATACTGAATTCCTGA")
+    expect_equal(as.character(sangerReadFFa@secondarySeq), "")
+    expect_equal(as.character(sangerReadFFa@primaryAASeqS1), "HFIFYSGRLSRNGWSRYKTSNSNRAKTTRSVPGQRPTIQYYRYCTRICNNLLSSNACIHRGIRKLAFTFNTWSPRYSIPSTQQHEILTTSPITDPFSVLCGGRKRRWYGVNCLSASSKKSCPRRPVCRFSHLFPSFSGCVFYSRGY*FYHHSY*YALKRITS*TNSPVCLSCANYSCSSTSIFTSASRCHYHTSYRPKPQYFIL*SCRWWRPHPLLALILIFRSP*C*VILNS*")
+    expect_equal(as.character(sangerReadFFa@primaryAASeqS2), "TLYFILGV*AGMVGAGIRLLIRIELRQPGAFLGRDQLYNTIVTAHAFVIIFFLVMPVFIGGFGNWLLPLILGAPDIAFPRLNNMRF*LLPPSLILLVSSAAVEKGAGTG*TVYPPLARNLAHAGPSVDLAIFSLHLAGASSILGAINFITTVINMR*RGLRLERIPLFV*AVLITVVLLLLSLPVLAGAITILLTDRNLNTSFFDPAGGGDPILY*HLF*FLDHPDVESY*IP")
+    expect_equal(as.character(sangerReadFFa@primaryAASeqS3), "LYILFWASEQEWLEPV*DF*FESS*DNQERSWAETNYTILSLLHTHL**SSF**CLYSSGDSETGFYL*YLEPPI*HSLDSTT*DSDYFPHH*SF*CPLRR*KKALVRGELFIRL*QEILPTQARL*I*PSFPFI*RVRLLF*GLLILSPQLLICVEEDYVLNEFPCLSELC*LQLFFYFYLYQC*QVPLPYFLPTETSILHSLILPVVETPSSTSTYSDF*ITLMLSHTEFL")
+    expect_equal(is.null(sangerReadFFa@ChromatogramParam), TRUE)
+    expect_equal(is.null(sangerReadFFa@QualityReport), TRUE)
+    expect_equal(is.null(sangerReadFFa@abifRawData), TRUE)
+    expect_equal(as.character(sangerReadFFa@primarySeqRaw), "")
+    expect_equal(as.character(sangerReadFFa@secondarySeqRaw), "")
+    expect_equal(sangerReadFFa@primarySeqID, "From fasta file")
+    expect_equal(sangerReadFFa@secondarySeqID, "")
+    expect_equal(sangerReadFFa@traceMatrix, matrix())
+    expect_equal(sangerReadFFa@peakPosMatrix, matrix())
+    expect_equal(sangerReadFFa@peakAmpMatrix, matrix())
 })
 
 
@@ -32,17 +33,17 @@ test_that("SangerRead update quality trimming parameters 10 (M2CutoffQualityScor
 })
 
 test_that("SangerRead - FASTA functions test", {
-    expect_message(qualityBasePlot(sangerReadFa),
+    expect_message(qualityBasePlot(sangerReadFFa),
                  paste("SangerRead with 'FASTA' inputSource",
                        "cannot plot quality plots"))
-    expect_message(updateQualityParam(sangerReadFa),
+    expect_message(updateQualityParam(sangerReadFFa),
                  paste("SangerRead with 'FASTA' inputSource",
                  "cannot update quality parameters"))
-    expect_message(MakeBaseCalls(sangerReadFa),
+    expect_message(MakeBaseCalls(sangerReadFFa),
                  paste("SangerRead with 'FASTA'",
                        "inputSource cannot do base calling"))
 
-    outputFasta <- writeFastaSR(sangerReadFa)
+    outputFasta <- writeFastaSR(sangerReadFFa)
     expect_true(file.exists(outputFasta))
     con = file(outputFasta, "r")
     line = readLines(con, n = 1)

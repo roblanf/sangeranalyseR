@@ -38,10 +38,10 @@ setMethod("updateQualityParam",  "SangerRead",
                    M2CutoffQualityScore   = NULL,
                    M2SlidingWindowSize    = NULL){
     if (object@inputSource == "ABIF") {
-        ### --------------------------------------------------------------
+        ### --------------------------------------------------------------------
         ### Updating SangerRead quality parameters
         ###   Trimming parameters is checked in 'QualityReport' method
-        ### --------------------------------------------------------------
+        ### --------------------------------------------------------------------
         errors <- character()
         errors <- checkTrimParam(TrimmingMethod,
                                  M1TrimmingCutoff,
@@ -127,7 +127,18 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
     fastaFilename <- gsub(file_ext(basename(obj@readFileName)), "fa",
                           basename(obj@readFileName))
     outputFilename <- file.path(outputDir, fastaFilename)
-    writeTarget <- DNAStringSet(obj@primarySeq)
+    ### ------------------------------------------------------------------------
+    ### Add trimming in ABIF file format
+    ### ------------------------------------------------------------------------
+    if(obj@inputSource == "ABIF") {
+        trimmedStartPos <- obj@QualityReport@trimmedStartPos
+        trimmedFinishPos <- obj@QualityReport@trimmedFinishPos
+        targetSeq <- DNAString(substr(as.character(obj@primarySeq),
+                                      trimmedStartPos+1, trimmedFinishPos))
+    } else if (obj@inputSource == "FASTA") {
+        targetSeq <- obj@primarySeq
+    }
+    writeTarget <- DNAStringSet(targetSeq)
     names(writeTarget) <- basename(obj@readFileName)
     writeXStringSet(writeTarget,
                     filepath = outputFilename,
@@ -136,7 +147,6 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
     message("\n >> '", outputFilename, "' is written")
     return(outputFilename)
 })
-
 
 ## =============================================================================
 ## Generating report for SangerRead

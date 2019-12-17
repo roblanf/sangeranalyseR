@@ -175,7 +175,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         }
         primaryDNA <- as.character(forwardRead@primarySeq)
         if (inputSource != "FASTA") {
-            primaryDNA <- substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+            primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
         }
         return(primaryDNA)
     })
@@ -186,7 +186,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         }
         primaryDNA <- as.character(reverseRead@primarySeq)
         if (inputSource != "FASTA") {
-            primaryDNA <- substr(primaryDNA, trimmedStartPos, trimmedFinishPos)
+            primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
         }
         return(primaryDNA)
     })
