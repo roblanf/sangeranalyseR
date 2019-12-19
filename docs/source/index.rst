@@ -46,8 +46,7 @@ Guide
 
 .. toctree::
    :maxdepth: 3
-   :caption: Contents:
-
+   
    content/license
    content/contact
    content/help
