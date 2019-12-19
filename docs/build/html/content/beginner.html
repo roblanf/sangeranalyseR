@@ -164,59 +164,62 @@
             
   <div class="section" id="beginner-guide">
 <h1>Beginner Guide<a class="headerlink" href="#beginner-guide" title="Permalink to this headline">¶</a></h1>
-<p>Please first install <code class="code docutils literal notranslate"><span class="pre">sangeranalyseR</span></code> and load it in your R console. If you haven't finished the above steps, please refer to <a class="reference internal" href="getting_start.html#getting-start"><span class="std std-ref">Getting Start</span></a>.</p>
+<p>First, please install sangeranalyseR and load it into your R console. If you haven't finished the above steps, please read <a class="reference internal" href="getting_start.html#getting-start"><span class="std std-ref">Getting Start</span></a> first.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <div class="section" id="input-files-preparation">
 <h2>Input files preparation<a class="headerlink" href="#input-files-preparation" title="Permalink to this headline">¶</a></h2>
-<p>sangeranalyseR takes ABIF files as input and constructs contigs for each species. All the contigs will be aligned and a</p>
-<p>The results contain contigs alignment, evolution tree,</p>
-<p>All reads in each contig will be aligned first to get a contig,</p>
-<p>All the files must have ab1 in its suffix. The reads that belong to the same group should have the same contig name. Forward and reverse read also need to specify in the filename.</p>
-<p>There are three parameters that users need to provide.
-First is parent directory <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>
-Second is forward suffix <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>.
-Third is reverse suffix <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>.</p>
-<p>All files should be placed under the <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>. They do not need to be in the same layer of the directory. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> and find all files that end with ab1 and match the forward or reverse suffix. Files with the same contig names will be categorized in the same group and aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named.</p>
-<div class="figure align-center" id="figure-1">
-<img alt="../_images/figure_1.png" src="../_images/figure_1.png" />
+<p>sangeranalyseR takes <strong>ab1</strong> files as input and constructs contigs for those with the same contig name. Then, all the contigs will be aligned and a phylogenetic tree will be generated. We first explain how users should organize their files before running sangeranalyseR.</p>
+<p>First, users need to prepare a directory and put all their <strong>ab1</strong> files inside it. As for the file naming convention, all the input files must have <strong>ab1</strong> as its file extension; the reads that belong to the same contig should have the same contig name; forward or reverse direction also needs to be specified in the filename.</p>
+<p>There are three parameters, <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>, <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>, and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>, that users need to provide so that program can automatically group all <strong>ab1</strong> files. To be clearer, let's have an example.</p>
+<div class="figure align-center" id="id1">
+<span id="figure-1"></span><a class="reference internal image-reference" href="../_images/figure_1.png"><img alt="../_images/figure_1.png" src="../_images/figure_1.png" style="width: 402.0px; height: 383.0px;" /></a>
+<p class="caption"><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#figure-1">Figure_1</a> is the example of the hierarchy of input ab1 files.</p>
-<p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>: &quot;./tmp&quot;
-<code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: &quot;_F_[0-9]*.ab1&quot;.
-<code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: &quot;_R_[0-9]*.ab1&quot;.</p>
+<p><a class="reference internal" href="#figure-1">Figure_1</a> shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>: It is the directory that contains all the <strong>ab1</strong> files. In this example, it is <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_F.ab1</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: Same as forward read, all the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_R.ab1</span></code>.</p></li>
+</ul>
+<p>All files inside the <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> and find all files that end with <strong>ab1</strong> and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named.</p>
+<p>In this example, there are four contigs that will be detected: <code class="code docutils literal notranslate"><span class="pre">ACHLO006-09[LCO1490_t1,HCO2198_t1]</span></code>, <code class="code docutils literal notranslate"><span class="pre">ACHLO007-09[LCO1490_t1,HCO2198_t1]</span></code>, <code class="code docutils literal notranslate"><span class="pre">RBNII396-13[C_LepFolF,C_LepFolR]</span></code> and <code class="code docutils literal notranslate"><span class="pre">RBNII397-13[C_LepFolF,C_LepFolR]</span></code>. In this example, <code class="code docutils literal notranslate"><span class="pre">_1</span></code> and <code class="code docutils literal notranslate"><span class="pre">_2</span></code> in the filenames are not necessary because there are only two reads, one forward and one reverse, in each contig. However, it is a good habit to index the reads by order because in a contig, there might be more than one read in the same direction.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="sangeralignment-creation">
 <h2><em>SangerAlignment</em> creation<a class="headerlink" href="#sangeralignment-creation" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">rawDir</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
-<span class="n">parentDir</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">rawDir</span><span class="p">,</span> <span class="s">&quot;Allolobophora_chlorotica&quot;</span><span class="p">,</span> <span class="s">&quot;RBNII&quot;</span><span class="p">)</span>
+<p>After preparing the input directory, we can now create a <em>SangerAlignment</em> S4 instance by running one-line function below.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;./tmp/&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_F.ab1&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_R.ab1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span> <span class="o">=</span> <span class="n">parentDir</span><span class="p">,</span>
-                                   <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[F]_[0-9]*.ab1&quot;</span><span class="p">,</span>
-                                   <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[R]_[0-9]*.ab1&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>One thing to pay attention to is that your current working directory need to be at the same level of <code class="code docutils literal notranslate"><span class="pre">tmp</span></code> directory so that you can directly use &quot;./tmp/&quot;. Or otherwise, you need to use the absolute directory which might look like <code class="code docutils literal notranslate"><span class="pre">/path/to/your/tmp</span></code>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="launch-shiny-app">
 <h2>Launch Shiny App<a class="headerlink" href="#launch-shiny-app" title="Permalink to this headline">¶</a></h2>
+<p>You can launch an interactive Shiny app in your local computer by running <code class="code docutils literal notranslate"><span class="pre">launchAppSA</span></code> function.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchAppSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="figure-2">
-<img alt="../_images/figure_2.png" src="../_images/figure_2.png" />
+<div class="figure align-center" id="id2">
+<span id="figure-2"></span><img alt="../_images/figure_2.png" src="../_images/figure_2.png" />
+<p class="caption"><span class="caption-text">Figure 2. <em>SangerAlignment</em> Shiny app user interface.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#figure-2">Figure_2</a> is the</p>
+<p><a class="reference internal" href="#figure-2">Figure_2</a> shows how the Shiny app looks like. On the left-hand side of <a class="reference internal" href="#figure-2">Figure_2</a>, there is a navigation menu that users can click inside to each contig and each single read to get more details.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="writing-fasta-file">
 <h2>Writing FASTA file<a class="headerlink" href="#writing-fasta-file" title="Permalink to this headline">¶</a></h2>
+<p>The following function can write the <em>SangerAlignment</em> S4 instance to a FASTA file.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFastaSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -226,25 +229,30 @@ Third is reverse suffix <code class="code docutils literal notranslate"><span cl
 </div>
 <div class="section" id="generating-report">
 <h2>Generating report<a class="headerlink" href="#generating-report" title="Permalink to this headline">¶</a></h2>
+<p>Last but not least, it is important to store all results in a report. A detailed report will be generated by running the following one-line function. <a class="reference internal" href="#figure-3">Figure_3</a> and <a class="reference internal" href="#figure-4">Figure_4</a> show the main results of <em>SangerAlignment</em>.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="figure-3">
-<img alt="../_images/figure_3.png" src="../_images/figure_3.png" />
+<div class="figure align-center" id="id3">
+<span id="figure-3"></span><img alt="../_images/figure_3.png" src="../_images/figure_3.png" />
+<p class="caption"><span class="caption-text">Figure 3. Alignment result of all contigs in the <em>SangerAlignment</em> instance.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#figure-3">Figure_3</a> is the</p>
-<div class="figure align-center" id="figure-4">
-<img alt="../_images/figure_4.png" src="../_images/figure_4.png" />
+<div class="figure align-center" id="id4">
+<span id="figure-4"></span><a class="reference internal image-reference" href="../_images/figure_4.png"><img alt="../_images/figure_4.png" src="../_images/figure_4.png" style="width: 379.2px; height: 251.39999999999998px;" /></a>
+<p class="caption"><span class="caption-text">Figure 4. Phylogenetic trees with contigs as the leaf nodes.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#figure-4">Figure_4</a> is the</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="where-to-go-from-here">
 <h2>Where to go from here ?<a class="headerlink" href="#where-to-go-from-here" title="Permalink to this headline">¶</a></h2>
-<p>Congratulation, you have finished the <a class="reference internal" href="#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>. For learning more</p>
-<p><a class="reference internal" href="#beginner-guide"><span class="std std-ref">Beginner Guide</span></a></p>
+<p>Congratulation, you have finished the <a class="reference internal" href="#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>. As mentioned in <a class="reference internal" href="introduction.html#introduction"><span class="std std-ref">Introduction</span></a> section, there are three levels of Sanger sequencing analysis which are <em>SangerRead</em>, <em>SangerContig</em> and <em>SangerAlignment</em>. Users can start the data analysis in each level now.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="advance_user_SangerRead.html#advanced-user-guide-sangerread"><span class="std std-ref">Advanced User Guide - SangerRead</span></a></p></li>
+<li><p><a class="reference internal" href="advance_user_SangerContig.html#advanced-user-guide-sangercontig"><span class="std std-ref">Advanced User Guide - SangerContig</span></a></p></li>
+<li><p><a class="reference internal" href="advance_user_SangerAlignment.html#advanced-user-guide-sangeralignment"><span class="std std-ref">Advanced User Guide - SangerAlignment</span></a></p></li>
+</ul>
 </div>
 </div>
 
