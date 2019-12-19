@@ -16,7 +16,7 @@
 
 
 # -- Project information -----------------------------------------------------
-
+master_doc = 'index'
 project = 'sangeranalyseR'
 copyright = '2019, Kuan-Hao Chao'
 author = 'Kuan-Hao Chao'
