@@ -1,8 +1,6 @@
 sangeranalyseR's tutorial!
 **************************
 
-H1 -- Top of Page Header
-************************
 There should only be one of these per page and this will also -- when
 converting to pdf -- be used for the chapters.
 
@@ -43,12 +41,16 @@ This picture Figure_1_.
 
 :download:`An Example Pypi Project<figure/Figure_10_.png>`
 
+Guide
+=====
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   H1
 
-
+   license
+   contact
+   help
 
 
 

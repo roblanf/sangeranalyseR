@@ -43,12 +43,16 @@ This picture Figure_1_.
 
 :download:`An Example Pypi Project<figure/Figure_10_.png>`
 
+Guide
+=====
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   H1
 
-
+   license
+   contact
+   help
 
 
 
