@@ -5,7 +5,7 @@
 #' load("data/sangerAlignment.RData")
 #' RShinySA <- launchAppSA(sangerAlignment)
 setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
-    if (object@inputSource == "ABIF") {
+    if (obj@inputSource == "ABIF") {
         ### ------------------------------------------------------------------------
         ### Checking SangerAlignment input parameter is a list containing
         ### one S4 object.
@@ -24,7 +24,7 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
         } else {
             stop("'", outputDir, "' is not valid. Please check again")
         }
-    } else if (object@inputSource == "FASTA") {
+    } else if (obj@inputSource == "FASTA") {
         message("SangerAlignment with 'FASTA' inputSource ",
                 "cannot run Shiny app\n (You don't need to ",
                 "do trimming or base calling)")
