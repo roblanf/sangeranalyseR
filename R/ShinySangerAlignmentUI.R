@@ -53,17 +53,12 @@ SangerAlignmentUI <- dashboardPage(
                     }
                     ")),
 
-        ### --------------------------------------------------------------------
-        ### Right navigation bar style changing
-        ### --------------------------------------------------------------------
-        tags$script(HTML('
-            $(document).ready(function() {
-            $("header").find("nav").append(\'<span id="rightHeader" class="myClass"> Contigs Alignment Overview </span>\');
-            })
-        ')),
-
-        tags$head(tags$style(HTML(
-            '.myClass {
+        tags$head(
+            ### ----------------------------------------------------------------
+            ### Right navigation bar style changing
+            ### ----------------------------------------------------------------
+            tags$style(HTML(
+                '.myClass {
             font-size: 25px;
             line-height: 50px;
             text-align: left;
@@ -71,10 +66,14 @@ SangerAlignmentUI <- dashboardPage(
             padding: 0 15px;
             overflow: hidden;
             color: white;
-            font-weight: bold;
-        }'))),
-
-        tags$head(
+            font-weight: bold;}')),
+            ### --------------------------------------------------------------------
+            ### Right navigation bar style changing
+            ### --------------------------------------------------------------------
+            tags$script(HTML('
+            $(document).ready(function() {
+            $("header").find("nav").append(\'<div id="rightHeader" class="myClass"> SangerAlignment Overview </div>\');
+            })')),
             ### ----------------------------------------------------------------
             ### Close button style changing
             ### ----------------------------------------------------------------
@@ -111,6 +110,7 @@ SangerAlignmentUI <- dashboardPage(
                        "pre { display: inline-block; }"
             )
         ),
+
         ### --------------------------------------------------------------------
         ### Pop-up notification style changing
         ### --------------------------------------------------------------------

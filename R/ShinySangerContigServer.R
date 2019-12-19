@@ -774,7 +774,33 @@ SangerContigServer <- function(input, output, session) {
     ### observeEvent: Adding dynamic rightHeader text
     ### ------------------------------------------------------------------------
     #!!!!!!!! Fix
-    observeEventDynamicHeaderSC(input, output, session, trimmedRV)
+    # observeEventDynamicHeaderSC(input, output, session, trimmedRV)
+
+    observeEvent(input$sidebar_menu, {
+        # header <- switch(input$tabs,
+        #                  tab1 = "Tab 1",
+        #                  tab2 = "Tab 2",
+        #                  tab3 = "Tab 3")
+        menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
+        message("input$sidebar_menu: ", menuItem)
+        html("rightHeader", menuItem)
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Close UI
     ### ------------------------------------------------------------------------

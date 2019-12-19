@@ -1059,6 +1059,20 @@ SangerAlignmentServer <- function(input, output, session) {
     ############################################################################
     ### All other features (dynamic header / button save / button close)
     ############################################################################
+    observeEvent(input$sidebar_menu, {
+        # header <- switch(input$tabs,
+        #                  tab1 = "Tab 1",
+        #                  tab2 = "Tab 2",
+        #                  tab3 = "Tab 3")
+        shinyjs::html("rightHeader", input$sidebar_menu)
+    })
+
+
+
+
+
+
+
     ### ------------------------------------------------------------------------
     ### observeEvent: Adding dynamic sidebar
     ### ------------------------------------------------------------------------
