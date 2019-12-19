@@ -12,5 +12,5 @@ qualityBasePlot
 }
 \examples{
 load("data/sangerRead.RData")
-qualityBasePlot(sangerRead)
+qualityBasePlot(sangerReadF)
 }

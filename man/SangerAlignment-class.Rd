@@ -14,9 +14,9 @@ An S4 class containing SangerContigs lists and contigs alignment results which c
 
 \item{\code{parentDirectory}}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.}
 
-\item{\code{suffixForwardRegExp}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.}
+\item{\code{suffixForwardRegExp}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.}
 
-\item{\code{suffixReverseRegExp}}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.}
+\item{\code{suffixReverseRegExp}}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.}
 
 \item{\code{trimmingMethodSA}}{The read trimming method for all SangerRead S4 instances in SangerAlignment. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerReads must have the same trimming method.}
 
@@ -40,9 +40,9 @@ An S4 class containing SangerContigs lists and contigs alignment results which c
 \examples{
 ## Input From ABIF file format
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
-suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
+suffixForwardRegExp <- "_F.ab1"
+suffixReverseRegExp <- "_R.ab1"
 sangerAlignment <- new("SangerAlignment",
                        inputSource           = "ABIF",
                        parentDirectory       = parentDir,
@@ -62,8 +62,8 @@ sangerAlignment <- new("SangerAlignment",
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
                      "SangerAlignment", "Sanger_all_reads.fa")
-suffixForwardRegExpFa <- "_[F]_[0-9]*"
-suffixReverseRegExpFa <- "_[R]_[0-9]*"
+suffixForwardRegExpFa <- "_F"
+suffixReverseRegExpFa <- "_R"
 sangerAlignmentFa <- new("SangerAlignment",
                          inputSource           = "FASTA",
                          fastaFileName         = fastaFN,

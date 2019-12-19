@@ -6,7 +6,7 @@
 #' @rdname SangerRead-class-qualityBasePlot
 #' @examples
 #' load("data/sangerRead.RData")
-#' qualityBasePlot(sangerRead)
+#' qualityBasePlot(sangerReadF)
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     if (object@inputSource == "ABIF") {
         QualityReportObject = object@QualityReport
@@ -26,7 +26,7 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 #' @rdname SangerRead-class-updateQualityParam
 #' @examples
 #' load("data/sangerRead.RData")
-#' updateQualityParam(sangerRead,
+#' updateQualityParam(sangerReadF,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
@@ -73,7 +73,7 @@ setMethod("updateQualityParam",  "SangerRead",
 #' @rdname SangerRead-class-MakeBaseCalls
 #' @examples
 #' load("data/sangerRead.RData")
-#' MakeBaseCalls(sangerRead, signalRatioCutoff = 0.22)
+#' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
 setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
     if (obj@inputSource == "ABIF") {
         errors <- character(0)
@@ -115,7 +115,7 @@ setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
 #' @rdname SangerRead-class-writeFastaSR
 #' @examples
 #' load("data/sangerRead.RData")
-#' writeFastaSR(sangerRead, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")
+#' writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")
 setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
                                                  compression_level) {
     if (is.null(outputDir)) {
@@ -162,7 +162,7 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 #' @rdname SangerRead-class-generateReportSR
 #' @examples
 #' load("data/sangerRead.RData")
-#' generateReportSR(sangerRead)
+#' generateReportSR(sangerReadF)
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {

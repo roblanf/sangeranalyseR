@@ -225,7 +225,6 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             QualityReport <-
                 new("QualityReport",
-                    readFeature           = readFeature,
                     qualityPhredScores    = qualityPhredScores,
                     TrimmingMethod        = TrimmingMethod,
                     M1TrimmingCutoff      = M1TrimmingCutoff,

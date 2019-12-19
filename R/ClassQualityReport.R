@@ -31,8 +31,7 @@
 #'                              "Allolobophora_chlorotica",
 #'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
 #' A_chloroticaRead <-
-#'        SangerRead(readFeature           = "Forward Read",
-#'                   readFileName          = A_chloroticaFdReadFN,
+#'        SangerRead(readFileName          = A_chloroticaFdReadFN,
 #'                   TrimmingMethod        = "M2",
 #'                   M1TrimmingCutoff      = NULL,
 #'                   M2CutoffQualityScore  = 20,
@@ -43,7 +42,6 @@ setClass("QualityReport",
          ### Input type of each variable
          ### -------------------------------------------------------------------
          representation(
-             readFeature             = "character",
              TrimmingMethod          = "character",
              M1TrimmingCutoff        = "numericORNULL",
              M2CutoffQualityScore    = "numericORNULL",
@@ -70,7 +68,6 @@ setClass("QualityReport",
 setMethod("initialize",
           "QualityReport",
           function(.Object, ...,
-                   readFeature           = "",
                    qualityPhredScores    = numeric(0),
                    TrimmingMethod        = "M1",
                    M1TrimmingCutoff      = 0.0001,
@@ -80,7 +77,6 @@ setMethod("initialize",
               ### Input parameter prechecking
               ### --------------------------------------------------------------
               errors <- character()
-              errors <- checkReadFeature (readFeature, errors)
               errors <- checkQualityPhredScores (qualityPhredScores, errors)
 
               ##### ------------------------------------------------------------
@@ -98,9 +94,6 @@ setMethod("initialize",
                   # calculate base score
                   # Calculate probability error per base (through column)
                   #     ==> Q = -10log10(P)
-                  # if (readFeature == "Reverse Read") {
-                  #     qualityPhredScores <- rev(qualityPhredScores)
-                  # }
                   qualityBaseScores <- 10** (qualityPhredScores / (-10.0))
 
                   ### ----------------------------------------------------------
@@ -142,7 +135,6 @@ setMethod("initialize",
                   stop(errors)
               }
               callNextMethod(.Object, ...,
-                             readFeature             = readFeature,
                              qualityPhredScores      = qualityPhredScores,
                              qualityBaseScores       = qualityBaseScores,
                              rawSeqLength            = rawSeqLength,

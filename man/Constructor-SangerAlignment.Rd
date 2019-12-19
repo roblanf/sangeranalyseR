@@ -6,8 +6,8 @@
 \title{SangerAlignment}
 \usage{
 SangerAlignment(inputSource = "ABIF", fastaFileName = "",
-  parentDirectory = "", suffixForwardRegExp = "_[F]_[0-9]*.ab1",
-  suffixReverseRegExp = "_[R]_[0-9]*.ab1", TrimmingMethod = "M1",
+  parentDirectory = "", suffixForwardRegExp = "_F.ab1",
+  suffixReverseRegExp = "_R.ab1", TrimmingMethod = "M1",
   M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
   M2SlidingWindowSize = NULL, baseNumPerRow = 100,
   heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE,
@@ -22,9 +22,9 @@ SangerAlignment(inputSource = "ABIF", fastaFileName = "",
 
 \item{parentDirectory}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.}
 
-\item{suffixForwardRegExp}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.}
+\item{suffixForwardRegExp}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.}
 
-\item{suffixReverseRegExp}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.}
+\item{suffixReverseRegExp}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.}
 
 \item{TrimmingMethod}{TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.}
 
@@ -69,8 +69,8 @@ SangerAlignment
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
-suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+suffixForwardRegExp <- "_F.ab1"
+suffixReverseRegExp <- "_R.ab1"
 sangerAlignment <- SangerAlignment(
                        inputSource            = "ABIF",
                        parentDirectory       = parentDir,

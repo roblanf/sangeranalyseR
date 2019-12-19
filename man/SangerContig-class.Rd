@@ -18,9 +18,9 @@ An S4 class containing forward and reverse SangerRead lists and alignment, conse
 
 \item{\code{contigName}}{The contig name of all the reads in \code{parentDirectory}.}
 
-\item{\code{suffixForwardRegExp}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.}
+\item{\code{suffixForwardRegExp}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.}
 
-\item{\code{suffixReverseRegExp}}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.}
+\item{\code{suffixReverseRegExp}}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.}
 
 \item{\code{forwardReadList}}{The list of SangerRead S4 instances which are all forward reads.}
 
@@ -66,8 +66,8 @@ An S4 class containing forward and reverse SangerRead lists and alignment, conse
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+suffixForwardRegExp <- "_F.ab1"
+suffixReverseRegExp <- "_R.ab1"
 sangerContig <- new("SangerContig",
                      inputSource           = "ABIF",
                      parentDirectory       = parentDir,
@@ -89,8 +89,8 @@ rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
                      "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
 contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-suffixForwardRegExpFa <- "_[F]_[0-9]*"
-suffixReverseRegExpFa <- "_[R]_[0-9]*"
+suffixForwardRegExpFa <- "_F"
+suffixReverseRegExpFa <- "_R"
 sangerContigFa <- new("SangerContig",
                       inputSource           = "FASTA",
                       fastaFileName         = fastaFN,

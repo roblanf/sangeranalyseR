@@ -14,7 +14,7 @@ updateQualityParam
 }
 \examples{
 load("data/sangerRead.RData")
-updateQualityParam(sangerRead,
+updateQualityParam(sangerReadF,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,

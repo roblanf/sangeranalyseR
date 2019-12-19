@@ -13,5 +13,5 @@ generateReportSR
 }
 \examples{
 load("data/sangerRead.RData")
-generateReportSR(sangerRead)
+generateReportSR(sangerReadF)
 }

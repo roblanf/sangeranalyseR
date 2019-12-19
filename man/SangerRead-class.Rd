@@ -46,7 +46,7 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
                              "ACHLO",
-                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
+                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
 sangerReadF <- new("SangerRead",
                     inputSource           = "ABIF",
                     readFeature           = "Forward Read",
@@ -65,7 +65,7 @@ sangerReadF <- new("SangerRead",
 A_chloroticaRFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
                              "ACHLO",
-                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.ab1")
+                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1")
 sangerReadR <- new("SangerRead",
                     inputSource           = "ABIF",
                     readFeature           = "Reverse Read",
@@ -86,8 +86,8 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFFNfa <- file.path(inputFilesPath,
                                "fasta",
                                "SangerRead",
-                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
-readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1"
+                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.fa")
+readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F"
 sangerReadFfa <- new("SangerRead",
                      inputSource   = "FASTA",
                      readFeature   = "Forward Read",
@@ -98,8 +98,8 @@ sangerReadFfa <- new("SangerRead",
 A_chloroticaRFNfa <- file.path(inputFilesPath,
                                "fasta",
                                "SangerRead",
-                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.fa")
-readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2"
+                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.fa")
+readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R"
 sangerReadRfa <- new("SangerRead",
                      inputSource   = "FASTA",
                      readFeature   = "Reverse Read",

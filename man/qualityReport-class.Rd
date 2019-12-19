@@ -47,10 +47,9 @@ An S4 class storing quality related inputs and results in a SangerRead S4 object
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFdReadFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
-                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.ab1")
+                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
 A_chloroticaRead <-
-       SangerRead(readFeature           = "Forward Read",
-                  readFileName          = A_chloroticaFdReadFN,
+       SangerRead(readFileName          = A_chloroticaFdReadFN,
                   TrimmingMethod        = "M2",
                   M1TrimmingCutoff      = NULL,
                   M2CutoffQualityScore  = 20,

@@ -7,13 +7,12 @@
 \usage{
 SangerContig(inputSource = "ABIF", fastaFileName = "",
   parentDirectory = "", contigName = "",
-  suffixForwardRegExp = "_[F]_[0-9]*.ab1",
-  suffixReverseRegExp = "_[R]_[0-9]*.ab1", TrimmingMethod = "M1",
-  M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
-  M2SlidingWindowSize = NULL, baseNumPerRow = 100,
-  heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE,
-  refAminoAcidSeq = "", minReadsNum = 2, minReadLength = 20,
-  minFractionCall = 0.5, maxFractionLost = 0.5,
+  suffixForwardRegExp = "_F.ab1", suffixReverseRegExp = "_R.ab1",
+  TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
+  M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
+  baseNumPerRow = 100, heightPerRow = 200, signalRatioCutoff = 0.33,
+  showTrimmed = TRUE, refAminoAcidSeq = "", minReadsNum = 2,
+  minReadLength = 20, minFractionCall = 0.5, maxFractionLost = 0.5,
   geneticCode = GENETIC_CODE, acceptStopCodons = TRUE,
   readingFrame = 1, processorsNum = NULL)
 }
@@ -24,9 +23,9 @@ SangerContig(inputSource = "ABIF", fastaFileName = "",
 
 \item{contigName}{The contig name of all the reads in \code{parentDirectory}.}
 
-\item{suffixForwardRegExp}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.}
+\item{suffixForwardRegExp}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.}
 
-\item{suffixReverseRegExp}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.}
+\item{suffixReverseRegExp}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.}
 
 \item{TrimmingMethod}{TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.}
 
@@ -72,8 +71,8 @@ SangerContig
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+suffixForwardRegExp <- "_F.ab1"
+suffixReverseRegExp <- "_R.ab1"
 sangerContig <- SangerContig(
                      inputSource           = "ABIF",
                      parentDirectory       = parentDir,

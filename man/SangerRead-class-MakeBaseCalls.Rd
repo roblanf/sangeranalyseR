@@ -12,5 +12,5 @@ MakeBaseCalls
 }
 \examples{
 load("data/sangerRead.RData")
-MakeBaseCalls(sangerRead, signalRatioCutoff = 0.22)
+MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
 }
