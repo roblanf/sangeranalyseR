@@ -69,7 +69,7 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 #' load("data/sangerContig.RData")
 #' RShinySC <- launchAppSC(sangerContig)
 setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
-    if (object@inputSource == "ABIF") {
+    if (obj@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
         ### Checking SangerContig input parameter is a list containing
         ### one S4 object.
@@ -88,7 +88,7 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
         } else {
             stop("'", outputDir, "' is not valid. Please check again")
         }
-    } else if (object@inputSource == "FASTA") {
+    } else if (obj@inputSource == "FASTA") {
         message("SangerContig with 'FASTA' inputSource ",
                 "cannot run Shiny app\n (You don't need to ",
                 "do trimming or base calling)")

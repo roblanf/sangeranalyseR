@@ -1,7 +1,7 @@
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
-suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+suffixForwardRegExp <- "_F.ab1"
+suffixReverseRegExp <- "_R.ab1"
 sangerAlignment <- new("SangerAlignment",
                        inputSource           = "ABIF",
                        parentDirectory       = parentDir,

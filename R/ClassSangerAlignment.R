@@ -10,8 +10,8 @@ setOldClass("phylo")
 #'
 #'
 #' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.
-#' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.
-#' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.
+#' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
+#' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
 #' @slot trimmingMethodSA The read trimming method for all SangerRead S4 instances in SangerAlignment. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerReads must have the same trimming method.
 #' @slot minFractionCallSA Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.
 #' @slot maxFractionLostSA Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.
@@ -33,8 +33,8 @@ setOldClass("phylo")
 #' ## Input From ABIF file format
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
-#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' suffixForwardRegExp <- "_F.ab1"
+#' suffixReverseRegExp <- "_R.ab1"
 #' sangerAlignment <- new("SangerAlignment",
 #'                        inputSource           = "ABIF",
 #'                        parentDirectory       = parentDir,
@@ -54,8 +54,8 @@ setOldClass("phylo")
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerAlignment", "Sanger_all_reads.fa")
-#' suffixForwardRegExpFa <- "_[F]_[0-9]*"
-#' suffixReverseRegExpFa <- "_[R]_[0-9]*"
+#' suffixForwardRegExpFa <- "_F"
+#' suffixReverseRegExpFa <- "_R"
 #' sangerAlignmentFa <- new("SangerAlignment",
 #'                          inputSource           = "FASTA",
 #'                          fastaFileName         = fastaFN,
@@ -105,8 +105,8 @@ setMethod("initialize",
                    inputSource            = "ABIF",
                    fastaFileName          = "",
                    parentDirectory        = "",
-                   suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
-                   suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
+                   suffixForwardRegExp    = "_F.ab1",
+                   suffixReverseRegExp    = "_R.ab1",
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
                    M2CutoffQualityScore   = NULL,

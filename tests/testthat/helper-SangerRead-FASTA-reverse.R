@@ -2,8 +2,8 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 SRfastaRFN <- file.path(inputFilesPath,
                         "fasta",
                         "SangerRead",
-                        "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2.fa")
-fastaReadRName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R_2"
+                        "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.fa")
+fastaReadRName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R"
 sangerReadRFa <- new("SangerRead",
                      inputSource   = "FASTA",
                      readFeature   = "Reverse Read",

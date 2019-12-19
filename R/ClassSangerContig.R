@@ -9,8 +9,8 @@
 #'
 #' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
 #' @slot contigName The contig name of all the reads in \code{parentDirectory}.
-#' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.
-#' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.
+#' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
+#' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
 #' @slot forwardReadList The list of SangerRead S4 instances which are all forward reads.
 #' @slot reverseReadList The list of SangerRead S4 instances which are all reverse reads.
 #' @slot trimmingMethodSC The read trimming method for all SangerRead S4 instances in SangerContig. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerRead must have the same trimming method.
@@ -43,8 +43,8 @@
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' suffixForwardRegExp <- "_F.ab1"
+#' suffixReverseRegExp <- "_R.ab1"
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
 #'                      parentDirectory       = parentDir,
@@ -66,8 +66,8 @@
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-#' suffixForwardRegExpFa <- "_[F]_[0-9]*"
-#' suffixReverseRegExpFa <- "_[R]_[0-9]*"
+#' suffixForwardRegExpFa <- "_F"
+#' suffixReverseRegExpFa <- "_R"
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
 #'                       fastaFileName         = fastaFN,
@@ -117,8 +117,8 @@ setMethod("initialize",
                    fastaFileName          = "",
                    parentDirectory        = "",
                    contigName             = "",
-                   suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
-                   suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
+                   suffixForwardRegExp    = "_F.ab1",
+                   suffixReverseRegExp    = "_R.ab1",
                    geneticCode            = GENETIC_CODE,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,

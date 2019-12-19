@@ -8,8 +8,8 @@
 #'
 #'
 #' @param parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.
-#' @param suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.
-#' @param suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.
+#' @param suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
+#' @param suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
 #' @param TrimmingMethod TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
@@ -38,8 +38,8 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
-#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' suffixForwardRegExp <- "_F.ab1"
+#' suffixReverseRegExp <- "_R.ab1"
 #' sangerAlignment <- SangerAlignment(
 #'                        inputSource            = "ABIF",
 #'                        parentDirectory       = parentDir,
@@ -57,8 +57,8 @@
 SangerAlignment <- function(inputSource            = "ABIF",
                             fastaFileName          = "",
                             parentDirectory        = "",
-                            suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
-                            suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
+                            suffixForwardRegExp    = "_F.ab1",
+                            suffixReverseRegExp    = "_R.ab1",
                             TrimmingMethod         = "M1",
                             M1TrimmingCutoff       = 0.0001,
                             M2CutoffQualityScore   = NULL,
@@ -117,8 +117,8 @@ SangerAlignment <- function(inputSource            = "ABIF",
 #'
 #' @param parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
 #' @param contigName The contig name of all the reads in \code{parentDirectory}.
-#' @param suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_[F]_[0-9]*.ab1"}.
-#' @param suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_[R]_[0-9]*.ab1"}.
+#' @param suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
+#' @param suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
 #' @param TrimmingMethod TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
@@ -148,8 +148,8 @@ SangerAlignment <- function(inputSource            = "ABIF",
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-#' suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-#' suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+#' suffixForwardRegExp <- "_F.ab1"
+#' suffixReverseRegExp <- "_R.ab1"
 #' sangerContig <- SangerContig(
 #'                      inputSource           = "ABIF",
 #'                      parentDirectory       = parentDir,
@@ -169,8 +169,8 @@ SangerContig <- function(inputSource            = "ABIF",
                          fastaFileName          = "",
                          parentDirectory        = "",
                          contigName             = "",
-                         suffixForwardRegExp    = "_[F]_[0-9]*.ab1",
-                         suffixReverseRegExp    = "_[R]_[0-9]*.ab1",
+                         suffixForwardRegExp    = "_F.ab1",
+                         suffixReverseRegExp    = "_R.ab1",
                          TrimmingMethod         = "M1",
                          M1TrimmingCutoff       = 0.0001,
                          M2CutoffQualityScore   = NULL,

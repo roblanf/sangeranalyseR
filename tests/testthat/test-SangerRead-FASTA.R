@@ -6,7 +6,7 @@ test_that("SangerRead - FASTA Initial test", {
     expect_s4_class(sangerReadFFa, "SangerRead")
     expect_equal(sangerReadFFa@inputSource, "FASTA")
     expect_equal(sangerReadFFa@readFeature, "Forward Read")
-    expect_equal(basename(sangerReadFFa@readFileName), "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
+    expect_equal(basename(sangerReadFFa@readFileName), "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.fa")
     expect_equal(as.character(sangerReadFFa@primarySeq), "CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG")
     expect_equal(as.character(sangerReadFFa@secondarySeq), "")
     expect_equal(as.character(sangerReadFFa@primaryAASeqS1), "LGV*AGMVGAGIRLLIRIELRQPGAFLGRDQLYNTIVTAHAFVIIFFLVMPVFIGGFGNWLLPLILGAPDIAFPRLNNMRF*LLPPSLILLVSSAAVEKGAGTG*TVYPPLARNLAHAGPSVDLAIFSLHLAGASSILGAINFITTVINMR*R")
@@ -34,7 +34,7 @@ test_that("SangerRead update quality trimming parameters 10 (M2CutoffQualityScor
                      readFileName  = SRfastaFFN,
                      fastaReadName = "Random_read_name",
                      geneticCode   = GENETIC_CODE),
-                 "The name 'Random_read_name' is not in the 'ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa' FASTA file", fixed = TRUE)
+                 "The name 'Random_read_name' is not in the 'ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.fa' FASTA file", fixed = TRUE)
 })
 
 ### ============================================================================
@@ -55,7 +55,7 @@ test_that("SangerRead - FASTA functions test", {
     expect_true(file.exists(outputFasta))
     con = file(outputFasta, "r")
     line = readLines(con, n = 1)
-    expect_equal(line, ">ACHLO006-09[LCO1490_t1,HCO2198_t1]_F_1.fa")
+    expect_equal(line, ">ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.fa")
     line = readLines(con, n = 1)
     expect_equal(line, "CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCT")
     line = readLines(con, n = 1)
