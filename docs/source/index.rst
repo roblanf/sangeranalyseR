@@ -46,16 +46,13 @@ Guide
 
 .. toctree::
    :maxdepth: 3
-   
+
+   content/introduction
+   content/getting_start
+   content/beginner
+   content/advance_user_SangerRead
+   content/advance_user_SangerContig
+   content/advance_user_SangerAlignment
    content/license
    content/contact
    content/help
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

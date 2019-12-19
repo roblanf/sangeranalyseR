@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="English" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="English" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Beginner Guide &mdash; sangeranalyseR  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advanced User Guide - SangerRead" href="advance_user_SangerRead.html" />
+    <link rel="prev" title="Getting Start" href="getting_start.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> sangeranalyseR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting Start</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Beginner Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#input-files-preparation">Input files preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-creation"><em>SangerAlignment</em> creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#launch-shiny-app">Launch Shiny App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-fasta-file">Writing FASTA file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-report">Generating report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-to-go-from-here">Where to go from here ?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advance_user_SangerRead.html">Advanced User Guide - <em>SangerRead</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="advance_user_SangerContig.html">Advanced User Guide - <em>SangerContig</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="advance_user_SangerAlignment.html">Advanced User Guide - <em>SangerAlignment</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Need help</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sangeranalyseR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Beginner Guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/content/beginner.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="beginner-guide">
+<h1>Beginner Guide<a class="headerlink" href="#beginner-guide" title="Permalink to this headline">¶</a></h1>
+<p>Please first install <code class="code docutils literal notranslate"><span class="pre">sangeranalyseR</span></code> and load it in your R console. If you haven't finished the above steps, please refer to <a class="reference internal" href="getting_start.html#getting-start"><span class="std std-ref">Getting Start</span></a>.</p>
+<div class="section" id="input-files-preparation">
+<h2>Input files preparation<a class="headerlink" href="#input-files-preparation" title="Permalink to this headline">¶</a></h2>
+<p>sangeranalyseR takes ABIF files as input and constructs contigs for each species. All the contigs will be aligned and a</p>
+<p>The results contain contigs alignment, evolution tree,</p>
+<p>All reads in each contig will be aligned first to get a contig,</p>
+<p>All the files must have ab1 in its suffix. The reads that belong to the same group should have the same contig name. Forward and reverse read also need to specify in the filename.</p>
+<p>There are three parameters that users need to provide.
+First is parent directory <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>
+Second is forward suffix <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>.
+Third is reverse suffix <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>.</p>
+<p>All files should be placed under the <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>. They do not need to be in the same layer of the directory. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> and find all files that end with ab1 and match the forward or reverse suffix. Files with the same contig names will be categorized in the same group and aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/figure_1.png" src="../_images/figure_1.png" />
+</div>
+<p><a class="reference internal" href="#figure-1">Figure_1</a> is the example of the hierarchy of input ab1 files.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>: &quot;./tmp&quot;
+<code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: &quot;_F_[0-9]*.ab1&quot;.
+<code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: &quot;_R_[0-9]*.ab1&quot;.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="sangeralignment-creation">
+<h2><em>SangerAlignment</em> creation<a class="headerlink" href="#sangeralignment-creation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">rawDir</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
+<span class="n">parentDir</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">rawDir</span><span class="p">,</span> <span class="s">&quot;Allolobophora_chlorotica&quot;</span><span class="p">,</span> <span class="s">&quot;RBNII&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span> <span class="o">=</span> <span class="n">parentDir</span><span class="p">,</span>
+                                   <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[F]_[0-9]*.ab1&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[R]_[0-9]*.ab1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="launch-shiny-app">
+<h2>Launch Shiny App<a class="headerlink" href="#launch-shiny-app" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchAppSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/figure_2.png" src="../_images/figure_2.png" />
+</div>
+<p><a class="reference internal" href="#figure-2">Figure_2</a> is the</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="writing-fasta-file">
+<h2>Writing FASTA file<a class="headerlink" href="#writing-fasta-file" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFastaSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="generating-report">
+<h2>Generating report<a class="headerlink" href="#generating-report" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/figure_3.png" src="../_images/figure_3.png" />
+</div>
+<p><a class="reference internal" href="#figure-3">Figure_3</a> is the</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/figure_4.png" src="../_images/figure_4.png" />
+</div>
+<p><a class="reference internal" href="#figure-4">Figure_4</a> is the</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="where-to-go-from-here">
+<h2>Where to go from here ?<a class="headerlink" href="#where-to-go-from-here" title="Permalink to this headline">¶</a></h2>
+<p>Congratulation, you have finished the <a class="reference internal" href="#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>. For learning more</p>
+<p><a class="reference internal" href="#beginner-guide"><span class="std std-ref">Beginner Guide</span></a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="advance_user_SangerRead.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerRead" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="getting_start.html" class="btn btn-neutral float-left" title="Getting Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Kuan-Hao Chao
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
