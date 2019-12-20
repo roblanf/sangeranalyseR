@@ -33,8 +33,9 @@ setOldClass("phylo")
 #' ## Input From ABIF file format
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
-#' suffixForwardRegExp <- "_F.ab1"
-#' suffixReverseRegExp <- "_R.ab1"
+#' parentDir <- "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR-manuscript/tmp"
+#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
+#' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerAlignment <- new("SangerAlignment",
 #'                        inputSource           = "ABIF",
 #'                        parentDirectory       = parentDir,

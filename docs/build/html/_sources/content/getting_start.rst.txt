@@ -4,7 +4,7 @@ Getting Start
 System prerequisite
 -------------------
 * R >= 3.6.0 (current)
-* Rstudio (recommend)
+* `Rstudio (recommend) <https://rstudio.com>`_
 
 |
 
@@ -52,6 +52,7 @@ After installing :code:`sangeranalyseR`, load it in R console.
 Now, you are ready to go !
 
 |
+
 
 Where to go from here ?
 -----------------------

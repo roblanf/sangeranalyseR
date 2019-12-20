@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>License &mdash; sangeranalyseR  documentation</title>
+  <title>Quick Commands &mdash; sangeranalyseR  documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contact" href="contact.html" />
-    <link rel="prev" title="Conclusion" href="conclusion.html" /> 
+    <link rel="next" title="Beginner Guide" href="beginner.html" />
+    <link rel="prev" title="Getting Start" href="getting_start.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,13 +83,13 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick_commands.html">Quick Commands</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="beginner.html">Beginner Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerRead.html">Advanced User Guide - <em>SangerRead</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerContig.html">Advanced User Guide - <em>SangerContig</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerAlignment.html">Advanced User Guide - <em>SangerAlignment</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help.html">Help</a></li>
 </ul>
@@ -137,13 +137,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>License</li>
+      <li>Quick Commands</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/content/license.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/content/quick_commands.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -156,25 +156,50 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="license">
-<h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
-<p>MIT License</p>
-<p>Copyright (c) 2019 Kuan-Hao Chao</p>
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the &quot;Software&quot;), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.</p>
+  <div class="section" id="quick-commands">
+<h1>Quick Commands<a class="headerlink" href="#quick-commands" title="Permalink to this headline">¶</a></h1>
+<p>This page is the concise and core analysis steps of sangeranalyseR. For more details, please refer to <a class="reference internal" href="beginner.html#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>.</p>
+<ul>
+<li><p><strong>Step 1</strong> : Input files preparation</p>
+<blockquote>
+<div><p>Put all your <strong>ab1</strong> files in a directory <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</p>
+</div></blockquote>
+</li>
+<li><p><strong>Step 2</strong> : <em>SangerAlignment</em> creation</p></li>
+</ul>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;./tmp/&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_F.ab1&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_R.ab1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Step 3</strong> : Launching Shiny App</p></li>
+</ul>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchAppSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Step 4</strong> : Writing FASTA file</p></li>
+</ul>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFastaSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Step 5</strong> : Generating report</p></li>
+</ul>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>For more detailed analysis steps, please choose one the following topics :</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="beginner.html#beginner-guide"><span class="std std-ref">Beginner Guide</span></a></p></li>
+<li><p><a class="reference internal" href="advance_user_SangerRead.html#advanced-user-guide-sangerread"><span class="std std-ref">Advanced User Guide - SangerRead</span></a></p></li>
+<li><p><a class="reference internal" href="advance_user_SangerContig.html#advanced-user-guide-sangercontig"><span class="std std-ref">Advanced User Guide - SangerContig</span></a></p></li>
+<li><p><a class="reference internal" href="advance_user_SangerAlignment.html#advanced-user-guide-sangeralignment"><span class="std std-ref">Advanced User Guide - SangerAlignment</span></a></p></li>
+</ul>
 </div>
 
 
@@ -185,10 +210,10 @@ SOFTWARE.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="contact.html" class="btn btn-neutral float-right" title="Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="beginner.html" class="btn btn-neutral float-right" title="Beginner Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="conclusion.html" class="btn btn-neutral float-left" title="Conclusion" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="getting_start.html" class="btn btn-neutral float-left" title="Getting Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

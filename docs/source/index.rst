@@ -29,14 +29,6 @@ COMPLEX TABLE:
 | body row 4 |            | - blocks. |
 +------------+------------+-----------+
 
-.. _Figure_1:
-.. figure::  figure/Figure_10_.png
-   :align:   center
-
-   Proof that getting rich is mostly luck.
-
-
-This picture Figure_1_.
 
 
 :download:`An Example Pypi Project<figure/Figure_10_.png>`
@@ -49,10 +41,12 @@ Guide
 
    content/introduction
    content/getting_start
+   content/quick_commands
    content/beginner
    content/advance_user_SangerRead
    content/advance_user_SangerContig
    content/advance_user_SangerAlignment
+   content/conclusion
    content/license
    content/contact
    content/help
