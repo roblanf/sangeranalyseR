@@ -173,13 +173,21 @@
 <div class="section" id="step-1-input-files-preparation">
 <h2><strong>Step 1</strong>: Input files preparation<a class="headerlink" href="#step-1-input-files-preparation" title="Permalink to this headline">¶</a></h2>
 <p>sangeranalyseR takes <strong>ab1</strong> files as input and constructs contigs for those with the same contig name. Then, all the contigs will be aligned and a phylogenetic tree will be generated. We first explain how users should organize their files before running sangeranalyseR.</p>
-<p>First, users need to prepare a directory and put all their <strong>ab1</strong> files inside it. As for the file naming convention, all the input files must have <strong>ab1</strong> as its file extension; the reads that belong to the same contig should have the same contig name; forward or reverse direction also needs to be specified in the filename.</p>
+<p>First, users need to prepare a directory and put all their <strong>ab1</strong> files inside it. The files should follow the regulation in the note below:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>All the input files must have <strong>ab1</strong> as its file extension;</p></li>
+<li><p>The reads that belong to the same contig should have the same contig name;</p></li>
+<li><p>Forward or reverse direction needs to be specified in the filename.</p></li>
+</ul>
+</div>
 <p>There are three parameters, <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>, <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>, and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>, that users need to provide so that program can automatically group all <strong>ab1</strong> files. To be clearer, let's have an example.</p>
 <div class="figure align-center" id="id1">
-<span id="figure-1"></span><a class="reference internal image-reference" href="../_images/figure_1.png"><img alt="../_images/figure_1.png" src="../_images/figure_1.png" style="width: 402.0px; height: 383.0px;" /></a>
+<span id="sangeralignment-file-structure"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure.png"><img alt="../_images/SangerAlignment_file_structure.png" src="../_images/SangerAlignment_file_structure.png" style="width: 402.0px; height: 383.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#figure-1">Figure_1</a> shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.</p>
+<p><a class="reference internal" href="#sangeralignment-file-structure"><span class="std std-ref">Figure_1</span></a> shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.</p>
 <ul class="simple">
 <li><p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>: It is the directory that contains all the <strong>ab1</strong> files. In this example, it is <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code></p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_F.ab1</span></code>.</p></li>
@@ -199,7 +207,7 @@
                                    <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_R.ab1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>One thing to pay attention to is that your current working directory need to be at the same level of <code class="code docutils literal notranslate"><span class="pre">tmp</span></code> directory so that you can directly use &quot;./tmp/&quot;. Or otherwise, you need to use the absolute directory which might look like <code class="code docutils literal notranslate"><span class="pre">/path/to/your/tmp</span></code>.</p>
+<p>One thing to pay attention to is that your current working directory need to be at the same level of <code class="code docutils literal notranslate"><span class="pre">tmp</span></code> directory so that you can directly use <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>. Or otherwise, you need to use the absolute directory which might look like <code class="code docutils literal notranslate"><span class="pre">/path/to/your/tmp</span></code>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -211,10 +219,10 @@
 </pre></div>
 </div>
 <div class="figure align-center" id="id2">
-<span id="figure-2"></span><img alt="../_images/figure_2.png" src="../_images/figure_2.png" />
+<span id="sangeralignment-shiny-app"></span><img alt="../_images/SangerAlignment_shiny_app.png" src="../_images/SangerAlignment_shiny_app.png" />
 <p class="caption"><span class="caption-text">Figure 2. <em>SangerAlignment</em> Shiny app user interface.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#figure-2">Figure_2</a> shows how the Shiny app looks like. On the left-hand side of <a class="reference internal" href="#figure-2">Figure_2</a>, there is a navigation menu that users can click inside to each contig and each single read to get more details.</p>
+<p><a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">Figure_2</span></a> shows how the Shiny app looks like. On the left-hand side of <a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">Figure_2</span></a>, there is a navigation menu that users can click inside to each contig and each single read to get more details.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -231,16 +239,16 @@
 </div>
 <div class="section" id="step-5-generating-report">
 <h2><strong>Step 5</strong>: Generating report<a class="headerlink" href="#step-5-generating-report" title="Permalink to this headline">¶</a></h2>
-<p>Last but not least, it is important to store all results in a report for future reference. A detailed report will be generated by running the following one-line function. <a class="reference internal" href="#figure-3">Figure_3</a> and <a class="reference internal" href="#figure-4">Figure_4</a> show the main results of <em>SangerAlignment</em>.</p>
+<p>Last but not least, it is important to store all results in a report for future reference. A detailed report will be generated by running the following one-line function. <a class="reference internal" href="#sangeralignment-alignment-result"><span class="std std-ref">Figure_3</span></a> and <a class="reference internal" href="#sangeralignment-tree"><span class="std std-ref">Figure_4</span></a> show the main results of <em>SangerAlignment</em>.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-center" id="id3">
-<span id="figure-3"></span><img alt="../_images/figure_3.png" src="../_images/figure_3.png" />
+<span id="sangeralignment-alignment-result"></span><img alt="../_images/SangerAlignment_alignment_result.png" src="../_images/SangerAlignment_alignment_result.png" />
 <p class="caption"><span class="caption-text">Figure 3. Alignment result of all contigs in the <em>SangerAlignment</em> instance.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-center" id="id4">
-<span id="figure-4"></span><a class="reference internal image-reference" href="../_images/figure_4.png"><img alt="../_images/figure_4.png" src="../_images/figure_4.png" style="width: 379.2px; height: 251.39999999999998px;" /></a>
+<span id="sangeralignment-tree"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_tree.png"><img alt="../_images/SangerAlignment_tree.png" src="../_images/SangerAlignment_tree.png" style="width: 399.59999999999997px; height: 115.19999999999999px;" /></a>
 <p class="caption"><span class="caption-text">Figure 4. Phylogenetic trees with contigs as the leaf nodes.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 <div class="line-block">

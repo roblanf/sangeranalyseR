@@ -87,7 +87,23 @@
 <li class="toctree-l1"><a class="reference internal" href="beginner.html">Beginner Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerRead.html">Advanced User Guide - <em>SangerRead</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerContig.html">Advanced User Guide - <em>SangerContig</em></a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced User Guide - <em>SangerAlignment</em></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced User Guide - <em>SangerAlignment</em></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#input-files-preparation">Input files preparation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ab1-files">ab1 files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fasta-files">FASTA files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-creation"><em>SangerAlignment</em> creation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inputs-definition">Inputs Definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#slots-definition">Slots Definition</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#update-quality-trimming-parameters">Update quality trimming parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-shiny-app"><em>SangerAlignment</em> Shiny app</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-fasta-files">Writing FASTA files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-sangeralignment-report">Generating <em>SangerAlignment</em> report</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -158,6 +174,86 @@
             
   <div class="section" id="advanced-user-guide-sangeralignment">
 <h1>Advanced User Guide - <em>SangerAlignment</em><a class="headerlink" href="#advanced-user-guide-sangeralignment" title="Permalink to this headline">¶</a></h1>
+<p><em>SangerAlignment</em> is the highest class level in sangeranalyseR showed in <a class="reference internal" href="#sangeralignment-hierachy"><span class="std std-ref">Figure_1</span></a>. It contains <em>SangerContig</em> list and the contigs alignment result. Users can access to <em>SangerContig</em> and <em>SangerRead</em> instance inside <em>SangerAlignment</em> instance. In this section, we are going to go through detailed sangeranalyseR data analysis steps in <em>SangerAlignment</em> level.</p>
+<div class="figure align-center" id="id1">
+<span id="sangeralignment-hierachy"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_hierachy.png"><img alt="../_images/SangerAlignment_hierachy.png" src="../_images/SangerAlignment_hierachy.png" style="width: 545.4px; height: 218.8px;" /></a>
+<p class="caption"><span class="caption-text">Figure 1. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="input-files-preparation">
+<h2>Input files preparation<a class="headerlink" href="#input-files-preparation" title="Permalink to this headline">¶</a></h2>
+<p>Users can choose to input <strong>ab1</strong> or <strong>FASTA</strong> as their input file format.</p>
+<div class="section" id="ab1-files">
+<h3>ab1 files<a class="headerlink" href="#ab1-files" title="Permalink to this headline">¶</a></h3>
+<p>The main input file format to create <em>SangerAlignment</em> instance is <strong>ab1</strong>. Before starting the analysis, users needs to prepare a directory which contains all the <strong>ab1</strong> files. Here are some filename regulations:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>All the input files must have <strong>ab1</strong> as its file extension</p></li>
+<li><p>The reads that belong to the same contig must have the same contig name in its filename.</p></li>
+<li><p>Forward or reverse direction also needs to be specified in the filename.</p></li>
+</ul>
+</div>
+<p>There are three parameters, <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>, <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>, and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>, that users need to provide so that program can automatically group all <strong>ab1</strong> files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> is the root directory that contains all the <strong>ab1</strong> files. It can be absolute or relative path. We suggest users to put only target <strong>ab1</strong> files inside this directory without other unrelated files.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: The value of this parameter is a regular expression that matches all filename of forward reads. <code class="code docutils literal notranslate"><span class="pre">grepl</span></code> function in R is used to select forward reads from all <strong>ab1</strong> files.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: The value of this parameter is a regular expression that matches all filename of reverse reads. <code class="code docutils literal notranslate"><span class="pre">grepl</span></code> function in R is used to select reverse reads from all <strong>ab1</strong> files.</p></li>
+</ul>
+</div>
+<p>It is important to carefully select <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>.
+The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. <code class="code docutils literal notranslate"><span class="pre">_[0-9]*_F.ab1$</span></code>, <code class="code docutils literal notranslate"><span class="pre">_[0-9]*_R.ab1$</span></code> for matching forward and reverse reads are highly suggested and are used as default. Users are strongly recommended to follow the default file naming convention to reduce any change of error.</p>
+<p>For basic preparing input files example, please go to <a class="reference internal" href="beginner.html#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>. Here, we have another more complicated example.</p>
+<div class="figure align-center" id="id2">
+<span id="sangeralignment-file-structure"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure.png"><img alt="../_images/SangerAlignment_file_structure.png" src="../_images/SangerAlignment_file_structure.png" style="width: 402.0px; height: 383.0px;" /></a>
+<p class="caption"><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p><a class="reference internal" href="beginner.html#sangeralignment-file-structure"><span class="std std-ref">Figure_1</span></a> shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.</p>
+</div>
+<div class="section" id="fasta-files">
+<h3>FASTA files<a class="headerlink" href="#fasta-files" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+<div class="section" id="sangeralignment-creation">
+<h2><em>SangerAlignment</em> creation<a class="headerlink" href="#sangeralignment-creation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="inputs-definition">
+<h3>Inputs Definition<a class="headerlink" href="#inputs-definition" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="slots-definition">
+<h3>Slots Definition<a class="headerlink" href="#slots-definition" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+<div class="section" id="update-quality-trimming-parameters">
+<h2>Update quality trimming parameters<a class="headerlink" href="#update-quality-trimming-parameters" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="sangeralignment-shiny-app">
+<h2><em>SangerAlignment</em> Shiny app<a class="headerlink" href="#sangeralignment-shiny-app" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="writing-fasta-files">
+<h2>Writing FASTA files<a class="headerlink" href="#writing-fasta-files" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="generating-sangeralignment-report">
+<h2>Generating <em>SangerAlignment</em> report<a class="headerlink" href="#generating-sangeralignment-report" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 

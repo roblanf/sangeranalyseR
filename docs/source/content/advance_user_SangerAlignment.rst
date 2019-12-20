@@ -1,100 +1,94 @@
 Advanced User Guide - *SangerAlignment*
 =======================================
 
-*SangerAlignment* is the highest level in sangeranalyseR. 
 
-**Step 1**: Input files preparation
------------------------------------
-sangeranalyseR takes **ab1** files as input and constructs contigs for those with the same contig name. Then, all the contigs will be aligned and a phylogenetic tree will be generated. We first explain how users should organize their files before running sangeranalyseR.
 
-First, users need to prepare a directory and put all their **ab1** files inside it. As for the file naming convention, all the input files must have **ab1** as its file extension; the reads that belong to the same contig should have the same contig name; forward or reverse direction also needs to be specified in the filename.
+*SangerAlignment* is the highest class level in sangeranalyseR showed in :ref:`Figure_1<SangerAlignment_hierachy>`. It contains *SangerContig* list and the contigs alignment result. Users can access to *SangerContig* and *SangerRead* instance inside *SangerAlignment* instance. In this section, we are going to go through detailed sangeranalyseR data analysis steps in *SangerAlignment* level.
 
-There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **ab1** files. To be clearer, let's have an example.
+.. _SangerAlignment_hierachy:
+.. figure::  ../image/SangerAlignment_hierachy.png
+   :align:   center
+   :scale:   20 %
 
-.. _Figure_1:
-.. figure::  ../image/figure_1.png
+   Figure 1. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+|
+
+Input files preparation
+-----------------------
+Users can choose to input **ab1** or **FASTA** as their input file format.
+
+ab1 files
++++++++++
+The main input file format to create *SangerAlignment* instance is **ab1**. Before starting the analysis, users needs to prepare a directory which contains all the **ab1** files. Here are some filename regulations:
+
+.. note::
+
+    *  All the input files must have **ab1** as its file extension
+    *  The reads that belong to the same contig must have the same contig name in its filename.
+    *  Forward or reverse direction also needs to be specified in the filename.
+
+
+There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **ab1** files.
+
+.. note::
+
+  * :code:`parentDirectory` is the root directory that contains all the **ab1** files. It can be absolute or relative path. We suggest users to put only target **ab1** files inside this directory without other unrelated files.
+  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filename of forward reads. :code:`grepl` function in R is used to select forward reads from all **ab1** files.
+
+  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filename of reverse reads. :code:`grepl` function in R is used to select reverse reads from all **ab1** files.
+
+
+It is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`.
+The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. :code:`_[0-9]*_F.ab1$`, :code:`_[0-9]*_R.ab1$` for matching forward and reverse reads are highly suggested and are used as default. Users are strongly recommended to follow the default file naming convention to reduce any change of error.
+
+
+For basic preparing input files example, please go to :ref:`Beginner Guide`. Here, we have another more complicated example.
+
+
+.. _SangerAlignment_file_structure:
+.. figure::  ../image/SangerAlignment_file_structure.png
    :align:   center
    :scale:   50 %
 
    Figure 1. Input ab1 files inside the parent directory, :code:`./tmp/`.
 
 
-Figure_1_ shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.
+:ref:`Figure_1<SangerAlignment_file_structure>` shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.
 
-* :code:`parentDirectory`: It is the directory that contains all the **ab1** files. In this example, it is :code:`./tmp/`
 
-* :code:`suffixForwardRegExp`: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is :code:`_F.ab1`.
 
-* :code:`suffixReverseRegExp`: Same as forward read, all the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is :code:`_R.ab1`.
-
-All files inside the :code:`parentDirectory` do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside :code:`parentDirectory` and find all files that end with **ab1** and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named.
-
-In this example, there are four contigs that will be detected: :code:`ACHLO006-09[LCO1490_t1,HCO2198_t1]`, :code:`ACHLO007-09[LCO1490_t1,HCO2198_t1]`, :code:`RBNII396-13[C_LepFolF,C_LepFolR]` and :code:`RBNII397-13[C_LepFolF,C_LepFolR]`. In this example, :code:`_1` and :code:`_2` in the filenames are not necessary because there are only two reads, one forward and one reverse, in each contig. However, it is a good habit to index the reads by order because in a contig, there might be more than one read in the same direction.
+FASTA files
++++++++++++
 
 |
 
-**Step 2**: *SangerAlignment* creation
---------------------------------------
-After preparing the input directory, we can now create a *SangerAlignment* S4 instance by running one-line function below.
+*SangerAlignment* creation
+--------------------------
 
-.. code-block:: R
+Inputs Definition
++++++++++++++++++
 
-   sangerAlignment <- SangerAlignment(parentDirectory     = "./tmp/",
-                                      suffixForwardRegExp = "_F.ab1",
-                                      suffixReverseRegExp = "_R.ab1")
-
-One thing to pay attention to is that your current working directory need to be at the same level of :code:`tmp` directory so that you can directly use "./tmp/". Or otherwise, you need to use the absolute directory which might look like :code:`/path/to/your/tmp`.
+Slots Definition
+++++++++++++++++
 
 |
 
-**Step 3**: Launch Shiny App
-----------------------------
-You can launch an interactive Shiny app in your local computer by running :code:`launchAppSA` function.
-
-.. code-block:: R
-
-   launchAppSA(sangerAlignment)
-
-.. _Figure_2:
-.. figure::  ../image/figure_2.png
-   :align:   center
-
-   Figure 2. *SangerAlignment* Shiny app user interface.
-
-Figure_2_ shows how the Shiny app looks like. On the left-hand side of Figure_2_, there is a navigation menu that users can click inside to each contig and each single read to get more details.
+Update quality trimming parameters
+----------------------------------
 
 |
 
-**Step 4**: Writing FASTA file
-------------------------------
-The following function can write the *SangerAlignment* S4 instance to a FASTA file.
-
-.. code-block:: R
-
-   writeFastaSA(sangerAlignment)
+*SangerAlignment* Shiny app
+---------------------------
 
 |
 
-**Step 5**: Generating report
------------------------------
-Last but not least, it is important to store all results in a report for future reference. A detailed report will be generated by running the following one-line function. Figure_3_ and Figure_4_ show the main results of *SangerAlignment*.
 
+Writing FASTA files
+-------------------
 
-.. code-block:: R
+|
 
-   generateReportSA(sangerAlignment)
-
-.. _Figure_3:
-.. figure::  ../image/figure_3.png
-   :align:   center
-
-   Figure 3. Alignment result of all contigs in the *SangerAlignment* instance.
-
-
-
-.. _Figure_4:
-.. figure::  ../image/figure_4.png
-   :align:   center
-   :scale:   30 %
-
-   Figure 4. Phylogenetic trees with contigs as the leaf nodes.
+Generating *SangerAlignment* report
+-----------------------------------
