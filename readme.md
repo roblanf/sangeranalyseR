@@ -1,5 +1,5 @@
 <!-- badges: start -->
-  [![Travis build status](https://travis-ci.org/roblanf/sangeranalyseR.svg?branch=master)](https://travis-ci.org/roblanf/sangeranalyseR)
+  [![Travis build status](https://travis-ci.org/roblanf/sangeranalyseR.svg?branch=master)](https://travis-ci.org/roblanf/sangeranalyseR) ![documentation build status](https://readthedocs.org/projects/pip/badge/)
 <!-- badges: end -->
   
 sangeranalyseR
