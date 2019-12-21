@@ -22,3 +22,12 @@ test_that("sangerContigFa Initial test", {
 })
 
 
+### ============================================================================
+### SangerContig Functions test
+### ============================================================================
+test_that("sangerContigFa - FASTA functions test -forward", {
+    expect_message(updateQualityParam(sangerContigFa),
+                   paste("SangerContig with 'FASTA' inputSource",
+                         "cannot update quality parameters"))
+})
+

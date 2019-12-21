@@ -1,0 +1,30 @@
+### ============================================================================
+### SangerAlignment Initialization test
+### ============================================================================
+test_that("sangerAlignmentFa Initial test", {
+    expect_type(sangerAlignmentFa, "S4")
+    expect_s4_class(sangerAlignmentFa, "SangerAlignment")
+    expect_equal(sangerAlignmentFa@inputSource, "FASTA")
+    expect_equal(basename(sangerAlignmentFa@fastaFileName), "Sanger_all_reads.fa")
+    expect_equal(sangerAlignmentFa@suffixForwardRegExp, "_[0-9]*_F")
+    expect_equal(sangerAlignmentFa@suffixReverseRegExp, "_[0-9]*_R")
+    expect_equal(sangerAlignmentFa@trimmingMethodSA, "")
+    expect_equal(sangerAlignmentFa@minFractionCallSA, 0.5)
+    expect_equal(sangerAlignmentFa@maxFractionLostSA, 0.5)
+    expect_equal(sangerAlignmentFa@refAminoAcidSeq, "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
+    expect_equal(as.character(sangerAlignmentFa@contigsConsensus), "TAATATATCGRCGGCCAGTGGTCAACAAATCATAAAGATATTGGAACTYTATAYTTTATTYTRGGCGTCTGAGCAGGAATGGTTGGAGCYGGTATAAGACTYCTAATTCGAATYGAGCTAAGACARCCRGGAGCRTTCCTRGGMAGRGAYCAACTMTAYAATACTATYGTWACTGCWCACGCATTTGTAATAATYTTCTTTCTAGTAATRCCTGTATTYATYGGGGGRTTCGGWAAYTGRCTTYTACCTTTAATACTTGGAGCCCCYGAYATRGCATTCCCWCGACTYAACAACATRAGATTCTGACTMCTTCCCCCATCACTRATCCTTYTAGTGTCCTCTGCKGCRGTAGAAAAAGGCGCTGGWACKGGRTGAACTGTTTATCCGCCYCTAGCAAGAAATMTTGCYCAYGCMGGCCCRTCTGTAGAYTTAGCYATYTTTTCYCTTCATTTAGCGGGTGCKTCWTCWATYYTAGGGGCYATTAATTTTATYACYACWGTTATTAAYATGCGWTGAAGAGGMTTACGWCTTGAACGAATYCCMYTRTTYGTYTGAGCYGTRCTAATTACAGTKGTTCTTCTACTYCTATCYTTACCAGTGYTAGCMGGTGCMATTACYATACTWCTTACCGAYCGAAATCTAAATACCTCCTTCTTTGATCCTGCTGGDGGTGGAGAYCCMATCCTMTACCAACACTTATTCTGATTTTTTGGTCACCCTGAG")
+
+    expect_equal(sangerAlignmentFa@contigsTree$tip.label[1], "ACHLO006-09[LCO1490_t1,HCO2198_t1]")
+    expect_equal(sangerAlignmentFa@contigsTree$tip.label[2], "ACHLO007-09[LCO1490_t1,HCO2198_t1]")
+    expect_equal(sangerAlignmentFa@contigsTree$tip.label[3], "ACHLO040-09[LCO1490_t1,HCO2198_t1]")
+    expect_equal(sangerAlignmentFa@contigsTree$tip.label[4], "ACHLO041-09[LCO1490_t1,HCO2198_t1]")
+})
+
+### ============================================================================
+### SangerAlignment Functions test
+### ============================================================================
+test_that("sangerAlignmentFa update quality trimming parameters test 1 - M1", {
+    expect_message(updateQualityParam(sangerAlignmentFa),
+                   paste("SangerAlignment with 'FASTA' inputSource",
+                         "cannot update quality parameters"))
+})
