@@ -519,23 +519,26 @@ countStopSodons <- function(sequence,
     stops = freqs["*"]
     return(as.numeric(stops))
 }
-calculateAASeq <- function(primarySeq, geneticCode) {
-    primaryAASeqS1 =
-        suppressWarnings(Biostrings::translate(primarySeq,
+calculateAASeq <- function(primarySeq, trimmedStartPos,
+                           trimmedFinishPos, geneticCode) {
+    DNASeqshift0 <- DNAString(substr(as.character(primarySeq),
+                                     1+trimmedStartPos, trimmedFinishPos))
+    primaryAASeqS1 <-
+        suppressWarnings(Biostrings::translate(DNASeqshift0,
                                    genetic.code = geneticCode,
                                    no.init.codon=TRUE,
                                    if.fuzzy.codon="solve"))
 
-    DNASeqshift1 <-DNAString(substr(as.character(primarySeq),
-                                    2, length(primarySeq)))
-    primaryAASeqS2 =
+    DNASeqshift1 <- DNAString(substr(as.character(primarySeq),
+                                     2+trimmedStartPos, trimmedFinishPos))
+    primaryAASeqS2 <-
         suppressWarnings(Biostrings::translate(DNASeqshift1,
                                    genetic.code = geneticCode,
                                    no.init.codon=TRUE,
                                    if.fuzzy.codon="solve"))
 
     DNASeqshift2 <- DNAString(substr(as.character(primarySeq),
-                                     3, length(primarySeq)))
+                                     3+trimmedStartPos, trimmedFinishPos))
     primaryAASeqS3 <-
         suppressWarnings(Biostrings::translate(DNASeqshift2,
                                    genetic.code = geneticCode,

@@ -539,30 +539,6 @@ SangerContigServer <- function(input, output, session) {
                                            font-weight: bold;"),
                            excelOutput("qualityScoreDF",
                                        width = "100%", height = "50"),
-                           tags$br(),
-                           tags$br(),
-                           tags$p(tagList(icon("bars"),
-                                          "AA Sequence 1"),
-                                  style = "font-size: 22px;
-                                           font-weight: bold;"),
-                           excelOutput("PrimAASeqS1DF",
-                                       width = "100%", height = "50"),
-                           tags$br(),
-                           tags$br(),
-                           tags$p(tagList(icon("bars"),
-                                          "AA Sequence 2"),
-                                  style = "font-size: 22px;
-                                           font-weight: bold;"),
-                           excelOutput("PrimAASeqS2DF",
-                                       width = "100%", height = "50"),
-                           tags$br(),
-                           tags$br(),
-                           tags$p(tagList(icon("bars"),
-                                          "AA Sequence 3"),
-                                  style = "font-size: 22px;
-                                           font-weight: bold;"),
-                           excelOutput("PrimAASeqS3DF",
-                                       width = "100%", height = "50"),
                            style = paste("overflow-y: hidden;",
                                          "overflow-x: scroll;")
                     ),
@@ -693,6 +669,30 @@ SangerContigServer <- function(input, output, session) {
                                   style = "font-size: 22px;
                                            font-weight: bold;"),
                            excelOutput("qualityScoreTrimmedDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "AA Sequence 1"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("PrimAASeqS1DF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "AA Sequence 2"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("PrimAASeqS2DF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "AA Sequence 3"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("PrimAASeqS3DF",
                                        width = "100%", height = "50"),
                            style = paste("overflow-y: hidden;",
                                          "overflow-x: scroll;")
@@ -1710,6 +1710,8 @@ SangerContigServer <- function(input, output, session) {
                 ### Updating AASeqs
                 ### ----------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                               SangerContig@forwardReadList[[readIndex]]@QualityReport@trimmedStartPos,
+                                               SangerContig@forwardReadList[[readIndex]]@QualityReport@trimmedFinishPos,
                                                SangerContig@geneticCode)
                 SangerContig@forwardReadList[[readIndex]]@primaryAASeqS1 <<-
                     AASeqResult[["primaryAASeqS1"]]
@@ -1762,6 +1764,8 @@ SangerContigServer <- function(input, output, session) {
                 ### Updating AASeqs
                 ### ----------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                               SangerContig@forwardReadList[[readIndex]]@QualityReport@trimmedStartPos,
+                                               SangerContig@forwardReadList[[readIndex]]@QualityReport@trimmedFinishPos,
                                                SangerContig@geneticCode)
                 SangerContig@reverseReadList[[readIndex]]@primaryAASeqS1 <<-
                     AASeqResult[["primaryAASeqS1"]]

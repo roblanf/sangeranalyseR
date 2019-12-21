@@ -1,7 +1,7 @@
 ### ============================================================================
 ### SangerRead FASTA Initial test
 ### ============================================================================
-test_that("SangerRead - FASTA Initial test", {
+test_that("SangerRead - FASTA Initial test - forward", {
     expect_type(sangerReadFFa, "S4")
     expect_s4_class(sangerReadFFa, "SangerRead")
     expect_equal(sangerReadFFa@inputSource, "FASTA")
@@ -23,6 +23,29 @@ test_that("SangerRead - FASTA Initial test", {
     expect_equal(sangerReadFFa@peakPosMatrix, matrix())
     expect_equal(sangerReadFFa@peakAmpMatrix, matrix())
 })
+test_that("SangerRead - FASTA Initial test - reverse", {
+    expect_type(sangerReadRFa, "S4")
+    expect_s4_class(sangerReadRFa, "SangerRead")
+    expect_equal(sangerReadRFa@inputSource, "FASTA")
+    expect_equal(sangerReadRFa@readFeature, "Reverse Read")
+    expect_equal(basename(sangerReadRFa@readFileName), "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.fa")
+    expect_equal(as.character(sangerReadRFa@primarySeq), "GTATATCGACGGCCAGTGGTCAACAAATCATAAAGATATTGGAACTTTATATTTTATTCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGGATTACGTCTTGAACGAATTCCCCTGTTTGTCTGAGCTGTGCTAATTACAGTTGTTCTTCTACTTCTATCTTTACCAGTGCTAGCAGGTGCCATTACCATACTTCTTACCGACCG")
+    expect_equal(as.character(sangerReadRFa@secondarySeq), "")
+    expect_equal(as.character(sangerReadRFa@primaryAASeqS1), "VYRRPVVNKS*RYWNFIFYSGRLSRNGWSRYKTSNSNRAKTTRSVPGQRPTIQYYRYCTRICNNLLSSNACIHRGIRKLAFTFNTWSPRYSIPSTQQHEILTTSPITDPFSVLCGGRKRRWYGVNCLSASSKKSCPRRPVCRFSHLFPSFSGCVFYSRGY*FYHHSY*YALKRITS*TNSPVCLSCANYSCSSTSIFTSASRCHYHTSYRP")
+    expect_equal(as.character(sangerReadRFa@primaryAASeqS2), "YIDGQWSTNHKDIGTLYFILGV*AGMVGAGIRLLIRIELRQPGAFLGRDQLYNTIVTAHAFVIIFFLVMPVFIGGFGNWLLPLILGAPDIAFPRLNNMRF*LLPPSLILLVSSAAVEKGAGTG*TVYPPLARNLAHAGPSVDLAIFSLHLAGASSILGAINFITTVINMR*RGLRLERIPLFV*AVLITVVLLLLSLPVLAGAITILLTD")
+    expect_equal(as.character(sangerReadRFa@primaryAASeqS3), "ISTASGQQIIKILELYILFWASEQEWLEPV*DF*FESS*DNQERSWAETNYTILSLLHTHL**SSF**CLYSSGDSETGFYL*YLEPPI*HSLDSTT*DSDYFPHH*SF*CPLRR*KKALVRGELFIRL*QEILPTQARL*I*PSFPFI*RVRLLF*GLLILSPQLLICVEEDYVLNEFPCLSELC*LQLFFYFYLYQC*QVPLPYFLPT")
+    expect_equal(is.null(sangerReadRFa@ChromatogramParam), TRUE)
+    expect_equal(is.null(sangerReadRFa@QualityReport), TRUE)
+    expect_equal(is.null(sangerReadRFa@abifRawData), TRUE)
+    expect_equal(as.character(sangerReadRFa@primarySeqRaw), "")
+    expect_equal(as.character(sangerReadRFa@secondarySeqRaw), "")
+    expect_equal(sangerReadRFa@primarySeqID, "From fasta file")
+    expect_equal(sangerReadRFa@secondarySeqID, "")
+    expect_equal(sangerReadRFa@traceMatrix, matrix())
+    expect_equal(sangerReadRFa@peakPosMatrix, matrix())
+    expect_equal(sangerReadRFa@peakAmpMatrix, matrix())
+})
+
 
 ### ============================================================================
 ### SangerRead FASTA Update Quality Trimming test
@@ -40,7 +63,7 @@ test_that("SangerRead update quality trimming parameters 10 (M2CutoffQualityScor
 ### ============================================================================
 ### SangerRead Functions test
 ### ============================================================================
-test_that("SangerRead - FASTA functions test", {
+test_that("SangerRead - FASTA functions test -forward", {
     expect_message(qualityBasePlot(sangerReadFFa),
                  paste("SangerRead with 'FASTA' inputSource",
                        "cannot plot quality plots"))
@@ -68,6 +91,41 @@ test_that("SangerRead - FASTA functions test", {
     expect_equal(line, "TTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTG")
     line = readLines(con, n = 1)
     expect_equal(line, "CGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG")
+    close(con)
+    unlink(outputFasta)
+})
+test_that("SangerRead - FASTA functions test -reverse", {
+    expect_message(qualityBasePlot(sangerReadRFa),
+                   paste("SangerRead with 'FASTA' inputSource",
+                         "cannot plot quality plots"))
+    expect_message(updateQualityParam(sangerReadRFa),
+                   paste("SangerRead with 'FASTA' inputSource",
+                         "cannot update quality parameters"))
+    expect_message(MakeBaseCalls(sangerReadRFa),
+                   paste("SangerRead with 'FASTA'",
+                         "inputSource cannot do base calling"))
+
+    outputFasta <- writeFastaSR(sangerReadRFa)
+    expect_true(file.exists(outputFasta))
+    con = file(outputFasta, "r")
+    line = readLines(con, n = 1)
+    expect_equal(line, ">ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.fa")
+    line = readLines(con, n = 1)
+    expect_equal(line, "CGGTCGGTAAGAAGTATGGTAATGGCACCTGCTAGCACTGGTAAAGATAGAAGTAGAAGAACAACTGTAATTAGCACAGC")
+    line = readLines(con, n = 1)
+    expect_equal(line, "TCAGACAAACAGGGGAATTCGTTCAAGACGTAATCCTCTTCAACGCATATTAATAACTGTGGTGATAAAATTAATAGCCC")
+    line = readLines(con, n = 1)
+    expect_equal(line, "CTAGAATAGAAGACGCACCCGCTAAATGAAGGGAAAAGATGGCTAAATCTACAGACGGGCCTGCGTGGGCAAGATTTCTT")
+    line = readLines(con, n = 1)
+    expect_equal(line, "GCTAGAGGCGGATAAACAGTTCACCCCGTACCAGCGCCTTTTTCTACCGCCGCAGAGGACACTAAAAGGATCAGTGATGG")
+    line = readLines(con, n = 1)
+    expect_equal(line, "GGGAAGTAGTCAGAATCTCATGTTGTTGAGTCGAGGGAATGCTATATCGGGGGCTCCAAGTATTAAAGGTAAAAGCCAGT")
+    line = readLines(con, n = 1)
+    expect_equal(line, "TTCCGAATCCCCCGATGAATACAGGCATTACTAGAAAGAAGATTATTACAAATGCGTGTGCAGTAACGATAGTATTGTAT")
+    line = readLines(con, n = 1)
+    expect_equal(line, "AGTTGGTCTCTGCCCAGGAACGCTCCTGGTTGTCTTAGCTCGATTCGAATTAGAAGTCTTATACCGGCTCCAACCATTCC")
+    line = readLines(con, n = 1)
+    expect_equal(line, "TGCTCAGACGCCCAGAATAAAATATAAAGTTCCAATATCTTTATGATTTGTTGACCACTGGCCGTCGATATAC")
     close(con)
     unlink(outputFasta)
 })

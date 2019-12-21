@@ -33,7 +33,7 @@
 #' A_chloroticaFFN <- file.path(inputFilesPath,
 #'                              "Allolobophora_chlorotica",
 #'                              "ACHLO",
-#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
+#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.ab1")
 #' sangerReadF <- new("SangerRead",
 #'                     inputSource           = "ABIF",
 #'                     readFeature           = "Forward Read",
@@ -52,7 +52,7 @@
 #' A_chloroticaRFN <- file.path(inputFilesPath,
 #'                              "Allolobophora_chlorotica",
 #'                              "ACHLO",
-#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1")
+#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.ab1")
 #' sangerReadR <- new("SangerRead",
 #'                     inputSource           = "ABIF",
 #'                     readFeature           = "Reverse Read",
@@ -247,6 +247,8 @@ setMethod("initialize",
                     heightPerRow      = heightPerRow,
                     signalRatioCutoff = signalRatioCutoff,
                     showTrimmed       = showTrimmed)
+            trimmedStartPos <- QualityReport@trimmedStartPos
+            trimmedFinishPos <- QualityReport@trimmedFinishPos
         } else if (inputSource == "FASTA") {
             abifRawData <- NULL
             primarySeqID <- "From fasta file"
@@ -275,8 +277,11 @@ setMethod("initialize",
             peakAmpMatrix     <- matrix()
             QualityReport     <- NULL
             ChromatogramParam <- NULL
+            trimmedStartPos <- 0
+            trimmedFinishPos <- length(primarySeq)
         }
-        AASeqResult    <- calculateAASeq (primarySeq, geneticCode)
+        AASeqResult    <- calculateAASeq (primarySeq, trimmedStartPos,
+                                          trimmedFinishPos, geneticCode)
         primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
         primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
         primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]

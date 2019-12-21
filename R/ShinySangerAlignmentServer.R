@@ -832,30 +832,6 @@ SangerAlignmentServer <- function(input, output, session) {
                                                            font-weight: bold;"),
                                    excelOutput("qualityScoreDF",
                                                width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "AA Sequence 1"),
-                                          style = "font-size: 22px;
-                                                           font-weight: bold;"),
-                                   excelOutput("PrimAASeqS1DF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "AA Sequence 2"),
-                                          style = "font-size: 22px;
-                                                           font-weight: bold;"),
-                                   excelOutput("PrimAASeqS2DF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "AA Sequence 3"),
-                                          style = "font-size: 22px;
-                                                           font-weight: bold;"),
-                                   excelOutput("PrimAASeqS3DF",
-                                               width = "100%", height = "50"),
                                    style = paste("overflow-y: hidden;",
                                                  "overflow-x: scroll;")
                             ),
@@ -988,6 +964,30 @@ SangerAlignmentServer <- function(input, output, session) {
                                           style = "font-size: 22px;
                                            font-weight: bold;"),
                                    excelOutput("qualityScoreTrimmedDF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "AA Sequence 1"),
+                                          style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                                   excelOutput("PrimAASeqS1DF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "AA Sequence 2"),
+                                          style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                                   excelOutput("PrimAASeqS2DF",
+                                               width = "100%", height = "50"),
+                                   tags$br(),
+                                   tags$br(),
+                                   tags$p(tagList(icon("bars"),
+                                                  "AA Sequence 3"),
+                                          style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                                   excelOutput("PrimAASeqS3DF",
                                                width = "100%", height = "50"),
                                    style = paste("overflow-y: hidden;",
                                                  "overflow-x: scroll;")
@@ -2199,6 +2199,10 @@ SangerAlignmentServer <- function(input, output, session) {
                 ### Updating AASeqs
                 ### ----------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                               SangerAlignment@contigList[[contigIndex]]@
+                                                   forwardReadList[[readIndex]]@QualityReport@trimmedStartPos,
+                                               SangerAlignment@contigList[[contigIndex]]@
+                                                   forwardReadList[[readIndex]]@QualityReport@trimmedFinishPos,
                                                SangerAlignment@geneticCode)
                 SangerAlignment@contigList[[contigIndex]]@
                     forwardReadList[[readIndex]]@primaryAASeqS1 <<-
@@ -2240,9 +2244,9 @@ SangerAlignmentServer <- function(input, output, session) {
                                       reverseReadList[[readIndex]],
                                   signalRatioCutoff = as.numeric(
                                       ChromatogramParam[["signalRatioCutoff"]]))
-                ### ----------------------------------------------------------------
+                ### ------------------------------------------------------------
                 ### Update 'SangerContig'!
-                ### ----------------------------------------------------------------
+                ### ------------------------------------------------------------
                 SangerAlignment@contigList[[contigIndex]]@
                     reverseReadList[[readIndex]]@peakPosMatrix <<-
                     hetcalls@peakPosMatrix
@@ -2255,10 +2259,14 @@ SangerAlignmentServer <- function(input, output, session) {
                 SangerAlignment@contigList[[contigIndex]]@
                     reverseReadList[[readIndex]]@secondarySeq <<-
                     hetcalls@secondarySeq
-                ### ----------------------------------------------------------------
+                ### ------------------------------------------------------------
                 ### Updating AASeqs
-                ### ----------------------------------------------------------------
+                ### ------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
+                                               SangerAlignment@contigList[[contigIndex]]@
+                                                   forwardReadList[[readIndex]]@QualityReport@trimmedStartPos,
+                                               SangerAlignment@contigList[[contigIndex]]@
+                                                   forwardReadList[[readIndex]]@QualityReport@trimmedFinishPos,
                                                SangerAlignment@geneticCode)
                 SangerAlignment@contigList[[contigIndex]]@
                     reverseReadList[[readIndex]]@primaryAASeqS1 <<-
@@ -2269,9 +2277,9 @@ SangerAlignmentServer <- function(input, output, session) {
                 SangerAlignment@contigList[[contigIndex]]@
                     reverseReadList[[readIndex]]@primaryAASeqS3 <<-
                     AASeqResult[["primaryAASeqS3"]]
-                ### ----------------------------------------------------------------
+                ### ------------------------------------------------------------
                 ### Updating reactive values
-                ### ----------------------------------------------------------------
+                ### ------------------------------------------------------------
                 sequenceParam[["primarySeq"]] <<-
                     as.character(SangerAlignment@contigList[[contigIndex]]@
                                      reverseReadList[[readIndex]]@primarySeq)

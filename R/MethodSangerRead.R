@@ -55,6 +55,13 @@ setMethod("updateQualityParam",  "SangerRead",
                                    M1TrimmingCutoff,
                                    M2CutoffQualityScore,
                                    M2SlidingWindowSize)
+            AASeqResult    <- calculateAASeq (object@primarySeq,
+                                              object@QualityReport@trimmedStartPos,
+                                              object@QualityReport@trimmedFinishPos,
+                                              object@geneticCode)
+            object@primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
+            object@primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
+            object@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
             return(object)
         } else {
             stop(errors)
@@ -93,7 +100,10 @@ setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
             obj@secondarySeq <- MBCResult[["secondarySeq"]]
 
             AASeqResult <-
-                calculateAASeq (obj@primarySeq, obj@geneticCode)
+                calculateAASeq (obj@primarySeq,
+                                obj@QualityReport@trimmedStartPos,
+                                obj@QualityReport@trimmedFinishPos,
+                                obj@geneticCode)
             obj@primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
             obj@primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
             obj@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
