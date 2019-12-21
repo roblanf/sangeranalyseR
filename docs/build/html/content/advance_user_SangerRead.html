@@ -162,6 +162,58 @@
 <div class="figure align-center" id="id1">
 <span id="sangerread-hierarchy"></span><a class="reference internal image-reference" href="../_images/SangerRead_hierarchy.png"><img alt="../_images/SangerRead_hierarchy.png" src="../_images/SangerRead_hierarchy.png" style="width: 626.6px; height: 217.8px;" /></a>
 <p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<div class="legend">
+<p>Now we can create the <em>SangerAlignment</em> S4 instance by <code class="code docutils literal notranslate"><span class="pre">SangerAlignment</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal notranslate"><span class="pre">new</span></code> method.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">inputSource</span>          <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
+                                   <span class="n">parentDirectory</span>      <span class="o">=</span> <span class="s">&quot;./tmp/&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixForwardRegExp</span>  <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixReverseRegExp</span>  <span class="o">=</span> <span class="s">&quot;_[0-9]*_R.ab1$&quot;</span><span class="p">,</span>
+                                   <span class="n">refAminoAcidSeq</span> <span class="o">=</span> <span class="s">&quot;SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN&quot;</span><span class="p">,</span>
+                                   <span class="n">TrimmingMethod</span>        <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
+                                   <span class="n">M1TrimmingCutoff</span>      <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
+                                   <span class="n">M2CutoffQualityScore</span>  <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                                   <span class="n">M2SlidingWindowSize</span>   <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                                   <span class="n">baseNumPerRow</span>         <span class="o">=</span> <span class="m">100</span><span class="p">,</span>
+                                   <span class="n">heightPerRow</span>          <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
+                                   <span class="n">signalRatioCutoff</span>     <span class="o">=</span> <span class="m">0.33</span><span class="p">,</span>
+                                   <span class="n">showTrimmed</span>           <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The inputs of <code class="code docutils literal notranslate"><span class="pre">SangerAlignment</span></code> constructor function and <code class="code docutils literal notranslate"><span class="pre">new</span></code> method are same. Both of their input parameters can be divided into three main categories: <code class="code docutils literal notranslate"><span class="pre">Basic</span> <span class="pre">Parameters</span></code>, <code class="code docutils literal notranslate"><span class="pre">Quality</span> <span class="pre">Trimming</span> <span class="pre">Parameters</span></code>, and <code class="code docutils literal notranslate"><span class="pre">Chromatogram</span> <span class="pre">Parameters</span></code>. Here, we will only explain important parameters. For more details, please refer to <a class="reference external" href="http://packages.python.org/an_example_pypi_project/">sangeranalyseR reference manul</a>.</p>
+<ul>
+<li><p>Basic Parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">readFeature</span></code>: Specify whether the read is forward or reverse reads. The value must be “Forward Read” or “Reverse Read”.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>: see <a class="reference internal" href="advance_user_SangerAlignment.html#input-files-preparation"><span class="std std-ref">Input files preparation</span></a>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: see <a class="reference internal" href="advance_user_SangerAlignment.html#input-files-preparation"><span class="std std-ref">Input files preparation</span></a>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: see <a class="reference internal" href="advance_user_SangerAlignment.html#input-files-preparation"><span class="std std-ref">Input files preparation</span></a>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">refAminoAcidSeq</span></code>: a reference amino acid sequence for the primary sequence as an AAString object in Biostring R packge.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Quality Trimming Parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">TrimmingMethod</span></code>: Specify the read trimming method for this SangerRead. The value must be “M1” (the default) or ‘M2’.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">M1TrimmingCutoff</span></code>: The trimming cutoff for the Method 1. If TrimmingMethod is “M1”, then the default value is “0.0001”. Otherwise, the value must be “NULL”</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">M2CutoffQualityScore</span></code>: The trimming cutoff quality score for the Method 2. If TrimmingMethod is “M2”, then the default value is “20”. Otherwise, the value must be “NULL”. It works with M2SlidingWindowSize.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">M2SlidingWindowSize</span></code>: The trimming sliding window size for the Method 2. If TrimmingMethod is “M2”, then the default value is “5”. Otherwise, the value must be “NULL”. It works with M2CutoffQualityScore.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Chromatogram Parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">baseNumPerRow</span></code>: It defines maximum base pairs in each row. The default value is “100”.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">heightPerRow</span></code>: It defines the height of each row in chromatogram. The default value is “200”.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">signalRatioCutoff</span></code>: The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is “0.33”.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">showTrimmed</span></code>: The logical value storing whether to show trimmed base pairs in chromatogram. The default value is “TRUE”.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
 </div>
 </div>
 

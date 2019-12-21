@@ -85,11 +85,11 @@
 <li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick_commands.html">Quick Commands</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Beginner Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#step-1-input-files-preparation"><strong>Step 1</strong>: Input files preparation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-2-sangeralignment-creation"><strong>Step 2</strong>: <em>SangerAlignment</em> creation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-3-launch-shiny-app"><strong>Step 3</strong>: Launch Shiny App</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-4-writing-fasta-file"><strong>Step 4</strong>: Writing FASTA file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-5-generating-report"><strong>Step 5</strong>: Generating report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-1-input-files-preparation">Step 1: Input files preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-2-sangeralignment-creation">Step 2: <em>SangerAlignment</em> creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-3-launch-shiny-app">Step 3: Launch Shiny App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-4-writing-fasta-file">Step 4: Writing FASTA file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-5-generating-report">Step 5: Generating report</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#what-s-next">What's next ?</a></li>
 </ul>
 </li>
@@ -171,7 +171,7 @@
 <div class="line"><br /></div>
 </div>
 <div class="section" id="step-1-input-files-preparation">
-<h2><strong>Step 1</strong>: Input files preparation<a class="headerlink" href="#step-1-input-files-preparation" title="Permalink to this headline">¶</a></h2>
+<h2>Step 1: Input files preparation<a class="headerlink" href="#step-1-input-files-preparation" title="Permalink to this headline">¶</a></h2>
 <p>sangeranalyseR takes <strong>ab1</strong> files as input and constructs contigs for those with the same contig name. Then, all the contigs will be aligned and a phylogenetic tree will be generated. We first explain how users should organize their files before running sangeranalyseR.</p>
 <p>First, users need to prepare a directory and put all their <strong>ab1</strong> files inside it. The files should follow the regulation in the note below:</p>
 <div class="admonition note">
@@ -200,7 +200,7 @@
 </div>
 </div>
 <div class="section" id="step-2-sangeralignment-creation">
-<h2><strong>Step 2</strong>: <em>SangerAlignment</em> creation<a class="headerlink" href="#step-2-sangeralignment-creation" title="Permalink to this headline">¶</a></h2>
+<h2>Step 2: <em>SangerAlignment</em> creation<a class="headerlink" href="#step-2-sangeralignment-creation" title="Permalink to this headline">¶</a></h2>
 <p>After preparing the input directory, we can now create a <em>SangerAlignment</em> S4 instance by running one-line function below.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;./tmp/&quot;</span><span class="p">,</span>
                                    <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_F.ab1&quot;</span><span class="p">,</span>
@@ -213,7 +213,7 @@
 </div>
 </div>
 <div class="section" id="step-3-launch-shiny-app">
-<h2><strong>Step 3</strong>: Launch Shiny App<a class="headerlink" href="#step-3-launch-shiny-app" title="Permalink to this headline">¶</a></h2>
+<h2>Step 3: Launch Shiny App<a class="headerlink" href="#step-3-launch-shiny-app" title="Permalink to this headline">¶</a></h2>
 <p>You can launch an interactive Shiny app in your local computer by running <code class="code docutils literal notranslate"><span class="pre">launchAppSA</span></code> function.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchAppSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
 </pre></div>
@@ -228,7 +228,7 @@
 </div>
 </div>
 <div class="section" id="step-4-writing-fasta-file">
-<h2><strong>Step 4</strong>: Writing FASTA file<a class="headerlink" href="#step-4-writing-fasta-file" title="Permalink to this headline">¶</a></h2>
+<h2>Step 4: Writing FASTA file<a class="headerlink" href="#step-4-writing-fasta-file" title="Permalink to this headline">¶</a></h2>
 <p>The following function can write the <em>SangerAlignment</em> S4 instance to a FASTA file.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFastaSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
 </pre></div>
@@ -238,7 +238,7 @@
 </div>
 </div>
 <div class="section" id="step-5-generating-report">
-<h2><strong>Step 5</strong>: Generating report<a class="headerlink" href="#step-5-generating-report" title="Permalink to this headline">¶</a></h2>
+<h2>Step 5: Generating report<a class="headerlink" href="#step-5-generating-report" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least, it is important to store all results in a report for future reference. A detailed report will be generated by running the following one-line function. <a class="reference internal" href="#sangeralignment-alignment-result"><span class="std std-ref">Figure_3</span></a> and <a class="reference internal" href="#sangeralignment-tree"><span class="std std-ref">Figure_4</span></a> show the main results of <em>SangerAlignment</em>.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
 </pre></div>

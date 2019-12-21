@@ -94,8 +94,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#sangeralignment-creation"><em>SangerAlignment</em> creation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#inputs-definition">Inputs Definition</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#slots-definition">Slots Definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inputs-slots-definition">Inputs &amp; Slots Definition</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#update-quality-trimming-parameters">Update quality trimming parameters</a></li>
@@ -201,18 +200,21 @@
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> is the root directory that contains all the <strong>ab1</strong> files. It can be absolute or relative path. We suggest users to put only target <strong>ab1</strong> files inside this directory without other unrelated files.</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: The value of this parameter is a regular expression that matches all filename of forward reads. <code class="code docutils literal notranslate"><span class="pre">grepl</span></code> function in R is used to select forward reads from all <strong>ab1</strong> files.</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: The value of this parameter is a regular expression that matches all filename of reverse reads. <code class="code docutils literal notranslate"><span class="pre">grepl</span></code> function in R is used to select reverse reads from all <strong>ab1</strong> files.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: The value of this parameter is a regular expression that matches all filename in forward direction. <code class="code docutils literal notranslate"><span class="pre">grepl</span></code> function in R is used to select forward reads from all <strong>ab1</strong> files.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: The value of this parameter is a regular expression that matches all filename in reverse direction. <code class="code docutils literal notranslate"><span class="pre">grepl</span></code> function in R is used to select reverse reads from all <strong>ab1</strong> files.</p></li>
 </ul>
 </div>
-<p>It is important to carefully select <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>.
-The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. <code class="code docutils literal notranslate"><span class="pre">_[0-9]*_F.ab1$</span></code>, <code class="code docutils literal notranslate"><span class="pre">_[0-9]*_R.ab1$</span></code> for matching forward and reverse reads are highly suggested and are used as default. Users are strongly recommended to follow the default file naming convention to reduce any change of error.</p>
-<p>For basic preparing input files example, please go to <a class="reference internal" href="beginner.html#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>. Here, we have another more complicated example.</p>
+<p>For basic input files preparation example, please go to <a class="reference internal" href="beginner.html#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>. Here, we have another more complicated example.</p>
 <div class="figure align-center" id="id2">
-<span id="sangeralignment-file-structure"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure.png"><img alt="../_images/SangerAlignment_file_structure.png" src="../_images/SangerAlignment_file_structure.png" style="width: 402.0px; height: 383.0px;" /></a>
+<span id="sangeralignment-file-structure-complex"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure_complex.png"><img alt="../_images/SangerAlignment_file_structure_complex.png" src="../_images/SangerAlignment_file_structure_complex.png" style="width: 477.59999999999997px; height: 708.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="beginner.html#sangeralignment-file-structure"><span class="std std-ref">Figure_1</span></a> shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.</p>
+<p><a class="reference internal" href="#sangeralignment-file-structure-complex"><span class="std std-ref">Figure_1</span></a> shows the file naming convention and directory hierarchy. In this example, the parent directory is <code class="code docutils literal notranslate"><span class="pre">extdata</span></code> and the directories in first layer are <code class="code docutils literal notranslate"><span class="pre">Allolobophora_chlorotica</span></code> and <code class="code docutils literal notranslate"><span class="pre">Drosophila_melanogaster</span></code>. All target <strong>ab1</strong> files need to be inside parent directory but it is not necessary to put them in the same level of directory. sangeranalyseR will recursively search all files with <strong>.ab1</strong> file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code> with filenames. Therefore, it is important to carefully select <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, <code class="code docutils literal notranslate"><span class="pre">&quot;_[0-9]*_F.ab1$&quot;</span></code>, <code class="code docutils literal notranslate"><span class="pre">&quot;_[0-9]*_R.ab1$&quot;</span></code> for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.</p>
+<div class="figure align-center" id="id3">
+<span id="sangeralignment-filename-convention"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_filename_convention.png"><img alt="../_images/SangerAlignment_filename_convention.png" src="../_images/SangerAlignment_filename_convention.png" style="width: 621.0px; height: 28.0px;" /></a>
+<p class="caption"><span class="caption-text">Figure 2. Suggested <strong>ab1</strong> file naming convention.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p><a class="reference internal" href="#sangeralignment-filename-convention"><span class="std std-ref">Figure_2</span></a> shows the suggested <strong>ab1</strong> file naming convention. Users are strongly recommended to follow this file naming convention and use the default <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> : <code class="code docutils literal notranslate"><span class="pre">&quot;_[0-9]*_F.ab1$&quot;</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code> : <code class="code docutils literal notranslate"><span class="pre">&quot;_[0-9]*_R.ab1$&quot;</span></code> to reduce any chance of error.</p>
 </div>
 <div class="section" id="fasta-files">
 <h3>FASTA files<a class="headerlink" href="#fasta-files" title="Permalink to this headline">¶</a></h3>
@@ -223,11 +225,35 @@ The bad file naming and wrong regex matching might accidentally include reverse 
 </div>
 <div class="section" id="sangeralignment-creation">
 <h2><em>SangerAlignment</em> creation<a class="headerlink" href="#sangeralignment-creation" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="inputs-definition">
-<h3>Inputs Definition<a class="headerlink" href="#inputs-definition" title="Permalink to this headline">¶</a></h3>
+<p>After preparing the input directory, we can create the <em>SangerAlignment</em> S4 instance by running <code class="code docutils literal notranslate"><span class="pre">SangerAlignment</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal notranslate"><span class="pre">new</span></code> method and it make instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list all possible parameters that users can assign. For a simpler command, please go to <a class="reference internal" href="quick_commands.html#quick-commands"><span class="std std-ref">Quick Commands</span></a>.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">inputSource</span>          <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
+                                   <span class="n">parentDirectory</span>      <span class="o">=</span> <span class="s">&quot;./tmp/&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixForwardRegExp</span>  <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixReverseRegExp</span>  <span class="o">=</span> <span class="s">&quot;_[0-9]*_R.ab1$&quot;</span><span class="p">,</span>
+                                   <span class="n">refAminoAcidSeq</span>      <span class="o">=</span> <span class="s">&quot;SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN&quot;</span><span class="p">,</span>
+                                   <span class="n">TrimmingMethod</span>        <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
+                                   <span class="n">M1TrimmingCutoff</span>      <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
+                                   <span class="n">M2CutoffQualityScore</span>  <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                                   <span class="n">M2SlidingWindowSize</span>   <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                                   <span class="n">baseNumPerRow</span>         <span class="o">=</span> <span class="m">100</span><span class="p">,</span>
+                                   <span class="n">heightPerRow</span>          <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
+                                   <span class="n">signalRatioCutoff</span>     <span class="o">=</span> <span class="m">0.33</span><span class="p">,</span>
+                                   <span class="n">showTrimmed</span>           <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+                                   <span class="n">minReadsNum</span>           <span class="o">=</span> <span class="m">2</span><span class="p">,</span>
+                                   <span class="n">minReadLength</span>         <span class="o">=</span> <span class="m">20</span><span class="p">,</span>
+                                   <span class="n">minFractionCall</span>       <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+                                   <span class="n">maxFractionLost</span>       <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+                                   <span class="n">geneticCode</span>           <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">,</span>
+                                   <span class="n">acceptStopCodons</span>      <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+                                   <span class="n">readingFrame</span>          <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+                                   <span class="n">minFractionCallSA</span>     <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+                                   <span class="n">maxFractionLostSA</span>     <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+                                   <span class="n">processorsNum</span>         <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="slots-definition">
-<h3>Slots Definition<a class="headerlink" href="#slots-definition" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="inputs-slots-definition">
+<h3>Inputs &amp; Slots Definition<a class="headerlink" href="#inputs-slots-definition" title="Permalink to this headline">¶</a></h3>
+<p>The inputs of <code class="code docutils literal notranslate"><span class="pre">SangerAlignment</span></code> constructor function and <code class="code docutils literal notranslate"><span class="pre">new</span></code> method are same. For more details, please refer to <a class="reference external" href="http://packages.python.org/an_example_pypi_project/">sangeranalyseR reference manul</a>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>

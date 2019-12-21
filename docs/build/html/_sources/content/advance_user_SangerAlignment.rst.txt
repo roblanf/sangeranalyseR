@@ -34,27 +34,34 @@ There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`
 .. note::
 
   * :code:`parentDirectory` is the root directory that contains all the **ab1** files. It can be absolute or relative path. We suggest users to put only target **ab1** files inside this directory without other unrelated files.
-  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filename of forward reads. :code:`grepl` function in R is used to select forward reads from all **ab1** files.
-
-  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filename of reverse reads. :code:`grepl` function in R is used to select reverse reads from all **ab1** files.
-
-
-It is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`.
-The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. :code:`_[0-9]*_F.ab1$`, :code:`_[0-9]*_R.ab1$` for matching forward and reverse reads are highly suggested and are used as default. Users are strongly recommended to follow the default file naming convention to reduce any change of error.
+  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filename in forward direction. :code:`grepl` function in R is used to select forward reads from all **ab1** files.
+  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filename in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **ab1** files.
 
 
-For basic preparing input files example, please go to :ref:`Beginner Guide`. Here, we have another more complicated example.
 
 
-.. _SangerAlignment_file_structure:
-.. figure::  ../image/SangerAlignment_file_structure.png
+
+For basic input files preparation example, please go to :ref:`Beginner Guide`. Here, we have another more complicated example.
+
+
+.. _SangerAlignment_file_structure_complex:
+.. figure::  ../image/SangerAlignment_file_structure_complex.png
    :align:   center
-   :scale:   50 %
+   :scale:   120 %
 
    Figure 1. Input ab1 files inside the parent directory, :code:`./tmp/`.
 
 
-:ref:`Figure_1<SangerAlignment_file_structure>` shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.
+:ref:`Figure_1<SangerAlignment_file_structure_complex>` shows the file naming convention and directory hierarchy. In this example, the parent directory is :code:`extdata` and the directories in first layer are :code:`Allolobophora_chlorotica` and :code:`Drosophila_melanogaster`. All target **ab1** files need to be inside parent directory but it is not necessary to put them in the same level of directory. sangeranalyseR will recursively search all files with **.ab1** file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with filenames. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
+
+.. _SangerAlignment_filename_convention:
+.. figure::  ../image/SangerAlignment_filename_convention.png
+   :align:   center
+   :scale:   25 %
+
+   Figure 2. Suggested **ab1** file naming convention.
+
+:ref:`Figure_2<SangerAlignment_filename_convention>` shows the suggested **ab1** file naming convention. Users are strongly recommended to follow this file naming convention and use the default :code:`suffixForwardRegExp` : :code:`"_[0-9]*_F.ab1$"` and :code:`suffixReverseRegExp` : :code:`"_[0-9]*_R.ab1$"` to reduce any chance of error.
 
 
 
@@ -65,12 +72,37 @@ FASTA files
 
 *SangerAlignment* creation
 --------------------------
+After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it make instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list all possible parameters that users can assign. For a simpler command, please go to :ref:`Quick Commands`.
 
-Inputs Definition
-+++++++++++++++++
+.. code-block:: R
 
-Slots Definition
-++++++++++++++++
+   sangerAlignment <- SangerAlignment(inputSource          = "ABIF",
+                                      parentDirectory      = "./tmp/",
+                                      suffixForwardRegExp  = "_[0-9]*_F.ab1$",
+                                      suffixReverseRegExp  = "_[0-9]*_R.ab1$",
+                                      refAminoAcidSeq      = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                                      TrimmingMethod        = "M1",
+                                      M1TrimmingCutoff      = 0.0001,
+                                      M2CutoffQualityScore  = NULL,
+                                      M2SlidingWindowSize   = NULL,
+                                      baseNumPerRow         = 100,
+                                      heightPerRow          = 200,
+                                      signalRatioCutoff     = 0.33,
+                                      showTrimmed           = TRUE,
+                                      minReadsNum           = 2,
+                                      minReadLength         = 20,
+                                      minFractionCall       = 0.5,
+                                      maxFractionLost       = 0.5,
+                                      geneticCode           = GENETIC_CODE,
+                                      acceptStopCodons      = TRUE,
+                                      readingFrame          = 1,
+                                      minFractionCallSA     = 0.5,
+                                      maxFractionLostSA     = 0.5,
+                                      processorsNum         = NULL)
+
+Inputs & Slots Definition
++++++++++++++++++++++++++
+The inputs of :code:`SangerAlignment` constructor function and :code:`new` method are same. For more details, please refer to `sangeranalyseR reference manul <http://packages.python.org/an_example_pypi_project/>`_.
 
 |
 
