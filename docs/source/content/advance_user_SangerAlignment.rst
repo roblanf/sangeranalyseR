@@ -108,6 +108,15 @@ The inputs of :code:`SangerAlignment` constructor function and :code:`new` metho
 
 Update quality trimming parameters
 ----------------------------------
+:code:`SangerAlignment` constructor function will apply the given quality trimming parameters to all reads. After creating the *SangerAlignment* S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function. This function will change all the trimming parameters inside 
+
+.. code-block:: R
+
+   newSangerAlignment <- updateQualityParam(sangerAlignment,
+                                            TrimmingMethod       = "M2",
+                                            M1TrimmingCutoff     = NULL,
+                                            M2CutoffQualityScore = 29,
+                                            M2SlidingWindowSize  = 15)
 
 |
 

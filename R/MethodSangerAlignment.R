@@ -11,11 +11,12 @@
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
 #'                    M2SlidingWindowSize    = 15)
-setMethod("updateQualityParam",  "SangerAlignment",function(object,
-                                                         TrimmingMethod         = "M1",
-                                                         M1TrimmingCutoff       = 0.0001,
-                                                         M2CutoffQualityScore   = NULL,
-                                                         M2SlidingWindowSize    = NULL){
+setMethod("updateQualityParam",  "SangerAlignment",
+          function(object,
+                   TrimmingMethod         = "M1",
+                   M1TrimmingCutoff       = 0.0001,
+                   M2CutoffQualityScore   = NULL,
+                   M2SlidingWindowSize    = NULL){
     if (object@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
         ### Updating forward read quality parameters
@@ -41,6 +42,14 @@ setMethod("updateQualityParam",  "SangerAlignment",function(object,
                        })
             object@contigList <- newContigList
             object@trimmingMethodSA <- TrimmingMethod
+            acResult <- alignContigs(object@contigList, object@geneticCode,
+                                     object@refAminoAcidSeq,
+                                     object@minFractionCallSA,
+                                     object@maxFractionLostSA,
+                                     getProcessors(NULL))
+            object@contigsConsensus <- acResult[["consensus"]]
+            object@contigsAlignment <- acResult[["aln"]]
+            object@contigsTree <- acResult[["aln.tree"]]
             return(object)
         } else {
             stop(errors)
@@ -218,10 +227,6 @@ setMethod("generateReportSA", "SangerAlignment",
     #             "cannot run Shiny app\n (You don't need to ",
     #             "do trimming or base calling)")
     # }
-
-
-
-
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
     ### ------------------------------------------------------------------------

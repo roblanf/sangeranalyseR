@@ -75,7 +75,7 @@ test_that("SangerAlignment update quality trimming parameters test 2 - M2", {
     newTrimmedSangerAlignment <- updateQualityParam(sangerAlignment,
                                                     TrimmingMethod       = "M2",
                                                     M1TrimmingCutoff     = NULL,
-                                                    M2CutoffQualityScore = 29,
+                                                    M2CutoffQualityScore = 35,
                                                     M2SlidingWindowSize  = 15)
     expect_equal(newTrimmedSangerAlignment@trimmingMethodSA, "M2")
     sapply(newTrimmedSangerAlignment@contigList, function(contig) {
@@ -95,7 +95,7 @@ test_that("SangerAlignment update quality trimming parameters test 2 - M2", {
         sapply(contig@forwardReadList, function(forwardRead) {
             expect_equal(forwardRead@QualityReport@TrimmingMethod, "M2")
             expect_equal(forwardRead@QualityReport@M1TrimmingCutoff, NULL)
-            expect_equal(forwardRead@QualityReport@M2CutoffQualityScore, 29, tolerance=1e-10)
+            expect_equal(forwardRead@QualityReport@M2CutoffQualityScore, 35, tolerance=1e-10)
             expect_equal(forwardRead@QualityReport@M2SlidingWindowSize, 15, tolerance=1e-10)
         })
     })
@@ -117,7 +117,7 @@ test_that("SangerAlignment update quality trimming parameters test 2 - M2", {
         sapply(contig@reverseReadList, function(reverseRead) {
             expect_equal(reverseRead@QualityReport@TrimmingMethod, "M2")
             expect_equal(reverseRead@QualityReport@M1TrimmingCutoff, NULL)
-            expect_equal(reverseRead@QualityReport@M2CutoffQualityScore, 29, tolerance=1e-10)
+            expect_equal(reverseRead@QualityReport@M2CutoffQualityScore, 35, tolerance=1e-10)
             expect_equal(reverseRead@QualityReport@M2SlidingWindowSize, 15, tolerance=1e-10)
         })
     })

@@ -53,6 +53,25 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
                        })
             object@reverseReadList <- newReverseReadList
             object@trimmingMethodSC <- TrimmingMethod
+            CSResult <-
+                calculateContigSeq (inputSource      = object@inputSource,
+                                    forwardReadList  = object@forwardReadList,
+                                    reverseReadList  = object@reverseReadList,
+                                    refAminoAcidSeq  = object@refAminoAcidSeq,
+                                    minFractionCall  = object@minFractionCall,
+                                    maxFractionLost  = object@maxFractionLost,
+                                    geneticCode      = object@geneticCode,
+                                    acceptStopCodons = object@acceptStopCodons,
+                                    readingFrame     = object@readingFrame,
+                                    processorsNum    = getProcessors(NULL))
+            object@contigSeq <- CSResult$consensusGapfree
+            object@differencesDF <- CSResult$diffsDf
+            object@alignment <- CSResult$aln2
+            object@distanceMatrix <- CSResult$dist
+            object@dendrogram <- CSResult$dend
+            object@indelsDF <- CSResult$indels
+            object@stopCodonsDF <- CSResult$stopsDf
+            object@secondaryPeakDF <- CSResult$spDf
             return(object)
         } else {
             stop(errors)
