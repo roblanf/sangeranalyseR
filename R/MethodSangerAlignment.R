@@ -1,3 +1,56 @@
+## =============================================================================
+## Updating quality parameters for SangerAlignment object.
+## =============================================================================
+#' @title updateQualityParam
+#' @name SangerAlignment-class-updateQualityParam
+#' @rdname SangerAlignment-class-updateQualityParam
+#' @examples
+#' load("data/sangerAlignment.RData")
+#' updateQualityParam(sangerAlignment,
+#'                    TrimmingMethod         = "M2",
+#'                    M1TrimmingCutoff       = NULL,
+#'                    M2CutoffQualityScore   = 40,
+#'                    M2SlidingWindowSize    = 15)
+setMethod("updateQualityParam",  "SangerAlignment",function(object,
+                                                         TrimmingMethod         = "M1",
+                                                         M1TrimmingCutoff       = 0.0001,
+                                                         M2CutoffQualityScore   = NULL,
+                                                         M2SlidingWindowSize    = NULL){
+    if (object@inputSource == "ABIF") {
+        ### --------------------------------------------------------------------
+        ### Updating forward read quality parameters
+        ### Quality parameters is checked in 'QualityReport' method
+        ### --------------------------------------------------------------------
+        errors <- character()
+        errors <- checkTrimParam(TrimmingMethod,
+                                 M1TrimmingCutoff,
+                                 M2CutoffQualityScore,
+                                 M2SlidingWindowSize,
+                                 errors)
+        if (length(errors) == 0) {
+            newContigList <-
+                sapply(object@contigList,
+                       function(contig) {
+                           contig <-
+                               updateQualityParam(
+                                   contig,
+                                   TrimmingMethod         = TrimmingMethod,
+                                   M1TrimmingCutoff       = M1TrimmingCutoff,
+                                   M2CutoffQualityScore   = M2CutoffQualityScore,
+                                   M2SlidingWindowSize    = M2SlidingWindowSize)
+                       })
+            object@contigList <- newContigList
+            object@trimmingMethodSA <- TrimmingMethod
+            return(object)
+        } else {
+            stop(errors)
+        }
+    } else if (object@inputSource == "FASTA") {
+        message("SangerAlignment with 'FASTA' inputSource ",
+                "cannot update quality parameters")
+    }
+})
+
 #' @title launchAppSA
 #' @name SangerAlignment-class-launchAppSA
 #' @rdname SangerAlignment-class-launchAppSA

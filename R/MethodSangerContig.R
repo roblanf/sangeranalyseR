@@ -52,6 +52,7 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
                                    M2SlidingWindowSize    = M2SlidingWindowSize)
                        })
             object@reverseReadList <- newReverseReadList
+            object@trimmingMethodSC <- TrimmingMethod
             return(object)
         } else {
             stop(errors)
