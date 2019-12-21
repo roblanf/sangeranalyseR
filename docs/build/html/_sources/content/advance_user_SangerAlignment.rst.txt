@@ -108,14 +108,170 @@ The inputs of :code:`SangerAlignment` constructor function and :code:`new` metho
 
 Update quality trimming parameters
 ----------------------------------
+:code:`SangerAlignment` constructor function will apply the given quality trimming parameters to all reads. After creating the *SangerAlignment* S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will change the trimming parameters for each read and redo alignment in both *SangerContig* and *SangerAlignment* levels. If users want to do quality trimming read by read, please
+read :ref:`*SangerAlignment* Shiny app`.
+
+.. code-block:: R
+
+   newSangerAlignment <- updateQualityParam(sangerAlignment,
+                                            TrimmingMethod       = "M2",
+                                            M1TrimmingCutoff     = NULL,
+                                            M2CutoffQualityScore = 29,
+                                            M2SlidingWindowSize  = 15)
 
 |
 
 *SangerAlignment* Shiny app
 ---------------------------
+We create an interactive local Shiny app for users to go inside each *SangerRead* and *SangerContig* in *SangerAlignment*.
+
+Users only need to run one function with previously created *SangerAlignment* instance as input and the Shiny app will pop up.
+
+.. code-block:: R
+
+   launchAppSA(sangerAlignment)
+
+
+*SangerAlignment* Page
+++++++++++++++++++++++
+
+.. _SangerAlignment_ShinyApp_1:
+.. figure::  ../image/SangerAlignment_ShinyApp_1.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 2. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_2:
+.. figure::  ../image/SangerAlignment_ShinyApp_2.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 3. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_3:
+.. figure::  ../image/SangerAlignment_ShinyApp_3.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 4. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_4:
+.. figure::  ../image/SangerAlignment_ShinyApp_4.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 5. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_5:
+.. figure::  ../image/SangerAlignment_ShinyApp_5.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 6. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_6:
+.. figure::  ../image/SangerAlignment_ShinyApp_6.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 7. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_7:
+.. figure::  ../image/SangerAlignment_ShinyApp_7.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 8. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_8:
+.. figure::  ../image/SangerAlignment_ShinyApp_8.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 9. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_9:
+.. figure::  ../image/SangerAlignment_ShinyApp_9.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 10. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_10:
+.. figure::  ../image/SangerAlignment_ShinyApp_10.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 11. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_11:
+.. figure::  ../image/SangerAlignment_ShinyApp_11.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 12. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_12:
+.. figure::  ../image/SangerAlignment_ShinyApp_12.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 13. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_13:
+.. figure::  ../image/SangerAlignment_ShinyApp_13.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 14. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_14:
+.. figure::  ../image/SangerAlignment_ShinyApp_14.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 15. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_15:
+.. figure::  ../image/SangerAlignment_ShinyApp_15.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 16. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_16:
+.. figure::  ../image/SangerAlignment_ShinyApp_16.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 17. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_17:
+.. figure::  ../image/SangerAlignment_ShinyApp_17.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 18. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+.. _SangerAlignment_ShinyApp_18:
+.. figure::  ../image/SangerAlignment_ShinyApp_18.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 19. Classes hierarchy in sangeranalyseR, *SangerAlignment* level.
+
+
+*SangerContig* Page
++++++++++++++++++++
+
+*SangerRead* Page
++++++++++++++++++
 
 |
 
+
+Inside Shiny app, users can change the quality trimming and chromatogram parameters for each read and redo alignment.
 
 Writing FASTA files
 -------------------

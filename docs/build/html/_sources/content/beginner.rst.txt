@@ -41,8 +41,8 @@ In this example, there are four contigs that will be detected: :code:`ACHLO006-0
 
 |
 
-Step 2: *SangerAlignment* creation
-----------------------------------
+Step 2: S4 instance creation
+----------------------------
 After preparing the input directory, we can now create a *SangerAlignment* S4 instance by running one-line function below.
 
 .. code-block:: R
@@ -55,8 +55,8 @@ One thing to pay attention to is that your current working directory need to be 
 
 |
 
-Step 3: Launch Shiny App
-------------------------
+Step 3: Launching Shiny App
+---------------------------
 You can launch an interactive Shiny app in your local computer by running :code:`launchAppSA` function.
 
 .. code-block:: R

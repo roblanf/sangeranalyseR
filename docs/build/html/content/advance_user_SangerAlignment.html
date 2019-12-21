@@ -98,7 +98,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#update-quality-trimming-parameters">Update quality trimming parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-shiny-app"><em>SangerAlignment</em> Shiny app</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-shiny-app"><em>SangerAlignment</em> Shiny app</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sangeralignment-page"><em>SangerAlignment</em> Page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sangercontig-page"><em>SangerContig</em> Page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sangerread-page"><em>SangerRead</em> Page</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-fasta-files">Writing FASTA files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-sangeralignment-report">Generating <em>SangerAlignment</em> report</a></li>
 </ul>
@@ -261,14 +266,110 @@
 </div>
 <div class="section" id="update-quality-trimming-parameters">
 <h2>Update quality trimming parameters<a class="headerlink" href="#update-quality-trimming-parameters" title="Permalink to this headline">¶</a></h2>
+<p><code class="code docutils literal notranslate"><span class="pre">SangerAlignment</span></code> constructor function will apply the given quality trimming parameters to all reads. After creating the <em>SangerAlignment</em> S4 instance, users can change the trimming parameters by running <code class="code docutils literal notranslate"><span class="pre">updateQualityParam</span></code> function which will change the trimming parameters for each read and redo alignment in both <em>SangerContig</em> and <em>SangerAlignment</em> levels. If users want to do quality trimming read by read, please
+read <a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">SangerAlignment Shiny app</span></a>.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">newSangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">updateQualityParam</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">,</span>
+                                         <span class="n">TrimmingMethod</span>       <span class="o">=</span> <span class="s">&quot;M2&quot;</span><span class="p">,</span>
+                                         <span class="n">M1TrimmingCutoff</span>     <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                                         <span class="n">M2CutoffQualityScore</span> <span class="o">=</span> <span class="m">29</span><span class="p">,</span>
+                                         <span class="n">M2SlidingWindowSize</span>  <span class="o">=</span> <span class="m">15</span><span class="p">)</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="sangeralignment-shiny-app">
 <h2><em>SangerAlignment</em> Shiny app<a class="headerlink" href="#sangeralignment-shiny-app" title="Permalink to this headline">¶</a></h2>
+<p>We create an interactive local Shiny app for users to go inside each <em>SangerRead</em> and <em>SangerContig</em> in <em>SangerAlignment</em>.</p>
+<p>Users only need to run one function with previously created <em>SangerAlignment</em> instance as input and the Shiny app will pop up.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchAppSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="sangeralignment-page">
+<h3><em>SangerAlignment</em> Page<a class="headerlink" href="#sangeralignment-page" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-center" id="id4">
+<span id="sangeralignment-shinyapp-1"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_1.png"><img alt="../_images/SangerAlignment_ShinyApp_1.png" src="../_images/SangerAlignment_ShinyApp_1.png" style="width: 1152.0px; height: 630.4000000000001px;" /></a>
+<p class="caption"><span class="caption-text">Figure 2. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id5">
+<span id="sangeralignment-shinyapp-2"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_2.png"><img alt="../_images/SangerAlignment_ShinyApp_2.png" src="../_images/SangerAlignment_ShinyApp_2.png" style="width: 896.8000000000001px; height: 555.2px;" /></a>
+<p class="caption"><span class="caption-text">Figure 3. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id6">
+<span id="sangeralignment-shinyapp-3"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_3.png"><img alt="../_images/SangerAlignment_ShinyApp_3.png" src="../_images/SangerAlignment_ShinyApp_3.png" style="width: 539.2px; height: 416.0px;" /></a>
+<p class="caption"><span class="caption-text">Figure 4. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id7">
+<span id="sangeralignment-shinyapp-4"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_4.png"><img alt="../_images/SangerAlignment_ShinyApp_4.png" src="../_images/SangerAlignment_ShinyApp_4.png" style="width: 1151.2px; height: 658.4000000000001px;" /></a>
+<p class="caption"><span class="caption-text">Figure 5. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id8">
+<span id="sangeralignment-shinyapp-5"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_5.png"><img alt="../_images/SangerAlignment_ShinyApp_5.png" src="../_images/SangerAlignment_ShinyApp_5.png" style="width: 1152.0px; height: 630.4000000000001px;" /></a>
+<p class="caption"><span class="caption-text">Figure 6. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id9">
+<span id="sangeralignment-shinyapp-6"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_6.png"><img alt="../_images/SangerAlignment_ShinyApp_6.png" src="../_images/SangerAlignment_ShinyApp_6.png" style="width: 851.2px; height: 629.6px;" /></a>
+<p class="caption"><span class="caption-text">Figure 7. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id10">
+<span id="sangeralignment-shinyapp-7"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_7.png"><img alt="../_images/SangerAlignment_ShinyApp_7.png" src="../_images/SangerAlignment_ShinyApp_7.png" style="width: 896.0px; height: 630.4000000000001px;" /></a>
+<p class="caption"><span class="caption-text">Figure 8. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id11">
+<span id="sangeralignment-shinyapp-8"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_8.png"><img alt="../_images/SangerAlignment_ShinyApp_8.png" src="../_images/SangerAlignment_ShinyApp_8.png" style="width: 1152.0px; height: 630.4000000000001px;" /></a>
+<p class="caption"><span class="caption-text">Figure 9. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id12">
+<span id="sangeralignment-shinyapp-9"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_9.png"><img alt="../_images/SangerAlignment_ShinyApp_9.png" src="../_images/SangerAlignment_ShinyApp_9.png" style="width: 642.4000000000001px; height: 250.0px;" /></a>
+<p class="caption"><span class="caption-text">Figure 10. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id13">
+<span id="sangeralignment-shinyapp-10"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_10.png"><img alt="../_images/SangerAlignment_ShinyApp_10.png" src="../_images/SangerAlignment_ShinyApp_10.png" style="width: 642.4000000000001px; height: 248.8px;" /></a>
+<p class="caption"><span class="caption-text">Figure 11. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id14">
+<span id="sangeralignment-shinyapp-11"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_11.png"><img alt="../_images/SangerAlignment_ShinyApp_11.png" src="../_images/SangerAlignment_ShinyApp_11.png" style="width: 621.2px; height: 294.40000000000003px;" /></a>
+<p class="caption"><span class="caption-text">Figure 12. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id15">
+<span id="sangeralignment-shinyapp-12"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_12.png"><img alt="../_images/SangerAlignment_ShinyApp_12.png" src="../_images/SangerAlignment_ShinyApp_12.png" style="width: 585.6px; height: 296.40000000000003px;" /></a>
+<p class="caption"><span class="caption-text">Figure 13. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id16">
+<span id="sangeralignment-shinyapp-13"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_13.png"><img alt="../_images/SangerAlignment_ShinyApp_13.png" src="../_images/SangerAlignment_ShinyApp_13.png" style="width: 578.0px; height: 290.0px;" /></a>
+<p class="caption"><span class="caption-text">Figure 14. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id17">
+<span id="sangeralignment-shinyapp-14"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_14.png"><img alt="../_images/SangerAlignment_ShinyApp_14.png" src="../_images/SangerAlignment_ShinyApp_14.png" style="width: 642.0px; height: 373.6px;" /></a>
+<p class="caption"><span class="caption-text">Figure 15. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id18">
+<span id="sangeralignment-shinyapp-15"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_15.png"><img alt="../_images/SangerAlignment_ShinyApp_15.png" src="../_images/SangerAlignment_ShinyApp_15.png" style="width: 644.8000000000001px; height: 376.8px;" /></a>
+<p class="caption"><span class="caption-text">Figure 16. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id18" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id19">
+<span id="sangeralignment-shinyapp-16"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_16.png"><img alt="../_images/SangerAlignment_ShinyApp_16.png" src="../_images/SangerAlignment_ShinyApp_16.png" style="width: 617.6px; height: 333.20000000000005px;" /></a>
+<p class="caption"><span class="caption-text">Figure 17. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id19" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id20">
+<span id="sangeralignment-shinyapp-17"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_17.png"><img alt="../_images/SangerAlignment_ShinyApp_17.png" src="../_images/SangerAlignment_ShinyApp_17.png" style="width: 642.8000000000001px; height: 267.2px;" /></a>
+<p class="caption"><span class="caption-text">Figure 18. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id20" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id21">
+<span id="sangeralignment-shinyapp-18"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_18.png"><img alt="../_images/SangerAlignment_ShinyApp_18.png" src="../_images/SangerAlignment_ShinyApp_18.png" style="width: 767.6px; height: 386.8px;" /></a>
+<p class="caption"><span class="caption-text">Figure 19. Classes hierarchy in sangeranalyseR, <em>SangerAlignment</em> level.</span><a class="headerlink" href="#id21" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="sangercontig-page">
+<h3><em>SangerContig</em> Page<a class="headerlink" href="#sangercontig-page" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="sangerread-page">
+<h3><em>SangerRead</em> Page<a class="headerlink" href="#sangerread-page" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line"><br /></div>
+</div>
+<p>Inside Shiny app, users can change the quality trimming and chromatogram parameters for each read and redo alignment.</p>
 </div>
 </div>
 <div class="section" id="writing-fasta-files">
