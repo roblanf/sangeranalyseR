@@ -17,9 +17,6 @@ Depends:
     reshape2,
     phangorn,
     sangerseqR,
-    stringi,
-    stringr,
-    ggplot2,
     gridExtra,
     shiny,
     shinydashboard,
@@ -28,7 +25,6 @@ Depends:
     plotly,
     DT,
     zeallot,
-    rhandsontable,
     excelR,
     shinycssloaders,
     ggdendro,
@@ -37,7 +33,6 @@ Depends:
     tools,
     rmarkdown,
     kableExtra,
-    IRanges,
     seqinr
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr

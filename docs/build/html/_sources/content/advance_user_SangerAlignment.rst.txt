@@ -52,16 +52,16 @@ For basic input files preparation example, please go to :ref:`Beginner Guide`. H
    Figure 2. Input ab1 files inside the parent directory, :code:`./tmp/`.
 
 
-:ref:`Figure_1<SangerAlignment_file_structure_complex>` shows the file naming convention and directory hierarchy. In this example, the parent directory is :code:`extdata` and the directories in first layer are :code:`Allolobophora_chlorotica` and :code:`Drosophila_melanogaster`. All target **ab1** files need to be inside parent directory but it is not necessary to put them in the same level of directory. sangeranalyseR will recursively search all files with **.ab1** file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with filenames. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
+:ref:`Figure_2<SangerAlignment_file_structure_complex>` shows the file naming convention and directory hierarchy. In this example, the parent directory is :code:`extdata` and the directories in first layer are :code:`Allolobophora_chlorotica` and :code:`Drosophila_melanogaster`. All target **ab1** files need to be inside parent directory but it is not necessary to put them in the same level of directory. sangeranalyseR will recursively search all files with **.ab1** file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with filenames. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
 
 .. _SangerAlignment_filename_convention:
 .. figure::  ../image/SangerAlignment_filename_convention.png
    :align:   center
    :scale:   25 %
 
-   Figure 2. Suggested **ab1** file naming convention.
+   Figure 3. Suggested **ab1** file naming convention.
 
-:ref:`Figure_2<SangerAlignment_filename_convention>` shows the suggested **ab1** file naming convention. Users are strongly recommended to follow this file naming convention and use the default :code:`suffixForwardRegExp` : :code:`"_[0-9]*_F.ab1$"` and :code:`suffixReverseRegExp` : :code:`"_[0-9]*_R.ab1$"` to reduce any chance of error.
+:ref:`Figure_3<SangerAlignment_filename_convention>` shows the suggested **ab1** file naming convention. Users are strongly recommended to follow this file naming convention and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
 
 
 
@@ -72,7 +72,7 @@ FASTA files
 
 *SangerAlignment* creation
 --------------------------
-After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it make instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list all possible parameters that users can assign. For a simpler command, please go to :ref:`Quick Commands`.
+After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list all possible parameters. For a simpler command, please go to :ref:`Quick Commands`.
 
 .. code-block:: R
 
@@ -131,37 +131,37 @@ We create an interactive local Shiny app for users to go into each *SangerRead* 
 
 *SangerAlignment* Page
 ++++++++++++++++++++++
-:ref:`Figure 3<SangerAlignment_ShinyApp_1>` is the initial page and the toppest layer of *SangerAlignment* App. It provides basic parameters in *SangerAlignment* instance, contigs alignment result and phylogenetic tree etc. After updating all the trimmed reads, users need to click “Re-calculate Contigs Alignment” button to do contigs alignment again. From the left-hand side panel, we can clearly see the hierarchy of the *SangerAlignment* S4 instance and easily access to all reads and contigs in it.
+:ref:`Figure 4<SangerAlignment_ShinyApp_1>` is the initial page and the toppest layer of *SangerAlignment* App. It provides basic parameters in *SangerAlignment* instance, contigs alignment result and phylogenetic tree etc. After updating all the trimmed reads, users need to click “Re-calculate Contigs Alignment” button to do contigs alignment again. From the left-hand side panel, we can clearly see the hierarchy of the *SangerAlignment* S4 instance and easily access to all reads and contigs in it.
 
 .. _SangerAlignment_ShinyApp_1:
 .. figure::  ../image/SangerAlignment_ShinyApp_1.png
    :align:   center
    :scale:   25 %
 
-   Figure 3. *SangerAlignment* Shiny app initial page - *SangerAlignment* Page.
+   Figure 4. *SangerAlignment* Shiny app initial page - *SangerAlignment* Page.
 
-Scroll down a bit, users can see the contigs alignment result generated by `DECIPHER <https://bioconductor.org/packages/release/bioc/html/DECIPHER.html>`_ R package embedded in *SangerAlignment* page. :ref:`Figure 4<SangerAlignment_ShinyApp_2>` shows the contigs alignment result.
+Scroll down a bit, users can see the contigs alignment result generated by `DECIPHER <https://bioconductor.org/packages/release/bioc/html/DECIPHER.html>`_ R package embedded in *SangerAlignment* page. :ref:`Figure 5<SangerAlignment_ShinyApp_2>` shows the contigs alignment result.
 
 .. _SangerAlignment_ShinyApp_2:
 .. figure::  ../image/SangerAlignment_ShinyApp_2.png
    :align:   center
    :scale:   30 %
 
-   Figure 4. *SangerAlignment* Page - contigs alignment result.
+   Figure 5. *SangerAlignment* Page - contigs alignment result.
 
-In *SangerAlignment* page, the phylogenetic tree result is provided as well. The tree is generated by `ape <https://cran.r-project.org/web/packages/ape/index.html>`_ R package which uses NJ algorithm.
+In *SangerAlignment* page, the phylogenetic tree result is provided as well (:ref:`Figure 6<SangerAlignment_ShinyApp_3>`). The tree is generated by `ape <https://cran.r-project.org/web/packages/ape/index.html>`_ R package which uses NJ algorithm.
 
 .. _SangerAlignment_ShinyApp_3:
 .. figure::  ../image/SangerAlignment_ShinyApp_3.png
    :align:   center
    :scale:   60 %
 
-   Figure 5. *SangerAlignment* Page - phylogenetic tree result.
+   Figure 6. *SangerAlignment* Page - phylogenetic tree result.
 
 
 *SangerContig* Page
 +++++++++++++++++++
-Now, let's go to the page in next level, *SangerContig* page. Users can click into all contigs and check their results. :ref:`Figure 7<SangerAlignment_ShinyApp_5>` shows the overview page of Contig 1. Notice that there is a red “Re-calculate Contig” button. After changing the quality trimming parameters, users need to click the button before checking the results below in order to get the updated information.
+Now, let's go to the page in the next level, *SangerContig* page. Users can click into all contigs and check their results. :ref:`Figure 7<SangerAlignment_ShinyApp_5>` shows the overview page of Contig 1. Notice that there is a red “Re-calculate Contig” button. After changing the quality trimming parameters, users need to click the button before checking the results below in order to get the updated information.
 
 .. _SangerAlignment_ShinyApp_5:
 .. figure::  ../image/SangerAlignment_ShinyApp_5.png
@@ -189,7 +189,7 @@ The information provided in this page includes : “input parameters”, “gene
 
 *SangerRead* Page
 +++++++++++++++++
-Now, let's go to the page in the lowest level, *SangerRead* page. *SangerRead* page contains all details of a read including its trimming and chromatogram inputs and results. All reads are in "forward" or "reverse" direction. Under *SangerContig* page, there are two expendable tabs, “Forward Reads” and “Reverse Reads” storing the corresponding reads on the left-hand side navigation panel in :ref:`Figure 10<SangerAlignment_ShinyApp_8>`. In this example, there are one read in each tab and :ref:`Figure 10<SangerAlignment_ShinyApp_8>` shows the “1 - 1 Forward Read” page. It provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences in this figure are dynamic based on the :code:`signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in :ref:`Figure 16<SangerAlignment_ShinyApp_14>` below will always be same after trimming and their color codings for A/T/C/G are same as well.
+Now, let's go to the page in the lowest level, *SangerRead* page. *SangerRead* page contains all details of a read including its trimming and chromatogram inputs and results. All reads are in "forward" or "reverse" direction. Under *SangerContig* page, there are two expendable tabs, “Forward Reads” and “Reverse Reads” storing the corresponding reads on the left-hand side navigation panel in :ref:`Figure 10<SangerAlignment_ShinyApp_8>`. In this example, there are one read in each tab and :ref:`Figure 10<SangerAlignment_ShinyApp_8>` shows the “1 - 1 Forward Read” page. It provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences in this figure are dynamic based on the :code:`signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in :ref:`Figure 15<SangerAlignment_ShinyApp_14>` below will always be same after trimming and their color codings for A/T/C/G are same as well.
 
 .. _SangerAlignment_ShinyApp_8:
 .. figure::  ../image/SangerAlignment_ShinyApp_8.png
@@ -198,7 +198,7 @@ Now, let's go to the page in the lowest level, *SangerRead* page. *SangerRead* p
 
    Figure 10. *SangerAlignment* Shiny app - *SangerRead* page.
 
-In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would improves alignment results. :ref:`Figure 11<SangerAlignment_ShinyApp_9>` shows the UI for Trimming Method 1 (M1): ‘Logarithmic Scale Trimming’. Users can change the cutoff score and click “Apply Trimming Parameters" button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.
+In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would improves alignment results. :ref:`Figure 11<SangerAlignment_ShinyApp_9>` shows the UI for Trimming Method 1 (M1): ‘Modified Mott Trimming’. This method is implemented in `Phred <http://www.phrap.org/phredphrapconsed.html>`_ Users can change the cutoff score and click “Apply Trimming Parameters" button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.
 
 .. _SangerAlignment_ShinyApp_9:
 .. figure::  ../image/SangerAlignment_ShinyApp_9.png

@@ -2,13 +2,12 @@
 #'
 #' @name sangeranalyseR
 #' @importFrom sangerseqR sangerseq read.abif primarySeq chromatogram
-#' @importFrom ggplot2 ggplot
 #' @importFrom gridExtra grid.arrange
 #' @import shiny
 #' @importFrom shinydashboard dashboardPage
 #' @importFrom data.table tstrsplit
 #' @importFrom shinyjs useShinyjs html
-#' @importFrom plotly orca
+#' @importFrom plotly plot_ly
 #' @importFrom DECIPHER AlignSeqs AlignTranslation ConsensusSequence
 #'               CorrectFrameshifts DistanceMatrix IdClusters RemoveGaps
 #' @importFrom Biostrings DNAStringSet GENETIC_CODE trinucleotideFrequency
