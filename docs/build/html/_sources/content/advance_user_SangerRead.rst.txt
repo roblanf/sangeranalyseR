@@ -11,12 +11,12 @@ Advanced User Guide - *SangerRead*
    Figure 1. Hierarchy of classes in sangeranalyseR, *SangerRead* level.
 
 
-*SangerRead* input file preparation
------------------------------------
+Preparing *SangerRead* input file
+---------------------------------
 Users can choose to input **ab1** or **FASTA** as their input file format.
 
-**ab1** file
-++++++++++++
+**ab1** file (SR)
++++++++++++++++++
 The main input file format to create *SangerRead* instance is **ab1**. Before starting the analysis, users need to prepare one target **ab1** file. The only hard regulation of the filename is that the input file must have **.ab1** as its file extension. There are some suggestions about file naming:
 
 .. note::
@@ -38,7 +38,7 @@ The main input file format to create *SangerRead* instance is **ab1**. Before st
 
    Figure 2. *SangerRead* filename regulation.
 
-In *SangerRead* section, it is not compulsory to follow the file naming regulation because users can directly specify the filename in input (see :ref:`*SangerRead* instance creation`); however, in the *SangerContig* and *SangerAlignment*, sangeranalyseR will automatically group files therefore it is compulsory to have systematic file naming strategy. For more details, please read :ref:`Advanced User Guide - *SangerContig*` and :ref:`Advanced User Guide - *SangerAlignment*`.
+In *SangerRead* section, it is not compulsory to follow the file naming regulation because users can directly specify the filename in input (see :ref:`Creating *SangerRead* instance`); however, in the *SangerContig* and *SangerAlignment*, sangeranalyseR will automatically group files therefore it is compulsory to have systematic file naming strategy. For more details, please read :ref:`Advanced User Guide - *SangerContig*` and :ref:`Advanced User Guide - *SangerAlignment*`.
 
 .. _sangeranalyseR_filename_convention_SangerRead:
 .. figure::  ../image/sangeranalyseR_filename_convention.png
@@ -50,12 +50,12 @@ In *SangerRead* section, it is not compulsory to follow the file naming regulati
 :ref:`Figure_3<sangeranalyseR_filename_convention_SangerRead>` shows the suggested **ab1** file naming convention. Users are strongly recommended to follow this file naming convention and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
 
 
-FASTA file
-++++++++++
+FASTA file (SR)
++++++++++++++++
 
 |
 
-*SangerRead* instance creation
+Creating *SangerRead* instance
 ------------------------------
 
 After preparing the *SangerRead* input file, the next step is to create the *SangerRead* S4 instance by running :code:`SangerRead` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method which makes instance creation more intuitive. The inputs include **Basic Parameters**, **Trimming Parameters** and **Chromatogram Parameters** and most of them have their own default values. In the constructor below, we list all possible parameters.
@@ -81,8 +81,8 @@ The inputs of :code:`SangerRead` constructor function and :code:`new` method are
 
 |
 
-*SangerRead* trimmed read visualization
----------------------------------------
+Visualizing *SangerRead* trimmed read
+-------------------------------------
 Before going to :ref:`Writing *SangerRead* FASTA files` and :ref:`Generating *SangerRead* report` parts, it is suggested to visualize the trimmed *SangerRead*. :ref:`Figure_4 <SangerRead_qualityBasePlot>` shows the quality score for each base pairs and the trimming start/end points of the sequence.
 
 
@@ -99,9 +99,9 @@ Before going to :ref:`Writing *SangerRead* FASTA files` and :ref:`Generating *Sa
 
 |
 
-*SangerRead* quality trimming parameters updating
+Updating *SangerRead* quality trimming parameters
 -------------------------------------------------
-In the previous :ref:`*SangerRead* instance creation` part, the constructor function apply the quality trimming parameters to all reads. After creating the *SangerRead* S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will change the *QualityReport* instance inside the *SangerRead* and update frameshift amino acid sequences.
+In the previous :ref:`Creating *SangerRead* instance` part, the constructor function apply the quality trimming parameters to all reads. After creating the *SangerRead* S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will change the *QualityReport* instance inside the *SangerRead* and update frameshift amino acid sequences.
 
 .. code-block:: R
 

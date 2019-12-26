@@ -88,20 +88,20 @@
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerRead.html">Advanced User Guide - <em>SangerRead</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerContig.html">Advanced User Guide - <em>SangerContig</em></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced User Guide - <em>SangerAlignment</em></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-input-files-preparation"><em>SangerAlignment</em> input files preparation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ab1-files">ab1 files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fasta-files">FASTA files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-sangeralignment-input-files">Preparing <em>SangerAlignment</em> input files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ab1-files-sa">ab1 files (SA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fasta-files-sa">FASTA files (SA)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-instance-creation"><em>SangerAlignment</em> instance creation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-sangeralignment-instance">Creating <em>SangerAlignment</em> instance</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#sangeralignment-inputs-slots-definition"><em>SangerAlignment</em> inputs &amp; slots definition</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-quality-trimming-parameters-updating"><em>SangerAlignment</em> quality trimming parameters updating</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-shiny-app"><em>SangerAlignment</em> Shiny app</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#sangeralignment-page"><em>SangerAlignment</em> page</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sangercontig-page"><em>SangerContig</em> page</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sangerread-page"><em>SangerRead</em> page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updating-sangeralignment-quality-trimming-parameters">Updating <em>SangerAlignment</em> quality trimming parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#launching-sangeralignment-shiny-app">Launching <em>SangerAlignment</em> Shiny app</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sangeralignment-page-sa-app"><em>SangerAlignment</em> page (SA app)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sangercontig-page-sa-app"><em>SangerContig</em> page (SA app)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sangerread-page-sa-app"><em>SangerRead</em> page (SA app)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-sangeralignment-fasta-files">Writing <em>SangerAlignment</em> FASTA files</a></li>
@@ -186,11 +186,11 @@
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="section" id="sangeralignment-input-files-preparation">
-<h2><em>SangerAlignment</em> input files preparation<a class="headerlink" href="#sangeralignment-input-files-preparation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="preparing-sangeralignment-input-files">
+<h2>Preparing <em>SangerAlignment</em> input files<a class="headerlink" href="#preparing-sangeralignment-input-files" title="Permalink to this headline">¶</a></h2>
 <p>Users can choose to input <strong>ab1</strong> or <strong>FASTA</strong> as their input file format.</p>
-<div class="section" id="ab1-files">
-<h3>ab1 files<a class="headerlink" href="#ab1-files" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="ab1-files-sa">
+<h3>ab1 files (SA)<a class="headerlink" href="#ab1-files-sa" title="Permalink to this headline">¶</a></h3>
 <p>The main input file format to create <em>SangerAlignment</em> instance is <strong>ab1</strong>. Before starting the analysis, users need to prepare a directory which contains all the <strong>ab1</strong> files. Here are some filename regulations:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -221,15 +221,15 @@
 </div>
 <p><a class="reference internal" href="#sangeranalyser-filename-convention-sangeralignment"><span class="std std-ref">Figure_3</span></a> shows the suggested <strong>ab1</strong> file naming convention. Users are strongly recommended to follow this file naming convention and use the default <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> : &quot;<code class="code docutils literal notranslate"><span class="pre">_[0-9]*_F.ab1$</span></code>&quot; and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code> : &quot;<code class="code docutils literal notranslate"><span class="pre">_[0-9]*_R.ab1$</span></code>&quot; to reduce any chance of error.</p>
 </div>
-<div class="section" id="fasta-files">
-<h3>FASTA files<a class="headerlink" href="#fasta-files" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="fasta-files-sa">
+<h3>FASTA files (SA)<a class="headerlink" href="#fasta-files-sa" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 </div>
-<div class="section" id="sangeralignment-instance-creation">
-<h2><em>SangerAlignment</em> instance creation<a class="headerlink" href="#sangeralignment-instance-creation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="creating-sangeralignment-instance">
+<h2>Creating <em>SangerAlignment</em> instance<a class="headerlink" href="#creating-sangeralignment-instance" title="Permalink to this headline">¶</a></h2>
 <p>After preparing the input directory, we can create the <em>SangerAlignment</em> S4 instance by running <code class="code docutils literal notranslate"><span class="pre">SangerAlignment</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal notranslate"><span class="pre">new</span></code> method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list all possible parameters. For a simpler command, please go to <a class="reference internal" href="quick_commands.html#quick-commands"><span class="std std-ref">Quick Commands</span></a>.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">inputSource</span>          <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
                                    <span class="n">parentDirectory</span>      <span class="o">=</span> <span class="s">&quot;./tmp/&quot;</span><span class="p">,</span>
@@ -264,9 +264,9 @@
 </div>
 </div>
 </div>
-<div class="section" id="sangeralignment-quality-trimming-parameters-updating">
-<h2><em>SangerAlignment</em> quality trimming parameters updating<a class="headerlink" href="#sangeralignment-quality-trimming-parameters-updating" title="Permalink to this headline">¶</a></h2>
-<p>In the previous <a class="reference internal" href="#sangeralignment-instance-creation"><span class="std std-ref">SangerAlignment instance creation</span></a> part, the constructor function will apply the quality trimming parameters to all reads. After creating the <em>SangerAlignment</em> S4 instance, users can change the trimming parameters by running <code class="code docutils literal notranslate"><span class="pre">updateQualityParam</span></code> function which will update all reads with the new trimming parameters and redo reads alignment in <em>SangerContig</em> and contigs alignment in <em>SangerAlignment</em>. If users want to do quality trimming read by read instead all at once, please read <a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">SangerAlignment Shiny app</span></a>.</p>
+<div class="section" id="updating-sangeralignment-quality-trimming-parameters">
+<h2>Updating <em>SangerAlignment</em> quality trimming parameters<a class="headerlink" href="#updating-sangeralignment-quality-trimming-parameters" title="Permalink to this headline">¶</a></h2>
+<p>In the previous <a class="reference internal" href="#creating-sangeralignment-instance"><span class="std std-ref">Creating SangerAlignment instance</span></a> part, the constructor function will apply the quality trimming parameters to all reads. After creating the <em>SangerAlignment</em> S4 instance, users can change the trimming parameters by running <code class="code docutils literal notranslate"><span class="pre">updateQualityParam</span></code> function which will update all reads with the new trimming parameters and redo reads alignment in <em>SangerContig</em> and contigs alignment in <em>SangerAlignment</em>. If users want to do quality trimming read by read instead all at once, please read <a class="reference internal" href="#launching-sangeralignment-shiny-app"><span class="std std-ref">Launching SangerAlignment Shiny app</span></a>.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">newSangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">updateQualityParam</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">,</span>
                                          <span class="n">TrimmingMethod</span>       <span class="o">=</span> <span class="s">&quot;M2&quot;</span><span class="p">,</span>
                                          <span class="n">M1TrimmingCutoff</span>     <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
@@ -278,14 +278,14 @@
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="sangeralignment-shiny-app">
-<h2><em>SangerAlignment</em> Shiny app<a class="headerlink" href="#sangeralignment-shiny-app" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="launching-sangeralignment-shiny-app">
+<h2>Launching <em>SangerAlignment</em> Shiny app<a class="headerlink" href="#launching-sangeralignment-shiny-app" title="Permalink to this headline">¶</a></h2>
 <p>We create an interactive local Shiny app for users to go into each <em>SangerRead</em> and <em>SangerContig</em> in <em>SangerAlignment</em> instance. Users only need to run one function with previously created instance as input and the <em>SangerAlignment</em> Shiny app will pop up. Here, we will go through pages in the three levels.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchAppSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="sangeralignment-page">
-<h3><em>SangerAlignment</em> page<a class="headerlink" href="#sangeralignment-page" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sangeralignment-page-sa-app">
+<h3><em>SangerAlignment</em> page (SA app)<a class="headerlink" href="#sangeralignment-page-sa-app" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="#sangeralignment-shinyapp-1"><span class="std std-ref">Figure 4</span></a> is the initial page and the toppest layer of <em>SangerAlignment</em> App. It provides basic parameters in <em>SangerAlignment</em> instance, contigs alignment result and phylogenetic tree etc. After updating all the trimmed reads, users need to click “Re-calculate Contigs Alignment” button to do contigs alignment again. From the left-hand side panel, we can clearly see the hierarchy of the <em>SangerAlignment</em> S4 instance and easily access to all reads and contigs in it.</p>
 <div class="figure align-center" id="id4">
 <span id="sangeralignment-shinyapp-1"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_1.png"><img alt="../_images/SangerAlignment_ShinyApp_1.png" src="../_images/SangerAlignment_ShinyApp_1.png" style="width: 720.0px; height: 394.0px;" /></a>
@@ -302,8 +302,8 @@
 <p class="caption"><span class="caption-text">Figure 6. <em>SangerAlignment</em> Page - phylogenetic tree result.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 </div>
-<div class="section" id="sangercontig-page">
-<h3><em>SangerContig</em> page<a class="headerlink" href="#sangercontig-page" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sangercontig-page-sa-app">
+<h3><em>SangerContig</em> page (SA app)<a class="headerlink" href="#sangercontig-page-sa-app" title="Permalink to this headline">¶</a></h3>
 <p>Now, let's go to the page in the next level, <em>SangerContig</em> page. Users can click into all contigs and check their results. <a class="reference internal" href="#sangeralignment-shinyapp-5"><span class="std std-ref">Figure 7</span></a> shows the overview page of Contig 1. Notice that there is a red “Re-calculate Contig” button. After changing the quality trimming parameters, users need to click the button before checking the results below in order to get the updated information.</p>
 <div class="figure align-center" id="id7">
 <span id="sangeralignment-shinyapp-5"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_5.png"><img alt="../_images/SangerAlignment_ShinyApp_5.png" src="../_images/SangerAlignment_ShinyApp_5.png" style="width: 720.0px; height: 394.0px;" /></a>
@@ -319,14 +319,14 @@
 <p class="caption"><span class="caption-text">Figure 9. <em>SangerContig</em> page - reads alignment and difference data frame.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </div>
 </div>
-<div class="section" id="sangerread-page">
-<h3><em>SangerRead</em> page<a class="headerlink" href="#sangerread-page" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sangerread-page-sa-app">
+<h3><em>SangerRead</em> page (SA app)<a class="headerlink" href="#sangerread-page-sa-app" title="Permalink to this headline">¶</a></h3>
 <p>Now, let's go to the page in the lowest level, <em>SangerRead</em> page. <em>SangerRead</em> page contains all details of a read including its trimming and chromatogram inputs and results. All reads are in &quot;forward&quot; or &quot;reverse&quot; direction. Under <em>SangerContig</em> page, there are two expendable tabs, “Forward Reads” and “Reverse Reads” storing the corresponding reads on the left-hand side navigation panel in <a class="reference internal" href="#sangeralignment-shinyapp-8"><span class="std std-ref">Figure 10</span></a>. In this example, there are one read in each tab and <a class="reference internal" href="#sangeralignment-shinyapp-8"><span class="std std-ref">Figure 10</span></a> shows the “1 - 1 Forward Read” page. It provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences in this figure are dynamic based on the <code class="code docutils literal notranslate"><span class="pre">signalRatioCutoff</span></code> value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in <a class="reference internal" href="#sangeralignment-shinyapp-14"><span class="std std-ref">Figure 15</span></a> below will always be same after trimming and their color codings for A/T/C/G are same as well.</p>
 <div class="figure align-center" id="id10">
 <span id="sangeralignment-shinyapp-8"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_8.png"><img alt="../_images/SangerAlignment_ShinyApp_8.png" src="../_images/SangerAlignment_ShinyApp_8.png" style="width: 720.0px; height: 394.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 10. <em>SangerAlignment</em> Shiny app - <em>SangerRead</em> page.</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
-<p>In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would improves alignment results. <a class="reference internal" href="#sangeralignment-shinyapp-9"><span class="std std-ref">Figure 11</span></a> shows the UI for Trimming Method 1 (M1): ‘Modified Mott Trimming’. This method is implemented in <a class="reference external" href="http://www.phrap.org/phredphrapconsed.html">Phred</a> Users can change the cutoff score and click “Apply Trimming Parameters&quot; button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.</p>
+<p>In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would improves alignment results. <a class="reference internal" href="#sangeralignment-shinyapp-9"><span class="std std-ref">Figure 11</span></a> shows the UI for Trimming Method 1 (M1): ‘Modified Mott Trimming’. This method is implemented in <a class="reference external" href="http://www.phrap.org/phredphrapconsed.html">Phred</a>. Users can change the cutoff score and click “Apply Trimming Parameters&quot; button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.</p>
 <div class="figure align-center" id="id11">
 <span id="sangeralignment-shinyapp-9"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_9.png"><img alt="../_images/SangerAlignment_ShinyApp_9.png" src="../_images/SangerAlignment_ShinyApp_9.png" style="width: 722.7px; height: 281.25px;" /></a>
 <p class="caption"><span class="caption-text">Figure 11. <em>SangerRead</em> page - Trimming Method 1 (M1): ‘Modified Mott Trimming’ UI.</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
@@ -346,7 +346,7 @@
 <span id="sangeralignment-shinyapp-13"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_13.png"><img alt="../_images/SangerAlignment_ShinyApp_13.png" src="../_images/SangerAlignment_ShinyApp_13.png" style="width: 722.5px; height: 362.5px;" /></a>
 <p class="caption"><span class="caption-text">Figure 14. <em>SangerRead</em> page - quality trimming plot.</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
 </div>
-<p>If we only see primary and secondary sequences in the table, we will loose some variations. Chromatogram is very helpful to check the peak resolution. <a class="reference internal" href="#sangeralignment-shinyapp-14"><span class="std std-ref">Figure 15</span></a> shows the panel of plotting chromatogram. Users can change four parameters: “Base Number Per Row”, “Height Per Row”, “Signal Ratio Cutoff”, and “Show Trimmed Region”. Among them, “Signal Ratio Cutoff” is a key parameter. If its value is default value 0.33, it indicates that the lower peak should be at least 1/3rd as high as the higher peak for it count as a secondary peak.</p>
+<p>If we only see primary and secondary sequences in the table, we will loose some variations. Chromatogram is very helpful to check the peak resolution. <a class="reference internal" href="#sangeralignment-shinyapp-14"><span class="std std-ref">Figure 15</span></a> shows the panel of plotting chromatogram. Users can change four parameters: <code class="code docutils literal notranslate"><span class="pre">Base</span> <span class="pre">Number</span> <span class="pre">Per</span> <span class="pre">Row</span></code>, <code class="code docutils literal notranslate"><span class="pre">Height</span> <span class="pre">Per</span> <span class="pre">Row</span></code>, <code class="code docutils literal notranslate"><span class="pre">Signal</span> <span class="pre">Ratio</span> <span class="pre">Cutoff</span></code>, and <code class="code docutils literal notranslate"><span class="pre">Show</span> <span class="pre">Trimmed</span> <span class="pre">Region</span></code>. Among them, <code class="code docutils literal notranslate"><span class="pre">Signal</span> <span class="pre">Ratio</span> <span class="pre">Cutoff</span></code> is a key parameter. If its value is default value 0.33, it indicates that the lower peak should be at least 1/3rd as high as the higher peak for it count as a secondary peak.</p>
 <div class="figure align-center" id="id15">
 <span id="sangeralignment-shinyapp-14"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_ShinyApp_14.png"><img alt="../_images/SangerAlignment_ShinyApp_14.png" src="../_images/SangerAlignment_ShinyApp_14.png" style="width: 722.25px; height: 420.3px;" /></a>
 <p class="caption"><span class="caption-text">Figure 15. <em>SangerRead</em> page - chromatogram panel.</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>

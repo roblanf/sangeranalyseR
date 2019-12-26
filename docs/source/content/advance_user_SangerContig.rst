@@ -12,13 +12,13 @@ Advanced User Guide - *SangerContig*
 
 |
 
-*SangerContig* input files preparation
---------------------------------------
+Preparing *SangerContig* input files
+------------------------------------
 
 Users can choose to input **ab1** or **FASTA** as their input file format.
 
-ab1 files
-+++++++++
+ab1 files (SC)
+++++++++++++++
 
 The main input file format to create *SangerRead* instance is **ab1**. Before starting the analysis, users need to prepare all **ab1** files inside one directory. This directory is the parent directory and all **ab1** files must be in the first layer of it; in other words, there should not be any directory containing any **ab1** files inside the parent directory. Because sangeranalyseR will group **ab1** files based on their direction automatically, users have to follow the filename regulations below:
 
@@ -64,13 +64,13 @@ sangeranalyseR will first match the :code:`contigName` to exclude unrelated file
 :ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig>` shows the suggested **ab1** file naming convention. Users are strongly recommended to follow this file naming convention and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
 
 
-FASTA files
-+++++++++++
+FASTA files (SC)
+++++++++++++++++
 
 |
 
 
-*SangerContig* instance creation
+Creating *SangerContig* instance
 --------------------------------
 
 After preparing the input directory, we can create the *SangerContig* S4 instance by running :code:`SangerContig` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list all possible parameters.
@@ -112,10 +112,10 @@ The inputs of :code:`SangerContig` constructor function and :code:`new` method a
 |
 
 
-*SangerContig* quality trimming parameters updating
+Updating *SangerContig* quality trimming parameters
 ---------------------------------------------------
 
-In the previous :ref:`*SangerContig* instance creation` part, the constructor function will apply the quality trimming parameters to all reads. After creating the SangerContig S4 instance, users can change the trimming parameters by running updateQualityParam function which will update all reads with the new trimming parameters and redo reads alignment. If users want to do quality trimming read by read instead all at once, please read :ref:`*SangerContig* Shiny app`.
+In the previous :ref:`Creating *SangerContig* instance` part, the constructor function will apply the quality trimming parameters to all reads. After creating the SangerContig S4 instance, users can change the trimming parameters by running updateQualityParam function which will update all reads with the new trimming parameters and redo reads alignment. If users want to do quality trimming read by read instead all at once, please read :ref:`Launching *SangerContig* Shiny app`.
 
 .. code-block:: R
 
@@ -127,29 +127,35 @@ In the previous :ref:`*SangerContig* instance creation` part, the constructor fu
 
 |
 
-*SangerContig* Shiny app
-------------------------
+Launching *SangerContig* Shiny app
+----------------------------------
 
 We create an interactive local Shiny app for users to go into each *SangerRead* in *SangerContig* instance. Users only need to run one function with previously created instance as input and the *SangerContig* Shiny app will pop up. Here, we will go through pages in the two levels, *SangerRead* and *SangerContig* pages.
 
-*SangerContig* page
-+++++++++++++++++++
-*SangerContig* page is the initial page of *SangerContig* Shiny app.
+*SangerContig* page (SC app)
+++++++++++++++++++++++++++++
+*SangerContig* page is the initial page of *SangerContig* Shiny app. :ref:`Figure 4<SangerContig_shiny_SangerContig_page>` shows the overview page of the contig. Notice that there is a red "Re-calculate Contig" button. Users need to click the button after changing the quality trimming parameters in order to get the updated information. Under SangerContig page, there are two expendable tabs, “Forward Reads” and “Reverse Reads” storing the corresponding reads on the left-hand side navigation panel in :ref:`Figure 4<SangerContig_shiny_SangerContig_page>`. See :ref:`*SangerRead* page (SC app)` for the lower level.
 
 .. _SangerContig_shiny_SangerContig_page:
 .. figure::  ../image/SangerContig_shiny_SangerContig_page.png
    :align:   center
-   :scale:   30 %
+   :scale:   25 %
 
    Figure 4. *SangerContig* Shiny app initial page - *SangerContig* page.
+
+The information provided in this page are input parameters and contig results including “input parameters”, “genetic code table”, “reference amino acid sequence”, “reads alignment”, “difference data frame”, “dendrogram”, “sample distance heatmap”, “indels data frame”, “stop codons data frame”.
+
+:ref:`Figure 5<SangerContig_shiny_alignment_differenceDF>` shows reads alignment result and difference data frame. The alignment is generated by :code:`AlignSeqs` or :code:`AlignTranslation` function in `DECIPHER <https://bioconductor.org/packages/release/bioc/html/DECIPHER.html>`_ package.
+
 
 .. _SangerContig_shiny_alignment_differenceDF:
 .. figure::  ../image/SangerContig_shiny_alignment_differenceDF.png
    :align:   center
    :scale:   30 %
 
-   Figure 5. *SangerContig* page - *SangerRead* alignment.
+   Figure 5. *SangerContig* page - reads alignment and difference data frame.
 
+:ref:`Figure 6<SangerContig_shiny_dendrogram>` shows dendrogram result in both plot and in data frame. The results are generated by :code:`IdClusters` function in `DECIPHER <https://bioconductor.org/packages/release/bioc/html/DECIPHER.html>`_ package.
 
 .. _SangerContig_shiny_dendrogram:
 .. figure::  ../image/SangerContig_shiny_dendrogram.png
@@ -158,6 +164,7 @@ We create an interactive local Shiny app for users to go into each *SangerRead* 
 
    Figure 6. *SangerContig* page - dendrogram.
 
+:ref:`Figure 7<SangerContig_shiny_samples_distance>` shows distance between **ab1** files. The results are generated by :code:`DistanceMatrix` function in `DECIPHER <https://bioconductor.org/packages/release/bioc/html/DECIPHER.html>`_ package. The heatmap is generated by :code:`plot_ly` function in `plotly <https://plot.ly/r/>`_ package.
 
 .. _SangerContig_shiny_samples_distance:
 .. figure::  ../image/SangerContig_shiny_samples_distance.png
@@ -165,6 +172,8 @@ We create an interactive local Shiny app for users to go into each *SangerRead* 
    :scale:   30 %
 
    Figure 7. *SangerContig* page - samples distance.
+
+:ref:`Figure 8<SangerContig_shiny_indelsDF_stopcodonsDF>` shows insertions, deletions and stop codons data frame.
 
 .. _SangerContig_shiny_indelsDF_stopcodonsDF:
 .. figure::  ../image/SangerContig_shiny_indelsDF_stopcodonsDF.png
@@ -174,20 +183,107 @@ We create an interactive local Shiny app for users to go into each *SangerRead* 
    Figure 8. *SangerContig* page - indels and stop codons data frame.
 
 
-*SangerRead* page
-+++++++++++++++++
-.. _SangerContig_shiny_SangerRead_page:
-.. figure::  ../image/SangerContig_shiny_SangerRead_page.png
-   :align:   center
-   :scale:   30 %
-
-   Figure 8. *SangerContig* page - indels and stop codons data frame.
+*SangerRead* page (SC app)
+++++++++++++++++++++++++++
+Now, let's go to the next level which is also the lowest level, *SangerRead* page. *SangerRead* page contains all details of a read including its trimming and chromatogram inputs and results. All reads are in "forward" or "reverse" direction. In this example, there is one read in each direction and :ref:`Figure 9<SangerContig_shiny_SangerRead_page>` shows "1 Forward Read" page. This page provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences and quality Phred score table in this figure are dynamic based on the :code:`signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>` below will always be same after trimming and their color codings for A/T/C/G are same as well.
 
 .. _SangerContig_shiny_SangerRead_page:
 .. figure::  ../image/SangerContig_shiny_SangerRead_page.png
    :align:   center
-   :scale:   30 %
+   :scale:   25 %
 
-   Figure 8. *SangerContig* page - indels and stop codons data frame.
+   Figure 9. *SangerContig* Shiny app - *SangerRead* page
+
+In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would improves alignment results. :ref:`Figure 10<SangerContig_shiny_trimming_1>` shows the UI for Trimming Method 1 (M1): ‘Modified Mott Trimming’. This method is implemented in `Phred <http://www.phrap.org/phredphrapconsed.html>`_. Users can change the cutoff score and click “Apply Trimming Parameters" button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.
+
+.. _SangerContig_shiny_trimming_1:
+.. figure::  ../image/SangerContig_shiny_trimming_1.png
+   :align:   center
+   :scale:   45 %
+
+   Figure 10. *SangerRead* page - Trimming Method 1 (M1): ‘Modified Mott Trimming’ UI.
+
+:ref:`Figure 11<SangerContig_shiny_trimming_2>` shows another quality trimming method for users to choose from, Trimming Method 2 (M2): ‘Trimmomatics Sliding Window Trimming’. This method is implemented in `Trimmomatics <http://www.usadellab.org/cms/?page=trimmomatic>`_. Users can change the cutoff quality score as well as sliding window size and click “Apply Trimming Parameters" button to update the UI. The value of cutoff quality score must be between 0 and 60 (default 20); the value of sliding window size must be between 0 and 40 (default 10). If the inputs are invalid, their values will be set to default.
+
+.. _SangerContig_shiny_trimming_2:
+.. figure::  ../image/SangerContig_shiny_trimming_2.png
+   :align:   center
+   :scale:   45 %
+
+   Figure 11. *SangerRead* page - Trimming Method 2 (M2): ‘Trimmomatics Sliding Window Trimming’ UI.
+
+:ref:`Figure 12<SangerContig_shiny_trimmed_before_after>` shows the quality report before and after trimming. After clicking the “Apply Trimming Parameters” button in :ref:`Figure 10<SangerContig_shiny_trimming_1>` or :ref:`Figure 11<SangerContig_shiny_trimming_2>`, the values of these information boxes will be updated to the latest values.
+
+.. _SangerContig_shiny_trimmed_before_after:
+.. figure::  ../image/SangerContig_shiny_trimmed_before_after.png
+   :align:   center
+   :scale:   45 %
+
+   Figure 12. *SangerRead* page - read quality report before / after trimming.
+
+In :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>`, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top is the raw read region and the orange horizontal bar represents the trimmed read region. Both :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>` timming plot and :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>` chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters" button in :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>`.
+
+.. _SangerContig_shiny_bp_quality_plot:
+.. figure::  ../image/SangerContig_shiny_bp_quality_plot.png
+   :align:   center
+   :scale:   45 %
+
+   Figure 13. *SangerContig* page - quality trimming plot.
+
+If we only see primary and secondary sequences in the table, we will loose some variations. Chromatogram is very helpful to check the peak resolution. :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>` shows the panel of plotting chromatogram. Users can change four parameters: :code:`Base Number Per Row`, :code:`Height Per Row`, :code:`Signal Ratio Cutoff`, and :code:`Show Trimmed Region`. Among them, :code:`Signal Ratio Cutoff` is a key parameter. If its value is default value 0.33, it indicates that the lower peak should be at least 1/3rd as high as the higher peak for it count as a secondary peak.
+
+.. _SangerContig_shiny_chromatogram_panel:
+.. figure::  ../image/SangerContig_shiny_chromatogram_panel.png
+   :align:   center
+   :scale:   45 %
+
+   Figure 14. *SangerContig* page - chromatogram panel.
+
+Here is an example of applying new chromatogram parameters. We click “Show Trimmed Region” to set its value from FALSE to TRUE. :ref:`Figure 15<SangerContig_plotting_popup>` shows the loading notification popup during base calling and chromatogram plotting.
+
+
+.. _SangerContig_plotting_popup:
+.. figure::  ../image/SangerContig_plotting_popup.png
+   :align:   center
+   :scale:   45 %
+
+   Figure 15. *SangerContig* page - loading notification popup during replotting chromatogram.
+
+After replotting the chromatogram, trimmed region is showed in red striped region. :ref:`Figure 16<SangerContig_shiny_chromatogram>` shows part of the the chromatogram (1 bp ~ 240 bp). Moreover, chromatogram will be replotted when trimmed positions or chromatogram parameters are updated.
+
+
+.. _SangerContig_shiny_chromatogram:
+.. figure::  ../image/SangerContig_shiny_chromatogram.png
+   :align:   center
+   :scale:   45 %
+
+   Figure 16. *SangerContig* page - chromatogram with trimmed region showed.
+
+To let users browse the trimmed primary/secondary sequences without finding “Trimming Start Point” and “Trimming End Point” by themselves, we provide the final trimmed primary/secondary sequences that will be used for reads alignment in table format with quality scores in :ref:`Figure 17<SangerContig_shiny_trimmed_sequences>`. Frameshift amino acid sequences are also provided.
+
+
+.. _SangerContig_shiny_trimmed_sequences:
+.. figure::  ../image/SangerContig_shiny_trimmed_sequences.png
+   :align:   center
+   :scale:   45 %
+
+   Figure 17. *SangerContig* page - trimmed primary/secondary sequences and Phred quality score in table format.
+
+We have updated the trimming and chromatogram parameters for each read. Now, we need to click “Re-calculate contig” button to do alignment again. Last but not least, we can save all data into a new ‘SangerContig’ S4 instance by clicking “Save S4 Object button”. New S4 instance would be saved in Rda format. Users can run :code:`readRDS` function to load it into current R environment. :ref:`Figure 18<SangerContig_shiny_save_popup>` shows some hints in the save notification popup.
+
+.. _SangerContig_shiny_save_popup:
+.. figure::  ../image/SangerContig_shiny_save_popup.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 18. *SangerContig* page - saving notification popup.
 
 |
+
+Writing *SangerContig* FASTA files
+----------------------------------
+
+|
+
+Generating *SangerContig* report
+--------------------------------

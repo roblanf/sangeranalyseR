@@ -86,17 +86,17 @@
 <li class="toctree-l1"><a class="reference internal" href="quick_commands.html">Quick Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="beginner.html">Beginner Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced User Guide - <em>SangerRead</em></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#sangerread-input-file-preparation"><em>SangerRead</em> input file preparation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ab1-file"><strong>ab1</strong> file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fasta-file">FASTA file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-sangerread-input-file">Preparing <em>SangerRead</em> input file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ab1-file-sr"><strong>ab1</strong> file (SR)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fasta-file-sr">FASTA file (SR)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#sangerread-instance-creation"><em>SangerRead</em> instance creation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-sangerread-instance">Creating <em>SangerRead</em> instance</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#sangerread-inputs-slots-definition"><em>SangerRead</em> inputs &amp; slots definition</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#sangerread-trimmed-read-visualization"><em>SangerRead</em> trimmed read visualization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sangerread-quality-trimming-parameters-updating"><em>SangerRead</em> quality trimming parameters updating</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-sangerread-trimmed-read">Visualizing <em>SangerRead</em> trimmed read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updating-sangerread-quality-trimming-parameters">Updating <em>SangerRead</em> quality trimming parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-sangerread-fasta-files">Writing <em>SangerRead</em> FASTA files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-sangerread-report">Generating <em>SangerRead</em> report</a></li>
 </ul>
@@ -178,11 +178,11 @@
 <span id="sangerread-hierarchy"></span><a class="reference internal image-reference" href="../_images/SangerRead_hierarchy.png"><img alt="../_images/SangerRead_hierarchy.png" src="../_images/SangerRead_hierarchy.png" style="width: 626.6px; height: 217.8px;" /></a>
 <p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerRead</em> level.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<div class="section" id="sangerread-input-file-preparation">
-<h2><em>SangerRead</em> input file preparation<a class="headerlink" href="#sangerread-input-file-preparation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="preparing-sangerread-input-file">
+<h2>Preparing <em>SangerRead</em> input file<a class="headerlink" href="#preparing-sangerread-input-file" title="Permalink to this headline">¶</a></h2>
 <p>Users can choose to input <strong>ab1</strong> or <strong>FASTA</strong> as their input file format.</p>
-<div class="section" id="ab1-file">
-<h3><strong>ab1</strong> file<a class="headerlink" href="#ab1-file" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="ab1-file-sr">
+<h3><strong>ab1</strong> file (SR)<a class="headerlink" href="#ab1-file-sr" title="Permalink to this headline">¶</a></h3>
 <p>The main input file format to create <em>SangerRead</em> instance is <strong>ab1</strong>. Before starting the analysis, users need to prepare one target <strong>ab1</strong> file. The only hard regulation of the filename is that the input file must have <strong>.ab1</strong> as its file extension. There are some suggestions about file naming:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -202,22 +202,22 @@
 <span id="sangerread-file-structure"></span><a class="reference internal image-reference" href="../_images/SangerRead_file_structure.png"><img alt="../_images/SangerRead_file_structure.png" src="../_images/SangerRead_file_structure.png" style="width: 412.8px; height: 41.6px;" /></a>
 <p class="caption"><span class="caption-text">Figure 2. <em>SangerRead</em> filename regulation.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
-<p>In <em>SangerRead</em> section, it is not compulsory to follow the file naming regulation because users can directly specify the filename in input (see <a class="reference internal" href="#sangerread-instance-creation"><span class="std std-ref">SangerRead instance creation</span></a>); however, in the <em>SangerContig</em> and <em>SangerAlignment</em>, sangeranalyseR will automatically group files therefore it is compulsory to have systematic file naming strategy. For more details, please read <a class="reference internal" href="advance_user_SangerContig.html#advanced-user-guide-sangercontig"><span class="std std-ref">Advanced User Guide - SangerContig</span></a> and <a class="reference internal" href="advance_user_SangerAlignment.html#advanced-user-guide-sangeralignment"><span class="std std-ref">Advanced User Guide - SangerAlignment</span></a>.</p>
+<p>In <em>SangerRead</em> section, it is not compulsory to follow the file naming regulation because users can directly specify the filename in input (see <a class="reference internal" href="#creating-sangerread-instance"><span class="std std-ref">Creating SangerRead instance</span></a>); however, in the <em>SangerContig</em> and <em>SangerAlignment</em>, sangeranalyseR will automatically group files therefore it is compulsory to have systematic file naming strategy. For more details, please read <a class="reference internal" href="advance_user_SangerContig.html#advanced-user-guide-sangercontig"><span class="std std-ref">Advanced User Guide - SangerContig</span></a> and <a class="reference internal" href="advance_user_SangerAlignment.html#advanced-user-guide-sangeralignment"><span class="std std-ref">Advanced User Guide - SangerAlignment</span></a>.</p>
 <div class="figure align-center" id="id3">
 <span id="sangeranalyser-filename-convention-sangerread"></span><a class="reference internal image-reference" href="../_images/sangeranalyseR_filename_convention.png"><img alt="../_images/sangeranalyseR_filename_convention.png" src="../_images/sangeranalyseR_filename_convention.png" style="width: 621.0px; height: 28.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 3. Suggested <strong>ab1</strong> file naming convention - <em>SangerRead</em>.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 <p><a class="reference internal" href="#sangeranalyser-filename-convention-sangerread"><span class="std std-ref">Figure_3</span></a> shows the suggested <strong>ab1</strong> file naming convention. Users are strongly recommended to follow this file naming convention and use the default <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> : &quot;<code class="code docutils literal notranslate"><span class="pre">_[0-9]*_F.ab1$</span></code>&quot; and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code> : &quot;<code class="code docutils literal notranslate"><span class="pre">_[0-9]*_R.ab1$</span></code>&quot; to reduce any chance of error.</p>
 </div>
-<div class="section" id="fasta-file">
-<h3>FASTA file<a class="headerlink" href="#fasta-file" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="fasta-file-sr">
+<h3>FASTA file (SR)<a class="headerlink" href="#fasta-file-sr" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 </div>
-<div class="section" id="sangerread-instance-creation">
-<h2><em>SangerRead</em> instance creation<a class="headerlink" href="#sangerread-instance-creation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="creating-sangerread-instance">
+<h2>Creating <em>SangerRead</em> instance<a class="headerlink" href="#creating-sangerread-instance" title="Permalink to this headline">¶</a></h2>
 <p>After preparing the <em>SangerRead</em> input file, the next step is to create the <em>SangerRead</em> S4 instance by running <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal notranslate"><span class="pre">new</span></code> method which makes instance creation more intuitive. The inputs include <strong>Basic Parameters</strong>, <strong>Trimming Parameters</strong> and <strong>Chromatogram Parameters</strong> and most of them have their own default values. In the constructor below, we list all possible parameters.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerRead</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">inputSource</span>           <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
                          <span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
@@ -241,8 +241,8 @@
 </div>
 </div>
 </div>
-<div class="section" id="sangerread-trimmed-read-visualization">
-<h2><em>SangerRead</em> trimmed read visualization<a class="headerlink" href="#sangerread-trimmed-read-visualization" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="visualizing-sangerread-trimmed-read">
+<h2>Visualizing <em>SangerRead</em> trimmed read<a class="headerlink" href="#visualizing-sangerread-trimmed-read" title="Permalink to this headline">¶</a></h2>
 <p>Before going to <a class="reference internal" href="#writing-sangerread-fasta-files"><span class="std std-ref">Writing SangerRead FASTA files</span></a> and <a class="reference internal" href="#generating-sangerread-report"><span class="std std-ref">Generating SangerRead report</span></a> parts, it is suggested to visualize the trimmed <em>SangerRead</em>. <a class="reference internal" href="#sangerread-qualitybaseplot"><span class="std std-ref">Figure_4</span></a> shows the quality score for each base pairs and the trimming start/end points of the sequence.</p>
 <div class="figure align-center" id="id4">
 <span id="sangerread-qualitybaseplot"></span><a class="reference internal image-reference" href="../_images/SangerRead_qualityBasePlot.png"><img alt="../_images/SangerRead_qualityBasePlot.png" src="../_images/SangerRead_qualityBasePlot.png" style="width: 498.0px; height: 337.2px;" /></a>
@@ -255,9 +255,9 @@
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="sangerread-quality-trimming-parameters-updating">
-<h2><em>SangerRead</em> quality trimming parameters updating<a class="headerlink" href="#sangerread-quality-trimming-parameters-updating" title="Permalink to this headline">¶</a></h2>
-<p>In the previous <a class="reference internal" href="#sangerread-instance-creation"><span class="std std-ref">SangerRead instance creation</span></a> part, the constructor function apply the quality trimming parameters to all reads. After creating the <em>SangerRead</em> S4 instance, users can change the trimming parameters by running <code class="code docutils literal notranslate"><span class="pre">updateQualityParam</span></code> function which will change the <em>QualityReport</em> instance inside the <em>SangerRead</em> and update frameshift amino acid sequences.</p>
+<div class="section" id="updating-sangerread-quality-trimming-parameters">
+<h2>Updating <em>SangerRead</em> quality trimming parameters<a class="headerlink" href="#updating-sangerread-quality-trimming-parameters" title="Permalink to this headline">¶</a></h2>
+<p>In the previous <a class="reference internal" href="#creating-sangerread-instance"><span class="std std-ref">Creating SangerRead instance</span></a> part, the constructor function apply the quality trimming parameters to all reads. After creating the <em>SangerRead</em> S4 instance, users can change the trimming parameters by running <code class="code docutils literal notranslate"><span class="pre">updateQualityParam</span></code> function which will change the <em>QualityReport</em> instance inside the <em>SangerRead</em> and update frameshift amino acid sequences.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">newSangerRead</span> <span class="o">&lt;-</span> <span class="nf">updateQualityParam</span><span class="p">(</span><span class="n">sangerRead</span><span class="p">,</span>
                                     <span class="n">TrimmingMethod</span>       <span class="o">=</span> <span class="s">&quot;M2&quot;</span><span class="p">,</span>
                                     <span class="n">M1TrimmingCutoff</span>     <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
