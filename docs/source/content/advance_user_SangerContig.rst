@@ -282,8 +282,36 @@ We have updated the trimming and chromatogram parameters for each read. Now, we 
 
 Writing *SangerContig* FASTA files
 ----------------------------------
+Users can write the *SangerContig* instance to **FASTA** files. There are four options for users to choose from in :code:`selection` parameter.
+
+* :code:`reads_unalignment`: Writing reads into a single **FASTA** file (only trimmed without alignment).
+* :code:`reads_alignment`: Writing reads alignment and contig read to a single **FASTA** file.
+* :code:`contig`: Writing the contig to a single **FASTA** file.
+* :code:`all`: Writing reads, reads alignment, and the contig into three different files.
+
+Below is the one-line function that users need to run. This function mainly depends on :code:`writeXStringSet` function in `Biostrings <https://bioconductor.org/packages/release/bioc/html/Biostrings.html>`_ R package. Users can set the compression level through :code:`writeFastaSA` function.
+
+.. code-block:: R
+
+   writeFastaSC(sangerContig,
+                outputDir         = tempdir(),
+                compress          = FALSE,
+                compression_level = NA,
+                selection         = "all")
 
 |
 
 Generating *SangerContig* report
 --------------------------------
+Last but not least, users can save *SangerContig* instance into a report after the analysis. The report will be generated in **HTML** by knitting **Rmd** files.
+
+
+Users can set :code:`includeSangerRead` parameter to decide to which level the *SangerContig* report will go. Moreover, after the reports are generated, users can easily navigate through reports in different levels within the **HTML** file.
+
+One thing to pay attention to is that if users have many reads, it would take quite a long time to write out all reports. If users only want to generate the contig result, remember to set :code:`includeSangerRead` to :code:`FALSE` in order to save time.
+
+.. code-block:: R
+
+   generateReportSC(sangerContig,
+                    outputDir           = tempdir(),
+                    includeSangerRead   = TRUE)

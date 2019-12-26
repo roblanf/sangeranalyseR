@@ -370,12 +370,35 @@
 </div>
 <div class="section" id="writing-sangercontig-fasta-files">
 <h2>Writing <em>SangerContig</em> FASTA files<a class="headerlink" href="#writing-sangercontig-fasta-files" title="Permalink to this headline">¶</a></h2>
+<p>Users can write the <em>SangerContig</em> instance to <strong>FASTA</strong> files. There are four options for users to choose from in <code class="code docutils literal notranslate"><span class="pre">selection</span></code> parameter.</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">reads_unalignment</span></code>: Writing reads into a single <strong>FASTA</strong> file (only trimmed without alignment).</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">reads_alignment</span></code>: Writing reads alignment and contig read to a single <strong>FASTA</strong> file.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">contig</span></code>: Writing the contig to a single <strong>FASTA</strong> file.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">all</span></code>: Writing reads, reads alignment, and the contig into three different files.</p></li>
+</ul>
+<p>Below is the one-line function that users need to run. This function mainly depends on <code class="code docutils literal notranslate"><span class="pre">writeXStringSet</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">Biostrings</a> R package. Users can set the compression level through <code class="code docutils literal notranslate"><span class="pre">writeFastaSA</span></code> function.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFastaSC</span><span class="p">(</span><span class="n">sangerContig</span><span class="p">,</span>
+             <span class="n">outputDir</span>         <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
+             <span class="n">compress</span>          <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
+             <span class="n">compression_level</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">,</span>
+             <span class="n">selection</span>         <span class="o">=</span> <span class="s">&quot;all&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="generating-sangercontig-report">
 <h2>Generating <em>SangerContig</em> report<a class="headerlink" href="#generating-sangercontig-report" title="Permalink to this headline">¶</a></h2>
+<p>Last but not least, users can save <em>SangerContig</em> instance into a report after the analysis. The report will be generated in <strong>HTML</strong> by knitting <strong>Rmd</strong> files.</p>
+<p>Users can set <code class="code docutils literal notranslate"><span class="pre">includeSangerRead</span></code> parameter to decide to which level the <em>SangerContig</em> report will go. Moreover, after the reports are generated, users can easily navigate through reports in different levels within the <strong>HTML</strong> file.</p>
+<p>One thing to pay attention to is that if users have many reads, it would take quite a long time to write out all reports. If users only want to generate the contig result, remember to set <code class="code docutils literal notranslate"><span class="pre">includeSangerRead</span></code> to <code class="code docutils literal notranslate"><span class="pre">FALSE</span></code> in order to save time.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSC</span><span class="p">(</span><span class="n">sangerContig</span><span class="p">,</span>
+                 <span class="n">outputDir</span>           <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
+                 <span class="n">includeSangerRead</span>   <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 
