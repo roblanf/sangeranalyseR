@@ -10,6 +10,7 @@ License: GPL-2
 Encoding: UTF-8
 Depends: 
     R (>= 3.0.1),
+    stringr,
     ape,
     Biostrings,
     DECIPHER,

@@ -1,6 +1,7 @@
 #' sangeranalyseR-package
 #'
 #' @name sangeranalyseR
+#' @importFrom stringr str_extract
 #' @importFrom sangerseqR sangerseq read.abif primarySeq chromatogram
 #' @importFrom gridExtra grid.arrange
 #' @import shiny

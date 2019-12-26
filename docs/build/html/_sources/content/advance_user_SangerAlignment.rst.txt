@@ -14,26 +14,26 @@ Advanced User Guide - *SangerAlignment*
 
 |
 
-Input files preparation
------------------------
+*SangerAlignment* input files preparation
+-----------------------------------------
 Users can choose to input **ab1** or **FASTA** as their input file format.
 
 ab1 files
 +++++++++
-The main input file format to create *SangerAlignment* instance is **ab1**. Before starting the analysis, users needs to prepare a directory which contains all the **ab1** files. Here are some filename regulations:
+The main input file format to create *SangerAlignment* instance is **ab1**. Before starting the analysis, users need to prepare a directory which contains all the **ab1** files. Here are some filename regulations:
 
 .. note::
 
-    *  All the input files must have **ab1** as its file extension
+    *  All the input files must have **.ab1** as its file extension
     *  The reads that belong to the same contig must have the same contig name in its filename.
-    *  Forward or reverse direction also needs to be specified in the filename.
+    *  Forward or reverse direction also has to be specified in the filename.
 
 
 There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **ab1** files.
 
 .. note::
 
-  * :code:`parentDirectory` is the root directory that contains all the **ab1** files. It can be absolute or relative path. We suggest users to put only target **ab1** files inside this directory without other unrelated files.
+  * :code:`parentDirectory`: The root directory that contains all the **ab1** files. It can be absolute or relative path. We suggest users to put only target **ab1** files inside this directory without other unrelated files.
   * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filename in forward direction. :code:`grepl` function in R is used to select forward reads from all **ab1** files.
   * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filename in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **ab1** files.
 
@@ -54,14 +54,14 @@ For basic input files preparation example, please go to :ref:`Beginner Guide`. H
 
 :ref:`Figure_2<SangerAlignment_file_structure_complex>` shows the file naming convention and directory hierarchy. In this example, the parent directory is :code:`extdata` and the directories in first layer are :code:`Allolobophora_chlorotica` and :code:`Drosophila_melanogaster`. All target **ab1** files need to be inside parent directory but it is not necessary to put them in the same level of directory. sangeranalyseR will recursively search all files with **.ab1** file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with filenames. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
 
-.. _SangerAlignment_filename_convention:
-.. figure::  ../image/SangerAlignment_filename_convention.png
+.. _sangeranalyseR_filename_convention_SangerAlignment:
+.. figure::  ../image/sangeranalyseR_filename_convention.png
    :align:   center
    :scale:   25 %
 
-   Figure 3. Suggested **ab1** file naming convention.
+   Figure 3. Suggested **ab1** file naming convention - *SangerAlignment*.
 
-:ref:`Figure_3<SangerAlignment_filename_convention>` shows the suggested **ab1** file naming convention. Users are strongly recommended to follow this file naming convention and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
+:ref:`Figure_3<sangeranalyseR_filename_convention_SangerAlignment>` shows the suggested **ab1** file naming convention. Users are strongly recommended to follow this file naming convention and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
 
 
 
@@ -70,8 +70,8 @@ FASTA files
 
 |
 
-*SangerAlignment* creation
---------------------------
+*SangerAlignment* instance creation
+-----------------------------------
 After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list all possible parameters. For a simpler command, please go to :ref:`Quick Commands`.
 
 .. code-block:: R
@@ -100,15 +100,15 @@ After preparing the input directory, we can create the *SangerAlignment* S4 inst
                                       maxFractionLostSA     = 0.5,
                                       processorsNum         = NULL)
 
-Inputs & Slots Definition
-+++++++++++++++++++++++++
-The inputs of :code:`SangerAlignment` constructor function and :code:`new` method are same. For more details, please refer to `sangeranalyseR reference manul (need update) <http://packages.python.org/an_example_pypi_project/>`_.
+*SangerAlignment* inputs & slots definition
++++++++++++++++++++++++++++++++++++++++++++
+The inputs of :code:`SangerAlignment` constructor function and :code:`new` method are same. For more details, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_.
 
 |
 
-Update quality trimming parameters
-----------------------------------
-In the previous :ref:`*SangerAlignment* creation` part, the constructor function will apply the quality trimming parameters to all reads. After creating the *SangerAlignment* S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will update all reads with the new trimming parameters and redo reads alignment in *SangerContig* and contigs alignment in *SangerAlignment*. If users want to do quality trimming read by read instead all at once, please read :ref:`*SangerAlignment* Shiny app`.
+*SangerAlignment* quality trimming parameters updating
+------------------------------------------------------
+In the previous :ref:`*SangerAlignment* instance creation` part, the constructor function will apply the quality trimming parameters to all reads. After creating the *SangerAlignment* S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will update all reads with the new trimming parameters and redo reads alignment in *SangerContig* and contigs alignment in *SangerAlignment*. If users want to do quality trimming read by read instead all at once, please read :ref:`*SangerAlignment* Shiny app`.
 
 .. code-block:: R
 
@@ -129,7 +129,7 @@ We create an interactive local Shiny app for users to go into each *SangerRead* 
    launchAppSA(sangerAlignment)
 
 
-*SangerAlignment* Page
+*SangerAlignment* page
 ++++++++++++++++++++++
 :ref:`Figure 4<SangerAlignment_ShinyApp_1>` is the initial page and the toppest layer of *SangerAlignment* App. It provides basic parameters in *SangerAlignment* instance, contigs alignment result and phylogenetic tree etc. After updating all the trimmed reads, users need to click “Re-calculate Contigs Alignment” button to do contigs alignment again. From the left-hand side panel, we can clearly see the hierarchy of the *SangerAlignment* S4 instance and easily access to all reads and contigs in it.
 
@@ -159,7 +159,7 @@ In *SangerAlignment* page, the phylogenetic tree result is provided as well (:re
    Figure 6. *SangerAlignment* Page - phylogenetic tree result.
 
 
-*SangerContig* Page
+*SangerContig* page
 +++++++++++++++++++
 Now, let's go to the page in the next level, *SangerContig* page. Users can click into all contigs and check their results. :ref:`Figure 7<SangerAlignment_ShinyApp_5>` shows the overview page of Contig 1. Notice that there is a red “Re-calculate Contig” button. After changing the quality trimming parameters, users need to click the button before checking the results below in order to get the updated information.
 
@@ -187,7 +187,7 @@ The information provided in this page includes : “input parameters”, “gene
    Figure 9. *SangerContig* page - reads alignment and difference data frame.
 
 
-*SangerRead* Page
+*SangerRead* page
 +++++++++++++++++
 Now, let's go to the page in the lowest level, *SangerRead* page. *SangerRead* page contains all details of a read including its trimming and chromatogram inputs and results. All reads are in "forward" or "reverse" direction. Under *SangerContig* page, there are two expendable tabs, “Forward Reads” and “Reverse Reads” storing the corresponding reads on the left-hand side navigation panel in :ref:`Figure 10<SangerAlignment_ShinyApp_8>`. In this example, there are one read in each tab and :ref:`Figure 10<SangerAlignment_ShinyApp_8>` shows the “1 - 1 Forward Read” page. It provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences in this figure are dynamic based on the :code:`signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in :ref:`Figure 15<SangerAlignment_ShinyApp_14>` below will always be same after trimming and their color codings for A/T/C/G are same as well.
 
@@ -205,16 +205,16 @@ In quality trimming steps, we removes fragment at both ends of sequencing reads 
    :align:   center
    :scale:   45 %
 
-   Figure 11. *SangerRead* page - Trimming Method 1 (M1): ‘Logarithmic Scale Trimming’ UI.
+   Figure 11. *SangerRead* page - Trimming Method 1 (M1): ‘Modified Mott Trimming’ UI.
 
-:ref:`Figure 12<SangerAlignment_ShinyApp_10>` shows another quality trimming methods for users to choose from, Trimming Method 2 (M2): ‘Logarithmic Scale Sliding Window Trimming’. Users can change the cutoff quality score as well as sliding window size and click “Apply Trimming Parameters" button to update the UI. The value of cutoff quality score must be between 0 and 60 (default 20); the value of sliding window size must be between 0 and 40 (default 10). If the inputs are invalid, their values will be set to default.
+:ref:`Figure 12<SangerAlignment_ShinyApp_10>` shows another quality trimming methods for users to choose from, Trimming Method 2 (M2): ‘Trimmomatics Sliding Window Trimming’. This method is implemented in `Trimmomatics <http://www.usadellab.org/cms/?page=trimmomatic>`_. Users can change the cutoff quality score as well as sliding window size and click “Apply Trimming Parameters" button to update the UI. The value of cutoff quality score must be between 0 and 60 (default 20); the value of sliding window size must be between 0 and 40 (default 10). If the inputs are invalid, their values will be set to default.
 
 .. _SangerAlignment_ShinyApp_10:
 .. figure::  ../image/SangerAlignment_ShinyApp_10.png
    :align:   center
    :scale:   45 %
 
-   Figure 12. *SangerRead* page - Trimming Method 2 (M2): ‘Logarithmic Scale Sliding Window Trimming’ UI.
+   Figure 12. *SangerRead* page - Trimming Method 2 (M2): ‘Trimmomatics Sliding Window Trimming’ UI.
 
 :ref:`Figure 13<SangerAlignment_ShinyApp_11>` shows the quality report before and after trimming. After clicking the “Apply Trimming Parameters” button, the values of these information boxes will be updated to the latest values.
 
@@ -225,7 +225,7 @@ In quality trimming steps, we removes fragment at both ends of sequencing reads 
 
    Figure 13. *SangerRead* page - read quality report before / after trimming.
 
-In :ref:`Figure 14<SangerAlignment_ShinyApp_13>`, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top is the raw read region and the orange horizontal bar represents the trimmed read region. Both :ref:`Figure 14<SangerAlignment_ShinyApp_13>` timming plot and :ref:`Figure 15<SangerAlignment_ShinyApp_14>` chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters" button.
+In :ref:`Figure 14<SangerAlignment_ShinyApp_13>`, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top is the raw read region and the orange horizontal bar represents the trimmed read region. Both :ref:`Figure 14<SangerAlignment_ShinyApp_13>` timming plot and :ref:`Figure 15<SangerAlignment_ShinyApp_14>` chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters" button in :ref:`Figure 15<SangerAlignment_ShinyApp_14>`.
 
 .. _SangerAlignment_ShinyApp_13:
 .. figure::  ../image/SangerAlignment_ShinyApp_13.png
@@ -270,7 +270,7 @@ To let users browse the trimmed primary/secondary sequences without finding “T
 
    Figure 18. *SangerRead* page - trimmed primary/secondary sequences and Phred quality score in table format.
 
-We have updated the trimming and chromatogram parameters for each read. Now, we need to click “Re-calculate contig” button to do alignment again. Last but not least, we can save all data into a new ‘SangerContig’ S4 instance by clicking “Save S4 Object button”. New S4 instance would be saved in Rda format. Users can run readRDS function to load it into current R environment. :ref:`Figure 19<SangerAlignment_ShinyApp_18>` shows some hints in the save notification popup.
+We have updated the trimming and chromatogram parameters for each read. Now, we need to click “Re-calculate contig” button to do alignment again. Last but not least, we can save all data into a new ‘SangerContig’ S4 instance by clicking “Save S4 Object button”. New S4 instance would be saved in Rda format. Users can run :code:`readRDS` function to load it into current R environment. :ref:`Figure 19<SangerAlignment_ShinyApp_18>` shows some hints in the save notification popup.
 
 .. _SangerAlignment_ShinyApp_18:
 .. figure::  ../image/SangerAlignment_ShinyApp_18.png
@@ -283,8 +283,8 @@ We have updated the trimming and chromatogram parameters for each read. Now, we 
 |
 
 
-Writing FASTA files
--------------------
+Writing *SangerAlignment* FASTA files
+-------------------------------------
 Users can write the *SangerAlignment* instance to **FASTA** files. There are four options for users to choose from in :code:`selection` parameter.
 
 * :code:`contigs_unalignment`: Writing contigs into a single **FASTA** file.
