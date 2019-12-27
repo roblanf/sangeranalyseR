@@ -1764,8 +1764,8 @@ SangerContigServer <- function(input, output, session) {
                 ### Updating AASeqs
                 ### ----------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
-                                               SangerContig@forwardReadList[[readIndex]]@QualityReport@trimmedStartPos,
-                                               SangerContig@forwardReadList[[readIndex]]@QualityReport@trimmedFinishPos,
+                                               SangerContig@reverseReadList[[readIndex]]@QualityReport@trimmedStartPos,
+                                               SangerContig@reverseReadList[[readIndex]]@QualityReport@trimmedFinishPos,
                                                SangerContig@geneticCode)
                 SangerContig@reverseReadList[[readIndex]]@primaryAASeqS1 <<-
                     AASeqResult[["primaryAASeqS1"]]

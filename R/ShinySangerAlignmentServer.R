@@ -2264,9 +2264,9 @@ SangerAlignmentServer <- function(input, output, session) {
                 ### ------------------------------------------------------------
                 AASeqResult <- calculateAASeq (hetcalls@primarySeq,
                                                SangerAlignment@contigList[[contigIndex]]@
-                                                   forwardReadList[[readIndex]]@QualityReport@trimmedStartPos,
+                                                   reverseReadList[[readIndex]]@QualityReport@trimmedStartPos,
                                                SangerAlignment@contigList[[contigIndex]]@
-                                                   forwardReadList[[readIndex]]@QualityReport@trimmedFinishPos,
+                                                   reverseReadList[[readIndex]]@QualityReport@trimmedFinishPos,
                                                SangerAlignment@geneticCode)
                 SangerAlignment@contigList[[contigIndex]]@
                     reverseReadList[[readIndex]]@primaryAASeqS1 <<-
