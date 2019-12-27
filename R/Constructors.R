@@ -3,10 +3,9 @@
 ### ============================================================================
 #' @description
 #'
-#' @param inputSource
-#' @param fastaFileName
-#'
-#'
+#' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
+#' @param fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @param namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @param parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.
 #' @param suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
 #' @param suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
@@ -26,6 +25,8 @@
 #' @param geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @param acceptStopCodons The logical value \code{TRUE} or \code{FALSE}. \code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; \code{FALSE}: reject reads with stop codons. If \code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).
 #' @param readingFrame \code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
+#' @param minFractionCallSA Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.
+#' @param maxFractionLostSA Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.
 #' @param processorsNum The number of processors to use, or NULL (the default) for all available processors.
 #'
 #' @title SangerAlignment
@@ -56,6 +57,7 @@
 #'                        showTrimmed           = TRUE)
 SangerAlignment <- function(inputSource            = "ABIF",
                             fastaFileName          = "",
+                            namesConversionCSV     = NULL,
                             parentDirectory        = "",
                             suffixForwardRegExp    = "_F.ab1",
                             suffixReverseRegExp    = "_R.ab1",
@@ -81,6 +83,7 @@ SangerAlignment <- function(inputSource            = "ABIF",
     newAlignment <- new("SangerAlignment",
                         inputSource            = inputSource,
                         fastaFileName          = fastaFileName,
+                        namesConversionCSV     = namesConversionCSV,
                         parentDirectory        = parentDirectory,
                         suffixForwardRegExp    = suffixForwardRegExp,
                         suffixReverseRegExp    = suffixReverseRegExp,
@@ -110,11 +113,10 @@ SangerAlignment <- function(inputSource            = "ABIF",
 ### Self-defined constructor for SangerContig
 ### ============================================================================
 #' @description
-
-#' @param inputSource
-#' @param fastaFileName
 #'
-#'
+#' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
+#' @param fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @param namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @param parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
 #' @param contigName The contig name of all the reads in \code{parentDirectory}.
 #' @param suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
@@ -167,6 +169,7 @@ SangerAlignment <- function(inputSource            = "ABIF",
 #'                      showTrimmed           = TRUE)
 SangerContig <- function(inputSource            = "ABIF",
                          fastaFileName          = "",
+                         namesConversionCSV     = NULL,
                          parentDirectory        = "",
                          contigName             = "",
                          suffixForwardRegExp    = "_F.ab1",
@@ -191,6 +194,7 @@ SangerContig <- function(inputSource            = "ABIF",
     newContig <- new("SangerContig",
                      inputSource            = inputSource,
                      fastaFileName          = fastaFileName,
+                     namesConversionCSV     = namesConversionCSV,
                      parentDirectory        = parentDirectory,
                      contigName             = contigName,
                      suffixForwardRegExp    = suffixForwardRegExp,
@@ -222,11 +226,12 @@ SangerContig <- function(inputSource            = "ABIF",
 ### ============================================================================
 #' @description
 #'
-#' @param inputSource
-#'
-#'
+#' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @param readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @param readFileName The filename of the target ABIF file.
+#' @param fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @param namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
+#' @param geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @param TrimmingMethod TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
@@ -266,6 +271,7 @@ SangerRead <- function(inputSource           = "ABIF",
                        readFeature           = "",
                        readFileName          = "",
                        fastaReadName         = "",
+                       namesConversionCSV    = NULL,
                        geneticCode           = GENETIC_CODE,
                        TrimmingMethod        = "M1",
                        M1TrimmingCutoff      = 0.0001,
@@ -280,6 +286,7 @@ SangerRead <- function(inputSource           = "ABIF",
                    readFeature          = readFeature,
                    readFileName         = readFileName,
                    fastaReadName        = fastaReadName,
+                   namesConversionCSV   = namesConversionCSV,
                    geneticCode          = geneticCode,
                    TrimmingMethod       = TrimmingMethod,
                    M1TrimmingCutoff     = M1TrimmingCutoff,

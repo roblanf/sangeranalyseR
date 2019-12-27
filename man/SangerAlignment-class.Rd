@@ -10,7 +10,11 @@ An S4 class containing SangerContigs lists and contigs alignment results which c
 \section{Slots}{
 
 \describe{
-\item{\code{fastaFileName}}{}
+\item{\code{inputSource}}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
+
+\item{\code{fastaReadName}}{If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.}
+
+\item{\code{namesConversionCSV}}{The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
 
 \item{\code{parentDirectory}}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.}
 
@@ -40,9 +44,9 @@ An S4 class containing SangerContigs lists and contigs alignment results which c
 \examples{
 ## Input From ABIF file format
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
-suffixForwardRegExp <- "_F.ab1"
-suffixReverseRegExp <- "_R.ab1"
+parentDir <- file.path(rawDataDir)
+suffixForwardRegExp <- "[0-9]*_F.ab1"
+suffixReverseRegExp <- "[0-9]*_R.ab1"
 sangerAlignment <- new("SangerAlignment",
                        inputSource           = "ABIF",
                        parentDirectory       = parentDir,
@@ -62,11 +66,13 @@ sangerAlignment <- new("SangerAlignment",
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
                      "SangerAlignment", "Sanger_all_reads.fa")
+namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion.csv")
 suffixForwardRegExpFa <- "_F"
 suffixReverseRegExpFa <- "_R"
 sangerAlignmentFa <- new("SangerAlignment",
                          inputSource           = "FASTA",
                          fastaFileName         = fastaFN,
+                         namesConversionCSV    = namesConversionCSV,
                          suffixForwardRegExp   = suffixForwardRegExpFa,
                          suffixReverseRegExp   = suffixReverseRegExpFa,
                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",

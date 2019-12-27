@@ -118,3 +118,6 @@ setClassUnion("numericORNULL", c("numeric", "NULL"))
 #' @export
 setClassUnion("abifORNULL", c("abif", "NULL"))
 
+#' @export
+setClassUnion("characterORNULL", c("character", "NULL"))
+

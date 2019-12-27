@@ -14,7 +14,11 @@ An S4 class extending sangerseq S4 class which corresponds to a single ABIF file
 
 \item{\code{readFeature}}{The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.}
 
-\item{\code{readFileName}}{The filename of the target ABIF file.}
+\item{\code{readFileName}}{The filename of the target input file. It can be \code{"ABIF"} or \code{"FASTA"} file.}
+
+\item{\code{fastaReadName}}{If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.}
+
+\item{\code{namesConversionCSV}}{The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
 
 \item{\code{abifRawData}}{A S4 class containing all fields in the ABIF file. It is defined in sangerseqR package.}
 
@@ -46,7 +50,7 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
                              "ACHLO",
-                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
+                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.ab1")
 sangerReadF <- new("SangerRead",
                     inputSource           = "ABIF",
                     readFeature           = "Forward Read",
@@ -65,7 +69,7 @@ sangerReadF <- new("SangerRead",
 A_chloroticaRFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
                              "ACHLO",
-                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.ab1")
+                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.ab1")
 sangerReadR <- new("SangerRead",
                     inputSource           = "ABIF",
                     readFeature           = "Reverse Read",
@@ -86,25 +90,29 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFFNfa <- file.path(inputFilesPath,
                                "fasta",
                                "SangerRead",
-                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.fa")
-readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F"
+                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa")
+readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F"
+namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_1.csv")
 sangerReadFfa <- new("SangerRead",
-                     inputSource   = "FASTA",
-                     readFeature   = "Forward Read",
-                     readFileName  = A_chloroticaFFNfa,
-                     fastaReadName = readNameFfa,
-                     geneticCode   = GENETIC_CODE)
+                     inputSource        = "FASTA",
+                     readFeature        = "Forward Read",
+                     readFileName       = A_chloroticaFFNfa,
+                     fastaReadName      = readNameFfa,
+                     namesConversionCSV = namesConversionCSV,
+                     geneticCode        = GENETIC_CODE)
 # Reverse Read
 A_chloroticaRFNfa <- file.path(inputFilesPath,
                                "fasta",
                                "SangerRead",
-                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.fa")
-readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R"
+                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.fa")
+readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R"
+namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_2.csv")
 sangerReadRfa <- new("SangerRead",
                      inputSource   = "FASTA",
                      readFeature   = "Reverse Read",
                      readFileName  = A_chloroticaRFNfa,
                      fastaReadName = readNameRfa,
+                     namesConversionCSV = namesConversionCSV,
                      geneticCode   = GENETIC_CODE)
 }
 \author{

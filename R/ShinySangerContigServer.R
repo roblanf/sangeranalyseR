@@ -13,10 +13,10 @@ SangerContigServer <- function(input, output, session) {
     trimmingMethod <- SangerContig@trimmingMethodSC
     if (trimmingMethod == "M1") {
         trimmingMethodName = "Method 1:
-                               'Logarithmic Scale Trimming'"
+                               'Modified Mott Trimming'"
     } else if (trimmingMethod == "M2") {
         trimmingMethodName = "Method 2:
-                               'Logarithmic Scale Sliding Window Trimming'"
+                               'Trimmomatics Sliding Window Trimming'"
     }
 
     ### ------------------------------------------------------------------------
@@ -628,7 +628,7 @@ SangerContigServer <- function(input, output, session) {
                         tags$hr(
                             style = ("border-top: 6px double #A9A9A9;")),
                         fluidRow(
-                            box(title = tags$p("Base Pairs Quality Plot",
+                            box(title = tags$p("Quality Trimming Plot",
                                                style = "font-size: 21px;
                                            font-weight: bold;"),
                                 collapsible = TRUE,
@@ -734,7 +734,7 @@ SangerContigServer <- function(input, output, session) {
                                    value = ChromatogramParam[["signalRatioCutoff"]]),
                                checkboxInput(
                                    "ChromatogramCheckShowTrimmed",
-                                   "Whether show trimmed region",
+                                   "Show trimmed region",
                                    value =
                                        ChromatogramParam[["showTrimmed"]])
                         ),
@@ -1175,7 +1175,7 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$SCrefAminoAcidSeq <- renderUI({
         if (SangerContig@refAminoAcidSeq == "") {
-            box(title = tags$p("Reference Amino Acids Sequence",
+            box(title = tags$p("Reference Amino Acid Sequence",
                                style = "font-size: 24px;
                                     font-weight: bold;"),
                 collapsible = TRUE,
@@ -1185,7 +1185,7 @@ SangerContigServer <- function(input, output, session) {
                        h4("Reference Amino Acid Sequence is not provided."))
             )
         } else {
-            box(title = tags$p("Reference Amino Acids Sequence",
+            box(title = tags$p("Reference Amino Acid Sequence",
                                style = "font-size: 24px;
                                     font-weight: bold;"),
                 collapsible = TRUE,
@@ -1369,7 +1369,7 @@ SangerContigServer <- function(input, output, session) {
         }
     })
     ### ------------------------------------------------------------------------
-    ### Primary Amino Acids dataframe (1)
+    ### Primary Amino Acid dataframe (1)
     ### ------------------------------------------------------------------------
     output$PrimAASeqS1DF <- renderExcel({
         ## !!!!! Update !!!!
@@ -1381,7 +1381,7 @@ SangerContigServer <- function(input, output, session) {
         }
     })
     ### ------------------------------------------------------------------------
-    ### Primary Amino Acids dataframe (2)
+    ### Primary Amino Acid dataframe (2)
     ### ------------------------------------------------------------------------
     output$PrimAASeqS2DF <- renderExcel({
         ## !!!!! Update !!!!
@@ -1393,7 +1393,7 @@ SangerContigServer <- function(input, output, session) {
         }
     })
     ### ------------------------------------------------------------------------
-    ### Primary Amino Acids dataframe (3)
+    ### Primary Amino Acid dataframe (3)
     ### ------------------------------------------------------------------------
     output$PrimAASeqS3DF <- renderExcel({
         ## !!!!! Update !!!!
@@ -1467,12 +1467,12 @@ SangerContigServer <- function(input, output, session) {
                 QualityReport@TrimmingMethod == "M1") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
-                        'Logarithmic Scale Trimming'")
+                        'Modified Mott Trimming'")
             } else if (SangerContig@forwardReadList[[1]]@
                        QualityReport@TrimmingMethod == "M2") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
-                        'Logarithmic Scale Sliding Window Trimming'")
+                        'Trimmomatics Sliding Window Trimming'")
             }
         }
     })

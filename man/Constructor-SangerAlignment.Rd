@@ -6,19 +6,23 @@
 \title{SangerAlignment}
 \usage{
 SangerAlignment(inputSource = "ABIF", fastaFileName = "",
-  parentDirectory = "", suffixForwardRegExp = "_F.ab1",
-  suffixReverseRegExp = "_R.ab1", TrimmingMethod = "M1",
-  M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
-  M2SlidingWindowSize = NULL, baseNumPerRow = 100,
-  heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE,
-  refAminoAcidSeq = "", minReadsNum = 2, minReadLength = 20,
-  minFractionCall = 0.5, maxFractionLost = 0.5,
+  namesConversionCSV = NULL, parentDirectory = "",
+  suffixForwardRegExp = "_F.ab1", suffixReverseRegExp = "_R.ab1",
+  TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
+  M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
+  baseNumPerRow = 100, heightPerRow = 200, signalRatioCutoff = 0.33,
+  showTrimmed = TRUE, refAminoAcidSeq = "", minReadsNum = 2,
+  minReadLength = 20, minFractionCall = 0.5, maxFractionLost = 0.5,
   geneticCode = GENETIC_CODE, acceptStopCodons = TRUE,
   readingFrame = 1, minFractionCallSA = 0.5, maxFractionLostSA = 0.5,
   processorsNum = NULL)
 }
 \arguments{
-\item{fastaFileName}{}
+\item{inputSource}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
+
+\item{fastaFileName}{If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.}
+
+\item{namesConversionCSV}{The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
 
 \item{parentDirectory}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.}
 
@@ -57,6 +61,10 @@ SangerAlignment(inputSource = "ABIF", fastaFileName = "",
 \item{acceptStopCodons}{The logical value \code{TRUE} or \code{FALSE}. \code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; \code{FALSE}: reject reads with stop codons. If \code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).}
 
 \item{readingFrame}{\code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.}
+
+\item{minFractionCallSA}{Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.}
+
+\item{maxFractionLostSA}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.}
 
 \item{processorsNum}{The number of processors to use, or NULL (the default) for all available processors.}
 }

@@ -6,7 +6,7 @@
 \title{SangerContig}
 \usage{
 SangerContig(inputSource = "ABIF", fastaFileName = "",
-  parentDirectory = "", contigName = "",
+  namesConversionCSV = NULL, parentDirectory = "", contigName = "",
   suffixForwardRegExp = "_F.ab1", suffixReverseRegExp = "_R.ab1",
   TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
   M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
@@ -17,7 +17,11 @@ SangerContig(inputSource = "ABIF", fastaFileName = "",
   readingFrame = 1, processorsNum = NULL)
 }
 \arguments{
-\item{fastaFileName}{}
+\item{inputSource}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
+
+\item{fastaFileName}{If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.}
+
+\item{namesConversionCSV}{The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
 
 \item{parentDirectory}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.}
 
@@ -65,7 +69,7 @@ SangerContig(inputSource = "ABIF", fastaFileName = "",
 SangerContig
 }
 \description{
-SangerContig
+
 }
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")

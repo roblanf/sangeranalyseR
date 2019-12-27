@@ -4,8 +4,9 @@
 #'
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
-#' @slot readFileName The filename of the target ABIF file.
-#' @slot fastaReadName
+#' @slot readFileName The filename of the target input file. It can be \code{"ABIF"} or \code{"FASTA"} file.
+#' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot abifRawData A S4 class containing all fields in the ABIF file. It is defined in sangerseqR package.
 #' @slot QualityReport A S4 class containing quality trimming related inputs and trimming results.
 #' @slot ChromatogramParam A S4 class containing chromatogram inputs.
@@ -73,25 +74,29 @@
 #' A_chloroticaFFNfa <- file.path(inputFilesPath,
 #'                                "fasta",
 #'                                "SangerRead",
-#'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.fa")
-#' readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F"
+#'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa")
+#' readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F"
+#' namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_1.csv")
 #' sangerReadFfa <- new("SangerRead",
-#'                      inputSource   = "FASTA",
-#'                      readFeature   = "Forward Read",
-#'                      readFileName  = A_chloroticaFFNfa,
-#'                      fastaReadName = readNameFfa,
-#'                      geneticCode   = GENETIC_CODE)
+#'                      inputSource        = "FASTA",
+#'                      readFeature        = "Forward Read",
+#'                      readFileName       = A_chloroticaFFNfa,
+#'                      fastaReadName      = readNameFfa,
+#'                      namesConversionCSV = namesConversionCSV,
+#'                      geneticCode        = GENETIC_CODE)
 #' # Reverse Read
 #' A_chloroticaRFNfa <- file.path(inputFilesPath,
 #'                                "fasta",
 #'                                "SangerRead",
-#'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R.fa")
-#' readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_R"
+#'                                "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.fa")
+#' readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R"
+#' namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_2.csv")
 #' sangerReadRfa <- new("SangerRead",
 #'                      inputSource   = "FASTA",
 #'                      readFeature   = "Reverse Read",
 #'                      readFileName  = A_chloroticaRFNfa,
 #'                      fastaReadName = readNameRfa,
+#'                      namesConversionCSV = namesConversionCSV,
 #'                      geneticCode   = GENETIC_CODE)
 setClass(
     "SangerRead",
@@ -104,6 +109,7 @@ setClass(
             readFeature         = "character",
             readFileName        = "character",
             fastaReadName       = "character",
+            namesConversionCSV  = "characterORNULL",
             geneticCode         = "character",
             abifRawData         = "abifORNULL",
             QualityReport       = "QualityReportORNULL",
@@ -127,6 +133,7 @@ setMethod("initialize",
                    readFeature          = "",
                    readFileName         = "",
                    fastaReadName        = "",
+                   namesConversionCSV   = NULL,
                    geneticCode          = GENETIC_CODE,
                    TrimmingMethod       = "M1",
                    M1TrimmingCutoff     = 0.0001,
@@ -152,6 +159,8 @@ setMethod("initialize",
             ##### --------------------------------------------------------------
             ##### Inside prechecking.
             ##### --------------------------------------------------------------
+            errors <- checkNamesConversionCSV(namesConversionCSV,
+                                              inputSource, errors)
             ##### --------------------------------------------------------------
             ##### Input parameter prechecking for TrimmingMethod. [abif only]
             ##### --------------------------------------------------------------
@@ -170,7 +179,7 @@ setMethod("initialize",
             if(length(errors) != 0) {
                 stop(errors)
             }
-            message(readFeature, " read: Creating abif & sangerseq ...")
+            message(readFeature, ": Creating abif & sangerseq ...")
             message("    * Creating ", readFeature , " raw abif ...")
             abifRawData = read.abif(readFileName)
             message("    * Creating ", readFeature , " raw sangerseq ...")
@@ -250,11 +259,27 @@ setMethod("initialize",
             trimmedStartPos <- QualityReport@trimmedStartPos
             trimmedFinishPos <- QualityReport@trimmedFinishPos
         } else if (inputSource == "FASTA") {
+            errors <- checkNamesConversionCSV(namesConversionCSV,
+                                              inputSource, errors)
+            if(length(errors) != 0) {
+                stop(errors)
+            }
             abifRawData <- NULL
             primarySeqID <- "From fasta file"
             secondarySeqID <- ""
             primarySeqRaw <- DNAString()
+            message(readFeature, ": Creating SangerRead from FASTA ...")
             readFasta <- read.fasta(readFileName, as.string = TRUE)
+            if (!is.null(namesConversionCSV)) {
+                message("    * Reading CSV file and matching names !!")
+                fastaNames <- names(readFasta)
+                csvFile <- read.csv(namesConversionCSV, header = TRUE)
+                tmpFastaNames <- sapply(fastaNames, function(fastaName) {
+                    as.character(csvFile[csvFile$original_read_name %in%
+                                             fastaName, ]$analysis_read_name)
+                })
+                names(readFasta) <- tmpFastaNames
+            }
             ### ----------------------------------------------------------------
             ### Get the Target Filename !!
             ### ----------------------------------------------------------------
@@ -285,6 +310,7 @@ setMethod("initialize",
         primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
         primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
         primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+        message("  >> 'SangerRead' S4 instance is created !!")
         ### ====================================================================
     } else {
         stop(errors)
@@ -292,6 +318,7 @@ setMethod("initialize",
     callNextMethod(.Object, ...,
                    inputSource         = inputSource,
                    fastaReadName       = fastaReadName,
+                   namesConversionCSV  = namesConversionCSV,
                    readFeature         = readFeature,
                    readFileName        = readFileName,
                    geneticCode         = geneticCode,

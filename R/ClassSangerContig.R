@@ -3,10 +3,8 @@
 #' @description  An S4 class containing forward and reverse SangerRead lists and alignment, consensus read results which corresponds to a contig in Sanger sequencing.
 #'
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
-#' @slot fastaFileName          = "",
-#'
-#'
-#'
+#' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
 #' @slot contigName The contig name of all the reads in \code{parentDirectory}.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
@@ -65,12 +63,14 @@
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
+#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion.csv")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 #' suffixForwardRegExpFa <- "_F"
 #' suffixReverseRegExpFa <- "_R"
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
 #'                       fastaFileName         = fastaFN,
+#'                       namesConversionCSV    = namesConversionCSV,
 #'                       contigName            = contigName,
 #'                       suffixForwardRegExp   = suffixForwardRegExpFa,
 #'                       suffixReverseRegExp   = suffixReverseRegExpFa,
@@ -82,6 +82,7 @@ setClass("SangerContig",
          ### -------------------------------------------------------------------
          representation(inputSource               = "character",
                         fastaFileName             = "character",
+                        namesConversionCSV        = "characterORNULL",
                         parentDirectory           = "character",
                         contigName                = "character",
                         suffixForwardRegExp       = "character",
@@ -115,6 +116,7 @@ setMethod("initialize",
           function(.Object, ...,
                    inputSource            = "ABIF",
                    fastaFileName          = "",
+                   namesConversionCSV     = NULL,
                    parentDirectory        = "",
                    contigName             = "",
                    suffixForwardRegExp    = "_F.ab1",
@@ -159,6 +161,8 @@ setMethod("initialize",
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
             errors <- checkParentDirectory (parentDirectory, errors)
+            errors <- checkNamesConversionCSV(namesConversionCSV,
+                                              inputSource, errors)
             ### ----------------------------------------------------------------
             ### 'forwardAllReads' & 'reverseAllReads' files prechecking
             ### ----------------------------------------------------------------
@@ -279,10 +283,22 @@ setMethod("initialize",
             })
         } else if (inputSource == "FASTA") {
             errors <- checkFastaFileName(fastaFileName, errors)
+            errors <- checkNamesConversionCSV(namesConversionCSV,
+                                              inputSource, errors)
             if(length(errors) != 0) {
                 stop(errors)
             }
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+            if (!is.null(namesConversionCSV)) {
+                message("    * Reading CSV file and matching names !!")
+                fastaNames <- names(readFasta)
+                csvFile <- read.csv(namesConversionCSV, header = TRUE)
+                tmpFastaNames <- sapply(fastaNames, function(fastaName) {
+                    as.character(csvFile[csvFile$original_read_name %in%
+                                             fastaName, ]$analysis_read_name)
+                })
+                names(readFasta) <- tmpFastaNames
+            }
             fastaNames <- names(readFasta)
             ### ----------------------------------------------------------------
             ### Find names with the given contigName
@@ -307,21 +323,25 @@ setMethod("initialize",
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
             forwardReadList <- sapply(forwardSelectNames, function(forwardName){
-                SangerRead(inputSource   = inputSource,
-                           readFeature   = "Forward Read",
-                           readFileName  = fastaFileName,
-                           fastaReadName = forwardName,
-                           geneticCode   = geneticCode)
+                new("SangerRead",
+                    inputSource        = inputSource,
+                    readFeature        = "Forward Read",
+                    readFileName       = fastaFileName,
+                    fastaReadName      = forwardName,
+                    namesConversionCSV = namesConversionCSV,
+                    geneticCode        = geneticCode)
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
             reverseReadList <- sapply(reverseSelectNames, function(reverseName){
-                SangerRead(inputSource   = inputSource,
-                           readFeature   = "Reverse Read",
-                           readFileName  = fastaFileName,
-                           fastaReadName = reverseName,
-                           geneticCode   = geneticCode)
+                new("SangerRead",
+                    inputSource        = inputSource,
+                    readFeature        = "Reverse Read",
+                    readFileName       = fastaFileName,
+                    fastaReadName      = reverseName,
+                    namesConversionCSV = namesConversionCSV,
+                    geneticCode        = geneticCode)
             })
         }
         CSResult <- calculateContigSeq (inputSource      = inputSource,
@@ -342,12 +362,14 @@ setMethod("initialize",
         indels <- CSResult$indels
         stopsDf <- CSResult$stopsDf
         spDf <- CSResult$spDf
+        message("  >> 'SangerContig' S4 instance is created !!")
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
                    inputSource            = inputSource,
                    fastaFileName          = fastaFileName,
+                   namesConversionCSV     = namesConversionCSV,
                    parentDirectory        = parentDirectory,
                    contigName             = contigName,
                    suffixForwardRegExp    = suffixForwardRegExp,

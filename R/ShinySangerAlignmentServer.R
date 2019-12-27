@@ -47,10 +47,10 @@ SangerAlignmentServer <- function(input, output, session) {
     })
     SATrimmingMethod <- SangerAlignment@trimmingMethodSA
     if (SATrimmingMethod == "M1") {
-        SATrimmingMethodName = "Method 1: 'Logarithmic Scale Trimming'"
+        SATrimmingMethodName = "Method 1: 'Modified Mott Trimming'"
     } else if (SATrimmingMethod == "M2") {
         SATrimmingMethodName =
-            "Method 2: 'Logarithmic Scale Sliding Window Trimming'"
+            "Method 2: 'Trimmomatics Sliding Window Trimming'"
     }
 
     ### ------------------------------------------------------------------------
@@ -861,7 +861,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 ),
                                 actionBttn("startTrimmingButton",
                                            "Apply Trimming Parameters",
-                                           style = "simple", color = "success",
+                                           style = "simple", color = "danger",
                                            block = TRUE, size = "lg")
                             ),
                             box(title = tags$p(tagList(icon("arrow-circle-left"),
@@ -923,7 +923,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 tags$hr(
                                     style = ("border-top: 6px double #A9A9A9;")),
                                 fluidRow(
-                                    box(title = tags$p("Base Pairs Quality Plot",
+                                    box(title = tags$p("Quality Trimming Plot",
                                                        style = "font-size: 21px;
                                                            font-weight: bold;"),
                                         collapsible = TRUE,
@@ -1026,7 +1026,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                            value = ChromatogramParam[["signalRatioCutoff"]]),
                                        checkboxInput(
                                            "ChromatogramCheckShowTrimmed",
-                                           "Whether show trimmed region",
+                                           "Show trimmed region",
                                            value = ChromatogramParam[["showTrimmed"]])
                                 ),
                                 column(3,
@@ -1037,7 +1037,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                 ),
                                 actionBttn("saveChromatogramParam",
                                            "Apply Chromatogram Parameters",
-                                           style = "simple", color = "success",
+                                           style = "simple", color = "danger",
                                            block = TRUE, size = "lg")
                             ),
                             box(title = tags$p(tagList(icon("arrow-circle-left"),
@@ -1549,7 +1549,7 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$SArefAminoAcidSeq <- renderUI({
         if (SangerAlignment@refAminoAcidSeq == "") {
-            box(title = tags$p("Reference Amino Acids Sequence",
+            box(title = tags$p("Reference Amino Acid Sequence",
                                style = "font-size: 24px;
                                         font-weight: bold;"),
                 collapsible = TRUE,
@@ -1559,7 +1559,7 @@ SangerAlignmentServer <- function(input, output, session) {
                        h4("Reference Amino Acid Sequence is not provided."))
             )
         } else {
-            box(title = tags$p("Reference Amino Acids Sequence",
+            box(title = tags$p("Reference Amino Acid Sequence",
                                style = "font-size: 24px;
                                         font-weight: bold;"),
                 collapsible = TRUE,
@@ -1921,11 +1921,11 @@ SangerAlignmentServer <- function(input, output, session) {
             if (SangerAlignment@trimmingMethodSA == "M1") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
-                            'Logarithmic Scale Trimming'")
+                            'Modified Mott Trimming'")
             } else if (SangerAlignment@trimmingMethodSA == "M2") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
-                            'Logarithmic Scale Sliding Window Trimming'")
+                            'Trimmomatics Sliding Window Trimming'")
             }
         }
     })

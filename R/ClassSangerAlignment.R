@@ -5,10 +5,9 @@ setOldClass("phylo")
 #'
 #' @description  An S4 class containing SangerContigs lists and contigs alignment results which corresponds to a final alignment in Sanger sequencing.
 #'
-#' @slot inputSource
-#' @slot fastaFileName
-#'
-#'
+#' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
+#' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
 #' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
@@ -54,11 +53,13 @@ setOldClass("phylo")
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerAlignment", "Sanger_all_reads.fa")
+#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion.csv")
 #' suffixForwardRegExpFa <- "_F"
 #' suffixReverseRegExpFa <- "_R"
 #' sangerAlignmentFa <- new("SangerAlignment",
 #'                          inputSource           = "FASTA",
 #'                          fastaFileName         = fastaFN,
+#'                          namesConversionCSV    = namesConversionCSV,
 #'                          suffixForwardRegExp   = suffixForwardRegExpFa,
 #'                          suffixReverseRegExp   = suffixReverseRegExpFa,
 #'                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -81,6 +82,7 @@ setClass("SangerAlignment",
          ### -------------------------------------------------------------------
          representation(inputSource                 = "character",
                         fastaFileName               = "character",
+                        namesConversionCSV          = "characterORNULL",
                         parentDirectory             = "character",
                         suffixForwardRegExp         = "character",
                         suffixReverseRegExp         = "character",
@@ -104,6 +106,7 @@ setMethod("initialize",
           function(.Object, ...,
                    inputSource            = "ABIF",
                    fastaFileName          = "",
+                   namesConversionCSV     = NULL,
                    parentDirectory        = "",
                    suffixForwardRegExp    = "_F.ab1",
                    suffixReverseRegExp    = "_R.ab1",
@@ -144,10 +147,11 @@ setMethod("initialize",
     ##### Input parameter prechecking for processorsNum
     ##### ----------------------------------------------------------------------
     errors <- checkProcessorsNum(processorsNum, errors)
-
     if (length(errors) == 0) {
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
+            errors <- checkNamesConversionCSV(namesConversionCSV,
+                                              inputSource, errors)
             ### ----------------------------------------------------------------
             ##### 'parentDirectory' prechecking
             ### ----------------------------------------------------------------
@@ -226,13 +230,24 @@ setMethod("initialize",
                        })
         } else if (inputSource == "FASTA") {
             errors <- checkFastaFileName(fastaFileName, errors)
+            errors <- checkNamesConversionCSV(namesConversionCSV,
+                                              inputSource, errors)
             if(length(errors) != 0) {
                 stop(errors)
             }
             trimmingMethodSA = ""
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+            if (!is.null(namesConversionCSV)) {
+                message("    * Reading CSV file and matching names !!")
+                fastaNames <- names(readFasta)
+                csvFile <- read.csv(namesConversionCSV, header = TRUE)
+                tmpFastaNames <- sapply(fastaNames, function(fastaName) {
+                    as.character(csvFile[csvFile$original_read_name %in%
+                                             fastaName, ]$analysis_read_name)
+                })
+                names(readFasta) <- tmpFastaNames
+            }
             fastaNames <- names(readFasta)
-
             forwardSelect <- fastaNames[grepl(suffixForwardRegExp, fastaNames)]
             reverseSelect <- fastaNames[grepl(suffixReverseRegExp, fastaNames)]
 
@@ -249,6 +264,7 @@ setMethod("initialize",
                 new("SangerContig",
                     inputSource          = inputSource,
                     fastaFileName        = fastaFileName,
+                    namesConversionCSV   = namesConversionCSV,
                     parentDirectory      = parentDirectory,
                     contigName           = contigName,
                     suffixForwardRegExp  = suffixForwardRegExp,
@@ -270,12 +286,14 @@ setMethod("initialize",
         consensus <- acResult[["consensus"]]
         aln <- acResult[["aln"]]
         aln.tree <- acResult[["aln.tree"]]
+        message("  >> 'SangerAlignment' S4 instance is created !!")
     } else {
         stop(errors)
     }
     callNextMethod(.Object, ...,
                    inputSource           = inputSource,
                    fastaFileName         = fastaFileName,
+                   namesConversionCSV    = namesConversionCSV,
                    parentDirectory       = parentDirectory,
                    suffixForwardRegExp   = suffixForwardRegExp,
                    suffixReverseRegExp   = suffixReverseRegExp,
