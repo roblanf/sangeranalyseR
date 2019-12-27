@@ -278,6 +278,7 @@ setMethod("initialize",
                     as.character(csvFile[csvFile$original_read_name %in%
                                              fastaName, ]$analysis_read_name)
                 })
+                names(tmpFastaNames) <- NULL
                 names(readFasta) <- tmpFastaNames
             }
             ### ----------------------------------------------------------------

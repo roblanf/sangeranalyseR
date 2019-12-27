@@ -63,7 +63,7 @@
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
-#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion.csv")
+#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
 #' suffixForwardRegExpFa <- "_F"
 #' suffixReverseRegExpFa <- "_R"
@@ -297,6 +297,7 @@ setMethod("initialize",
                     as.character(csvFile[csvFile$original_read_name %in%
                                              fastaName, ]$analysis_read_name)
                 })
+                names(tmpFastaNames) <- NULL
                 names(readFasta) <- tmpFastaNames
             }
             fastaNames <- names(readFasta)
