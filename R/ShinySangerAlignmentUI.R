@@ -16,9 +16,11 @@ SangerAlignmentUI <- dashboardPage(
         useShinyjs(debug = TRUE),
         sidebarMenu(
             id = "sidebar_menu",
-            menuItem("Contigs Alignment",
-                     tabName = "Contigs Alignment Overview Page _",
-                     icon=icon("dashboard")),
+            menuItem(text = tags$p(tagList(icon("home"),
+                                           "Contigs Alignment "),
+                                   style = "font-size: 20px;
+                                           font-weight: bold;"),
+                     tabName = "Contigs Alignment Overview Page _"),
             sidebarMenuOutput("singleReadMenu")
         )
     ),

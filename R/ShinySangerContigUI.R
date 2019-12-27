@@ -16,9 +16,11 @@ SangerContigUI <- dashboardPage(
         useShinyjs(debug = TRUE),
         sidebarMenu(
             id = "sidebar_menu",
-            menuItem(text = "Contig",
-                     tabName = "Sanger Contig Overview",
-                     icon=icon("dashboard")),
+            menuItem(text = tags$p(tagList(icon("home"),
+                                           "Contig "),
+                                   style = "font-size: 20px;
+                                           font-weight: bold;"),
+                     tabName = "Sanger Contig Overview"),
             sidebarMenuOutput("singleReadMenu")
         )
     ),

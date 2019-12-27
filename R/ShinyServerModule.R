@@ -15,13 +15,17 @@ dynamicMenuSideBarSC <- function(input, output, session,
                           tabName = reverseReadFeature[i],
                           icon = icon("minus")))
         })
-        fmenu_list <- menuItem(text = "Forward Reads",
-                               tabName = "forwardReads",
-                               icon = icon("minus"), fmenuSub_list)
+        fmenu_list <- menuItem(text = tags$p(tagList(icon("circle"),
+                                                     "Forward Reads"),
+                                             style = "font-size: 17px;
+                                           font-weight: bold;"),
+                               tabName = "forwardReads", fmenuSub_list)
 
-        rmenu_list <- menuItem(text = "Reverse Reads",
-                               tabName = "reverseReads",
-                               icon = icon("minus"), rmenuSub_list)
+        rmenu_list <- menuItem(text = tags$p(tagList(icon("circle"),
+                                                     "Reverse Reads"),
+                                             style = "font-size: 17px;
+                                           font-weight: bold;"),
+                               tabName = "reverseReads", rmenuSub_list)
         sidebarMenu(.list = list(fmenu_list, rmenu_list))
     })
     # Select consensus Read Menu first
@@ -50,11 +54,11 @@ dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
             })
             fmenu_list <- menuItem(text = "Forward Reads",
                                    tabName = "forwardReads",
-                                   icon = icon("minus"), fmenuSub_list)
+                                   icon = icon("circle"), fmenuSub_list)
 
             rmenu_list <- menuItem(text = "Reverse Reads",
                                    tabName = "reverseReads",
-                                   icon = icon("minus"), rmenuSub_list)
+                                   icon = icon("circle"), rmenuSub_list)
             SangerCSMenuSubItem <- list(fmenu_list, rmenu_list)
 
             SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerAlignmentParam[[i]]$SCName, "Overview"),
@@ -62,9 +66,12 @@ dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
                                                       icon = icon("align-left"))),
                                      SangerCSMenuSubItem)
             SangerAlignmentParam[[i]]$SCName
-            list(menuItem(text = SangerAlignmentParam[[i]]$SCName,
+            list(menuItem(text = tags$p(tagList(icon("align-left"),
+                                                SangerAlignmentParam[[i]]$SCName),
+                                        style = "font-size: 17px;
+                                           font-weight: bold;"),
                           tabName = SangerAlignmentParam[[i]]$SCName,
-                          icon = icon("minus"), SangerCSMenuSubItem))
+                          SangerCSMenuSubItem))
         })
         sidebarMenu(.list = menu_list)
     })
@@ -638,13 +645,23 @@ qualityScoreDisplay <- function(PhredScore) {
 }
 PrimAASeqS1Display <- function(sequenceParam) {
     AAString <- data.frame(AAString(sequenceParam[["primaryAASeqS1"]]))
-    AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
-    colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
-    rownames(AAStringDF) <- NULL
-    width <- rep(90, length(AAStringDF))
-    styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
-    styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
-    styleList <- c(styleList1, styleList2)
+    if (nchar(sequenceParam[["primaryAASeqS1"]]) == 0) {
+        AAString <- rbind(NA, AAString)
+        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        width <- c(30)
+        styleList <- list()
+        styleList[['A1']] <- 'background-color: black;'
+    } else {
+        AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+        colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+        rownames(AAStringDF) <- NULL
+        width <- rep(90, length(AAStringDF))
+        styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+        styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+        styleList <- c(styleList1, styleList2)
+    }
     suppressMessages(
         excelTable(data = AAStringDF, columns = data.frame(width = width),
                    defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
