@@ -15,7 +15,7 @@ Advanced User Guide - *SangerRead* (**FASTA**)
 
 Preparing *SangerRead* **FASTA** input
 --------------------------------------
-We design the **FASTA** file input for those who do not want to do quality trimming and base calling for their *SangerRead*; therefore, it does not contain quality trimming and chromatogram input parameters and results in its slots. Before starting the analysis, users need to prepare one target **FASTA** file. The only hard regulation of the filename is that the input file must have **.fasta** or **.fa** as its file extension.
+We design the **FASTA** file input for those who do not want to do quality trimming and base calling for their *SangerRead*; therefore, it does not contain quality trimming and chromatogram input parameters and results in its slots. Before starting the analysis, users need to prepare one target **FASTA** file. The only hard regulation of the filename is that file extension must be **.fasta** or **.fa**.
 
 |
 

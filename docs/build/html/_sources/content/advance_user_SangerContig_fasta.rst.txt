@@ -15,10 +15,7 @@ Advanced User Guide - *SangerContig* (**FASTA**)
 Preparing *SangerContig* **FASTA** input
 ----------------------------------------
 
-We design the **FASTA** file input for those who do not want to do quality trimming and base calling for each *SangerRead* in *SangerContig*; therefore, it does not contain quality trimming and chromatogram input parameters and results in slots of *SangerRead*.
-
-
-Before starting the analysis, users need to prepare one **FASTA** file containing sequence of all reads. Inside the **FASTA** file, there are strings starting with ">" before each read which are the read names. Because sangeranalyseR will group reads into "Forward Read List" and "Reverse Read List", users have to follow the naming regulations for the read names. Below are some regulations:
+We design the **FASTA** file input for those who do not want to do quality trimming and base calling for each *SangerRead* in *SangerContig*; therefore, it does not contain quality trimming and chromatogram input parameters and results in *SangerRead* slots. Before starting the analysis, users need to prepare one **FASTA** file containing sequence of all reads. Inside the **FASTA** file, there are strings starting with ">" before each read which are the read names. Because sangeranalyseR will group reads into "Forward Read List" and "Reverse Read List", users have to follow the naming regulations for the read names. Below are some regulations:
 
 .. note::
 
@@ -30,35 +27,41 @@ There are four parameters, :code:`fastaFileName`, :code:`contigName`, :code:`suf
 .. note::
 
   * :code:`fastaFileName`: The **FASTA** file that contains sequence of all reads. The read names have to follow the naming regulation.
-  * :code:`contigName`: The value of this parameter is a regular expression that matches read names that are going to be included in the *SangerContig* level analysis. :code:`grepl` function in R is used.
+  * :code:`contigName`: The value of this parameter is a regular expression that matches read names included in the *SangerContig* level analysis. :code:`grepl` function in R is used.
   * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all read names in forward direction. :code:`grepl` function in R is used to select forward reads from all **AB1** files.
   * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all read names in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **AB1** files.
 
-namesConversionCSV
+It is common that read names in the original **FASTA** file does not follow the naming regulation; however, it is not recommended to change the name directly in the **FASTA** raw file. Therefore, users can provide a **CSV** file showed in :ref:`Figure_2<SangerContig_read_names_conversion>` to do read names conversion. The first column is "original_read_name", and the second column is "analysis_read_name". :code:`namesConversionCSV` is the path to the **CSV** file.
+
+.. _SangerContig_read_names_conversion:
+.. figure::  ../image/SangerContig_read_names_conversion.png
+   :align:   center
+   :scale:   35 %
+
+   Figure 2. *SangerContig* **CSV** file - read names conversion.
+
 
 Here, we have an example:
 
 .. _SangerContig_fasta_input:
 .. figure::  ../image/SangerContig_fasta_input.png
    :align:   center
-   :scale:   50 %
+   :scale:   40 %
 
-   Figure 2. *SangerContig* **FASTA** input file.
+   Figure 3. *SangerContig* **FASTA** input file.
 
-:ref:`Figure_2<SangerContig_fasta_input>` shows the **FASTA** input file and read names naming convention. sangeranalyseR will first match the :code:`contigName` to exclude unrelated reads and then separate the forward and reverse reads by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. Therefore, it is important to make sure all target reads share the same :code:`contigName` and carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
+:ref:`Figure_3<SangerContig_fasta_input>` shows the **FASTA** input file and the read names in it will be replaced by **CSV** file showed in :ref:`Figure_2<SangerContig_read_names_conversion>`. sangeranalyseR will first match the :code:`contigName` to exclude unrelated reads and then separate the forward and reverse reads by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. Therefore, it is important to make sure all target reads share the same :code:`contigName` and carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
 
 .. _sangeranalyseR_filename_convention_SangerContig_fasta:
 .. figure::  ../image/sangeranalyseR_filename_convention.png
    :align:   center
    :scale:   25 %
 
-   Figure 3. Suggested read naming regulation - *SangerContig*.
+   Figure 4. Suggested read naming regulation in **FASTA** file - *SangerContig*.
 
-:ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig_fasta>` shows the suggested read naming convention. Users are strongly recommended to follow this file naming regulation and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
-
+:ref:`Figure_4<sangeranalyseR_filename_convention_SangerContig_fasta>` shows the suggested read naming regulation which is used in the "analysis_read_name" column in **CSV** file (:ref:`Figure_2<SangerContig_read_names_conversion>`). Users are strongly recommended to follow this file naming regulation and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
 
 |
-
 
 Creating *SangerContig* instance from **FASTA**
 -----------------------------------------------
@@ -73,7 +76,7 @@ After preparing the input directory, we can create the *SangerContig* S4 instanc
                                   contigName            = contigName,
                                   suffixForwardRegExp   = suffixForwardRegExpFa,
                                   suffixReverseRegExp   = suffixReverseRegExpFa,
-                                  refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
+                                  refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
 
 
 In this example, :code:`contigName` is set to :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]"`, so only :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]_1_F.ab1"` and :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]_2_R.ab1"` reads will be selected from **FASTA** file to align to a contig.
@@ -87,7 +90,7 @@ Writing *SangerContig* FASTA files :sub:`(FASTA)`
 -------------------------------------------------
 Users can write the *SangerContig* instance to **FASTA** files. There are four options for users to choose from in :code:`selection` parameter.
 
-* :code:`reads_unalignment`: Writing reads into a single **FASTA** file (only trimmed without alignment).
+* :code:`reads_unalignment`: Writing reads into a single **FASTA** file.
 * :code:`reads_alignment`: Writing reads alignment and contig read to a single **FASTA** file.
 * :code:`contig`: Writing the contig to a single **FASTA** file.
 * :code:`all`: Writing reads, reads alignment, and the contig into three different files.

@@ -1,7 +1,7 @@
 Advanced User Guide - *SangerAlignment* (**FASTA**)
 ===================================================
 
-*SangerAlignment* is the highest class level in sangeranalyseR showed in :ref:`Figure_1<SangerAlignment_hierachy_fasta>`. It contains *SangerContig* list and the contigs alignment result. Users can access to *SangerContig* and *SangerRead* instance inside *SangerAlignment* instance. In this section, we are going to go through detailed sangeranalyseR data analysis steps in *SangerAlignment* level.
+*SangerAlignment* is the highest class level in sangeranalyseR showed in :ref:`Figure_1<SangerAlignment_hierachy_fasta>`. It contains *SangerContig* list and the contigs alignment result. Users can access to *SangerContig* and *SangerRead* instance inside *SangerAlignment* instance. In this section, we are going to go through detailed sangeranalyseR data analysis steps in *SangerAlignment* level from **FASTA** file input.
 
 .. _SangerAlignment_hierachy_fasta:
 .. figure::  ../image/SangerAlignment_hierachy.png
@@ -14,56 +14,59 @@ Advanced User Guide - *SangerAlignment* (**FASTA**)
 
 Preparing *SangerAlignment* **FASTA** input
 -------------------------------------------
-Users can choose to input **AB1** or **FASTA** as their input file format.
+We design the **FASTA** file input for those who do not want to do quality trimming and base calling for each *SangerRead* in *SangerAlignment*; therefore, it does not contain quality trimming and chromatogram input parameters and results in *SangerRead* slots.
 
-The main input file format to create *SangerAlignment* instance is **AB1**. Before starting the analysis, users need to prepare a directory which contains all the **AB1** files. Here are some filename regulations:
-
-.. note::
-
-    *  All the input files must have **.ab1** as its file extension
-    *  The reads that belong to the same contig must have the same contig name in its filename.
-    *  Forward or reverse direction also has to be specified in the filename.
-
-
-There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **AB1** files.
+Before starting the analysis, users need to prepare one **FASTA** file containing sequence of all reads. Inside the **FASTA** file, there are strings starting with ">" before each read which are the read names. Because sangeranalyseR will group reads into "Forward Read List" and "Reverse Read List", users have to follow the naming regulations for the read names. Below are some regulations:
 
 .. note::
 
-  * :code:`parentDirectory`: The root directory that contains all the **AB1** files. It can be absolute or relative path. We suggest users to put only target **AB1** files inside this directory without other unrelated files.
-  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filename in forward direction. :code:`grepl` function in R is used to select forward reads from all **AB1** files.
-  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filename in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **AB1** files.
+  *  Reads that are in the same contig have to share the same contig name.
+  *  Forward or reverse direction also has to be specified in the read names.
 
+There are three parameters, :code:`fastaFileName`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **FASTA** files.
 
+.. note::
 
+  * :code:`fastaFileName`: The **FASTA** file that contains sequence of all reads. The read names have to follow the naming regulation.
+  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filename in forward direction. :code:`grepl` function in R is used to select forward reads from all **FASTA** files.
+  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filename in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **FASTA** files.
 
+It is common that read names in the original **FASTA** file does not follow the naming regulation; however, it is not recommended to change the name directly in the **FASTA** raw file. Therefore, users can provide a **CSV** file showed in :ref:`Figure_2<SangerAlignment_read_names_conversion>` to do read names conversion. The first column is "original_read_name", and the second column is "analysis_read_name". :code:`namesConversionCSV` is the path to the **CSV** file.
 
-For basic input files preparation example, please go to :ref:`Beginner Guide`. Here, we have another more complicated example.
-
-
-.. _SangerAlignment_file_structure_complex_fasta:
-.. figure::  ../image/SangerAlignment_file_structure_complex.png
+.. _SangerAlignment_read_names_conversion:
+.. figure::  ../image/SangerAlignment_read_names_conversion.png
    :align:   center
-   :scale:   120 %
+   :scale:   35 %
 
-   Figure 2. Input ab1 files inside the parent directory, :code:`./tmp/`.
+   Figure 2. *SangerAlignment* **CSV** file - read names conversion.
+
+Here, we have another more complicated example.
 
 
-:ref:`Figure_2<SangerAlignment_file_structure_complex_fasta>` shows the file naming regulation and directory hierarchy. In this example, the parent directory is :code:`extdata` and the directories in first layer are :code:`Allolobophora_chlorotica` and :code:`Drosophila_melanogaster`. All target **AB1** files need to be inside parent directory but it is not necessary to put them in the same level of directory. sangeranalyseR will recursively search all files with **.ab1** file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with filenames. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
+.. _SangerAlignment_fasta_input:
+.. figure::  ../image/SangerAlignment_fasta_input.png
+   :align:   center
+   :scale:   40 %
+
+   Figure 3. *SangerAlignment* **FASTA** input file.
+
+
+:ref:`Figure_3<SangerAlignment_fasta_input>` shows the **FASTA** input file and the read names in it will be replaced by **CSV** file showed in :ref:`Figure_2<SangerAlignment_read_names_conversion>` (Only two reads are showed). sangeranalyseR will first match the :code:`contigName` to exclude unrelated reads. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with read names. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
 
 .. _sangeranalyseR_filename_convention_SangerAlignment_fasta:
 .. figure::  ../image/sangeranalyseR_filename_convention.png
    :align:   center
    :scale:   25 %
 
-   Figure 3. Suggested **AB1** file naming regulation - *SangerAlignment*.
+   Figure 4. Suggested read naming regulation in **FASTA** file - *SangerAlignment*.
 
-:ref:`Figure_3<sangeranalyseR_filename_convention_SangerAlignment_fasta>` shows the suggested **AB1** file naming regulation. Users are strongly recommended to follow this file naming regulation and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
+:ref:`Figure_4<sangeranalyseR_filename_convention_SangerAlignment_fasta>` shows the suggested reads naming regulation. Users are strongly recommended to follow this reads naming regulation and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
 
 |
 
 Creating *SangerAlignment* instance from **FASTA**
 --------------------------------------------------
-After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters. For a simpler command, please go to :ref:`Quick Commands`.
+After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters.
 
 .. code-block:: R
 
@@ -72,7 +75,7 @@ After preparing the input directory, we can create the *SangerAlignment* S4 inst
                                       namesConversionCSV    = namesConversionCSV,
                                       suffixForwardRegExp   = suffixForwardRegExpFa,
                                       suffixReverseRegExp   = suffixReverseRegExpFa,
-                                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
+                                      refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
                                       )
 
 
