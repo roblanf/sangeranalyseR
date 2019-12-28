@@ -1,6 +1,5 @@
-Advanced User Guide - *SangerAlignment*
-=======================================
-
+Advanced User Guide - *SangerAlignment* (**AB1**)
+=================================================
 
 
 *SangerAlignment* is the highest class level in sangeranalyseR showed in :ref:`Figure_1<SangerAlignment_hierachy>`. It contains *SangerContig* list and the contigs alignment result. Users can access to *SangerContig* and *SangerRead* instance inside *SangerAlignment* instance. In this section, we are going to go through detailed sangeranalyseR data analysis steps in *SangerAlignment* level.
@@ -14,13 +13,11 @@ Advanced User Guide - *SangerAlignment*
 
 |
 
-Preparing *SangerAlignment* input files
----------------------------------------
-Users can choose to input **ab1** or **FASTA** as their input file format.
+Preparing *SangerAlignment* **AB1** input
+-----------------------------------------
+Users can choose to input **AB1** or **FASTA** as their input file format.
 
-ab1 files (SA)
-++++++++++++++
-The main input file format to create *SangerAlignment* instance is **ab1**. Before starting the analysis, users need to prepare a directory which contains all the **ab1** files. Here are some filename regulations:
+The main input file format to create *SangerAlignment* instance is **AB1**. Before starting the analysis, users need to prepare a directory which contains all the **AB1** files. Here are some filename regulations:
 
 .. note::
 
@@ -29,13 +26,13 @@ The main input file format to create *SangerAlignment* instance is **ab1**. Befo
     *  Forward or reverse direction also has to be specified in the filename.
 
 
-There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **ab1** files.
+There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **AB1** files.
 
 .. note::
 
-  * :code:`parentDirectory`: The root directory that contains all the **ab1** files. It can be absolute or relative path. We suggest users to put only target **ab1** files inside this directory without other unrelated files.
-  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filename in forward direction. :code:`grepl` function in R is used to select forward reads from all **ab1** files.
-  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filename in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **ab1** files.
+  * :code:`parentDirectory`: The root directory that contains all the **AB1** files. It can be absolute or relative path. We suggest users to put only target **AB1** files inside this directory without other unrelated files.
+  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filename in forward direction. :code:`grepl` function in R is used to select forward reads from all **AB1** files.
+  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filename in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **AB1** files.
 
 
 
@@ -52,27 +49,22 @@ For basic input files preparation example, please go to :ref:`Beginner Guide`. H
    Figure 2. Input ab1 files inside the parent directory, :code:`./tmp/`.
 
 
-:ref:`Figure_2<SangerAlignment_file_structure_complex>` shows the file naming convention and directory hierarchy. In this example, the parent directory is :code:`extdata` and the directories in first layer are :code:`Allolobophora_chlorotica` and :code:`Drosophila_melanogaster`. All target **ab1** files need to be inside parent directory but it is not necessary to put them in the same level of directory. sangeranalyseR will recursively search all files with **.ab1** file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with filenames. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
+:ref:`Figure_2<SangerAlignment_file_structure_complex>` shows the file naming regulation and directory hierarchy. In this example, the parent directory is :code:`extdata` and the directories in first layer are :code:`Allolobophora_chlorotica` and :code:`Drosophila_melanogaster`. All target **AB1** files need to be inside parent directory but it is not necessary to put them in the same level of directory. sangeranalyseR will recursively search all files with **.ab1** file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with filenames. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
 
 .. _sangeranalyseR_filename_convention_SangerAlignment:
 .. figure::  ../image/sangeranalyseR_filename_convention.png
    :align:   center
    :scale:   25 %
 
-   Figure 3. Suggested **ab1** file naming convention - *SangerAlignment*.
+   Figure 3. Suggested **AB1** file naming regulation - *SangerAlignment*.
 
-:ref:`Figure_3<sangeranalyseR_filename_convention_SangerAlignment>` shows the suggested **ab1** file naming convention. Users are strongly recommended to follow this file naming convention and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
-
-
-
-FASTA files (SA)
-++++++++++++++++
+:ref:`Figure_3<sangeranalyseR_filename_convention_SangerAlignment>` shows the suggested **AB1** file naming regulation. Users are strongly recommended to follow this file naming regulation and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
 
 |
 
-Creating *SangerAlignment* instance
------------------------------------
-After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list all possible parameters. For a simpler command, please go to :ref:`Quick Commands`.
+Creating *SangerAlignment* instance from **AB1**
+------------------------------------------------
+After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters. For a simpler command, please go to :ref:`Quick Commands`.
 
 .. code-block:: R
 
@@ -100,15 +92,13 @@ After preparing the input directory, we can create the *SangerAlignment* S4 inst
                                       maxFractionLostSA     = 0.5,
                                       processorsNum         = NULL)
 
-*SangerAlignment* inputs & slots definition
-+++++++++++++++++++++++++++++++++++++++++++
-The inputs of :code:`SangerAlignment` constructor function and :code:`new` method are same. For more details, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_.
+The inputs of :code:`SangerAlignment` constructor function and :code:`new` method are same. For more details about *SangerAlignment* inputs & slots definition, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_.
 
 |
 
 Updating *SangerAlignment* quality trimming parameters
 ------------------------------------------------------
-In the previous :ref:`Creating *SangerAlignment* instance` part, the constructor function will apply the quality trimming parameters to all reads. After creating the *SangerAlignment* S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will update all reads with the new trimming parameters and redo reads alignment in *SangerContig* and contigs alignment in *SangerAlignment*. If users want to do quality trimming read by read instead all at once, please read :ref:`Launching *SangerAlignment* Shiny app`.
+In the previous :ref:`Creating *SangerAlignment* instance from **AB1**` part, the constructor function will apply the quality trimming parameters to all reads. After creating the *SangerAlignment* S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will update all reads with the new trimming parameters and redo reads alignment in *SangerContig* and contigs alignment in *SangerAlignment*. If users want to do quality trimming read by read instead all at once, please read :ref:`Launching *SangerAlignment* Shiny app`.
 
 .. code-block:: R
 
@@ -283,8 +273,8 @@ We have updated the trimming and chromatogram parameters for each read. Now, we 
 |
 
 
-Writing *SangerAlignment* FASTA files
--------------------------------------
+Writing *SangerAlignment* FASTA files :sub:`(AB1)`
+--------------------------------------------------
 Users can write the *SangerAlignment* instance to **FASTA** files. There are four options for users to choose from in :code:`selection` parameter.
 
 * :code:`contigs_unalignment`: Writing contigs into a single **FASTA** file.
@@ -304,8 +294,8 @@ Below is the one-line function that users need to run. This function mainly depe
 
 |
 
-Generating *SangerAlignment* report
------------------------------------
+Generating *SangerAlignment* report :sub:`(AB1)`
+------------------------------------------------
 Last but not least, users can save *SangerAlignment* instance into a report after the analysis. The report will be generated in **HTML** by knitting **Rmd** files.
 
 There are two parameters, :code:`includeSangerContig` and :code:`includeSangerRead`, for users to decide to which level the *SangerAlignment* report will go. Moreover, after the reports are generated, users can easily navigate through reports in different levels within the **HTML** file.

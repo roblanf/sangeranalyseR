@@ -43,9 +43,13 @@ Guide
    content/getting_start
    content/quick_commands
    content/beginner
-   content/advance_user_SangerRead
-   content/advance_user_SangerContig
-   content/advance_user_SangerAlignment
+   content/advance_user_SangerRead_ab1
+   content/advance_user_SangerContig_ab1
+   content/advance_user_SangerAlignment_ab1
+
+   content/advance_user_SangerRead_fasta
+   content/advance_user_SangerContig_fasta
+   content/advance_user_SangerAlignment_fasta
    content/conclusion
    content/license
    content/contact

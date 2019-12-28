@@ -7,17 +7,17 @@ First, please install sangeranalyseR and load it into your R console. If you hav
 
 Step 1: Input files preparation
 -------------------------------
-sangeranalyseR takes **ab1** files as input and constructs contigs for those with the same contig name. Then, all the contigs will be aligned and a phylogenetic tree will be generated. We first explain how users should organize their files before running sangeranalyseR.
+sangeranalyseR takes **AB1** files as input and constructs contigs for those with the same contig name. Then, all the contigs will be aligned and a phylogenetic tree will be generated. We first explain how users should organize their files before running sangeranalyseR.
 
-First, users need to prepare a directory and put all their **ab1** files inside it. The files should follow the regulation in the note below:
+First, users need to prepare a directory and put all their **AB1** files inside it. The files should follow the regulation in the note below:
 
 .. note::
 
-  * All the input files must have **ab1** as its file extension;
+  * All the input files must have **AB1** as its file extension;
   * The reads that belong to the same contig should have the same contig name;
   * Forward or reverse direction needs to be specified in the filename.
 
-There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **ab1** files. To be clearer, let's have an example.
+There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **AB1** files. To be clearer, let's have an example.
 
 .. _SangerAlignment_file_structure:
 .. figure::  ../image/SangerAlignment_file_structure.png
@@ -29,13 +29,13 @@ There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`
 
 :ref:`Figure_1<SangerAlignment_file_structure>` shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.
 
-* :code:`parentDirectory`: It is the directory that contains all the **ab1** files. In this example, it is :code:`./tmp/`
+* :code:`parentDirectory`: It is the directory that contains all the **AB1** files. In this example, it is :code:`./tmp/`
 
 * :code:`suffixForwardRegExp`: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is :code:`_F.ab1`.
 
 * :code:`suffixReverseRegExp`: Same as forward read, all the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is :code:`_R.ab1`.
 
-All files inside the :code:`parentDirectory` do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside :code:`parentDirectory` and find all files that end with **ab1** and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named.
+All files inside the :code:`parentDirectory` do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside :code:`parentDirectory` and find all files that end with **AB1** and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named.
 
 In this example, there are four contigs that will be detected: :code:`ACHLO006-09[LCO1490_t1,HCO2198_t1]`, :code:`ACHLO007-09[LCO1490_t1,HCO2198_t1]`, :code:`RBNII396-13[C_LepFolF,C_LepFolR]` and :code:`RBNII397-13[C_LepFolF,C_LepFolR]`. In this example, :code:`_1` and :code:`_2` in the filenames are not necessary because there are only two reads, one forward and one reverse, in each contig. However, it is a good habit to index the reads by order because in a contig, there might be more than one read in the same direction.
 
@@ -110,10 +110,21 @@ Last but not least, it is important to store all results in a report for future 
 
 What's next ?
 -------------
-Congratulation, you have finished the :ref:`Beginner Guide`. As mentioned in :ref:`Introduction` section, there are three levels of Sanger sequencing analysis which are *SangerRead*, *SangerContig* and *SangerAlignment*. Users can start the data analysis in each level now.
+Congratulation, you have finished the :ref:`Beginner Guide`. As mentioned in :ref:`Introduction` section, there are three levels of Sanger sequencing analysis which are *SangerRead*, *SangerContig* and *SangerAlignment*. Users can start the data analysis in each level now. The main input file format to create *SangerRead* instance is **AB1**; however, we also allow users to run sangeranalyseR with **FASTA** file as input.
 
-* :ref:`Advanced User Guide - *SangerRead*`
+If you want to start the analysis from **AB1** files, please read the following three links.
 
-* :ref:`Advanced User Guide - *SangerContig*`
+* :ref:`Advanced User Guide - *SangerRead* (**AB1**)`
 
-* :ref:`Advanced User Guide - *SangerAlignment*`
+* :ref:`Advanced User Guide - *SangerContig* (**AB1**)`
+
+* :ref:`Advanced User Guide - *SangerAlignment* (**AB1**)`
+
+
+If you want to start the analysis from **FASTA** files, please read the following three links.
+
+* :ref:`Advanced User Guide - *SangerRead* (**FASTA**)`
+
+* :ref:`Advanced User Guide - *SangerContig* (**FASTA**)`
+
+* :ref:`Advanced User Guide - *SangerAlignment* (**FASTA**)`
