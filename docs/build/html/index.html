@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sangeranalyseR&#39;s tutorial! &mdash; sangeranalyseR  documentation</title>
+  <title>sangeranalyseR&#39;s tutorial &mdash; sangeranalyseR  documentation</title>
   
 
   
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Introduction" href="content/introduction.html" /> 
+    <link rel="next" title="Getting Start" href="content/getting_start.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,7 +80,6 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="content/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/getting_start.html">Getting Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/quick_commands.html">Quick Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/beginner.html">Beginner Guide</a></li>
@@ -139,7 +138,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>sangeranalyseR's tutorial!</li>
+      <li>sangeranalyseR's tutorial</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -159,66 +158,40 @@
            <div itemprop="articleBody">
             
   <div class="section" id="sangeranalyser-s-tutorial">
-<h1>sangeranalyseR's tutorial!<a class="headerlink" href="#sangeranalyser-s-tutorial" title="Permalink to this headline">¶</a></h1>
-<p>There should only be one of these per page and this will also -- when
-converting to pdf -- be used for the chapters.</p>
-<div class="section" id="h2-page-sections">
-<h2>H2 -- Page Sections<a class="headerlink" href="#h2-page-sections" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="h3-subsection">
-<h3>H3 -- Subsection<a class="headerlink" href="#h3-subsection" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="h4-subsubsection">
-<h4>H4 -- Subsubsection<a class="headerlink" href="#h4-subsubsection" title="Permalink to this headline">¶</a></h4>
-<p><a class="reference external" href="http://packages.python.org/an_example_pypi_project/">Docs for this project</a></p>
-<p>COMPLEX TABLE:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 34%" />
-<col style="width: 34%" />
-<col style="width: 31%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Header 1</p></th>
-<th class="head"><p>Header 2</p></th>
-<th class="head"><p>Header 3</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>body row 1</p></td>
-<td><p>column 2</p></td>
-<td><p>column 3</p></td>
-</tr>
-<tr class="row-odd"><td><p>body row 2</p></td>
-<td colspan="2"><p>Cells may span columns.</p></td>
-</tr>
-<tr class="row-even"><td><p>body row 3</p></td>
-<td rowspan="2"><p>Cells may
-span rows.</p></td>
-<td rowspan="2"><ul class="simple">
-<li><p>Cells</p></li>
-<li><p>contain</p></li>
-<li><p>blocks.</p></li>
+<h1>sangeranalyseR's tutorial<a class="headerlink" href="#sangeranalyser-s-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="why-sangeranalyser">
+<h2>Why sangeranalyseR<a class="headerlink" href="#why-sangeranalyser" title="Permalink to this headline">¶</a></h2>
+<p>Sanger sequencing was first proposed in 1977 and is still widely used in sequencing high-quality DNA. There are some widely used tools e.g. <a class="reference external" href="https://www.geneious.com">Geneious</a>, <a class="reference external" href="https://www.codoncode.com/aligner/">CodonCode Aligner</a> and <a class="reference external" href="http://www.phrap.org/phredphrapconsed.html">Phred-Phrap-Consed</a>; however, these are all commercial software which require expensive license fee. Therefore, we develop sangeranalyseR allowing users to do Sanger sequencing data analysis in pure R environment. sangeranalyseR is an open source software which provides another option for biologists and clinical researchers to do Sanger sequencing data analysis in an easy way.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="main-features">
+<h2>Main features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Well-structured S4 classes</strong>: There are three S4 classes in sangeranalyseR which are <em>SangerRead</em>, <em>SangerContig</em> and <em>SangerAlignment</em> representing different levels of Sanger sequencing data analysis and storing user inputs and results in each level. They are the main structure of sangeranalyseR for the following analysis.</p></li>
+<li><p><strong>Automated data analysis</strong>: The S4 instance creation process is automated with systematic named input files by default parameters. The downstream analysis function is maximally simplified.</p></li>
+<li><p><strong>Interactive Shiny apps</strong>: Local Shiny apps for <em>SangerContig</em> and <em>SangerAlignment</em> are provided to visualize the S4 instance. Users are allowed to change trimming and chromatogram parameters inside Shiny apps.</p></li>
+<li><p><strong>Exporting reads to FASTA</strong>: Aligned results and trimmed reads can be written into <strong>FASTA</strong> file format.</p></li>
+<li><p><strong>Thorough report</strong>: A comprehensive report can be created with a single command.</p></li>
+<li><p>Pure R environment: Users can do Sanger sequencing data analysis in pure R environment.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="row-odd"><td><p>body row 4</p></td>
-</tr>
-</tbody>
-</table>
-<p><a class="reference download internal" download="" href="_downloads/89a10889167fb41790f6f4d3c01c8b72/Figure_10_.png"><code class="xref download docutils literal notranslate"><span class="pre">An</span> <span class="pre">Example</span> <span class="pre">Pypi</span> <span class="pre">Project</span></code></a></p>
+<div class="line-block">
+<div class="line"><br /></div>
 </div>
 </div>
+<div class="section" id="user-support">
+<h2>User support<a class="headerlink" href="#user-support" title="Permalink to this headline">¶</a></h2>
+<p>Please go through the <a class="reference internal" href="#documentation"><span class="std std-ref">Documentation</span></a> below first. If you have further questions, feedback, new ideas, and bug reports, please sign up the following Google group and post a topic to the</p>
+<p><a class="reference external" href="https://groups.google.com/d/forum/iqtree">https://groups.google.com/d/forum/iqtree</a></p>
+<div class="line-block">
+<div class="line"><br /></div>
 </div>
-<div class="section" id="guide">
-<h2>Guide<a class="headerlink" href="#guide" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="content/introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="content/introduction.html#why-sangeranalyser">Why sangeranalyseR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="content/introduction.html#main-features">Main features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="content/introduction.html#user-support">User support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="content/introduction.html#documentation">Documentation</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="content/getting_start.html">Getting Start</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="content/getting_start.html#system-prerequisite">System prerequisite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="content/getting_start.html#installation">Installation</a><ul>
@@ -316,7 +289,7 @@ span rows.</p></td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="content/introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="content/getting_start.html" class="btn btn-neutral float-right" title="Getting Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>

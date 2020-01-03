@@ -1,7 +1,7 @@
 Beginner Guide
 ==============
 
-First, please install sangeranalyseR and load it into your R console. If you haven't finished the above steps, please read :ref:`Getting Start` first.
+First, please install sangeranalyseR and load it into your R console. If you haven't finished the above steps, please read :ref:`Getting Start` page first.
 
 |
 
@@ -110,7 +110,7 @@ Last but not least, it is important to store all results in a report for future 
 
 What's next ?
 -------------
-Congratulation, you have finished the :ref:`Beginner Guide`. As mentioned in :ref:`Introduction` section, there are three levels of Sanger sequencing analysis which are *SangerRead*, *SangerContig* and *SangerAlignment*. Users can start the data analysis in each level now. The main input file format to create *SangerRead* instance is **AB1**; however, we also allow users to run sangeranalyseR with **FASTA** file as input.
+Congratulation, you have finished the :ref:`Beginner Guide`. There are three levels of Sanger sequencing analysis which are *SangerRead*, *SangerContig* and *SangerAlignment*. Users can start the data analysis in each level now. The main input file format to create *SangerRead* instance is **AB1**; however, we also allow users to run sangeranalyseR with **FASTA** file as input.
 
 If you want to start the analysis from **AB1** files, please read the following three links.
 
