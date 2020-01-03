@@ -168,7 +168,7 @@
             
   <div class="section" id="beginner-guide">
 <h1>Beginner Guide<a class="headerlink" href="#beginner-guide" title="Permalink to this headline">¶</a></h1>
-<p>First, please install sangeranalyseR and load it into your R console. If you haven't finished the above steps, please read <a class="reference internal" href="getting_start.html#getting-start"><span class="std std-ref">Getting Start</span></a> first.</p>
+<p>First, please install sangeranalyseR and load it into your R console. If you haven't finished the above steps, please read <a class="reference internal" href="getting_start.html#getting-start"><span class="std std-ref">Getting Start</span></a> page first.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -186,17 +186,16 @@
 </div>
 <p>There are three parameters, <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>, <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>, and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>, that users need to provide so that program can automatically group all <strong>AB1</strong> files. To be clearer, let's have an example.</p>
 <div class="figure align-center" id="id1">
-<span id="sangeralignment-file-structure"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure.png"><img alt="../_images/SangerAlignment_file_structure.png" src="../_images/SangerAlignment_file_structure.png" style="width: 402.0px; height: 383.0px;" /></a>
+<span id="sangeralignment-file-structure-beginner"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure_beginner.png"><img alt="../_images/SangerAlignment_file_structure_beginner.png" src="../_images/SangerAlignment_file_structure_beginner.png" style="width: 388.0px; height: 384.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#sangeralignment-file-structure"><span class="std std-ref">Figure_1</span></a> shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.</p>
+<p><a class="reference internal" href="#sangeralignment-file-structure-beginner"><span class="std std-ref">Figure_1</span></a> shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.</p>
 <ul class="simple">
 <li><p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>: It is the directory that contains all the <strong>AB1</strong> files. In this example, it is <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code></p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_F.ab1</span></code>.</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: Same as forward read, all the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_R.ab1</span></code>.</p></li>
 </ul>
-<p>All files inside the <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> and find all files that end with <strong>AB1</strong> and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named.</p>
-<p>In this example, there are four contigs that will be detected: <code class="code docutils literal notranslate"><span class="pre">ACHLO006-09[LCO1490_t1,HCO2198_t1]</span></code>, <code class="code docutils literal notranslate"><span class="pre">ACHLO007-09[LCO1490_t1,HCO2198_t1]</span></code>, <code class="code docutils literal notranslate"><span class="pre">RBNII396-13[C_LepFolF,C_LepFolR]</span></code> and <code class="code docutils literal notranslate"><span class="pre">RBNII397-13[C_LepFolF,C_LepFolR]</span></code>. In this example, <code class="code docutils literal notranslate"><span class="pre">_1</span></code> and <code class="code docutils literal notranslate"><span class="pre">_2</span></code> in the filenames are not necessary because there are only two reads, one forward and one reverse, in each contig. However, it is a good habit to index the reads by order because in a contig, there might be more than one read in the same direction.</p>
+<p>All files inside the <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> and find all files that end with <strong>AB1</strong> and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named. In this example, there are four contigs that will be detected: <code class="code docutils literal notranslate"><span class="pre">ACHLO006-09[LCO1490_t1,HCO2198_t1]</span></code>, <code class="code docutils literal notranslate"><span class="pre">ACHLO007-09[LCO1490_t1,HCO2198_t1]</span></code>, <code class="code docutils literal notranslate"><span class="pre">RBNII396-13[C_LepFolF,C_LepFolR]</span></code> and <code class="code docutils literal notranslate"><span class="pre">RBNII397-13[C_LepFolF,C_LepFolR]</span></code>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -209,7 +208,7 @@
                                    <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_R.ab1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>One thing to pay attention to is that your current working directory need to be at the same level of <code class="code docutils literal notranslate"><span class="pre">tmp</span></code> directory so that you can directly use <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>. Or otherwise, you need to use the absolute directory which might look like <code class="code docutils literal notranslate"><span class="pre">/path/to/your/tmp</span></code>.</p>
+<p>One thing to pay attention to is that your current working directory need to be at the same level of <code class="code docutils literal notranslate"><span class="pre">tmp</span></code> directory so that you can directly use <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>. Or otherwise, you need to use the absolute path which might look like <code class="code docutils literal notranslate"><span class="pre">/path/to/your/tmp</span></code>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -259,14 +258,14 @@
 </div>
 <div class="section" id="what-s-next">
 <h2>What's next ?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
-<p>Congratulation, you have finished the <a class="reference internal" href="#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>. There are three levels of Sanger sequencing analysis which are <em>SangerRead</em>, <em>SangerContig</em> and <em>SangerAlignment</em>. Users can start the data analysis in each level now. The main input file format to create <em>SangerRead</em> instance is <strong>AB1</strong>; however, we also allow users to run sangeranalyseR with <strong>FASTA</strong> file as input.</p>
-<p>If you want to start the analysis from <strong>AB1</strong> files, please read the following three links.</p>
+<p>Congratulation, you have finished the <a class="reference internal" href="#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>. There are three levels of Sanger sequencing analysis which are <em>SangerRead</em>, <em>SangerContig</em> and <em>SangerAlignment</em>. Users can start the data analysis in each level now. The main input file format to create <em>SangerRead</em> instance is <strong>AB1</strong>; however, we also allow users to run sangeranalyseR with <strong>FASTA</strong> file as input with some limitation.</p>
+<p>If you want to start the analysis from <strong>AB1</strong> files, please choose the analysis level and read the following three links.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="advance_user_SangerRead_ab1.html#advanced-user-guide-sangerread-ab1"><span class="std std-ref">Advanced User Guide - SangerRead (AB1)</span></a></p></li>
 <li><p><a class="reference internal" href="advance_user_SangerContig_ab1.html#advanced-user-guide-sangercontig-ab1"><span class="std std-ref">Advanced User Guide - SangerContig (AB1)</span></a></p></li>
 <li><p><a class="reference internal" href="advance_user_SangerAlignment_ab1.html#advanced-user-guide-sangeralignment-ab1"><span class="std std-ref">Advanced User Guide - SangerAlignment (AB1)</span></a></p></li>
 </ul>
-<p>If you want to start the analysis from <strong>FASTA</strong> files, please read the following three links.</p>
+<p>If you want to start the analysis from <strong>FASTA</strong> files, please choose the analysis level and read the following three links.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="advance_user_SangerRead_fasta.html#advanced-user-guide-sangerread-fasta"><span class="std std-ref">Advanced User Guide - SangerRead (FASTA)</span></a></p></li>
 <li><p><a class="reference internal" href="advance_user_SangerContig_fasta.html#advanced-user-guide-sangercontig-fasta"><span class="std std-ref">Advanced User Guide - SangerContig (FASTA)</span></a></p></li>
