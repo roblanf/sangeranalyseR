@@ -20,7 +20,7 @@ Main features
 
 User support
 ============
-Please go through the :ref:`Documentation` below first. If you have further questions, feedback, new ideas, and bug reports, please sign up the following Google group and post a topic to the
+Please go through the :ref:`Documentation` below first. If you have further questions, feedback, new ideas, and bug reports, please sign up the following Google group and post a topic to the (FIX!!!)
 
 https://groups.google.com/d/forum/iqtree
 

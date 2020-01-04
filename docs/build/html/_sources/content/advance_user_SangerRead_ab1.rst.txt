@@ -17,7 +17,7 @@ The main input file format to create *SangerRead* instance is **AB1**. Before st
 
 .. note::
 
-    * **AB1** file should be indexed for better consistency.
+    * **AB1** file should be indexed for better consistency with file naming regulation for *SangerContig* and *SangerAlignment*.
     * Forward or reverse direction should be specified in the filename.
 
 :ref:`Figure_2<SangerRead_file_structure>` shows the suggested file naming strategy. The filename should contain four main parts: **"Contig name"**, **"Index number"**, **"Direction"** and **"ab1 file extension"**.

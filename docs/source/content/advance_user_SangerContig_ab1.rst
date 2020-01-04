@@ -15,8 +15,6 @@ Advanced User Guide - *SangerContig* (**AB1**)
 Preparing *SangerContig* **AB1** input
 --------------------------------------
 
-Users can choose to input **AB1** or **FASTA** as their input file format.
-
 The main input file format to create *SangerRead* instance is **AB1**. Before starting the analysis, users need to prepare all **AB1** files inside one directory. This directory is the parent directory and all **AB1** files must be in the first layer of it; in other words, there should not be any directory containing any **AB1** files inside the parent directory. Because sangeranalyseR will group **AB1** files based on their direction automatically, users have to follow the filename regulations below:
 
 .. note::
