@@ -3,7 +3,7 @@ sangeranalyseR's tutorial
 
 Why sangeranalyseR
 ==================
-Sanger sequencing was first proposed in 1977 and is still widely used in sequencing high-quality DNA. There are some widely used tools e.g. `Geneious <https://www.geneious.com>`_, `CodonCode Aligner <https://www.codoncode.com/aligner/>`_ and `Phred-Phrap-Consed <http://www.phrap.org/phredphrapconsed.html>`_; however, these are all commercial software which require expensive license fee. Therefore, we develop sangeranalyseR allowing users to do Sanger sequencing data analysis in pure R environment. sangeranalyseR is an open source software which provides another option for biologists and clinical researchers to do Sanger sequencing data analysis in an easy way.
+Sanger sequencing was first proposed in 1977 and is still widely used in sequencing high-quality DNA. There are some widely used tools e.g. `Geneious <https://www.geneious.com>`_, `CodonCode Aligner <https://www.codoncode.com/aligner/>`_ and `Phred-Phrap-Consed <http://www.phrap.org/phredphrapconsed.html>`_; however, these are all commercial software which requires expensive license fee. Therefore, we develop sangeranalyseR allowing users to do Sanger sequencing data analysis in pure R environment. sangeranalyseR is an open source software which provides another option for biologists and clinical researchers to do Sanger sequencing data analysis in an easy way.
 
 |
 
@@ -14,7 +14,7 @@ Main features
 * **Interactive Shiny apps**: Local Shiny apps for *SangerContig* and *SangerAlignment* are provided to visualize the S4 instance. Users are allowed to change trimming and chromatogram parameters inside Shiny apps.
 * **Exporting reads to FASTA**: Aligned results and trimmed reads can be written into **FASTA** file format.
 * **Thorough report**: A comprehensive report can be created with a single command.
-* Pure R environment: Users can do Sanger sequencing data analysis in pure R environment.
+* **Pure R environment**: Users can do Sanger sequencing data analysis in pure R environment.
 
 |
 

@@ -13,8 +13,8 @@ First, users need to prepare a directory and put all their **AB1** files inside 
 
 .. note::
 
-  * All the input files must have **AB1** as its file extension;
-  * The reads that belong to the same contig should have the same contig name;
+  * All the input files must have **AB1** as its file extension.
+  * The reads that belong to the same contig should have the same contig name.
   * Forward or reverse direction needs to be specified in the filename.
 
 There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`, that users need to provide so that program can automatically group all **AB1** files. To be clearer, let's have an example.
@@ -108,7 +108,7 @@ Last but not least, it is important to store all results in a report for future 
 
 What's next ?
 -------------
-Congratulation, you have finished the :ref:`Beginner Guide`. There are three levels of Sanger sequencing analysis which are *SangerRead*, *SangerContig* and *SangerAlignment*. Users can start the data analysis in each level now. The main input file format to create *SangerRead* instance is **AB1**; however, we also allow users to run sangeranalyseR with **FASTA** file as input with some limitation.
+Congratulation, you have finished the :ref:`Beginner Guide`. There are three levels of Sanger sequencing analysis which are *SangerRead*, *SangerContig* and *SangerAlignment*. Users can start the data analysis in each level now. The main input file format to create *SangerRead* instance is **AB1**; however, we also allow users to run sangeranalyseR with **FASTA** file as input with some limitations.
 
 If you want to start the analysis from **AB1** files, please choose the analysis level and read the following three links.
 
