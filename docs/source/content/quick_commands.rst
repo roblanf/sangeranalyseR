@@ -1,7 +1,6 @@
 Quick Commands
 ==============
-This page is the concise and core analysis steps of sangeranalyseR.
-If you have not read the :ref:`Beginner Guide` page, please read it first for more details.
+This page is the concise and core analysis steps of sangeranalyseR. If you have not read the :ref:`Beginner Guide` page, please read it first for more details.
 
 * **Step 1** : Input files preparation
 
