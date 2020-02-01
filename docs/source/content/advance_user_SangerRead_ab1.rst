@@ -54,18 +54,18 @@ After preparing the *SangerRead* input **AB1** file, the next step is to create 
 
 .. code-block:: R
 
-   sangerRead <- SangerRead(inputSource           = "ABIF",
-                            readFeature           = "Forward Read",
-                            readFileName          = "RBNII397-13[C_LepFolF,C_LepFolR]_1_F.ab1",
-                            geneticCode           = GENETIC_CODE,
-                            TrimmingMethod        = "M1",
-                            M1TrimmingCutoff      = 0.0001,
-                            M2CutoffQualityScore  = NULL,
-                            M2SlidingWindowSize   = NULL,
-                            baseNumPerRow         = 100,
-                            heightPerRow          = 200,
-                            signalRatioCutoff     = 0.33,
-                            showTrimmed           = TRUE)
+   sangerReadF <- SangerRead(inputSource           = "ABIF",
+                             readFeature           = "Forward Read",
+                             readFileName          = "RBNII397-13[C_LepFolF,C_LepFolR]_1_F.ab1",
+                             geneticCode           = GENETIC_CODE,
+                             TrimmingMethod        = "M1",
+                             M1TrimmingCutoff      = 0.0001,
+                             M2CutoffQualityScore  = NULL,
+                             M2SlidingWindowSize   = NULL,
+                             baseNumPerRow         = 100,
+                             heightPerRow          = 200,
+                             signalRatioCutoff     = 0.33,
+                             showTrimmed           = TRUE)
 
 
 The inputs of :code:`SangerRead` constructor function and :code:`new` method are same. For more details about *SangerRead* inputs & slots definition, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_. The created *SangerRead* instance, :code:`sangerRead`, is used as the input for the following functions.
@@ -86,7 +86,7 @@ Before going to :ref:`Writing *SangerRead* FASTA files :sub:\`(AB1)\`` and :ref:
 
 .. code-block:: R
 
-   qualityBasePlot(singleRead)
+   qualityBasePlot(sangerReadF)
 
 |
 
@@ -96,7 +96,7 @@ In the previous :ref:`Creating *SangerRead* instance from **AB1**` part, the con
 
 .. code-block:: R
 
-   newSangerRead <- updateQualityParam(sangerRead,
+   newSangerRead <- updateQualityParam(sangerReadF,
                                        TrimmingMethod       = "M2",
                                        M1TrimmingCutoff     = NULL,
                                        M2CutoffQualityScore = 29,
@@ -126,5 +126,5 @@ Last but not least, users can save *SangerRead* instance into a report after the
 
 .. code-block:: R
 
-   generateReportSR(sangerRead,
+   generateReportSR(sangerReadF,
                     outputDir = tempdir())

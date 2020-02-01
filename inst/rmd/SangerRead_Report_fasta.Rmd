@@ -1,0 +1,195 @@
+---
+title: "'SangerRead' Report"
+author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+    fig_caption: yes
+  BiocStyle::pdf_document: default
+#bibliography: bibliography.bib
+params:
+  SangerRead: NULL
+  outputDir: ""
+  navigationContig: FALSE
+  navigationContigFN: NULL
+  navigationAlignmentFN: NULL
+fontsize: 14pt
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+---
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div style="margin-left:50px; padding-left:-50;margin-top:50px; margin-bottom:50px; border-left: 4px solid #d3d6db;">
+`r if(!is.null(params$navigationAlignmentFN)){ "<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerAlignment Level</p>" }`
+`r if(!is.null(params$navigationContigFN)){ "<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerContig Level</p>" }`
+<p style = "font-size: 15px; font-weight: bold; margin-left:-20px"><i class="fa fa-arrow-circle-right" style="margin-right: 10px; color: green"></i>SangerRead Level</p>
+</div>
+
+
+```{r echo=FALSE}
+library(sangeranalyseR)
+```
+
+# Basic Information:
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<div style="overflow: scroll;">
+<ul style="list-style-type:disc;">
+  <li>**Output Directory : **  <span><i>`r params$outputDir`</i></span></li>
+
+  <li>**Input Directory : **  <span><i>`r dirname(params$SangerRead@readFileName)`</i></span></li>
+
+  <li>**Input Filename : **  <span><i>`r basename(params$SangerRead@readFileName)`</i></span></li>
+
+  <li>**Read Feature : **  <span>*`r params$SangerRead@readFeature`*</span></li>
+</ul>
+</div>
+</details>
+
+--- 
+
+# DNA Seqence
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<div style="overflow: scroll;">
+<h3> Primary Sequence </h3>
+```{r echo=FALSE, warning=FALSE}
+primarySeq <- unlist(strsplit(as.character(params$SangerRead@primarySeq), ""))
+primarySeqDF <- data.frame(t(data.frame(primarySeq)), stringsAsFactors = FALSE)
+colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
+rownames(primarySeqDF) <- NULL
+AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
+TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
+CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
+GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
+styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+suppressWarnings(suppressMessages(
+    excelTable(data = primarySeqDF, defaultColWidth = 30,
+               editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList, loadingSpin = TRUE)
+))
+```
+</div>
+</details>
+
+---
+
+# Amino Acids Sequence
+
+<details class="description"> <summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<div style="overflow: scroll;">
+<h3> Amino Acids Sequence frameshit 0 </h3>
+```{r echo=FALSE, warning=FALSE}
+AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS1))
+AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+rownames(AAStringDF) <- NULL
+width <- rep(90, length(AAStringDF))
+styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+styleList <- c(styleList1, styleList2)
+suppressWarnings(suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList)
+))
+```
+<h3> Amino Acids Sequence frameshit 1  </h3>
+```{r echo=FALSE, warning=FALSE}
+AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS2))
+AAString <- rbind(NA, AAString)
+AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+rownames(AAStringDF) <- NULL
+width <- rep(90, length(AAStringDF) - 1)
+width <- c(30, width)
+styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+styleList <- c(styleList1, styleList2)
+styleList[['A1']] <- 'background-color: black;'
+suppressWarnings(suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList)
+))
+```
+<h3> Amino Acids Sequence frameshit 2 </h3>
+```{r echo=FALSE, warning=FALSE}
+AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS3))
+AAString <- rbind(NA, NA, AAString)
+AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+rownames(AAStringDF) <- NULL
+width <- rep(90, length(AAStringDF) - 2)
+width <- c(30, 30, width)
+styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+styleList <- c(styleList1, styleList2)
+styleList[['A1']] <- 'background-color: black;'
+styleList[['B1']] <- 'background-color: black;'
+suppressWarnings(suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList)
+))
+```
+</div>
+</details>
+
+--- 
+
+
+`r if(!is.null(params$navigationContigFN)){paste0('<br><br><a style="margin-left:-20px" href="', file.path("..", basename(params$navigationContigFN)), '" class="btn btn-success btn-block btn-lg active" role="button">Back to \'SangerContig\' Report</a>')}`
+
+
+<style>
+li{
+    margin-top: 16px;
+}
+li:first-child {
+    margin-top:0;
+}
+.tab {position:absolute;left:380px; }
+
+.jexcel_content { 
+    height: 60px !important;
+}
+
+details.description[open] summary::after {
+  content: attr(data-open);
+  color: #d45050;
+  border-bottom: 2px solid #d45050;
+}
+
+details.description:not([open]) summary::after {
+  content: attr(data-close);
+  color: #4c9c6b;
+  border-bottom: 2px solid #4c9c6b;
+}
+
+.description {
+border-left: 4px solid #d3d6db;
+padding-left: 10px;
+}
+.description summary{
+  font-weight: bold;
+  font-size: 10px;
+  color: #383838;
+}
+
+</style>

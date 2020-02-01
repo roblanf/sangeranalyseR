@@ -176,13 +176,6 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {
-              # if (object@inputSource == "ABIF") {
-              #
-              # } else if (object@inputSource == "FASTA") {
-              #     message("SangerContig with 'FASTA' inputSource ",
-              #             "cannot run Shiny app\n (You don't need to ",
-              #             "do trimming or base calling)")
-              # }
     # Another Rmd for SangerRead with FASTA file source
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
@@ -201,7 +194,11 @@ setMethod("generateReportSR", "SangerRead",
         suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
     }
     rootDir <- system.file(package = "sangeranalyseR")
-    originRmd <- file.path(rootDir, "rmd", "SangerRead_Report.Rmd")
+    if (obj@inputSource == "ABIF") {
+        originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_ab1.Rmd")
+    } else if (obj@inputSource == "FASTA") {
+        originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_fasta.Rmd")
+    }
     outputHtml <- file.path(outputDirSR, "SangerRead_Report.html")
     res <- render(input = originRmd,
                   output_dir = outputDirSR,
