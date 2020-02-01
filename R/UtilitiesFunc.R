@@ -186,7 +186,6 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         }
         return(primaryDNA)
     })
-
     ### ------------------------------------------------------------------------
     ### DNAStringSet storing forward & reverse reads ! (Origin)
     ### ------------------------------------------------------------------------

@@ -1171,6 +1171,7 @@ SangerAlignmentServer <- function(input, output, session) {
         if (!is.na(contigIndex)) {
             CSResult<-
                 calculateContigSeq (
+                    SangerAlignment@contigList[[contigIndex]]@inputSource,
                     SangerAlignment@contigList[[contigIndex]]@forwardReadList,
                     SangerAlignment@contigList[[contigIndex]]@reverseReadList,
                     SangerAlignment@contigList[[contigIndex]]@refAminoAcidSeq,

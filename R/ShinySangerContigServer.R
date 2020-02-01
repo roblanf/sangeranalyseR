@@ -859,7 +859,8 @@ SangerContigServer <- function(input, output, session) {
         message("@@@@@@@ 'Reactive button' has been clicked")
         message("######## Start to recalculate contig")
         CSResult<-
-            calculateContigSeq (SangerContig@forwardReadList,
+            calculateContigSeq (SangerContig@inputSource,
+                                SangerContig@forwardReadList,
                                 SangerContig@reverseReadList,
                                 SangerContig@refAminoAcidSeq,
                                 SangerContig@minFractionCall,
