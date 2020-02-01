@@ -185,7 +185,11 @@ setMethod("generateReportSR", "SangerRead",
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
         message(">>> outputDir : ", outputDir)
     }
-    readName <- sub('\\.ab1$', '', basename(obj@readFileName))
+    if (obj@inputSource == "ABIF") {
+        readName <- sub('\\.ab1$', '', basename(obj@readFileName))
+    } else if (obj@inputSource == "FASTA") {
+        readName <- sub('\\.fa$', '', basename(obj@readFileName))
+    }
     outputDirSR <- file.path(outputDir, readName)
     ### ------------------------------------------------------------------------
     ### Make sure the directory is exist (SangerRead level)

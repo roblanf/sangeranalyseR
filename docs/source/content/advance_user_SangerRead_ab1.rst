@@ -126,5 +126,7 @@ Last but not least, users can save *SangerRead* instance into a report after the
 
 .. code-block:: R
 
-   generateReportSR(sangerReadF,
+   generateReportSR(newSangerRead,
                     outputDir = tempdir())
+
+`SangerRead_Report_ab1.html <https://howardchao.github.io/sangeranalyseR_report/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_ab1.html>`_ is the generated report html of this example. Users can access to 'Basic Information', 'DNA Sequence', 'Amino Acids Sequence', 'Quality Trimming' and 'Chromatogram' sections inside the report. 
