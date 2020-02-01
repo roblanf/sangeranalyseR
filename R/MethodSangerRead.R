@@ -189,6 +189,7 @@ setMethod("generateReportSR", "SangerRead",
         readName <- sub('\\.ab1$', '', basename(obj@readFileName))
     } else if (obj@inputSource == "FASTA") {
         readName <- sub('\\.fa$', '', basename(obj@readFileName))
+        readName <- sub('\\.fasta$', '', basename(obj@readFileName))
     }
     outputDirSR <- file.path(outputDir, readName)
     ### ------------------------------------------------------------------------

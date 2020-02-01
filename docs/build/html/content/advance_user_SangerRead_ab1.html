@@ -206,18 +206,18 @@
 <div class="section" id="creating-sangerread-instance-from-ab1">
 <h2>Creating <em>SangerRead</em> instance from <strong>AB1</strong><a class="headerlink" href="#creating-sangerread-instance-from-ab1" title="Permalink to this headline">¶</a></h2>
 <p>After preparing the <em>SangerRead</em> input <strong>AB1</strong> file, the next step is to create the <em>SangerRead</em> S4 instance by running <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal notranslate"><span class="pre">new</span></code> method which makes instance creation more intuitive. The inputs include <strong>Basic Parameters</strong>, <strong>Trimming Parameters</strong> and <strong>Chromatogram Parameters</strong> and most of them have their own default values. In the constructor below, we list important parameters.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerRead</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">inputSource</span>           <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
-                         <span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
-                         <span class="n">readFileName</span>          <span class="o">=</span> <span class="s">&quot;RBNII397-13[C_LepFolF,C_LepFolR]_1_F.ab1&quot;</span><span class="p">,</span>
-                         <span class="n">geneticCode</span>           <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">,</span>
-                         <span class="n">TrimmingMethod</span>        <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
-                         <span class="n">M1TrimmingCutoff</span>      <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
-                         <span class="n">M2CutoffQualityScore</span>  <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
-                         <span class="n">M2SlidingWindowSize</span>   <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
-                         <span class="n">baseNumPerRow</span>         <span class="o">=</span> <span class="m">100</span><span class="p">,</span>
-                         <span class="n">heightPerRow</span>          <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
-                         <span class="n">signalRatioCutoff</span>     <span class="o">=</span> <span class="m">0.33</span><span class="p">,</span>
-                         <span class="n">showTrimmed</span>           <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerReadF</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">inputSource</span>           <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
+                          <span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
+                          <span class="n">readFileName</span>          <span class="o">=</span> <span class="s">&quot;RBNII397-13[C_LepFolF,C_LepFolR]_1_F.ab1&quot;</span><span class="p">,</span>
+                          <span class="n">geneticCode</span>           <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">,</span>
+                          <span class="n">TrimmingMethod</span>        <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
+                          <span class="n">M1TrimmingCutoff</span>      <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
+                          <span class="n">M2CutoffQualityScore</span>  <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                          <span class="n">M2SlidingWindowSize</span>   <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                          <span class="n">baseNumPerRow</span>         <span class="o">=</span> <span class="m">100</span><span class="p">,</span>
+                          <span class="n">heightPerRow</span>          <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
+                          <span class="n">signalRatioCutoff</span>     <span class="o">=</span> <span class="m">0.33</span><span class="p">,</span>
+                          <span class="n">showTrimmed</span>           <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The inputs of <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function and <code class="code docutils literal notranslate"><span class="pre">new</span></code> method are same. For more details about <em>SangerRead</em> inputs &amp; slots definition, please refer to <a class="reference external" href="http://packages.python.org/an_example_pypi_project/">sangeranalyseR reference manual (need update)</a>. The created <em>SangerRead</em> instance, <code class="code docutils literal notranslate"><span class="pre">sangerRead</span></code>, is used as the input for the following functions.</p>
@@ -232,7 +232,7 @@
 <span id="sangerread-qualitybaseplot"></span><a class="reference internal image-reference" href="../_images/SangerRead_qualityBasePlot.png"><img alt="../_images/SangerRead_qualityBasePlot.png" src="../_images/SangerRead_qualityBasePlot.png" style="width: 498.0px; height: 337.2px;" /></a>
 <p class="caption"><span class="caption-text">Figure 4. <em>SangerRead</em> trimmed read visualization.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">qualityBasePlot</span><span class="p">(</span><span class="n">singleRead</span><span class="p">)</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">qualityBasePlot</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="line-block">
@@ -242,7 +242,7 @@
 <div class="section" id="updating-sangerread-quality-trimming-parameters">
 <h2>Updating <em>SangerRead</em> quality trimming parameters<a class="headerlink" href="#updating-sangerread-quality-trimming-parameters" title="Permalink to this headline">¶</a></h2>
 <p>In the previous <a class="reference internal" href="#creating-sangerread-instance-from-ab1"><span class="std std-ref">Creating SangerRead instance from AB1</span></a> part, the constructor function applies the quality trimming parameters to the read. After creating the <em>SangerRead</em> S4 instance, users can change the trimming parameters by running <code class="code docutils literal notranslate"><span class="pre">updateQualityParam</span></code> function which will change the <em>QualityReport</em> instance inside the <em>SangerRead</em> and update frameshift amino acid sequences.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">newSangerRead</span> <span class="o">&lt;-</span> <span class="nf">updateQualityParam</span><span class="p">(</span><span class="n">sangerRead</span><span class="p">,</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">newSangerRead</span> <span class="o">&lt;-</span> <span class="nf">updateQualityParam</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">,</span>
                                     <span class="n">TrimmingMethod</span>       <span class="o">=</span> <span class="s">&quot;M2&quot;</span><span class="p">,</span>
                                     <span class="n">M1TrimmingCutoff</span>     <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
                                     <span class="n">M2CutoffQualityScore</span> <span class="o">=</span> <span class="m">29</span><span class="p">,</span>
@@ -269,12 +269,11 @@
 <div class="section" id="generating-sangerread-report-ab1">
 <h2>Generating <em>SangerRead</em> report <sub>(AB1)</sub><a class="headerlink" href="#generating-sangerread-report-ab1" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least, users can save <em>SangerRead</em> instance into a report after the analysis. The report will be generated in <strong>HTML</strong> by knitting <strong>Rmd</strong> files. The results in the report are static.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">,</span>
-                 <span class="n">outputDir</span>           <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
-                 <span class="n">includeSangerContig</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
-                 <span class="n">includeSangerRead</span>   <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSR</span><span class="p">(</span><span class="n">newSangerRead</span><span class="p">,</span>
+                 <span class="n">outputDir</span> <span class="o">=</span> <span class="nf">tempdir</span><span class="p">())</span>
 </pre></div>
 </div>
+<p><a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_ab1.html">SangerRead_Report_ab1.html</a> is the generated report html of this example. Users can access to '<em>Basic Information</em>', '<em>DNA Sequence</em>', '<em>Amino Acids Sequence</em>', '<em>Quality Trimming</em>' and '<em>Chromatogram</em>' sections inside this report.</p>
 </div>
 </div>
 
