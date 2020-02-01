@@ -126,7 +126,5 @@ Last but not least, users can save *SangerRead* instance into a report after the
 
 .. code-block:: R
 
-   generateReportSA(sangerAlignment,
-                    outputDir           = tempdir(),
-                    includeSangerContig = TRUE,
-                    includeSangerRead   = TRUE)
+   generateReportSR(sangerRead,
+                    outputDir = tempdir())

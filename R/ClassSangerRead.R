@@ -48,7 +48,6 @@
 #'                     heightPerRow          = 200,
 #'                     signalRatioCutoff     = 0.33,
 #'                     showTrimmed           = TRUE)
-#'
 #' # Reverse Read
 #' A_chloroticaRFN <- file.path(inputFilesPath,
 #'                              "Allolobophora_chlorotica",
@@ -67,6 +66,7 @@
 #'                     heightPerRow          = 200,
 #'                     signalRatioCutoff     = 0.33,
 #'                     showTrimmed           = TRUE)
+#'
 #'
 #' ## Input From FASTA file format
 #' # Forward Read

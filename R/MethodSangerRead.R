@@ -176,8 +176,6 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {
-
-
               # if (object@inputSource == "ABIF") {
               #
               # } else if (object@inputSource == "FASTA") {
