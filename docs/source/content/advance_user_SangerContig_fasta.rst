@@ -105,6 +105,13 @@ Below is the one-line function that users need to run. This function mainly depe
                 compression_level = NA,
                 selection         = "all")
 
+
+Users can download the output FASTA file of this example through the following three links:
+
+* `reads_unalignment FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerContig/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_reads_unalignment.fa>`_
+* `reads_alignment FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerContig/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_reads_alignment.fa>`_
+* `contig FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerContig/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_contig.fa>`_
+
 |
 
 Generating *SangerContig* report :sub:`(FASTA)`
@@ -121,3 +128,5 @@ One thing to pay attention to is that if users have many reads, it would take qu
    generateReportSC(sangerContigFa,
                     outputDir           = tempdir(),
                     includeSangerRead   = TRUE)
+
+`SangerRead_Report_ab1.html <https://howardchao.github.io/sangeranalyseR_report/SangerContig/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_ is the generated *SangerContig* report html of this example. Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside this report. Furthermore, users can check all forward and reverse *SangerRead* html reports which belong to this *SangerContig*.

@@ -292,6 +292,12 @@ Below is the one-line function that users need to run. This function mainly depe
                 compression_level = NA,
                 selection         = "all")
 
+Users can download the output FASTA file of this example through the following three links:
+
+* `reads_unalignment FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_reads_unalignment.fa>`_
+* `reads_alignment FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_reads_alignment.fa>`_
+* `contig FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_contig.fa>`_
+
 |
 
 Generating *SangerContig* report :sub:`(AB1)`
@@ -299,7 +305,8 @@ Generating *SangerContig* report :sub:`(AB1)`
 Last but not least, users can save *SangerContig* instance into a report after the analysis. The report will be generated in **HTML** by knitting **Rmd** files.
 
 
-Users can set :code:`includeSangerRead` parameter to decide to which level the *SangerContig* report will go. Moreover, after the reports are generated, users can easily navigate through reports in different levels within the **HTML** file.
+Users can set :code:`includeSangerRead` parameter to decide to which level the *SangerContig* report will go. Moreover, after the reports are generated,
+users can easily navigate through reports in different levels within the **HTML** file.
 
 One thing to pay attention to is that if users have many reads, it will take quite a long time to write out all reports. If users only want to generate the contig result, remember to set :code:`includeSangerRead` to :code:`FALSE` in order to save time.
 
@@ -308,3 +315,6 @@ One thing to pay attention to is that if users have many reads, it will take qui
    generateReportSC(newSangerContig,
                     outputDir           = tempdir(),
                     includeSangerRead   = TRUE)
+
+
+`SangerRead_Report_ab1.html <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_ is the generated *SangerContig* report html of this example. Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside this report. Furthermore, users can check all forward and reverse *SangerRead* html reports which belong to this *SangerContig*.
