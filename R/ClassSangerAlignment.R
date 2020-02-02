@@ -54,8 +54,8 @@ setOldClass("phylo")
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerAlignment", "Sanger_all_reads.fa")
 #' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion.csv")
-#' suffixForwardRegExpFa <- "_F"
-#' suffixReverseRegExpFa <- "_R"
+#' suffixForwardRegExpFa <- "[0-9]*_F$"
+#' suffixReverseRegExpFa <- "[0-9]*_R$"
 #' sangerAlignmentFa <- new("SangerAlignment",
 #'                          inputSource           = "FASTA",
 #'                          fastaFileName         = fastaFN,

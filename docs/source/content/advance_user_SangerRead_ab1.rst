@@ -68,7 +68,7 @@ After preparing the *SangerRead* input **AB1** file, the next step is to create 
                              showTrimmed           = TRUE)
 
 
-The inputs of :code:`SangerRead` constructor function and :code:`new` method are same. For more details about *SangerRead* inputs & slots definition, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_. The created *SangerRead* instance, :code:`sangerRead`, is used as the input for the following functions.
+The inputs of :code:`SangerRead` constructor function and :code:`new` method are same. For more details about *SangerRead* inputs and slots definition, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_. The created *SangerRead* instance, :code:`sangerRead`, is used as the input for the following functions.
 
 |
 

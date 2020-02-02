@@ -29,8 +29,8 @@ There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`
 .. note::
 
   * :code:`parentDirectory`: The root directory that contains all the **AB1** files. It can be absolute or relative path. We suggest users to put only target **AB1** files inside this directory without other unrelated files.
-  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filename in forward direction. :code:`grepl` function in R is used to select forward reads from all **AB1** files.
-  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filename in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **AB1** files.
+  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all filenames in forward direction. :code:`grepl` function in R is used to select forward reads from all **AB1** files.
+  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filenames in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **AB1** files.
 
 
 
@@ -47,7 +47,7 @@ For basic input files preparation example, please go to :ref:`Beginner Guide`. H
    Figure 2. Input ab1 files inside the parent directory, :code:`./tmp/`.
 
 
-:ref:`Figure_2<SangerAlignment_file_structure_complex>` shows the file naming regulation and directory hierarchy. In this example, the parent directory is :code:`extdata` and the directories in first layer are :code:`Allolobophora_chlorotica` and :code:`Drosophila_melanogaster`. All target **AB1** files need to be inside parent directory but it is not necessary to put them in the same level of directory. sangeranalyseR will recursively search all files with **.ab1** file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with filenames. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming regulation and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
+:ref:`Figure_2<SangerAlignment_file_structure_complex>` shows the file naming regulation and directory hierarchy. In this example, the parent directory is :code:`extdata` and the directories in first layer are :code:`Allolobophora_chlorotica` and :code:`Drosophila_melanogaster`. All target **AB1** files need to be inside parent directory but it is not necessary to put them in the same level. sangeranalyseR will recursively search all files with **.ab1** file extension and automatically group reads with the same contig name. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with filenames. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming regulation and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, ":code:`_[0-9]*_F.ab1$`", ":code:`_[0-9]*_R.ab1$`" for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
 
 .. _sangeranalyseR_filename_convention_SangerAlignment:
 .. figure::  ../image/sangeranalyseR_filename_convention.png
@@ -119,7 +119,7 @@ We create an interactive local Shiny app for users to go into each *SangerRead* 
 
 *SangerAlignment* page (SA app)
 +++++++++++++++++++++++++++++++
-:ref:`Figure 4<SangerAlignment_ShinyApp_1>` is the initial page and the toppest layer of *SangerAlignment* App. It provides basic parameters in *SangerAlignment* instance, contigs alignment result and phylogenetic tree etc. After updating all the trimmed reads, users need to click “Re-calculate Contigs Alignment” button to do contigs alignment again. From the left-hand side panel, we can clearly see the hierarchy of the *SangerAlignment* S4 instance and easily access to all reads and contigs in it.
+:ref:`Figure 4<SangerAlignment_ShinyApp_1>` is the initial page and the toppest layer of *SangerAlignment* App. It provides basic parameters in *SangerAlignment* instance, contigs alignment result and phylogenetic tree etc. Before checking the results, users need to click “Re-calculate Contigs Alignment” button to do contigs alignment in order to get the updated results. From the left-hand side panel, we can clearly see the hierarchy of the *SangerAlignment* S4 instance and easily access to all reads and contigs in it.
 
 .. _SangerAlignment_ShinyApp_1:
 .. figure::  ../image/SangerAlignment_ShinyApp_1.png
@@ -137,7 +137,7 @@ Scroll down a bit, users can see the contigs alignment result generated by `DECI
 
    Figure 5. *SangerAlignment* Page - contigs alignment result.
 
-In *SangerAlignment* page, the phylogenetic tree result is provided as well (:ref:`Figure 6<SangerAlignment_ShinyApp_3>`). The tree is generated by `ape <https://cran.r-project.org/web/packages/ape/index.html>`_ R package which uses NJ algorithm.
+In *SangerAlignment* page, the phylogenetic tree result is provided as well (:ref:`Figure 6<SangerAlignment_ShinyApp_3>`). The tree is generated by `ape <https://cran.r-project.org/web/packages/ape/index.html>`_ R package which uses neighbor-joining algorithm.
 
 .. _SangerAlignment_ShinyApp_3:
 .. figure::  ../image/SangerAlignment_ShinyApp_3.png
@@ -177,7 +177,7 @@ The information provided in this page includes : “input parameters”, “gene
 
 *SangerRead* page (SA app)
 ++++++++++++++++++++++++++
-Now, let's go to the page in the lowest level, *SangerRead* page. *SangerRead* page contains all details of a read including its trimming and chromatogram inputs and results. All reads are in "forward" or "reverse" direction. Under *SangerContig* page, there are two expendable tabs, “Forward Reads” and “Reverse Reads” storing the corresponding reads on the left-hand side navigation panel in :ref:`Figure 10<SangerAlignment_ShinyApp_8>`. In this example, there are one read in each tab and :ref:`Figure 10<SangerAlignment_ShinyApp_8>` shows the “1 - 1 Forward Read” page. It provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences in this figure are dynamic based on the :code:`signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in :ref:`Figure 15<SangerAlignment_ShinyApp_14>` below will always be same after trimming and their color codings for A/T/C/G are same as well.
+Now, let's go to the page in the lowest level, *SangerRead* page. *SangerRead* page contains all details of a read including its trimming and chromatogram inputs and results. All reads are in "forward" or "reverse" direction. Under "Contig Overview" tab (*SangerContig* page), there are two expendable tabs, “Forward Reads” and “Reverse Reads” storing corresponding reads on the left-hand side navigation panel in :ref:`Figure 10<SangerAlignment_ShinyApp_8>`. In this example, there are one read in each tab and :ref:`Figure 10<SangerAlignment_ShinyApp_8>` shows the “1 - 1 Forward Read” page. It provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences in this figure are dynamic based on the :code:`signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in :ref:`Figure 15<SangerAlignment_ShinyApp_14>` below will always be same after trimming and their color codings for A/T/C/G are same as well.
 
 .. _SangerAlignment_ShinyApp_8:
 .. figure::  ../image/SangerAlignment_ShinyApp_8.png
@@ -186,7 +186,7 @@ Now, let's go to the page in the lowest level, *SangerRead* page. *SangerRead* p
 
    Figure 10. *SangerAlignment* Shiny app - *SangerRead* page.
 
-In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would improves alignment results. :ref:`Figure 11<SangerAlignment_ShinyApp_9>` shows the UI for Trimming Method 1 (M1): ‘Modified Mott Trimming’. This method is implemented in `Phred <http://www.phrap.org/phredphrapconsed.html>`_. Users can change the cutoff score and click “Apply Trimming Parameters" button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.
+In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads will improves alignment results. :ref:`Figure 11<SangerAlignment_ShinyApp_9>` shows the UI for Trimming Method 1 (M1): ‘Modified Mott Trimming’. This method is implemented in `Phred <http://www.phrap.org/phredphrapconsed.html>`_. Users can change the cutoff score and click “Apply Trimming Parameters" button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.
 
 .. _SangerAlignment_ShinyApp_9:
 .. figure::  ../image/SangerAlignment_ShinyApp_9.png
@@ -213,7 +213,7 @@ In quality trimming steps, we removes fragment at both ends of sequencing reads 
 
    Figure 13. *SangerRead* page - read quality report before / after trimming.
 
-In :ref:`Figure 14<SangerAlignment_ShinyApp_13>`, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top is the raw read region and the orange horizontal bar represents the trimmed read region. Both :ref:`Figure 14<SangerAlignment_ShinyApp_13>` timming plot and :ref:`Figure 15<SangerAlignment_ShinyApp_14>` chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters" button in :ref:`Figure 15<SangerAlignment_ShinyApp_14>`.
+In :ref:`Figure 14<SangerAlignment_ShinyApp_13>`, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top of the plot is the raw read region and the orange horizontal bar represents the trimmed read region. Both :ref:`Figure 14<SangerAlignment_ShinyApp_13>` trimming plot and :ref:`Figure 15<SangerAlignment_ShinyApp_14>` chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters" button in :ref:`Figure 15<SangerAlignment_ShinyApp_14>`.
 
 .. _SangerAlignment_ShinyApp_13:
 .. figure::  ../image/SangerAlignment_ShinyApp_13.png
@@ -222,7 +222,7 @@ In :ref:`Figure 14<SangerAlignment_ShinyApp_13>`, the x-axis is the index of the
 
    Figure 14. *SangerRead* page - quality trimming plot.
 
-If we only see primary and secondary sequences in the table, we will loose some variations. Chromatogram is very helpful to check the peak resolution. :ref:`Figure 15<SangerAlignment_ShinyApp_14>` shows the panel of plotting chromatogram. Users can change four parameters: :code:`Base Number Per Row`, :code:`Height Per Row`, :code:`Signal Ratio Cutoff`, and :code:`Show Trimmed Region`. Among them, :code:`Signal Ratio Cutoff` is a key parameter. If its value is default value 0.33, it indicates that the lower peak should be at least 1/3rd as high as the higher peak for it count as a secondary peak.
+If we only see primary and secondary sequences in the table, we will loose some variations. Chromatogram is very helpful to check the peak resolution. :ref:`Figure 15<SangerAlignment_ShinyApp_14>` shows the panel of plotting chromatogram. Users can change four parameters: :code:`Base Number Per Row`, :code:`Height Per Row`, :code:`Signal Ratio Cutoff`, and :code:`Show Trimmed Region`. Among them, :code:`Signal Ratio Cutoff` is the key parameter. If its value is default value 0.33, it indicates that the lower peak should be at least 1/3rd as high as the higher peak for it count as a secondary peak.
 
 .. _SangerAlignment_ShinyApp_14:
 .. figure::  ../image/SangerAlignment_ShinyApp_14.png
@@ -258,7 +258,7 @@ To let users browse the trimmed primary/secondary sequences without finding “T
 
    Figure 18. *SangerRead* page - trimmed primary/secondary sequences and Phred quality score in table format.
 
-We have updated the trimming and chromatogram parameters for each read. Now, we need to click “Re-calculate contig” button to do alignment again. Last but not least, we can save all data into a new ‘SangerContig’ S4 instance by clicking “Save S4 Object button”. New S4 instance would be saved in Rda format. Users can run :code:`readRDS` function to load it into current R environment. :ref:`Figure 19<SangerAlignment_ShinyApp_18>` shows some hints in the save notification popup.
+We have updated the trimming and chromatogram parameters for each read. Now, we need to click “Re-calculate contig” button to do alignment again. Last but not least, we can save all data into a new ‘SangerContig’ S4 instance by clicking “Save S4 instance button”. New S4 instance will be saved in **Rda** format. Users can run :code:`readRDS` function to load it into current R environment. :ref:`Figure 19<SangerAlignment_ShinyApp_18>` shows some hints in the save notification popup.
 
 .. _SangerAlignment_ShinyApp_18:
 .. figure::  ../image/SangerAlignment_ShinyApp_18.png
@@ -294,14 +294,12 @@ Below is the one-line function that users need to run. This function mainly depe
 
 Generating *SangerAlignment* report :sub:`(AB1)`
 ------------------------------------------------
-Last but not least, users can save *SangerAlignment* instance into a report after the analysis. The report will be generated in **HTML** by knitting **Rmd** files.
-
-There are two parameters, :code:`includeSangerContig` and :code:`includeSangerRead`, for users to decide to which level the *SangerAlignment* report will go. Moreover, after the reports are generated, users can easily navigate through reports in different levels within the **HTML** file.
+Last but not least, users can save *SangerAlignment* instance into a report after the analysis. The report will be generated in **HTML** by knitting **Rmd** files. There are two parameters, :code:`includeSangerContig` and :code:`includeSangerRead`, for users to decide which level the *SangerAlignment* report will go. Moreover, after the reports are generated, users can easily navigate through reports in different levels within the **HTML** file.
 
 * :code:`includeSangerContig`: Whether users want to generate the report of each *SangerContig* in *SangerAlignment*.
 * :code:`includeSangerRead`: If :code:`includeSangerContig` is :code:`TRUE`, then users can set this value to decide whether they want to include *SangerRead* reports in each *SangerContig*.
 
-One thing to pay attention to is that if users have many reads, it would take quite a long time to write out all reports. If users only want to generate the contigs alignment, remember to set :code:`includeSangerContig` and :code:`includeSangerRead` to :code:`FALSE` in order to save time.
+One thing to pay attention to is that if users have many reads, it will take quite a long time to write out all reports. If users only want to generate the contigs alignment, remember to set :code:`includeSangerContig` and :code:`includeSangerRead` to :code:`FALSE` in order to save time.
 
 .. code-block:: R
 

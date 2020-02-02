@@ -95,7 +95,7 @@ After preparing the input directory, we can create the *SangerContig* S4 instanc
 
 In this example, :code:`contigName` is set to :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]"`, so only :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]_1_F.ab1"` and :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]_2_R.ab1"` will be selected to align to a contig.
 
-The inputs of :code:`SangerContig` constructor function and :code:`new` method are same. For more details about *SangerContig* inputs & slots definition, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_. The created *SangerContig* instance, :code:`sangerContig`, is used as the input for the following functions.
+The inputs of :code:`SangerContig` constructor function and :code:`new` method are same. For more details about *SangerContig* inputs and slots definition, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_. The created *SangerContig* instance, :code:`sangerContig`, is used as the input for the following functions.
 
 |
 
@@ -214,7 +214,7 @@ In quality trimming steps, we removes fragment at both ends of sequencing reads 
 
    Figure 12. *SangerRead* page - read quality report before / after trimming.
 
-In :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>`, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top is the raw read region and the orange horizontal bar represents the remaining read region. Both :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>` timming plot and :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>` chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters" button in :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>`.
+In :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>`, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top of the plot is the raw read region and the orange horizontal bar represents the remaining read region. Both :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>` trimming plot and :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>` chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters" button in :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>`.
 
 .. _SangerContig_shiny_bp_quality_plot:
 .. figure::  ../image/SangerContig_shiny_bp_quality_plot.png
@@ -316,4 +316,4 @@ One thing to pay attention to is that if users have many reads, it will take qui
                     outputDir           = tempdir(),
                     includeSangerRead   = TRUE)
 
-Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside the generated `*SangerContig* html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.
+Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.

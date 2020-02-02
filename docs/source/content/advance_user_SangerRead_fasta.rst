@@ -40,7 +40,7 @@ After preparing the *SangerRead* input **FASTA** file, the next step is to creat
 
    Figure 2. *SangerRead* **FASTA** input file.
 
-The inputs of :code:`SangerRead` constructor function and :code:`new` method are same. For more details about *SangerRead* inputs & slots definition, please refer to `sangeranalyseR reference manual (need update after upload function manul) <http://packages.python.org/an_example_pypi_project/>`_.
+The inputs of :code:`SangerRead` constructor function and :code:`new` method are same. For more details about *SangerRead* inputs and slots definition, please refer to `sangeranalyseR reference manual (need update after upload function manul) <http://packages.python.org/an_example_pypi_project/>`_.
 
 |
 
