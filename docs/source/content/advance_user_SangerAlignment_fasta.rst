@@ -32,9 +32,7 @@ There are three parameters, :code:`fastaFileName`, :code:`suffixForwardRegExp`, 
   * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all filenames in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **FASTA** files.
 
 
-No doubt read names in the original **FASTA** file will not follow the naming regulation; however, it is highly not recommended to change the name directly in the raw **FASTA** file. Therefore, we provide a feature to let users do read names mapping conversion by a **CSV** file showed in :ref:`Figure_2<SangerAlignment_read_names_conversion>`.
-
-The first column is "original_read_name" which are the read names in the raw **FASTA** file, and the second column is "analysis_read_name" which are the read names that follow the naming regulation. The read names will be mapped onto the names in "original_read_name" without changing the raw **FASTA** file. :code:`namesConversionCSV` is the parameter that stores the path to this **CSV** file.
+No doubt read names in the original **FASTA** file will not follow the naming regulation; however, it is highly not recommended to change the name directly in the raw **FASTA** file. Therefore, we provide a feature to let users do read names mapping conversion by a **CSV** file showed in :ref:`Figure_2<SangerAlignment_read_names_conversion>`. The first column is "original_read_name" which are the read names in the raw **FASTA** file, and the second column is "analysis_read_name" which are the read names that follow the naming regulation. The read names will be mapped onto the names in "original_read_name" without changing the raw **FASTA** file. :code:`namesConversionCSV` is the parameter that stores the path to this **CSV** file.
 
 .. _SangerAlignment_read_names_conversion:
 .. figure::  ../image/SangerAlignment_read_names_conversion.png
@@ -105,6 +103,12 @@ Below is the one-line function that users need to run. This function mainly depe
                 compression_level = NA,
                 selection         = "all")
 
+Users can download the output FASTA file of this example through the following three links:
+
+* `contigs_unalignment FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/FASTA/Sanger_contigs_unalignment.fa>`_
+* `contigs_alignment FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/FASTA/Sanger_contigs_alignment.fa>`_
+* `all_reads FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/FASTA/Sanger_all_trimmed_reads.fa>`_
+
 |
 
 Generating *SangerAlignment* report :sub:`(FASTA)`
@@ -122,3 +126,5 @@ One thing to pay attention to is that if users have many reads, it will take qui
                     outputDir           = tempdir(),
                     includeSangerContig = TRUE,
                     includeSangerRead   = TRUE)
+
+Users can access to '*Basic Information*', '*Contigs Consensus*', '*Contigs Alignment*' and '*Contigs Tree*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/FASTA/SangerAlignment/SangerAlignment_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.

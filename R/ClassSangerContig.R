@@ -41,8 +41,8 @@
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-#' suffixForwardRegExp <- "_F.ab1"
-#' suffixReverseRegExp <- "_R.ab1"
+#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
+#' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
 #'                      parentDirectory       = parentDir,
@@ -65,8 +65,8 @@
 #'                      "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
 #' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
 #' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
-#' suffixForwardRegExpFa <- "[0-9]*_F$"
-#' suffixReverseRegExpFa <- "[0-9]*_R$"
+#' suffixForwardRegExpFa <- "_[0-9]*_F$"
+#' suffixReverseRegExpFa <- "_[0-9]*_R$"
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
 #'                       fastaFileName         = fastaFN,

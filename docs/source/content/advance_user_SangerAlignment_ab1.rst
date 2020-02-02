@@ -290,6 +290,12 @@ Below is the one-line function that users need to run. This function mainly depe
                 compression_level = NA,
                 selection         = "all")
 
+Users can download the output FASTA file of this example through the following three links:
+
+* `contigs_unalignment FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/AB1/Sanger_contigs_unalignment.fa>`_
+* `contigs_alignment FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/AB1/Sanger_contigs_alignment.fa>`_
+* `all_reads FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/AB1/Sanger_all_trimmed_reads.fa>`_
+
 |
 
 Generating *SangerAlignment* report :sub:`(AB1)`
@@ -307,3 +313,5 @@ One thing to pay attention to is that if users have many reads, it will take qui
                     outputDir           = tempdir(),
                     includeSangerContig = TRUE,
                     includeSangerRead   = TRUE)
+
+Users can access to '*Basic Information*', '*Contigs Consensus*', '*Contigs Alignment*' and '*Contigs Tree*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/AB1/SangerAlignment/SangerAlignment_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.
