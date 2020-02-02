@@ -189,7 +189,7 @@ setMethod("generateReportSR", "SangerRead",
         readName <- sub('\\.ab1$', '', basename(obj@readFileName))
     } else if (obj@inputSource == "FASTA") {
         readName <- sub('\\.fa$', '', basename(obj@readFileName))
-        readName <- sub('\\.fasta$', '', basename(obj@readFileName))
+        readName <- sub('\\.fasta$', '', readName)
     }
     outputDirSR <- file.path(outputDir, readName)
     ### ------------------------------------------------------------------------
@@ -201,10 +201,11 @@ setMethod("generateReportSR", "SangerRead",
     rootDir <- system.file(package = "sangeranalyseR")
     if (obj@inputSource == "ABIF") {
         originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_ab1.Rmd")
+        outputHtml <- file.path(outputDirSR, "SangerRead_Report_ab1.html")
     } else if (obj@inputSource == "FASTA") {
         originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_fasta.Rmd")
+        outputHtml <- file.path(outputDirSR, "SangerRead_Report_fasta.html")
     }
-    outputHtml <- file.path(outputDirSR, "SangerRead_Report.html")
     res <- render(input = originRmd,
                   output_dir = outputDirSR,
                   params = list(SangerRead = obj,

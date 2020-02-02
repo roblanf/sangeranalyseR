@@ -268,8 +268,12 @@ setMethod("generateReportSC", "SangerContig",
 
     rootDir <- system.file(package = "sangeranalyseR")
     originRmd <- file.path(rootDir, "rmd", "SangerContig_Report.Rmd")
-    outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
 
+    if (obj@inputSource == "ABIF") {
+        outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
+    } else if (obj@inputSource == "FASTA") {
+        outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
+    }
     forwardReads <- obj@forwardReadList
     reverseReads <- obj@reverseReadList
 
