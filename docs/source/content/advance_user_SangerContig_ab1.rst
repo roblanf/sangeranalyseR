@@ -187,7 +187,7 @@ Now, let's go to the next level which is also the lowest level, *SangerRead* pag
 
    Figure 9. *SangerContig* Shiny app - *SangerRead* page
 
-In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads would improves alignment results. :ref:`Figure 10<SangerContig_shiny_trimming_1>` shows the UI for Trimming Method 1 (M1): ‘Modified Mott Trimming’. This method is implemented in `Phred <http://www.phrap.org/phredphrapconsed.html>`_. Users can change the cutoff score and click “Apply Trimming Parameters" button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.
+In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads will improves alignment results. :ref:`Figure 10<SangerContig_shiny_trimming_1>` shows the UI for Trimming Method 1 (M1): ‘Modified Mott Trimming’. This method is implemented in `Phred <http://www.phrap.org/phredphrapconsed.html>`_. Users can change the cutoff score and click “Apply Trimming Parameters" button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.
 
 .. _SangerContig_shiny_trimming_1:
 .. figure::  ../image/SangerContig_shiny_trimming_1.png
@@ -214,7 +214,7 @@ In quality trimming steps, we removes fragment at both ends of sequencing reads 
 
    Figure 12. *SangerRead* page - read quality report before / after trimming.
 
-In :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>`, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top is the raw read region and the orange horizontal bar represents the trimmed read region. Both :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>` timming plot and :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>` chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters" button in :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>`.
+In :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>`, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top is the raw read region and the orange horizontal bar represents the remaining read region. Both :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>` timming plot and :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>` chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters" button in :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>`.
 
 .. _SangerContig_shiny_bp_quality_plot:
 .. figure::  ../image/SangerContig_shiny_bp_quality_plot.png
@@ -232,7 +232,7 @@ If we only see primary and secondary sequences in the table, we will loose some 
 
    Figure 14. *SangerContig* page - chromatogram panel.
 
-Here is an example of applying new chromatogram parameters. We click “Show Trimmed Region” to set its value from :code:`FALSE` to :code:`TRUE`. :ref:`Figure 15<SangerContig_plotting_popup>` shows the loading notification popup during base calling and chromatogram plotting.
+Here is an example of applying new chromatogram parameters. We click “Show Trimmed Region” to set its value from :code:`FALSE` to :code:`TRUE` and click the "Apply Chromatogram Parameters" button. :ref:`Figure 15<SangerContig_plotting_popup>` shows the loading notification popup during base calling and chromatogram plotting.
 
 
 .. _SangerContig_plotting_popup:
@@ -242,7 +242,7 @@ Here is an example of applying new chromatogram parameters. We click “Show Tri
 
    Figure 15. *SangerContig* page - loading notification popup during replotting chromatogram.
 
-After replotting the chromatogram, trimmed region is showed in red striped region. :ref:`Figure 16<SangerContig_shiny_chromatogram>` shows part of the the chromatogram (1 bp ~ 240 bp). Moreover, chromatogram will be replotted when trimmed positions or chromatogram parameters are updated.
+After replotting the chromatogram, we can see that trimmed region is showed in red striped region. :ref:`Figure 16<SangerContig_shiny_chromatogram>` shows part of the the chromatogram (1 bp ~ 240 bp). Moreover, chromatogram will be replotted when trimmed positions or chromatogram parameters are updated.
 
 
 .. _SangerContig_shiny_chromatogram:
@@ -252,7 +252,7 @@ After replotting the chromatogram, trimmed region is showed in red striped regio
 
    Figure 16. *SangerContig* page - chromatogram with trimmed region showed.
 
-To let users browse the trimmed primary/secondary sequences without finding “Trimming Start Point” and “Trimming End Point” by themselves, we provide the final trimmed primary/secondary sequences that will be used for reads alignment in table format with quality scores in :ref:`Figure 17<SangerContig_shiny_trimmed_sequences>`. Frameshift amino acid sequences are also provided.
+To let users browse the trimmed primary/secondary sequences without finding “Trimming Start Point” and “Trimming End Point” by themselves, we provide the final trimmed primary/secondary sequences that will be used for reads alignment with quality scores in table format in :ref:`Figure 17<SangerContig_shiny_trimmed_sequences>`. Frameshift amino acid sequences are also provided.
 
 
 .. _SangerContig_shiny_trimmed_sequences:
@@ -262,7 +262,7 @@ To let users browse the trimmed primary/secondary sequences without finding “T
 
    Figure 17. *SangerContig* page - trimmed primary/secondary sequences and Phred quality score in table format.
 
-We have updated the trimming and chromatogram parameters for each read. Now, we need to click “Re-calculate contig” button to do alignment again. Last but not least, we can save all data into a new ‘SangerContig’ S4 instance by clicking “Save S4 Object button”. New S4 instance would be saved in Rda format. Users can run :code:`readRDS` function to load it into current R environment. :ref:`Figure 18<SangerContig_shiny_save_popup>` shows some hints in the save notification popup.
+We have updated the trimming and chromatogram parameters for each read. Now, we need to click “Re-calculate contig” button to do alignment again. Last but not least, we can save all data into a new ‘SangerContig’ S4 instance by clicking “Save S4 Instance button”. New S4 instance will be saved in **Rda** format. Users can run :code:`readRDS` function to load it into current R environment. :ref:`Figure 18<SangerContig_shiny_save_popup>` shows some hints in the save notification popup.
 
 .. _SangerContig_shiny_save_popup:
 .. figure::  ../image/SangerContig_shiny_save_popup.png
@@ -286,7 +286,7 @@ Below is the one-line function that users need to run. This function mainly depe
 
 .. code-block:: R
 
-   writeFastaSC(sangerContig,
+   writeFastaSC(newSangerContig,
                 outputDir         = tempdir(),
                 compress          = FALSE,
                 compression_level = NA,
@@ -301,10 +301,10 @@ Last but not least, users can save *SangerContig* instance into a report after t
 
 Users can set :code:`includeSangerRead` parameter to decide to which level the *SangerContig* report will go. Moreover, after the reports are generated, users can easily navigate through reports in different levels within the **HTML** file.
 
-One thing to pay attention to is that if users have many reads, it would take quite a long time to write out all reports. If users only want to generate the contig result, remember to set :code:`includeSangerRead` to :code:`FALSE` in order to save time.
+One thing to pay attention to is that if users have many reads, it will take quite a long time to write out all reports. If users only want to generate the contig result, remember to set :code:`includeSangerRead` to :code:`FALSE` in order to save time.
 
 .. code-block:: R
 
-   generateReportSC(sangerContig,
+   generateReportSC(newSangerContig,
                     outputDir           = tempdir(),
                     includeSangerRead   = TRUE)

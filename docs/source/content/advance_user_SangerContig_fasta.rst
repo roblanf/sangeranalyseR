@@ -15,7 +15,7 @@ Advanced User Guide - *SangerContig* (**FASTA**)
 Preparing *SangerContig* **FASTA** input
 ----------------------------------------
 
-We design the **FASTA** file input for those who do not want to do quality trimming and base calling for each *SangerRead* in *SangerContig*; therefore, it does not contain quality trimming and chromatogram input parameters and results in *SangerRead* slots. Before starting the analysis, users need to prepare one **FASTA** file containing sequence of all reads. Inside the **FASTA** file, there are strings starting with ">" before each read which are the read names. Because sangeranalyseR will group reads into "Forward Read List" and "Reverse Read List", users have to follow the naming regulations for the read names. Below are some regulations:
+We design the **FASTA** file input for those who do not want to do quality trimming and base calling for each *SangerRead* in *SangerContig*; therefore, it does not contain quality trimming and chromatogram input parameters and results in *SangerRead* slots. Before starting the analysis, users need to prepare one **FASTA** file containing sequence of all reads. Inside the **FASTA** file, the strings starting with ">" before each read are the read names. Because sangeranalyseR will automatically group reads into "Forward Read List" and "Reverse Read List", users have to follow the naming regulations. Below are some regulations:
 
 .. note::
 
@@ -26,12 +26,12 @@ There are four parameters, :code:`fastaFileName`, :code:`contigName`, :code:`suf
 
 .. note::
 
-  * :code:`fastaFileName`: The **FASTA** file that contains sequence of all reads. The read names have to follow the naming regulation.
-  * :code:`contigName`: The value of this parameter is a regular expression that matches read names included in the *SangerContig* level analysis. :code:`grepl` function in R is used.
-  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all read names in forward direction. :code:`grepl` function in R is used to select forward reads from all **AB1** files.
-  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all read names in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **AB1** files.
+  * :code:`fastaFileName`: The path of **FASTA** file that contains sequence of all reads. The read names have to follow the naming regulation.
+  * :code:`contigName`: The value of this parameter is a regular expression that matches read names that are going to be included in the *SangerContig* level analysis. :code:`grepl` function in R is used.
+  * :code:`suffixForwardRegExp`: The value of this parameter is a regular expression that matches all read names in forward direction. :code:`grepl` function in R is used to select forward reads from all read names in **FASTA** files.
+  * :code:`suffixReverseRegExp`: The value of this parameter is a regular expression that matches all read names in reverse direction. :code:`grepl` function in R is used to select reverse reads from all read names in **FASTA** files.
 
-It is common that read names in the original **FASTA** file does not follow the naming regulation; however, it is not recommended to change the name directly in the **FASTA** raw file. Therefore, users can provide a **CSV** file showed in :ref:`Figure_2<SangerContig_read_names_conversion>` to do read names conversion. The first column is "original_read_name", and the second column is "analysis_read_name". :code:`namesConversionCSV` is the path to the **CSV** file.
+No doubt read names in the original **FASTA** file will not follow the naming regulation mentioned above; however, it is highly not recommended to change the name directly in the raw **FASTA** file. Therefore, we provide a feature to let users do read names mapping conversion by a **CSV** file showed in :ref:`Figure_2<SangerContig_read_names_conversion>`. The first column is "original_read_name" which are the read names in the raw **FASTA** file, and the second column is "analysis_read_name" which are the read names that follow the naming regulation. The read names will be mapped to the names in "original_read_name" without changing the raw **FASTA** file. :code:`namesConversionCSV` is the parameter that stores the path to this **CSV** file.
 
 .. _SangerContig_read_names_conversion:
 .. figure::  ../image/SangerContig_read_names_conversion.png

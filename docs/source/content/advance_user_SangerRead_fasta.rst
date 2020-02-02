@@ -67,4 +67,4 @@ Last but not least, users can save *SangerRead* instance into a report after the
    generateReportSR(sangerReadFfa,
                     outputDir           = tempdir())
 
-`SangerRead_Report_fasta.html <https://howardchao.github.io/sangeranalyseR_report/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_fasta.html>`_ is the generated report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*' and '*Amino Acids Sequence*' sections inside this report.
+`SangerRead_Report_fasta.html <https://howardchao.github.io/sangeranalyseR_report/SangerRead/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_fasta.html>`_ is the generated report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*' and '*Amino Acids Sequence*' sections inside this report.

@@ -6,7 +6,7 @@ SangerContigUI <- dashboardPage(
     dashboardHeader(
         title = "sangeranalyseR",
         tags$li(class = "dropdown",
-                actionButton('saveS4', 'Save S4 object'),
+                actionButton('saveS4', 'Save S4 instance'),
                 actionButton('closeUI', 'Close UI'))
     ),
     ### ------------------------------------------------------------------------
