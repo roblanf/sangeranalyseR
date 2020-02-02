@@ -316,5 +316,4 @@ One thing to pay attention to is that if users have many reads, it will take qui
                     outputDir           = tempdir(),
                     includeSangerRead   = TRUE)
 
-
-`SangerRead_Report_ab1.html <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_ is the generated *SangerContig* report html of this example. Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside this report. Furthermore, users can check all forward and reverse *SangerRead* html reports which belong to this *SangerContig*.
+`SangerContig_Report.html <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_ is the generated *SangerContig* html report of this example. Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside this report. Furthermore, users can also check html reports of all forward and reverse *SangerRead* which belong to this *SangerContig*.
