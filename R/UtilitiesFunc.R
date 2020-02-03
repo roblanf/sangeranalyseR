@@ -648,15 +648,25 @@ M2inside_calculate_trimming <-function(qualityPhredScores,
                 break
             }
         }
-        for (i in (trimmedStartPos+M2SlidingWindowSize-1):(rawSeqLength-M2SlidingWindowSize+1)) {
+        qualityPhredScoresRev <- rev(qualityPhredScores)
+        for (i in 1:(rawSeqLength-M2SlidingWindowSize+1)) {
             totalScore <-
-                sum(qualityPhredScores[i:(i+M2SlidingWindowSize-1)])
-            if (totalScore < totalThresholdScore) {
-                # Keep all base pairs in the previous window.
-                trimmedFinishPos = i + M2SlidingWindowSize - 2
+                sum(qualityPhredScoresRev[i:(i+M2SlidingWindowSize-1)])
+            if (totalScore > totalThresholdScore) {
+                trimmedFinishPos = i
                 break
             }
         }
+        trimmedFinishPos <- length(qualityPhredScoresRev) - trimmedFinishPos + 1
+        # for (i in (trimmedStartPos+M2SlidingWindowSize-1):(rawSeqLength-M2SlidingWindowSize+1)) {
+        #     totalScore <-
+        #         sum(qualityPhredScores[i:(i+M2SlidingWindowSize-1)])
+        #     if (totalScore < totalThresholdScore) {
+        #         # Keep all base pairs in the previous window.
+        #         trimmedFinishPos = i + M2SlidingWindowSize - 2
+        #         break
+        #     }
+        # }
         if (trimmedStartPos == (rawSeqLength-M2SlidingWindowSize+1) ||
             trimmedStartPos == trimmedFinishPos) {
             trimmedStartPos = 1
