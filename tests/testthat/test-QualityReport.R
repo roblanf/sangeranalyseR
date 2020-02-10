@@ -69,13 +69,13 @@ test_that("QualityReport update quality trimming parameters 3 (to M2)", {
     expect_equal(length(newQualityReport@qualityBaseScores), 702)
 
     expect_equal(newQualityReport@rawSeqLength, 702)
-    expect_equal(newQualityReport@trimmedSeqLength, 665)
+    expect_equal(newQualityReport@trimmedSeqLength, 668)
     expect_equal(newQualityReport@trimmedStartPos, 19)
-    expect_equal(newQualityReport@trimmedFinishPos, 684)
+    expect_equal(newQualityReport@trimmedFinishPos, 687)
     expect_equal(newQualityReport@rawMeanQualityScore, 52.87607, tolerance=1e-6)
-    expect_equal(newQualityReport@trimmedMeanQualityScore, 54.74887, tolerance=1e-6)
+    expect_equal(newQualityReport@trimmedMeanQualityScore, 54.64371, tolerance=1e-6)
     expect_equal(newQualityReport@rawMinQualityScore, 1)
     expect_equal(newQualityReport@trimmedMinQualityScore, 12)
-    expect_equal(newQualityReport@remainingRatio, 0.9472934, tolerance=1e-6)
+    expect_equal(newQualityReport@remainingRatio, 0.951567, tolerance=1e-6)
 })
 
