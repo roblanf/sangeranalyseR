@@ -3,7 +3,6 @@
 ### ============================================================================
 #' @title qualityBasePlot
 #' @name SangerRead-class-qualityBasePlot
-#' @rdname SangerRead-class-qualityBasePlot
 #' @examples
 #' load("data/sangerRead.RData")
 #' qualityBasePlot(sangerReadF)
@@ -23,7 +22,6 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 ## =============================================================================
 #' @title updateQualityParam
 #' @name SangerRead-class-updateQualityParam
-#' @rdname SangerRead-class-updateQualityParam
 #' @examples
 #' load("data/sangerRead.RData")
 #' updateQualityParam(sangerReadF,
@@ -77,7 +75,6 @@ setMethod("updateQualityParam",  "SangerRead",
 ## =============================================================================
 #' @title MakeBaseCalls
 #' @name SangerRead-class-MakeBaseCalls
-#' @rdname SangerRead-class-MakeBaseCalls
 #' @examples
 #' load("data/sangerRead.RData")
 #' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
@@ -122,7 +119,6 @@ setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
 ## =============================================================================
 #' @title writeFastaSR
 #' @name SangerRead-class-writeFastaSR
-#' @rdname SangerRead-class-writeFastaSR
 #' @examples
 #' load("data/sangerRead.RData")
 #' writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")
@@ -169,7 +165,6 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 ## =============================================================================
 #' @title generateReportSR
 #' @name SangerRead-class-generateReportSR
-#' @rdname SangerRead-class-generateReportSR
 #' @examples
 #' load("data/sangerRead.RData")
 #' generateReportSR(sangerReadF)

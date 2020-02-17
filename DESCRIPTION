@@ -43,7 +43,6 @@ Suggests:
     testthat (>= 2.1.0)
 Collate: 
     'AllGenerics.R'
-    'ClassBaseCall.R'
     'ClassChromatogramParam.R'
     'ClassQualityReport.R'
     'ClassSangerRead.R'

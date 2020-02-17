@@ -3,7 +3,6 @@
 ## =============================================================================
 #' @title updateQualityParam
 #' @name SangerContig-class-updateQualityParam
-#' @rdname SangerContig-class-updateQualityParam
 #' @examples
 #' load("data/sangerContig.RData")
 #' updateQualityParam(sangerContig,
@@ -84,7 +83,6 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 
 #' @title launchAppSC
 #' @name SangerContig-class-launchAppSC
-#' @rdname SangerContig-class-launchAppSC
 #' @examples
 #' load("data/sangerContig.RData")
 #' RShinySC <- launchAppSC(sangerContig)
@@ -120,7 +118,6 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
 ## =============================================================================
 #' @title writeFastaSC
 #' @name SangerContig-class-writeFastaSC
-#' @rdname SangerContig-class-writeFastaSC
 #' @examples
 #' load("data/sangerContig.RData")
 #' writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")
@@ -226,7 +223,6 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
 ## =============================================================================
 #' @title generateReportSC
 #' @name SangerContig-class-generateReportSC
-#' @rdname SangerContig-class-generateReportSC
 #' @examples
 #' load("data/sangerContig.RData")
 #' generateReportSC(sangerContig)

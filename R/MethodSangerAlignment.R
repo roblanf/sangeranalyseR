@@ -3,7 +3,6 @@
 ## =============================================================================
 #' @title updateQualityParam
 #' @name SangerAlignment-class-updateQualityParam
-#' @rdname SangerAlignment-class-updateQualityParam
 #' @examples
 #' load("data/sangerAlignment.RData")
 #' updateQualityParam(sangerAlignment,
@@ -62,7 +61,6 @@ setMethod("updateQualityParam",  "SangerAlignment",
 
 #' @title launchAppSA
 #' @name SangerAlignment-class-launchAppSA
-#' @rdname SangerAlignment-class-launchAppSA
 #' @examples
 #' load("data/sangerAlignment.RData")
 #' RShinySA <- launchAppSA(sangerAlignment)
@@ -98,7 +96,6 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
 ## =============================================================================
 #' @title writeFastaSA
 #' @name SangerAlignment-class-writeFastaSA
-#' @rdname SangerAlignment-class-writeFastaSA
 #' @examples
 #' load("data/sangerAlignment.RData")
 #' writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")
@@ -211,7 +208,6 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
 ## =============================================================================
 #' @title generateReportSA
 #' @name SangerAlignment-class-generateReportSA
-#' @rdname SangerAlignment-class-generateReportSA
 #' @examples
 #' load("data/sangerAlignment.RData")
 #' generateReportSA(sangerAlignment)
