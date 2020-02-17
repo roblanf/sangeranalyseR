@@ -11,6 +11,8 @@
 MakeBaseCalls
 }
 \examples{
+\dontrun{
 load("data/sangerRead.RData")
 MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
+}
 }

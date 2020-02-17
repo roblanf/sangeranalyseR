@@ -12,6 +12,8 @@
 generateReportSR
 }
 \examples{
+\dontrun{
 load("data/sangerRead.RData")
 generateReportSR(sangerReadF)
+}
 }

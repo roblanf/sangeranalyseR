@@ -23,12 +23,14 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 #' @title updateQualityParam
 #' @name SangerRead-class-updateQualityParam
 #' @examples
+#' \dontrun{
 #' load("data/sangerRead.RData")
 #' updateQualityParam(sangerReadF,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
 #'                    M2SlidingWindowSize    = 15)
+#' }
 setMethod("updateQualityParam",  "SangerRead",
           function(object,
                    TrimmingMethod         = "M1",
@@ -76,8 +78,10 @@ setMethod("updateQualityParam",  "SangerRead",
 #' @title MakeBaseCalls
 #' @name SangerRead-class-MakeBaseCalls
 #' @examples
+#' \dontrun{
 #' load("data/sangerRead.RData")
 #' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
+#' }
 setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
     if (obj@inputSource == "ABIF") {
         errors <- character(0)
@@ -120,8 +124,10 @@ setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
 #' @title writeFastaSR
 #' @name SangerRead-class-writeFastaSR
 #' @examples
+#' \dontrun{
 #' load("data/sangerRead.RData")
 #' writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")
+#' }
 setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
                                                  compression_level) {
     if (is.null(outputDir)) {
@@ -166,8 +172,10 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 #' @title generateReportSR
 #' @name SangerRead-class-generateReportSR
 #' @examples
+#' \dontrun{
 #' load("data/sangerRead.RData")
 #' generateReportSR(sangerReadF)
+#' }
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {

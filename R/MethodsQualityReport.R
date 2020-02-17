@@ -25,8 +25,10 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object, readFeature){
 #' @title qualityBasePlot
 #' @name QualityReport-class-qualityBasePlot
 #' @examples
+#' \dontrun{
 #' load("data/qualityReport.RData")
 #' qualityBasePlot(qualityReport)
+#' }
 setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
     plotting
@@ -38,12 +40,14 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 #' @title updateQualityParam
 #' @name QualityReport-class-updateQualityParam
 #' @examples
+#' \dontrun{
 #' load("data/sangerRead.RData")
 #' updateQualityParam(qualityReport,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 30,
 #'                    M2SlidingWindowSize    = 15)
+#' }
 setMethod("updateQualityParam",  "QualityReport",
           function(object,
                    TrimmingMethod         = "M1",

@@ -11,6 +11,8 @@
 launchAppSC
 }
 \examples{
+\dontrun{
 load("data/sangerContig.RData")
 RShinySC <- launchAppSC(sangerContig)
+}
 }

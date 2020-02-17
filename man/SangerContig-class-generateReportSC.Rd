@@ -12,6 +12,8 @@
 generateReportSC
 }
 \examples{
+\dontrun{
 load("data/sangerContig.RData")
 generateReportSC(sangerContig)
+}
 }

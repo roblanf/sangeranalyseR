@@ -4,12 +4,14 @@
 #' @title updateQualityParam
 #' @name SangerAlignment-class-updateQualityParam
 #' @examples
+#' \dontrun{
 #' load("data/sangerAlignment.RData")
 #' updateQualityParam(sangerAlignment,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
 #'                    M2SlidingWindowSize    = 15)
+#' }
 setMethod("updateQualityParam",  "SangerAlignment",
           function(object,
                    TrimmingMethod         = "M1",
@@ -62,8 +64,10 @@ setMethod("updateQualityParam",  "SangerAlignment",
 #' @title launchAppSA
 #' @name SangerAlignment-class-launchAppSA
 #' @examples
+#' \dontrun{
 #' load("data/sangerAlignment.RData")
 #' RShinySA <- launchAppSA(sangerAlignment)
+#' }
 setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
     if (obj@inputSource == "ABIF") {
         ### ------------------------------------------------------------------------
@@ -97,8 +101,10 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
 #' @title writeFastaSA
 #' @name SangerAlignment-class-writeFastaSA
 #' @examples
+#' \dontrun{
 #' load("data/sangerAlignment.RData")
 #' writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")
+#' }
 setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
                                                  compression_level,
                                                  selection = "all") {
@@ -209,8 +215,10 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
 #' @title generateReportSA
 #' @name SangerAlignment-class-generateReportSA
 #' @examples
+#' \dontrun{
 #' load("data/sangerAlignment.RData")
 #' generateReportSA(sangerAlignment)
+#' }
 setMethod("generateReportSA", "SangerAlignment",
           function(obj, outputDir,
                    includeSangerContig = TRUE,

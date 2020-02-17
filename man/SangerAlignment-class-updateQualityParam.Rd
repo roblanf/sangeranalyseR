@@ -13,10 +13,12 @@
 updateQualityParam
 }
 \examples{
+\dontrun{
 load("data/sangerAlignment.RData")
 updateQualityParam(sangerAlignment,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,
                    M2SlidingWindowSize    = 15)
+}
 }

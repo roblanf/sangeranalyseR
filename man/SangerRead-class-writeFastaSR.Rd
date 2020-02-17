@@ -12,6 +12,8 @@
 writeFastaSR
 }
 \examples{
+\dontrun{
 load("data/sangerRead.RData")
 writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")
+}
 }

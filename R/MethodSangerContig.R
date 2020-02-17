@@ -4,12 +4,14 @@
 #' @title updateQualityParam
 #' @name SangerContig-class-updateQualityParam
 #' @examples
+#' \dontrun{
 #' load("data/sangerContig.RData")
 #' updateQualityParam(sangerContig,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
 #'                    M2SlidingWindowSize    = 15)
+#' }
 setMethod("updateQualityParam",  "SangerContig",function(object,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
@@ -84,8 +86,10 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 #' @title launchAppSC
 #' @name SangerContig-class-launchAppSC
 #' @examples
+#' \dontrun{
 #' load("data/sangerContig.RData")
 #' RShinySC <- launchAppSC(sangerContig)
+#' }
 setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
     if (obj@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
@@ -119,8 +123,10 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
 #' @title writeFastaSC
 #' @name SangerContig-class-writeFastaSC
 #' @examples
+#' \dontrun{
 #' load("data/sangerContig.RData")
 #' writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")
+#' }
 setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
                                                    compression_level,
                                                    selection = "all") {
@@ -224,8 +230,10 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
 #' @title generateReportSC
 #' @name SangerContig-class-generateReportSC
 #' @examples
+#' \dontrun{
 #' load("data/sangerContig.RData")
 #' generateReportSC(sangerContig)
+#' }
 setMethod("generateReportSC", "SangerContig",
           function(obj, outputDir, includeSangerRead = TRUE,
                    navigationAlignmentFN = NULL) {

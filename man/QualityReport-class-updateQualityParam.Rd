@@ -13,10 +13,12 @@
 updateQualityParam
 }
 \examples{
+\dontrun{
 load("data/sangerRead.RData")
 updateQualityParam(qualityReport,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 30,
                    M2SlidingWindowSize    = 15)
+}
 }

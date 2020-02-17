@@ -12,6 +12,8 @@
 writeFastaSC
 }
 \examples{
+\dontrun{
 load("data/sangerContig.RData")
 writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")
+}
 }

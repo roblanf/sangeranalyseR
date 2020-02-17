@@ -11,6 +11,8 @@
 qualityBasePlot
 }
 \examples{
+\dontrun{
 load("data/qualityReport.RData")
 qualityBasePlot(qualityReport)
+}
 }
