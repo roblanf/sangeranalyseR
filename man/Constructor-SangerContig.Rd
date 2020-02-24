@@ -69,7 +69,7 @@ SangerContig(inputSource = "ABIF", fastaFileName = "",
 SangerContig
 }
 \description{
-
+the constructor for SangerContig
 }
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")

@@ -45,7 +45,7 @@ SangerRead(inputSource = "ABIF", readFeature = "", readFileName = "",
 SangerRead
 }
 \description{
-
+the constructor for SangerRead
 }
 \examples{
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")

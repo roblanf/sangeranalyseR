@@ -72,7 +72,7 @@ SangerAlignment(inputSource = "ABIF", fastaFileName = "",
 SangerAlignment
 }
 \description{
-
+the constructor for SangerAlignment
 }
 \examples{
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")

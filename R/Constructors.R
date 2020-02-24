@@ -1,7 +1,7 @@
 ### ============================================================================
 ### Self-defined constructor for AlignedConsensusSet
 ### ============================================================================
-#' @description
+#' @description the constructor for SangerAlignment
 #'
 #' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @param fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
@@ -112,7 +112,7 @@ SangerAlignment <- function(inputSource            = "ABIF",
 ### ============================================================================
 ### Self-defined constructor for SangerContig
 ### ============================================================================
-#' @description
+#' @description the constructor for SangerContig
 #'
 #' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @param fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
@@ -224,7 +224,7 @@ SangerContig <- function(inputSource            = "ABIF",
 ### ============================================================================
 ### Self-defined constructor for SangerRead
 ### ============================================================================
-#' @description
+#' @description the constructor for SangerRead
 #'
 #' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @param readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
