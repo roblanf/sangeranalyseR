@@ -27,16 +27,24 @@
 #' @author Kuan-Hao Chao
 #' @examples
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
-#' A_chloroticaFdReadFN <- file.path(inputFilesPath,
+#' A_chloroticaFFN <- file.path(inputFilesPath,
 #'                              "Allolobophora_chlorotica",
-#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_F.ab1")
-#' A_chloroticaRead <-
-#'        SangerRead(readFileName          = A_chloroticaFdReadFN,
-#'                   TrimmingMethod        = "M2",
-#'                   M1TrimmingCutoff      = NULL,
-#'                   M2CutoffQualityScore  = 20,
-#'                   M2SlidingWindowSize   = 10)
-#' "@@"(A_chloroticaRead, QualityReport)
+#'                              "ACHLO",
+#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.ab1")
+#' sangerReadF <- new("SangerRead",
+#'                     inputSource           = "ABIF",
+#'                     readFeature           = "Forward Read",
+#'                     readFileName          = A_chloroticaFFN,
+#'                     geneticCode           = GENETIC_CODE,
+#'                     TrimmingMethod        = "M1",
+#'                     M1TrimmingCutoff      = 0.0001,
+#'                     M2CutoffQualityScore  = NULL,
+#'                     M2SlidingWindowSize   = NULL,
+#'                     baseNumPerRow         = 100,
+#'                     heightPerRow          = 200,
+#'                     signalRatioCutoff     = 0.33,
+#'                     showTrimmed           = TRUE)
+#' "@@"(sangerReadF, QualityReport)
 setClass("QualityReport",
          ### -------------------------------------------------------------------
          ### Input type of each variable

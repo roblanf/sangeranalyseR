@@ -312,7 +312,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     consensusGapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
 
     # count columns in the alignment with >1 coincident secondary peaks
-    spDf = countCoincidentSp(aln, processors = processorsNum)
+    spDf = countCoincidentSp(aln, processorsNum = processorsNum)
     if (is.null(spDf)) {
         spDf = data.frame()
     }

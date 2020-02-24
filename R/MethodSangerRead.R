@@ -4,8 +4,10 @@
 #' @title qualityBasePlot
 #' @name SangerRead-class-qualityBasePlot
 #' @examples
+#' \dontrun{
 #' load("data/sangerRead.RData")
 #' qualityBasePlot(sangerReadF)
+#' }
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     if (object@inputSource == "ABIF") {
         QualityReportObject = object@QualityReport

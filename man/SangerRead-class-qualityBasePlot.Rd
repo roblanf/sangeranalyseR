@@ -11,6 +11,8 @@
 qualityBasePlot
 }
 \examples{
+\dontrun{
 load("data/sangerRead.RData")
 qualityBasePlot(sangerReadF)
+}
 }

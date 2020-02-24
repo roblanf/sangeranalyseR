@@ -9,7 +9,7 @@ Description: This package implements bioinformatic methods to process and make i
 License: GPL-2
 Encoding: UTF-8
 Depends: 
-    R (>= 3.0.1),
+    R (>= 3.5.0),
     stringr,
     ape,
     Biostrings,
