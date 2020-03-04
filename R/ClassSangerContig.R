@@ -30,10 +30,9 @@
 #' @slot secondaryPeakDF A data frame with one row for each column in the alignment that contained more than one secondary peak. The data frame has three columns: the column number of the alignment; the number of secondary peaks in that column; and the bases (with IUPAC ambiguity codes representing secondary peak calls) in that column represented as a string.
 #'
 #' @name SangerContig-class
-#'
 #' @rdname SangerContig-class
-#'
 #' @exportClass SangerContig
+#'
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
@@ -111,6 +110,10 @@ setClass("SangerContig",
 ### ============================================================================
 ### Overwrite initialize for 'SangerContig' (New constructor)
 ### ============================================================================
+#' Constructor method of SangerContig Class.
+#'
+#' @name SangerContig
+#' @rdname SangerContig-class
 setMethod("initialize",
           "SangerContig",
           function(.Object, ...,

@@ -1,6 +1,16 @@
 ### ============================================================================
 ### Preplotting quality for each base for "QualityReport" S4 object
 ### ============================================================================
+#' A QualityReport method which pre-plots quality base interactive plot.
+#'
+#' @title preQualityBasePlot
+#' @name QualityReport-class-preQualityBasePlot
+#' @rdname QualityReport-Method
+#'
+#' @docType methods
+#' @examples
+#' \dontrun{load("data/qualityReport.RData")
+#' preQualityBasePlot(qualityReport)}
 setMethod("preQualityBasePlot",  "QualityReport", function(object, readFeature){
     trimmedStartPos = object@trimmedStartPos
     trimmedFinishPos = object@trimmedFinishPos
@@ -22,13 +32,16 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object, readFeature){
 ### ============================================================================
 ### Plotting quality of each base pair for "QualityReport" S4 object
 ### ============================================================================
+#' A QualityReport method which creates quality base interactive plot.
+#'
 #' @title qualityBasePlot
 #' @name QualityReport-class-qualityBasePlot
+#' @rdname QualityReport-Method
+#'
+#' @docType methods
 #' @examples
-#' \dontrun{
-#' load("data/qualityReport.RData")
-#' qualityBasePlot(qualityReport)
-#' }
+#' \dontrun{load("data/qualityReport.RData")
+#' qualityBasePlot(qualityReport)}
 setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
     plotting
@@ -37,17 +50,20 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 ## =============================================================================
 ## Updating quality parameters for QualityReport object.
 ## =============================================================================
+#' A QualityReport method which updates quality base interactive plot.
+#'
 #' @title updateQualityParam
 #' @name QualityReport-class-updateQualityParam
+#' @rdname QualityReport-Method
+#'
+#' @docType methods
 #' @examples
-#' \dontrun{
-#' load("data/sangerRead.RData")
+#' \dontrun{load("data/sangerRead.RData")
 #' updateQualityParam(qualityReport,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 30,
-#'                    M2SlidingWindowSize    = 15)
-#' }
+#'                    M2SlidingWindowSize    = 15)}
 setMethod("updateQualityParam",  "QualityReport",
           function(object,
                    TrimmingMethod         = "M1",

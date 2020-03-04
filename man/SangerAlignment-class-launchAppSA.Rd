@@ -11,8 +11,6 @@
 launchAppSA
 }
 \examples{
-\dontrun{
-load("data/sangerAlignment.RData")
-RShinySA <- launchAppSA(sangerAlignment)
-}
+\dontrun{load("data/sangerAlignment.RData")
+RShinySA <- launchAppSA(sangerAlignment)}
 }

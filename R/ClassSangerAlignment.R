@@ -22,10 +22,9 @@ setOldClass("phylo")
 #' @slot contigsTree A phylo instance returned by bionj function in ape package. It can be used to draw the tree.
 #'
 #' @name SangerAlignment-class
-#'
 #' @rdname SangerAlignment-class
-#'
 #' @exportClass SangerAlignment
+#'
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
@@ -94,6 +93,10 @@ setClass("SangerAlignment",
 ### ============================================================================
 ### Overwrite initialize for 'SangerContig' (New constructor)
 ### ============================================================================
+#' Constructor method of SangerAlignment Class.
+#'
+#' @name SangerAlignment
+#' @rdname SangerAlignment-class
 setMethod("initialize",
           "SangerAlignment",
           function(.Object, ...,

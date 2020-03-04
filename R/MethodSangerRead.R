@@ -1,13 +1,16 @@
 ### ============================================================================
 ### Plotting quality for each base for "SangerRead" S4 object
 ### ============================================================================
+#' A SangerRead method which creates quality base interactive plot.
+#'
 #' @title qualityBasePlot
 #' @name SangerRead-class-qualityBasePlot
+#' @rdname SangerRead-Method
+#'
+#' @docType methods
 #' @examples
-#' \dontrun{
-#' load("data/sangerRead.RData")
-#' qualityBasePlot(sangerReadF)
-#' }
+#' \dontrun{load("data/sangerRead.RData")
+#' qualityBasePlot(sangerReadF)}
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     if (object@inputSource == "ABIF") {
         QualityReportObject = object@QualityReport
@@ -22,17 +25,20 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 ## =============================================================================
 ## Updating quality parameters for SangerRead object.
 ## =============================================================================
+#' A SangerRead method which updates QualityReport parameter inside the SangerRead.
+#'
 #' @title updateQualityParam
 #' @name SangerRead-class-updateQualityParam
+#' @rdname SangerRead-Method
+#'
+#' @docType methods
 #' @examples
-#' \dontrun{
-#' load("data/sangerRead.RData")
+#' \dontrun{load("data/sangerRead.RData")
 #' updateQualityParam(sangerReadF,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
-#'                    M2SlidingWindowSize    = 15)
-#' }
+#'                    M2SlidingWindowSize    = 15)}
 setMethod("updateQualityParam",  "SangerRead",
           function(object,
                    TrimmingMethod         = "M1",
@@ -77,13 +83,17 @@ setMethod("updateQualityParam",  "SangerRead",
 ## =============================================================================
 ## Base calling for primarySeq in SangerRead
 ## =============================================================================
+#' A SangerRead method which does base calling on SangerRead instance
+#'
 #' @title MakeBaseCalls
 #' @name SangerRead-class-MakeBaseCalls
+#' @rdname SangerRead-Method
+#'
+#' @docType methods
+#'
 #' @examples
-#' \dontrun{
-#' load("data/sangerRead.RData")
-#' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
-#' }
+#' \dontrun{load("data/sangerRead.RData")
+#' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)}
 setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
     if (obj@inputSource == "ABIF") {
         errors <- character(0)
@@ -123,13 +133,17 @@ setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
 ## =============================================================================
 ## Writing primary sequence into FASTA format
 ## =============================================================================
+#' A SangerRead method which writes the sequence into Fasta files.
+#'
 #' @title writeFastaSR
 #' @name SangerRead-class-writeFastaSR
+#' @rdname SangerRead-Method
+#'
+#' @docType methods
+#'
 #' @examples
-#' \dontrun{
-#' load("data/sangerRead.RData")
-#' writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")
-#' }
+#' \dontrun{load("data/sangerRead.RData")
+#' writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")}
 setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
                                                  compression_level) {
     if (is.null(outputDir)) {
@@ -171,13 +185,17 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 ## =============================================================================
 ## Generating report for SangerRead
 ## =============================================================================
+#' A SangerRead method which generates final reports of the SangerRead instance.
+#'
 #' @title generateReportSR
 #' @name SangerRead-class-generateReportSR
+#' @rdname SangerRead-Method
+#'
+#' @docType methods
+#'
 #' @examples
-#' \dontrun{
-#' load("data/sangerRead.RData")
-#' generateReportSR(sangerReadF)
-#' }
+#' \dontrun{load("data/sangerRead.RData")
+#' generateReportSR(sangerReadF)}
 setMethod("generateReportSR", "SangerRead",
           function(obj, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {

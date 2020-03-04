@@ -12,8 +12,6 @@
 writeFastaSA
 }
 \examples{
-\dontrun{
-load("data/sangerAlignment.RData")
-writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")
-}
+\dontrun{load("data/sangerAlignment.RData")
+writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")}
 }

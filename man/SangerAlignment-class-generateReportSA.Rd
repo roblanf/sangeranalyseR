@@ -12,8 +12,6 @@
 generateReportSA
 }
 \examples{
-\dontrun{
-load("data/sangerAlignment.RData")
-generateReportSA(sangerAlignment)
-}
+\dontrun{load("data/sangerAlignment.RData")
+generateReportSA(sangerAlignment)}
 }

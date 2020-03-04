@@ -20,10 +20,9 @@
 #' @slot peakAmpMatrixRaw The raw peak amplitude matrix from sangerseq class in sangerseqR package before base calling.
 #'
 #' @name SangerRead-class
-#'
 #' @rdname SangerRead-class
-#'
 #' @exportClass SangerRead
+#'
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R
 #' @import sangerseqR
@@ -126,6 +125,10 @@ setClass(
 ### ============================================================================
 ### Overwrite initialize for SangerRead (New constructor)
 ### ============================================================================
+#' Constructor method of SangerRead Class.
+#'
+#' @name SangerRead
+#' @rdname SangerRead-class
 setMethod("initialize",
           "SangerRead",
           function(.Object, ...,

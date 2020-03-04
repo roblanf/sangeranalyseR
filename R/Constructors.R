@@ -1,7 +1,7 @@
 ### ============================================================================
 ### Self-defined constructor for AlignedConsensusSet
 ### ============================================================================
-#' @description the constructor for SangerAlignment
+#' @description the wrapper function for SangerAlignment
 #'
 #' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @param fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
@@ -30,11 +30,11 @@
 #' @param processorsNum The number of processors to use, or NULL (the default) for all available processors.
 #'
 #' @title SangerAlignment
-#' @name Constructor-SangerAlignment
-#' @rdname Constructor-SangerAlignment
+#' @name SangerAlignment
+#' @rdname SangerAlignment-class
+#' @export
 #'
 #' @return SangerAlignment
-#' @export
 #' @author Kuan-Hao Chao
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
@@ -112,7 +112,7 @@ SangerAlignment <- function(inputSource            = "ABIF",
 ### ============================================================================
 ### Self-defined constructor for SangerContig
 ### ============================================================================
-#' @description the constructor for SangerContig
+#' @description the wrapper function for SangerContig
 #'
 #' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @param fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
@@ -140,11 +140,11 @@ SangerAlignment <- function(inputSource            = "ABIF",
 #' @param processorsNum The number of processors to use, or NULL (the default) for all available processors.
 #'
 #' @title SangerContig
-#' @name Constructor-SangerContig
-#' @rdname Constructor-SangerContig
+#' @name SangerContig
+#' @rdname SangerContig-class
+#' @export
 #'
 #' @return SangerContig
-#' @export
 #' @author Kuan-Hao Chao
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
@@ -224,7 +224,7 @@ SangerContig <- function(inputSource            = "ABIF",
 ### ============================================================================
 ### Self-defined constructor for SangerRead
 ### ============================================================================
-#' @description the constructor for SangerRead
+#' @description the wrapper function for SangerRead
 #'
 #' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @param readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
@@ -242,11 +242,11 @@ SangerContig <- function(inputSource            = "ABIF",
 #' @param showTrimmed The logical value storing whether to show trimmed base pairs in chromatogram. The default value is \code{TRUE}.
 #'
 #' @title SangerRead
-#' @name Constructor-SangerRead
-#' @rdname Constructor-SangerRead
+#' @name SangerRead
+#' @rdname SangerRead-class
+#' @export
 #'
 #' @return SangerRead
-#' @export
 #' @author Kuan-Hao Chao
 #' @examples
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
