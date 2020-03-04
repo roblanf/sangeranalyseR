@@ -160,18 +160,21 @@ setGeneric("generateReportSA", function(obj, outputDir = NULL,
 #' ClassUnion numericORNULL
 #' @name numericORNULL
 #' @rdname numericORNULL-ClassUnion
+#' @aliases numericORNULL
 #' @exportClass numericORNULL
 setClassUnion("numericORNULL", c("numeric", "NULL"))
 
 #' ClassUnion abifORNULL
 #' @name abifORNULL
 #' @rdname abifORNULL-ClassUnion
+#' @aliases abifORNULL
 #' @exportClass abifORNULL
 setClassUnion("abifORNULL", c("abif", "NULL"))
 
 #' ClassUnion characterORNULL
 #' @name characterORNULL
 #' @rdname characterORNULL-ClassUnion
+#' @aliases characterORNULL
 #' @exportClass characterORNULL
 setClassUnion("characterORNULL", c("character", "NULL"))
 

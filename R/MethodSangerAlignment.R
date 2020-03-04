@@ -1,8 +1,13 @@
 ## =============================================================================
 ## Updating quality parameters for SangerAlignment object.
 ## =============================================================================
+#' A SangerAlignment method which updates QualityReport parameter for each the SangerRead instance inside SangerAlignment.
+#'
 #' @title updateQualityParam
 #' @name SangerAlignment-class-updateQualityParam
+#' @rdname SangerAlignment-Method
+#'
+#' @docType methods
 #' @examples
 #' \dontrun{load("data/sangerAlignment.RData")
 #' updateQualityParam(sangerAlignment,
@@ -59,8 +64,13 @@ setMethod("updateQualityParam",  "SangerAlignment",
     }
 })
 
+#' A SangerAlignment method which launches Shiny app for SangerAlignment instance.
+#'
 #' @title launchAppSA
 #' @name SangerAlignment-class-launchAppSA
+#' @rdname SangerAlignment-Method
+#'
+#' @docType methods
 #' @examples
 #' \dontrun{load("data/sangerAlignment.RData")
 #' RShinySA <- launchAppSA(sangerAlignment)}
@@ -94,8 +104,13 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
 ## =============================================================================
 ## Writing primary sequence into FASTA format
 ## =============================================================================
+#' A SangerAlignment method which writes sequences into Fasta files.
+#'
 #' @title writeFastaSA
 #' @name SangerAlignment-class-writeFastaSA
+#' @rdname SangerAlignment-Method
+#'
+#' @docType methods
 #' @examples
 #' \dontrun{load("data/sangerAlignment.RData")
 #' writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")}
@@ -206,8 +221,13 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
 ## =============================================================================
 ## Generating report for SangerContig
 ## =============================================================================
+#' A SangerAlignment method which generates final reports of the SangerContig instance.
+#'
 #' @title generateReportSA
 #' @name SangerAlignment-class-generateReportSA
+#' @rdname SangerAlignment-Method
+#'
+#' @docType methods
 #' @examples
 #' \dontrun{load("data/sangerAlignment.RData")
 #' generateReportSA(sangerAlignment)}

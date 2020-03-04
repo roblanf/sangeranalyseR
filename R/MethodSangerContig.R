@@ -1,8 +1,13 @@
 ## =============================================================================
 ## Updating quality parameters for SangerContig object.
 ## =============================================================================
+#' A SangerContig method which updates QualityReport parameter for each the SangerRead instance inside SangerContig.
+#'
 #' @title updateQualityParam
 #' @name SangerContig-class-updateQualityParam
+#' @rdname SangerContig-Method
+#'
+#' @docType methods
 #' @examples
 #' \dontrun{load("data/sangerContig.RData")
 #' updateQualityParam(sangerContig,
@@ -81,8 +86,13 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
     }
 })
 
+#' A SangerContig method which launches Shiny app for SangerContig instance.
+#'
 #' @title launchAppSC
 #' @name SangerContig-class-launchAppSC
+#' @rdname SangerContig-Method
+#'
+#' @docType methods
 #' @examples
 #' \dontrun{load("data/sangerContig.RData")
 #' RShinySC <- launchAppSC(sangerContig)}
@@ -116,8 +126,13 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
 ## =============================================================================
 ## Writing primary sequence into FASTA format
 ## =============================================================================
+#' A SangerContig method which writes sequences into Fasta files.
+#'
 #' @title writeFastaSC
 #' @name SangerContig-class-writeFastaSC
+#' @rdname SangerContig-Method
+#'
+#' @docType methods
 #' @examples
 #' \dontrun{load("data/sangerContig.RData")
 #' writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")}
@@ -221,19 +236,19 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
 ## =============================================================================
 ## Generating report for SangerContig
 ## =============================================================================
+#' A SangerContig method which generates final reports of the SangerContig instance.
+#'
 #' @title generateReportSC
 #' @name SangerContig-class-generateReportSC
+#' @rdname SangerContig-Method
+#'
+#' @docType methods
 #' @examples
 #' \dontrun{load("data/sangerContig.RData")
 #' generateReportSC(sangerContig)}
 setMethod("generateReportSC", "SangerContig",
           function(obj, outputDir, includeSangerRead = TRUE,
                    navigationAlignmentFN = NULL) {
-
-
-
-
-
     # if (object@inputSource == "ABIF") {
     #
     # } else if (object@inputSource == "FASTA") {
@@ -241,10 +256,6 @@ setMethod("generateReportSC", "SangerContig",
     #             "cannot run Shiny app\n (You don't need to ",
     #             "do trimming or base calling)")
     # }
-
-
-
-
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
     ### ------------------------------------------------------------------------
