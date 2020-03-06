@@ -6,11 +6,12 @@
 #' @title preQualityBasePlot
 #' @name QualityReport-class-preQualityBasePlot
 #' @rdname QualityReport-Method
+#' @aliases preQualityBasePlot,QualityReport-method
+#'
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/qualityReport.RData")
-#' preQualityBasePlot(qualityReport)}
+#' \dontrun{preQualityBasePlot(qualityReport)}
 setMethod("preQualityBasePlot",  "QualityReport", function(object, readFeature){
     trimmedStartPos = object@trimmedStartPos
     trimmedFinishPos = object@trimmedFinishPos
@@ -37,11 +38,13 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object, readFeature){
 #' @title qualityBasePlot
 #' @name QualityReport-class-qualityBasePlot
 #' @rdname QualityReport-Method
+#' @aliases qualityBasePlot,QualityReport-method
+#'
+#' @param object .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/qualityReport.RData")
-#' qualityBasePlot(qualityReport)}
+#' \dontrun{qualityBasePlot(qualityReport)}
 setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
     plotting
@@ -55,11 +58,17 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 #' @title updateQualityParam
 #' @name QualityReport-class-updateQualityParam
 #' @rdname QualityReport-Method
+#' @aliases updateQualityParam,QualityReport-method
+#'
+#' @param object .
+#' @param TrimmingMethod .
+#' @param M1TrimmingCutoff .
+#' @param M2CutoffQualityScore .
+#' @param M2SlidingWindowSize .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerRead.RData")
-#' updateQualityParam(qualityReport,
+#' \dontrun{updateQualityParam(qualityReport,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 30,

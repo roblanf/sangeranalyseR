@@ -4,7 +4,7 @@
 \alias{generateReportSA}
 \title{Method generateReportSA}
 \usage{
-generateReportSA(obj, outputDir = NULL, includeSangerContig = TRUE,
+generateReportSA(object, outputDir = NULL, includeSangerContig = TRUE,
   includeSangerRead = TRUE)
 }
 \description{

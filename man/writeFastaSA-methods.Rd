@@ -4,7 +4,7 @@
 \alias{writeFastaSA}
 \title{Method writeFastaSA}
 \usage{
-writeFastaSA(obj, outputDir = NULL, compress = FALSE,
+writeFastaSA(object, outputDir = NULL, compress = FALSE,
   compression_level = NA, selection = "all")
 }
 \description{

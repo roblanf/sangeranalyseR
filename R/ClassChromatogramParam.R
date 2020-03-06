@@ -63,8 +63,8 @@ setMethod("initialize",
                              showTrimmed       = showTrimmed)
           })
 
-#' ClassUnion ChromatogramParamORNULL
+#' @description ClassUnion ChromatogramParamORNULL
+#' @title S4 Class Union ChromatogramParamORNULL
 #' @name ChromatogramParamORNULL
-#' @rdname ChromatogramParamORNULL-ClassUnion
 #' @exportClass ChromatogramParamORNULL
 setClassUnion("ChromatogramParamORNULL", c("ChromatogramParam", "NULL"))

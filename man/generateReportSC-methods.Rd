@@ -4,7 +4,8 @@
 \alias{generateReportSC}
 \title{Method generateReportSC}
 \usage{
-generateReportSC(obj, outputDir = NULL, includeSangerRead = TRUE, ...)
+generateReportSC(object, outputDir = NULL, includeSangerRead = TRUE,
+  ...)
 }
 \description{
 Method generateReportSC

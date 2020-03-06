@@ -4,7 +4,7 @@
 \alias{launchAppSC}
 \title{Method launchAppSC}
 \usage{
-launchAppSC(obj, outputDir = NULL)
+launchAppSC(object, outputDir = NULL)
 }
 \description{
 Method launchAppSC

@@ -3,7 +3,7 @@
 \docType{class}
 \name{QualityReportORNULL}
 \alias{QualityReportORNULL}
-\title{ClassUnion QualityReportORNULL}
+\title{S4 Class Union QualityReportORNULL}
 \description{
 ClassUnion QualityReportORNULL
 }

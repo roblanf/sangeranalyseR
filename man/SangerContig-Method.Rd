@@ -3,22 +3,59 @@
 \docType{methods}
 \name{SangerContig-class-updateQualityParam}
 \alias{SangerContig-class-updateQualityParam}
+\alias{updateQualityParam,SangerContig-method}
 \alias{SangerContig-class-launchAppSC}
+\alias{launchAppSC,SangerContig-method}
 \alias{SangerContig-class-writeFastaSC}
+\alias{writeFastaSC,SangerContig-method}
 \alias{SangerContig-class-generateReportSC}
+\alias{generateReportSC,SangerContig-method}
 \title{updateQualityParam}
 \usage{
 \S4method{updateQualityParam}{SangerContig}(object,
   TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
   M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL)
 
-\S4method{launchAppSC}{SangerContig}(obj, outputDir = NULL)
+\S4method{launchAppSC}{SangerContig}(object, outputDir = NULL)
 
-\S4method{writeFastaSC}{SangerContig}(obj, outputDir = NULL,
+\S4method{writeFastaSC}{SangerContig}(object, outputDir = NULL,
   compress = FALSE, compression_level = NA, selection = "all")
 
-\S4method{generateReportSC}{SangerContig}(obj, outputDir,
+\S4method{generateReportSC}{SangerContig}(object, outputDir,
   includeSangerRead = TRUE, navigationAlignmentFN = NULL)
+}
+\arguments{
+\item{object}{.}
+
+\item{TrimmingMethod}{.}
+
+\item{M1TrimmingCutoff}{.}
+
+\item{M2CutoffQualityScore}{.}
+
+\item{M2SlidingWindowSize}{.}
+
+\item{outputDir}{.}
+
+\item{compress}{.}
+
+\item{compression_level}{.}
+
+\item{selection}{.}
+
+\item{includeSangerRead}{.}
+
+\item{navigationAlignmentFN}{.}
+
+\item{object}{.}
+
+\item{object}{.}
+
+\item{outputDir}{.}
+
+\item{object}{.}
+
+\item{outputDir}{.}
 }
 \description{
 A SangerContig method which updates QualityReport parameter for each the SangerRead instance inside SangerContig.
@@ -30,16 +67,12 @@ A SangerContig method which writes sequences into Fasta files.
 A SangerContig method which generates final reports of the SangerContig instance.
 }
 \examples{
-\dontrun{load("data/sangerContig.RData")
-updateQualityParam(sangerContig,
+\dontrun{updateQualityParam(sangerContig,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,
                    M2SlidingWindowSize    = 15)}
-\dontrun{load("data/sangerContig.RData")
-RShinySC <- launchAppSC(sangerContig)}
-\dontrun{load("data/sangerContig.RData")
-writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")}
-\dontrun{load("data/sangerContig.RData")
-generateReportSC(sangerContig)}
+\dontrun{RShinySC <- launchAppSC(sangerContig)}
+\dontrun{writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")}
+\dontrun{generateReportSC(sangerContig)}
 }

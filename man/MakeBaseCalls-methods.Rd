@@ -4,7 +4,7 @@
 \alias{MakeBaseCalls}
 \title{Method MakeBaseCalls}
 \usage{
-MakeBaseCalls(obj, signalRatioCutoff = 0.33)
+MakeBaseCalls(object, signalRatioCutoff = 0.33)
 }
 \description{
 Method MakeBaseCalls

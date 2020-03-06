@@ -3,7 +3,7 @@
 \docType{class}
 \name{ChromatogramParamORNULL}
 \alias{ChromatogramParamORNULL}
-\title{ClassUnion ChromatogramParamORNULL}
+\title{S4 Class Union ChromatogramParamORNULL}
 \description{
 ClassUnion ChromatogramParamORNULL
 }

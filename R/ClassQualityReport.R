@@ -160,8 +160,8 @@ setMethod("initialize",
                              M2SlidingWindowSize     = M2SlidingWindowSize)
           })
 
-#' ClassUnion QualityReportORNULL
+#' @description ClassUnion QualityReportORNULL
+#' @title S4 Class Union QualityReportORNULL
 #' @name QualityReportORNULL
-#' @rdname QualityReportORNULL-ClassUnion
 #' @exportClass QualityReportORNULL
 setClassUnion("QualityReportORNULL", c("QualityReport", "NULL"))

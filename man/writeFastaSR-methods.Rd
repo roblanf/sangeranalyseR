@@ -4,7 +4,7 @@
 \alias{writeFastaSR}
 \title{Method writeFastaSR}
 \usage{
-writeFastaSR(obj, outputDir = NULL, compress = FALSE,
+writeFastaSR(object, outputDir = NULL, compress = FALSE,
   compression_level = NA)
 }
 \description{

@@ -6,11 +6,13 @@
 #' @title qualityBasePlot
 #' @name SangerRead-class-qualityBasePlot
 #' @rdname SangerRead-Method
+#' @aliases qualityBasePlot,SangerRead-method
+#'
+#' @param object .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerRead.RData")
-#' qualityBasePlot(sangerReadF)}
+#' \dontrun{qualityBasePlot(sangerReadF)}
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     if (object@inputSource == "ABIF") {
         QualityReportObject = object@QualityReport
@@ -30,11 +32,17 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 #' @title updateQualityParam
 #' @name SangerRead-class-updateQualityParam
 #' @rdname SangerRead-Method
+#' @aliases updateQualityParam,SangerRead-method
+#'
+#' @param object .
+#' @param TrimmingMethod .
+#' @param M1TrimmingCutoff .
+#' @param M2CutoffQualityScore .
+#' @param M2SlidingWindowSize .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerRead.RData")
-#' updateQualityParam(sangerReadF,
+#' \dontrun{updateQualityParam(sangerReadF,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
@@ -89,43 +97,47 @@ setMethod("updateQualityParam",  "SangerRead",
 #' @name SangerRead-class-MakeBaseCalls
 #' @rdname SangerRead-Method
 #'
+#' @aliases MakeBaseCalls,SangerRead-method
+#'
+#' @param object .
+#' @param signalRatioCutoff .
+#'
 #' @docType methods
 #'
 #' @examples
-#' \dontrun{load("data/sangerRead.RData")
-#' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)}
-setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
-    if (obj@inputSource == "ABIF") {
+#' \dontrun{MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)}
+setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
+    if (object@inputSource == "ABIF") {
         errors <- character(0)
         errors <- checkSignalRatioCutoff(signalRatioCutoff, errors)
         if (length(errors) == 0) {
-            traceMatrix <- obj@traceMatrix
-            peakPosMatrixRaw <- obj@peakPosMatrixRaw
-            qualityPhredScoresRaw <- obj@abifRawData@data$PCON.2
-            readFeature <- obj@readFeature
+            traceMatrix <- object@traceMatrix
+            peakPosMatrixRaw <- object@peakPosMatrixRaw
+            qualityPhredScoresRaw <- object@abifRawData@data$PCON.2
+            readFeature <- object@readFeature
             MBCResult <-
                 MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                      qualityPhredScoresRaw,
                                      signalRatioCutoff, readFeature)
-            obj@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
-            obj@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
-            obj@primarySeq <- MBCResult[["primarySeq"]]
-            obj@secondarySeq <- MBCResult[["secondarySeq"]]
+            object@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
+            object@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
+            object@primarySeq <- MBCResult[["primarySeq"]]
+            object@secondarySeq <- MBCResult[["secondarySeq"]]
 
             AASeqResult <-
-                calculateAASeq (obj@primarySeq,
-                                obj@QualityReport@trimmedStartPos,
-                                obj@QualityReport@trimmedFinishPos,
-                                obj@geneticCode)
-            obj@primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
-            obj@primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
-            obj@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-            obj@ChromatogramParam@signalRatioCutoff <- signalRatioCutoff
-            return(obj)
+                calculateAASeq (object@primarySeq,
+                                object@QualityReport@trimmedStartPos,
+                                object@QualityReport@trimmedFinishPos,
+                                object@geneticCode)
+            object@primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
+            object@primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
+            object@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+            object@ChromatogramParam@signalRatioCutoff <- signalRatioCutoff
+            return(object)
         } else {
             stop(errors)
         }
-    } else if (obj@inputSource == "FASTA") {
+    } else if (object@inputSource == "FASTA") {
         message("SangerRead with 'FASTA' inputSource cannot do base calling")
     }
 })
@@ -138,42 +150,47 @@ setMethod("MakeBaseCalls", "SangerRead", function(obj, signalRatioCutoff) {
 #' @title writeFastaSR
 #' @name SangerRead-class-writeFastaSR
 #' @rdname SangerRead-Method
+#' @aliases writeFastaSR,SangerRead-method
+#'
+#' @param object .
+#' @param outputDir .
+#' @param compress .
+#' @param compression_level .
 #'
 #' @docType methods
 #'
 #' @examples
-#' \dontrun{load("data/sangerRead.RData")
-#' writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")}
-setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
+#' \dontrun{writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")}
+setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
                                                  compression_level) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
         message(">>> outputDir : ", outputDir)
     }
-    message("Start writing '", obj@readFileName, "' to FASTA format ...")
-    fastaFilename <- gsub(file_ext(basename(obj@readFileName)), "fa",
-                          basename(obj@readFileName))
+    message("Start writing '", object@readFileName, "' to FASTA format ...")
+    fastaFilename <- gsub(file_ext(basename(object@readFileName)), "fa",
+                          basename(object@readFileName))
     outputFilename <- file.path(outputDir, fastaFilename)
     ### ------------------------------------------------------------------------
     ### Add trimming in ABIF file format
     ### ------------------------------------------------------------------------
-    if(obj@inputSource == "ABIF") {
-        trimmedStartPos <- obj@QualityReport@trimmedStartPos
-        trimmedFinishPos <- obj@QualityReport@trimmedFinishPos
-        targetSeq <- DNAString(substr(as.character(obj@primarySeq),
+    if(object@inputSource == "ABIF") {
+        trimmedStartPos <- object@QualityReport@trimmedStartPos
+        trimmedFinishPos <- object@QualityReport@trimmedFinishPos
+        targetSeq <- DNAString(substr(as.character(object@primarySeq),
                                       trimmedStartPos+1, trimmedFinishPos))
-    } else if (obj@inputSource == "FASTA") {
-        targetSeq <- obj@primarySeq
+    } else if (object@inputSource == "FASTA") {
+        targetSeq <- object@primarySeq
     }
     ### ------------------------------------------------------------------------
     ### When writing out FASTA, reverse read need to reverseComplement back ~
     ### ------------------------------------------------------------------------
-    if (obj@readFeature == "Reverse Read") {
+    if (object@readFeature == "Reverse Read") {
         targetSeq <- reverseComplement(targetSeq)
     }
     writeTarget <- DNAStringSet(targetSeq)
-    names(writeTarget) <- basename(obj@readFileName)
+    names(writeTarget) <- basename(object@readFileName)
     writeXStringSet(writeTarget,
                     filepath = outputFilename,
                     compress = compress,
@@ -190,14 +207,19 @@ setMethod("writeFastaSR", "SangerRead", function(obj, outputDir, compress,
 #' @title generateReportSR
 #' @name SangerRead-class-generateReportSR
 #' @rdname SangerRead-Method
+#' @aliases generateReportSR,SangerRead-method
+#'
+#' @param object .
+#' @param outputDir .
+#' @param navigationContigFN .
+#' @param navigationAlignmentFN .
 #'
 #' @docType methods
 #'
 #' @examples
-#' \dontrun{load("data/sangerRead.RData")
-#' generateReportSR(sangerReadF)}
+#' \dontrun{generateReportSR(sangerReadF)}
 setMethod("generateReportSR", "SangerRead",
-          function(obj, outputDir,
+          function(object, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {
     # Another Rmd for SangerRead with FASTA file source
     ### ------------------------------------------------------------------------
@@ -208,10 +230,10 @@ setMethod("generateReportSR", "SangerRead",
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
         message(">>> outputDir : ", outputDir)
     }
-    if (obj@inputSource == "ABIF") {
-        readName <- sub('\\.ab1$', '', basename(obj@readFileName))
-    } else if (obj@inputSource == "FASTA") {
-        readName <- sub('\\.fa$', '', basename(obj@readFileName))
+    if (object@inputSource == "ABIF") {
+        readName <- sub('\\.ab1$', '', basename(object@readFileName))
+    } else if (object@inputSource == "FASTA") {
+        readName <- sub('\\.fa$', '', basename(object@readFileName))
         readName <- sub('\\.fasta$', '', readName)
     }
     outputDirSR <- file.path(outputDir, readName)
@@ -222,16 +244,16 @@ setMethod("generateReportSR", "SangerRead",
         suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
     }
     rootDir <- system.file(package = "sangeranalyseR")
-    if (obj@inputSource == "ABIF") {
+    if (object@inputSource == "ABIF") {
         originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_ab1.Rmd")
         outputHtml <- file.path(outputDirSR, "SangerRead_Report_ab1.html")
-    } else if (obj@inputSource == "FASTA") {
+    } else if (object@inputSource == "FASTA") {
         originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_fasta.Rmd")
         outputHtml <- file.path(outputDirSR, "SangerRead_Report_fasta.html")
     }
     res <- render(input = originRmd,
                   output_dir = outputDirSR,
-                  params = list(SangerRead = obj,
+                  params = list(SangerRead = object,
                                 outputDir = outputDirSR,
                                 navigationContigFN = navigationContigFN,
                                 navigationAlignmentFN = navigationAlignmentFN))

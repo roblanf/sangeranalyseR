@@ -4,7 +4,7 @@
 \alias{writeFastaSC}
 \title{Method writeFastaSC}
 \usage{
-writeFastaSC(obj, outputDir = NULL, compress = FALSE,
+writeFastaSC(object, outputDir = NULL, compress = FALSE,
   compression_level = NA, selection = "all")
 }
 \description{

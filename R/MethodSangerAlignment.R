@@ -6,11 +6,17 @@
 #' @title updateQualityParam
 #' @name SangerAlignment-class-updateQualityParam
 #' @rdname SangerAlignment-Method
+#' @aliases updateQualityParam,SangerAlignment-method
+#'
+#' @param object .
+#' @param TrimmingMethod .
+#' @param M1TrimmingCutoff .
+#' @param M2CutoffQualityScore .
+#' @param M2SlidingWindowSize .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerAlignment.RData")
-#' updateQualityParam(sangerAlignment,
+#' \dontrun{updateQualityParam(sangerAlignment,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
@@ -69,17 +75,20 @@ setMethod("updateQualityParam",  "SangerAlignment",
 #' @title launchAppSA
 #' @name SangerAlignment-class-launchAppSA
 #' @rdname SangerAlignment-Method
+#' @aliases launchAppSA,SangerAlignment-method
+#'
+#' @param object .
+#' @param outputDir .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerAlignment.RData")
-#' RShinySA <- launchAppSA(sangerAlignment)}
-setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
-    if (obj@inputSource == "ABIF") {
-        ### ------------------------------------------------------------------------
+#' \dontrun{RShinySA <- launchAppSA(sangerAlignment)}
+setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
+    if (object@inputSource == "ABIF") {
+        ### --------------------------------------------------------------------
         ### Checking SangerAlignment input parameter is a list containing
         ### one S4 object.
-        ### ------------------------------------------------------------------------
+        ### --------------------------------------------------------------------
         if (is.null(outputDir)) {
             outputDir <- tempdir()
             suppressWarnings(dir.create(outputDir, recursive = TRUE))
@@ -87,14 +96,14 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
         message(">>> outputDir : ", outputDir)
 
         if (dir.exists(outputDir)) {
-            shinyOptions(sangerAlignment = list(obj))
+            shinyOptions(sangerAlignment = list(object))
             shinyOptions(shinyDirectory = outputDir)
             newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer)
             return(newSangerAlignment)
         } else {
             stop("'", outputDir, "' is not valid. Please check again")
         }
-    } else if (obj@inputSource == "FASTA") {
+    } else if (object@inputSource == "FASTA") {
         message("SangerAlignment with 'FASTA' inputSource ",
                 "cannot run Shiny app\n (You don't need to ",
                 "do trimming or base calling)")
@@ -109,12 +118,18 @@ setMethod("launchAppSA", "SangerAlignment", function(obj, outputDir = NULL) {
 #' @title writeFastaSA
 #' @name SangerAlignment-class-writeFastaSA
 #' @rdname SangerAlignment-Method
+#' @aliases writeFastaSA,SangerAlignment-method
+#'
+#' @param object .
+#' @param outputDir .
+#' @param compress .
+#' @param compression_level .
+#' @param selection .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerAlignment.RData")
-#' writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")}
-setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
+#' \dontrun{writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")}
+setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compress,
                                                  compression_level,
                                                  selection = "all") {
     ### ------------------------------------------------------------------------
@@ -139,7 +154,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "contigs_alignment") {
         message("\n    >> Writing 'alignment' to FASTA ...")
-        alignmentObject = obj@contigsAlignment
+        alignmentObject = object@contigsAlignment
         writeXStringSet(alignmentObject,
                         file.path(outputDir, "Sanger_contigs_alignment.fa"),
                         compress = compress,
@@ -151,7 +166,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "contigs_unalignment") {
         message("\n    >> Writing 'contigs' to FASTA ...")
-        contigsList <- sapply(obj@contigList, function(contig) {
+        contigsList <- sapply(object@contigList, function(contig) {
             contig@contigSeq
         })
         contigsListDNASet<- DNAStringSet(contigsList)
@@ -161,12 +176,12 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
                         compression_level = compression_level)
     }
 
-    # ### ------------------------------------------------------------------------
+    # ### ----------------------------------------------------------------------
     # ### Writing 'contigs consensus read' to FASTA file
-    # ### ------------------------------------------------------------------------
+    # ### ----------------------------------------------------------------------
     # if (selection == "all" || selection == "consensusRead") {
     #     message("\n    >> Writing 'consensusRead' to FASTA ...")
-    #     contigsConsensusDNASet<- DNAStringSet(obj@contigsConsensus)
+    #     contigsConsensusDNASet<- DNAStringSet(object@contigsConsensus)
     #     names(contigsConsensusDNASet) <- "Sanger Consensus Read"
     #     writeXStringSet(contigsConsensusDNASet,
     #                     file.path(outputDir, "Sanger_consensus_read.fa"),
@@ -179,10 +194,10 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "all_reads") {
         message("\n    >> Writing all single reads to FASTA ...")
-        fRDNASet <- sapply(obj@contigList, function(contig) {
+        fRDNASet <- sapply(object@contigList, function(contig) {
             fRDNAStringSet <- sapply(contig@forwardReadList, function(forwardRead) {
                 primaryDNA <- as.character(forwardRead@primarySeq)
-                if (obj@inputSource == "ABIF") {
+                if (object@inputSource == "ABIF") {
                     trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
                     trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
                     primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
@@ -192,10 +207,10 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
             names(fRDNAStringSet) <- basename(names(fRDNAStringSet))
             fRDNAStringSet
         })
-        rRDNASet <- sapply(obj@contigList, function(contig) {
+        rRDNASet <- sapply(object@contigList, function(contig) {
             rRDNAStringSet <- sapply(contig@reverseReadList, function(reverseRead) {
                 primaryDNA <- as.character(reverseRead@primarySeq)
-                if (obj@inputSource == "ABIF") {
+                if (object@inputSource == "ABIF") {
                     # Trim first and then reverse complement
                     trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
                     trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
@@ -226,13 +241,18 @@ setMethod("writeFastaSA", "SangerAlignment", function(obj, outputDir, compress,
 #' @title generateReportSA
 #' @name SangerAlignment-class-generateReportSA
 #' @rdname SangerAlignment-Method
+#' @aliases generateReportSA,SangerAlignment-method
+#'
+#' @param object .
+#' @param outputDir .
+#' @param includeSangerContig .
+#' @param includeSangerRead .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerAlignment.RData")
-#' generateReportSA(sangerAlignment)}
+#' \dontrun{generateReportSA(sangerAlignment)}
 setMethod("generateReportSA", "SangerAlignment",
-          function(obj, outputDir,
+          function(object, outputDir,
                    includeSangerContig = TRUE,
                    includeSangerRead = TRUE) {
 
@@ -265,7 +285,7 @@ setMethod("generateReportSA", "SangerAlignment",
 
     # Start for loop
     if (includeSangerContig) {
-        contigsFN <- sapply(obj@contigList, function (objContig) {
+        contigsFN <- sapply(object@contigList, function (objContig) {
             message("!!! outputHtml: ", outputHtml)
             generateReportSC(objContig, outputDir = outputDirSA,
                              navigationAlignmentFN = outputHtml,
@@ -276,7 +296,7 @@ setMethod("generateReportSA", "SangerAlignment",
     }
     res <- render(input = originRmd,
                   output_dir = outputDirSA,
-                  params = list(SangerAlignment = obj,
+                  params = list(SangerAlignment = object,
                                 outputDir = outputDirSA,
                                 contigsFN = contigsFN))
     return(outputHtml)

@@ -4,7 +4,7 @@
 \alias{launchAppSA}
 \title{Method launchAppSA}
 \usage{
-launchAppSA(obj, outputDir = NULL)
+launchAppSA(object, outputDir = NULL)
 }
 \description{
 Method launchAppSA

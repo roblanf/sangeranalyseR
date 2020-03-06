@@ -73,7 +73,7 @@ setGeneric("updateQualityParam", function(object,
 #' @name MakeBaseCalls
 #' @rdname MakeBaseCalls-methods
 #' @exportMethod MakeBaseCalls
-setGeneric("MakeBaseCalls", function(obj, signalRatioCutoff = 0.33) {
+setGeneric("MakeBaseCalls", function(object, signalRatioCutoff = 0.33) {
     standardGeneric("MakeBaseCalls")
 })
 
@@ -84,7 +84,7 @@ setGeneric("MakeBaseCalls", function(obj, signalRatioCutoff = 0.33) {
 #' @name writeFastaSA
 #' @rdname writeFastaSA-methods
 #' @exportMethod writeFastaSA
-setGeneric("writeFastaSA", function(obj,outputDir = NULL,
+setGeneric("writeFastaSA", function(object,outputDir = NULL,
                                     compress  = FALSE,
                                     compression_level = NA,
                                     selection = "all") {
@@ -94,7 +94,7 @@ setGeneric("writeFastaSA", function(obj,outputDir = NULL,
 #' @name writeFastaSC
 #' @rdname writeFastaSC-methods
 #' @exportMethod writeFastaSC
-setGeneric("writeFastaSC", function(obj,outputDir = NULL,
+setGeneric("writeFastaSC", function(object,outputDir = NULL,
                                     compress  = FALSE,
                                     compression_level = NA,
                                     selection = "all") {
@@ -104,7 +104,7 @@ setGeneric("writeFastaSC", function(obj,outputDir = NULL,
 #' @name writeFastaSR
 #' @rdname writeFastaSR-methods
 #' @exportMethod writeFastaSR
-setGeneric("writeFastaSR", function(obj,outputDir = NULL,
+setGeneric("writeFastaSR", function(object,outputDir = NULL,
                                   compress  = FALSE,
                                   compression_level = NA) {
     standardGeneric("writeFastaSR")
@@ -117,7 +117,7 @@ setGeneric("writeFastaSR", function(obj,outputDir = NULL,
 #' @name launchAppSC
 #' @rdname launchAppSC-methods
 #' @exportMethod launchAppSC
-setGeneric("launchAppSC", function(obj, outputDir = NULL) {
+setGeneric("launchAppSC", function(object, outputDir = NULL) {
     standardGeneric("launchAppSC")
 })
 
@@ -125,7 +125,7 @@ setGeneric("launchAppSC", function(obj, outputDir = NULL) {
 #' @name launchAppSA
 #' @rdname launchAppSA-methods
 #' @exportMethod launchAppSA
-setGeneric("launchAppSA", function(obj, outputDir = NULL) {
+setGeneric("launchAppSA", function(object, outputDir = NULL) {
     standardGeneric("launchAppSA")
 })
 
@@ -136,14 +136,14 @@ setGeneric("launchAppSA", function(obj, outputDir = NULL) {
 #' @name generateReportSR
 #' @rdname generateReportSR-methods
 #' @exportMethod generateReportSR
-setGeneric("generateReportSR", function(obj, outputDir = NULL, ...) {
+setGeneric("generateReportSR", function(object, outputDir = NULL, ...) {
     standardGeneric("generateReportSR")
 })
 #' Method generateReportSC
 #' @name generateReportSC
 #' @rdname generateReportSC-methods
 #' @exportMethod generateReportSC
-setGeneric("generateReportSC", function(obj, outputDir = NULL,
+setGeneric("generateReportSC", function(object, outputDir = NULL,
                                         includeSangerRead = TRUE, ...) {
     standardGeneric("generateReportSC")
 })
@@ -151,30 +151,27 @@ setGeneric("generateReportSC", function(obj, outputDir = NULL,
 #' @name generateReportSA
 #' @rdname generateReportSA-methods
 #' @exportMethod generateReportSA
-setGeneric("generateReportSA", function(obj, outputDir = NULL,
+setGeneric("generateReportSA", function(object, outputDir = NULL,
                                         includeSangerContig = TRUE,
                                         includeSangerRead = TRUE) {
     standardGeneric("generateReportSA")
 })
 
-#' ClassUnion numericORNULL
+#' @description ClassUnion numericORNULL
+#' @title S4 Class Union numericORNULL
 #' @name numericORNULL
-#' @rdname numericORNULL-ClassUnion
-#' @aliases numericORNULL
 #' @exportClass numericORNULL
 setClassUnion("numericORNULL", c("numeric", "NULL"))
 
-#' ClassUnion abifORNULL
+#' @description ClassUnion abifORNULL
+#' @title S4 Class Union abifORNULL
 #' @name abifORNULL
-#' @rdname abifORNULL-ClassUnion
-#' @aliases abifORNULL
 #' @exportClass abifORNULL
 setClassUnion("abifORNULL", c("abif", "NULL"))
 
-#' ClassUnion characterORNULL
+#' @description  ClassUnion characterORNULL
+#' @title S4 Class Union characterORNULL
 #' @name characterORNULL
-#' @rdname characterORNULL-ClassUnion
-#' @aliases characterORNULL
 #' @exportClass characterORNULL
 setClassUnion("characterORNULL", c("character", "NULL"))
 

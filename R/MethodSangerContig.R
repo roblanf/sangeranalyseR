@@ -6,11 +6,17 @@
 #' @title updateQualityParam
 #' @name SangerContig-class-updateQualityParam
 #' @rdname SangerContig-Method
+#' @aliases updateQualityParam,SangerContig-method
+#'
+#' @param object .
+#' @param TrimmingMethod .
+#' @param M1TrimmingCutoff .
+#' @param M2CutoffQualityScore .
+#' @param M2SlidingWindowSize .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerContig.RData")
-#' updateQualityParam(sangerContig,
+#' \dontrun{updateQualityParam(sangerContig,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
@@ -91,13 +97,16 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 #' @title launchAppSC
 #' @name SangerContig-class-launchAppSC
 #' @rdname SangerContig-Method
+#' @aliases launchAppSC,SangerContig-method
+#'
+#' @param object .
+#' @param outputDir .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerContig.RData")
-#' RShinySC <- launchAppSC(sangerContig)}
-setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
-    if (obj@inputSource == "ABIF") {
+#' \dontrun{RShinySC <- launchAppSC(sangerContig)}
+setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL) {
+    if (object@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
         ### Checking SangerContig input parameter is a list containing
         ### one S4 object.
@@ -108,7 +117,7 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
         }
         message(">>> outputDir : ", outputDir)
         if (dir.exists(outputDir)) {
-            shinyOptions(sangerContig = list(obj))
+            shinyOptions(sangerContig = list(object))
             shinyOptions(shinyDirectory = outputDir)
             newSangerContig <-
                 shinyApp(SangerContigUI, SangerContigServer)
@@ -116,7 +125,7 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
         } else {
             stop("'", outputDir, "' is not valid. Please check again")
         }
-    } else if (obj@inputSource == "FASTA") {
+    } else if (object@inputSource == "FASTA") {
         message("SangerContig with 'FASTA' inputSource ",
                 "cannot run Shiny app\n (You don't need to ",
                 "do trimming or base calling)")
@@ -131,12 +140,18 @@ setMethod("launchAppSC", "SangerContig", function(obj, outputDir = NULL) {
 #' @title writeFastaSC
 #' @name SangerContig-class-writeFastaSC
 #' @rdname SangerContig-Method
+#' @aliases writeFastaSC,SangerContig-method
+#'
+#' @param object .
+#' @param outputDir .
+#' @param compress .
+#' @param compression_level .
+#' @param selection .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerContig.RData")
-#' writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")}
-setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
+#' \dontrun{writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")}
+setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
                                                    compression_level,
                                                    selection = "all") {
     ### ------------------------------------------------------------------------
@@ -152,19 +167,19 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
     message(">>> outputDir : ", outputDir)
-    contigName = obj@contigName
+    contigName = object@contigName
     message("Start to write '", contigName, "' to FASTA format ...")
     ### ------------------------------------------------------------------------
     ### Writing alignment result to FASTA file (Exclude consensus read)
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "reads_alignment") {
         message("\n    >> Writing alignment to FASTA ...")
-        alignmentObject = obj@alignment
+        alignmentObject = object@alignment
         alignmentObject$Consensus <- NULL
-        writeAlignment <- append(alignmentObject, list(obj@contigSeq))
+        writeAlignment <- append(alignmentObject, list(object@contigSeq))
         names(writeAlignment) <- sub("^[0-9]*_", "", names(writeAlignment))
         names(writeAlignment)[length(writeAlignment)] <-
-            paste0(obj@contigName, "_contig")
+            paste0(object@contigName, "_contig")
         writeXStringSet(writeAlignment,
                         file.path(outputDir,
                                   paste0(contigName, "_reads_alignment.fa")),
@@ -177,12 +192,12 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "reads_unalignment") {
         message("\n    >> Writing all single reads to FASTA ...")
-        fRDNAStringSet <- sapply(obj@forwardReadList, function(forwardRead) {
+        fRDNAStringSet <- sapply(object@forwardReadList, function(forwardRead) {
             primaryDNA <- as.character(forwardRead@primarySeq)
             ### ----------------------------------------------------------------
             ### Only read in ABIF file format needs to do trimming
             ### ----------------------------------------------------------------
-            if (obj@inputSource == "ABIF") {
+            if (object@inputSource == "ABIF") {
                 trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
                 trimmedFinishPos <- forwardRead@QualityReport@trimmedFinishPos
                 primaryDNA <- substr(primaryDNA,
@@ -191,12 +206,12 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
             return(primaryDNA)
         })
         names(fRDNAStringSet) <- basename(names(fRDNAStringSet))
-        rRDNAStringSet <- sapply(obj@reverseReadList, function(reverseRead) {
+        rRDNAStringSet <- sapply(object@reverseReadList, function(reverseRead) {
             ### ----------------------------------------------------------------
             ### Only read in ABIF file format needs to do trimming
             ### ----------------------------------------------------------------
             primaryDNA <- as.character(reverseRead@primarySeq)
-            if (obj@inputSource == "ABIF") {
+            if (object@inputSource == "ABIF") {
                 # Trim first and then reverse complement
                 trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
                 trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
@@ -223,7 +238,7 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
     if (selection == "all" || selection == "contig") {
         message("\n    >> Writing consensus read to FASTA ...")
 
-        writeTarget <- DNAStringSet(obj@contigSeq)
+        writeTarget <- DNAStringSet(object@contigSeq)
         names(writeTarget) <- paste0(contigName, "_contig")
         writeXStringSet(writeTarget,
                         file.path(outputDir,paste0(contigName, "_contig.fa")),
@@ -241,13 +256,18 @@ setMethod("writeFastaSC", "SangerContig", function(obj, outputDir, compress,
 #' @title generateReportSC
 #' @name SangerContig-class-generateReportSC
 #' @rdname SangerContig-Method
+#' @aliases generateReportSC,SangerContig-method
+#'
+#' @param object .
+#' @param outputDir .
+#' @param includeSangerRead .
+#' @param navigationAlignmentFN .
 #'
 #' @docType methods
 #' @examples
-#' \dontrun{load("data/sangerContig.RData")
-#' generateReportSC(sangerContig)}
+#' \dontrun{generateReportSC(sangerContig)}
 setMethod("generateReportSC", "SangerContig",
-          function(obj, outputDir, includeSangerRead = TRUE,
+          function(object, outputDir, includeSangerRead = TRUE,
                    navigationAlignmentFN = NULL) {
     # if (object@inputSource == "ABIF") {
     #
@@ -268,7 +288,7 @@ setMethod("generateReportSC", "SangerContig",
     ### Make sure the directory is exist (SangerContig level)
     ###  => SangerRead level directory will be created recursively
     ### ------------------------------------------------------------------------
-    outputDirSC <- file.path(outputDir, obj@contigName)
+    outputDirSC <- file.path(outputDir, object@contigName)
     if (!dir.exists(outputDirSC)) {
         suppressWarnings(dir.create(outputDirSC, recursive = TRUE))
     }
@@ -276,13 +296,13 @@ setMethod("generateReportSC", "SangerContig",
     rootDir <- system.file(package = "sangeranalyseR")
     originRmd <- file.path(rootDir, "rmd", "SangerContig_Report.Rmd")
 
-    if (obj@inputSource == "ABIF") {
+    if (object@inputSource == "ABIF") {
         outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
-    } else if (obj@inputSource == "FASTA") {
+    } else if (object@inputSource == "FASTA") {
         outputHtml <- file.path(outputDirSC, "SangerContig_Report.html")
     }
-    forwardReads <- obj@forwardReadList
-    reverseReads <- obj@reverseReadList
+    forwardReads <- object@forwardReadList
+    reverseReads <- object@reverseReadList
 
     if(includeSangerRead) {
         forwardReadFN <- sapply(forwardReads, generateReportSR,
@@ -299,7 +319,7 @@ setMethod("generateReportSC", "SangerContig",
     }
     res <- render(input = originRmd,
                   output_dir = outputDirSC,
-                  params = list(SangerContig = obj,
+                  params = list(SangerContig = object,
                                 outputDir = outputDirSC,
                                 forwardReadFN = forwardReadFN,
                                 reverseReadFN = reverseReadFN,

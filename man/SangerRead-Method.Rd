@@ -3,10 +3,15 @@
 \docType{methods}
 \name{SangerRead-class-qualityBasePlot}
 \alias{SangerRead-class-qualityBasePlot}
+\alias{qualityBasePlot,SangerRead-method}
 \alias{SangerRead-class-updateQualityParam}
+\alias{updateQualityParam,SangerRead-method}
 \alias{SangerRead-class-MakeBaseCalls}
+\alias{MakeBaseCalls,SangerRead-method}
 \alias{SangerRead-class-writeFastaSR}
+\alias{writeFastaSR,SangerRead-method}
 \alias{SangerRead-class-generateReportSR}
+\alias{generateReportSR,SangerRead-method}
 \title{qualityBasePlot}
 \usage{
 \S4method{qualityBasePlot}{SangerRead}(object)
@@ -15,13 +20,46 @@
   M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
   M2SlidingWindowSize = NULL)
 
-\S4method{MakeBaseCalls}{SangerRead}(obj, signalRatioCutoff = 0.33)
+\S4method{MakeBaseCalls}{SangerRead}(object, signalRatioCutoff = 0.33)
 
-\S4method{writeFastaSR}{SangerRead}(obj, outputDir = NULL,
+\S4method{writeFastaSR}{SangerRead}(object, outputDir = NULL,
   compress = FALSE, compression_level = NA)
 
-\S4method{generateReportSR}{SangerRead}(obj, outputDir,
+\S4method{generateReportSR}{SangerRead}(object, outputDir,
   navigationContigFN = NULL, navigationAlignmentFN = NULL)
+}
+\arguments{
+\item{object}{.}
+
+\item{TrimmingMethod}{.}
+
+\item{M1TrimmingCutoff}{.}
+
+\item{M2CutoffQualityScore}{.}
+
+\item{M2SlidingWindowSize}{.}
+
+\item{signalRatioCutoff}{.}
+
+\item{outputDir}{.}
+
+\item{compress}{.}
+
+\item{compression_level}{.}
+
+\item{navigationContigFN}{.}
+
+\item{navigationAlignmentFN}{.}
+
+\item{object}{.}
+
+\item{object}{.}
+
+\item{object}{.}
+
+\item{object}{.}
+
+\item{outputDir}{.}
 }
 \description{
 A SangerRead method which creates quality base interactive plot.
@@ -35,18 +73,13 @@ A SangerRead method which writes the sequence into Fasta files.
 A SangerRead method which generates final reports of the SangerRead instance.
 }
 \examples{
-\dontrun{load("data/sangerRead.RData")
-qualityBasePlot(sangerReadF)}
-\dontrun{load("data/sangerRead.RData")
-updateQualityParam(sangerReadF,
+\dontrun{qualityBasePlot(sangerReadF)}
+\dontrun{updateQualityParam(sangerReadF,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,
                    M2SlidingWindowSize    = 15)}
-\dontrun{load("data/sangerRead.RData")
-MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)}
-\dontrun{load("data/sangerRead.RData")
-writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")}
-\dontrun{load("data/sangerRead.RData")
-generateReportSR(sangerReadF)}
+\dontrun{MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)}
+\dontrun{writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")}
+\dontrun{generateReportSR(sangerReadF)}
 }

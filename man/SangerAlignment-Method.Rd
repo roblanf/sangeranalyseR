@@ -3,22 +3,59 @@
 \docType{methods}
 \name{SangerAlignment-class-updateQualityParam}
 \alias{SangerAlignment-class-updateQualityParam}
+\alias{updateQualityParam,SangerAlignment-method}
 \alias{SangerAlignment-class-launchAppSA}
+\alias{launchAppSA,SangerAlignment-method}
 \alias{SangerAlignment-class-writeFastaSA}
+\alias{writeFastaSA,SangerAlignment-method}
 \alias{SangerAlignment-class-generateReportSA}
+\alias{generateReportSA,SangerAlignment-method}
 \title{updateQualityParam}
 \usage{
 \S4method{updateQualityParam}{SangerAlignment}(object,
   TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
   M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL)
 
-\S4method{launchAppSA}{SangerAlignment}(obj, outputDir = NULL)
+\S4method{launchAppSA}{SangerAlignment}(object, outputDir = NULL)
 
-\S4method{writeFastaSA}{SangerAlignment}(obj, outputDir = NULL,
+\S4method{writeFastaSA}{SangerAlignment}(object, outputDir = NULL,
   compress = FALSE, compression_level = NA, selection = "all")
 
-\S4method{generateReportSA}{SangerAlignment}(obj, outputDir = NULL,
+\S4method{generateReportSA}{SangerAlignment}(object, outputDir = NULL,
   includeSangerContig = TRUE, includeSangerRead = TRUE)
+}
+\arguments{
+\item{object}{.}
+
+\item{TrimmingMethod}{.}
+
+\item{M1TrimmingCutoff}{.}
+
+\item{M2CutoffQualityScore}{.}
+
+\item{M2SlidingWindowSize}{.}
+
+\item{outputDir}{.}
+
+\item{compress}{.}
+
+\item{compression_level}{.}
+
+\item{selection}{.}
+
+\item{includeSangerContig}{.}
+
+\item{includeSangerRead}{.}
+
+\item{object}{.}
+
+\item{object}{.}
+
+\item{outputDir}{.}
+
+\item{object}{.}
+
+\item{outputDir}{.}
 }
 \description{
 A SangerAlignment method which updates QualityReport parameter for each the SangerRead instance inside SangerAlignment.
@@ -30,16 +67,12 @@ A SangerAlignment method which writes sequences into Fasta files.
 A SangerAlignment method which generates final reports of the SangerContig instance.
 }
 \examples{
-\dontrun{load("data/sangerAlignment.RData")
-updateQualityParam(sangerAlignment,
+\dontrun{updateQualityParam(sangerAlignment,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,
                    M2SlidingWindowSize    = 15)}
-\dontrun{load("data/sangerAlignment.RData")
-RShinySA <- launchAppSA(sangerAlignment)}
-\dontrun{load("data/sangerAlignment.RData")
-writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")}
-\dontrun{load("data/sangerAlignment.RData")
-generateReportSA(sangerAlignment)}
+\dontrun{RShinySA <- launchAppSA(sangerAlignment)}
+\dontrun{writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")}
+\dontrun{generateReportSA(sangerAlignment)}
 }

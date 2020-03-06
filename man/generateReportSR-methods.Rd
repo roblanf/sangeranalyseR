@@ -4,7 +4,7 @@
 \alias{generateReportSR}
 \title{Method generateReportSR}
 \usage{
-generateReportSR(obj, outputDir = NULL, ...)
+generateReportSR(object, outputDir = NULL, ...)
 }
 \description{
 Method generateReportSR

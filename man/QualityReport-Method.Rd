@@ -3,8 +3,11 @@
 \docType{methods}
 \name{QualityReport-class-preQualityBasePlot}
 \alias{QualityReport-class-preQualityBasePlot}
+\alias{preQualityBasePlot,QualityReport-method}
 \alias{QualityReport-class-qualityBasePlot}
+\alias{qualityBasePlot,QualityReport-method}
 \alias{QualityReport-class-updateQualityParam}
+\alias{updateQualityParam,QualityReport-method}
 \title{preQualityBasePlot}
 \usage{
 \S4method{preQualityBasePlot}{QualityReport}(object,
@@ -16,6 +19,19 @@
   TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
   M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL)
 }
+\arguments{
+\item{object}{.}
+
+\item{TrimmingMethod}{.}
+
+\item{M1TrimmingCutoff}{.}
+
+\item{M2CutoffQualityScore}{.}
+
+\item{M2SlidingWindowSize}{.}
+
+\item{object}{.}
+}
 \description{
 A QualityReport method which pre-plots quality base interactive plot.
 
@@ -24,12 +40,9 @@ A QualityReport method which creates quality base interactive plot.
 A QualityReport method which updates quality base interactive plot.
 }
 \examples{
-\dontrun{load("data/qualityReport.RData")
-preQualityBasePlot(qualityReport)}
-\dontrun{load("data/qualityReport.RData")
-qualityBasePlot(qualityReport)}
-\dontrun{load("data/sangerRead.RData")
-updateQualityParam(qualityReport,
+\dontrun{preQualityBasePlot(qualityReport)}
+\dontrun{qualityBasePlot(qualityReport)}
+\dontrun{updateQualityParam(qualityReport,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 30,

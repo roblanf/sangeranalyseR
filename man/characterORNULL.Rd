@@ -3,7 +3,7 @@
 \docType{class}
 \name{characterORNULL}
 \alias{characterORNULL}
-\title{ClassUnion characterORNULL}
+\title{S4 Class Union characterORNULL}
 \description{
 ClassUnion characterORNULL
 }
