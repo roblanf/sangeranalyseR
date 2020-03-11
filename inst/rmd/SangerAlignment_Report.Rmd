@@ -105,7 +105,11 @@ shiny::includeHTML(browseSeqHTML)
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <div style="overflow: scroll;">
 ```{r results='asis', echo=FALSE, warning=FALSE}
-plot(params$SangerAlignment@contigsTree)
+if (is.null(params$SangerAlignment@contigsTree)) {
+  cat("<p style='font-size: 13px; font-weight:bold'> The number of contigs is less than 3, so tree is not created. </p>")
+} else {
+  plot(params$SangerAlignment@contigsTree) 
+}
 ```
 </div>
 </details>

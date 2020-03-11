@@ -244,7 +244,7 @@ SangerAlignmentServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               plotOutput("SATreePlot"),
+                               uiOutput("SATreePlotUI"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         )
@@ -1521,6 +1521,17 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     ### Contigs Tree
     ### ------------------------------------------------------------------------
+    output$SATreePlotUI <- renderUI({
+        if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
+            if (!is.null(sangerAlignmentParam[["contigsTree"]])) {
+
+                plotOutput("SATreePlot")
+            } else {
+                h4("*** The number of contigs is less than 3, so 'Contigs Tree' cannot be created. ***",
+                   style="font-weight: bold; font-style: italic;")
+            }
+        }
+    })
     output$SATreePlot <- renderPlot({
         if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
             plot(sangerAlignmentParam[["contigsTree"]])

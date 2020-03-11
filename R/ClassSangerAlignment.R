@@ -1,3 +1,12 @@
+#' @export
+setOldClass("phylo")
+
+#' @description  ClassUnion phyloORNULL
+#' @title S4 Class Union phyloORNULL
+#' @name phyloORNULL
+#' @exportClass phyloORNULL
+setClassUnion("phyloORNULL", c("phylo", "NULL"))
+
 #' @title SangerAlignment
 #'
 #' @description  An S4 class containing SangerContigs lists and contigs alignment results which corresponds to a final alignment in Sanger sequencing.
