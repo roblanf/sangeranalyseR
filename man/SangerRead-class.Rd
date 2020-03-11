@@ -101,7 +101,7 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
                              "ACHLO",
-                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.ab1")
+                             "Achl_ACHLO006-09_1_F.ab1")
 sangerReadF <- new("SangerRead",
                     inputSource           = "ABIF",
                     readFeature           = "Forward Read",
@@ -115,11 +115,12 @@ sangerReadF <- new("SangerRead",
                     heightPerRow          = 200,
                     signalRatioCutoff     = 0.33,
                     showTrimmed           = TRUE)
+
 # Reverse Read
 A_chloroticaRFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
                              "ACHLO",
-                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.ab1")
+                             "Achl_ACHLO006-09_2_R.ab1")
 sangerReadR <- new("SangerRead",
                     inputSource           = "ABIF",
                     readFeature           = "Reverse Read",
@@ -141,8 +142,8 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFFNfa <- file.path(inputFilesPath,
                                "fasta",
                                "SangerRead",
-                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa")
-readNameFfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F"
+                               "Achl_ACHLO006-09_1_F.fa")
+readNameFfa <- "Achl_ACHLO006-09_1_F"
 namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_1.csv")
 sangerReadFfa <- new("SangerRead",
                      inputSource        = "FASTA",
@@ -155,8 +156,8 @@ sangerReadFfa <- new("SangerRead",
 A_chloroticaRFNfa <- file.path(inputFilesPath,
                                "fasta",
                                "SangerRead",
-                               "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.fa")
-readNameRfa <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R"
+                               "Achl_ACHLO006-09_2_R.fa")
+readNameRfa <- "Achl_ACHLO006-09_2_R"
 namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_2.csv")
 sangerReadRfa <- new("SangerRead",
                      inputSource   = "FASTA",

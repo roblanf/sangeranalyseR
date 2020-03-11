@@ -66,7 +66,7 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
         }else{
             message('Before building!!')
             aln = AlignSeqs(SangerContigDNASet, processors = processorsNum,
-                            verbose = TRUE)
+                            verbose = FALSE)
             message('After building!!')
         }
         # Making a rough NJ tree. Labels are rows in the summary df

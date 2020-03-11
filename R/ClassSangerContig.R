@@ -38,8 +38,8 @@
 #' @examples
 #' ## Input From ABIF file format
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
-#' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
+#' contigName <- "Achl_RBNII384-13"
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerContig <- new("SangerContig",
@@ -58,31 +58,12 @@
 #'                      signalRatioCutoff     = 0.33,
 #'                      showTrimmed           = TRUE)
 #'
-#' parentDir <- '/Users/chaokuan-hao/Desktop/testab'
-#' contigName <- "002A-16S"
-#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
-#' suffixReverseRegExp <- "_[0-9]*_R.ab1"
-#' sangerContig <- new("SangerContig",
-#'                      inputSource           = "ABIF",
-#'                      parentDirectory       = parentDir,
-#'                      contigName            = contigName,
-#'                      suffixForwardRegExp   = suffixForwardRegExp,
-#'                      suffixReverseRegExp   = suffixReverseRegExp,
-#'                      TrimmingMethod        = "M1",
-#'                      M1TrimmingCutoff      = 0.0001,
-#'                      M2CutoffQualityScore  = NULL,
-#'                      M2SlidingWindowSize   = NULL,
-#'                      baseNumPerRow         = 100,
-#'                      heightPerRow          = 200,
-#'                      signalRatioCutoff     = 0.33,
-#'                      showTrimmed           = TRUE)
-#'
 #' ## Input From FASTA file format
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' fastaFN <- file.path(rawDataDir, "fasta",
-#'                      "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
+#'                      "SangerContig", "Achl_ACHLO006-09.fa")
 #' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
-#' contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+#' contigName <- "Achl_ACHLO006-09"
 #' suffixForwardRegExpFa <- "_[0-9]*_F$"
 #' suffixReverseRegExpFa <- "_[0-9]*_R$"
 #' sangerContigFa <- new("SangerContig",
