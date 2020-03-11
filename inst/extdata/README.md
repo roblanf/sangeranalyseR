@@ -10,4 +10,9 @@ Was renamed to:
 
 ACHLO006-09_1_F.ab1
 
+and then a species id was added to the front to become (this example the species is Allolobophora_chlorotica)
+
+Achl_ACHLO006-09_1_F.ab1
+
+
 The remaining sequence ID (ACHLO006-09) is searchable on the BOLD link above, and will take you to the original data which you can download.
