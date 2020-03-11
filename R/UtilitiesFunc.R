@@ -64,32 +64,39 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
                                    processors = processorsNum,
                                    verbose = FALSE)
         }else{
+            message('Before building!!')
             aln = AlignSeqs(SangerContigDNASet, processors = processorsNum,
-                            verbose = FALSE)
+                            verbose = TRUE)
+            message('After building!!')
         }
         # Making a rough NJ tree. Labels are rows in the summary df
-        neat.labels = match(names(aln),
-                            as.character(names(SangerContigDNASet)))
-        aln2 = aln
-        names(aln2) = neat.labels
 
-        aln.bin = as.DNAbin(aln2)
+        if (length(aln) > 2) {
+            neat.labels = match(names(aln),
+                                as.character(names(SangerContigDNASet)))
+            aln2 = aln
+            names(aln2) = neat.labels
 
-        aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
-        # Making a rough NJ tree. Labels are rows in the summary df
-        #    (If tree cannot be created ==> NULL)
-        aln.tree = NULL
-        try({
-            aln.tree = bionjs(aln.dist)
-            aln.tree$tip.label <- names(aln)
-            # deal with -ve branches
-            # This is not necessarily accurate, but it is good enough to
-            # judge seuqences using the tree
-            aln.tree$edge.length[which(aln.tree$edge.length<0)] =
-                abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])
-        },
-        silent = TRUE
-        )
+            aln.bin = as.DNAbin(aln2)
+
+            aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
+            # Making a rough NJ tree. Labels are rows in the summary df
+            #    (If tree cannot be created ==> NULL)
+            aln.tree = NULL
+            try({
+                aln.tree = bionjs(aln.dist)
+                aln.tree$tip.label <- names(aln)
+                # deal with -ve branches
+                # This is not necessarily accurate, but it is good enough to
+                # judge seuqences using the tree
+                aln.tree$edge.length[which(aln.tree$edge.length<0)] =
+                    abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])
+            },
+            silent = TRUE
+            )
+        } else {
+            aln.tree = NULL
+        }
 
         # Get consensus read and add to alignment result
         consensus = ConsensusSequence(aln,

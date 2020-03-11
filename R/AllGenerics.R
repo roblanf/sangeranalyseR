@@ -175,3 +175,12 @@ setClassUnion("abifORNULL", c("abif", "NULL"))
 #' @exportClass characterORNULL
 setClassUnion("characterORNULL", c("character", "NULL"))
 
+#' @export
+setOldClass("phylo")
+
+#' @description  ClassUnion phyloORNULL
+#' @title S4 Class Union phyloORNULL
+#' @name phyloORNULL
+#' @exportClass phyloORNULL
+setClassUnion("phyloORNULL", c("phylo", "NULL"))
+

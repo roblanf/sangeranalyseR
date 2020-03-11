@@ -1,6 +1,3 @@
-#' @export
-setOldClass("phylo")
-
 #' @title SangerAlignment
 #'
 #' @description  An S4 class containing SangerContigs lists and contigs alignment results which corresponds to a final alignment in Sanger sequencing.
@@ -29,8 +26,9 @@ setOldClass("phylo")
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
 #' ## Input From ABIF file format
-#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' rawDataDixr <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir)
+#' parentDir <- '/Users/chaokuan-hao/Desktop/ACHLO'
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerAlignment <- new("SangerAlignment",
@@ -47,6 +45,27 @@ setOldClass("phylo")
 #'                        heightPerRow          = 200,
 #'                        signalRatioCutoff     = 0.33,
 #'                        showTrimmed           = TRUE)
+#'
+#'
+#'
+#' parentDir <-  '/Users/chaokuan-hao/Desktop/testab'
+#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
+#' suffixReverseRegExp <- "_[0-9]*_R.ab1"
+#' sangerAlignment <- new("SangerAlignment",
+#'                        inputSource           = "ABIF",
+#'                        parentDirectory       = parentDir,
+#'                        suffixForwardRegExp   = suffixForwardRegExp,
+#'                        suffixReverseRegExp   = suffixReverseRegExp,
+#'                        TrimmingMethod        = "M1",
+#'                        M1TrimmingCutoff      = 0.0001,
+#'                        M2CutoffQualityScore  = NULL,
+#'                        M2SlidingWindowSize   = NULL,
+#'                        baseNumPerRow         = 100,
+#'                        heightPerRow          = 200,
+#'                        signalRatioCutoff     = 0.33,
+#'                        showTrimmed           = TRUE)
+#'
+#'
 #'
 #' ## Input From FASTA file format
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
@@ -86,7 +105,7 @@ setClass("SangerAlignment",
                         contigList                  = "list",
                         contigsConsensus            = "DNAString",
                         contigsAlignment            = "DNAStringSet",
-                        contigsTree                 = "phylo"
+                        contigsTree                 = "phyloORNULL"
          ),
 )
 
