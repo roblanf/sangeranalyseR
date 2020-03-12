@@ -7,8 +7,8 @@
 \title{SangerAlignment}
 \usage{
 \S4method{initialize}{SangerAlignment}(.Object, ...,
-  inputSource = "ABIF", fastaFileName = "",
-  namesConversionCSV = NULL, parentDirectory = "",
+  inputSource = "ABIF", fastaFileName = NULL,
+  namesConversionCSV = NULL, parentDirectory = NULL,
   suffixForwardRegExp = "_F.ab1", suffixReverseRegExp = "_R.ab1",
   TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
   M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
@@ -99,7 +99,7 @@ the wrapper function for SangerAlignment
 
 \item{\code{namesConversionCSV}}{The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
 
-\item{\code{parentDirectory}}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.}
+\item{\code{parentDirectory}}{If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerAlignment, all reads in subdirectories will be scanned recursively. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.}
 
 \item{\code{suffixForwardRegExp}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.}
 

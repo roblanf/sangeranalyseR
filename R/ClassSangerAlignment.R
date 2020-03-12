@@ -8,7 +8,7 @@ setOldClass("phylo")
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
 #' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
-#' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.
+#' @slot parentDirectory If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerAlignment, all reads in subdirectories will be scanned recursively. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
 #' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
 #' @slot trimmingMethodSA The read trimming method for all SangerRead S4 instances in SangerAlignment. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerReads must have the same trimming method.
@@ -73,9 +73,9 @@ setClass("SangerAlignment",
          ### Input type of each variable of 'SangerAlignment'
          ### -------------------------------------------------------------------
          representation(inputSource                 = "character",
-                        fastaFileName               = "character",
+                        fastaFileName               = "characterORNULL",
                         namesConversionCSV          = "characterORNULL",
-                        parentDirectory             = "character",
+                        parentDirectory             = "characterORNULL",
                         suffixForwardRegExp         = "character",
                         suffixReverseRegExp         = "character",
                         trimmingMethodSA            = "character",
@@ -101,9 +101,9 @@ setMethod("initialize",
           "SangerAlignment",
           function(.Object, ...,
                    inputSource            = "ABIF",
-                   fastaFileName          = "",
+                   fastaFileName          = NULL,
                    namesConversionCSV     = NULL,
-                   parentDirectory        = "",
+                   parentDirectory        = NULL,
                    suffixForwardRegExp    = "_F.ab1",
                    suffixReverseRegExp    = "_R.ab1",
                    TrimmingMethod         = "M1",

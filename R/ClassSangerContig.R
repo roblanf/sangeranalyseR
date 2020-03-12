@@ -3,9 +3,9 @@
 #' @description  An S4 class containing forward and reverse SangerRead lists and alignment, consensus read results which corresponds to a contig in Sanger sequencing.
 #'
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
-#' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
-#' @slot parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
+#' @slot parentDirectory If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerContig, all reads must be in the first layer in this directory. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.
 #' @slot contigName The contig name of all the reads in \code{parentDirectory}.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
 #' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
@@ -80,9 +80,9 @@ setClass("SangerContig",
          ### Input type of each variable of 'SangerContig'
          ### -------------------------------------------------------------------
          representation(inputSource               = "character",
-                        fastaFileName             = "character",
+                        fastaFileName             = "characterORNULL",
                         namesConversionCSV        = "characterORNULL",
-                        parentDirectory           = "character",
+                        parentDirectory           = "characterORNULL",
                         contigName                = "character",
                         suffixForwardRegExp       = "character",
                         suffixReverseRegExp       = "character",
@@ -118,9 +118,9 @@ setMethod("initialize",
           "SangerContig",
           function(.Object, ...,
                    inputSource            = "ABIF",
-                   fastaFileName          = "",
+                   fastaFileName          = NULL,
                    namesConversionCSV     = NULL,
-                   parentDirectory        = "",
+                   parentDirectory        = NULL,
                    contigName             = "",
                    suffixForwardRegExp    = "_F.ab1",
                    suffixReverseRegExp    = "_R.ab1",
