@@ -6,7 +6,7 @@ test_that("SangerRead - FASTA Initial test - forward", {
     expect_s4_class(sangerReadFFa, "SangerRead")
     expect_equal(sangerReadFFa@inputSource, "FASTA")
     expect_equal(sangerReadFFa@readFeature, "Forward Read")
-    expect_equal(basename(sangerReadFFa@readFileName), "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa")
+    expect_equal(basename(sangerReadFFa@readFileName), "Achl_ACHLO006-09_1_F.fa")
     expect_equal(as.character(sangerReadFFa@primarySeq), "CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG")
     expect_equal(as.character(sangerReadFFa@secondarySeq), "")
     expect_equal(as.character(sangerReadFFa@primaryAASeqS1), "LGV*AGMVGAGIRLLIRIELRQPGAFLGRDQLYNTIVTAHAFVIIFFLVMPVFIGGFGNWLLPLILGAPDIAFPRLNNMRF*LLPPSLILLVSSAAVEKGAGTG*TVYPPLARNLAHAGPSVDLAIFSLHLAGASSILGAINFITTVINMR*R")
@@ -28,7 +28,7 @@ test_that("SangerRead - FASTA Initial test - reverse", {
     expect_s4_class(sangerReadRFa, "SangerRead")
     expect_equal(sangerReadRFa@inputSource, "FASTA")
     expect_equal(sangerReadRFa@readFeature, "Reverse Read")
-    expect_equal(basename(sangerReadRFa@readFileName), "ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.fa")
+    expect_equal(basename(sangerReadRFa@readFileName), "Achl_ACHLO006-09_2_R.fa")
     expect_equal(as.character(sangerReadRFa@primarySeq), "GTATATCGACGGCCAGTGGTCAACAAATCATAAAGATATTGGAACTTTATATTTTATTCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGGATTACGTCTTGAACGAATTCCCCTGTTTGTCTGAGCTGTGCTAATTACAGTTGTTCTTCTACTTCTATCTTTACCAGTGCTAGCAGGTGCCATTACCATACTTCTTACCGACCG")
     expect_equal(as.character(sangerReadRFa@secondarySeq), "")
     expect_equal(as.character(sangerReadRFa@primaryAASeqS1), "VYRRPVVNKS*RYWNFIFYSGRLSRNGWSRYKTSNSNRAKTTRSVPGQRPTIQYYRYCTRICNNLLSSNACIHRGIRKLAFTFNTWSPRYSIPSTQQHEILTTSPITDPFSVLCGGRKRRWYGVNCLSASSKKSCPRRPVCRFSHLFPSFSGCVFYSRGY*FYHHSY*YALKRITS*TNSPVCLSCANYSCSSTSIFTSASRCHYHTSYRP")
@@ -57,7 +57,7 @@ test_that("SangerRead update quality trimming parameters 10 (M2CutoffQualityScor
                      readFileName  = SRfastaFFN,
                      fastaReadName = "Random_read_name",
                      geneticCode   = GENETIC_CODE),
-                 "The name 'Random_read_name' is not in the 'ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa' FASTA file", fixed = TRUE)
+                 "The name 'Random_read_name' is not in the 'Achl_ACHLO006-09_1_F.fa' FASTA file", fixed = TRUE)
 })
 
 ### ============================================================================
@@ -78,7 +78,7 @@ test_that("SangerRead - FASTA functions test -forward", {
     expect_true(file.exists(outputFasta))
     con = file(outputFasta, "r")
     line = readLines(con, n = 1)
-    expect_equal(line, ">ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa")
+    expect_equal(line, ">Achl_ACHLO006-09_1_F.fa")
     line = readLines(con, n = 1)
     expect_equal(line, "CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCT")
     line = readLines(con, n = 1)
@@ -109,7 +109,7 @@ test_that("SangerRead - FASTA functions test -reverse", {
     expect_true(file.exists(outputFasta))
     con = file(outputFasta, "r")
     line = readLines(con, n = 1)
-    expect_equal(line, ">ACHLO006-09[LCO1490_t1,HCO2198_t1]_2_R.fa")
+    expect_equal(line, ">Achl_ACHLO006-09_2_R.fa")
     line = readLines(con, n = 1)
     expect_equal(line, "CGGTCGGTAAGAAGTATGGTAATGGCACCTGCTAGCACTGGTAAAGATAGAAGTAGAAGAACAACTGTAATTAGCACAGC")
     line = readLines(con, n = 1)

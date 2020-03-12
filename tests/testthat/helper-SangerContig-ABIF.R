@@ -20,7 +20,7 @@ sangerContig <- new("SangerContig",
                     showTrimmed           = TRUE)
 
 inputFilesParentDir2 <- file.path(inputFilesPath, "Allolobophora_chlorotica", "RBNII")
-contigName2 <- "Achl_RBNII395-13"
+contigName2 <- "Achl_RBNII384-13"
 
 sangerContig2 <- new("SangerContig",
                     inputSource           = "ABIF",
@@ -37,5 +37,3 @@ sangerContig2 <- new("SangerContig",
                     heightPerRow          = 200,
                     signalRatioCutoff     = 0.33,
                     showTrimmed           = TRUE)
-
-

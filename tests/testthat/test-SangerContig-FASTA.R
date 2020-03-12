@@ -5,7 +5,7 @@ test_that("sangerContigFa Initial test", {
     expect_type(sangerContigFa, "S4")
     expect_s4_class(sangerContigFa, "SangerContig")
     expect_equal(sangerContigFa@inputSource, "FASTA")
-    expect_equal(sangerContigFa@contigName, "ACHLO006-09[LCO1490_t1,HCO2198_t1]")
+    expect_equal(sangerContigFa@contigName, "Achl_ACHLO006-09")
     expect_equal(sangerContigFa@suffixForwardRegExp, "_[0-9]*_F")
     expect_equal(sangerContigFa@suffixReverseRegExp, "_[0-9]*_R")
     expect_equal(sangerContigFa@trimmingMethodSC, "")
