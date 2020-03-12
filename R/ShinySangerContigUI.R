@@ -69,10 +69,10 @@ SangerContigUI <- dashboardPage(
             color: white;
             font-weight: bold;}')),
 
+
             tags$script(HTML('
             $(document).ready(function() {
-            $("header").find("nav").append(\'<div id="rightHeader"
-            class="myClass"> Contig </div>\');
+            $("header").find("nav").append(\'<div id="rightHeader" class="myClass"> SangerContig Overview Page </div>\');
             })')),
             ### ----------------------------------------------------------------
             ### Close button style changing

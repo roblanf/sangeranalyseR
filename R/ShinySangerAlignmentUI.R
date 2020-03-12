@@ -74,7 +74,7 @@ SangerAlignmentUI <- dashboardPage(
             ### --------------------------------------------------------------------
             tags$script(HTML('
             $(document).ready(function() {
-            $("header").find("nav").append(\'<div id="rightHeader" class="myClass"> SangerAlignment Overview </div>\');
+            $("header").find("nav").append(\'<div id="rightHeader" class="myClass"> SangerAlignment Overview Page</div>\');
             })')),
             ### ----------------------------------------------------------------
             ### Close button style changing

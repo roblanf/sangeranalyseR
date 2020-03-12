@@ -1060,18 +1060,32 @@ SangerAlignmentServer <- function(input, output, session) {
     ### All other features (dynamic header / button save / button close)
     ############################################################################
     observeEvent(input$sidebar_menu, {
-        # header <- switch(input$tabs,
-        #                  tab1 = "Tab 1",
-        #                  tab2 = "Tab 2",
-        #                  tab3 = "Tab 3")
-        shinyjs::html("rightHeader", input$sidebar_menu)
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        if (input$sidebar_menu == 'Contigs Alignment Overview Page _') {
+            shinyjs::html("rightHeader", "SangerAlignment Overview Page")
+        } else {
+            contigIndex <- strtoi(sidebar_menu[[1]])
+            readIndex <- strtoi(sidebar_menu[[4]])
+            directionParam <- sidebar_menu[[5]]
+            if (!is.na(contigIndex)) {
+                if (sidebar_menu[[2]] == "Sanger" &&
+                    sidebar_menu[[3]] == "Contig" &&
+                    sidebar_menu[[4]] == "Overview" &&
+                    sidebar_menu[[5]] == "Page") {
+                    shinyjs::html("rightHeader", paste("SangerContig Overview", "Page -", contigIndex))
+                } else if (sidebar_menu[[2]] == "Contig" &&
+                           sidebar_menu[[3]] == "-" &&
+                           !is.na(readIndex) &&
+                           (directionParam == "Forward" ||
+                            directionParam == "Reverse") &&
+                           sidebar_menu[[6]] == "Read") {
+                    shinyjs::html("rightHeader", paste("SangerContig",
+                                                       contigIndex, "- SangerRead",
+                                                       directionParam, "Page -", readIndex))
+                }
+            }
+        }
     })
-
-
-
-
-
-
 
     ### ------------------------------------------------------------------------
     ### observeEvent: Adding dynamic sidebar

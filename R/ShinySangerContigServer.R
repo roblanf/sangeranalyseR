@@ -777,14 +777,19 @@ SangerContigServer <- function(input, output, session) {
     # observeEventDynamicHeaderSC(input, output, session, trimmedRV)
 
     observeEvent(input$sidebar_menu, {
-        # header <- switch(input$tabs,
-        #                  tab1 = "Tab 1",
-        #                  tab2 = "Tab 2",
-        #                  tab3 = "Tab 3")
-        menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
-        message("input$sidebar_menu: ", menuItem)
-        html("rightHeader", menuItem)
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+        readIndex <- strtoi(sidebar_menu[[1]])
+        directionParam <- sidebar_menu[[2]]
+        if (input$sidebar_menu == "Sanger Contig Overview") {
+            html("rightHeader", "SangerContig Overview Page")
+        } else if (!is.na(strtoi(readIndex)) &&
+                   (directionParam == "Forward" ||
+                    directionParam == "Reverse")) {
+            html("rightHeader", paste("SangerRead -", directionParam, readIndex, "Page"))
+        }
     })
+
+
 
 
 
