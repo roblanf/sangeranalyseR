@@ -11,6 +11,7 @@ setMethod('show', 'SangerRead', function(object){
             "          Input Source : ", object@inputSource, "\n",
             "          Read Feature : ", object@readFeature, "\n",
             "         Read FileName : ", basename(object@readFileName), "\n",
+            "    Trimming Method SR : ", object@QualityReport@TrimmingMethod, "\n",
             "      Primary Sequence : ", primaryDNA, "\n",
             "    Secondary Sequence : ", secondaryDNA, "\n"
         )
@@ -19,6 +20,8 @@ setMethod('show', 'SangerRead', function(object){
             "          Input Source : ", object@inputSource, "\n",
             "          Read Feature : ", object@readFeature, "\n",
             "         Read FileName : ", basename(object@readFileName), "\n",
+            "       Fasta Read Name : ", object@fastaReadName, "\n",
+            "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
             "      Primary Sequence : ", as.character(object@primarySeq), "\n"
         )
     }
@@ -44,6 +47,8 @@ setMethod('show', 'SangerContig', function(object){
     } else if (object@inputSource == "FASTA") {
         cat("SangerContig S4 instance\n",
             "          Input Source : ", object@inputSource, "\n",
+            "       Fasta File Name : ", object@fastaFileName, "\n",
+            "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
             "           Contig Name : ", object@contigName, "\n",
             " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
             " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
@@ -61,16 +66,20 @@ setMethod('show', 'SangerContig', function(object){
 setMethod('show', 'SangerAlignment', function(object){
     if (object@inputSource == "ABIF") {
         cat("SangerAlignment S4 instance\n",
+            "          Input Source : ", object@inputSource, "\n",
             "      Parent Directory : ", object@parentDirectory, "\n",
             " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
             " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
-            "    'trimmingMethodSA' : ", object@trimmingMethodSA, "\n",
+            "    Trimming Method SA : ", object@trimmingMethodSA, "\n",
             "   'minFractionCallSA' : ", object@minFractionCallSA, "\n",
             "   'maxFractionLostSA' : ", object@maxFractionLostSA, "\n",
             "     Contigs Consensus : ", as.character(object@contigsConsensus), "\n"
         )
     } else if (object@inputSource == "FASTA") {
         cat("SangerAlignment S4 instance\n",
+            "          Input Source : ", object@inputSource, "\n",
+            "       Fasta File Name : ", object@fastaFileName, "\n",
+            "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
             " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
             " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
             "   'minFractionCallSA' : ", object@minFractionCallSA, "\n",
