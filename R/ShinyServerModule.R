@@ -137,7 +137,7 @@ valueBoxSAMinReadsNum <- function(input, output, SangerConsensusSet, session) {
                                             font-weight: bold;"),
                 value = tags$p(strtoi(SAMinReadsNum),
                                style = "font-size: 29px;"),
-                icon = icon("cut", "fa-sm"),
+                icon = icon("sliders-h", "fa-sm"),
                 color = "olive",
                 width = 12,
             )
@@ -156,7 +156,7 @@ valueBoxSAMinReadLength <- function(input, output, SangerConsensusSet, session) 
                                             font-weight: bold;"),
                 value = tags$p(strtoi(SAMinReadLength),
                                style = "font-size: 29px;"),
-                icon = icon("cut", "fa-sm"),
+                icon = icon("sliders-h", "fa-sm"),
                 color = "olive",
                 width = 12,
             )
@@ -175,7 +175,7 @@ valueBoxSAMinFractionCall <- function(input, output, SangerConsensusSet, session
                                             font-weight: bold;"),
                 value = tags$p(as.numeric(SAMinFractionCall),
                                style = "font-size: 29px;"),
-                icon = icon("cut", "fa-sm"),
+                icon = icon("sliders-h", "fa-sm"),
                 color = "olive",
                 width = 12,
             )
@@ -194,7 +194,7 @@ valueBoxSAMaxFractionLost <- function(input, output, SangerConsensusSet, session
                                             font-weight: bold;"),
                 value = tags$p(as.numeric(SAMaxFractionLost),
                                style = "font-size: 29px;"),
-                icon = icon("cut", "fa-sm"),
+                icon = icon("sliders-h", "fa-sm"),
                 color = "olive",
                 width = 12,
             )
@@ -213,7 +213,7 @@ valueBoxSAAcceptStopCodons <- function(input, output, SangerConsensusSet, sessio
                                             font-weight: bold;"),
                 value = tags$p(SAAcceptStopCodons,
                                style = "font-size: 29px;"),
-                icon = icon("cut", "fa-sm"),
+                icon = icon("sliders-h", "fa-sm"),
                 color = "olive",
                 width = 12,
             )
@@ -234,7 +234,7 @@ valueBoxSAReadingFrame <- function(input, output, SangerConsensusSet, session) {
                                             font-weight: bold;"),
                 value = tags$p(strtoi(SAReadingFrame),
                                style = "font-size: 29px;"),
-                icon = icon("cut", "fa-sm"),
+                icon = icon("sliders-h", "fa-sm"),
                 color = "olive",
                 width = 12,
             )
@@ -253,7 +253,7 @@ valueBoxSCMinReadsNum <- function(input, output, SCMinReadsNum, session) {
                                             font-weight: bold;"),
             value = tags$p(strtoi(SCMinReadsNum),
                            style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
+            icon = icon("sliders-h", "fa-sm"),
             color = "olive",
             width = 12,
         )
@@ -267,7 +267,7 @@ valueBoxSCMinReadLength <- function(input, output, SCMinReadLength, session) {
                                             font-weight: bold;"),
             value = tags$p(strtoi(SCMinReadLength),
                            style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
+            icon = icon("sliders-h", "fa-sm"),
             color = "olive",
             width = 12,
         )
@@ -282,7 +282,7 @@ valueBoxSCMinFractionCall <- function(input, output,
                                             font-weight: bold;"),
             value = tags$p(as.numeric(SCMinFractionCall),
                            style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
+            icon = icon("sliders-h", "fa-sm"),
             color = "olive",
             width = 12,
         )
@@ -297,7 +297,7 @@ valueBoxSCMaxFractionLost <- function(input, output,
                                       font-weight: bold;"),
             value = tags$p(as.numeric(SCMaxFractionLost),
                            style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
+            icon = icon("sliders-h", "fa-sm"),
             color = "olive",
             width = 12,
         )
@@ -312,7 +312,7 @@ valueBoxSCAcceptStopCodons <- function(input, output,
                                        font-weight: bold;"),
             value = tags$p(SCAcceptStopCodons,
                            style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
+            icon = icon("sliders-h", "fa-sm"),
             color = "olive",
             width = 12,
         )
@@ -326,7 +326,7 @@ valueBoxSCReadingFrame <- function(input, output, SCReadingFrame, session) {
                                       font-weight: bold;"),
             value = tags$p(strtoi(SCReadingFrame),
                            style = "font-size: 29px;"),
-            icon = icon("cut", "fa-sm"),
+            icon = icon("sliders-h", "fa-sm"),
             color = "olive",
             width = 12,
         )
