@@ -126,7 +126,7 @@ the wrapper function for SangerAlignment
 
 \examples{
 ## Input From ABIF file format
-rawDataDixr <- system.file("extdata", package = "sangeranalyseR")
+rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
 suffixForwardRegExp <- "_[0-9]*_F.ab1"
 suffixReverseRegExp <- "_[0-9]*_R.ab1"

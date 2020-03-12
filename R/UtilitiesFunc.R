@@ -82,7 +82,7 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
             aln.dist = dist.dna(aln.bin, pairwise.deletion = TRUE)
             # Making a rough NJ tree. Labels are rows in the summary df
             #    (If tree cannot be created ==> NULL)
-            aln.tree = NULL
+            aln.tree = read.tree(text="();")
             try({
                 aln.tree = bionjs(aln.dist)
                 aln.tree$tip.label <- names(aln)
@@ -95,7 +95,7 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
             silent = TRUE
             )
         } else {
-            aln.tree = NULL
+            aln.tree = read.tree(text="();")
         }
 
         # Get consensus read and add to alignment result
@@ -485,7 +485,7 @@ chromatogramRowNum <- function(width, rawLength, trimmedLength, showTrimmed) {
 ### SangerRead related helper functions
 ### ============================================================================
 SetCharStyleList <- function(AASeqDF, selectChar, colorCode) {
-    stopIndex <- AASeqDF %>% `==`(selectChar) %>% which()
+    stopIndex <- AASeqDF %>% `==` (selectChar) %>% which()
     stopExcelIndex <- int2col(stopIndex)
     stopExcelIndexName <- paste0(stopExcelIndex, "1")
     styleList <-

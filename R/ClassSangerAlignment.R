@@ -1,12 +1,6 @@
 #' @export
 setOldClass("phylo")
 
-#' @description  ClassUnion phyloORNULL
-#' @title S4 Class Union phyloORNULL
-#' @name phyloORNULL
-#' @exportClass phyloORNULL
-setClassUnion("phyloORNULL", c("phylo", "NULL"))
-
 #' @title SangerAlignment
 #'
 #' @description  An S4 class containing SangerContigs lists and contigs alignment results which corresponds to a final alignment in Sanger sequencing.
@@ -35,7 +29,7 @@ setClassUnion("phyloORNULL", c("phylo", "NULL"))
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
 #' ## Input From ABIF file format
-#' rawDataDixr <- system.file("extdata", package = "sangeranalyseR")
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
@@ -92,7 +86,7 @@ setClass("SangerAlignment",
                         contigList                  = "list",
                         contigsConsensus            = "DNAString",
                         contigsAlignment            = "DNAStringSet",
-                        contigsTree                 = "phyloORNULL"
+                        contigsTree                 = "phylo"
          ),
 )
 

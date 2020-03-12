@@ -5,7 +5,7 @@
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @slot readFileName The filename of the target input file. It can be \code{"ABIF"} or \code{"FASTA"} file.
-#' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot abifRawData A S4 class containing all fields in the ABIF file. It is defined in sangerseqR package.
 #' @slot QualityReport A S4 class containing quality trimming related inputs and trimming results.
@@ -108,7 +108,7 @@ setClass(
     slots=c(inputSource         = "character",
             readFeature         = "character",
             readFileName        = "character",
-            fastaReadName       = "character",
+            fastaReadName       = "characterORNULL",
             namesConversionCSV  = "characterORNULL",
             geneticCode         = "character",
             abifRawData         = "abifORNULL",
@@ -136,7 +136,7 @@ setMethod("initialize",
                    inputSource          = "ABIF",
                    readFeature          = "",
                    readFileName         = "",
-                   fastaReadName        = "",
+                   fastaReadName        = NULL,
                    namesConversionCSV   = NULL,
                    geneticCode          = GENETIC_CODE,
                    TrimmingMethod       = "M1",

@@ -1523,8 +1523,7 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$SATreePlotUI <- renderUI({
         if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
-            if (!is.null(sangerAlignmentParam[["contigsTree"]])) {
-
+            if (sangerAlignmentParam[["contigsTree"]]$tip.label != '') {
                 plotOutput("SATreePlot")
             } else {
                 h4("*** The number of contigs is less than 3, so 'Contigs Tree' cannot be created. ***",

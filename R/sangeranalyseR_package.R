@@ -22,7 +22,7 @@
 #' @importFrom DT dataTableOutput renderDataTable
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom ggdendro ggdendrogram
-#' @importFrom ape bionjs as.DNAbin dist.dna
+#' @importFrom ape bionjs as.DNAbin dist.dna read.tree
 #' @importFrom shinyWidgets actionBttn
 #' @importFrom openxlsx int2col
 #' @importFrom tools file_ext
