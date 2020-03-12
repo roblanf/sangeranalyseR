@@ -1,7 +1,7 @@
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 SCfastaFN <- file.path(inputFilesPath, "fasta",
-                     "SangerContig", "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa")
-contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+                     "SangerContig", "Achl_ACHLO006-09.fa")
+contigName <- "Achl_ACHLO006-09"
 suffixForwardRegExpFa <- "_[0-9]*_F"
 suffixReverseRegExpFa <- "_[0-9]*_R"
 namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
@@ -17,8 +17,8 @@ sangerContigFa <- new("SangerContig",
 
 
 SCfastaFN2 <- file.path(inputFilesPath, "fasta",
-                       "SangerContig", "RBNII395-13[C_LepFolF,C_LepFolR].fa")
-contigName2 <- "RBNII395-13[C_LepFolF,C_LepFolR]"
+                       "SangerContig", "Achl_RBNII384-13.fa")
+contigName2 <- "Achl_RBNII384-13"
 namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_2.csv")
 sangerContigFa2 <- new("SangerContig",
                       inputSource           = "FASTA",

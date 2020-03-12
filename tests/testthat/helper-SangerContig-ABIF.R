@@ -1,6 +1,6 @@
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(inputFilesPath, "Allolobophora_chlorotica", "ACHLO")
-contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+contigName <- "Achl_ACHLO006-09"
 suffixForwardRegExp <- "_[0-9]*_F.ab1"
 suffixReverseRegExp <- "_[0-9]*_R.ab1"
 sangerContig <- new("SangerContig",
@@ -20,7 +20,7 @@ sangerContig <- new("SangerContig",
                     showTrimmed           = TRUE)
 
 inputFilesParentDir2 <- file.path(inputFilesPath, "Allolobophora_chlorotica", "RBNII")
-contigName2 <- "RBNII395-13[C_LepFolF,C_LepFolR]"
+contigName2 <- "Achl_RBNII395-13"
 
 sangerContig2 <- new("SangerContig",
                     inputSource           = "ABIF",

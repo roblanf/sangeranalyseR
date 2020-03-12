@@ -2,9 +2,9 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 SRfastaFFN <- file.path(inputFilesPath,
                         "fasta",
                         "SangerRead",
-                        "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa")
+                        "Achl_ACHLO006-09_1_F.fa")
 namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_1.csv")
-fastaReadFName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F"
+fastaReadFName <- "Achl_ACHLO006-09_1_F"
 sangerReadFFa <- new("SangerRead",
                      inputSource        = "FASTA",
                      readFeature        = "Forward Read",
