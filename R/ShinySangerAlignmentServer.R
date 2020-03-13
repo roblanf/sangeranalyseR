@@ -1072,16 +1072,17 @@ SangerAlignmentServer <- function(input, output, session) {
                     sidebar_menu[[3]] == "Contig" &&
                     sidebar_menu[[4]] == "Overview" &&
                     sidebar_menu[[5]] == "Page") {
-                    shinyjs::html("rightHeader", paste("SangerContig Overview", "Page -", contigIndex))
+                    shinyjs::html("rightHeader", paste(contigIndex, "SangerContig Overview Page"))
                 } else if (sidebar_menu[[2]] == "Contig" &&
                            sidebar_menu[[3]] == "-" &&
                            !is.na(readIndex) &&
                            (directionParam == "Forward" ||
                             directionParam == "Reverse") &&
                            sidebar_menu[[6]] == "Read") {
-                    shinyjs::html("rightHeader", paste("SangerContig",
-                                                       contigIndex, "- SangerRead",
-                                                       directionParam, "Page -", readIndex))
+                    shinyjs::html("rightHeader",
+                                  paste(contigIndex, "SangerContig -",
+                                        readIndex, directionParam,
+                                        "SangerRead", "Page"))
                 }
             }
         }

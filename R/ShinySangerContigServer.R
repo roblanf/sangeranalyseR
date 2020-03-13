@@ -785,7 +785,8 @@ SangerContigServer <- function(input, output, session) {
         } else if (!is.na(strtoi(readIndex)) &&
                    (directionParam == "Forward" ||
                     directionParam == "Reverse")) {
-            html("rightHeader", paste("SangerRead -", directionParam, readIndex, "Page"))
+            html("rightHeader", paste(readIndex,
+                                      directionParam, "SangerRead", "Page"))
         }
     })
 

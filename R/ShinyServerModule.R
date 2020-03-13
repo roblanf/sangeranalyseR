@@ -6,24 +6,26 @@ dynamicMenuSideBarSC <- function(input, output, session,
                                   forwardReadFeature, reverseReadFeature) {
     output$singleReadMenu <- renderMenu({
         fmenuSub_list <- sapply(1:forwardReadNum, function(i) {
-            list(menuSubItem(text = forwardReadFeature[i],
-                          tabName = forwardReadFeature[i],
-                          icon = icon("minus")))
+            list(menuSubItem(text = paste(strsplit(forwardReadFeature[i], " ")[[1]][1],
+                                          "Forward SangerRead"),
+                          tabName = forwardReadFeature[i], icon = icon("minus")))
         })
         rmenuSub_list <- sapply(1:reverseReadNum, function(i) {
-            list(menuSubItem(text = reverseReadFeature[i],
-                          tabName = reverseReadFeature[i],
-                          icon = icon("minus")))
+            list(menuSubItem(text = paste(strsplit(forwardReadFeature[i], " ")[[1]][1],
+                                          "Reverse SangerRead"),
+                          tabName = reverseReadFeature[i], icon = icon("minus")))
         })
         fmenu_list <- menuItem(text = tags$p(tagList(icon("circle"),
-                                                     "Forward Reads"),
-                                             style = "font-size: 17px;
+                                                     HTML('&nbsp;'),
+                                                     "Forward SangerReads"),
+                                             style = "font-size: 15px;
                                            font-weight: bold;"),
                                tabName = "forwardReads", fmenuSub_list)
 
         rmenu_list <- menuItem(text = tags$p(tagList(icon("circle"),
-                                                     "Reverse Reads"),
-                                             style = "font-size: 17px;
+                                                     HTML('&nbsp;'),
+                                                     "Reverse SangerReads"),
+                                             style = "font-size: 15px;
                                            font-weight: bold;"),
                                tabName = "reverseReads", rmenuSub_list)
         sidebarMenu(.list = list(fmenu_list, rmenu_list))
@@ -43,31 +45,45 @@ dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
             forwardReadFeature <- SangerAlignmentParam[[i]]$forwardReadFeature
             reverseReadFeature <- SangerAlignmentParam[[i]]$reverseReadFeature
             fmenuSub_list <- sapply(1:forwardReadNum, function(j) {
-                list(menuSubItem(text = paste0(i, " - ", forwardReadFeature[j]),
-                                 tabName = paste0(i, " Contig - ", forwardReadFeature[j]),
+                list(menuSubItem(text = paste(i, "-",
+                                              strsplit(forwardReadFeature[j], " ")[[1]][1],
+                                              "Forward SangerRead"),
+                                 tabName = paste(i, "Contig -", forwardReadFeature[j]),
                                  icon = icon("minus")))
             })
             rmenuSub_list <- sapply(1:reverseReadNum, function(j) {
-                list(menuSubItem(text = paste0(i, " - ", reverseReadFeature[j]),
-                                 tabName = paste0(i, " Contig - ", reverseReadFeature[j]),
+                list(menuSubItem(text = paste(i, "-",
+                                              strsplit(reverseReadFeature[j], " ")[[1]][1],
+                                              "Reverse SangerRead"),
+                                 tabName = paste(i, "Contig -", reverseReadFeature[j]),
                                  icon = icon("minus")))
             })
-            fmenu_list <- menuItem(text = "Forward Reads",
-                                   tabName = "forwardReads",
-                                   icon = icon("circle"), fmenuSub_list)
+            fmenu_list <- menuItem(text = tags$p(tagList(HTML('&nbsp;'),
+                                                         HTML('&nbsp;'),
+                                                         icon("circle"),
+                                                         HTML('&nbsp;'),
+                                                         "Forward SangerReads"),
+                                                         style = "font-size: 14px;
+                                                 font-weight: bold;"),
+                                   tabName = "forwardReads", fmenuSub_list)
 
-            rmenu_list <- menuItem(text = "Reverse Reads",
+            rmenu_list <- menuItem(text = tags$p(tagList(HTML('&nbsp;'),
+                                                         HTML('&nbsp;'),
+                                                         icon("circle"),
+                                                         HTML('&nbsp;'),
+                                                         "Reverse SangerReads"),
+                                                         style = "font-size: 14px;
+                                                 font-weight: bold;"),
                                    tabName = "reverseReads",
-                                   icon = icon("circle"), rmenuSub_list)
+                                   rmenuSub_list)
             SangerCSMenuSubItem <- list(fmenu_list, rmenu_list)
 
-            SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(SangerAlignmentParam[[i]]$SCName, "Overview"),
-                                                      tabName = paste0(i, " Sanger Contig Overview Page"),
+            SangerCSMenuSubItem <- c(list(menuSubItem(text = paste(i, "SangerContig Overview"),
+                                                      tabName = paste(i, "Sanger Contig Overview Page"),
                                                       icon = icon("align-left"))),
                                      SangerCSMenuSubItem)
             SangerAlignmentParam[[i]]$SCName
-            list(menuItem(text = tags$p(tagList(icon("align-left"),
-                                                SangerAlignmentParam[[i]]$SCName),
+            list(menuItem(text = tags$p(tagList(icon("align-left"), i, "SangerContig"),
                                         style = "font-size: 17px;
                                            font-weight: bold;"),
                           tabName = SangerAlignmentParam[[i]]$SCName,

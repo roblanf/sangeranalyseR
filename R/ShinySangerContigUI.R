@@ -17,7 +17,10 @@ SangerContigUI <- dashboardPage(
         sidebarMenu(
             id = "sidebar_menu",
             menuItem(text = tags$p(tagList(icon("home"),
-                                           "Contig "),
+                                           "SangerContig", tags$br(),
+                                           HTML('&nbsp;'), HTML('&nbsp;'),
+                                           HTML('&nbsp;'), HTML('&nbsp;'),
+                                           "Overview"),
                                    style = "font-size: 20px;
                                            font-weight: bold;"),
                      tabName = "Sanger Contig Overview"),

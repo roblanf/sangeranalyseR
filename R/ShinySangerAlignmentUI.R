@@ -17,7 +17,10 @@ SangerAlignmentUI <- dashboardPage(
         sidebarMenu(
             id = "sidebar_menu",
             menuItem(text = tags$p(tagList(icon("home"),
-                                           "Contigs Alignment "),
+                                           "SangerAlignment", tags$br(),
+                                           HTML('&nbsp;'), HTML('&nbsp;'),
+                                           HTML('&nbsp;'), HTML('&nbsp;'),
+                                           "Overview"),
                                    style = "font-size: 20px;
                                            font-weight: bold;"),
                      tabName = "Contigs Alignment Overview Page _"),
