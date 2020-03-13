@@ -195,6 +195,20 @@ SangerAlignmentServer <- function(input, output, session) {
                                                     contigList)),
                                )
                         ),
+                        tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                        box(title = tags$p("Alignment Parameters",
+                                           style = "font-size: 24px;
+                                       font-weight: bold;"),
+                            collapsible = TRUE,
+                            status = "success", width = 12,
+                            column(4,
+                                   uiOutput("SAMinFractionCallSA") ,
+                            ),
+                            column(4,
+                                   uiOutput("SAMaxFractionLostSA") ,
+                            ),
+                        ),
+                        tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                         box(title = tags$p("Genetic Code Data Frame",
                                            style = "font-size: 24px;
                                                    font-weight: bold;"),
@@ -425,22 +439,22 @@ SangerAlignmentServer <- function(input, output, session) {
                                                            font-weight: bold;"),
                                 collapsible = TRUE,
                                 status = "success", width = 12,
-                                column(3,
+                                column(4,
                                        uiOutput("SAMinReadsNum") ,
                                 ),
-                                column(3,
+                                column(4,
                                        uiOutput("SAMinReadLength")  ,
                                 ),
-                                column(3,
+                                column(4,
                                        uiOutput("SAMinFractionCall") ,
                                 ),
-                                column(3,
+                                column(4,
                                        uiOutput("SAMaxFractionLost") ,
                                 ),
-                                column(3,
+                                column(4,
                                        uiOutput("SAAcceptStopCodons") ,
                                 ),
-                                column(3,
+                                column(4,
                                        uiOutput("SAReadingFrame") ,
                                 ),
                             ),
@@ -1515,6 +1529,13 @@ SangerAlignmentServer <- function(input, output, session) {
     ############################################################################
     ### SangerAlignment
     ############################################################################
+    ### ------------------------------------------------------------------------
+    ### valuebox
+    ### ------------------------------------------------------------------------
+    valueBoxSAMinFractionCallSA(input, output,
+                               SangerAlignment@minFractionCallSA, session)
+    valueBoxSAMaxFractionLostSA(input, output,
+                               SangerAlignment@maxFractionLostSA, session)
     ### ------------------------------------------------------------------------
     ### Alignment
     ### ------------------------------------------------------------------------

@@ -141,6 +141,37 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV) {
 ### ============================================================================
 ### valueBox for SangerAlignment
 ### ============================================================================
+valueBoxSAMinFractionCallSA <- function(input, output,
+                                      SAMinFractionCall, session) {
+    output$SAMinFractionCallSA <- renderUI({
+        valueBox(
+            subtitle = tags$p("MinFractionCall",
+                              style = "font-size: 15px;
+                                            font-weight: bold;"),
+            value = tags$p(as.numeric(SAMinFractionCall),
+                           style = "font-size: 29px;"),
+            icon = icon("sliders-h", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+valueBoxSAMaxFractionLostSA <- function(input, output,
+                                      SAMaxFractionLost, session) {
+    output$SAMaxFractionLostSA <- renderUI({
+        valueBox(
+            subtitle = tags$p("MaxFractionLost",
+                              style = "font-size: 15px;
+                                      font-weight: bold;"),
+            value = tags$p(as.numeric(SAMaxFractionLost),
+                           style = "font-size: 29px;"),
+            icon = icon("sliders-h", "fa-sm"),
+            color = "olive",
+            width = 12,
+        )
+    })
+}
+
 valueBoxSAMinReadsNum <- function(input, output, SangerConsensusSet, session) {
     output$SAMinReadsNum <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
@@ -437,7 +468,7 @@ valueBoxRawSeqLength <- function(input, output, session, trimmedRV) {
                                             font-weight: bold;"),
             value = tags$p(toString(trimmedRV[["rawSeqLength"]]),
                            style = "font-size: 29px;"),
-            icon = icon("check-circle", "fa-sm"),
+            icon = icon("ruler", "fa-sm"),
             color = "olive", width = 12,
         )
     })
@@ -450,7 +481,7 @@ valueBoxRawMeanQualityScore <- function(input, output, session, trimmedRV) {
                                             font-weight: bold;"),
             value = tags$p(toString(round(trimmedRV[["rawMeanQualityScore"]], 2)),
                            style = "font-size: 29px;"),
-            icon = icon("check-circle", "fa-sm"),
+            icon = icon("cogs", "fa-sm"),
             color = "olive", width = 12,
         )
     })
@@ -463,7 +494,7 @@ valueBoxRawMinQualityScore <- function(input, output, session, trimmedRV) {
                                             font-weight: bold;"),
             value = tags$p(toString(trimmedRV[["rawMinQualityScore"]]),
                            style = "font-size: 29px;"),
-            icon = icon("check-circle", "fa-sm"),
+            icon = icon("cogs", "fa-sm"),
             color = "olive", width = 12,
         )
     })
@@ -502,7 +533,7 @@ valueBoxTrimmedSeqLength <- function(input, output, session, trimmedRV) {
                                             font-weight: bold;"),
             value = tags$p(toString(trimmedRV[["trimmedSeqLength"]]),
                            style = "font-size: 29px;"),
-            icon = icon("check-circle", "fa-sm"),
+            icon = icon("ruler", "fa-sm"),
             color = "olive", width = 12,
         )
     })
@@ -515,7 +546,7 @@ valueBoxTrimmedMeanQualityScore <- function(input, output, session, trimmedRV) {
                                             font-weight: bold;"),
             value = tags$p(toString(round(trimmedRV[["trimmedMeanQualityScore"]], 2)),
                            style = "font-size: 29px;"),
-            icon = icon("check-circle", "fa-sm"),
+            icon = icon("cogs", "fa-sm"),
             color = "olive", width = 12,
         )
     })
@@ -528,7 +559,7 @@ valueBoxTrimmedMinQualityScore <- function(input, output, session, trimmedRV) {
                                             font-weight: bold;"),
             value = tags$p(toString(trimmedRV[["trimmedMinQualityScore"]]),
                            style = "font-size: 29px;"),
-            icon = icon("check-circle", "fa-sm"),
+            icon = icon("cogs", "fa-sm"),
             color = "olive", width = 12,
         )
     })
