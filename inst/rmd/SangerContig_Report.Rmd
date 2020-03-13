@@ -42,7 +42,16 @@ library(sangeranalyseR)
 <ul style="list-style-type:disc;">
   <li>**Output Directory : **  <span>*`r params$outputDir`*</span></li>
 
-  <li>**Input Parent Directory : **  <span><i>`r dirname(params$SangerContig@parentDirectory)`</i></span></li>
+```{r results='asis', echo=FALSE, warning=FALSE}
+if (params$SangerContig@inputSource == "ABIF" && !is.null(params$SangerContig@parentDirectory)) {
+    cat("<li>**Input Parent Directory : **  <span><i>", params$SangerContig@parentDirectory, "</i></span></li>")
+} else if (params$SangerContig@inputSource == "FASTA" && !is.null(params$SangerContig@fastaFileName) && !is.null(params$SangerContig@namesConversionCSV)){
+    cat("<li>**Fasta File Name : **  <span><i>", params$SangerContig@fastaFileName, "</i></span></li>")
+  if (!is.null(params$SangerContig@namesConversionCSV)) {
+    cat("<li>**Filename Conversion CSV : **  <span><i>", params$SangerContig@namesConversionCSV, "</i></span></li>")
+  }
+}
+```
 
   <li>**Contig Name : **  <span><i>`r basename(params$SangerContig@contigName)`</i></span></li>
 

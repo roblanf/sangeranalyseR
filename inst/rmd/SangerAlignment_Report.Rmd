@@ -37,8 +37,16 @@ library(sangeranalyseR)
 <ul style="list-style-type:disc;">
   <li>**Output Directory : **  <span>*`r params$outputDir`*</span></li>
 
-  <li>**Input Parent Directory : **  <span><i>`r dirname(params$SangerAlignment@parentDirectory)`</i></span></li>
-
+```{r results='asis', echo=FALSE, warning=FALSE}
+if (params$SangerAlignment@inputSource == "ABIF" && !is.null(params$SangerAlignment@parentDirectory)) {
+    cat("<li>**Input Parent Directory : **  <span><i>", params$SangerAlignment@parentDirectory, "</i></span></li>")
+} else if (params$SangerAlignment@inputSource == "FASTA" && !is.null(params$SangerAlignment@fastaFileName)){
+    cat("<li>**Fasta File Name : **  <span><i>", params$SangerAlignment@fastaFileName, "</i></span></li>")
+  if (!is.null(params$SangerAlignment@namesConversionCSV)) {
+    cat("<li>**Filename Conversion CSV : **  <span><i>", params$SangerAlignment@namesConversionCSV, "</i></span></li>")
+  }
+}
+```
   <li>**Trimming Method : **  <span>*`r params$SangerAlignment@contigList[[1]]@trimmingMethodSC`*</span></li>
   
   <li>**Forward Reads Suffix Regex : **  <span>*`r params$SangerAlignment@suffixForwardRegExp`*</span></li>
