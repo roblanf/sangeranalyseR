@@ -186,7 +186,7 @@
 </div>
 <p>There are three parameters, <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>, <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>, and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>, that users need to provide so that program can automatically group all <strong>AB1</strong> files. To be clearer, let's have an example.</p>
 <div class="figure align-center" id="id1">
-<span id="sangeralignment-file-structure-beginner"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure_beginner.png"><img alt="../_images/SangerAlignment_file_structure_beginner.png" src="../_images/SangerAlignment_file_structure_beginner.png" style="width: 388.0px; height: 384.0px;" /></a>
+<span id="sangeralignment-file-structure-beginner"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure_beginner.png"><img alt="../_images/SangerAlignment_file_structure_beginner.png" src="../_images/SangerAlignment_file_structure_beginner.png" style="width: 319.0px; height: 385.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 <p><a class="reference internal" href="#sangeralignment-file-structure-beginner"><span class="std std-ref">Figure_1</span></a> shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.</p>
@@ -204,8 +204,8 @@
 <h2>Step 2: S4 instance creation<a class="headerlink" href="#step-2-s4-instance-creation" title="Permalink to this headline">¶</a></h2>
 <p>After preparing the input directory, we can now create a <em>SangerAlignment</em> S4 instance by running one-line function below.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;./tmp/&quot;</span><span class="p">,</span>
-                                   <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_F.ab1&quot;</span><span class="p">,</span>
-                                   <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_R.ab1&quot;</span><span class="p">)</span>
+                                   <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]\*_F.ab1&quot;</span><span class="p">,</span>
+                                   <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]\*_R.ab1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>One thing to pay attention to is that your current working directory need to be at the same level of <code class="code docutils literal notranslate"><span class="pre">tmp</span></code> directory so that you can directly use <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>. Or otherwise, you need to use the absolute path which might look like <code class="code docutils literal notranslate"><span class="pre">/path/to/your/tmp</span></code>.</p>
@@ -249,7 +249,7 @@
 <p class="caption"><span class="caption-text">Figure 3. Alignment result of all contigs in the <em>SangerAlignment</em> instance.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-center" id="id4">
-<span id="sangeralignment-tree"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_tree.png"><img alt="../_images/SangerAlignment_tree.png" src="../_images/SangerAlignment_tree.png" style="width: 399.59999999999997px; height: 115.19999999999999px;" /></a>
+<span id="sangeralignment-tree"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_tree.png"><img alt="../_images/SangerAlignment_tree.png" src="../_images/SangerAlignment_tree.png" style="width: 547.1999999999999px; height: 160.2px;" /></a>
 <p class="caption"><span class="caption-text">Figure 4. Phylogenetic trees with contigs as the leaf nodes.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 <div class="line-block">

@@ -46,8 +46,8 @@ After preparing the input directory, we can now create a *SangerAlignment* S4 in
 .. code-block:: R
 
    sangerAlignment <- SangerAlignment(parentDirectory     = "./tmp/",
-                                      suffixForwardRegExp = "_F.ab1",
-                                      suffixReverseRegExp = "_R.ab1")
+                                      suffixForwardRegExp = "_[0-9]\*_F.ab1",
+                                      suffixReverseRegExp = "_[0-9]\*_R.ab1")
 
 One thing to pay attention to is that your current working directory need to be at the same level of :code:`tmp` directory so that you can directly use :code:`./tmp/`. Or otherwise, you need to use the absolute path which might look like :code:`/path/to/your/tmp`.
 
