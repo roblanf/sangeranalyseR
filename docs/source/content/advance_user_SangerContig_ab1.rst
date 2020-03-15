@@ -41,7 +41,7 @@ Here, we have an example:
 .. _SangerContig_file_structure:
 .. figure::  ../image/SangerContig_file_structure.png
    :align:   center
-   :scale:   90 %
+   :scale:   60 %
 
    Figure 2. *SangerContig* filename regulation.
 
@@ -132,7 +132,7 @@ We create an interactive local Shiny app for users to go into each *SangerRead* 
 .. _SangerContig_shiny_SangerContig_page:
 .. figure::  ../image/SangerContig_shiny_SangerContig_page.png
    :align:   center
-   :scale:   25 %
+   :scale:   20 %
 
    Figure 4. *SangerContig* Shiny app initial page - *SangerContig* page.
 
@@ -183,7 +183,7 @@ Now, let's go to the next level which is also the lowest level, *SangerRead* pag
 .. _SangerContig_shiny_SangerRead_page:
 .. figure::  ../image/SangerContig_shiny_SangerRead_page.png
    :align:   center
-   :scale:   25 %
+   :scale:   20 %
 
    Figure 9. *SangerContig* Shiny app - *SangerRead* page
 
@@ -192,7 +192,7 @@ In quality trimming steps, we removes fragment at both ends of sequencing reads 
 .. _SangerContig_shiny_trimming_1:
 .. figure::  ../image/SangerContig_shiny_trimming_1.png
    :align:   center
-   :scale:   45 %
+   :scale:   30 %
 
    Figure 10. *SangerRead* page - Trimming Method 1 (M1): ‘Modified Mott Trimming’ UI.
 
@@ -201,7 +201,7 @@ In quality trimming steps, we removes fragment at both ends of sequencing reads 
 .. _SangerContig_shiny_trimming_2:
 .. figure::  ../image/SangerContig_shiny_trimming_2.png
    :align:   center
-   :scale:   45 %
+   :scale:   30 %
 
    Figure 11. *SangerRead* page - Trimming Method 2 (M2): ‘Trimmomatics Sliding Window Trimming’ UI.
 
@@ -210,7 +210,7 @@ In quality trimming steps, we removes fragment at both ends of sequencing reads 
 .. _SangerContig_shiny_trimmed_before_after:
 .. figure::  ../image/SangerContig_shiny_trimmed_before_after.png
    :align:   center
-   :scale:   45 %
+   :scale:   30 %
 
    Figure 12. *SangerRead* page - read quality report before / after trimming.
 
@@ -219,7 +219,7 @@ In :ref:`Figure 13<SangerContig_shiny_bp_quality_plot>`, the x-axis is the index
 .. _SangerContig_shiny_bp_quality_plot:
 .. figure::  ../image/SangerContig_shiny_bp_quality_plot.png
    :align:   center
-   :scale:   45 %
+   :scale:   30 %
 
    Figure 13. *SangerContig* page - quality trimming plot.
 
@@ -228,7 +228,7 @@ If we only see primary and secondary sequences in the table, we will loose some 
 .. _SangerContig_shiny_chromatogram_panel:
 .. figure::  ../image/SangerContig_shiny_chromatogram_panel.png
    :align:   center
-   :scale:   45 %
+   :scale:   30 %
 
    Figure 14. *SangerContig* page - chromatogram panel.
 
@@ -238,7 +238,7 @@ Here is an example of applying new chromatogram parameters. We click “Show Tri
 .. _SangerContig_plotting_popup:
 .. figure::  ../image/SangerContig_plotting_popup.png
    :align:   center
-   :scale:   45 %
+   :scale:   30 %
 
    Figure 15. *SangerContig* page - loading notification popup during replotting chromatogram.
 
@@ -248,7 +248,7 @@ After replotting the chromatogram, we can see that trimmed region is showed in r
 .. _SangerContig_shiny_chromatogram:
 .. figure::  ../image/SangerContig_shiny_chromatogram.png
    :align:   center
-   :scale:   45 %
+   :scale:   30 %
 
    Figure 16. *SangerContig* page - chromatogram with trimmed region showed.
 
@@ -258,7 +258,7 @@ To let users browse the trimmed primary/secondary sequences without finding “T
 .. _SangerContig_shiny_trimmed_sequences:
 .. figure::  ../image/SangerContig_shiny_trimmed_sequences.png
    :align:   center
-   :scale:   45 %
+   :scale:   28 %
 
    Figure 17. *SangerContig* page - trimmed primary/secondary sequences and Phred quality score in table format.
 
@@ -267,7 +267,7 @@ We have updated the trimming and chromatogram parameters for each read. Now, we 
 .. _SangerContig_shiny_save_popup:
 .. figure::  ../image/SangerContig_shiny_save_popup.png
    :align:   center
-   :scale:   40 %
+   :scale:   25 %
 
    Figure 18. *SangerContig* page - saving notification popup.
 
