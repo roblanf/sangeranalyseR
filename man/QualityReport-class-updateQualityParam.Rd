@@ -10,6 +10,17 @@
   TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
   M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL)
 }
+\arguments{
+\item{object}{object}
+
+\item{TrimmingMethod}{TrimmingMethod}
+
+\item{M1TrimmingCutoff}{M1TrimmingCutoff}
+
+\item{M2CutoffQualityScore}{M2CutoffQualityScore}
+
+\item{M2SlidingWindowSize}{M2SlidingWindowSize}
+}
 \description{
 A QualityReport method which updates quality base interactive plot.
 }

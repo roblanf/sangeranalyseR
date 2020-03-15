@@ -9,6 +9,17 @@
 \S4method{writeFastaSC}{SangerContig}(object, outputDir = NULL,
   compress = FALSE, compression_level = NA, selection = "all")
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+
+\item{compress}{compress}
+
+\item{compression_level}{compression_level}
+
+\item{selection}{selection}
+}
 \description{
 A SangerContig method which writes sequences into Fasta files.
 }

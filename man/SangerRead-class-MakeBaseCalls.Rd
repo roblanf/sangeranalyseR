@@ -8,6 +8,11 @@
 \usage{
 \S4method{MakeBaseCalls}{SangerRead}(object, signalRatioCutoff = 0.33)
 }
+\arguments{
+\item{object}{object}
+
+\item{signalRatioCutoff}{signalRatioCutoff}
+}
 \description{
 A SangerRead method which does base calling on SangerRead instance
 }

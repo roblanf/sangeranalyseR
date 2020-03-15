@@ -9,8 +9,6 @@
 #'
 #' @name ChromatogramParam-class
 #'
-#' @rdname ChromatogramParam-class
-#'
 #' @exportClass ChromatogramParam
 #' @author Kuan-Hao Chao
 #' @examples

@@ -9,6 +9,15 @@
 \S4method{generateReportSR}{SangerRead}(object, outputDir,
   navigationContigFN = NULL, navigationAlignmentFN = NULL)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+
+\item{navigationContigFN}{navigationContigFN}
+
+\item{navigationAlignmentFN}{navigationAlignmentFN}
+}
 \description{
 A SangerRead method which generates final reports of the SangerRead instance.
 }

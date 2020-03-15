@@ -7,6 +7,8 @@
 #' @name SangerRead-class-qualityBasePlot
 #' @aliases qualityBasePlot,SangerRead-method
 #'
+#' @param object object
+#'
 #' @docType methods
 #' @examples
 #' \dontrun{qualityBasePlot(sangerReadF)}
@@ -29,6 +31,12 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 #' @title updateQualityParam
 #' @name SangerRead-class-updateQualityParam
 #' @aliases updateQualityParam,SangerRead-method
+#'
+#' @param object object
+#' @param TrimmingMethod TrimmingMethod
+#' @param M1TrimmingCutoff M1TrimmingCutoff
+#' @param M2CutoffQualityScore M2CutoffQualityScore
+#' @param M2SlidingWindowSize M2SlidingWindowSize
 #'
 #' @docType methods
 #' @examples
@@ -87,6 +95,9 @@ setMethod("updateQualityParam",  "SangerRead",
 #' @name SangerRead-class-MakeBaseCalls
 #' @aliases MakeBaseCalls,SangerRead-method
 #'
+#' @param object object
+#' @param signalRatioCutoff signalRatioCutoff
+#'
 #' @docType methods
 #'
 #' @examples
@@ -135,6 +146,11 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
 #' @title writeFastaSR
 #' @name SangerRead-class-writeFastaSR
 #' @aliases writeFastaSR,SangerRead-method
+#'
+#' @param object object
+#' @param outputDir outputDir
+#' @param compress compress
+#' @param compression_level compression_level
 #'
 #' @docType methods
 #' @examples
@@ -185,6 +201,11 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 #' @title generateReportSR
 #' @name SangerRead-class-generateReportSR
 #' @aliases generateReportSR,SangerRead-method
+#'
+#' @param object object
+#' @param outputDir outputDir
+#' @param navigationContigFN navigationContigFN
+#' @param navigationAlignmentFN navigationAlignmentFN
 #'
 #' @docType methods
 #' @examples

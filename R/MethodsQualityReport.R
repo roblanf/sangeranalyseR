@@ -7,6 +7,8 @@
 #' @name QualityReport-class-preQualityBasePlot
 #' @aliases preQualityBasePlot,QualityReport-method
 #'
+#' @param object object
+#'
 #' @docType methods
 #' @examples
 #' \dontrun{preQualityBasePlot(qualityReport)}
@@ -37,6 +39,8 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object){
 #' @name QualityReport-class-qualityBasePlot
 #' @aliases qualityBasePlot,QualityReport-method
 #'
+#' @param object object
+#'
 #' @docType methods
 #' @examples
 #' \dontrun{qualityBasePlot(qualityReport)}
@@ -53,6 +57,12 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 #' @title updateQualityParam
 #' @name QualityReport-class-updateQualityParam
 #' @aliases updateQualityParam,QualityReport-method
+#'
+#' @param object object
+#' @param TrimmingMethod TrimmingMethod
+#' @param M1TrimmingCutoff M1TrimmingCutoff
+#' @param M2CutoffQualityScore M2CutoffQualityScore
+#' @param M2SlidingWindowSize M2SlidingWindowSize
 #'
 #' @docType methods
 #' @examples

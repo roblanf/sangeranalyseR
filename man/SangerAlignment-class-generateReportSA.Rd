@@ -9,6 +9,15 @@
 \S4method{generateReportSA}{SangerAlignment}(object, outputDir = NULL,
   includeSangerContig = TRUE, includeSangerRead = TRUE)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+
+\item{includeSangerContig}{includeSangerContig}
+
+\item{includeSangerRead}{includeSangerRead}
+}
 \description{
 A SangerAlignment method which generates final reports of the SangerContig instance.
 }

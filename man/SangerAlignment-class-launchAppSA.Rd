@@ -8,6 +8,11 @@
 \usage{
 \S4method{launchAppSA}{SangerAlignment}(object, outputDir = NULL)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+}
 \description{
 A SangerAlignment method which launches Shiny app for SangerAlignment instance.
 }

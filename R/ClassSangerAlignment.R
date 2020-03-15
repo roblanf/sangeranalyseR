@@ -22,7 +22,6 @@ setOldClass("phylo")
 #' @slot contigsTree A phylo instance returned by bionj function in ape package. It can be used to draw the tree.
 #'
 #' @name SangerAlignment-class
-#' @rdname SangerAlignment-class
 #' @exportClass SangerAlignment
 #'
 #' @author Kuan-Hao Chao
@@ -31,6 +30,8 @@ setOldClass("phylo")
 #' ## Input From ABIF file format
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
+#'
+#' parentDir <- "/Users/chaokuan-hao/Desktop/tmp"
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerAlignment <- new("SangerAlignment",
@@ -96,7 +97,6 @@ setClass("SangerAlignment",
 #' Constructor method of SangerAlignment Class.
 #'
 #' @name SangerAlignment
-#' @rdname SangerAlignment-class
 setMethod("initialize",
           "SangerAlignment",
           function(.Object, ...,

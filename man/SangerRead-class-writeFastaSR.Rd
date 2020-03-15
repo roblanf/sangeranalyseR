@@ -9,6 +9,15 @@
 \S4method{writeFastaSR}{SangerRead}(object, outputDir = NULL,
   compress = FALSE, compression_level = NA)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+
+\item{compress}{compress}
+
+\item{compression_level}{compression_level}
+}
 \description{
 A SangerRead method which writes the sequence into Fasta files.
 }

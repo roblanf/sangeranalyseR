@@ -6,14 +6,6 @@
 \alias{SangerRead}
 \title{SangerRead}
 \usage{
-\S4method{initialize}{SangerRead}(.Object, ..., inputSource = "ABIF",
-  readFeature = "", readFileName = "", fastaReadName = NULL,
-  namesConversionCSV = NULL, geneticCode = GENETIC_CODE,
-  TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
-  M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
-  baseNumPerRow = 100, heightPerRow = 200, signalRatioCutoff = 0.33,
-  showTrimmed = TRUE)
-
 SangerRead(inputSource = "ABIF", readFeature = "", readFileName = "",
   fastaReadName = "", namesConversionCSV = NULL,
   geneticCode = GENETIC_CODE, TrimmingMethod = "M1",

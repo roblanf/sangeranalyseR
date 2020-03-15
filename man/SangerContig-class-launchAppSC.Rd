@@ -8,6 +8,11 @@
 \usage{
 \S4method{launchAppSC}{SangerContig}(object, outputDir = NULL)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+}
 \description{
 A SangerContig method which launches Shiny app for SangerContig instance.
 }

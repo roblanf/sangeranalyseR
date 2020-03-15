@@ -31,7 +31,6 @@
 #'
 #' @title SangerAlignment
 #' @name SangerAlignment
-#' @rdname SangerAlignment-class
 #' @export
 #'
 #' @return SangerAlignment

@@ -20,8 +20,6 @@
 #'
 #' @name QualityReport-class
 #'
-#' @rdname QualityReport-class
-#'
 #' @exportClass QualityReport
 #' @author Kuan-Hao Chao
 #' @examples

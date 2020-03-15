@@ -9,6 +9,15 @@
 \S4method{generateReportSC}{SangerContig}(object, outputDir,
   includeSangerRead = TRUE, navigationAlignmentFN = NULL)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+
+\item{includeSangerRead}{includeSangerRead}
+
+\item{navigationAlignmentFN}{navigationAlignmentFN}
+}
 \description{
 A SangerContig method which generates final reports of the SangerContig instance.
 }

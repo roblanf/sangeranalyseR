@@ -7,6 +7,12 @@
 #' @name SangerContig-class-updateQualityParam
 #' @aliases updateQualityParam,SangerContig-method
 #'
+#' @param object object
+#' @param TrimmingMethod TrimmingMethod
+#' @param M1TrimmingCutoff M1TrimmingCutoff
+#' @param M2CutoffQualityScore M2CutoffQualityScore
+#' @param M2SlidingWindowSize M2SlidingWindowSize
+#'
 #' @docType methods
 #' @examples
 #' \dontrun{updateQualityParam(sangerContig,
@@ -91,6 +97,9 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 #' @name SangerContig-class-launchAppSC
 #' @aliases launchAppSC,SangerContig-method
 #'
+#' @param object object
+#' @param outputDir outputDir
+#'
 #' @docType methods
 #' @examples
 #' \dontrun{RShinySC <- launchAppSC(sangerContig)}
@@ -129,6 +138,12 @@ setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL) {
 #' @title writeFastaSC
 #' @name SangerContig-class-writeFastaSC
 #' @aliases writeFastaSC,SangerContig-method
+#'
+#' @param object object
+#' @param outputDir outputDir
+#' @param compress compress
+#' @param compression_level compression_level
+#' @param selection selection
 #'
 #' @docType methods
 #' @examples
@@ -238,6 +253,11 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
 #' @title generateReportSC
 #' @name SangerContig-class-generateReportSC
 #' @aliases generateReportSC,SangerContig-method
+#'
+#' @param object object
+#' @param outputDir outputDir
+#' @param includeSangerRead includeSangerRead
+#' @param navigationAlignmentFN navigationAlignmentFN
 #'
 #' @docType methods
 #' @examples

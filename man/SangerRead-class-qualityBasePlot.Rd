@@ -8,6 +8,9 @@
 \usage{
 \S4method{qualityBasePlot}{SangerRead}(object)
 }
+\arguments{
+\item{object}{object}
+}
 \description{
 A SangerRead method which creates quality base interactive plot.
 }

@@ -6,18 +6,6 @@
 \alias{SangerContig}
 \title{SangerContig}
 \usage{
-\S4method{initialize}{SangerContig}(.Object, ..., inputSource = "ABIF",
-  fastaFileName = NULL, namesConversionCSV = NULL,
-  parentDirectory = NULL, contigName = "",
-  suffixForwardRegExp = "_F.ab1", suffixReverseRegExp = "_R.ab1",
-  geneticCode = GENETIC_CODE, TrimmingMethod = "M1",
-  M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
-  M2SlidingWindowSize = NULL, baseNumPerRow = 100,
-  heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE,
-  refAminoAcidSeq = "", minReadsNum = 2, minReadLength = 20,
-  minFractionCall = 0.5, maxFractionLost = 0.5,
-  acceptStopCodons = TRUE, readingFrame = 1, processorsNum = NULL)
-
 SangerContig(inputSource = "ABIF", fastaFileName = "",
   namesConversionCSV = NULL, parentDirectory = "", contigName = "",
   suffixForwardRegExp = "_F.ab1", suffixReverseRegExp = "_R.ab1",
@@ -44,8 +32,6 @@ SangerContig(inputSource = "ABIF", fastaFileName = "",
 
 \item{suffixReverseRegExp}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.}
 
-\item{geneticCode}{Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
-
 \item{TrimmingMethod}{TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.}
 
 \item{M1TrimmingCutoff}{The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.}
@@ -71,6 +57,8 @@ SangerContig(inputSource = "ABIF", fastaFileName = "",
 \item{minFractionCall}{Minimum fraction of the sequences required to call a consensus sequence for SangerContig at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.}
 
 \item{maxFractionLost}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerContig (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.}
+
+\item{geneticCode}{Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
 
 \item{acceptStopCodons}{The logical value \code{TRUE} or \code{FALSE}. \code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; \code{FALSE}: reject reads with stop codons. If \code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).}
 

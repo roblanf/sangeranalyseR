@@ -7,6 +7,12 @@
 #' @name SangerAlignment-class-updateQualityParam
 #' @aliases updateQualityParam,SangerAlignment-method
 #'
+#' @param object object
+#' @param TrimmingMethod TrimmingMethod
+#' @param M1TrimmingCutoff M1TrimmingCutoff
+#' @param M2CutoffQualityScore M2CutoffQualityScore
+#' @param M2SlidingWindowSize M2SlidingWindowSize
+#'
 #' @docType methods
 #' @examples
 #' \dontrun{updateQualityParam(sangerAlignment,
@@ -69,6 +75,9 @@ setMethod("updateQualityParam",  "SangerAlignment",
 #' @name SangerAlignment-class-launchAppSA
 #' @aliases launchAppSA,SangerAlignment-method
 #'
+#' @param object object
+#' @param outputDir outputDir
+#'
 #' @docType methods
 #' @examples
 #' \dontrun{RShinySA <- launchAppSA(sangerAlignment)}
@@ -107,6 +116,12 @@ setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
 #' @title writeFastaSA
 #' @name SangerAlignment-class-writeFastaSA
 #' @aliases writeFastaSA,SangerAlignment-method
+#'
+#' @param object object
+#' @param outputDir outputDir
+#' @param compress compress
+#' @param compression_level compression_level
+#' @param selection selection
 #'
 #' @docType methods
 #' @examples
@@ -223,6 +238,11 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
 #' @title generateReportSA
 #' @name SangerAlignment-class-generateReportSA
 #' @aliases generateReportSA,SangerAlignment-method
+#'
+#' @param object object
+#' @param outputDir outputDir
+#' @param includeSangerContig includeSangerContig
+#' @param includeSangerRead includeSangerRead
 #'
 #' @docType methods
 #' @examples

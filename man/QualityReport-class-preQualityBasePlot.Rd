@@ -8,6 +8,9 @@
 \usage{
 \S4method{preQualityBasePlot}{QualityReport}(object)
 }
+\arguments{
+\item{object}{object}
+}
 \description{
 A QualityReport method which pre-plots quality base interactive plot.
 }
