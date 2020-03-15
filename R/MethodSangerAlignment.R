@@ -5,14 +5,7 @@
 #'
 #' @title updateQualityParam
 #' @name SangerAlignment-class-updateQualityParam
-#' @rdname SangerAlignment-Method
 #' @aliases updateQualityParam,SangerAlignment-method
-#'
-#' @param object .
-#' @param TrimmingMethod .
-#' @param M1TrimmingCutoff .
-#' @param M2CutoffQualityScore .
-#' @param M2SlidingWindowSize .
 #'
 #' @docType methods
 #' @examples
@@ -74,11 +67,7 @@ setMethod("updateQualityParam",  "SangerAlignment",
 #'
 #' @title launchAppSA
 #' @name SangerAlignment-class-launchAppSA
-#' @rdname SangerAlignment-Method
 #' @aliases launchAppSA,SangerAlignment-method
-#'
-#' @param object .
-#' @param outputDir .
 #'
 #' @docType methods
 #' @examples
@@ -117,14 +106,7 @@ setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
 #'
 #' @title writeFastaSA
 #' @name SangerAlignment-class-writeFastaSA
-#' @rdname SangerAlignment-Method
 #' @aliases writeFastaSA,SangerAlignment-method
-#'
-#' @param object .
-#' @param outputDir .
-#' @param compress .
-#' @param compression_level .
-#' @param selection .
 #'
 #' @docType methods
 #' @examples
@@ -240,13 +222,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
 #'
 #' @title generateReportSA
 #' @name SangerAlignment-class-generateReportSA
-#' @rdname SangerAlignment-Method
 #' @aliases generateReportSA,SangerAlignment-method
-#'
-#' @param object .
-#' @param outputDir .
-#' @param includeSangerContig .
-#' @param includeSangerRead .
 #'
 #' @docType methods
 #' @examples

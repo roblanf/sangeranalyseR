@@ -6,7 +6,7 @@ setOldClass("phylo")
 #' @description  An S4 class containing SangerContigs lists and contigs alignment results which corresponds to a final alignment in Sanger sequencing.
 #'
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
-#' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @slot fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
 #' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot parentDirectory If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerAlignment, all reads in subdirectories will be scanned recursively. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.

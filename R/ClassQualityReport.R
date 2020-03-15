@@ -2,7 +2,10 @@
 #'
 #' @description  An S4 class storing quality related inputs and results in a SangerRead S4 object.
 #'
-#' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
+#' @slot TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
+#' @slot M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
+#' @slot M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
+#' @slot M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #' @slot qualityPhredScores The Phred quality scores of each base pairs after base calling.
 #' @slot qualityBaseScores The probability of incorrect base call of each base pairs. They are calculated from \code{qualityPhredScores}.
 #' @slot rawSeqLength The number of nucleotides of raw primary DNA sequence.
@@ -14,10 +17,6 @@
 #' @slot rawMinQualityScore The minimum quality score of the primary sequence after base calling.
 #' @slot trimmedMinQualityScore The minimum quality score of the trimmed primary sequence after base calling.
 #' @slot remainingRatio The remaining sequence length ratio after trimming.
-#' @slot TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
-#' @slot M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
-#' @slot M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
-#' @slot M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #'
 #' @name QualityReport-class
 #'
@@ -30,7 +29,7 @@
 #' A_chloroticaFFN <- file.path(inputFilesPath,
 #'                              "Allolobophora_chlorotica",
 #'                              "ACHLO",
-#'                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.ab1")
+#'                              "Achl_ACHLO006-09_1_F.ab1")
 #' sangerReadF <- new("SangerRead",
 #'                     inputSource           = "ABIF",
 #'                     readFeature           = "Forward Read",
@@ -161,7 +160,8 @@ setMethod("initialize",
           })
 
 #' @description ClassUnion QualityReportORNULL
-#' @title S4 Class Union QualityReportORNULL
+#' @title S4 Class Union slot types
 #' @name QualityReportORNULL
 #' @exportClass QualityReportORNULL
+#' @rdname slot-type
 setClassUnion("QualityReportORNULL", c("QualityReport", "NULL"))

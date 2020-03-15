@@ -6,6 +6,9 @@
 \usage{
 qualityBasePlot(object)
 }
+\arguments{
+\item{object}{object}
+}
 \description{
 Method qualityBasePlot
 }

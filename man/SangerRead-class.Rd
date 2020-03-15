@@ -170,7 +170,7 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFdFN <- file.path(inputFilesPath,
                               "Allolobophora_chlorotica",
                               "ACHLO",
-                              "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.ab1")
+                              "Achl_ACHLO006-09_1_F.ab1")
 sangerRead <- SangerRead(
                    inputSource           = "ABIF",
                    readFeature           = "Forward Read",

@@ -7,6 +7,17 @@
 writeFastaSA(object, outputDir = NULL, compress = FALSE,
   compression_level = NA, selection = "all")
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+
+\item{compress}{compress}
+
+\item{compression_level}{compression_level}
+
+\item{selection}{selection}
+}
 \description{
 Method writeFastaSA
 }

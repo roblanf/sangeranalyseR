@@ -7,6 +7,15 @@
 generateReportSC(object, outputDir = NULL, includeSangerRead = TRUE,
   ...)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+
+\item{includeSangerRead}{includeSangerRead}
+
+\item{...}{...}
+}
 \description{
 Method generateReportSC
 }

@@ -6,6 +6,11 @@
 \usage{
 MakeBaseCalls(object, signalRatioCutoff = 0.33)
 }
+\arguments{
+\item{object}{object}
+
+\item{signalRatioCutoff}{signalRatioCutoff}
+}
 \description{
 Method MakeBaseCalls
 }

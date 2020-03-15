@@ -4,12 +4,11 @@
 \alias{preQualityBasePlot}
 \title{Method preQualityBasePlot}
 \usage{
-preQualityBasePlot(object, readFeature = "Forward Read")
-
-preQualityBasePlot(object, readFeature = "Forward Read")
+preQualityBasePlot(object)
+}
+\arguments{
+\item{object}{object}
 }
 \description{
-Method preQualityBasePlot
-
 Method preQualityBasePlot
 }

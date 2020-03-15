@@ -6,6 +6,11 @@
 \usage{
 launchAppSA(object, outputDir = NULL)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+}
 \description{
 Method launchAppSA
 }

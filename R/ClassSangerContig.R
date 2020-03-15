@@ -3,12 +3,13 @@
 #' @description  An S4 class containing forward and reverse SangerRead lists and alignment, consensus read results which corresponds to a contig in Sanger sequencing.
 #'
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
-#' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
+#' @slot fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot parentDirectory If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerContig, all reads must be in the first layer in this directory. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.
 #' @slot contigName The contig name of all the reads in \code{parentDirectory}.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
 #' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
+#' @slot geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @slot forwardReadList The list of SangerRead S4 instances which are all forward reads.
 #' @slot reverseReadList The list of SangerRead S4 instances which are all reverse reads.
 #' @slot trimmingMethodSC The read trimming method for all SangerRead S4 instances in SangerContig. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerRead must have the same trimming method.
@@ -17,7 +18,6 @@
 #' @slot refAminoAcidSeq An amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand. The default value is \code{""}.
 #' @slot minFractionCall Minimum fraction of the sequences required to call a consensus sequence for SangerContig at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.
 #' @slot maxFractionLost Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerContig (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.
-#' @slot geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @slot acceptStopCodons The logical value \code{TRUE} or \code{FALSE}. \code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; \code{FALSE}: reject reads with stop codons. If \code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).
 #' @slot readingFrame \code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
 #' @slot contigSeq The consensus read of all SangerRead S4 instances in DNAString object.
@@ -40,9 +40,6 @@
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' contigName <- "Achl_RBNII384-13"
-#'
-#' parentDir <- "/Users/chaokuan-hao/Desktop/tmp/ACHLO/"
-#' contigName <- "Achl_ACHLO006-09"
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerContig <- new("SangerContig",

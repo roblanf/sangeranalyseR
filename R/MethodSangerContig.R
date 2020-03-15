@@ -5,14 +5,7 @@
 #'
 #' @title updateQualityParam
 #' @name SangerContig-class-updateQualityParam
-#' @rdname SangerContig-Method
 #' @aliases updateQualityParam,SangerContig-method
-#'
-#' @param object .
-#' @param TrimmingMethod .
-#' @param M1TrimmingCutoff .
-#' @param M2CutoffQualityScore .
-#' @param M2SlidingWindowSize .
 #'
 #' @docType methods
 #' @examples
@@ -96,11 +89,7 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 #'
 #' @title launchAppSC
 #' @name SangerContig-class-launchAppSC
-#' @rdname SangerContig-Method
 #' @aliases launchAppSC,SangerContig-method
-#'
-#' @param object .
-#' @param outputDir .
 #'
 #' @docType methods
 #' @examples
@@ -139,14 +128,7 @@ setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL) {
 #'
 #' @title writeFastaSC
 #' @name SangerContig-class-writeFastaSC
-#' @rdname SangerContig-Method
 #' @aliases writeFastaSC,SangerContig-method
-#'
-#' @param object .
-#' @param outputDir .
-#' @param compress .
-#' @param compression_level .
-#' @param selection .
 #'
 #' @docType methods
 #' @examples
@@ -255,13 +237,7 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
 #'
 #' @title generateReportSC
 #' @name SangerContig-class-generateReportSC
-#' @rdname SangerContig-Method
 #' @aliases generateReportSC,SangerContig-method
-#'
-#' @param object .
-#' @param outputDir .
-#' @param includeSangerRead .
-#' @param navigationAlignmentFN .
 #'
 #' @docType methods
 #' @examples

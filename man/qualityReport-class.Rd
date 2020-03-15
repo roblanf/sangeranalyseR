@@ -10,7 +10,13 @@ An S4 class storing quality related inputs and results in a SangerRead S4 object
 \section{Slots}{
 
 \describe{
-\item{\code{inputSource}}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
+\item{\code{TrimmingMethod}}{The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.}
+
+\item{\code{M1TrimmingCutoff}}{The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.}
+
+\item{\code{M2CutoffQualityScore}}{The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.}
+
+\item{\code{M2SlidingWindowSize}}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
 
 \item{\code{qualityPhredScores}}{The Phred quality scores of each base pairs after base calling.}
 
@@ -33,14 +39,6 @@ An S4 class storing quality related inputs and results in a SangerRead S4 object
 \item{\code{trimmedMinQualityScore}}{The minimum quality score of the trimmed primary sequence after base calling.}
 
 \item{\code{remainingRatio}}{The remaining sequence length ratio after trimming.}
-
-\item{\code{TrimmingMethod}}{The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.}
-
-\item{\code{M1TrimmingCutoff}}{The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.}
-
-\item{\code{M2CutoffQualityScore}}{The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.}
-
-\item{\code{M2SlidingWindowSize}}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
 }}
 
 \examples{
@@ -48,7 +46,7 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
                              "ACHLO",
-                             "ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.ab1")
+                             "Achl_ACHLO006-09_1_F.ab1")
 sangerReadF <- new("SangerRead",
                     inputSource           = "ABIF",
                     readFeature           = "Forward Read",

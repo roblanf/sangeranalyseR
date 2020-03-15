@@ -6,6 +6,13 @@
 \usage{
 generateReportSR(object, outputDir = NULL, ...)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+
+\item{...}{...}
+}
 \description{
 Method generateReportSR
 }

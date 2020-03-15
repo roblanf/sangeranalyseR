@@ -44,7 +44,7 @@ inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFdReadFN <- file.path(inputFilesPath, 
                           "Allolobophora_chlorotica",
                           "RBNII",
-                          "RBNII396-13[C_LepFolF,C_LepFolR]_1_F.ab1")
+                          "Achl_RBNII396-13_1_F.ab1")
 ```
 
 Now we can create a **'SangerRead'** instance by running `SangerRead` constructor function. 
@@ -106,7 +106,7 @@ First step is to prepare all reads in the same directory and define the project 
 ```{r}
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
-contigName <- "ACHLO006-09[LCO1490_t1,HCO2198_t1]"
+contigName <- "Achl_ACHLO006-09"
 suffixForwardRegExp <- "_[0-9]*_[F].ab1"
 suffixReverseRegExp <- "_[0-9]*_[R].ab1"
 ```

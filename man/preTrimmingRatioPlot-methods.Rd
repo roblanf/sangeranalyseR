@@ -6,6 +6,9 @@
 \usage{
 preTrimmingRatioPlot(object)
 }
+\arguments{
+\item{object}{object}
+}
 \description{
 Method preTrimmingRatioPlot
 }

@@ -64,7 +64,9 @@ setMethod("initialize",
           })
 
 #' @description ClassUnion ChromatogramParamORNULL
-#' @title S4 Class Union ChromatogramParamORNULL
+#' @title S4 Class Union slot types
 #' @name ChromatogramParamORNULL
 #' @exportClass ChromatogramParamORNULL
+#' @rdname slot-type
 setClassUnion("ChromatogramParamORNULL", c("ChromatogramParam", "NULL"))
+

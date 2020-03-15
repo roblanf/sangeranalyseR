@@ -5,10 +5,7 @@
 #'
 #' @title qualityBasePlot
 #' @name SangerRead-class-qualityBasePlot
-#' @rdname SangerRead-Method
 #' @aliases qualityBasePlot,SangerRead-method
-#'
-#' @param object .
 #'
 #' @docType methods
 #' @examples
@@ -31,14 +28,7 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 #'
 #' @title updateQualityParam
 #' @name SangerRead-class-updateQualityParam
-#' @rdname SangerRead-Method
 #' @aliases updateQualityParam,SangerRead-method
-#'
-#' @param object .
-#' @param TrimmingMethod .
-#' @param M1TrimmingCutoff .
-#' @param M2CutoffQualityScore .
-#' @param M2SlidingWindowSize .
 #'
 #' @docType methods
 #' @examples
@@ -95,12 +85,7 @@ setMethod("updateQualityParam",  "SangerRead",
 #'
 #' @title MakeBaseCalls
 #' @name SangerRead-class-MakeBaseCalls
-#' @rdname SangerRead-Method
-#'
 #' @aliases MakeBaseCalls,SangerRead-method
-#'
-#' @param object .
-#' @param signalRatioCutoff .
 #'
 #' @docType methods
 #'
@@ -149,16 +134,9 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
 #'
 #' @title writeFastaSR
 #' @name SangerRead-class-writeFastaSR
-#' @rdname SangerRead-Method
 #' @aliases writeFastaSR,SangerRead-method
 #'
-#' @param object .
-#' @param outputDir .
-#' @param compress .
-#' @param compression_level .
-#'
 #' @docType methods
-#'
 #' @examples
 #' \dontrun{writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")}
 setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
@@ -206,16 +184,9 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 #'
 #' @title generateReportSR
 #' @name SangerRead-class-generateReportSR
-#' @rdname SangerRead-Method
 #' @aliases generateReportSR,SangerRead-method
 #'
-#' @param object .
-#' @param outputDir .
-#' @param navigationContigFN .
-#' @param navigationAlignmentFN .
-#'
 #' @docType methods
-#'
 #' @examples
 #' \dontrun{generateReportSR(sangerReadF)}
 setMethod("generateReportSR", "SangerRead",

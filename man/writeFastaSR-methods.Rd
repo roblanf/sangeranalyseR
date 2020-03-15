@@ -7,6 +7,15 @@
 writeFastaSR(object, outputDir = NULL, compress = FALSE,
   compression_level = NA)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+
+\item{compress}{compress}
+
+\item{compression_level}{compression_level}
+}
 \description{
 Method writeFastaSR
 }

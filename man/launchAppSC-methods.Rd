@@ -6,6 +6,11 @@
 \usage{
 launchAppSC(object, outputDir = NULL)
 }
+\arguments{
+\item{object}{object}
+
+\item{outputDir}{outputDir}
+}
 \description{
 Method launchAppSC
 }
