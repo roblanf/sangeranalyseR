@@ -40,6 +40,9 @@
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' contigName <- "Achl_RBNII384-13"
+#'
+#' parentDir <- "/Users/chaokuan-hao/Desktop/tmp/ACHLO/"
+#' contigName <- "Achl_ACHLO006-09"
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerContig <- new("SangerContig",
@@ -49,10 +52,10 @@
 #'                      suffixForwardRegExp   = suffixForwardRegExp,
 #'                      suffixReverseRegExp   = suffixReverseRegExp,
 #'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
-#'                      TrimmingMethod        = "M1",
-#'                      M1TrimmingCutoff      = 0.0001,
-#'                      M2CutoffQualityScore  = NULL,
-#'                      M2SlidingWindowSize   = NULL,
+#'                      TrimmingMethod        = "M2",
+#'                      M1TrimmingCutoff      = NULL,
+#'                      M2CutoffQualityScore  = 20,
+#'                      M2SlidingWindowSize   = 15,
 #'                      baseNumPerRow         = 100,
 #'                      heightPerRow          = 200,
 #'                      signalRatioCutoff     = 0.33,

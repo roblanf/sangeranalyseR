@@ -71,7 +71,7 @@ After preparing the input directory, we can create the *SangerContig* S4 instanc
 
     sangerContig <- SangerContig(inputSource            = "ABIF",
                                  parentDirectory        = "./tmp/",
-                                 contigName             = "ACHLO006-09[LCO1490_t1.HCO2198_t1]",
+                                 contigName             = "Achl_ACHLO006-09",
                                  suffixForwardRegExp    = "[0-9]*_F.ab1",
                                  suffixReverseRegExp    = "[0-9]*_R.ab1",
                                  TrimmingMethod         = "M1",
@@ -93,7 +93,7 @@ After preparing the input directory, we can create the *SangerContig* S4 instanc
                                  processorsNum          = NULL)
 
 
-In this example, :code:`contigName` is set to :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]"`, so only :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]_1_F.ab1"` and :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]_2_R.ab1"` will be selected to align to a contig.
+In this example, :code:`contigName` is set to :code:`"Achl_ACHLO006-09"`, so only :code:`"Achl_ACHLO006-09_1_F.ab1"` and :code:`"Achl_ACHLO006-09_2_R.ab1"` will be selected to align to a contig.
 
 The inputs of :code:`SangerContig` constructor function and :code:`new` method are same. For more details about *SangerContig* inputs and slots definition, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_. The created *SangerContig* instance, :code:`sangerContig`, is used as the input for the following functions.
 
@@ -110,7 +110,7 @@ In the previous :ref:`Creating *SangerContig* instance from **AB1**` part, the c
    newSangerContig <- updateQualityParam(sangerContig,
                                          TrimmingMethod       = "M2",
                                          M1TrimmingCutoff     = NULL,
-                                         M2CutoffQualityScore = 29,
+                                         M2CutoffQualityScore = 20,
                                          M2SlidingWindowSize  = 15)
 
 |

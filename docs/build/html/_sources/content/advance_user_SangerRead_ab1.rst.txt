@@ -22,7 +22,7 @@ The main input file format to create *SangerRead* instance is **AB1**. Before st
 
 :ref:`Figure_2<SangerRead_file_structure>` shows the suggested file naming strategy. The filename should contain four main parts: **"Contig name"**, **"Index number"**, **"Direction"** and **"ab1 file extension"**.
 
-* **"Contig name"** :  :code:`RBNII397-13[C_LepFolF,C_lepFolR]`
+* **"Contig name"** :  :code:`Achl_RBNII397-13`
 * **"Index number"** :  :code:`1`
 * **"Direction"** :  :code:`F`
 * **"ab1 file extension"** :  :code:`.ab1`
@@ -56,7 +56,7 @@ After preparing the *SangerRead* input **AB1** file, the next step is to create 
 
    sangerReadF <- SangerRead(inputSource           = "ABIF",
                              readFeature           = "Forward Read",
-                             readFileName          = "RBNII397-13[C_LepFolF,C_LepFolR]_1_F.ab1",
+                             readFileName          = "Achl_RBNII397-13_1_F.ab1",
                              geneticCode           = GENETIC_CODE,
                              TrimmingMethod        = "M1",
                              M1TrimmingCutoff      = 0.0001,
