@@ -1,4 +1,4 @@
-#' @name qualityReport
+#' @name qualityReport-data
 #' @title QualityReport instance
 #' @description QualityReport instance
 #' @docType data
@@ -7,7 +7,7 @@
 #' data(qualityReport)
 NULL
 
-#' @name sangerReadF
+#' @name sangerReadF-data
 #' @title SangerRead instance
 #' @description SangerRead instance
 #' @docType data
@@ -16,7 +16,7 @@ NULL
 #' data(sangerReadF)
 NULL
 
-#' @name sangerContig
+#' @name sangerContig-data
 #' @title SangerContig instance
 #' @description SangerContig instance
 #' @docType data
@@ -25,7 +25,7 @@ NULL
 #' data(sangerContig)
 NULL
 
-#' @name sangerAlignment
+#' @name sangerAlignment-data
 #' @title SangerAlignment instance
 #' @description SangerAlignment instance
 #' @docType data
