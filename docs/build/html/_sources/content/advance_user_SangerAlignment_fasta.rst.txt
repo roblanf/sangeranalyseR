@@ -37,7 +37,7 @@ No doubt read names in the original **FASTA** file will not follow the naming re
 .. _SangerAlignment_read_names_conversion:
 .. figure::  ../image/SangerAlignment_read_names_conversion.png
    :align:   center
-   :scale:   35 %
+   :scale:   40 %
 
    Figure 2. *SangerAlignment* **CSV** file - read names conversion.
 

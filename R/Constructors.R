@@ -140,7 +140,6 @@ SangerAlignment <- function(inputSource            = "ABIF",
 #'
 #' @title SangerContig
 #' @name SangerContig
-#' @rdname SangerContig-class
 #' @export
 #'
 #' @return SangerContig
@@ -242,7 +241,6 @@ SangerContig <- function(inputSource            = "ABIF",
 #'
 #' @title SangerRead
 #' @name SangerRead
-#' @rdname SangerRead-class
 #' @export
 #'
 #' @return SangerRead
