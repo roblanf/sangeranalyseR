@@ -1,18 +1,4 @@
-### ============================================================================
-### Preplotting quality for each base for "QualityReport" S4 object
-### ============================================================================
-#' A QualityReport method which pre-plots quality base interactive plot.
-#'
-#' @title preQualityBasePlot
-#' @name QualityReport-class-preQualityBasePlot
-#' @aliases preQualityBasePlot,QualityReport-method
-#'
-#' @param object object
-#'
-#' @docType methods
-#' @examples
-#' \dontrun{preQualityBasePlot(qualityReport)}
-setMethod("preQualityBasePlot",  "QualityReport", function(object){
+preQualityBasePlot <- function(object) {
     trimmedStartPos = object@trimmedStartPos
     trimmedFinishPos = object@trimmedFinishPos
     qualityPhredScores = object@qualityPhredScores
@@ -28,7 +14,8 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object){
     )
     p <- QualityBasePlotly(trimmedStartPos, trimmedFinishPos,
                            readLen, qualityPlotDf, x,  y)
-})
+    return(p)
+}
 
 ### ============================================================================
 ### Plotting quality of each base pair for "QualityReport" S4 object
@@ -41,9 +28,9 @@ setMethod("preQualityBasePlot",  "QualityReport", function(object){
 #'
 #' @param object object
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{qualityBasePlot(qualityReport)}
+#' data("qualityReport")
+#' qualityBasePlot(qualityReport)
 setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
     plotting
@@ -64,13 +51,13 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 #' @param M2CutoffQualityScore M2CutoffQualityScore
 #' @param M2SlidingWindowSize M2SlidingWindowSize
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{updateQualityParam(qualityReport,
+#' data("qualityReport")
+#' updateQualityParam(qualityReport,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 30,
-#'                    M2SlidingWindowSize    = 15)}
+#'                    M2SlidingWindowSize    = 15)
 setMethod("updateQualityParam",  "QualityReport",
           function(object,
                    TrimmingMethod         = "M1",

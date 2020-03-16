@@ -9,13 +9,12 @@
 #'
 #' @param object object
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{qualityBasePlot(sangerReadF)}
+#' data("sangerReadF")
+#' qualityBasePlot(sangerReadF)
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     if (object@inputSource == "ABIF") {
-        QualityReportObject = object@QualityReport
-        plotting <- preQualityBasePlot(QualityReportObject)
+        plotting <- preQualityBasePlot(object@QualityReport)
         plotting
     } else if (object@inputSource == "FASTA") {
         message("SangerRead with 'FASTA' inputSource ",
@@ -38,13 +37,13 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 #' @param M2CutoffQualityScore M2CutoffQualityScore
 #' @param M2SlidingWindowSize M2SlidingWindowSize
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{updateQualityParam(sangerReadF,
+#' data("sangerReadF")
+#' updateQualityParam(sangerReadF,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
-#'                    M2SlidingWindowSize    = 15)}
+#'                    M2SlidingWindowSize    = 15)
 setMethod("updateQualityParam",  "SangerRead",
           function(object,
                    TrimmingMethod         = "M1",
@@ -98,10 +97,9 @@ setMethod("updateQualityParam",  "SangerRead",
 #' @param object object
 #' @param signalRatioCutoff signalRatioCutoff
 #'
-#' @docType methods
-#'
 #' @examples
-#' \dontrun{MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)}
+#' data("sangerReadF")
+#' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
 setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
     if (object@inputSource == "ABIF") {
         errors <- character(0)
@@ -152,9 +150,9 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
 #' @param compress compress
 #' @param compression_level compression_level
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")}
+#' data("sangerReadF")
+#' writeFastaSR(sangerReadF)
 setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
                                                  compression_level) {
     if (is.null(outputDir)) {
@@ -207,9 +205,10 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 #' @param navigationContigFN navigationContigFN
 #' @param navigationAlignmentFN navigationAlignmentFN
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{generateReportSR(sangerReadF)}
+#' data("sangerReadF")
+#' \dontrun{
+#' generateReportSR(sangerReadF)}
 setMethod("generateReportSR", "SangerRead",
           function(object, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {

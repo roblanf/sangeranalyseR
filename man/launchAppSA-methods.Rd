@@ -14,3 +14,8 @@ launchAppSA(object, outputDir = NULL)
 \description{
 Method launchAppSA
 }
+\examples{
+data(sangerAlignment)
+\dontrun{
+launchAppSA(sangerAlignment)}
+}

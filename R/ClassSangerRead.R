@@ -125,9 +125,6 @@ setClass(
 ### ============================================================================
 ### Overwrite initialize for SangerRead (New constructor)
 ### ============================================================================
-#' Constructor method of SangerRead Class.
-#'
-#' @name SangerRead
 setMethod("initialize",
           "SangerRead",
           function(.Object,

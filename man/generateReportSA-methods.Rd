@@ -19,3 +19,8 @@ generateReportSA(object, outputDir = NULL, includeSangerContig = TRUE,
 \description{
 Method generateReportSA
 }
+\examples{
+data(sangerAlignment)
+\dontrun{
+generateReportSA(sangerAlignment)}
+}

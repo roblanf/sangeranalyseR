@@ -5,6 +5,8 @@ Version: 0.99.1
 Date: 2015-12-18
 Author: Rob Lanfear <rob.lanfear@gmail.com>
 Maintainer: Rob Lanfear <rob.lanfear@gmail.com>
+biocViews: Genetics, Alignment, sequencing, SangerSeq, Preprocessing, 
+           QualityControl, Visualization, Phylogenetics, GUI, shiny
 Description: This package implements bioinformatic methods to process and make inferences from Sanger sequencing reads, particularly those sequenced with ABI machines.
 License: GPL-2
 Encoding: UTF-8
@@ -61,5 +63,6 @@ Collate:
     'ShinyServerModule.R'
     'UtilitiesFunc.R'
     'UtilitiesFuncInputChecker.R'
+    'data.R'
     'sangeranalyseR_package.R'
     'sangeranalyseR_show_method.R'

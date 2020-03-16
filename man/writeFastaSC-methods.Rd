@@ -21,3 +21,7 @@ writeFastaSC(object, outputDir = NULL, compress = FALSE,
 \description{
 Method writeFastaSC
 }
+\examples{
+data(sangerContig)
+writeFastaSC(sangerContig)
+}

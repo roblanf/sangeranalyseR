@@ -25,9 +25,10 @@
 A SangerAlignment method which updates QualityReport parameter for each the SangerRead instance inside SangerAlignment.
 }
 \examples{
-\dontrun{updateQualityParam(sangerAlignment,
+data("sangerAlignment")
+updateQualityParam(sangerAlignment,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,
-                   M2SlidingWindowSize    = 15)}
+                   M2SlidingWindowSize    = 15)
 }

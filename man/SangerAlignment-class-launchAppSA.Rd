@@ -17,5 +17,6 @@
 A SangerAlignment method which launches Shiny app for SangerAlignment instance.
 }
 \examples{
-\dontrun{RShinySA <- launchAppSA(sangerAlignment)}
+data("sangerAlignment")
+RShinySA <- launchAppSA(sangerAlignment)
 }

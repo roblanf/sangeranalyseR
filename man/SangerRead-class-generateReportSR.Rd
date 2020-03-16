@@ -22,5 +22,7 @@
 A SangerRead method which generates final reports of the SangerRead instance.
 }
 \examples{
-\dontrun{generateReportSR(sangerReadF)}
+data("sangerReadF")
+\dontrun{
+generateReportSR(sangerReadF)}
 }

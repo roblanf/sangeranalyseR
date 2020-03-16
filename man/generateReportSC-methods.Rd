@@ -19,3 +19,8 @@ generateReportSC(object, outputDir = NULL, includeSangerRead = TRUE,
 \description{
 Method generateReportSC
 }
+\examples{
+data(sangerContig)
+\dontrun{
+generateReportSC(sangerContig)}
+}

@@ -22,5 +22,6 @@
 A SangerRead method which writes the sequence into Fasta files.
 }
 \examples{
-\dontrun{writeFastaSR(sangerReadF, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerRead")}
+data("sangerReadF")
+writeFastaSR(sangerReadF)
 }

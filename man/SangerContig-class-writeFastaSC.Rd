@@ -24,5 +24,6 @@
 A SangerContig method which writes sequences into Fasta files.
 }
 \examples{
-\dontrun{writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")}
+data("sangerContig")
+writeFastaSC(sangerContig)
 }

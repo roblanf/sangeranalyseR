@@ -21,3 +21,7 @@ writeFastaSA(object, outputDir = NULL, compress = FALSE,
 \description{
 Method writeFastaSA
 }
+\examples{
+data(sangerAlignment)
+writeFastaSA(sangerAlignment)
+}

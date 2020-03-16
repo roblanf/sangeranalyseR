@@ -157,9 +157,4 @@ setMethod("initialize",
                              M2SlidingWindowSize     = M2SlidingWindowSize)
           })
 
-#' @description ClassUnion QualityReportORNULL
-#' @title S4 Class Union slot types
-#' @name QualityReportORNULL
-#' @exportClass QualityReportORNULL
-#' @rdname slot-type
 setClassUnion("QualityReportORNULL", c("QualityReport", "NULL"))

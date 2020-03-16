@@ -109,9 +109,6 @@ setClass("SangerContig",
 ### ============================================================================
 ### Overwrite initialize for 'SangerContig' (New constructor)
 ### ============================================================================
-#' Constructor method of SangerContig Class.
-#'
-#' @name SangerContig
 setMethod("initialize",
           "SangerContig",
           function(.Object,

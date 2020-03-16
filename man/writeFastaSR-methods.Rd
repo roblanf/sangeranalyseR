@@ -19,3 +19,7 @@ writeFastaSR(object, outputDir = NULL, compress = FALSE,
 \description{
 Method writeFastaSR
 }
+\examples{
+data(sangerReadF)
+writeFastaSR(sangerReadF)
+}

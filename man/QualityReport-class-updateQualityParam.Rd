@@ -25,9 +25,10 @@
 A QualityReport method which updates quality base interactive plot.
 }
 \examples{
-\dontrun{updateQualityParam(qualityReport,
+data("qualityReport")
+updateQualityParam(qualityReport,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 30,
-                   M2SlidingWindowSize    = 15)}
+                   M2SlidingWindowSize    = 15)
 }

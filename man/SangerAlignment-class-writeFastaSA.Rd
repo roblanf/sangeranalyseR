@@ -24,5 +24,6 @@
 A SangerAlignment method which writes sequences into Fasta files.
 }
 \examples{
-\dontrun{writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")}
+data("sangerAlignment")
+writeFastaSA(sangerAlignment)
 }

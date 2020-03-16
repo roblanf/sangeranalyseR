@@ -22,5 +22,7 @@
 A SangerAlignment method which generates final reports of the SangerContig instance.
 }
 \examples{
-\dontrun{generateReportSA(sangerAlignment)}
+data("sangerAlignment")
+\dontrun{
+generateReportSA(sangerAlignment)}
 }

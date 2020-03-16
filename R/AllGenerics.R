@@ -1,65 +1,8 @@
-#' @description ClassUnion numericORNULL
-#' @title S4 Class Union slot types
-#' @name numericORNULL
-#' @exportClass numericORNULL
-#' @rdname slot-type
 setClassUnion("numericORNULL", c("numeric", "NULL"))
 
-#' @description ClassUnion abifORNULL
-#' @title S4 Class Union slot types
-#' @name abifORNULL
-#' @exportClass abifORNULL
-#' @rdname slot-type
 setClassUnion("abifORNULL", c("abif", "NULL"))
 
-#' @description  ClassUnion characterORNULL
-#' @title S4 Class Union slot types
-#' @name characterORNULL
-#' @exportClass characterORNULL
-#' @rdname slot-type
 setClassUnion("characterORNULL", c("character", "NULL"))
-
-### ============================================================================
-### Defined in QualityReport
-### ============================================================================
-#' Method preTrimmingRatioPlot
-#' @name preTrimmingRatioPlot
-#' @rdname preTrimmingRatioPlot-methods
-#'
-#' @param object object
-#'
-#' @exportMethod preTrimmingRatioPlot
-setGeneric("preTrimmingRatioPlot", function(object) {
-    standardGeneric("preTrimmingRatioPlot")
-})
-
-### ============================================================================
-### Defined in QualityReport
-### ============================================================================
-#' Method preQualityBasePlot
-#' @name preQualityBasePlot
-#' @rdname preQualityBasePlot-methods
-#'
-#' @param object object
-#'
-#' @exportMethod preQualityBasePlot
-setGeneric("preQualityBasePlot", function(object) {
-    standardGeneric("preQualityBasePlot")
-})
-
-### ============================================================================
-### Defined in QualityReport, SangerRead, SangerContig
-### ============================================================================
-#' Method trimmingRatioPlot
-#' @name trimmingRatioPlot
-#' @rdname trimmingRatioPlot-methods
-#'
-#' @param object object
-#'
-#' @exportMethod trimmingRatioPlot
-setGeneric("trimmingRatioPlot", function(object) {
-    standardGeneric("trimmingRatioPlot")
-})
 
 ### ============================================================================
 ### Defined in QualityReport, SangerRead, SangerContig
@@ -71,6 +14,11 @@ setGeneric("trimmingRatioPlot", function(object) {
 #' @param object object
 #'
 #' @exportMethod qualityBasePlot
+#' @examples
+#' data(qualityReport)
+#' data(sangerReadF)
+#' qualityBasePlot(qualityReport)
+#' qualityBasePlot(sangerReadF)
 setGeneric("qualityBasePlot", function(object) {
     standardGeneric("qualityBasePlot")
 })
@@ -89,6 +37,31 @@ setGeneric("qualityBasePlot", function(object) {
 #' @param M2SlidingWindowSize M2SlidingWindowSize
 #'
 #' @exportMethod updateQualityParam
+#' @examples
+#' data(qualityReport)
+#' data(sangerReadF)
+#' data(sangerContig)
+#' data(sangerAlignment)
+#' updateQualityParam(qualityReport,
+#'                    TrimmingMethod         = "M2",
+#'                    M1TrimmingCutoff       = NULL,
+#'                    M2CutoffQualityScore   = 40,
+#'                    M2SlidingWindowSize    = 15)
+#' updateQualityParam(sangerReadF,
+#'                    TrimmingMethod         = "M2",
+#'                    M1TrimmingCutoff       = NULL,
+#'                    M2CutoffQualityScore   = 40,
+#'                    M2SlidingWindowSize    = 15)
+#' updateQualityParam(sangerContig,
+#'                    TrimmingMethod         = "M2",
+#'                    M1TrimmingCutoff       = NULL,
+#'                    M2CutoffQualityScore   = 40,
+#'                    M2SlidingWindowSize    = 15)
+#' updateQualityParam(sangerAlignment,
+#'                    TrimmingMethod         = "M2",
+#'                    M1TrimmingCutoff       = NULL,
+#'                    M2CutoffQualityScore   = 40,
+#'                    M2SlidingWindowSize    = 15)
 setGeneric("updateQualityParam", function(object,
                                           TrimmingMethod        = "M1",
                                           M1TrimmingCutoff      = 0.0001,
@@ -108,6 +81,9 @@ setGeneric("updateQualityParam", function(object,
 #' @param signalRatioCutoff signalRatioCutoff
 #'
 #' @exportMethod MakeBaseCalls
+#' @examples
+#' data(sangerReadF)
+#' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
 setGeneric("MakeBaseCalls", function(object, signalRatioCutoff = 0.33) {
     standardGeneric("MakeBaseCalls")
 })
@@ -126,12 +102,16 @@ setGeneric("MakeBaseCalls", function(object, signalRatioCutoff = 0.33) {
 #' @param selection selection
 #'
 #' @exportMethod writeFastaSA
+#' @examples
+#' data(sangerAlignment)
+#' writeFastaSA(sangerAlignment)
 setGeneric("writeFastaSA", function(object,outputDir = NULL,
                                     compress  = FALSE,
                                     compression_level = NA,
                                     selection = "all") {
     standardGeneric("writeFastaSA")
 })
+
 #' Method writeFastaSC
 #' @name writeFastaSC
 #' @rdname writeFastaSC-methods
@@ -143,12 +123,16 @@ setGeneric("writeFastaSA", function(object,outputDir = NULL,
 #' @param selection selection
 #'
 #' @exportMethod writeFastaSC
+#' @examples
+#' data(sangerContig)
+#' writeFastaSC(sangerContig)
 setGeneric("writeFastaSC", function(object,outputDir = NULL,
                                     compress  = FALSE,
                                     compression_level = NA,
                                     selection = "all") {
     standardGeneric("writeFastaSC")
 })
+
 #' Method writeFastaSR
 #' @name writeFastaSR
 #' @rdname writeFastaSR-methods
@@ -159,6 +143,9 @@ setGeneric("writeFastaSC", function(object,outputDir = NULL,
 #' @param compression_level compression_level
 #'
 #' @exportMethod writeFastaSR
+#' @examples
+#' data(sangerReadF)
+#' writeFastaSR(sangerReadF)
 setGeneric("writeFastaSR", function(object,outputDir = NULL,
                                   compress  = FALSE,
                                   compression_level = NA) {
@@ -176,6 +163,10 @@ setGeneric("writeFastaSR", function(object,outputDir = NULL,
 #' @param outputDir outputDir
 #'
 #' @exportMethod launchAppSC
+#' @examples
+#' data(sangerContig)
+#' \dontrun{
+#' launchAppSC(sangerContig)}
 setGeneric("launchAppSC", function(object, outputDir = NULL) {
     standardGeneric("launchAppSC")
 })
@@ -188,6 +179,10 @@ setGeneric("launchAppSC", function(object, outputDir = NULL) {
 #' @param outputDir outputDir
 #'
 #' @exportMethod launchAppSA
+#' @examples
+#' data(sangerAlignment)
+#' \dontrun{
+#' launchAppSA(sangerAlignment)}
 setGeneric("launchAppSA", function(object, outputDir = NULL) {
     standardGeneric("launchAppSA")
 })
@@ -204,9 +199,14 @@ setGeneric("launchAppSA", function(object, outputDir = NULL) {
 #' @param ... ...
 #'
 #' @exportMethod generateReportSR
+#' @examples
+#' data(sangerReadF)
+#' \dontrun{
+#' generateReportSR(sangerReadF)}
 setGeneric("generateReportSR", function(object, outputDir = NULL, ...) {
     standardGeneric("generateReportSR")
 })
+
 #' Method generateReportSC
 #' @name generateReportSC
 #' @rdname generateReportSC-methods
@@ -217,10 +217,15 @@ setGeneric("generateReportSR", function(object, outputDir = NULL, ...) {
 #' @param ... ...
 #'
 #' @exportMethod generateReportSC
+#' @examples
+#' data(sangerContig)
+#' \dontrun{
+#' generateReportSC(sangerContig)}
 setGeneric("generateReportSC", function(object, outputDir = NULL,
                                         includeSangerRead = TRUE, ...) {
     standardGeneric("generateReportSC")
 })
+
 #' Method generateReportSA
 #' @name generateReportSA
 #' @rdname generateReportSA-methods
@@ -231,6 +236,10 @@ setGeneric("generateReportSC", function(object, outputDir = NULL,
 #' @param includeSangerRead includeSangerRead
 #'
 #' @exportMethod generateReportSA
+#' @examples
+#' data(sangerAlignment)
+#' \dontrun{
+#' generateReportSA(sangerAlignment)}
 setGeneric("generateReportSA", function(object, outputDir = NULL,
                                         includeSangerContig = TRUE,
                                         includeSangerRead = TRUE) {

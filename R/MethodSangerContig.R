@@ -13,13 +13,13 @@
 #' @param M2CutoffQualityScore M2CutoffQualityScore
 #' @param M2SlidingWindowSize M2SlidingWindowSize
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{updateQualityParam(sangerContig,
+#' data("sangerContig")
+#' updateQualityParam(sangerContig,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
-#'                    M2SlidingWindowSize    = 15)}
+#'                    M2SlidingWindowSize    = 15)
 setMethod("updateQualityParam",  "SangerContig",function(object,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
@@ -100,9 +100,9 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 #' @param object object
 #' @param outputDir outputDir
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{RShinySC <- launchAppSC(sangerContig)}
+#' data("sangerContig")
+#' RShinySC <- launchAppSC(sangerContig)
 setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL) {
     if (object@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
@@ -145,9 +145,9 @@ setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL) {
 #' @param compression_level compression_level
 #' @param selection selection
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{writeFastaSC(sangerContig, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerContig")}
+#' data("sangerContig")
+#' writeFastaSC(sangerContig)
 setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
                                                    compression_level,
                                                    selection = "all") {
@@ -259,9 +259,10 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
 #' @param includeSangerRead includeSangerRead
 #' @param navigationAlignmentFN navigationAlignmentFN
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{generateReportSC(sangerContig)}
+#' data("sangerContig")
+#' \dontrun{
+#' generateReportSC(sangerContig)}
 setMethod("generateReportSC", "SangerContig",
           function(object, outputDir, includeSangerRead = TRUE,
                    navigationAlignmentFN = NULL) {

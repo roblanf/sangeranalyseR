@@ -16,3 +16,8 @@ generateReportSR(object, outputDir = NULL, ...)
 \description{
 Method generateReportSR
 }
+\examples{
+data(sangerReadF)
+\dontrun{
+generateReportSR(sangerReadF)}
+}

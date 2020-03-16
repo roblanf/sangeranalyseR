@@ -14,3 +14,8 @@ launchAppSC(object, outputDir = NULL)
 \description{
 Method launchAppSC
 }
+\examples{
+data(sangerContig)
+\dontrun{
+launchAppSC(sangerContig)}
+}

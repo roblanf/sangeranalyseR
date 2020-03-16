@@ -94,9 +94,6 @@ setClass("SangerAlignment",
 ### ============================================================================
 ### Overwrite initialize for 'SangerContig' (New constructor)
 ### ============================================================================
-#' Constructor method of SangerAlignment Class.
-#'
-#' @name SangerAlignment
 setMethod("initialize",
           "SangerAlignment",
           function(.Object,

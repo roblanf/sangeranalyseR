@@ -17,5 +17,6 @@
 A SangerContig method which launches Shiny app for SangerContig instance.
 }
 \examples{
-\dontrun{RShinySC <- launchAppSC(sangerContig)}
+data("sangerContig")
+RShinySC <- launchAppSC(sangerContig)
 }

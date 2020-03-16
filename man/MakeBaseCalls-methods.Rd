@@ -14,3 +14,7 @@ MakeBaseCalls(object, signalRatioCutoff = 0.33)
 \description{
 Method MakeBaseCalls
 }
+\examples{
+data(sangerReadF)
+MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
+}

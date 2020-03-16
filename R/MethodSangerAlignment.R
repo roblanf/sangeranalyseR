@@ -13,13 +13,13 @@
 #' @param M2CutoffQualityScore M2CutoffQualityScore
 #' @param M2SlidingWindowSize M2SlidingWindowSize
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{updateQualityParam(sangerAlignment,
+#' data("sangerAlignment")
+#' updateQualityParam(sangerAlignment,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
-#'                    M2SlidingWindowSize    = 15)}
+#'                    M2SlidingWindowSize    = 15)
 setMethod("updateQualityParam",  "SangerAlignment",
           function(object,
                    TrimmingMethod         = "M1",
@@ -78,9 +78,9 @@ setMethod("updateQualityParam",  "SangerAlignment",
 #' @param object object
 #' @param outputDir outputDir
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{RShinySA <- launchAppSA(sangerAlignment)}
+#' data("sangerAlignment")
+#' RShinySA <- launchAppSA(sangerAlignment)
 setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
     if (object@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
@@ -123,9 +123,9 @@ setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
 #' @param compression_level compression_level
 #' @param selection selection
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{writeFastaSA(sangerAlignment, "/Users/chaokuan-hao/Desktop/sangeranalyseR_fasta/SangerAlignment")}
+#' data("sangerAlignment")
+#' writeFastaSA(sangerAlignment)
 setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compress,
                                                  compression_level,
                                                  selection = "all") {
@@ -244,9 +244,10 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
 #' @param includeSangerContig includeSangerContig
 #' @param includeSangerRead includeSangerRead
 #'
-#' @docType methods
 #' @examples
-#' \dontrun{generateReportSA(sangerAlignment)}
+#' data("sangerAlignment")
+#' \dontrun{
+#' generateReportSA(sangerAlignment)}
 setMethod("generateReportSA", "SangerAlignment",
           function(object, outputDir,
                    includeSangerContig = TRUE,

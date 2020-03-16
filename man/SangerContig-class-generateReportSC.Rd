@@ -22,5 +22,7 @@
 A SangerContig method which generates final reports of the SangerContig instance.
 }
 \examples{
-\dontrun{generateReportSC(sangerContig)}
+data("sangerContig")
+\dontrun{
+generateReportSC(sangerContig)}
 }

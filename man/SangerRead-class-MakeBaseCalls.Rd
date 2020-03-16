@@ -17,5 +17,6 @@
 A SangerRead method which does base calling on SangerRead instance
 }
 \examples{
-\dontrun{MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)}
+data("sangerReadF")
+MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
 }

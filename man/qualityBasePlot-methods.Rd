@@ -12,3 +12,9 @@ qualityBasePlot(object)
 \description{
 Method qualityBasePlot
 }
+\examples{
+data(qualityReport)
+data(sangerReadF)
+qualityBasePlot(qualityReport)
+qualityBasePlot(sangerReadF)
+}

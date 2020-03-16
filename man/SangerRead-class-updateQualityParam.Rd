@@ -25,9 +25,10 @@
 A SangerRead method which updates QualityReport parameter inside the SangerRead.
 }
 \examples{
-\dontrun{updateQualityParam(sangerReadF,
+data("sangerReadF")
+updateQualityParam(sangerReadF,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,
-                   M2SlidingWindowSize    = 15)}
+                   M2SlidingWindowSize    = 15)
 }
