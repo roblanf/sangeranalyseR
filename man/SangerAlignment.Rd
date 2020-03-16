@@ -5,15 +5,15 @@
 \alias{SangerAlignment}
 \title{Constructor method of SangerAlignment Class.}
 \usage{
-\S4method{initialize}{SangerAlignment}(.Object, ...,
-  inputSource = "ABIF", fastaFileName = NULL,
-  namesConversionCSV = NULL, parentDirectory = NULL,
-  suffixForwardRegExp = "_F.ab1", suffixReverseRegExp = "_R.ab1",
-  TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
-  M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
-  baseNumPerRow = 100, heightPerRow = 200, signalRatioCutoff = 0.33,
-  showTrimmed = TRUE, refAminoAcidSeq = "", minReadsNum = 2,
-  minReadLength = 20, minFractionCall = 0.5, maxFractionLost = 0.5,
+\S4method{initialize}{SangerAlignment}(.Object, inputSource = "ABIF",
+  fastaFileName = NULL, namesConversionCSV = NULL,
+  parentDirectory = NULL, suffixForwardRegExp = "_F.ab1",
+  suffixReverseRegExp = "_R.ab1", TrimmingMethod = "M1",
+  M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
+  M2SlidingWindowSize = NULL, baseNumPerRow = 100,
+  heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE,
+  refAminoAcidSeq = "", minReadsNum = 2, minReadLength = 20,
+  minFractionCall = 0.5, maxFractionLost = 0.5,
   geneticCode = GENETIC_CODE, acceptStopCodons = TRUE,
   readingFrame = 1, minFractionCallSA = 0.5, maxFractionLostSA = 0.5,
   processorsNum = NULL)

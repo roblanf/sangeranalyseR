@@ -130,7 +130,7 @@ setClass(
 #' @name SangerRead
 setMethod("initialize",
           "SangerRead",
-          function(.Object, ...,
+          function(.Object,
                    inputSource          = "ABIF",
                    readFeature          = "",
                    readFileName         = "",
@@ -318,7 +318,7 @@ setMethod("initialize",
     } else {
         stop(errors)
     }
-    callNextMethod(.Object, ...,
+    callNextMethod(.Object,
                    inputSource         = inputSource,
                    fastaReadName       = fastaReadName,
                    namesConversionCSV  = namesConversionCSV,

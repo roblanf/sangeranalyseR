@@ -5,7 +5,7 @@
 \alias{SangerContig}
 \title{Constructor method of SangerContig Class.}
 \usage{
-\S4method{initialize}{SangerContig}(.Object, ..., inputSource = "ABIF",
+\S4method{initialize}{SangerContig}(.Object, inputSource = "ABIF",
   fastaFileName = NULL, namesConversionCSV = NULL,
   parentDirectory = NULL, contigName = "",
   suffixForwardRegExp = "_F.ab1", suffixReverseRegExp = "_R.ab1",

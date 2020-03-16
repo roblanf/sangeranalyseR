@@ -31,7 +31,7 @@ setOldClass("phylo")
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
 #'
-#' parentDir <- "/Users/chaokuan-hao/Desktop/tmp"
+#' parentDir <- "/Users/chaokuan-hao/Desktop/Allolobophora_chlorotica/"
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerAlignment <- new("SangerAlignment",
@@ -99,7 +99,7 @@ setClass("SangerAlignment",
 #' @name SangerAlignment
 setMethod("initialize",
           "SangerAlignment",
-          function(.Object, ...,
+          function(.Object,
                    inputSource            = "ABIF",
                    fastaFileName          = NULL,
                    namesConversionCSV     = NULL,
@@ -287,7 +287,7 @@ setMethod("initialize",
     } else {
         stop(errors)
     }
-    callNextMethod(.Object, ...,
+    callNextMethod(.Object,
                    inputSource           = inputSource,
                    fastaFileName         = fastaFileName,
                    namesConversionCSV    = namesConversionCSV,

@@ -5,7 +5,7 @@
 \alias{SangerRead}
 \title{Constructor method of SangerRead Class.}
 \usage{
-\S4method{initialize}{SangerRead}(.Object, ..., inputSource = "ABIF",
+\S4method{initialize}{SangerRead}(.Object, inputSource = "ABIF",
   readFeature = "", readFileName = "", fastaReadName = NULL,
   namesConversionCSV = NULL, geneticCode = GENETIC_CODE,
   TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,

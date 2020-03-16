@@ -114,7 +114,7 @@ setClass("SangerContig",
 #' @name SangerContig
 setMethod("initialize",
           "SangerContig",
-          function(.Object, ...,
+          function(.Object,
                    inputSource            = "ABIF",
                    fastaFileName          = NULL,
                    namesConversionCSV     = NULL,
@@ -368,7 +368,7 @@ setMethod("initialize",
     } else {
         stop(errors)
     }
-    callNextMethod(.Object, ...,
+    callNextMethod(.Object,
                    inputSource            = inputSource,
                    fastaFileName          = fastaFileName,
                    namesConversionCSV     = namesConversionCSV,
