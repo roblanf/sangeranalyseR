@@ -3,26 +3,39 @@ sangeranalyseR's tutorial
 
 Why sangeranalyseR
 ==================
-Sanger sequencing was first proposed in 1977 and is still widely used in sequencing high-quality DNA. There are some widely used tools e.g. `Geneious <https://www.geneious.com>`_, `CodonCode Aligner <https://www.codoncode.com/aligner/>`_ and `Phred-Phrap-Consed <http://www.phrap.org/phredphrapconsed.html>`_; however, these are all commercial software which requires expensive license fee. Therefore, we develop sangeranalyseR allowing users to do Sanger sequencing data analysis in pure R environment. sangeranalyseR is an open source software which provides another option for biologists and clinical researchers to do Sanger sequencing data analysis in an easy way.
+sangeranalseR is an R package that provides fast, flexible, and reproducible workflows for assembling your sanger seuqencing data into contigs. 
+
+It adds to a list of already widely-used tools, like `Geneious <https://www.geneious.com>`_, `CodonCode Aligner <https://www.codoncode.com/aligner/>`_ and `Phred-Phrap-Consed <http://www.phrap.org/phredphrapconsed.html>`_;. What makes it different from these tools is that it's free, it's open source, and it's in R. 
 
 |
 
 Main features
 =============
-* **Well-structured S4 classes**: There are three S4 classes in sangeranalyseR which are *SangerRead*, *SangerContig* and *SangerAlignment* representing different levels of Sanger sequencing data analysis and storing user inputs and results in each level. They are the main structure of sangeranalyseR for the following analysis.
-* **Automated data analysis**: The S4 instance creation process is automated with systematic named input files by default parameters. The downstream analysis function is maximally simplified.
-* **Interactive Shiny apps**: Local Shiny apps for *SangerContig* and *SangerAlignment* are provided to visualize the S4 instance. Users are allowed to change trimming and chromatogram parameters inside Shiny apps.
-* **Exporting reads to FASTA**: Aligned results and trimmed reads can be written into **FASTA** file format.
-* **Thorough report**: A comprehensive report can be created with a single command.
-* **Pure R environment**: Users can do Sanger sequencing data analysis in pure R environment.
+* **Pure R environment**: As far as we know, this is the first package that allows end-to-end analysis of Sanger sequencing data in a pure R environment.
+* **Automated data analysis**: Given appropriately-named input files, a lot of the data analysis can be automated. Once you've set up an appropriate workflow for your data, you can run it again in seconds. 
+* **Interactive Shiny apps**: Local Shiny apps mean you visualize the data at many levels, view chromatograms, and adjust things like trimming parameters.
+* **Exporting and importing FASTA files**: sangeranalyseR is primarily designed with loading raw :code:`ab1` files in mind, but it can also load sequencesin **FASTA** format. Aligned results and trimmed reads can be written into **FASTA** file format.
+* **Thorough report**: A single command creates a comprehensive interactive HTML report that provides a huge amount of detail on the analysis. 
+
+What sangeranalyseR **doesn't** do
+==================================
+
+One really important feature that sangeranalyseR doesn't have is the ability to edit bases by hand. R is just not the right language for this. If you need to edit your reads by hand, we suggest doing that in another tool like `Geneious <https://www.geneious.com>`_, then exporting your reads as FASTA files and following the instructions for using sangeranalyseR with FASTA input.
+
 
 |
 
 User support
 ============
-Please go through the :ref:`Documentation` below first. If you have further questions, feedback, new ideas, and bug reports, please sign up the following Google group and post a topic to the (FIX!!!)
+Please go through the :ref:`Documentation` below first. If you have questions about using the package, a bug report, or a feature request, please use the GitHub issue tracker here:
 
-https://groups.google.com/d/forum/iqtree
+https://github.com/roblanf/sangeranalyseR/issues
+
+
+Key contributors
+================
+
+The first (and not very good) version of the package was written by Rob Lanfear (at ANU in Australia), in collaboration with Kirston Barton and Sarah Palmer (then both at the University of Sydney). The second and far far better version of the package was written by Kuan-Hao (Howard) Chao at ANU. (This section was written by Rob Lanfear, lest you think Howard wrote it!)
 
 |
 
