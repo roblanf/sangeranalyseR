@@ -32,8 +32,8 @@ Documentation
 .. toctree::
    :maxdepth: 3
 
-   content/getting_start
-   content/quick_commands
+   content/installation
+   content/quickstart
    content/beginner
    content/advance_user_SangerRead_ab1
    content/advance_user_SangerContig_ab1
