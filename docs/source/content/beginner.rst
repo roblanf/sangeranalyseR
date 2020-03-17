@@ -2,6 +2,7 @@ Beginners Guide
 ===============
 
 If you haven't already, please follow the steps in the :ref:`Installation` page to install and load sangeranalyseR.
+
 |
 
 Step 1: Prepare your input files
@@ -13,7 +14,7 @@ First, users need to prepare a directory and put all their **AB1** files inside 
 
 .. note::
 
-  * All the input files must have **AB1** as its file extension.
+  * All the input files must have **.ab1** as its file extension.
   * The reads that belong to the same contig should have the same contig name.
   * Forward or reverse direction needs to be specified in the filename.
 
@@ -31,11 +32,11 @@ There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`
 
 * :code:`parentDirectory`: It is the directory that contains all the **AB1** files. In this example, it is :code:`./tmp/`
 
-* :code:`suffixForwardRegExp`: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is :code:`_F.ab1`.
+* :code:`suffixForwardRegExp`: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]\*_F.ab1$`.
 
-* :code:`suffixReverseRegExp`: Same as forward read, all the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is :code:`_R.ab1`.
+* :code:`suffixReverseRegExp`: Same as forward read, all the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]\*_R.ab1$`.
 
-All files inside the :code:`parentDirectory` do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside :code:`parentDirectory` and find all files that end with **AB1** and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named. In this example, there are four contigs that will be detected: :code:`ACHLO006-09[LCO1490_t1,HCO2198_t1]`, :code:`ACHLO007-09[LCO1490_t1,HCO2198_t1]`, :code:`RBNII396-13[C_LepFolF,C_LepFolR]` and :code:`RBNII397-13[C_LepFolF,C_LepFolR]`.
+All files inside the :code:`parentDirectory` do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside :code:`parentDirectory` and find all files that end with **AB1** and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named. In this example, there are four contigs that will be detected: :code:`Achl_RBNII397-13`, :code:`Achl_RBNII396-13`, :code:`Achl_ACHLO006-09` and :code:`Achl_ACHLO007-09`.
 
 |
 
@@ -46,8 +47,8 @@ After preparing the input directory, we can now create a *SangerAlignment* S4 in
 .. code-block:: R
 
    sangerAlignment <- SangerAlignment(parentDirectory     = "./tmp/",
-                                      suffixForwardRegExp = "_F.ab1",
-                                      suffixReverseRegExp = "_R.ab1")
+                                      suffixForwardRegExp = "_[0-9]\*_F.ab1$",
+                                      suffixReverseRegExp = "_[0-9]\*_R.ab1$")
 
 One thing to pay attention to is that your current working directory need to be at the same level of :code:`tmp` directory so that you can directly use :code:`./tmp/`. Or otherwise, you need to use the absolute path which might look like :code:`/path/to/your/tmp`.
 
@@ -55,11 +56,11 @@ One thing to pay attention to is that your current working directory need to be 
 
 Step 3: Launching Shiny App
 ---------------------------
-You can launch an interactive Shiny app in your local computer by running :code:`launchAppSA` function.
+You can launch an interactive Shiny app in your local computer by running :code:`launchApp` function.
 
 .. code-block:: R
 
-   launchAppSA(sangerAlignment)
+   launchApp(sangerAlignment)
 
 .. _SangerAlignment_shiny_app:
 .. figure::  ../image/SangerAlignment_shiny_app.png
@@ -77,7 +78,7 @@ The following function can write the *SangerAlignment* S4 instance to a FASTA fi
 
 .. code-block:: R
 
-   writeFastaSA(sangerAlignment)
+   writeFasta(sangerAlignment)
 
 |
 
@@ -87,7 +88,7 @@ Last but not least, it is important to store all results in a report for future 
 
 .. code-block:: R
 
-   generateReportSA(sangerAlignment)
+   generateReport(sangerAlignment)
 
 .. _SangerAlignment_alignment_result:
 .. figure::  ../image/SangerAlignment_alignment_result.png
