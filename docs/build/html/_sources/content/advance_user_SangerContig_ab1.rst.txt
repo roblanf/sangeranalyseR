@@ -118,11 +118,11 @@ In the previous :ref:`Creating *SangerContig* instance from **AB1**` part, the c
 Launching *SangerContig* Shiny app
 ----------------------------------
 
-We create an interactive local Shiny app for users to go into each *SangerRead* in *SangerContig* instance. Users only need to run one function, :code:`launchAppSC`, with previously created instance as input and the *SangerContig* Shiny app will pop up. Here, we will go through pages in the two levels, *SangerRead* and *SangerContig* pages.
+We create an interactive local Shiny app for users to go into each *SangerRead* in *SangerContig* instance. Users only need to run one function, :code:`launchApp`, with previously created instance as input and the *SangerContig* Shiny app will pop up. Here, we will go through pages in the two levels, *SangerRead* and *SangerContig* pages.
 
 .. code-block:: R
 
-  launchAppSC(newSangerContig)
+  launchApp(newSangerContig)
 
 
 *SangerContig* page (SC app)
@@ -282,15 +282,15 @@ Users can write the *SangerContig* instance to **FASTA** files. There are four o
 * :code:`contig`: Writing the contig to a single **FASTA** file.
 * :code:`all`: Writing reads, reads alignment, and the contig into three different files.
 
-Below is the one-line function that users need to run. This function mainly depends on :code:`writeXStringSet` function in `Biostrings <https://bioconductor.org/packages/release/bioc/html/Biostrings.html>`_ R package. Users can set the compression level through :code:`writeFastaSA` function.
+Below is the one-line function that users need to run. This function mainly depends on :code:`writeXStringSet` function in `Biostrings <https://bioconductor.org/packages/release/bioc/html/Biostrings.html>`_ R package. Users can set the compression level through :code:`writeFasta` function.
 
 .. code-block:: R
 
-   writeFastaSC(newSangerContig,
-                outputDir         = tempdir(),
-                compress          = FALSE,
-                compression_level = NA,
-                selection         = "all")
+   writeFasta(newSangerContig,
+              outputDir         = tempdir(),
+              compress          = FALSE,
+              compression_level = NA,
+              selection         = "all")
 
 Users can download the output FASTA file of this example through the following three links:
 
@@ -312,8 +312,8 @@ One thing to pay attention to is that if users have many reads, it will take qui
 
 .. code-block:: R
 
-   generateReportSC(newSangerContig,
-                    outputDir           = tempdir(),
-                    includeSangerRead   = TRUE)
+   generateReport(newSangerContig,
+                  outputDir           = tempdir(),
+                  includeSangerRead   = TRUE)
 
 Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.

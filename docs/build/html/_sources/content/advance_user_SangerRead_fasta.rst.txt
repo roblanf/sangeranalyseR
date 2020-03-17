@@ -51,10 +51,10 @@ Users can write the *SangerRead* instance to **FASTA** files. Because the **FAST
 
 .. code-block:: R
 
-   writeFastaSR(sangerReadFfa,
-                outputDir         = tempdir(),
-                compress          = FALSE,
-                compression_level = NA)
+   writeFasta(sangerReadFfa,
+              outputDir         = tempdir(),
+              compress          = FALSE,
+              compression_level = NA)
 
 Users can download the `output FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerRead/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa>`_ of this example.
 
@@ -67,7 +67,7 @@ Last but not least, users can save *SangerRead* instance into a report after the
 
 .. code-block:: R
 
-   generateReportSR(sangerReadFfa,
-                    outputDir           = tempdir())
+   generateReport(sangerReadFfa,
+                  outputDir = tempdir())
 
 `SangerRead_Report_fasta.html <https://howardchao.github.io/sangeranalyseR_report/SangerRead/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_fasta.html>`_ is the generated *SangerRead* report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*' and '*Amino Acids Sequence*' sections inside this report.

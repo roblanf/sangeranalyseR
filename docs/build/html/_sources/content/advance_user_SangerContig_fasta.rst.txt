@@ -95,15 +95,15 @@ Users can write the *SangerContig* instance to **FASTA** files. There are four o
 * :code:`contig`: Writing the contig to a single **FASTA** file.
 * :code:`all`: Executing the three options mentioned above and writing *SangerContig* instance into three different files.
 
-Below is the one-line function that users need to run. This function mainly depends on :code:`writeXStringSet` function in `Biostrings <https://bioconductor.org/packages/release/bioc/html/Biostrings.html>`_ R package. Users can set the compression level through :code:`writeFastaSA` function.
+Below is the one-line function that users need to run. This function mainly depends on :code:`writeXStringSet` function in `Biostrings <https://bioconductor.org/packages/release/bioc/html/Biostrings.html>`_ R package. Users can set the compression level through :code:`writeFasta` function.
 
 .. code-block:: R
 
-   writeFastaSC(sangerContigFa,
-                outputDir         = tempdir(),
-                compress          = FALSE,
-                compression_level = NA,
-                selection         = "all")
+   writeFasta(sangerContigFa,
+              outputDir         = tempdir(),
+              compress          = FALSE,
+              compression_level = NA,
+              selection         = "all")
 
 
 Users can download the output **FASTA** file of this example through the following three links:
@@ -125,8 +125,8 @@ One thing to pay attention to is that if users have many reads, it would take qu
 
 .. code-block:: R
 
-   generateReportSC(sangerContigFa,
-                    outputDir           = tempdir(),
-                    includeSangerRead   = TRUE)
+   generateReport(sangerContigFa,
+                  outputDir           = tempdir(),
+                  includeSangerRead   = TRUE)
 
 Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerContig/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.

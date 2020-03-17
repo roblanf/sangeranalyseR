@@ -8,11 +8,10 @@ System requirements
 
 |
 
-Installation
-------------
 
 Install the development version
-+++++++++++++++++++++++++++++++
+-------------------------------
+
 If you haven't installed the :code:`devtools` package before, please install it first:
 
 .. code-block:: R
@@ -31,7 +30,7 @@ Then run the following code in your R console to install the newest version from
 
 
 Install from Bioconductor
-+++++++++++++++++++++++++
+-------------------------
 NB: This is currently a placeholder - the package isn't on Bioconductor yet...
 After uploading to bioconductor !!!!
 

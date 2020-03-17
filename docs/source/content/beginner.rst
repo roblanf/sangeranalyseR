@@ -1,4 +1,3 @@
-docs/source/content/beginner.rst
 Beginners Guide
 ===============
 
@@ -6,8 +5,8 @@ If you haven't already, please follow the steps in the :ref:`Installation` page 
 
 |
 
-Step 1: Prepare your input files
--------------------------------
+Step 1: Prepare your **AB1** input files
+----------------------------------------
 
 sangeranalyseR takes **AB1** files as input and constructs contigs for those with the same contig name. Then, all the contigs will be aligned and a phylogenetic tree will be generated. We first explain how users should organize their files before running sangeranalyseR.
 
@@ -33,9 +32,9 @@ There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`
 
 * :code:`parentDirectory`: It is the directory that contains all the **AB1** files. In this example, it is :code:`./tmp/`
 
-* :code:`suffixForwardRegExp`: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]\*_F.ab1$`.
+* :code:`suffixForwardRegExp`: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]*_F.ab1$`.
 
-* :code:`suffixReverseRegExp`: Same as forward read, all the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]\*_R.ab1$`.
+* :code:`suffixReverseRegExp`: Same as forward read, all the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]*_R.ab1$`.
 
 All files inside the :code:`parentDirectory` do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside :code:`parentDirectory` and find all files that end with **AB1** and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named. In this example, there are four contigs that will be detected: :code:`Achl_RBNII397-13`, :code:`Achl_RBNII396-13`, :code:`Achl_ACHLO006-09` and :code:`Achl_ACHLO007-09`.
 
@@ -48,8 +47,8 @@ After preparing the input directory, we can now create a *SangerAlignment* S4 in
 .. code-block:: R
 
    sangerAlignment <- SangerAlignment(parentDirectory     = "./tmp/",
-                                      suffixForwardRegExp = "_[0-9]\*_F.ab1$",
-                                      suffixReverseRegExp = "_[0-9]\*_R.ab1$")
+                                      suffixForwardRegExp = "_[0-9]*_F.ab1$",
+                                      suffixReverseRegExp = "_[0-9]*_R.ab1$")
 
 One thing to pay attention to is that your current working directory need to be at the same level of :code:`tmp` directory so that you can directly use :code:`./tmp/`. Or otherwise, you need to use the absolute path which might look like :code:`/path/to/your/tmp`.
 
@@ -110,7 +109,7 @@ Last but not least, it is important to store all results in a report for future 
 
 What's next ?
 -------------
-Congratulation, you have finished the :ref:`Beginner Guide`. There are three levels of Sanger sequencing analysis which are *SangerRead*, *SangerContig* and *SangerAlignment*. Users can start the data analysis in each level now. The main input file format to create *SangerRead* instance is **AB1**; however, we also allow users to run sangeranalyseR with **FASTA** file as input with some limitations.
+Congratulation, you have finished the :ref:`Beginners Guide`. There are three levels of Sanger sequencing analysis which are *SangerRead*, *SangerContig* and *SangerAlignment*. Users can start the data analysis in each level now. The main input file format to create *SangerRead* instance is **AB1**; however, we also allow users to run sangeranalyseR with **FASTA** file as input with some limitations.
 
 If you want to start the analysis from **AB1** files, please choose the analysis level and read the following three links.
 

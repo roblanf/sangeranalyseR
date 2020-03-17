@@ -36,7 +36,7 @@ There are three parameters, :code:`parentDirectory`, :code:`suffixForwardRegExp`
 
 
 
-For basic input files preparation example, please go to :ref:`Beginner Guide`. Here, we have another more complicated example.
+For basic input files preparation example, please go to :ref:`Beginners Guide`. Here, we have another more complicated example.
 
 
 .. _SangerAlignment_file_structure_complex:
@@ -62,7 +62,7 @@ For basic input files preparation example, please go to :ref:`Beginner Guide`. H
 
 Creating *SangerAlignment* instance from **AB1**
 ------------------------------------------------
-After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters. For a simpler command, please go to :ref:`Quick Commands`.
+After preparing the input directory, we can create the *SangerAlignment* S4 instance by running :code:`SangerAlignment` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters. For a simpler command, please go to :ref:`Quick Start Guide`.
 
 .. code-block:: R
 

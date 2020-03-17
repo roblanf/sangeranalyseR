@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Getting Start" href="content/getting_start.html" /> 
+    <link rel="next" title="Installation" href="content/installation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,9 +80,9 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="content/getting_start.html">Getting Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="content/quick_commands.html">Quick Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="content/beginner.html">Beginner Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/beginner.html">Beginners Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/advance_user_SangerRead_ab1.html">Advanced User Guide - <em>SangerRead</em> (<strong>AB1</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/advance_user_SangerContig_ab1.html">Advanced User Guide - <em>SangerContig</em> (<strong>AB1</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/advance_user_SangerAlignment_ab1.html">Advanced User Guide - <em>SangerAlignment</em> (<strong>AB1</strong>)</a></li>
@@ -161,7 +161,8 @@
 <h1>sangeranalyseR's tutorial<a class="headerlink" href="#sangeranalyser-s-tutorial" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="why-sangeranalyser">
 <h2>Why sangeranalyseR<a class="headerlink" href="#why-sangeranalyser" title="Permalink to this headline">¶</a></h2>
-<p>Sanger sequencing was first proposed in 1977 and is still widely used in sequencing high-quality DNA. There are some widely used tools e.g. <a class="reference external" href="https://www.geneious.com">Geneious</a>, <a class="reference external" href="https://www.codoncode.com/aligner/">CodonCode Aligner</a> and <a class="reference external" href="http://www.phrap.org/phredphrapconsed.html">Phred-Phrap-Consed</a>; however, these are all commercial software which requires expensive license fee. Therefore, we develop sangeranalyseR allowing users to do Sanger sequencing data analysis in pure R environment. sangeranalyseR is an open source software which provides another option for biologists and clinical researchers to do Sanger sequencing data analysis in an easy way.</p>
+<p>sangeranalseR is an R package that provides fast, flexible, and reproducible workflows for assembling your sanger seuqencing data into contigs.</p>
+<p>It adds to a list of already widely-used tools, like <a class="reference external" href="https://www.geneious.com">Geneious</a>, <a class="reference external" href="https://www.codoncode.com/aligner/">CodonCode Aligner</a> and <a class="reference external" href="http://www.phrap.org/phredphrapconsed.html">Phred-Phrap-Consed</a>;. What makes it different from these tools is that it's free, it's open source, and it's in R.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -169,21 +170,28 @@
 <div class="section" id="main-features">
 <h2>Main features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><strong>Well-structured S4 classes</strong>: There are three S4 classes in sangeranalyseR which are <em>SangerRead</em>, <em>SangerContig</em> and <em>SangerAlignment</em> representing different levels of Sanger sequencing data analysis and storing user inputs and results in each level. They are the main structure of sangeranalyseR for the following analysis.</p></li>
-<li><p><strong>Automated data analysis</strong>: The S4 instance creation process is automated with systematic named input files by default parameters. The downstream analysis function is maximally simplified.</p></li>
-<li><p><strong>Interactive Shiny apps</strong>: Local Shiny apps for <em>SangerContig</em> and <em>SangerAlignment</em> are provided to visualize the S4 instance. Users are allowed to change trimming and chromatogram parameters inside Shiny apps.</p></li>
-<li><p><strong>Exporting reads to FASTA</strong>: Aligned results and trimmed reads can be written into <strong>FASTA</strong> file format.</p></li>
-<li><p><strong>Thorough report</strong>: A comprehensive report can be created with a single command.</p></li>
-<li><p><strong>Pure R environment</strong>: Users can do Sanger sequencing data analysis in pure R environment.</p></li>
+<li><p><strong>Pure R environment</strong>: As far as we know, this is the first package that allows end-to-end analysis of Sanger sequencing data in a pure R environment.</p></li>
+<li><p><strong>Automated data analysis</strong>: Given appropriately-named input files, a lot of the data analysis can be automated. Once you've set up an appropriate workflow for your data, you can run it again in seconds.</p></li>
+<li><p><strong>Interactive Shiny apps</strong>: Local Shiny apps mean you visualize the data at many levels, view chromatograms, and adjust things like trimming parameters.</p></li>
+<li><p><strong>Exporting and importing FASTA files</strong>: sangeranalyseR is primarily designed with loading raw <code class="code docutils literal notranslate"><span class="pre">ab1</span></code> files in mind, but it can also load sequencesin <strong>FASTA</strong> format. Aligned results and trimmed reads can be written into <strong>FASTA</strong> file format.</p></li>
+<li><p><strong>Thorough report</strong>: A single command creates a comprehensive interactive HTML report that provides a huge amount of detail on the analysis.</p></li>
 </ul>
+</div>
+<div class="section" id="what-sangeranalyser-doesn-t-do">
+<h2>What sangeranalyseR <strong>doesn't</strong> do<a class="headerlink" href="#what-sangeranalyser-doesn-t-do" title="Permalink to this headline">¶</a></h2>
+<p>One really important feature that sangeranalyseR doesn't have is the ability to edit bases by hand. R is just not the right language for this. If you need to edit your reads by hand, we suggest doing that in another tool like <a class="reference external" href="https://www.geneious.com">Geneious</a>, then exporting your reads as FASTA files and following the instructions for using sangeranalyseR with FASTA input.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="user-support">
 <h2>User support<a class="headerlink" href="#user-support" title="Permalink to this headline">¶</a></h2>
-<p>Please go through the <a class="reference internal" href="#documentation"><span class="std std-ref">Documentation</span></a> below first. If you have further questions, feedback, new ideas, and bug reports, please sign up the following Google group and post a topic to the (FIX!!!)</p>
-<p><a class="reference external" href="https://groups.google.com/d/forum/iqtree">https://groups.google.com/d/forum/iqtree</a></p>
+<p>Please go through the <a class="reference internal" href="#documentation"><span class="std std-ref">Documentation</span></a> below first. If you have questions about using the package, a bug report, or a feature request, please use the GitHub issue tracker here:</p>
+<p><a class="reference external" href="https://github.com/roblanf/sangeranalyseR/issues">https://github.com/roblanf/sangeranalyseR/issues</a></p>
+</div>
+<div class="section" id="key-contributors">
+<h2>Key contributors<a class="headerlink" href="#key-contributors" title="Permalink to this headline">¶</a></h2>
+<p>The first (and not very good) version of the package was written by Rob Lanfear (at ANU in Australia), in collaboration with Kirston Barton and Sarah Palmer (then both at the University of Sydney). The second and far far better version of the package was written by Kuan-Hao (Howard) Chao at ANU. (This section was written by Rob Lanfear, lest you think Howard wrote it!)</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -192,19 +200,24 @@
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="content/getting_start.html">Getting Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="content/getting_start.html#system-prerequisite">System prerequisite</a></li>
-<li class="toctree-l2"><a class="reference internal" href="content/getting_start.html#installation">Installation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="content/getting_start.html#install-the-development-version">Install the development version</a></li>
-<li class="toctree-l3"><a class="reference internal" href="content/getting_start.html#install-from-bioconductor">Install from Bioconductor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content/installation.html#system-requirements">System requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/installation.html#install-the-development-version">Install the development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/installation.html#install-from-bioconductor">Install from Bioconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/installation.html#where-to-go-from-here">Where to go from here ?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="content/getting_start.html#where-to-go-from-here">Where to go from here ?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/quickstart.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content/quickstart.html#super-quick-start-3-lines-of-code">Super-Quick Start (3 lines of code)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/quickstart.html#step-1-prepare-your-input-files">Step 1: Prepare your input files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/quickstart.html#step-2-load-and-analyse-your-data">Step 2: Load and analyse your data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/quickstart.html#step-3-optional-explore-your-data">Step 3 (optional): Explore your data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/quickstart.html#step-4-output-your-aligned-contigs">Step 4: Output your aligned contigs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content/quickstart.html#step-5-optional-generate-an-interactive-report">Step 5 (optional): Generate an interactive report</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="content/quick_commands.html">Quick Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="content/beginner.html">Beginner Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="content/beginner.html#step-1-input-files-preparation">Step 1: Input files preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/beginner.html">Beginners Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content/beginner.html#step-1-prepare-your-ab1-input-files">Step 1: Prepare your <strong>AB1</strong> input files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="content/beginner.html#step-2-s4-instance-creation">Step 2: S4 instance creation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="content/beginner.html#step-3-launching-shiny-app">Step 3: Launching Shiny App</a></li>
 <li class="toctree-l2"><a class="reference internal" href="content/beginner.html#step-4-writing-fasta-file">Step 4: Writing FASTA file</a></li>
@@ -289,7 +302,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="content/getting_start.html" class="btn btn-neutral float-right" title="Getting Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="content/installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>

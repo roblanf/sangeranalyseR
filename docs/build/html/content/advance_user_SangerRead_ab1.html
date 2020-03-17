@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Advanced User Guide - SangerContig (AB1)" href="advance_user_SangerContig_ab1.html" />
-    <link rel="prev" title="Beginner Guide" href="beginner.html" /> 
+    <link rel="prev" title="Beginners Guide" href="beginner.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -81,9 +81,9 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick_commands.html">Quick Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="beginner.html">Beginner Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="beginner.html">Beginners Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced User Guide - <em>SangerRead</em> (<strong>AB1</strong>)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#preparing-sangerread-ab1-input">Preparing <em>SangerRead</em> <strong>AB1</strong> input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#creating-sangerread-instance-from-ab1">Creating <em>SangerRead</em> instance from <strong>AB1</strong></a></li>
@@ -256,10 +256,10 @@
 <div class="section" id="writing-sangerread-fasta-files-ab1">
 <h2>Writing <em>SangerRead</em> FASTA files <sub>(AB1)</sub><a class="headerlink" href="#writing-sangerread-fasta-files-ab1" title="Permalink to this headline">¶</a></h2>
 <p>Users can write the <em>SangerRead</em> instance to <strong>FASTA</strong> files. The trimmed read sequence will be written into a <strong>FASTA</strong> file. Below is the one-line function that users need to run. This function mainly depends on <code class="code docutils literal notranslate"><span class="pre">writeXStringSet</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">Biostrings</a> R package. Users can set the compression level through <code class="code docutils literal notranslate"><span class="pre">writeFastaSA</span></code> function.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFastaSR</span><span class="p">(</span><span class="n">newSangerRead</span><span class="p">,</span>
-             <span class="n">outputDir</span>         <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
-             <span class="n">compress</span>          <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-             <span class="n">compression_level</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">)</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">newSangerRead</span><span class="p">,</span>
+           <span class="n">outputDir</span>         <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
+           <span class="n">compress</span>          <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
+           <span class="n">compression_level</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Users can download the <a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/SangerRead/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa">output FASTA file</a> of this example.</p>
@@ -270,8 +270,8 @@
 <div class="section" id="generating-sangerread-report-ab1">
 <h2>Generating <em>SangerRead</em> report <sub>(AB1)</sub><a class="headerlink" href="#generating-sangerread-report-ab1" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least, users can save <em>SangerRead</em> instance into a report after the analysis. The report will be generated in <strong>HTML</strong> by knitting <strong>Rmd</strong> files. The results in the report are static.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSR</span><span class="p">(</span><span class="n">newSangerRead</span><span class="p">,</span>
-                 <span class="n">outputDir</span> <span class="o">=</span> <span class="nf">tempdir</span><span class="p">())</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">newSangerRead</span><span class="p">,</span>
+               <span class="n">outputDir</span> <span class="o">=</span> <span class="nf">tempdir</span><span class="p">())</span>
 </pre></div>
 </div>
 <p><a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/SangerRead/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_ab1.html">SangerRead_Report_ab1.html</a> is the generated <em>SangerRead</em> report html of this example. Users can access to '<em>Basic Information</em>', '<em>DNA Sequence</em>', '<em>Amino Acids Sequence</em>', '<em>Quality Trimming</em>' and '<em>Chromatogram</em>' sections inside this report.</p>
@@ -289,7 +289,7 @@
         <a href="advance_user_SangerContig_ab1.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerContig (AB1)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="beginner.html" class="btn btn-neutral float-left" title="Beginner Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="beginner.html" class="btn btn-neutral float-left" title="Beginners Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

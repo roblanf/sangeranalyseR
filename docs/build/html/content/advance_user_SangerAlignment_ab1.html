@@ -81,9 +81,9 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick_commands.html">Quick Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="beginner.html">Beginner Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="beginner.html">Beginners Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerRead_ab1.html">Advanced User Guide - <em>SangerRead</em> (<strong>AB1</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerContig_ab1.html">Advanced User Guide - <em>SangerContig</em> (<strong>AB1</strong>)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced User Guide - <em>SangerAlignment</em> (<strong>AB1</strong>)</a><ul>
@@ -201,7 +201,7 @@
 <li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: The value of this parameter is a regular expression that matches all filenames in reverse direction. <code class="code docutils literal notranslate"><span class="pre">grepl</span></code> function in R is used to select reverse reads from all <strong>AB1</strong> files.</p></li>
 </ul>
 </div>
-<p>For basic input files preparation example, please go to <a class="reference internal" href="beginner.html#beginner-guide"><span class="std std-ref">Beginner Guide</span></a>. Here, we have another more complicated example.</p>
+<p>For basic input files preparation example, please go to <a class="reference internal" href="beginner.html#beginners-guide"><span class="std std-ref">Beginners Guide</span></a>. Here, we have another more complicated example.</p>
 <div class="figure align-center" id="id2">
 <span id="sangeralignment-file-structure-complex"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure_complex.png"><img alt="../_images/SangerAlignment_file_structure_complex.png" src="../_images/SangerAlignment_file_structure_complex.png" style="width: 435.4px; height: 826.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 2. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
@@ -218,7 +218,7 @@
 </div>
 <div class="section" id="creating-sangeralignment-instance-from-ab1">
 <h2>Creating <em>SangerAlignment</em> instance from <strong>AB1</strong><a class="headerlink" href="#creating-sangeralignment-instance-from-ab1" title="Permalink to this headline">¶</a></h2>
-<p>After preparing the input directory, we can create the <em>SangerAlignment</em> S4 instance by running <code class="code docutils literal notranslate"><span class="pre">SangerAlignment</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal notranslate"><span class="pre">new</span></code> method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters. For a simpler command, please go to <a class="reference internal" href="quick_commands.html#quick-commands"><span class="std std-ref">Quick Commands</span></a>.</p>
+<p>After preparing the input directory, we can create the <em>SangerAlignment</em> S4 instance by running <code class="code docutils literal notranslate"><span class="pre">SangerAlignment</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal notranslate"><span class="pre">new</span></code> method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters. For a simpler command, please go to <a class="reference internal" href="quickstart.html#quick-start-guide"><span class="std std-ref">Quick Start Guide</span></a>.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">inputSource</span>          <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
                                    <span class="n">parentDirectory</span>      <span class="o">=</span> <span class="s">&quot;./tmp/&quot;</span><span class="p">,</span>
                                    <span class="n">suffixForwardRegExp</span>  <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
@@ -266,7 +266,7 @@
 <div class="section" id="launching-sangeralignment-shiny-app">
 <h2>Launching <em>SangerAlignment</em> Shiny app<a class="headerlink" href="#launching-sangeralignment-shiny-app" title="Permalink to this headline">¶</a></h2>
 <p>We create an interactive local Shiny app for users to go into each <em>SangerRead</em> and <em>SangerContig</em> in <em>SangerAlignment</em> instance. Users only need to run one function with previously created instance as input and the <em>SangerAlignment</em> Shiny app will pop up. Here, we will go through pages in the three levels.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchAppSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchApp</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="sangeralignment-page-sa-app">
@@ -370,12 +370,12 @@
 <li><p><code class="code docutils literal notranslate"><span class="pre">all_reads</span></code>: Writing all reads to a single <strong>FASTA</strong> file.</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">all</span></code>: Writing contigs, contigs alignment, and all reads into three different files.</p></li>
 </ul>
-<p>Below is the one-line function that users need to run. This function mainly depends on <code class="code docutils literal notranslate"><span class="pre">writeXStringSet</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">Biostrings</a> R package. Users can set the compression level through <code class="code docutils literal notranslate"><span class="pre">writeFastaSA</span></code> function.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFastaSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">,</span>
-             <span class="n">outputDir</span>         <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
-             <span class="n">compress</span>          <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-             <span class="n">compression_level</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">,</span>
-             <span class="n">selection</span>         <span class="o">=</span> <span class="s">&quot;all&quot;</span><span class="p">)</span>
+<p>Below is the one-line function that users need to run. This function mainly depends on <code class="code docutils literal notranslate"><span class="pre">writeXStringSet</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">Biostrings</a> R package. Users can set the compression level through <code class="code docutils literal notranslate"><span class="pre">writeFasta</span></code> function.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">,</span>
+           <span class="n">outputDir</span>         <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
+           <span class="n">compress</span>          <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
+           <span class="n">compression_level</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">,</span>
+           <span class="n">selection</span>         <span class="o">=</span> <span class="s">&quot;all&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Users can download the output FASTA file of this example through the following three links:</p>
@@ -396,10 +396,10 @@
 <li><p><code class="code docutils literal notranslate"><span class="pre">includeSangerRead</span></code>: If <code class="code docutils literal notranslate"><span class="pre">includeSangerContig</span></code> is <code class="code docutils literal notranslate"><span class="pre">TRUE</span></code>, then users can set this value to decide whether they want to include <em>SangerRead</em> reports in each <em>SangerContig</em>.</p></li>
 </ul>
 <p>One thing to pay attention to is that if users have many reads, it will take quite a long time to write out all reports. If users only want to generate the contigs alignment, remember to set <code class="code docutils literal notranslate"><span class="pre">includeSangerContig</span></code> and <code class="code docutils literal notranslate"><span class="pre">includeSangerRead</span></code> to <code class="code docutils literal notranslate"><span class="pre">FALSE</span></code> in order to save time.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReportSA</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">,</span>
-                 <span class="n">outputDir</span>           <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
-                 <span class="n">includeSangerContig</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
-                 <span class="n">includeSangerRead</span>   <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">,</span>
+               <span class="n">outputDir</span>           <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
+               <span class="n">includeSangerContig</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+               <span class="n">includeSangerRead</span>   <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Users can access to '<em>Basic Information</em>', '<em>Contigs Consensus</em>', '<em>Contigs Alignment</em>' and '<em>Contigs Tree</em>' sections inside the generated <a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/AB1/SangerAlignment/SangerAlignment_Report.html">SangerContig html report of this example</a>. Furthermore, users can also navigate through html reports of all forward and reverse <em>SangerRead</em> in this <em>SangerContig</em> report.</p>
