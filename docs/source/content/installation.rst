@@ -1,10 +1,10 @@
-Getting Start
-=============
+Installation
+===============
 
-System prerequisite
+System requirements
 -------------------
 * R >= 3.6.0 (current)
-* `Rstudio (recommend) <https://rstudio.com>`_
+* `Rstudio (recommended) <https://rstudio.com>`_
 
 |
 
@@ -13,26 +13,26 @@ Installation
 
 Install the development version
 +++++++++++++++++++++++++++++++
-If you haven't install :code:`devtools` package before, please install it first.
+If you haven't installed the :code:`devtools` package before, please install it first:
 
 .. code-block:: R
 
    install.packages("devtools")
 
 
-Run the following code in your R console to install the newest version from Github.
+Then run the following code in your R console to install the newest version from Github.
 
 
 .. code-block:: R
 
    library(devtools)
-   install_github("roblanf/sangeranalyseR")
+   install_github("roblanf/sangeranalyseR", ref = "develop")
    library(sangeranalyseR)
-
 
 
 Install from Bioconductor
 +++++++++++++++++++++++++
+NB: This is currently a placeholder - the package isn't on Bioconductor yet...
 After uploading to bioconductor !!!!
 
 .. code-block:: R
@@ -56,4 +56,5 @@ Now, you are ready to go !
 
 Where to go from here ?
 -----------------------
-Please continue to the :ref:`Beginner Guide` for further usages.
+Please continue to the :ref:`Quick Start Guide` or the more detailed :ref:`Beginners Guide`.
+
