@@ -234,6 +234,7 @@ setGeneric("generateReportSC", function(object, outputDir = NULL,
 #' @param outputDir outputDir
 #' @param includeSangerContig includeSangerContig
 #' @param includeSangerRead includeSangerRead
+#' @param ... ...
 #'
 #' @exportMethod generateReportSA
 #' @examples
@@ -242,6 +243,6 @@ setGeneric("generateReportSC", function(object, outputDir = NULL,
 #' generateReportSA(sangerAlignment)}
 setGeneric("generateReportSA", function(object, outputDir = NULL,
                                         includeSangerContig = TRUE,
-                                        includeSangerRead = TRUE) {
+                                        includeSangerRead = TRUE, ...) {
     standardGeneric("generateReportSA")
 })

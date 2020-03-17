@@ -6,7 +6,7 @@
 \alias{generateReportSA,SangerAlignment-method}
 \title{generateReportSA}
 \usage{
-\S4method{generateReportSA}{SangerAlignment}(object, outputDir = NULL,
+\S4method{generateReportSA}{SangerAlignment}(object, outputDir,
   includeSangerContig = TRUE, includeSangerRead = TRUE)
 }
 \arguments{

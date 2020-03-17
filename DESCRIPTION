@@ -55,6 +55,7 @@ Collate:
     'MethodSangerAlignment.R'
     'MethodSangerContig.R'
     'MethodSangerRead.R'
+    'MethodShared.R'
     'MethodsQualityReport.R'
     'ShinySangerAlignmentServer.R'
     'ShinySangerAlignmentUI.R'

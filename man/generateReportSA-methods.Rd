@@ -5,7 +5,7 @@
 \title{Method generateReportSA}
 \usage{
 generateReportSA(object, outputDir = NULL, includeSangerContig = TRUE,
-  includeSangerRead = TRUE)
+  includeSangerRead = TRUE, ...)
 }
 \arguments{
 \item{object}{object}
@@ -15,6 +15,8 @@ generateReportSA(object, outputDir = NULL, includeSangerContig = TRUE,
 \item{includeSangerContig}{includeSangerContig}
 
 \item{includeSangerRead}{includeSangerRead}
+
+\item{...}{...}
 }
 \description{
 Method generateReportSA

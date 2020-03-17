@@ -143,7 +143,8 @@ setMethod("initialize",
     errors <- checkInputSource (inputSource, errors)
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking for contigSeq parameter
-    ### ------------------------------------------------------------------------    errors <- checkMinReadsNum(minReadsNum, errors)
+    ### ------------------------------------------------------------------------
+    errors <- checkMinReadsNum(minReadsNum, errors)
     errors <- checkMinReadLength(minReadLength, errors)
     errors <- checkMinFractionCall(minFractionCall, errors)
     errors <- checkMaxFractionLost(maxFractionLost, errors)
