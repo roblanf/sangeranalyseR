@@ -1,12 +1,12 @@
-Beginner Guide
-==============
+Beginners Guide
+===============
 
-First, please install sangeranalyseR and load it into your R console. If you haven't finished the above steps, please read :ref:`Getting Start` page first.
-
+If you haven't already, please follow the steps in the :ref:`Installation` page to install and load sangeranalyseR.
 |
 
-Step 1: Input files preparation
+Step 1: Prepare your input files
 -------------------------------
+
 sangeranalyseR takes **AB1** files as input and constructs contigs for those with the same contig name. Then, all the contigs will be aligned and a phylogenetic tree will be generated. We first explain how users should organize their files before running sangeranalyseR.
 
 First, users need to prepare a directory and put all their **AB1** files inside it. The files should follow the regulation in the note below:
@@ -46,8 +46,8 @@ After preparing the input directory, we can now create a *SangerAlignment* S4 in
 .. code-block:: R
 
    sangerAlignment <- SangerAlignment(parentDirectory     = "./tmp/",
-                                      suffixForwardRegExp = "_[0-9]\*_F.ab1",
-                                      suffixReverseRegExp = "_[0-9]\*_R.ab1")
+                                      suffixForwardRegExp = "_F.ab1",
+                                      suffixReverseRegExp = "_R.ab1")
 
 One thing to pay attention to is that your current working directory need to be at the same level of :code:`tmp` directory so that you can directly use :code:`./tmp/`. Or otherwise, you need to use the absolute path which might look like :code:`/path/to/your/tmp`.
 
