@@ -13,10 +13,10 @@ The most minimal example gets the job done in three lines of code. More details 
 .. code-block:: R
 
    my_aligned_contigs <- SangerAlignment(parentDirectory     = "./my_data/",
-                                         suffixForwardRegExp = "_F.ab1",
-                                         suffixReverseRegExp = "_R.ab1")
+                                         suffixForwardRegExp = "_[0-9]\*_F.ab1$",
+                                         suffixReverseRegExp = "_[0-9]\*_F.ab1$")
 
-   writeFastaSA(my_aligned_contigs)
+   writeFasta(my_aligned_contigs)
 
    generateReport(my_aligned_contigs)
 
@@ -26,7 +26,7 @@ Step 1: Prepare your input files
 
 Put all your :code:`AB1` files in a directory :code:`./my_data/`. The directory can be called anything.
 
-Name your files according to the convention :code:`contig_direction.ab1`. E.g. :code:`Drosophila_COI_F.ab1` and :code:`Drosophila_COI_R.ab1` describes a forward and reverse read to assemble into one contig. You can have as many files and contigs as you like in one directory.
+Name your files according to the convention :code:`contig_index_direction.ab1`. E.g. :code:`Drosophila_COI_1_F.ab1` and :code:`Drosophila_COI_2_R.ab1` describes a forward and reverse read to assemble into one contig. You can have as many files and contigs as you like in one directory.
 
 Step 2: Load and analyse your data
 ++++++++++++++++++++++++++++++++++
@@ -34,8 +34,8 @@ Step 2: Load and analyse your data
 .. code-block:: R
 
    my_aligned_contigs <- SangerAlignment(parentDirectory     = "./my_data/",
-                                         suffixForwardRegExp = "_F.ab1",
-                                         suffixReverseRegExp = "_R.ab1")
+                                         suffixForwardRegExp = "_[0-9]\*_F.ab1$",
+                                         suffixReverseRegExp = "_[0-9]\*_F.ab1$")
 
 
 This command loads, trims, builds contigs, and aligns contigs. All of these are done with sensible default values, which can be changed. I
@@ -46,7 +46,7 @@ Step 3 (optional): Explore your data
 
 .. code-block:: R
 
-   launchAppSA(my_aligned_contigs)
+   launchApp(my_aligned_contigs)
 
 This launches an interactive Shiny app where you can view your analysis, change the default settings, etc.
 
@@ -56,7 +56,7 @@ Step 4: Output your aligned contigs
 
 .. code-block:: R
 
-   writeFastaSA(my_aligned_contigs)
+   writeFasta(my_aligned_contigs)
 
 This will save your aligned contigs as a FASTA file.
 
