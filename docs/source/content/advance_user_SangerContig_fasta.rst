@@ -71,15 +71,15 @@ After preparing the input directory, we can create the *SangerContig* S4 instanc
 .. code-block:: R
 
    sangerContigFa <- SangerContig(inputSource           = "FASTA",
-                                  fastaFileName         = "ACHLO006-09[LCO1490_t1,HCO2198_t1].fa",
+                                  fastaFileName         = "Achl_ACHLO006-09.fa",
                                   namesConversionCSV    = "names_conversion_1.csv",
-                                  contigName            = "ACHLO006-09[LCO1490_t1,HCO2198_t1]",
+                                  contigName            = "Achl_ACHLO006-09",
                                   suffixForwardRegExp   = "_[0-9]*_F$",
                                   suffixReverseRegExp   = "_[0-9]*_R$",
                                   refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
 
 
-In this example, :code:`contigName` is set to :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]"`, so only :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]_1_F.ab1"` and :code:`"ACHLO006-09[LCO1490_t1.HCO2198_t1]_2_R.ab1"` reads will be selected from **FASTA** file to align into a contig.
+In this example, :code:`contigName` is set to :code:`"Achl_ACHLO006-09"`, so only :code:`"Achl_ACHLO006-09_1_F.ab1"` and :code:`"Achl_ACHLO006-09_2_R.ab1"` reads will be selected from **FASTA** file to align into a contig.
 
 The inputs of :code:`SangerContig` constructor function and :code:`new` method are same. For more details about *SangerContig* inputs and slots definition, please refer to `sangeranalyseR reference manual (need update) <http://packages.python.org/an_example_pypi_project/>`_.
 
