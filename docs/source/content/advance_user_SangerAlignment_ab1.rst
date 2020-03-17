@@ -114,7 +114,7 @@ We create an interactive local Shiny app for users to go into each *SangerRead* 
 
 .. code-block:: R
 
-   launchAppSA(sangerAlignment)
+   launchApp(sangerAlignment)
 
 
 *SangerAlignment* page (SA app)
@@ -280,15 +280,15 @@ Users can write the *SangerAlignment* instance to **FASTA** files. There are fou
 * :code:`all_reads`: Writing all reads to a single **FASTA** file.
 * :code:`all`: Writing contigs, contigs alignment, and all reads into three different files.
 
-Below is the one-line function that users need to run. This function mainly depends on :code:`writeXStringSet` function in `Biostrings <https://bioconductor.org/packages/release/bioc/html/Biostrings.html>`_ R package. Users can set the compression level through :code:`writeFastaSA` function.
+Below is the one-line function that users need to run. This function mainly depends on :code:`writeXStringSet` function in `Biostrings <https://bioconductor.org/packages/release/bioc/html/Biostrings.html>`_ R package. Users can set the compression level through :code:`writeFasta` function.
 
 .. code-block:: R
 
-   writeFastaSA(sangerAlignment,
-                outputDir         = tempdir(),
-                compress          = FALSE,
-                compression_level = NA,
-                selection         = "all")
+   writeFasta(sangerAlignment,
+              outputDir         = tempdir(),
+              compress          = FALSE,
+              compression_level = NA,
+              selection         = "all")
 
 Users can download the output FASTA file of this example through the following three links:
 
@@ -309,9 +309,9 @@ One thing to pay attention to is that if users have many reads, it will take qui
 
 .. code-block:: R
 
-   generateReportSA(sangerAlignment,
-                    outputDir           = tempdir(),
-                    includeSangerContig = TRUE,
-                    includeSangerRead   = TRUE)
+   generateReport(sangerAlignment,
+                  outputDir           = tempdir(),
+                  includeSangerContig = TRUE,
+                  includeSangerRead   = TRUE)
 
 Users can access to '*Basic Information*', '*Contigs Consensus*', '*Contigs Alignment*' and '*Contigs Tree*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerAlignment/AB1/SangerAlignment/SangerAlignment_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.

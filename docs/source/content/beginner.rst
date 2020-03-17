@@ -1,3 +1,4 @@
+docs/source/content/beginner.rst
 Beginners Guide
 ===============
 

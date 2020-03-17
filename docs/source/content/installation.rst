@@ -57,4 +57,3 @@ Now, you are ready to go !
 Where to go from here ?
 -----------------------
 Please continue to the :ref:`Quick Start Guide` or the more detailed :ref:`Beginners Guide`.
-
