@@ -178,7 +178,7 @@
 <p>The most minimal example gets the job done in three lines of code. More details below.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;./my_data/&quot;</span><span class="p">,</span>
                                       <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
-                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">)</span>
+                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_R.ab1$&quot;</span><span class="p">)</span>
 
 <span class="nf">writeFasta</span><span class="p">(</span><span class="n">my_aligned_contigs</span><span class="p">)</span>
 
@@ -201,7 +201,7 @@
 <h2>Step 2: Load and analyse your data<a class="headerlink" href="#step-2-load-and-analyse-your-data" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;./my_data/&quot;</span><span class="p">,</span>
                                       <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
-                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">)</span>
+                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_R.ab1$&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This command loads, trims, builds contigs, and aligns contigs. All of these are done with sensible default values, which can be changed. I</p>

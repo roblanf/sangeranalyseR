@@ -3,7 +3,7 @@ Beginners Guide
 
 If you haven't already, please follow the steps in the :ref:`Installation` page to install and load sangeranalyseR.
 
-This guide is for users who are starting with :code:`.ab1` files. If you are starting with FASTA files, please read through this guide then follow the slightly different path for those starting with FASTA data here: * :ref:`Advanced User Guide - *SangerAlignment* (**FASTA**)`.
+This guide is for users who are starting with :code:`.ab1` files. If you are starting with **FASTA** files, please read through this guide then follow the slightly different path for those starting with FASTA data here: :ref:`Advanced User Guide - *SangerAlignment* (**FASTA**)`.
 
 |
 
@@ -18,7 +18,7 @@ First, users need to prepare a directory and put all their **AB1** files inside 
 
   * All the input files must have the **.ab1** file extension. sangeranalyseR uses this to find valid **.ab1** files.
   * The start of each input file must be used to determine the contig. I.e. all reads that belong to the same contig should have the same beginning to their file name.
-  * The end of the filename should specify which direction the read was sequenced in (i.e. forward or reverse). 
+  * The end of the filename should specify which direction the read was sequenced in (i.e. forward or reverse).
 
 When loading your files you'll need to specify three parameters: :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`. These tell sangeranalyseR how to find and group your files. An example will help. Imagine you have sequenced four contigs with a forward and reverse read, all from the same species, but from different locations. In this case you might have arranged your data something like :ref:`Figure_1<SangerAlignment_file_structure_beginner>`, below.
 
@@ -33,7 +33,7 @@ To use sangeranalyseR you would set the three parameters for this example as fol
 
 * :code:`parentDirectory`: this is the directory that contains all the **AB1** files. In this example, the reads are in the :code:`/tmp/` directory, so for convenience we'll just say that :code:`parentDirectory` should be :code:`/path/to/tmp/`. In your case, it should be the absolute path to the folder that contains your reads.
 
-* :code:`suffixForwardRegExp`: This is a regular expression (if you don't know what this is, don't panic - it's just a way of recognising text that you will get the hang of fast), which tells sangeranalyseR how much of the end of a filename to use to determine a forward read. All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]*_F.ab1$`. This regular expression just says that the forward suffix is an underscore, followed by any number from 0-9, followed by another underscore then 'F.ab1'. What's important to realise is that whatever is *not* captured by this regex is then by default the contig name. So in this case the regex also determines that the contig name for the first read is 'Achl_RBNII397-13'. 
+* :code:`suffixForwardRegExp`: This is a regular expression (if you don't know what this is, don't panic - it's just a way of recognising text that you will get the hang of fast), which tells sangeranalyseR how much of the end of a filename to use to determine a forward read. All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]*_F.ab1$`. This regular expression just says that the forward suffix is an underscore, followed by any number from 0-9, followed by another underscore then 'F.ab1'. What's important to realise is that whatever is *not* captured by this regex is then by default the contig name. So in this case the regex also determines that the contig name for the first read is 'Achl_RBNII397-13'.
 
 * :code:`suffixReverseRegExp`: This is just the same as for the forward read, except that it determines the suffix for reverse reads. All the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]*_R.ab1$`. I.e. all we've done is switch the 'F' in the forward read for an 'R' in the reverse read.
 
@@ -52,8 +52,8 @@ So, let's create our contigs from our reads, and align them.
 .. code-block:: R
 
    my_aligned_contigs <- SangerAlignment(parentDirectory     = "/path/to/tmp/",
-                                      suffixForwardRegExp = "_[0-9]*_F.ab1$",
-                                      suffixReverseRegExp = "_[0-9]*_R.ab1$")
+                                         suffixForwardRegExp = "_[0-9]*_F.ab1$",
+                                         suffixReverseRegExp = "_[0-9]*_R.ab1$")
 
 :code:`my_aligned_contigs` is now a *SangerAlignment* S4 object which contains all of your reads, all the information on how they were trimmed, processed, and aligned, their chromatograms, and an alignment and phylogeny of all of your assembled contigs. The next section explains how to start digging into the details of that object.
 
@@ -83,7 +83,7 @@ To launch the interactive Shiny app use the :code:`launchApp` function as follow
 
 Step 4: Outputting your aligned contigs
 ---------------------------------------
-Once you're happy with your aligned contigs, you'll want to save them somewhere. 
+Once you're happy with your aligned contigs, you'll want to save them somewhere.
 
 The following function can write the *SangerAlignment* object as a FASTA file. You just need to tell it where with the :code:`outputDir` argument. Here we just wrote the alignment to the same folder that contains our reads.
 
@@ -120,7 +120,7 @@ Last but not least, it is useful to store all the results in a report for future
 
 What's next ?
 -------------
-Now you've finished the :ref:`Beginners Guide`, you should have a good overview of how to use the package. To dig a lot deeper into what you can do and why you might bother, there are also a set of advanced guides that focus on the three levels at which you can analyse Sanger data in the sangeranalyseR package. You can analyse individual reads with the *SangerRead* object, individual contigs with the *SangerContig* object, and alignments of two or more contigs (as we focussed on in this intro) with teh *SangerAlignment* object. 
+Now you've finished the :ref:`Beginners Guide`, you should have a good overview of how to use the package. To dig a lot deeper into what you can do and why you might bother, there are also a set of advanced guides that focus on the three levels at which you can analyse Sanger data in the sangeranalyseR package. You can analyse individual reads with the *SangerRead* object, individual contigs with the *SangerContig* object, and alignments of two or more contigs (as we focussed on in this intro) with teh *SangerAlignment* object.
 
 If you want to start the analysis from **AB1** files, please choose the analysis level and read the following three links.
 

@@ -84,11 +84,11 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Beginners Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#step-1-prepare-your-ab1-input-files">Step 1: Prepare your <strong>AB1</strong> input files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-2-s4-instance-creation">Step 2: S4 instance creation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-3-launching-shiny-app">Step 3: Launching Shiny App</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-4-writing-fasta-file">Step 4: Writing FASTA file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-5-generating-report">Step 5: Generating report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-1-preparing-your-input-files">Step 1: Preparing your input files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-2-loading-and-analysing-your-data">Step 2: Loading and analysing your data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-3-exploring-your-data-with-the-shiny-app">Step 3: Exploring your data with the Shiny app</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-4-outputting-your-aligned-contigs">Step 4: Outputting your aligned contigs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-5-generating-an-interactive-report">Step 5: Generating an interactive report</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#what-s-next">What's next ?</a></li>
 </ul>
 </li>
@@ -169,88 +169,93 @@
   <div class="section" id="beginners-guide">
 <h1>Beginners Guide<a class="headerlink" href="#beginners-guide" title="Permalink to this headline">¶</a></h1>
 <p>If you haven't already, please follow the steps in the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">Installation</span></a> page to install and load sangeranalyseR.</p>
+<p>This guide is for users who are starting with <code class="code docutils literal notranslate"><span class="pre">.ab1</span></code> files. If you are starting with <strong>FASTA</strong> files, please read through this guide then follow the slightly different path for those starting with FASTA data here: <a class="reference internal" href="advance_user_SangerAlignment_fasta.html#advanced-user-guide-sangeralignment-fasta"><span class="std std-ref">Advanced User Guide - SangerAlignment (FASTA)</span></a>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="section" id="step-1-prepare-your-ab1-input-files">
-<h2>Step 1: Prepare your <strong>AB1</strong> input files<a class="headerlink" href="#step-1-prepare-your-ab1-input-files" title="Permalink to this headline">¶</a></h2>
-<p>sangeranalyseR takes <strong>AB1</strong> files as input and constructs contigs for those with the same contig name. Then, all the contigs will be aligned and a phylogenetic tree will be generated. We first explain how users should organize their files before running sangeranalyseR.</p>
-<p>First, users need to prepare a directory and put all their <strong>AB1</strong> files inside it. The files should follow the regulation in the note below:</p>
+<div class="section" id="step-1-preparing-your-input-files">
+<h2>Step 1: Preparing your input files<a class="headerlink" href="#step-1-preparing-your-input-files" title="Permalink to this headline">¶</a></h2>
+<p>sangeranalyseR takes as input a group of <strong>AB1</strong> files. It groups these into contigs using the first part of the filename. Once the individual contigs are built, all the contigs are aligned and a simple phylogenetic tree is made. This section explains how users should organize their files before running sangeranalyseR.</p>
+<p>First, users need to prepare a directory and put all their <strong>AB1</strong> files inside it. Files can be organised in as many sub-folders as you like, but all read files should follow naming convention a naming convention in which the filename starts with the contig name, ends with the read direction, and has the <strong>.ab1</strong> extentsion (more in the note below).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>All the input files must have <strong>.ab1</strong> as its file extension.</p></li>
-<li><p>The reads that belong to the same contig should have the same contig name.</p></li>
-<li><p>Forward or reverse direction needs to be specified in the filename.</p></li>
+<li><p>All the input files must have the <strong>.ab1</strong> file extension. sangeranalyseR uses this to find valid <strong>.ab1</strong> files.</p></li>
+<li><p>The start of each input file must be used to determine the contig. I.e. all reads that belong to the same contig should have the same beginning to their file name.</p></li>
+<li><p>The end of the filename should specify which direction the read was sequenced in (i.e. forward or reverse).</p></li>
 </ul>
 </div>
-<p>There are three parameters, <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>, <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>, and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>, that users need to provide so that program can automatically group all <strong>AB1</strong> files. To be clearer, let's have an example.</p>
+<p>When loading your files you'll need to specify three parameters: <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>, <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>, and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>. These tell sangeranalyseR how to find and group your files. An example will help. Imagine you have sequenced four contigs with a forward and reverse read, all from the same species, but from different locations. In this case you might have arranged your data something like <a class="reference internal" href="#sangeralignment-file-structure-beginner"><span class="std std-ref">Figure_1</span></a>, below.</p>
 <div class="figure align-center" id="id1">
 <span id="sangeralignment-file-structure-beginner"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure_beginner.png"><img alt="../_images/SangerAlignment_file_structure_beginner.png" src="../_images/SangerAlignment_file_structure_beginner.png" style="width: 319.0px; height: 385.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#sangeralignment-file-structure-beginner"><span class="std std-ref">Figure_1</span></a> shows the directory that users need to prepare and the file naming convention. Here, we explain the three parameters in this example.</p>
+<p>To use sangeranalyseR you would set the three parameters for this example as follows:</p>
 <ul class="simple">
-<li><p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>: It is the directory that contains all the <strong>AB1</strong> files. In this example, it is <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_[0-9]*_F.ab1$</span></code>.</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: Same as forward read, all the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_[0-9]*_R.ab1$</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>: this is the directory that contains all the <strong>AB1</strong> files. In this example, the reads are in the <code class="code docutils literal notranslate"><span class="pre">/tmp/</span></code> directory, so for convenience we'll just say that <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> should be <code class="code docutils literal notranslate"><span class="pre">/path/to/tmp/</span></code>. In your case, it should be the absolute path to the folder that contains your reads.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: This is a regular expression (if you don't know what this is, don't panic - it's just a way of recognising text that you will get the hang of fast), which tells sangeranalyseR how much of the end of a filename to use to determine a forward read. All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_[0-9]*_F.ab1$</span></code>. This regular expression just says that the forward suffix is an underscore, followed by any number from 0-9, followed by another underscore then 'F.ab1'. What's important to realise is that whatever is <em>not</em> captured by this regex is then by default the contig name. So in this case the regex also determines that the contig name for the first read is 'Achl_RBNII397-13'.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: This is just the same as for the forward read, except that it determines the suffix for reverse reads. All the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_[0-9]*_R.ab1$</span></code>. I.e. all we've done is switch the 'F' in the forward read for an 'R' in the reverse read.</p></li>
 </ul>
-<p>All files inside the <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> do not need to be in the same layer. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> and find all files that end with <strong>AB1</strong> and match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named. In this example, there are four contigs that will be detected: <code class="code docutils literal notranslate"><span class="pre">Achl_RBNII397-13</span></code>, <code class="code docutils literal notranslate"><span class="pre">Achl_RBNII396-13</span></code>, <code class="code docutils literal notranslate"><span class="pre">Achl_ACHLO006-09</span></code> and <code class="code docutils literal notranslate"><span class="pre">Achl_ACHLO007-09</span></code>.</p>
+<p>The individual read files inside the <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> do not need to be in the same folder. You can have as many nested subfolders as you like. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> and find all files that end with <strong>.ab1</strong> and then try to match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named. In this example, there are four contigs that will be detected: <code class="code docutils literal notranslate"><span class="pre">Achl_RBNII397-13</span></code>, <code class="code docutils literal notranslate"><span class="pre">Achl_RBNII396-13</span></code>, <code class="code docutils literal notranslate"><span class="pre">Achl_ACHLO006-09</span></code> and <code class="code docutils literal notranslate"><span class="pre">Achl_ACHLO007-09</span></code>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="step-2-s4-instance-creation">
-<h2>Step 2: S4 instance creation<a class="headerlink" href="#step-2-s4-instance-creation" title="Permalink to this headline">¶</a></h2>
-<p>After preparing the input directory, we can now create a <em>SangerAlignment</em> S4 instance by running one-line function below.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerAlignment</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;./tmp/&quot;</span><span class="p">,</span>
-                                   <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
-                                   <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_R.ab1$&quot;</span><span class="p">)</span>
+<div class="section" id="step-2-loading-and-analysing-your-data">
+<h2>Step 2: Loading and analysing your data<a class="headerlink" href="#step-2-loading-and-analysing-your-data" title="Permalink to this headline">¶</a></h2>
+<p>After preparing the input directory, we can create and align our contigs with just a single line of R code. In technical jargon, we are creating a <em>SangerAlignment</em> S4 instance.</p>
+<p>It's important to note that this function is designed to be both <em>simple</em> and <em>flexible</em>. It's simple in that it has sensible defaults for all the usual things like trimming reads. But it's flexible in that you can change any and all of these defaults to suit your particular data and analyses. Here we just cover the simplest usage. The more flexible things are covered in the Advanced sections of the user guide.</p>
+<p>So, let's create our contigs from our reads, and align them.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;/path/to/tmp/&quot;</span><span class="p">,</span>
+                                      <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
+                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_R.ab1$&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>One thing to pay attention to is that your current working directory need to be at the same level of <code class="code docutils literal notranslate"><span class="pre">tmp</span></code> directory so that you can directly use <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>. Or otherwise, you need to use the absolute path which might look like <code class="code docutils literal notranslate"><span class="pre">/path/to/your/tmp</span></code>.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">my_aligned_contigs</span></code> is now a <em>SangerAlignment</em> S4 object which contains all of your reads, all the information on how they were trimmed, processed, and aligned, their chromatograms, and an alignment and phylogeny of all of your assembled contigs. The next section explains how to start digging into the details of that object.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="step-3-launching-shiny-app">
-<h2>Step 3: Launching Shiny App<a class="headerlink" href="#step-3-launching-shiny-app" title="Permalink to this headline">¶</a></h2>
-<p>You can launch an interactive Shiny app in your local computer by running <code class="code docutils literal notranslate"><span class="pre">launchApp</span></code> function.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchApp</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+<div class="section" id="step-3-exploring-your-data-with-the-shiny-app">
+<h2>Step 3: Exploring your data with the Shiny app<a class="headerlink" href="#step-3-exploring-your-data-with-the-shiny-app" title="Permalink to this headline">¶</a></h2>
+<p>sangeranalseR includes a Shiny app that allows you to see, interact with, and adjust the parameters of your aligned contigs. For example, you can adjust things like the trimming parameters, and see how that changes your reads and your contigs.</p>
+<p>To launch the interactive Shiny app use the <code class="code docutils literal notranslate"><span class="pre">launchApp</span></code> function as follows</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchApp</span><span class="p">(</span><span class="n">my_aligned_contigs</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-center" id="id2">
 <span id="sangeralignment-shiny-app"></span><img alt="../_images/SangerAlignment_shiny_app.png" src="../_images/SangerAlignment_shiny_app.png" />
 <p class="caption"><span class="caption-text">Figure 2. <em>SangerAlignment</em> Shiny app user interface.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">Figure_2</span></a> shows how the Shiny app looks like. On the left-hand side of <a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">Figure_2</span></a>, there is a navigation menu that users can click inside to each contig and each single read to get more details.</p>
+<p><a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">Figure_2</span></a> shows what the Shiny app looks like. On the left-hand side of <a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">Figure_2</span></a>, there is a navigation menu that you can click to get more detail on every contig and every read. You can explore this app to get a lot more detail and make adjustments to your data. (Note that sangeranalyseR doesn't allow for editing individual bases of reads though - that's just not something that R is good for).</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="step-4-writing-fasta-file">
-<h2>Step 4: Writing FASTA file<a class="headerlink" href="#step-4-writing-fasta-file" title="Permalink to this headline">¶</a></h2>
-<p>The following function can write the <em>SangerAlignment</em> S4 instance to a FASTA file.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+<div class="section" id="step-4-outputting-your-aligned-contigs">
+<h2>Step 4: Outputting your aligned contigs<a class="headerlink" href="#step-4-outputting-your-aligned-contigs" title="Permalink to this headline">¶</a></h2>
+<p>Once you're happy with your aligned contigs, you'll want to save them somewhere.</p>
+<p>The following function can write the <em>SangerAlignment</em> object as a FASTA file. You just need to tell it where with the <code class="code docutils literal notranslate"><span class="pre">outputDir</span></code> argument. Here we just wrote the alignment to the same folder that contains our reads.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">my_aligned_contigs</span><span class="p">,</span> <span class="n">outputDir</span> <span class="o">=</span> <span class="s">&quot;/path/to/tmp/&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="step-5-generating-report">
-<h2>Step 5: Generating report<a class="headerlink" href="#step-5-generating-report" title="Permalink to this headline">¶</a></h2>
-<p>Last but not least, it is important to store all results in a report for future reference. A detailed report will be generated by running the following one-line function. <a class="reference internal" href="#sangeralignment-alignment-result"><span class="std std-ref">Figure_3</span></a> and <a class="reference internal" href="#sangeralignment-tree"><span class="std std-ref">Figure_4</span></a> show the main results of <em>SangerAlignment</em>.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">sangerAlignment</span><span class="p">)</span>
+<div class="section" id="step-5-generating-an-interactive-report">
+<h2>Step 5: Generating an interactive report<a class="headerlink" href="#step-5-generating-an-interactive-report" title="Permalink to this headline">¶</a></h2>
+<p>Last but not least, it is useful to store all the results in a report for future reference. You can generate a detailed report by running the following one-line function. <a class="reference internal" href="#sangeralignment-alignment-result"><span class="std std-ref">Figure_3</span></a> and <a class="reference internal" href="#sangeralignment-tree"><span class="std std-ref">Figure_4</span></a>.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">my_aligned_contigs</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-center" id="id3">
 <span id="sangeralignment-alignment-result"></span><img alt="../_images/SangerAlignment_alignment_result.png" src="../_images/SangerAlignment_alignment_result.png" />
-<p class="caption"><span class="caption-text">Figure 3. Alignment result of all contigs in the <em>SangerAlignment</em> instance.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Figure 3. An alignment of all contigs in the <em>SangerAlignment</em> object.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-center" id="id4">
 <span id="sangeralignment-tree"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_tree.png"><img alt="../_images/SangerAlignment_tree.png" src="../_images/SangerAlignment_tree.png" style="width: 547.1999999999999px; height: 160.2px;" /></a>
-<p class="caption"><span class="caption-text">Figure 4. Phylogenetic trees with contigs as the leaf nodes.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Figure 4. A phylogenetic tree with contigs as the leaf nodes. This can help diagnose any issues with your contigs.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -258,7 +263,7 @@
 </div>
 <div class="section" id="what-s-next">
 <h2>What's next ?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
-<p>Congratulation, you have finished the <a class="reference internal" href="#beginners-guide"><span class="std std-ref">Beginners Guide</span></a>. There are three levels of Sanger sequencing analysis which are <em>SangerRead</em>, <em>SangerContig</em> and <em>SangerAlignment</em>. Users can start the data analysis in each level now. The main input file format to create <em>SangerRead</em> instance is <strong>AB1</strong>; however, we also allow users to run sangeranalyseR with <strong>FASTA</strong> file as input with some limitations.</p>
+<p>Now you've finished the <a class="reference internal" href="#beginners-guide"><span class="std std-ref">Beginners Guide</span></a>, you should have a good overview of how to use the package. To dig a lot deeper into what you can do and why you might bother, there are also a set of advanced guides that focus on the three levels at which you can analyse Sanger data in the sangeranalyseR package. You can analyse individual reads with the <em>SangerRead</em> object, individual contigs with the <em>SangerContig</em> object, and alignments of two or more contigs (as we focussed on in this intro) with teh <em>SangerAlignment</em> object.</p>
 <p>If you want to start the analysis from <strong>AB1</strong> files, please choose the analysis level and read the following three links.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="advance_user_SangerRead_ab1.html#advanced-user-guide-sangerread-ab1"><span class="std std-ref">Advanced User Guide - SangerRead (AB1)</span></a></p></li>

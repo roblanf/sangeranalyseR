@@ -28,6 +28,7 @@ Then run the following code in your R console to install the newest version from
    install_github("roblanf/sangeranalyseR", ref = "develop")
    library(sangeranalyseR)
 
+|
 
 Install from Bioconductor
 -------------------------
