@@ -10,19 +10,19 @@
   includeSangerRead = TRUE, navigationAlignmentFN = NULL)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerContig S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the generated HTML report.}
 
-\item{includeSangerRead}{includeSangerRead}
+\item{includeSangerRead}{The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.}
 
-\item{navigationAlignmentFN}{navigationAlignmentFN}
+\item{navigationAlignmentFN}{The internal parameter passed to HTML report. Users should not modify this parameter on their own.}
 }
 \description{
 A SangerContig method which generates final reports of the SangerContig instance.
 }
 \examples{
-data("sangerContig")
+data("sangerContigData")
 \dontrun{
-generateReportSC(sangerContig)}
+generateReportSC(sangerContigData)}
 }

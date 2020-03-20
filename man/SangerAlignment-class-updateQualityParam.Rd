@@ -11,22 +11,22 @@
   M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerAlignment S4 instance.}
 
-\item{TrimmingMethod}{TrimmingMethod}
+\item{TrimmingMethod}{The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.}
 
-\item{M1TrimmingCutoff}{M1TrimmingCutoff}
+\item{M1TrimmingCutoff}{The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.}
 
-\item{M2CutoffQualityScore}{M2CutoffQualityScore}
+\item{M2CutoffQualityScore}{The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.}
 
-\item{M2SlidingWindowSize}{M2SlidingWindowSize}
+\item{M2SlidingWindowSize}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
 }
 \description{
 A SangerAlignment method which updates QualityReport parameter for each the SangerRead instance inside SangerAlignment.
 }
 \examples{
-data("sangerAlignment")
-updateQualityParam(sangerAlignment,
+data("sangerAlignmentData")
+updateQualityParam(sangerAlignmentData,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,

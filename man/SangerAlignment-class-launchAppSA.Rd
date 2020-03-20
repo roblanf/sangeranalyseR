@@ -9,14 +9,14 @@
 \S4method{launchAppSA}{SangerAlignment}(object, outputDir = NULL)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerAlignment S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the saved new SangerContig S4 instance.}
 }
 \description{
 A SangerAlignment method which launches Shiny app for SangerAlignment instance.
 }
 \examples{
-data("sangerAlignment")
-RShinySA <- launchAppSA(sangerAlignment)
+data("sangerAlignmentData")
+RShinySA <- launchAppSA(sangerAlignmentData)
 }

@@ -7,15 +7,15 @@
 launchAppSC(object, outputDir = NULL)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerContig S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the saved new SangerContig S4 instance.}
 }
 \description{
 Method launchAppSC
 }
 \examples{
-data(sangerContig)
+data(sangerContigData)
 \dontrun{
-launchAppSC(sangerContig)}
+launchAppSC(sangerContigData)}
 }

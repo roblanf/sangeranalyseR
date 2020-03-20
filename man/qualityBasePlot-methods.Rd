@@ -7,14 +7,14 @@
 qualityBasePlot(object)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A QualityReport or SangerRead S4 instance}
 }
 \description{
 Method qualityBasePlot
 }
 \examples{
-data(qualityReport)
-data(sangerReadF)
-qualityBasePlot(qualityReport)
-qualityBasePlot(sangerReadF)
+data(qualityReportData)
+data(sangerReadFData)
+qualityBasePlot(qualityReportData)
+qualityBasePlot(sangerReadFData)
 }

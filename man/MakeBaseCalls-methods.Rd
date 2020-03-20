@@ -7,14 +7,14 @@
 MakeBaseCalls(object, signalRatioCutoff = 0.33)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerRead S4 instance.}
 
-\item{signalRatioCutoff}{signalRatioCutoff}
+\item{signalRatioCutoff}{The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.}
 }
 \description{
 Method MakeBaseCalls
 }
 \examples{
-data(sangerReadF)
-MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
+data(sangerReadFData)
+MakeBaseCalls(sangerReadFData, signalRatioCutoff = 0.22)
 }

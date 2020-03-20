@@ -9,14 +9,14 @@
 \S4method{launchAppSC}{SangerContig}(object, outputDir = NULL)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerContig S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the saved new SangerContig S4 instance.}
 }
 \description{
 A SangerContig method which launches Shiny app for SangerContig instance.
 }
 \examples{
-data("sangerContig")
-RShinySC <- launchAppSC(sangerContig)
+data("sangerContigData")
+RShinySC <- launchAppSC(sangerContigData)
 }

@@ -8,28 +8,28 @@ generateReport(object, outputDir = NULL, includeSangerContig = TRUE,
   includeSangerRead = TRUE, ...)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerRead, SangerContig, or SangerAlignment S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the generated HTML report.}
 
-\item{includeSangerContig}{includeSangerContig}
+\item{includeSangerContig}{The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.}
 
-\item{includeSangerRead}{includeSangerRead}
+\item{includeSangerRead}{The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.}
 
-\item{...}{...}
+\item{...}{Further generateReportSR, generateReportSC, and generateReportSA related parameters.}
 }
 \description{
 A method which generates final reports of the SangerRead,
  SangerContig, and SangerAlignment instance.
 }
 \examples{
-data(sangerReadF)
-data(sangerContig)
-data(sangerAlignment)
+data(sangerReadFData)
+data(sangerContigData)
+data(sangerAlignmentData)
 \dontrun{
-generateReport(sangerReadF)
-generateReport(sangerContig)
-generateReport(sangerAlignment)}
+generateReport(sangerReadFData)
+generateReport(sangerContigData)
+generateReport(sangerAlignmentData)}
 }
 \author{
 Kuan-Hao Chao

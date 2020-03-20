@@ -7,20 +7,20 @@
 launchApp(object, outputDir = NULL)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerContig or SangerAlignment S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the saved new SangerContig or SangerAlignment S4 instance.}
 }
 \description{
 A method which launches Shiny application of the SangerContig
  and SangerAlignment instance.
 }
 \examples{
-data(sangerContig)
-data(sangerAlignment)
+data(sangerContigData)
+data(sangerAlignmentData)
 \dontrun{
-launchApp(sangerContig)
-launchApp(sangerAlignment)}
+launchApp(sangerContigData)
+launchApp(sangerAlignmentData)}
 }
 \author{
 Kuan-Hao Chao

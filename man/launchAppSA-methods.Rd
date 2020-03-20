@@ -7,15 +7,15 @@
 launchAppSA(object, outputDir = NULL)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerAlignment S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the saved new SangerAlignment S4 instance.}
 }
 \description{
 Method launchAppSA
 }
 \examples{
-data(sangerAlignment)
+data(sangerAlignmentData)
 \dontrun{
-launchAppSA(sangerAlignment)}
+launchAppSA(sangerAlignmentData)}
 }

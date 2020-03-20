@@ -7,17 +7,17 @@
 generateReportSR(object, outputDir = NULL, ...)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerRead S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the generated HTML report.}
 
-\item{...}{...}
+\item{...}{Further generateReportSR-related parameters.}
 }
 \description{
 Method generateReportSR
 }
 \examples{
-data(sangerReadF)
+data(sangerReadFData)
 \dontrun{
-generateReportSR(sangerReadF)}
+generateReportSR(sangerReadFData)}
 }

@@ -9,12 +9,12 @@
 \S4method{qualityBasePlot}{QualityReport}(object)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A QualityReport S4 instance.}
 }
 \description{
 A QualityReport method which creates quality base interactive plot.
 }
 \examples{
-data("qualityReport")
-qualityBasePlot(qualityReport)
+data("qualityReportData")
+qualityBasePlot(qualityReportData)
 }

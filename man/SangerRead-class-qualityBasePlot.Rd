@@ -9,12 +9,12 @@
 \S4method{qualityBasePlot}{SangerRead}(object)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerRead S4 instance.}
 }
 \description{
 A SangerRead method which creates quality base interactive plot.
 }
 \examples{
-data("sangerReadF")
-qualityBasePlot(sangerReadF)
+data("sangerReadFData")
+qualityBasePlot(sangerReadFData)
 }

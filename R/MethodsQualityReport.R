@@ -26,11 +26,11 @@ preQualityBasePlot <- function(object) {
 #' @name QualityReport-class-qualityBasePlot
 #' @aliases qualityBasePlot,QualityReport-method
 #'
-#' @param object object
+#' @param object A QualityReport S4 instance.
 #'
 #' @examples
-#' data("qualityReport")
-#' qualityBasePlot(qualityReport)
+#' data("qualityReportData")
+#' qualityBasePlot(qualityReportData)
 setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
     plotting
@@ -45,15 +45,15 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 #' @name QualityReport-class-updateQualityParam
 #' @aliases updateQualityParam,QualityReport-method
 #'
-#' @param object object
-#' @param TrimmingMethod TrimmingMethod
-#' @param M1TrimmingCutoff M1TrimmingCutoff
-#' @param M2CutoffQualityScore M2CutoffQualityScore
-#' @param M2SlidingWindowSize M2SlidingWindowSize
+#' @param object A QualityReport S4 instance.
+#' @param TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
+#' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
+#' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
+#' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #'
 #' @examples
-#' data("qualityReport")
-#' updateQualityParam(qualityReport,
+#' data("qualityReportData")
+#' updateQualityParam(qualityReportData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 30,

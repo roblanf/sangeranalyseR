@@ -7,15 +7,15 @@
 #' @name SangerContig-class-updateQualityParam
 #' @aliases updateQualityParam,SangerContig-method
 #'
-#' @param object object
-#' @param TrimmingMethod TrimmingMethod
-#' @param M1TrimmingCutoff M1TrimmingCutoff
-#' @param M2CutoffQualityScore M2CutoffQualityScore
-#' @param M2SlidingWindowSize M2SlidingWindowSize
+#' @param object A SangerContig S4 instance.
+#' @param TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
+#' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
+#' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
+#' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #'
 #' @examples
-#' data("sangerContig")
-#' updateQualityParam(sangerContig,
+#' data("sangerContigData")
+#' updateQualityParam(sangerContigData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
@@ -97,12 +97,12 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 #' @name SangerContig-class-launchAppSC
 #' @aliases launchAppSC,SangerContig-method
 #'
-#' @param object object
-#' @param outputDir outputDir
+#' @param object A SangerContig S4 instance.
+#' @param outputDir The output directory of the saved new SangerContig S4 instance.
 #'
 #' @examples
-#' data("sangerContig")
-#' RShinySC <- launchAppSC(sangerContig)
+#' data("sangerContigData")
+#' RShinySC <- launchAppSC(sangerContigData)
 setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL) {
     if (object@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
@@ -139,15 +139,15 @@ setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL) {
 #' @name SangerContig-class-writeFastaSC
 #' @aliases writeFastaSC,SangerContig-method
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param compress compress
-#' @param compression_level compression_level
-#' @param selection selection
+#' @param object A SangerContig S4 instance.
+#' @param outputDir The output directory of generated FASTA files.
+#' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param selection This value can be \code{all}, \code{reads_alignment}, \code{reads_unalignment} or \code{contig}. It generates reads and the contig FASTA files.
 #'
 #' @examples
-#' data("sangerContig")
-#' writeFastaSC(sangerContig)
+#' data("sangerContigData")
+#' writeFastaSC(sangerContigData)
 setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
                                                    compression_level,
                                                    selection = "all") {
@@ -254,15 +254,15 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
 #' @name SangerContig-class-generateReportSC
 #' @aliases generateReportSC,SangerContig-method
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param includeSangerRead includeSangerRead
-#' @param navigationAlignmentFN navigationAlignmentFN
+#' @param object A SangerContig S4 instance.
+#' @param outputDir The output directory of the generated HTML report.
+#' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param navigationAlignmentFN The internal parameter passed to HTML report. Users should not modify this parameter on their own.
 #'
 #' @examples
-#' data("sangerContig")
+#' data("sangerContigData")
 #' \dontrun{
-#' generateReportSC(sangerContig)}
+#' generateReportSC(sangerContigData)}
 setMethod("generateReportSC", "SangerContig",
           function(object, outputDir, includeSangerRead = TRUE,
                    navigationAlignmentFN = NULL) {

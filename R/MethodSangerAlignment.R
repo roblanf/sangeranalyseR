@@ -7,15 +7,15 @@
 #' @name SangerAlignment-class-updateQualityParam
 #' @aliases updateQualityParam,SangerAlignment-method
 #'
-#' @param object object
-#' @param TrimmingMethod TrimmingMethod
-#' @param M1TrimmingCutoff M1TrimmingCutoff
-#' @param M2CutoffQualityScore M2CutoffQualityScore
-#' @param M2SlidingWindowSize M2SlidingWindowSize
+#' @param object A SangerAlignment S4 instance.
+#' @param TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
+#' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
+#' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
+#' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #'
 #' @examples
-#' data("sangerAlignment")
-#' updateQualityParam(sangerAlignment,
+#' data("sangerAlignmentData")
+#' updateQualityParam(sangerAlignmentData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
@@ -75,12 +75,12 @@ setMethod("updateQualityParam",  "SangerAlignment",
 #' @name SangerAlignment-class-launchAppSA
 #' @aliases launchAppSA,SangerAlignment-method
 #'
-#' @param object object
-#' @param outputDir outputDir
+#' @param object A SangerAlignment S4 instance.
+#' @param outputDir The output directory of the saved new SangerContig S4 instance.
 #'
 #' @examples
-#' data("sangerAlignment")
-#' RShinySA <- launchAppSA(sangerAlignment)
+#' data("sangerAlignmentData")
+#' RShinySA <- launchAppSA(sangerAlignmentData)
 setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
     if (object@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
@@ -117,15 +117,15 @@ setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
 #' @name SangerAlignment-class-writeFastaSA
 #' @aliases writeFastaSA,SangerAlignment-method
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param compress compress
-#' @param compression_level compression_level
-#' @param selection selection
+#' @param object A SangerAlignment S4 instance.
+#' @param outputDir The output directory of generated FASTA files.
+#' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param selection This value can be \code{all}, \code{contigs_alignment}, \code{contigs_unalignment} or \code{all_reads}. It generates reads and contigs FASTA files.
 #'
 #' @examples
-#' data("sangerAlignment")
-#' writeFastaSA(sangerAlignment)
+#' data("sangerAlignmentData")
+#' writeFastaSA(sangerAlignmentData)
 setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compress,
                                                  compression_level,
                                                  selection = "all") {
@@ -239,15 +239,15 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
 #' @name SangerAlignment-class-generateReportSA
 #' @aliases generateReportSA,SangerAlignment-method
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param includeSangerContig includeSangerContig
-#' @param includeSangerRead includeSangerRead
+#' @param object A SangerAlignment S4 instance.
+#' @param outputDir The output directory of the generated HTML report.
+#' @param includeSangerContig The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #'
 #' @examples
-#' data("sangerAlignment")
+#' data("sangerAlignmentData")
 #' \dontrun{
-#' generateReportSA(sangerAlignment)}
+#' generateReportSA(sangerAlignmentData)}
 setMethod("generateReportSA", "SangerAlignment",
           function(object, outputDir,
                    includeSangerContig = TRUE,

@@ -10,19 +10,19 @@
   navigationContigFN = NULL, navigationAlignmentFN = NULL)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerRead S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the generated HTML report.}
 
-\item{navigationContigFN}{navigationContigFN}
+\item{navigationContigFN}{The internal parameter passed to HTML report. Users should not modify this parameter on their own.}
 
-\item{navigationAlignmentFN}{navigationAlignmentFN}
+\item{navigationAlignmentFN}{The internal parameter passed to HTML report. Users should not modify this parameter on their own.}
 }
 \description{
 A SangerRead method which generates final reports of the SangerRead instance.
 }
 \examples{
-data("sangerReadF")
+data("sangerReadFData")
 \dontrun{
-generateReportSR(sangerReadF)}
+generateReportSR(sangerReadFData)}
 }

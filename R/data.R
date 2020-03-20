@@ -1,35 +1,35 @@
-#' @name qualityReport-data
+#' @name qualityReportData
 #' @title QualityReport instance
 #' @description QualityReport instance
 #' @docType data
+#' @keywords datasets
 #' @author Kuan-Hao Chao
-#' @examples
-#' data(qualityReport)
+#' @usage data(qualityReportData)
 NULL
 
-#' @name sangerReadF-data
+#' @name sangerReadFData
 #' @title SangerRead instance
 #' @description SangerRead instance
 #' @docType data
+#' @keywords datasets
 #' @author Kuan-Hao Chao
-#' @examples
-#' data(sangerReadF)
+#' @usage data(sangerReadFData)
 NULL
 
-#' @name sangerContig-data
+#' @name sangerContigData
 #' @title SangerContig instance
 #' @description SangerContig instance
 #' @docType data
+#' @keywords datasets
 #' @author Kuan-Hao Chao
-#' @examples
-#' data(sangerContig)
+#' @usage data(sangerContigData)
 NULL
 
-#' @name sangerAlignment-data
+#' @name sangerAlignmentData
 #' @title SangerAlignment instance
 #' @description SangerAlignment instance
 #' @docType data
+#' @keywords datasets
 #' @author Kuan-Hao Chao
-#' @examples
-#' data(sangerAlignment)
+#' @usage data(sangerAlignmentData)
 NULL

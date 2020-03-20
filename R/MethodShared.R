@@ -3,17 +3,17 @@
 #' @description  A method which launches Shiny application of the SangerContig
 #'  and SangerAlignment instance.
 #'
-#' @param object object
-#' @param outputDir outputDir
+#' @param object A SangerContig or SangerAlignment S4 instance.
+#' @param outputDir The output directory of the saved new SangerContig or SangerAlignment S4 instance.
 #'
 #' @export
 #' @author Kuan-Hao Chao
 #' @examples
-#' data(sangerContig)
-#' data(sangerAlignment)
+#' data(sangerContigData)
+#' data(sangerAlignmentData)
 #' \dontrun{
-#' launchApp(sangerContig)
-#' launchApp(sangerAlignment)}
+#' launchApp(sangerContigData)
+#' launchApp(sangerAlignmentData)}
 launchApp <- function(object, outputDir = NULL) {
     if(isS4(object)) {
         if (class(object)[1] == 'SangerAlignment') {
@@ -38,22 +38,22 @@ launchApp <- function(object, outputDir = NULL) {
 #' @description  A method which writes FASTA files of the SangerRead,
 #'  SangerContig, and SangerAlignment instance.
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param compress compress
-#' @param compression_level compression_level
-#' @param selection selection
+#' @param object A SangerRead, SangerContig, or SangerAlignment S4 instance.
+#' @param outputDir The output directory of generated FASTA files.
+#' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param selection This parameter will be passed to \code{writeFastaSC} or \code{writeFastaSA}.
 #'
 #' @export
 #' @author Kuan-Hao Chao
 #' @examples
-#' data(sangerReadF)
-#' data(sangerContig)
-#' data(sangerAlignment)
+#' data(sangerReadFData)
+#' data(sangerContigData)
+#' data(sangerAlignmentData)
 #' \dontrun{
-#' writeFasta(sangerReadF)
-#' writeFasta(sangerContig)
-#' writeFasta(sangerAlignment)}
+#' writeFasta(sangerReadFData)
+#' writeFasta(sangerContigData)
+#' writeFasta(sangerAlignmentData)}
 writeFasta <- function(object, outputDir = NULL, compress  = FALSE,
                        compression_level = NA, selection = "all") {
     if(isS4(object)) {
@@ -88,22 +88,22 @@ writeFasta <- function(object, outputDir = NULL, compress  = FALSE,
 #' @description  A method which generates final reports of the SangerRead,
 #'  SangerContig, and SangerAlignment instance.
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param includeSangerContig includeSangerContig
-#' @param includeSangerRead includeSangerRead
-#' @param ... ...
+#' @param object A SangerRead, SangerContig, or SangerAlignment S4 instance.
+#' @param outputDir The output directory of the generated HTML report.
+#' @param includeSangerContig The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param ... Further generateReportSR, generateReportSC, and generateReportSA related parameters.
 #'
 #' @export
 #' @author Kuan-Hao Chao
 #' @examples
-#' data(sangerReadF)
-#' data(sangerContig)
-#' data(sangerAlignment)
+#' data(sangerReadFData)
+#' data(sangerContigData)
+#' data(sangerAlignmentData)
 #' \dontrun{
-#' generateReport(sangerReadF)
-#' generateReport(sangerContig)
-#' generateReport(sangerAlignment)}
+#' generateReport(sangerReadFData)
+#' generateReport(sangerContigData)
+#' generateReport(sangerAlignmentData)}
 generateReport <- function(object, outputDir = NULL,
                            includeSangerContig = TRUE,
                            includeSangerRead = TRUE, ...) {

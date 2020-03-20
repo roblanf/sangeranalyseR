@@ -11,14 +11,14 @@ setClassUnion("characterORNULL", c("character", "NULL"))
 #' @name qualityBasePlot
 #' @rdname qualityBasePlot-methods
 #'
-#' @param object object
+#' @param object A QualityReport or SangerRead S4 instance
 #'
 #' @exportMethod qualityBasePlot
 #' @examples
-#' data(qualityReport)
-#' data(sangerReadF)
-#' qualityBasePlot(qualityReport)
-#' qualityBasePlot(sangerReadF)
+#' data(qualityReportData)
+#' data(sangerReadFData)
+#' qualityBasePlot(qualityReportData)
+#' qualityBasePlot(sangerReadFData)
 setGeneric("qualityBasePlot", function(object) {
     standardGeneric("qualityBasePlot")
 })
@@ -30,34 +30,34 @@ setGeneric("qualityBasePlot", function(object) {
 #' @name updateQualityParam
 #' @rdname updateQualityParam-methods
 #'
-#' @param object object
-#' @param TrimmingMethod TrimmingMethod
-#' @param M1TrimmingCutoff M1TrimmingCutoff
-#' @param M2CutoffQualityScore M2CutoffQualityScore
-#' @param M2SlidingWindowSize M2SlidingWindowSize
+#' @param object A QualityReport, SangerRead, SangerContig, or SangerAlignment S4 instance.
+#' @param TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
+#' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
+#' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
+#' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #'
 #' @exportMethod updateQualityParam
 #' @examples
-#' data(qualityReport)
-#' data(sangerReadF)
-#' data(sangerContig)
-#' data(sangerAlignment)
-#' updateQualityParam(qualityReport,
+#' data(qualityReportData)
+#' data(sangerReadFData)
+#' data(sangerContigData)
+#' data(sangerAlignmentData)
+#' updateQualityParam(qualityReportData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
 #'                    M2SlidingWindowSize    = 15)
-#' updateQualityParam(sangerReadF,
+#' updateQualityParam(sangerReadFData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
 #'                    M2SlidingWindowSize    = 15)
-#' updateQualityParam(sangerContig,
+#' updateQualityParam(sangerContigData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
 #'                    M2SlidingWindowSize    = 15)
-#' updateQualityParam(sangerAlignment,
+#' updateQualityParam(sangerAlignmentData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
@@ -77,13 +77,13 @@ setGeneric("updateQualityParam", function(object,
 #' @name MakeBaseCalls
 #' @rdname MakeBaseCalls-methods
 #'
-#' @param object object
-#' @param signalRatioCutoff signalRatioCutoff
+#' @param object A SangerRead S4 instance.
+#' @param signalRatioCutoff The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.
 #'
 #' @exportMethod MakeBaseCalls
 #' @examples
-#' data(sangerReadF)
-#' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
+#' data(sangerReadFData)
+#' MakeBaseCalls(sangerReadFData, signalRatioCutoff = 0.22)
 setGeneric("MakeBaseCalls", function(object, signalRatioCutoff = 0.33) {
     standardGeneric("MakeBaseCalls")
 })
@@ -95,16 +95,16 @@ setGeneric("MakeBaseCalls", function(object, signalRatioCutoff = 0.33) {
 #' @name writeFastaSA
 #' @rdname writeFastaSA-methods
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param compress compress
-#' @param compression_level compression_level
-#' @param selection selection
+#' @param object A SangerAlignment S4 instance.
+#' @param outputDir The output directory of generated FASTA files.
+#' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param selection This value can be \code{all}, \code{contigs_alignment}, \code{contigs_unalignment} or \code{all_reads}. It generates reads and contigs FASTA files.
 #'
 #' @exportMethod writeFastaSA
 #' @examples
-#' data(sangerAlignment)
-#' writeFastaSA(sangerAlignment)
+#' data(sangerAlignmentData)
+#' writeFastaSA(sangerAlignmentData)
 setGeneric("writeFastaSA", function(object,outputDir = NULL,
                                     compress  = FALSE,
                                     compression_level = NA,
@@ -116,16 +116,16 @@ setGeneric("writeFastaSA", function(object,outputDir = NULL,
 #' @name writeFastaSC
 #' @rdname writeFastaSC-methods
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param compress compress
-#' @param compression_level compression_level
-#' @param selection selection
+#' @param object A SangerContig S4 instance.
+#' @param outputDir The output directory of generated FASTA files.
+#' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param selection This value can be \code{all}, \code{reads_alignment}, \code{reads_unalignment} or \code{contig}. It generates reads and the contig FASTA files.
 #'
 #' @exportMethod writeFastaSC
 #' @examples
-#' data(sangerContig)
-#' writeFastaSC(sangerContig)
+#' data(sangerContigData)
+#' writeFastaSC(sangerContigData)
 setGeneric("writeFastaSC", function(object,outputDir = NULL,
                                     compress  = FALSE,
                                     compression_level = NA,
@@ -137,15 +137,15 @@ setGeneric("writeFastaSC", function(object,outputDir = NULL,
 #' @name writeFastaSR
 #' @rdname writeFastaSR-methods
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param compress compress
-#' @param compression_level compression_level
+#' @param object A SangerRead S4 instance.
+#' @param outputDir The output directory of the generated FASTA file.
+#' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #'
 #' @exportMethod writeFastaSR
 #' @examples
-#' data(sangerReadF)
-#' writeFastaSR(sangerReadF)
+#' data(sangerReadFData)
+#' writeFastaSR(sangerReadFData)
 setGeneric("writeFastaSR", function(object,outputDir = NULL,
                                   compress  = FALSE,
                                   compression_level = NA) {
@@ -159,14 +159,14 @@ setGeneric("writeFastaSR", function(object,outputDir = NULL,
 #' @name launchAppSC
 #' @rdname launchAppSC-methods
 #'
-#' @param object object
-#' @param outputDir outputDir
+#' @param object A SangerContig S4 instance.
+#' @param outputDir The output directory of the saved new SangerContig S4 instance.
 #'
 #' @exportMethod launchAppSC
 #' @examples
-#' data(sangerContig)
+#' data(sangerContigData)
 #' \dontrun{
-#' launchAppSC(sangerContig)}
+#' launchAppSC(sangerContigData)}
 setGeneric("launchAppSC", function(object, outputDir = NULL) {
     standardGeneric("launchAppSC")
 })
@@ -175,14 +175,14 @@ setGeneric("launchAppSC", function(object, outputDir = NULL) {
 #' @name launchAppSA
 #' @rdname launchAppSA-methods
 #'
-#' @param object object
-#' @param outputDir outputDir
+#' @param object A SangerAlignment S4 instance.
+#' @param outputDir The output directory of the saved new SangerAlignment S4 instance.
 #'
 #' @exportMethod launchAppSA
 #' @examples
-#' data(sangerAlignment)
+#' data(sangerAlignmentData)
 #' \dontrun{
-#' launchAppSA(sangerAlignment)}
+#' launchAppSA(sangerAlignmentData)}
 setGeneric("launchAppSA", function(object, outputDir = NULL) {
     standardGeneric("launchAppSA")
 })
@@ -194,15 +194,15 @@ setGeneric("launchAppSA", function(object, outputDir = NULL) {
 #' @name generateReportSR
 #' @rdname generateReportSR-methods
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param ... ...
+#' @param object A SangerRead S4 instance.
+#' @param outputDir The output directory of the generated HTML report.
+#' @param ... Further generateReportSR-related parameters.
 #'
 #' @exportMethod generateReportSR
 #' @examples
-#' data(sangerReadF)
+#' data(sangerReadFData)
 #' \dontrun{
-#' generateReportSR(sangerReadF)}
+#' generateReportSR(sangerReadFData)}
 setGeneric("generateReportSR", function(object, outputDir = NULL, ...) {
     standardGeneric("generateReportSR")
 })
@@ -211,16 +211,16 @@ setGeneric("generateReportSR", function(object, outputDir = NULL, ...) {
 #' @name generateReportSC
 #' @rdname generateReportSC-methods
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param includeSangerRead includeSangerRead
-#' @param ... ...
+#' @param object A SangerContig S4 instance.
+#' @param outputDir The output directory of the generated HTML report.
+#' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param ... Further generateReportSC-related parameters.
 #'
 #' @exportMethod generateReportSC
 #' @examples
-#' data(sangerContig)
+#' data(sangerContigData)
 #' \dontrun{
-#' generateReportSC(sangerContig)}
+#' generateReportSC(sangerContigData)}
 setGeneric("generateReportSC", function(object, outputDir = NULL,
                                         includeSangerRead = TRUE, ...) {
     standardGeneric("generateReportSC")
@@ -230,17 +230,17 @@ setGeneric("generateReportSC", function(object, outputDir = NULL,
 #' @name generateReportSA
 #' @rdname generateReportSA-methods
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param includeSangerContig includeSangerContig
-#' @param includeSangerRead includeSangerRead
-#' @param ... ...
+#' @param object A SangerAlignment S4 instance.
+#' @param outputDir The output directory of the generated HTML report.
+#' @param includeSangerContig The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param ... Further generateReportSA-related parameters.
 #'
 #' @exportMethod generateReportSA
 #' @examples
-#' data(sangerAlignment)
+#' data(sangerAlignmentData)
 #' \dontrun{
-#' generateReportSA(sangerAlignment)}
+#' generateReportSA(sangerAlignmentData)}
 setGeneric("generateReportSA", function(object, outputDir = NULL,
                                         includeSangerContig = TRUE,
                                         includeSangerRead = TRUE, ...) {

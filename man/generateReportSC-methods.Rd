@@ -8,19 +8,19 @@ generateReportSC(object, outputDir = NULL, includeSangerRead = TRUE,
   ...)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerContig S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of the generated HTML report.}
 
-\item{includeSangerRead}{includeSangerRead}
+\item{includeSangerRead}{The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.}
 
-\item{...}{...}
+\item{...}{Further generateReportSC-related parameters.}
 }
 \description{
 Method generateReportSC
 }
 \examples{
-data(sangerContig)
+data(sangerContigData)
 \dontrun{
-generateReportSC(sangerContig)}
+generateReportSC(sangerContigData)}
 }

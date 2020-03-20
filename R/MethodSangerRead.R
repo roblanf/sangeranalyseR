@@ -7,11 +7,11 @@
 #' @name SangerRead-class-qualityBasePlot
 #' @aliases qualityBasePlot,SangerRead-method
 #'
-#' @param object object
+#' @param object A SangerRead S4 instance.
 #'
 #' @examples
-#' data("sangerReadF")
-#' qualityBasePlot(sangerReadF)
+#' data("sangerReadFData")
+#' qualityBasePlot(sangerReadFData)
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     if (object@inputSource == "ABIF") {
         plotting <- preQualityBasePlot(object@QualityReport)
@@ -31,15 +31,15 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 #' @name SangerRead-class-updateQualityParam
 #' @aliases updateQualityParam,SangerRead-method
 #'
-#' @param object object
-#' @param TrimmingMethod TrimmingMethod
-#' @param M1TrimmingCutoff M1TrimmingCutoff
-#' @param M2CutoffQualityScore M2CutoffQualityScore
-#' @param M2SlidingWindowSize M2SlidingWindowSize
+#' @param object A SangerRead S4 instance.
+#' @param TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
+#' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
+#' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
+#' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #'
 #' @examples
-#' data("sangerReadF")
-#' updateQualityParam(sangerReadF,
+#' data("sangerReadFData")
+#' updateQualityParam(sangerReadFData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
@@ -94,12 +94,12 @@ setMethod("updateQualityParam",  "SangerRead",
 #' @name SangerRead-class-MakeBaseCalls
 #' @aliases MakeBaseCalls,SangerRead-method
 #'
-#' @param object object
-#' @param signalRatioCutoff signalRatioCutoff
+#' @param object A SangerRead S4 instance.
+#' @param signalRatioCutoff The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.
 #'
 #' @examples
-#' data("sangerReadF")
-#' MakeBaseCalls(sangerReadF, signalRatioCutoff = 0.22)
+#' data("sangerReadFData")
+#' MakeBaseCalls(sangerReadFData, signalRatioCutoff = 0.22)
 setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
     if (object@inputSource == "ABIF") {
         errors <- character(0)
@@ -145,14 +145,14 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
 #' @name SangerRead-class-writeFastaSR
 #' @aliases writeFastaSR,SangerRead-method
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param compress compress
-#' @param compression_level compression_level
+#' @param object A SangerRead S4 instance.
+#' @param outputDir The output directory of the generated FASTA file.
+#' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #'
 #' @examples
-#' data("sangerReadF")
-#' writeFastaSR(sangerReadF)
+#' data("sangerReadFData")
+#' writeFastaSR(sangerReadFData)
 setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
                                                  compression_level) {
     if (is.null(outputDir)) {
@@ -200,15 +200,15 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 #' @name SangerRead-class-generateReportSR
 #' @aliases generateReportSR,SangerRead-method
 #'
-#' @param object object
-#' @param outputDir outputDir
-#' @param navigationContigFN navigationContigFN
-#' @param navigationAlignmentFN navigationAlignmentFN
+#' @param object A SangerRead S4 instance.
+#' @param outputDir The output directory of the generated HTML report.
+#' @param navigationContigFN The internal parameter passed to HTML report. Users should not modify this parameter on their own.
+#' @param navigationAlignmentFN The internal parameter passed to HTML report. Users should not modify this parameter on their own.
 #'
 #' @examples
-#' data("sangerReadF")
+#' data("sangerReadFData")
 #' \dontrun{
-#' generateReportSR(sangerReadF)}
+#' generateReportSR(sangerReadFData)}
 setMethod("generateReportSR", "SangerRead",
           function(object, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {

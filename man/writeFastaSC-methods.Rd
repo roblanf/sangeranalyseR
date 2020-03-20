@@ -8,20 +8,20 @@ writeFastaSC(object, outputDir = NULL, compress = FALSE,
   compression_level = NA, selection = "all")
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerContig S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of generated FASTA files.}
 
-\item{compress}{compress}
+\item{compress}{Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.}
 
-\item{compression_level}{compression_level}
+\item{compression_level}{This parameter will be passed to \code{writeXStringSet} function in Biostrings package.}
 
-\item{selection}{selection}
+\item{selection}{This value can be \code{all}, \code{reads_alignment}, \code{reads_unalignment} or \code{contig}. It generates reads and the contig FASTA files.}
 }
 \description{
 Method writeFastaSC
 }
 \examples{
-data(sangerContig)
-writeFastaSC(sangerContig)
+data(sangerContigData)
+writeFastaSC(sangerContigData)
 }

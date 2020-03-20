@@ -8,28 +8,28 @@ writeFasta(object, outputDir = NULL, compress = FALSE,
   compression_level = NA, selection = "all")
 }
 \arguments{
-\item{object}{object}
+\item{object}{A SangerRead, SangerContig, or SangerAlignment S4 instance.}
 
-\item{outputDir}{outputDir}
+\item{outputDir}{The output directory of generated FASTA files.}
 
-\item{compress}{compress}
+\item{compress}{Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.}
 
-\item{compression_level}{compression_level}
+\item{compression_level}{This parameter will be passed to \code{writeXStringSet} function in Biostrings package.}
 
-\item{selection}{selection}
+\item{selection}{This parameter will be passed to \code{writeFastaSC} or \code{writeFastaSA}.}
 }
 \description{
 A method which writes FASTA files of the SangerRead,
  SangerContig, and SangerAlignment instance.
 }
 \examples{
-data(sangerReadF)
-data(sangerContig)
-data(sangerAlignment)
+data(sangerReadFData)
+data(sangerContigData)
+data(sangerAlignmentData)
 \dontrun{
-writeFasta(sangerReadF)
-writeFasta(sangerContig)
-writeFasta(sangerAlignment)}
+writeFasta(sangerReadFData)
+writeFasta(sangerContigData)
+writeFasta(sangerAlignmentData)}
 }
 \author{
 Kuan-Hao Chao
