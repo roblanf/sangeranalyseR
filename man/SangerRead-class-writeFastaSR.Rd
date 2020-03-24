@@ -18,6 +18,9 @@
 
 \item{compression_level}{This parameter will be passed to \code{writeXStringSet} function in Biostrings package.}
 }
+\value{
+The output absolute path to the FASTA file.
+}
 \description{
 A SangerRead method which writes the sequence into Fasta files.
 }

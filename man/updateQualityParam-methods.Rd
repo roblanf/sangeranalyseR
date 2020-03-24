@@ -19,6 +19,9 @@ updateQualityParam(object, TrimmingMethod = "M1",
 
 \item{M2SlidingWindowSize}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
 }
+\value{
+A \code{QualityReport}, \code{SangerRead}, \code{SangerContig}, or \code{SangerAlignment} instance.
+}
 \description{
 Method updateQualityParam
 }

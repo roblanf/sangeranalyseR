@@ -18,6 +18,9 @@
 
 \item{navigationAlignmentFN}{The internal parameter passed to HTML report. Users should not modify this parameter on their own.}
 }
+\value{
+The output absolute path to the SangerRead's HTML file.
+}
 \description{
 A SangerRead method which generates final reports of the SangerRead instance.
 }

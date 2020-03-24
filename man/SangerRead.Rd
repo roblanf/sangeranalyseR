@@ -41,7 +41,7 @@ SangerRead(inputSource = "ABIF", readFeature = "", readFileName = "",
 \item{showTrimmed}{The logical value storing whether to show trimmed base pairs in chromatogram. The default value is \code{TRUE}.}
 }
 \value{
-SangerRead
+A SangerRead instance.
 }
 \description{
 the wrapper function for SangerRead

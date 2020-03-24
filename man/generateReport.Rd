@@ -18,6 +18,9 @@ generateReport(object, outputDir = NULL, includeSangerContig = TRUE,
 
 \item{...}{Further generateReportSR, generateReportSC, and generateReportSA related parameters.}
 }
+\value{
+A \code{SangerRead}, \code{SangerContig}, or \code{SangerAlignment} object.
+}
 \description{
 A method which generates final reports of the SangerRead,
  SangerContig, and SangerAlignment instance.

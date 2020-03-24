@@ -18,6 +18,9 @@
 
 \item{includeSangerRead}{The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.}
 }
+\value{
+The output absolute path to the SangerAlignment's HTML file.
+}
 \description{
 A SangerAlignment method which generates final reports of the SangerContig instance.
 }

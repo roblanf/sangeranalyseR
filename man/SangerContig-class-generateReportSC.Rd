@@ -18,6 +18,9 @@
 
 \item{navigationAlignmentFN}{The internal parameter passed to HTML report. Users should not modify this parameter on their own.}
 }
+\value{
+The output absolute path to the SangerContig's HTML file.
+}
 \description{
 A SangerContig method which generates final reports of the SangerContig instance.
 }

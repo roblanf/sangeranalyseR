@@ -13,6 +13,9 @@
 
 \item{outputDir}{The output directory of the saved new SangerContig S4 instance.}
 }
+\value{
+A \code{shiny.appobj} object.
+}
 \description{
 A SangerContig method which launches Shiny app for SangerContig instance.
 }

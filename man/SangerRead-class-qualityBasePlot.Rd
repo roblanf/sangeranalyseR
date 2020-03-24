@@ -11,6 +11,9 @@
 \arguments{
 \item{object}{A SangerRead S4 instance.}
 }
+\value{
+A quality plot.
+}
 \description{
 A SangerRead method which creates quality base interactive plot.
 }

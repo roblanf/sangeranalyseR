@@ -11,6 +11,9 @@ MakeBaseCalls(object, signalRatioCutoff = 0.33)
 
 \item{signalRatioCutoff}{The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.}
 }
+\value{
+A \code{SangerRead} instance.
+}
 \description{
 Method MakeBaseCalls
 }

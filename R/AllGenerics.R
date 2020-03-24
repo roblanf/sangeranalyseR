@@ -13,6 +13,8 @@ setClassUnion("characterORNULL", c("character", "NULL"))
 #'
 #' @param object A QualityReport or SangerRead S4 instance
 #'
+#' @return A quality plot.
+#'
 #' @exportMethod qualityBasePlot
 #' @examples
 #' data(qualityReportData)
@@ -35,6 +37,8 @@ setGeneric("qualityBasePlot", function(object) {
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
 #' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
+#'
+#' @return A \code{QualityReport}, \code{SangerRead}, \code{SangerContig}, or \code{SangerAlignment} instance.
 #'
 #' @exportMethod updateQualityParam
 #' @examples
@@ -80,6 +84,8 @@ setGeneric("updateQualityParam", function(object,
 #' @param object A SangerRead S4 instance.
 #' @param signalRatioCutoff The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.
 #'
+#' @return A \code{SangerRead} instance.
+#'
 #' @exportMethod MakeBaseCalls
 #' @examples
 #' data(sangerReadFData)
@@ -100,6 +106,8 @@ setGeneric("MakeBaseCalls", function(object, signalRatioCutoff = 0.33) {
 #' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #' @param selection This value can be \code{all}, \code{contigs_alignment}, \code{contigs_unalignment} or \code{all_reads}. It generates reads and contigs FASTA files.
+#'
+#' @return The output directory of FASTA files.
 #'
 #' @exportMethod writeFastaSA
 #' @examples
@@ -122,6 +130,8 @@ setGeneric("writeFastaSA", function(object,outputDir = NULL,
 #' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #' @param selection This value can be \code{all}, \code{reads_alignment}, \code{reads_unalignment} or \code{contig}. It generates reads and the contig FASTA files.
 #'
+#' @return The output directory of FASTA files.
+#'
 #' @exportMethod writeFastaSC
 #' @examples
 #' data(sangerContigData)
@@ -141,6 +151,8 @@ setGeneric("writeFastaSC", function(object,outputDir = NULL,
 #' @param outputDir The output directory of the generated FASTA file.
 #' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#'
+#' @return The output absolute path to the FASTA file.
 #'
 #' @exportMethod writeFastaSR
 #' @examples
@@ -162,6 +174,8 @@ setGeneric("writeFastaSR", function(object,outputDir = NULL,
 #' @param object A SangerContig S4 instance.
 #' @param outputDir The output directory of the saved new SangerContig S4 instance.
 #'
+#' @return A \code{shiny.appobj} object.
+#'
 #' @exportMethod launchAppSC
 #' @examples
 #' data(sangerContigData)
@@ -177,6 +191,8 @@ setGeneric("launchAppSC", function(object, outputDir = NULL) {
 #'
 #' @param object A SangerAlignment S4 instance.
 #' @param outputDir The output directory of the saved new SangerAlignment S4 instance.
+#'
+#' @return A \code{shiny.appobj} object.
 #'
 #' @exportMethod launchAppSA
 #' @examples
@@ -198,6 +214,8 @@ setGeneric("launchAppSA", function(object, outputDir = NULL) {
 #' @param outputDir The output directory of the generated HTML report.
 #' @param ... Further generateReportSR-related parameters.
 #'
+#' @return The output absolute path to the SangerRead's HTML file.
+#'
 #' @exportMethod generateReportSR
 #' @examples
 #' data(sangerReadFData)
@@ -215,6 +233,8 @@ setGeneric("generateReportSR", function(object, outputDir = NULL, ...) {
 #' @param outputDir The output directory of the generated HTML report.
 #' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #' @param ... Further generateReportSC-related parameters.
+#'
+#' @return The output absolute path to the SangerContig's HTML file.
 #'
 #' @exportMethod generateReportSC
 #' @examples
@@ -235,6 +255,8 @@ setGeneric("generateReportSC", function(object, outputDir = NULL,
 #' @param includeSangerContig The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #' @param ... Further generateReportSA-related parameters.
+#'
+#' @return The output absolute path to the SangerAlignment's HTML file.
 #'
 #' @exportMethod generateReportSA
 #' @examples

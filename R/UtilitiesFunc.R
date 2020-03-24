@@ -122,7 +122,7 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
 ### ============================================================================
 getIndelDf <- function(indelList){
     r = lapply(indelList, indelRow)
-    indelDf = data.frame(matrix(unlist(r), byrow = T, nrow = length(indelList)))
+    indelDf = data.frame(matrix(unlist(r), byrow = TRUE, nrow = length(indelList)))
     indelDf = cbind(names(indelList), indelDf)
     names(indelDf) = c('read', 'insertions', 'deletions', 'distance')
     return(indelDf)
@@ -148,7 +148,7 @@ countCoincidentSp <- function(aln, processorsNum){
     r = Filter(Negate(is.null), r)
 
     if(length(r)>0){
-        r = as.data.frame(matrix(unlist(r), nrow=length(r), byrow=T))
+        r = as.data.frame(matrix(unlist(r), nrow=length(r), byrow=TRUE))
         names(r) = c('column.number', 'ambiguities', 'column')
         return(r)
     }else{

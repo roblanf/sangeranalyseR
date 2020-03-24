@@ -13,6 +13,9 @@ generateReportSR(object, outputDir = NULL, ...)
 
 \item{...}{Further generateReportSR-related parameters.}
 }
+\value{
+The output absolute path to the SangerRead's HTML file.
+}
 \description{
 Method generateReportSR
 }

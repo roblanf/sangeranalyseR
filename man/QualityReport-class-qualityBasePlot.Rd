@@ -11,6 +11,9 @@
 \arguments{
 \item{object}{A QualityReport S4 instance.}
 }
+\value{
+A quality plot.
+}
 \description{
 A QualityReport method which creates quality base interactive plot.
 }

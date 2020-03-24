@@ -68,7 +68,7 @@ SangerAlignment(inputSource = "ABIF", fastaFileName = "",
 \item{processorsNum}{The number of processors to use, or NULL (the default) for all available processors.}
 }
 \value{
-SangerAlignment
+A SangerAlignment instance.
 }
 \description{
 the wrapper function for SangerAlignment

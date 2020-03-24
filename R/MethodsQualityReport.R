@@ -28,6 +28,8 @@ preQualityBasePlot <- function(object) {
 #'
 #' @param object A QualityReport S4 instance.
 #'
+#' @return A quality plot.
+#'
 #' @examples
 #' data("qualityReportData")
 #' qualityBasePlot(qualityReportData)
@@ -50,6 +52,8 @@ setMethod("qualityBasePlot",  "QualityReport", function(object){
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
 #' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
+#'
+#' @return A QualityReport instance.
 #'
 #' @examples
 #' data("qualityReportData")

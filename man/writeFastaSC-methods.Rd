@@ -18,6 +18,9 @@ writeFastaSC(object, outputDir = NULL, compress = FALSE,
 
 \item{selection}{This value can be \code{all}, \code{reads_alignment}, \code{reads_unalignment} or \code{contig}. It generates reads and the contig FASTA files.}
 }
+\value{
+The output directory of FASTA files.
+}
 \description{
 Method writeFastaSC
 }

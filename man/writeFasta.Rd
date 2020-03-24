@@ -18,6 +18,9 @@ writeFasta(object, outputDir = NULL, compress = FALSE,
 
 \item{selection}{This parameter will be passed to \code{writeFastaSC} or \code{writeFastaSA}.}
 }
+\value{
+A \code{SangerRead}, \code{SangerContig}, or \code{SangerAlignment} object.
+}
 \description{
 A method which writes FASTA files of the SangerRead,
  SangerContig, and SangerAlignment instance.

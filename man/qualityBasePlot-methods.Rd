@@ -9,6 +9,9 @@ qualityBasePlot(object)
 \arguments{
 \item{object}{A QualityReport or SangerRead S4 instance}
 }
+\value{
+A quality plot.
+}
 \description{
 Method qualityBasePlot
 }

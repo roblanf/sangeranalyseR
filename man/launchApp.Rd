@@ -11,6 +11,9 @@ launchApp(object, outputDir = NULL)
 
 \item{outputDir}{The output directory of the saved new SangerContig or SangerAlignment S4 instance.}
 }
+\value{
+A \code{SangerContig} or \code{SangerAlignment} object.
+}
 \description{
 A method which launches Shiny application of the SangerContig
  and SangerAlignment instance.

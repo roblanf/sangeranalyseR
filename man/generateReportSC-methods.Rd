@@ -16,6 +16,9 @@ generateReportSC(object, outputDir = NULL, includeSangerRead = TRUE,
 
 \item{...}{Further generateReportSC-related parameters.}
 }
+\value{
+The output absolute path to the SangerContig's HTML file.
+}
 \description{
 Method generateReportSC
 }

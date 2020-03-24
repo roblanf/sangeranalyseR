@@ -33,7 +33,8 @@
 #' @name SangerAlignment
 #' @export
 #'
-#' @return SangerAlignment
+#' @return A SangerAlignment instance.
+#'
 #' @author Kuan-Hao Chao
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
@@ -142,7 +143,8 @@ SangerAlignment <- function(inputSource            = "ABIF",
 #' @name SangerContig
 #' @export
 #'
-#' @return SangerContig
+#' @return A SangerContig instance.
+#'
 #' @author Kuan-Hao Chao
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
@@ -243,7 +245,8 @@ SangerContig <- function(inputSource            = "ABIF",
 #' @name SangerRead
 #' @export
 #'
-#' @return SangerRead
+#' @return A SangerRead instance.
+#'
 #' @author Kuan-Hao Chao
 #' @examples
 #' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")

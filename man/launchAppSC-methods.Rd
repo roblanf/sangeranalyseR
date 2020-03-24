@@ -11,6 +11,9 @@ launchAppSC(object, outputDir = NULL)
 
 \item{outputDir}{The output directory of the saved new SangerContig S4 instance.}
 }
+\value{
+A \code{shiny.appobj} object.
+}
 \description{
 Method launchAppSC
 }

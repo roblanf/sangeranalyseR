@@ -18,6 +18,9 @@ generateReportSA(object, outputDir = NULL, includeSangerContig = TRUE,
 
 \item{...}{Further generateReportSA-related parameters.}
 }
+\value{
+The output absolute path to the SangerAlignment's HTML file.
+}
 \description{
 Method generateReportSA
 }

@@ -9,6 +9,8 @@
 #'
 #' @param object A SangerRead S4 instance.
 #'
+#' @return A quality plot.
+#'
 #' @examples
 #' data("sangerReadFData")
 #' qualityBasePlot(sangerReadFData)
@@ -36,6 +38,8 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
 #' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
+#'
+#' @return A SangerRead instance.
 #'
 #' @examples
 #' data("sangerReadFData")
@@ -97,9 +101,11 @@ setMethod("updateQualityParam",  "SangerRead",
 #' @param object A SangerRead S4 instance.
 #' @param signalRatioCutoff The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.
 #'
+#' @return A \code{SangerRead} instance.
+#'
 #' @examples
 #' data("sangerReadFData")
-#' MakeBaseCalls(sangerReadFData, signalRatioCutoff = 0.22)
+#' newSangerReadFData <- MakeBaseCalls(sangerReadFData, signalRatioCutoff = 0.22)
 setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
     if (object@inputSource == "ABIF") {
         errors <- character(0)
@@ -149,6 +155,8 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
 #' @param outputDir The output directory of the generated FASTA file.
 #' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
+#'
+#' @return The output absolute path to the FASTA file.
 #'
 #' @examples
 #' data("sangerReadFData")
@@ -204,6 +212,8 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 #' @param outputDir The output directory of the generated HTML report.
 #' @param navigationContigFN The internal parameter passed to HTML report. Users should not modify this parameter on their own.
 #' @param navigationAlignmentFN The internal parameter passed to HTML report. Users should not modify this parameter on their own.
+#'
+#' @return The output absolute path to the SangerRead's HTML file.
 #'
 #' @examples
 #' data("sangerReadFData")

@@ -21,6 +21,9 @@
 
 \item{M2SlidingWindowSize}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
 }
+\value{
+A SangerContig instance.
+}
 \description{
 A SangerContig method which updates QualityReport parameter for each the SangerRead instance inside SangerContig.
 }

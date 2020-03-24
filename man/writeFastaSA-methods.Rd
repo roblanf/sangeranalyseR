@@ -18,6 +18,9 @@ writeFastaSA(object, outputDir = NULL, compress = FALSE,
 
 \item{selection}{This value can be \code{all}, \code{contigs_alignment}, \code{contigs_unalignment} or \code{all_reads}. It generates reads and contigs FASTA files.}
 }
+\value{
+The output directory of FASTA files.
+}
 \description{
 Method writeFastaSA
 }

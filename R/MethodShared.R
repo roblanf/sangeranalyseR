@@ -6,6 +6,8 @@
 #' @param object A SangerContig or SangerAlignment S4 instance.
 #' @param outputDir The output directory of the saved new SangerContig or SangerAlignment S4 instance.
 #'
+#' @return A \code{SangerContig} or \code{SangerAlignment} object.
+#'
 #' @export
 #' @author Kuan-Hao Chao
 #' @examples
@@ -43,6 +45,8 @@ launchApp <- function(object, outputDir = NULL) {
 #' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #' @param selection This parameter will be passed to \code{writeFastaSC} or \code{writeFastaSA}.
+#'
+#' @return A \code{SangerRead}, \code{SangerContig}, or \code{SangerAlignment} object.
 #'
 #' @export
 #' @author Kuan-Hao Chao
@@ -93,6 +97,8 @@ writeFasta <- function(object, outputDir = NULL, compress  = FALSE,
 #' @param includeSangerContig The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #' @param ... Further generateReportSR, generateReportSC, and generateReportSA related parameters.
+#'
+#' @return A \code{SangerRead}, \code{SangerContig}, or \code{SangerAlignment} object.
 #'
 #' @export
 #' @author Kuan-Hao Chao

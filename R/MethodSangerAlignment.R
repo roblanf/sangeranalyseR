@@ -13,6 +13,8 @@
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
 #' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
 #'
+#' @return A SangerAlignment instance.
+#'
 #' @examples
 #' data("sangerAlignmentData")
 #' updateQualityParam(sangerAlignmentData,
@@ -78,6 +80,8 @@ setMethod("updateQualityParam",  "SangerAlignment",
 #' @param object A SangerAlignment S4 instance.
 #' @param outputDir The output directory of the saved new SangerContig S4 instance.
 #'
+#' @return A \code{shiny.appobj} object.
+#'
 #' @examples
 #' data("sangerAlignmentData")
 #' RShinySA <- launchAppSA(sangerAlignmentData)
@@ -122,6 +126,8 @@ setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
 #' @param compress Like for the \code{save} function in base R, must be \code{TRUE} or \code{FALSE} (the default), or a single string specifying whether writing to the file is to use compression. The only type of compression supported at the moment is "gzip". This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #' @param compression_level This parameter will be passed to \code{writeXStringSet} function in Biostrings package.
 #' @param selection This value can be \code{all}, \code{contigs_alignment}, \code{contigs_unalignment} or \code{all_reads}. It generates reads and contigs FASTA files.
+#'
+#' @return The output directory of FASTA files.
 #'
 #' @examples
 #' data("sangerAlignmentData")
@@ -243,6 +249,8 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
 #' @param outputDir The output directory of the generated HTML report.
 #' @param includeSangerContig The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#'
+#' @return The output absolute path to the SangerAlignment's HTML file.
 #'
 #' @examples
 #' data("sangerAlignmentData")

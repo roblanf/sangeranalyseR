@@ -16,6 +16,9 @@ writeFastaSR(object, outputDir = NULL, compress = FALSE,
 
 \item{compression_level}{This parameter will be passed to \code{writeXStringSet} function in Biostrings package.}
 }
+\value{
+The output absolute path to the FASTA file.
+}
 \description{
 Method writeFastaSR
 }
