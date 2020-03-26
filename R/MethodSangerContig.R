@@ -17,11 +17,12 @@
 #'
 #' @examples
 #' data("sangerContigData")
+#' \dontrun{
 #' updateQualityParam(sangerContigData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
-#'                    M2SlidingWindowSize    = 15)
+#'                    M2SlidingWindowSize    = 15)}
 setMethod("updateQualityParam",  "SangerContig",function(object,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,

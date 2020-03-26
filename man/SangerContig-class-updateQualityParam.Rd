@@ -29,9 +29,10 @@ A SangerContig method which updates QualityReport parameter for each the SangerR
 }
 \examples{
 data("sangerContigData")
+\dontrun{
 updateQualityParam(sangerContigData,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,
-                   M2SlidingWindowSize    = 15)
+                   M2SlidingWindowSize    = 15)}
 }

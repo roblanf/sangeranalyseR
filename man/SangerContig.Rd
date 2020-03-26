@@ -90,7 +90,8 @@ sangerContig <- SangerContig(
                      baseNumPerRow         = 100,
                      heightPerRow          = 200,
                      signalRatioCutoff     = 0.33,
-                     showTrimmed           = TRUE)
+                     showTrimmed           = TRUE,
+                     processorsNum         = 2)
 }
 \author{
 Kuan-Hao Chao
