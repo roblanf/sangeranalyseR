@@ -37,6 +37,7 @@ setGeneric("qualityBasePlot", function(object) {
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
 #' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
+#' @param ... Further updateQualityParam-related parameters.
 #'
 #' @return A \code{QualityReport}, \code{SangerRead}, \code{SangerContig}, or \code{SangerAlignment} instance.
 #'
@@ -46,6 +47,7 @@ setGeneric("qualityBasePlot", function(object) {
 #' data(sangerReadFData)
 #' data(sangerContigData)
 #' data(sangerAlignmentData)
+#' \dontrun{
 #' updateQualityParam(qualityReportData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
@@ -65,12 +67,13 @@ setGeneric("qualityBasePlot", function(object) {
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
 #'                    M2CutoffQualityScore   = 40,
-#'                    M2SlidingWindowSize    = 15)
+#'                    M2SlidingWindowSize    = 15)}
 setGeneric("updateQualityParam", function(object,
                                           TrimmingMethod        = "M1",
                                           M1TrimmingCutoff      = 0.0001,
                                           M2CutoffQualityScore  = NULL,
-                                          M2SlidingWindowSize   = NULL) {
+                                          M2SlidingWindowSize   = NULL,
+                                          ...) {
     standardGeneric("updateQualityParam")
 })
 

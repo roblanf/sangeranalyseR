@@ -32,7 +32,8 @@ preQualityBasePlot <- function(object) {
 #'
 #' @examples
 #' data("qualityReportData")
-#' qualityBasePlot(qualityReportData)
+#' \dontrun{
+#' qualityBasePlot(qualityReportData)}
 setMethod("qualityBasePlot",  "QualityReport", function(object){
     plotting <- preQualityBasePlot(object)
     plotting

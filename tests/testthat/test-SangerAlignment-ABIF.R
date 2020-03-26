@@ -24,7 +24,8 @@ test_that("SangerAlignment update quality trimming parameters test 1 - M1", {
                                                  TrimmingMethod       = "M1",
                                                  M1TrimmingCutoff     = 0.1,
                                                  M2CutoffQualityScore = NULL,
-                                                 M2SlidingWindowSize  = NULL)
+                                                 M2SlidingWindowSize  = NULL,
+                                                 processorsNum        = 1)
     expect_equal(newTrimmedSangerAlignment@trimmingMethodSA, "M1")
     sapply(newTrimmedSangerAlignment@contigList, function(contig) {
         expect_type(contig, "S4")
@@ -76,7 +77,8 @@ test_that("SangerAlignment update quality trimming parameters test 2 - M2", {
                                                     TrimmingMethod       = "M2",
                                                     M1TrimmingCutoff     = NULL,
                                                     M2CutoffQualityScore = 35,
-                                                    M2SlidingWindowSize  = 15)
+                                                    M2SlidingWindowSize  = 15,
+                                                    processorsNum        = 1)
     expect_equal(newTrimmedSangerAlignment@trimmingMethodSA, "M2")
     sapply(newTrimmedSangerAlignment@contigList, function(contig) {
         expect_type(contig, "S4")

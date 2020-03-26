@@ -13,7 +13,8 @@
 #'
 #' @examples
 #' data("sangerReadFData")
-#' qualityBasePlot(sangerReadFData)
+#' \dontrun{
+#' qualityBasePlot(sangerReadFData)}
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     if (object@inputSource == "ABIF") {
         plotting <- preQualityBasePlot(object@QualityReport)

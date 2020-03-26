@@ -19,5 +19,6 @@ A QualityReport method which creates quality base interactive plot.
 }
 \examples{
 data("qualityReportData")
-qualityBasePlot(qualityReportData)
+\dontrun{
+qualityBasePlot(qualityReportData)}
 }

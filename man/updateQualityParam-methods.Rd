@@ -6,7 +6,7 @@
 \usage{
 updateQualityParam(object, TrimmingMethod = "M1",
   M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
-  M2SlidingWindowSize = NULL)
+  M2SlidingWindowSize = NULL, ...)
 }
 \arguments{
 \item{object}{A QualityReport, SangerRead, SangerContig, or SangerAlignment S4 instance.}
@@ -18,6 +18,8 @@ updateQualityParam(object, TrimmingMethod = "M1",
 \item{M2CutoffQualityScore}{The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.}
 
 \item{M2SlidingWindowSize}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
+
+\item{...}{Further updateQualityParam-related parameters.}
 }
 \value{
 A \code{QualityReport}, \code{SangerRead}, \code{SangerContig}, or \code{SangerAlignment} instance.
@@ -30,6 +32,7 @@ data(qualityReportData)
 data(sangerReadFData)
 data(sangerContigData)
 data(sangerAlignmentData)
+\dontrun{
 updateQualityParam(qualityReportData,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
@@ -49,5 +52,5 @@ updateQualityParam(sangerAlignmentData,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,
                    M2CutoffQualityScore   = 40,
-                   M2SlidingWindowSize    = 15)
+                   M2SlidingWindowSize    = 15)}
 }

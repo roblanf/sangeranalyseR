@@ -8,7 +8,8 @@
 \usage{
 \S4method{updateQualityParam}{SangerContig}(object,
   TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
-  M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL)
+  M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
+  processorsNum = NULL)
 }
 \arguments{
 \item{object}{A SangerContig S4 instance.}
@@ -20,6 +21,8 @@
 \item{M2CutoffQualityScore}{The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.}
 
 \item{M2SlidingWindowSize}{The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.}
+
+\item{processorsNum}{The number of processors to use, or NULL (the default) for all available processors.}
 }
 \value{
 A SangerContig instance.

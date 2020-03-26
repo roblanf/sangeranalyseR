@@ -12,6 +12,7 @@
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
 #' @param M2SlidingWindowSize The trimming sliding window size for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{10}. Otherwise, the value must be \code{NULL}. It works with \code{M2CutoffQualityScore}.
+#' @param processorsNum The number of processors to use, or NULL (the default) for all available processors.
 #'
 #' @return A SangerContig instance.
 #'
@@ -27,7 +28,8 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
                    M2CutoffQualityScore   = NULL,
-                   M2SlidingWindowSize    = NULL){
+                   M2SlidingWindowSize    = NULL,
+                   processorsNum          = NULL){
     if (object@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
         ### Updating forward read quality parameters
@@ -75,7 +77,7 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
                                     geneticCode      = object@geneticCode,
                                     acceptStopCodons = object@acceptStopCodons,
                                     readingFrame     = object@readingFrame,
-                                    processorsNum    = getProcessors(NULL))
+                                    processorsNum    = getProcessors(processorsNum))
             object@contigSeq <- CSResult$consensusGapfree
             object@differencesDF <- CSResult$diffsDf
             object@alignment <- CSResult$aln2
