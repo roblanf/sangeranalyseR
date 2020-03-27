@@ -1,7 +1,7 @@
 ### ============================================================================
 ### Global helper functions
 ### ============================================================================
-getProcessors <- function(processors) {
+getProcessors <- function(processors = NULL) {
     sysinf <- Sys.info()
     if (!is.null(sysinf)){
         os <- sysinf["sysname"]
@@ -171,7 +171,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                refAminoAcidSeq, minFractionCall,
                                maxFractionLost, geneticCode,
                                acceptStopCodons, readingFrame,
-                               processorsNum) {
+                               processorsNum = NULL) {
     ### ------------------------------------------------------------------------
     ### forward & reverse character reads list string creation
     ### ------------------------------------------------------------------------
