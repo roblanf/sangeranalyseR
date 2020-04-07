@@ -53,6 +53,8 @@ setOldClass("phylo")
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerAlignment", "Sanger_all_reads.fa")
 #' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion.csv")
+#'
+#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion_v2.csv")
 #' suffixForwardRegExpFa <- "_[0-9]*_F$"
 #' suffixReverseRegExpFa <- "_[0-9]*_R$"
 #' sangerAlignmentFa <- new("SangerAlignment",
@@ -233,6 +235,28 @@ setMethod("initialize",
                 message("    * Reading CSV file and matching names !!")
                 fastaNames <- names(readFasta)
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
+
+
+
+                for (name in unique(as.character(csvFile$contig_name))) {
+                    csvFileSelectedContig = csvFile[csvFile$contig_name == name,]
+                    SamecontigNum <- length(rownames(csvFileSelectedContig))
+                    if (SamecontigNum < 2) {
+                        stop("Each contig reads number should be more than 2!")
+                    }
+                    for (direction in c("F", "R")) {
+                        csvFileSelectedDirection <- csvFileSelectedContig[csvFileSelectedContig$read_direction == direction,]
+                        # print(csvFileSelectedDirection)
+                        # print("----------------------------------------------------------------------------------")
+                    }
+                }
+
+
+
+
+
+
+
                 tmpFastaNames <- sapply(fastaNames, function(fastaName) {
                     as.character(csvFile[csvFile$original_read_name %in%
                                              fastaName, ]$analysis_read_name)

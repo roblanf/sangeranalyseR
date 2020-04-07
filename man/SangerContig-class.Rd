@@ -92,13 +92,16 @@ rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
                      "SangerContig", "Achl_ACHLO006-09.fa")
 namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
+
+
+namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1_v2.csv")
 contigName <- "Achl_ACHLO006-09"
 suffixForwardRegExpFa <- "_[0-9]*_F$"
 suffixReverseRegExpFa <- "_[0-9]*_R$"
 sangerContigFa <- new("SangerContig",
                       inputSource           = "FASTA",
                       fastaFileName         = fastaFN,
-                      namesConversionCSV    = namesConversionCSV,
+                      namesConversionCSV    = namesConversionCSV_v2,
                       contigName            = contigName,
                       suffixForwardRegExp   = suffixForwardRegExpFa,
                       suffixReverseRegExp   = suffixReverseRegExpFa,

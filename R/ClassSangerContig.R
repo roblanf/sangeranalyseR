@@ -63,13 +63,16 @@
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerContig", "Achl_ACHLO006-09.fa")
 #' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
+#'
+#'
+#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1_v2.csv")
 #' contigName <- "Achl_ACHLO006-09"
 #' suffixForwardRegExpFa <- "_[0-9]*_F$"
 #' suffixReverseRegExpFa <- "_[0-9]*_R$"
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
 #'                       fastaFileName         = fastaFN,
-#'                       namesConversionCSV    = namesConversionCSV,
+#'                       namesConversionCSV    = namesConversionCSV_v2,
 #'                       contigName            = contigName,
 #'                       suffixForwardRegExp   = suffixForwardRegExpFa,
 #'                       suffixReverseRegExp   = suffixReverseRegExpFa,
@@ -293,10 +296,34 @@ setMethod("initialize",
                 message("    * Reading CSV file and matching names !!")
                 fastaNames <- names(readFasta)
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
-                tmpFastaNames <- sapply(fastaNames, function(fastaName) {
-                    as.character(csvFile[csvFile$original_read_name %in%
-                                             fastaName, ]$analysis_read_name)
-                })
+
+                # csvFile$contig_name
+                #
+                # for (i)
+                # unique(as.character(csvFile$contig_name))
+                #
+                # for (i in as.character(csvFile$contig_name)) {
+                #     for (j in as.character(csvFile$read_direction)) {
+                #         message("i: ", i, " ;  j: ", j)
+                #     }
+                # }
+                #
+                # as.character(csvFile$contig_name)
+                # as.character(csvFile$read_direction)
+                #
+                # tmpFastaNames <- sapply(fastaNames, function(fastaName) {
+                #     as.character(csvFile[csvFile$original_read_name %in%
+                #                              fastaName, ]$contig_name)
+                # })
+                #
+                # tmpFastaNames <- sapply(fastaNames, function(fastaName) {
+                #     as.character(csvFile[csvFile$original_read_name %in%
+                #                              fastaName, ]$read_direction)
+                # })
+
+
+
+
                 names(tmpFastaNames) <- NULL
                 names(readFasta) <- tmpFastaNames
             }

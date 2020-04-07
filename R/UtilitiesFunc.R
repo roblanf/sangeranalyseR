@@ -741,7 +741,7 @@ QualityBasePlotly <- function(trimmedStartPos, trimmedFinishPos,
                                  xanchor = "center",
                                  x = 0.5, y = 1.1)) %>%
             add_annotations(
-                text = "Trimming Strat <br> BP Index",
+                text = "Trimming Start <br> BP Index",
                 x = trimmedStartPos + 40,
                 y = 15,
                 showarrow=FALSE
