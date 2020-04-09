@@ -133,6 +133,7 @@ setMethod("initialize",
                    readFileName         = "",
                    fastaReadName        = NULL,
                    namesConversionCSV   = NULL,
+
                    geneticCode          = GENETIC_CODE,
                    TrimmingMethod       = "M1",
                    M1TrimmingCutoff     = 0.0001,

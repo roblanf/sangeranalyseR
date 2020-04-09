@@ -237,46 +237,88 @@ setMethod("initialize",
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
 
 
-
-                for (name in unique(as.character(csvFile$contig_name))) {
-                    csvFileSelectedContig = csvFile[csvFile$contig_name == name,]
-                    SamecontigNum <- length(rownames(csvFileSelectedContig))
-                    if (SamecontigNum < 2) {
-                        stop("Each contig reads number should be more than 2!")
-                    }
-                    for (direction in c("F", "R")) {
-                        csvFileSelectedDirection <- csvFileSelectedContig[csvFileSelectedContig$read_direction == direction,]
-                        # print(csvFileSelectedDirection)
-                        # print("----------------------------------------------------------------------------------")
-                    }
-                }
+                # for (originalName in unique(as.character(csvFile$original_read_name))) {
+                #     csvFileSelectedContig <- csvFile[csvFile$original_read_name == originalName,]
+                #     print(csvFileSelectedContig)
+                #     print("---------------------------------------------------")
+                # }
+                #
+                # as.character(csvFile$original_read_name)
+                #
+                # csvFile
 
 
+                # # nameLayer <- list()
+                # originalDic <- list()
+                # for (name in unique(as.character(csvFile$contig_name))) {
+                #     csvFileSelectedContig <- csvFile[csvFile$contig_name == name,]
+                #     SamecontigNum <- length(rownames(csvFileSelectedContig))
+                #     if (SamecontigNum < 2) {
+                #         stop("Each contig reads number should be more than 2!")
+                #     }
+                #
+                #     # dirLayer <- list()
+                #     for (direction in c("F", "R")) {
+                #         csvFileSelectedDirection <- csvFileSelectedContig[csvFileSelectedContig$read_direction == direction,]
+                #         countDirLayer <- c()
+                #         for (row in 1:nrow(csvFileSelectedDirection)) {
+                #             originalName <- as.character(csvFileSelectedDirection[row,]$original_read_name)
+                #             countDirLayer <- c(countDirLayer, originalName)
+                #         }
+                #         # dirLayer[[direction]] <- countDirLayer
+                #
+                #         originalDic[[originalName]][[name]][[direction]] <- countDirLayer
+                #         # print(dirLayer)
+                #     }
+                #     # nameLayer[[name]] <- dirLayer
+                # }
 
 
 
 
-
-                tmpFastaNames <- sapply(fastaNames, function(fastaName) {
-                    as.character(csvFile[csvFile$original_read_name %in%
-                                             fastaName, ]$analysis_read_name)
-                })
-                names(tmpFastaNames) <- NULL
-                names(readFasta) <- tmpFastaNames
+                # originalDic <- list()
+                # for (originalName in unique(as.character(csvFile$original_read_name))) {
+                #     nameLayer <- list()
+                #     for (name in unique(as.character(csvFile$contig_name))) {
+                #         csvFileSelectedContig <- csvFile[csvFile$contig_name == name,]
+                #         SamecontigNum <- length(rownames(csvFileSelectedContig))
+                #         if (SamecontigNum < 2) {
+                #             stop("Each contig reads number should be more than 2!")
+                #         }
+                #
+                #         for (direction in c("F", "R")) {
+                #             csvFileSelectedDirection <- csvFileSelectedContig[csvFileSelectedContig$read_direction == direction,]
+                #             if (nrow(csvFileSelectedDirection) == 1) {
+                #                 nameLayer[[name]] <- direction
+                #             }
+                #         }
+                #         nameLayer[[name]] <- dirLayer
+                #     }
+                #     originalDic[[originalName]] <- nameLayer
+                # }
+                contigNames <- unique(as.character(csvFile$contig_name))
             }
-            fastaNames <- names(readFasta)
-            forwardSelect <- fastaNames[grepl(suffixForwardRegExp, fastaNames)]
-            reverseSelect <- fastaNames[grepl(suffixReverseRegExp, fastaNames)]
 
-            # Find possible consensus Name for forward and reverse reads
-            forwardContigName <-
-                unlist(str_split(forwardSelect, suffixForwardRegExp,
-                                 n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
-            reverseContigName <-
-                unlist(str_split(reverseSelect, suffixReverseRegExp,
-                                 n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
-            contigNames <- union(forwardContigName, reverseContigName)
-            contigNumber <- length(contigNames)
+
+            # fastaNames <- names(readFasta)
+            # forwardSelect <- fastaNames[grepl(suffixForwardRegExp, fastaNames)]
+            # reverseSelect <- fastaNames[grepl(suffixReverseRegExp, fastaNames)]
+            #
+            # # Find possible consensus Name for forward and reverse reads
+            # forwardContigName <-
+            #     unlist(str_split(forwardSelect, suffixForwardRegExp,
+            #                      n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+            # reverseContigName <-
+            #     unlist(str_split(reverseSelect, suffixReverseRegExp,
+            #                      n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+            # contigNames <- union(forwardContigName, reverseContigName)
+            # contigNumber <- length(contigNames)
+
+
+
+
+
+
             SangerContigList <- sapply(contigNames, function(contigName) {
                 new("SangerContig",
                     inputSource          = inputSource,

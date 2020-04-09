@@ -95,6 +95,8 @@ namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conv
 
 
 namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1_v2.csv")
+
+namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion_v2.csv")
 contigName <- "Achl_ACHLO006-09"
 suffixForwardRegExpFa <- "_[0-9]*_F$"
 suffixReverseRegExpFa <- "_[0-9]*_R$"

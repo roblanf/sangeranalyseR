@@ -66,6 +66,8 @@
 #'
 #'
 #' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1_v2.csv")
+#'
+#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion_v2.csv")
 #' contigName <- "Achl_ACHLO006-09"
 #' suffixForwardRegExpFa <- "_[0-9]*_F$"
 #' suffixReverseRegExpFa <- "_[0-9]*_R$"
@@ -169,6 +171,21 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### 'forwardAllReads' & 'reverseAllReads' files prechecking
             ### ----------------------------------------------------------------
+            if (is.null(namesConversionCSV) &&
+                !is.null(suffixForwardRegExp) &&
+                !is.null(suffixReverseRegExp)) {
+                # Regex input
+
+            } else if (!is.null(namesConversionCSV) &&
+                       is.null(suffixForwardRegExp) &&
+                       is.null(suffixReverseRegExp)) {
+                # CSV input
+
+            }
+
+
+
+
             parentDirFiles <- list.files(parentDirectory)
             contigSubGroupFiles <-
                 parentDirFiles[grepl(contigName,
@@ -288,6 +305,23 @@ setMethod("initialize",
             errors <- checkFastaFileName(fastaFileName, errors)
             errors <- checkNamesConversionCSV(namesConversionCSV,
                                               inputSource, errors)
+
+            if (!is.null(namesConversionCSV) &&
+                !is.null(suffixForwardRegExp) &&
+                !is.null(suffixReverseRegExp) &&
+                !is.null(contigName)) {
+                # Csv-Regex input
+
+            } else if (!is.null(namesConversionCSV) &&
+                       is.null(suffixForwardRegExp) &&
+                       is.null(suffixReverseRegExp) &&
+                       is.null(contigName)) {
+                # Csv-CSV input
+
+            }
+
+
+
             if(length(errors) != 0) {
                 stop(errors)
             }
@@ -297,7 +331,6 @@ setMethod("initialize",
                 fastaNames <- names(readFasta)
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
 
-                # csvFile$contig_name
                 #
                 # for (i)
                 # unique(as.character(csvFile$contig_name))
@@ -322,10 +355,40 @@ setMethod("initialize",
                 # })
 
 
+                # # nameLayer <- list()
+                # originalDic <- list()
+                # for (name in unique(as.character(csvFile$contig_name))) {
+                #     csvFileSelectedContig <- csvFile[csvFile$contig_name == name,]
+                #     SamecontigNum <- length(rownames(csvFileSelectedContig))
+                #     if (SamecontigNum < 2) {
+                #         stop("Each contig reads number should be more than 2!")
+                #     }
+                #
+                #     # dirLayer <- list()
+                #     for (direction in c("F", "R")) {
+                #         csvFileSelectedDirection <- csvFileSelectedContig[csvFileSelectedContig$read_direction == direction,]
+                #         countDirLayer <- c()
+                #         for (row in 1:nrow(csvFileSelectedDirection)) {
+                #             originalName <- as.character(csvFileSelectedDirection[row,]$original_read_name)
+                #             countDirLayer <- c(countDirLayer, originalName)
+                #         }
+                #         # dirLayer[[direction]] <- countDirLayer
+                #
+                #         originalDic[[originalName]][[name]][[direction]] <- countDirLayer
+                #         # print(dirLayer)
+                #     }
+                #     # nameLayer[[name]] <- dirLayer
+                # }
 
-
+                # Regex
+                tmpFastaNames <- sapply(fastaNames, function(fastaName) {
+                    as.character(csvFile[csvFile$original_read_name %in%
+                                             fastaName, ]$contig_name)
+                })
                 names(tmpFastaNames) <- NULL
                 names(readFasta) <- tmpFastaNames
+
+                # Csv
             }
             fastaNames <- names(readFasta)
             ### ----------------------------------------------------------------
