@@ -42,7 +42,7 @@ An S4 class containing SangerContigs lists and contigs alignment results which c
 }}
 
 \examples{
-## Input From ABIF file format
+## Input From ABIF file format (Regex)
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
 suffixForwardRegExp <- "_[0-9]*_F.ab1"
@@ -50,6 +50,7 @@ suffixReverseRegExp <- "_[0-9]*_R.ab1"
 sangerAlignment <- new("SangerAlignment",
                        inputSource           = "ABIF",
                        parentDirectory       = parentDir,
+                       namesConversionCSV    = namesConversionCSV,
                        suffixForwardRegExp   = suffixForwardRegExp,
                        suffixReverseRegExp   = suffixReverseRegExp,
                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -63,7 +64,26 @@ sangerAlignment <- new("SangerAlignment",
                        showTrimmed           = TRUE,
                        processorsNum         = 2)
 
-## Input From FASTA file format
+## Input From ABIF file format (Csv three column)
+rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
+namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment",
+"names_conversion.csv")
+sangerAlignment <- new("SangerAlignment",
+                       inputSource           = "ABIF",
+                       parentDirectory       = parentDir,
+                       refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                       TrimmingMethod        = "M1",
+                       M1TrimmingCutoff      = 0.0001,
+                       M2CutoffQualityScore  = NULL,
+                       M2SlidingWindowSize   = NULL,
+                       baseNumPerRow         = 100,
+                       heightPerRow          = 200,
+                       signalRatioCutoff     = 0.33,
+                       showTrimmed           = TRUE,
+                       processorsNum         = 2)
+
+## Input From FASTA file format (No Csv - Regex)
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
                      "SangerAlignment", "Sanger_all_reads.fa")
@@ -80,6 +100,9 @@ sangerAlignmentFa <- new("SangerAlignment",
                          suffixReverseRegExp   = suffixReverseRegExpFa,
                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
                          processorsNum         = 2)
+
+## Input From FASTA file format (Csv three column method)
+
 }
 \author{
 Kuan-Hao Chao

@@ -70,7 +70,6 @@ parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 contigName <- "Achl_RBNII384-13"
 suffixForwardRegExp <- "_[0-9]*_F.ab1"
 suffixReverseRegExp <- "_[0-9]*_R.ab1"
-namesConversionCSV <- ""
 sangerContig <- new("SangerContig",
                      inputSource           = "ABIF",
                      parentDirectory       = parentDir,
@@ -88,7 +87,7 @@ sangerContig <- new("SangerContig",
                      showTrimmed           = TRUE,
                      processorsNum         = 2)
 
-## Input From ABIF file format (Csv)
+## Input From ABIF file format (Csv three column method)
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 namesConversionCSV <- file.path(rawDataDir, "ab1", "SangerContig", "names_conversion_2.csv")
@@ -108,24 +107,31 @@ sangerContig <- new("SangerContig",
                      processorsNum         = 2)
 
 
-## Input From FASTA file format
+## Input From FASTA file format (No Csv - Regex)
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
                      "SangerContig", "Achl_ACHLO006-09.fa")
-namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
-
-
-namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1_v2.csv")
 contigName <- "Achl_ACHLO006-09"
 suffixForwardRegExpFa <- "_[0-9]*_F$"
 suffixReverseRegExpFa <- "_[0-9]*_R$"
 sangerContigFa <- new("SangerContig",
                       inputSource           = "FASTA",
                       fastaFileName         = fastaFN,
-                      namesConversionCSV    = namesConversionCSV_v2,
                       contigName            = contigName,
                       suffixForwardRegExp   = suffixForwardRegExpFa,
                       suffixReverseRegExp   = suffixReverseRegExpFa,
+                      refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                      processorsNum         = 2)
+
+## Input From FASTA file format (Csv - Csv three column method)
+rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+fastaFN <- file.path(rawDataDir, "fasta",
+                     "SangerContig", "Achl_ACHLO006-09.fa")
+namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
+sangerContigFa <- new("SangerContig",
+                      inputSource           = "FASTA",
+                      fastaFileName         = fastaFN,
+                      namesConversionCSV    = namesConversionCSV,
                       refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
                       processorsNum         = 2)
 }

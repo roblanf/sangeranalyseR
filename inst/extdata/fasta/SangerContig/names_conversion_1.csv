@@ -1,3 +1,3 @@
-"original_read_name","analysis_read_name"
-"Achl_ACHLO006-09_1_Forward","Achl_ACHLO006-09_1_F"
-"Achl_ACHLO006-09_2_Reverse","Achl_ACHLO006-09_2_R"
+"original_read_name","read_direction","contig_name"
+"Achl_ACHLO006-09_1_F","F","Achl_ACHLO006-09"
+"Achl_ACHLO006-09_2_R","R","Achl_ACHLO006-09"

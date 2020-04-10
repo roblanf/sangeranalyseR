@@ -25,10 +25,6 @@ checkNamesConversionCSV <- function (namesConversionCSV, inputSource, errors) {
             }
         }
     } else if (inputSource == "FASTA") {
-        if(is.null(namesConversionCSV)) {
-            message("\n(Warning) You didn't provide names conversion CSV file.",
-                    " Make sure the names in FASTA file are valid.\n")
-        }
         if(!is.null(namesConversionCSV)) {
             if (!file.exists(namesConversionCSV)) {
                 msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",

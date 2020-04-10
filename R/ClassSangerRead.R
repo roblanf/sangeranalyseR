@@ -75,13 +75,11 @@
 #'                                "SangerRead",
 #'                                "Achl_ACHLO006-09_1_F.fa")
 #' readNameFfa <- "Achl_ACHLO006-09_1_F"
-#' namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_1.csv")
 #' sangerReadFfa <- new("SangerRead",
 #'                      inputSource        = "FASTA",
 #'                      readFeature        = "Forward Read",
 #'                      readFileName       = A_chloroticaFFNfa,
 #'                      fastaReadName      = readNameFfa,
-#'                      namesConversionCSV = namesConversionCSV,
 #'                      geneticCode        = GENETIC_CODE)
 #' # Reverse Read
 #' A_chloroticaRFNfa <- file.path(inputFilesPath,
@@ -89,13 +87,11 @@
 #'                                "SangerRead",
 #'                                "Achl_ACHLO006-09_2_R.fa")
 #' readNameRfa <- "Achl_ACHLO006-09_2_R"
-#' namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_2.csv")
 #' sangerReadRfa <- new("SangerRead",
 #'                      inputSource   = "FASTA",
 #'                      readFeature   = "Reverse Read",
 #'                      readFileName  = A_chloroticaRFNfa,
 #'                      fastaReadName = readNameRfa,
-#'                      namesConversionCSV = namesConversionCSV,
 #'                      geneticCode   = GENETIC_CODE)
 setClass(
     "SangerRead",
@@ -269,17 +265,6 @@ setMethod("initialize",
             primarySeqRaw <- DNAString()
             message(readFeature, ": Creating SangerRead from FASTA ...")
             readFasta <- read.fasta(readFileName, as.string = TRUE)
-            if (!is.null(namesConversionCSV)) {
-                message("    * Reading CSV file and matching names !!")
-                fastaNames <- names(readFasta)
-                csvFile <- read.csv(namesConversionCSV, header = TRUE)
-                tmpFastaNames <- sapply(fastaNames, function(fastaName) {
-                    as.character(csvFile[csvFile$original_read_name %in%
-                                             fastaName, ]$analysis_read_name)
-                })
-                names(tmpFastaNames) <- NULL
-                names(readFasta) <- tmpFastaNames
-            }
             ### ----------------------------------------------------------------
             ### Get the Target Filename !!
             ### ----------------------------------------------------------------
