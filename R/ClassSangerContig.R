@@ -35,12 +35,13 @@
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
-#' ## Input From ABIF file format
+#' ## Input From ABIF file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' contigName <- "Achl_RBNII384-13"
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
+#' namesConversionCSV <- ""
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
 #'                      parentDirectory       = parentDir,
@@ -58,6 +59,33 @@
 #'                      showTrimmed           = TRUE,
 #'                      processorsNum         = 2)
 #'
+#' ## Input From ABIF file format (Csv)
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
+#' contigName <- "Achl_RBNII384-13"
+#' namesConversionCSV <- file.path(rawDataDir, "ab1", "SangerContig", "names_conversion_2.csv")
+#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
+#' suffixReverseRegExp <- "_[0-9]*_R.ab1"
+#' sangerContig <- new("SangerContig",
+#'                      inputSource           = "ABIF",
+#'                      parentDirectory       = parentDir,
+#'                      contigName            = contigName,
+#'                      namesConversionCSV    = namesConversionCSV,
+#'                      suffixForwardRegExp   = suffixForwardRegExp,
+#'                      suffixReverseRegExp   = suffixReverseRegExp,
+#'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                      TrimmingMethod        = "M1",
+#'                      M1TrimmingCutoff      = 0.0001,
+#'                      M2CutoffQualityScore  = NULL,
+#'                      M2SlidingWindowSize   = NULL,
+#'                      baseNumPerRow         = 100,
+#'                      heightPerRow          = 200,
+#'                      signalRatioCutoff     = 0.33,
+#'                      showTrimmed           = TRUE,
+#'                      processorsNum         = 2)
+#'
+#'
+#'
 #' ## Input From FASTA file format
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' fastaFN <- file.path(rawDataDir, "fasta",
@@ -66,8 +94,6 @@
 #'
 #'
 #' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1_v2.csv")
-#'
-#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion_v2.csv")
 #' contigName <- "Achl_ACHLO006-09"
 #' suffixForwardRegExpFa <- "_[0-9]*_F$"
 #' suffixReverseRegExpFa <- "_[0-9]*_R$"
@@ -122,7 +148,7 @@ setMethod("initialize",
                    fastaFileName          = NULL,
                    namesConversionCSV     = NULL,
                    parentDirectory        = NULL,
-                   contigName             = "",
+                   contigName             = NULL,
                    suffixForwardRegExp    = "_F.ab1",
                    suffixReverseRegExp    = "_R.ab1",
                    geneticCode            = GENETIC_CODE,
@@ -161,32 +187,33 @@ setMethod("initialize",
     ### Input parameter prechecking for processorsNum
     ### ------------------------------------------------------------------------
     errors <- checkProcessorsNum(processorsNum, errors)
+    if (length(errors) != 0 ) {
+        stop(errors)
+    }
+    processorsNum <- getProcessors (processorsNum)
+    if (inputSource == "ABIF") {
+        errors <- checkParentDirectory (parentDirectory, errors)
+        errors <- checkNamesConversionCSV(namesConversionCSV,
+                                          inputSource, errors)
+        if (length(errors) != 0 ) {
+            stop(errors)
+        }
+        ### ----------------------------------------------------------------
+        ### 'forwardAllReads' & 'reverseAllReads' files prechecking
+        ### ----------------------------------------------------------------
+        parentDirFiles <- list.files(parentDirectory)
 
-    if (length(errors) == 0) {
-        processorsNum <- getProcessors (processorsNum)
-        if (inputSource == "ABIF") {
-            errors <- checkParentDirectory (parentDirectory, errors)
-            errors <- checkNamesConversionCSV(namesConversionCSV,
-                                              inputSource, errors)
-            ### ----------------------------------------------------------------
-            ### 'forwardAllReads' & 'reverseAllReads' files prechecking
-            ### ----------------------------------------------------------------
-            if (is.null(namesConversionCSV) &&
-                !is.null(suffixForwardRegExp) &&
-                !is.null(suffixReverseRegExp)) {
-                # Regex input
+        ab1RegexChecker <- is.null(namesConversionCSV) &&
+            !is.null(contigName) &&
+            !is.null(suffixForwardRegExp) &&
+            !is.null(suffixReverseRegExp)
 
-            } else if (!is.null(namesConversionCSV) &&
-                       is.null(suffixForwardRegExp) &&
-                       is.null(suffixReverseRegExp)) {
-                # CSV input
+        ab1CSVChecker <- !is.null(namesConversionCSV)
 
-            }
-
-
-
-
-            parentDirFiles <- list.files(parentDirectory)
+        if (ab1RegexChecker) {
+            # Regex input
+            message("You are using Regular Expression Method",
+                    " to group AB1 files!")
             contigSubGroupFiles <-
                 parentDirFiles[grepl(contigName,
                                      parentDirFiles, fixed=TRUE)]
@@ -200,29 +227,20 @@ setMethod("initialize",
                                       forwardSelectInputFiles)
             reverseAllReads <- lapply(parentDirectory, file.path,
                                       reverseSelectInputFiles)
-
-            ### ----------------------------------------------------------------
-            ### 'forwardNumber' + 'reverseNumber' number > 2
-            ### ----------------------------------------------------------------
             forwardNumber <- length(forwardAllReads[[1]])
             reverseNumber <- length(reverseAllReads[[1]])
-            if ((forwardNumber + reverseNumber) < 2) {
-                msg <- "\n'Number of total reads has to be more than two."
-                errors <- c(errors, msg)
-            }
-
             ### ----------------------------------------------------------------
             ### 'forwardAllReads'  files prechecking (must exist)
             ### ----------------------------------------------------------------
             forwardAllErrorMsg <- sapply(c(forwardAllReads[[1]]),
                                          function(filePath) {
-                if (!file.exists(filePath)) {
-                    msg <- paste("\n'", filePath, "' forward read file does ",
-                                 "not exist.\n", sep = "")
-                    return(msg)
-                }
-                return()
-            })
+                                             if (!file.exists(filePath)) {
+                                                 msg <- paste("\n'", filePath, "' forward read file does ",
+                                                              "not exist.\n", sep = "")
+                                                 return(msg)
+                                             }
+                                             return()
+                                         })
             errors <- c(errors, unlist(forwardAllErrorMsg), use.names = FALSE)
 
             ### ----------------------------------------------------------------
@@ -230,40 +248,74 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             reverseAllErrorMsg <- sapply(c(reverseAllReads[[1]]),
                                          function(filePath) {
-                if (!file.exists(filePath)) {
-                    msg <- paste("\n'", filePath, "'",
-                                 " reverse read file does not exist.\n",
-                                 sep = "")
-                    return(msg)
-                }
-                return()
-            })
+                                             if (!file.exists(filePath)) {
+                                                 msg <- paste("\n'", filePath, "'",
+                                                              " reverse read file does not exist.\n",
+                                                              sep = "")
+                                                 return(msg)
+                                             }
+                                             return()
+                                         })
             errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
-
-            ### ----------------------------------------------------------------
-            ### Input parameter prechecking for TrimmingMethod.
-            ### ----------------------------------------------------------------
-            errors <- checkTrimParam(TrimmingMethod,
-                                     M1TrimmingCutoff,
-                                     M2CutoffQualityScore,
-                                     M2SlidingWindowSize,
-                                     errors)
-
-            ### ----------------------------------------------------------------
-            ##### Input parameter prechecking for ChromatogramParam
-            ### ----------------------------------------------------------------
-            errors <- checkBaseNumPerRow (baseNumPerRow, errors)
-            errors <- checkHeightPerRow (baseNumPerRow, errors)
-            errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
-            errors <- checkShowTrimmed (showTrimmed, errors)
-
-            ### ----------------------------------------------------------------
-            ### Prechecking success. Start to create multiple reads.
-            ### ----------------------------------------------------------------
-            if (length(errors) != 0) {
-                stop(errors)
+        } else if (ab1CSVChecker) {
+            # CSV input
+            message("You are using CSV Name Conversion Method ",
+                    "to group AB1 files!")
+            csvFile <- read.csv(namesConversionCSV, header = TRUE)
+            if (is.null(contigName)) {
+                if (length(unique(csvFile$contig_name)) != 1) {
+                    stop("Error! There are ",
+                         length(unique(csvFile$contig_name)) ,
+                         " contigName in the CSV file. ",
+                         "There should be only one contigName in the CSV file.")
+                } else {
+                    contigNameCSV <- as.character(unique(csvFile$contig_name))
+                    selectedCsvFile <- csvFile[csvFile$contig_name == contigNameCSV, ]
+                    forwardCsv <- selectedCsvFile[selectedCsvFile$read_direction == "F", ]
+                    reverseCsv <- selectedCsvFile[selectedCsvFile$read_direction == "R", ]
+                }
+            } else if (!is.null(contigName)) {
+                selectedCsvFile <- csvFile[csvFile$contig_name == contigName, ]
+                forwardCsv <- selectedCsvFile[selectedCsvFile$read_direction == "F", ]
+                reverseCsv <- selectedCsvFile[selectedCsvFile$read_direction == "R", ]
             }
-            trimmingMethodSC = TrimmingMethod
+            forwardNumber <- length(nrow(forwardCsv))
+            reverseNumber <- length(nrow(reverseCsv))
+        }
+        ### ----------------------------------------------------------------
+        ### 'forwardNumber' + 'reverseNumber' number > 2
+        ### ----------------------------------------------------------------
+        if ((forwardNumber + reverseNumber) < 2) {
+            msg <- "\n'Number of total reads has to be more than two."
+            errors <- c(errors, msg)
+        }
+
+        ### ----------------------------------------------------------------
+        ### Input parameter prechecking for TrimmingMethod.
+        ### ----------------------------------------------------------------
+        errors <- checkTrimParam(TrimmingMethod,
+                                 M1TrimmingCutoff,
+                                 M2CutoffQualityScore,
+                                 M2SlidingWindowSize,
+                                 errors)
+
+        ### ----------------------------------------------------------------
+        ##### Input parameter prechecking for ChromatogramParam
+        ### ----------------------------------------------------------------
+        errors <- checkBaseNumPerRow (baseNumPerRow, errors)
+        errors <- checkHeightPerRow (baseNumPerRow, errors)
+        errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
+        errors <- checkShowTrimmed (showTrimmed, errors)
+
+        ### ----------------------------------------------------------------
+        ### Prechecking success. Start to create multiple reads.
+        ### ----------------------------------------------------------------
+        if (length(errors) != 0) {
+            stop(errors)
+        }
+        trimmingMethodSC = TrimmingMethod
+
+        if (ab1RegexChecker) {
             # sapply to create SangerRead list.
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
@@ -301,162 +353,218 @@ setMethod("initialize",
                     signalRatioCutoff    = signalRatioCutoff,
                     showTrimmed          = showTrimmed)
             })
-        } else if (inputSource == "FASTA") {
-            errors <- checkFastaFileName(fastaFileName, errors)
-            errors <- checkNamesConversionCSV(namesConversionCSV,
-                                              inputSource, errors)
+        } else if (ab1CSVChecker) {
 
-            if (!is.null(namesConversionCSV) &&
-                !is.null(suffixForwardRegExp) &&
-                !is.null(suffixReverseRegExp) &&
-                !is.null(contigName)) {
-                # Csv-Regex input
+            forwardOriginal_read_name <- as.character(selectedCsvFile$original_read_name)
 
-            } else if (!is.null(namesConversionCSV) &&
-                       is.null(suffixForwardRegExp) &&
-                       is.null(suffixReverseRegExp) &&
-                       is.null(contigName)) {
-                # Csv-CSV input
+            # forwardOriginal_read_name <- as.character(forwardCsv$original_read_name)
 
+            absoluteAB1 <- file.path(parentDirectory, forwardOriginal_read_name)
+
+            file.exists(absoluteAB1)
+
+
+
+
+            if (!file.exists(absoluteAB1)) {
+                stop("Your 'original_read_name' (", forwardOriginal_read_name, ") in the csv file ",
+                     "does not match any ab1 files in '", parentDirectory, "'")
             }
-
-
-
-            if(length(errors) != 0) {
-                stop(errors)
-            }
-            readFasta <- read.fasta(fastaFileName, as.string = TRUE)
-            if (!is.null(namesConversionCSV)) {
-                message("    * Reading CSV file and matching names !!")
-                fastaNames <- names(readFasta)
-                csvFile <- read.csv(namesConversionCSV, header = TRUE)
-
-                #
-                # for (i)
-                # unique(as.character(csvFile$contig_name))
-                #
-                # for (i in as.character(csvFile$contig_name)) {
-                #     for (j in as.character(csvFile$read_direction)) {
-                #         message("i: ", i, " ;  j: ", j)
-                #     }
-                # }
-                #
-                # as.character(csvFile$contig_name)
-                # as.character(csvFile$read_direction)
-                #
-                # tmpFastaNames <- sapply(fastaNames, function(fastaName) {
-                #     as.character(csvFile[csvFile$original_read_name %in%
-                #                              fastaName, ]$contig_name)
-                # })
-                #
-                # tmpFastaNames <- sapply(fastaNames, function(fastaName) {
-                #     as.character(csvFile[csvFile$original_read_name %in%
-                #                              fastaName, ]$read_direction)
-                # })
-
-
-                # # nameLayer <- list()
-                # originalDic <- list()
-                # for (name in unique(as.character(csvFile$contig_name))) {
-                #     csvFileSelectedContig <- csvFile[csvFile$contig_name == name,]
-                #     SamecontigNum <- length(rownames(csvFileSelectedContig))
-                #     if (SamecontigNum < 2) {
-                #         stop("Each contig reads number should be more than 2!")
-                #     }
-                #
-                #     # dirLayer <- list()
-                #     for (direction in c("F", "R")) {
-                #         csvFileSelectedDirection <- csvFileSelectedContig[csvFileSelectedContig$read_direction == direction,]
-                #         countDirLayer <- c()
-                #         for (row in 1:nrow(csvFileSelectedDirection)) {
-                #             originalName <- as.character(csvFileSelectedDirection[row,]$original_read_name)
-                #             countDirLayer <- c(countDirLayer, originalName)
-                #         }
-                #         # dirLayer[[direction]] <- countDirLayer
-                #
-                #         originalDic[[originalName]][[name]][[direction]] <- countDirLayer
-                #         # print(dirLayer)
-                #     }
-                #     # nameLayer[[name]] <- dirLayer
-                # }
-
-                # Regex
-                tmpFastaNames <- sapply(fastaNames, function(fastaName) {
-                    as.character(csvFile[csvFile$original_read_name %in%
-                                             fastaName, ]$contig_name)
-                })
-                names(tmpFastaNames) <- NULL
-                names(readFasta) <- tmpFastaNames
-
-                # Csv
-            }
-            fastaNames <- names(readFasta)
-            ### ----------------------------------------------------------------
-            ### Find names with the given contigName
-            ### ----------------------------------------------------------------
-            contigSubGroupNames <-
-                fastaNames[grepl(contigName, fastaNames, fixed=TRUE)]
-            ### ----------------------------------------------------------------
-            ### Among them, find the forward names
-            ### ----------------------------------------------------------------
-            forwardSelectNames <-
-                contigSubGroupNames[grepl(suffixForwardRegExp,
-                                          contigSubGroupNames)]
-            ### ----------------------------------------------------------------
-            ### Among them, find the reverse names
-            ### ----------------------------------------------------------------
-            reverseSelectNames <-
-                contigSubGroupNames[grepl(suffixReverseRegExp,
-                                          contigSubGroupNames)]
-            trimmingMethodSC <- ""
             # sapply to create SangerRead list.
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
-            forwardReadList <- sapply(forwardSelectNames, function(forwardName){
+            forwardReadList <- sapply(as.character(forwardCsv$original_read_name), function(forwardN){
                 new("SangerRead",
-                    inputSource        = inputSource,
-                    readFeature        = "Forward Read",
-                    readFileName       = fastaFileName,
-                    fastaReadName      = forwardName,
-                    namesConversionCSV = namesConversionCSV,
-                    geneticCode        = geneticCode)
+                    inputSource          = inputSource,
+                    readFeature          = "Forward Read",
+                    readFileName         = forwardN,
+                    geneticCode          = geneticCode,
+                    TrimmingMethod       = TrimmingMethod,
+                    M1TrimmingCutoff     = M1TrimmingCutoff,
+                    M2CutoffQualityScore = M2CutoffQualityScore,
+                    M2SlidingWindowSize  = M2SlidingWindowSize,
+                    baseNumPerRow        = baseNumPerRow,
+                    heightPerRow         = heightPerRow,
+                    signalRatioCutoff    = signalRatioCutoff,
+                    showTrimmed          = showTrimmed)
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
-            reverseReadList <- sapply(reverseSelectNames, function(reverseName){
+            reverseReadList <- sapply(reverseAllReads[[1]], function(reverseN){
                 new("SangerRead",
-                    inputSource        = inputSource,
-                    readFeature        = "Reverse Read",
-                    readFileName       = fastaFileName,
-                    fastaReadName      = reverseName,
-                    namesConversionCSV = namesConversionCSV,
-                    geneticCode        = geneticCode)
+                    inputSource          = inputSource,
+                    readFeature          = "Reverse Read",
+                    readFileName         = reverseN,
+                    geneticCode          = geneticCode,
+                    TrimmingMethod       = TrimmingMethod,
+                    M1TrimmingCutoff     = M1TrimmingCutoff,
+                    M2CutoffQualityScore = M2CutoffQualityScore,
+                    M2SlidingWindowSize  = M2SlidingWindowSize,
+                    baseNumPerRow        = baseNumPerRow,
+                    heightPerRow         = heightPerRow,
+                    signalRatioCutoff    = signalRatioCutoff,
+                    showTrimmed          = showTrimmed)
             })
         }
-        CSResult <- calculateContigSeq (inputSource      = inputSource,
-                                        forwardReadList  = forwardReadList,
-                                        reverseReadList  = reverseReadList,
-                                        refAminoAcidSeq  = refAminoAcidSeq,
-                                        minFractionCall  = minFractionCall,
-                                        maxFractionLost  = maxFractionLost,
-                                        geneticCode      = geneticCode,
-                                        acceptStopCodons = acceptStopCodons,
-                                        readingFrame     = readingFrame,
-                                        processorsNum    = processorsNum)
-        contigGapfree <- CSResult$consensusGapfree
-        diffsDf <- CSResult$diffsDf
-        aln2 <- CSResult$aln2
-        dist <- CSResult$dist
-        dend <- CSResult$dend
-        indels <- CSResult$indels
-        stopsDf <- CSResult$stopsDf
-        spDf <- CSResult$spDf
-        message("  >> 'SangerContig' S4 instance is created !!")
-    } else {
-        stop(errors)
+    } else if (inputSource == "FASTA") {
+        errors <- checkFastaFileName(fastaFileName, errors)
+        errors <- checkNamesConversionCSV(namesConversionCSV,
+                                          inputSource, errors)
+
+        if (!is.null(namesConversionCSV) &&
+            !is.null(suffixForwardRegExp) &&
+            !is.null(suffixReverseRegExp) &&
+            !is.null(contigName)) {
+            # Csv-Regex input
+            message("You are using Regular Expression Method ",
+                    "to group reads in FASTA file!")
+
+        } else if (!is.null(namesConversionCSV) &&
+                   is.null(suffixForwardRegExp) &&
+                   is.null(suffixReverseRegExp) &&
+                   is.null(contigName)) {
+            # Csv-CSV input
+            message("You are using CSV Name Conversion Method ",
+                    "to group reads in FASTA file!")
+
+        }
+
+
+
+        if(length(errors) != 0) {
+            stop(errors)
+        }
+        readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+        if (!is.null(namesConversionCSV)) {
+            message("    * Reading CSV file and matching names !!")
+            fastaNames <- names(readFasta)
+            csvFile <- read.csv(namesConversionCSV, header = TRUE)
+
+            #
+            # for (i)
+            # unique(as.character(csvFile$contig_name))
+            #
+            # for (i in as.character(csvFile$contig_name)) {
+            #     for (j in as.character(csvFile$read_direction)) {
+            #         message("i: ", i, " ;  j: ", j)
+            #     }
+            # }
+            #
+            # as.character(csvFile$contig_name)
+            # as.character(csvFile$read_direction)
+            #
+            # tmpFastaNames <- sapply(fastaNames, function(fastaName) {
+            #     as.character(csvFile[csvFile$original_read_name %in%
+            #                              fastaName, ]$contig_name)
+            # })
+            #
+            # tmpFastaNames <- sapply(fastaNames, function(fastaName) {
+            #     as.character(csvFile[csvFile$original_read_name %in%
+            #                              fastaName, ]$read_direction)
+            # })
+
+
+            # # nameLayer <- list()
+            # originalDic <- list()
+            # for (name in unique(as.character(csvFile$contig_name))) {
+            #     csvFileSelectedContig <- csvFile[csvFile$contig_name == name,]
+            #     SamecontigNum <- length(rownames(csvFileSelectedContig))
+            #     if (SamecontigNum < 2) {
+            #         stop("Each contig reads number should be more than 2!")
+            #     }
+            #
+            #     # dirLayer <- list()
+            #     for (direction in c("F", "R")) {
+            #         csvFileSelectedDirection <- csvFileSelectedContig[csvFileSelectedContig$read_direction == direction,]
+            #         countDirLayer <- c()
+            #         for (row in 1:nrow(csvFileSelectedDirection)) {
+            #             originalName <- as.character(csvFileSelectedDirection[row,]$original_read_name)
+            #             countDirLayer <- c(countDirLayer, originalName)
+            #         }
+            #         # dirLayer[[direction]] <- countDirLayer
+            #
+            #         originalDic[[originalName]][[name]][[direction]] <- countDirLayer
+            #         # print(dirLayer)
+            #     }
+            #     # nameLayer[[name]] <- dirLayer
+            # }
+
+            # Regex
+            tmpFastaNames <- sapply(fastaNames, function(fastaName) {
+                as.character(csvFile[csvFile$original_read_name %in%
+                                         fastaName, ]$contig_name)
+            })
+            names(tmpFastaNames) <- NULL
+            names(readFasta) <- tmpFastaNames
+
+            # Csv
+        }
+        fastaNames <- names(readFasta)
+        ### ----------------------------------------------------------------
+        ### Find names with the given contigName
+        ### ----------------------------------------------------------------
+        contigSubGroupNames <-
+            fastaNames[grepl(contigName, fastaNames, fixed=TRUE)]
+        ### ----------------------------------------------------------------
+        ### Among them, find the forward names
+        ### ----------------------------------------------------------------
+        forwardSelectNames <-
+            contigSubGroupNames[grepl(suffixForwardRegExp,
+                                      contigSubGroupNames)]
+        ### ----------------------------------------------------------------
+        ### Among them, find the reverse names
+        ### ----------------------------------------------------------------
+        reverseSelectNames <-
+            contigSubGroupNames[grepl(suffixReverseRegExp,
+                                      contigSubGroupNames)]
+        trimmingMethodSC <- ""
+        # sapply to create SangerRead list.
+        ### ----------------------------------------------------------------
+        ### "SangerRead" S4 class creation (forward list)
+        ### ----------------------------------------------------------------
+        forwardReadList <- sapply(forwardSelectNames, function(forwardName){
+            new("SangerRead",
+                inputSource        = inputSource,
+                readFeature        = "Forward Read",
+                readFileName       = fastaFileName,
+                fastaReadName      = forwardName,
+                namesConversionCSV = namesConversionCSV,
+                geneticCode        = geneticCode)
+        })
+        ### ----------------------------------------------------------------
+        ### "SangerRead" S4 class creation (reverse list)
+        ### ----------------------------------------------------------------
+        reverseReadList <- sapply(reverseSelectNames, function(reverseName){
+            new("SangerRead",
+                inputSource        = inputSource,
+                readFeature        = "Reverse Read",
+                readFileName       = fastaFileName,
+                fastaReadName      = reverseName,
+                namesConversionCSV = namesConversionCSV,
+                geneticCode        = geneticCode)
+        })
     }
+    CSResult <- calculateContigSeq (inputSource      = inputSource,
+                                    forwardReadList  = forwardReadList,
+                                    reverseReadList  = reverseReadList,
+                                    refAminoAcidSeq  = refAminoAcidSeq,
+                                    minFractionCall  = minFractionCall,
+                                    maxFractionLost  = maxFractionLost,
+                                    geneticCode      = geneticCode,
+                                    acceptStopCodons = acceptStopCodons,
+                                    readingFrame     = readingFrame,
+                                    processorsNum    = processorsNum)
+    contigGapfree <- CSResult$consensusGapfree
+    diffsDf <- CSResult$diffsDf
+    aln2 <- CSResult$aln2
+    dist <- CSResult$dist
+    dend <- CSResult$dend
+    indels <- CSResult$indels
+    stopsDf <- CSResult$stopsDf
+    spDf <- CSResult$spDf
+    message("  >> 'SangerContig' S4 instance is created !!")
     callNextMethod(.Object,
                    inputSource            = inputSource,
                    fastaFileName          = fastaFileName,

@@ -64,12 +64,13 @@ An S4 class containing forward and reverse SangerRead lists and alignment, conse
 }}
 
 \examples{
-## Input From ABIF file format
+## Input From ABIF file format (Regex)
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 contigName <- "Achl_RBNII384-13"
 suffixForwardRegExp <- "_[0-9]*_F.ab1"
 suffixReverseRegExp <- "_[0-9]*_R.ab1"
+namesConversionCSV <- ""
 sangerContig <- new("SangerContig",
                      inputSource           = "ABIF",
                      parentDirectory       = parentDir,
@@ -87,6 +88,33 @@ sangerContig <- new("SangerContig",
                      showTrimmed           = TRUE,
                      processorsNum         = 2)
 
+## Input From ABIF file format (Csv)
+rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
+contigName <- "Achl_RBNII384-13"
+namesConversionCSV <- file.path(rawDataDir, "ab1", "SangerContig", "names_conversion_2.csv")
+suffixForwardRegExp <- "_[0-9]*_F.ab1"
+suffixReverseRegExp <- "_[0-9]*_R.ab1"
+sangerContig <- new("SangerContig",
+                     inputSource           = "ABIF",
+                     parentDirectory       = parentDir,
+                     contigName            = contigName,
+                     namesConversionCSV    = namesConversionCSV,
+                     suffixForwardRegExp   = suffixForwardRegExp,
+                     suffixReverseRegExp   = suffixReverseRegExp,
+                     refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                     TrimmingMethod        = "M1",
+                     M1TrimmingCutoff      = 0.0001,
+                     M2CutoffQualityScore  = NULL,
+                     M2SlidingWindowSize   = NULL,
+                     baseNumPerRow         = 100,
+                     heightPerRow          = 200,
+                     signalRatioCutoff     = 0.33,
+                     showTrimmed           = TRUE,
+                     processorsNum         = 2)
+
+
+
 ## Input From FASTA file format
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
@@ -95,8 +123,6 @@ namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conv
 
 
 namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1_v2.csv")
-
-namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion_v2.csv")
 contigName <- "Achl_ACHLO006-09"
 suffixForwardRegExpFa <- "_[0-9]*_F$"
 suffixReverseRegExpFa <- "_[0-9]*_R$"

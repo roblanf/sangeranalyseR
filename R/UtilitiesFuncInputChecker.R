@@ -18,9 +18,11 @@ checkFastaFileName <- function(fastaFileName, errors) {
 checkNamesConversionCSV <- function (namesConversionCSV, inputSource, errors) {
     if (inputSource == "ABIF") {
         if(!is.null(namesConversionCSV)) {
-            msg <- paste0("\n'namesConversionCSV' must be 'NULL'",
-                          " when input source is 'ABIF'\n")
-            errors <- c(errors, msg)
+            if (!file.exists(namesConversionCSV)) {
+                msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
+                             " file does not exist.\n", sep = "")
+                errors <- c(errors, msg)
+            }
         }
     } else if (inputSource == "FASTA") {
         if(is.null(namesConversionCSV)) {
@@ -29,7 +31,7 @@ checkNamesConversionCSV <- function (namesConversionCSV, inputSource, errors) {
         }
         if(!is.null(namesConversionCSV)) {
             if (!file.exists(namesConversionCSV)) {
-                msg <- paste("\n'", namesConversionCSV, "'",
+                msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
                              " file does not exist.\n", sep = "")
                 errors <- c(errors, msg)
             }
