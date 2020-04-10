@@ -91,17 +91,11 @@ sangerContig <- new("SangerContig",
 ## Input From ABIF file format (Csv)
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
-contigName <- "Achl_RBNII384-13"
 namesConversionCSV <- file.path(rawDataDir, "ab1", "SangerContig", "names_conversion_2.csv")
-suffixForwardRegExp <- "_[0-9]*_F.ab1"
-suffixReverseRegExp <- "_[0-9]*_R.ab1"
 sangerContig <- new("SangerContig",
                      inputSource           = "ABIF",
                      parentDirectory       = parentDir,
-                     contigName            = contigName,
                      namesConversionCSV    = namesConversionCSV,
-                     suffixForwardRegExp   = suffixForwardRegExp,
-                     suffixReverseRegExp   = suffixReverseRegExp,
                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
                      TrimmingMethod        = "M1",
                      M1TrimmingCutoff      = 0.0001,
@@ -112,7 +106,6 @@ sangerContig <- new("SangerContig",
                      signalRatioCutoff     = 0.33,
                      showTrimmed           = TRUE,
                      processorsNum         = 2)
-
 
 
 ## Input From FASTA file format
