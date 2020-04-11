@@ -471,7 +471,7 @@ setMethod("initialize",
         } else if (csvCSVChecker) {
             # Csv-CSV input
             message("You are using CSV Name Conversion Method ",
-                    "to group reads in FASTA file!")
+                    "to group reads in FASTA file (with Csv file)!")
             message("    * Reading CSV file and matching names !!")
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
             if (is.null(contigName)) {

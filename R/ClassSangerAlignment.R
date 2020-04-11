@@ -35,7 +35,6 @@ setOldClass("phylo")
 #' sangerAlignment <- new("SangerAlignment",
 #'                        inputSource           = "ABIF",
 #'                        parentDirectory       = parentDir,
-#'                        namesConversionCSV    = namesConversionCSV,
 #'                        suffixForwardRegExp   = suffixForwardRegExp,
 #'                        suffixReverseRegExp   = suffixReverseRegExp,
 #'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -57,6 +56,7 @@ setOldClass("phylo")
 #' sangerAlignment <- new("SangerAlignment",
 #'                        inputSource           = "ABIF",
 #'                        parentDirectory       = parentDir,
+#'                        namesConversionCSV    = namesConversionCSV,
 #'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                        TrimmingMethod        = "M1",
 #'                        M1TrimmingCutoff      = 0.0001,
@@ -72,22 +72,28 @@ setOldClass("phylo")
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerAlignment", "Sanger_all_reads.fa")
-#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion.csv")
-#'
-#' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion_v2.csv")
 #' suffixForwardRegExpFa <- "_[0-9]*_F$"
 #' suffixReverseRegExpFa <- "_[0-9]*_R$"
 #' sangerAlignmentFa <- new("SangerAlignment",
 #'                          inputSource           = "FASTA",
 #'                          fastaFileName         = fastaFN,
-#'                          namesConversionCSV    = namesConversionCSV,
 #'                          suffixForwardRegExp   = suffixForwardRegExpFa,
 #'                          suffixReverseRegExp   = suffixReverseRegExpFa,
 #'                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                          processorsNum         = 2)
 #'
 #' ## Input From FASTA file format (Csv three column method)
-#'
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' fastaFN <- file.path(rawDataDir, "fasta",
+#'                      "SangerAlignment", "Sanger_all_reads.fa")
+#' namesConversionCSV <- file.path(rawDataDir, "fasta",
+#'                                 "SangerAlignment", "names_conversion.csv")
+#' sangerAlignmentFa <- new("SangerAlignment",
+#'                          inputSource           = "FASTA",
+#'                          fastaFileName         = fastaFN,
+#'                          namesConversionCSV    = namesConversionCSV,
+#'                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                          processorsNum         = 2)
 setClass("SangerAlignment",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
@@ -101,8 +107,8 @@ setClass("SangerAlignment",
                         fastaFileName               = "characterORNULL",
                         namesConversionCSV          = "characterORNULL",
                         parentDirectory             = "characterORNULL",
-                        suffixForwardRegExp         = "character",
-                        suffixReverseRegExp         = "character",
+                        suffixForwardRegExp         = "characterORNULL",
+                        suffixReverseRegExp         = "characterORNULL",
                         trimmingMethodSA            = "character",
                         minFractionCallSA           = "numeric",
                         maxFractionLostSA           = "numeric",
@@ -125,8 +131,8 @@ setMethod("initialize",
                    fastaFileName          = NULL,
                    namesConversionCSV     = NULL,
                    parentDirectory        = NULL,
-                   suffixForwardRegExp    = "_F.ab1",
-                   suffixReverseRegExp    = "_R.ab1",
+                   suffixForwardRegExp    = NULL,
+                   suffixReverseRegExp    = NULL,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
                    M2CutoffQualityScore   = NULL,
@@ -192,11 +198,8 @@ setMethod("initialize",
             ab1RegexChecker <- is.null(namesConversionCSV) &&
                 !is.null(suffixForwardRegExp) &&
                 !is.null(suffixReverseRegExp)
-
             ab1CSVChecker <- !is.null(namesConversionCSV)
-
             trimmingMethodSA = TrimmingMethod
-
             if (ab1RegexChecker) {
                 ### ----------------------------------------------------------------
                 ##### Automatically finding contig name by forward&reverse suffix
@@ -260,12 +263,24 @@ setMethod("initialize",
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
 
                 message("**** Contig number in your Csv file is ", length(unique(csvFile$contig_name)))
-                contigNameCSV <- as.character(unique(csvFile$contig_name))
-                selectedCsvFile <- csvFile[csvFile$contig_name == contigNameCSV, ]
-                forwardCsv <- selectedCsvFile[selectedCsvFile$read_direction == "F", ]
-                reverseCsv <- selectedCsvFile[selectedCsvFile$read_direction == "R", ]
-                forwardNumber <- length(nrow(forwardCsv))
-                reverseNumber <- length(nrow(reverseCsv))
+                contigNames <- as.character(unique(csvFile$contig_name))
+                SangerContigList <- sapply(contigNames, function(contigName) {
+                    new("SangerContig",
+                        inputSource          = inputSource,
+                        fastaFileName        = fastaFileName,
+                        namesConversionCSV   = namesConversionCSV,
+                        parentDirectory      = parentDirectory,
+                        contigName           = contigName,
+                        refAminoAcidSeq      = refAminoAcidSeq,
+                        minReadsNum          = minReadsNum,
+                        minReadLength        = minReadLength,
+                        minFractionCall      = minFractionCall,
+                        maxFractionLost      = maxFractionLost,
+                        geneticCode          = geneticCode,
+                        acceptStopCodons     = acceptStopCodons,
+                        readingFrame         = readingFrame,
+                        processorsNum        = processorsNum)
+                })
             }
         } else if (inputSource == "FASTA") {
             errors <- checkFastaFileName(fastaFileName, errors)
@@ -274,115 +289,72 @@ setMethod("initialize",
             if(length(errors) != 0) {
                 stop(errors)
             }
-            trimmingMethodSA = ""
+            csvRegexChecker <- is.null(namesConversionCSV) &&
+                !is.null(suffixForwardRegExp) &&
+                !is.null(suffixReverseRegExp)
+            csvCSVChecker <- !is.null(namesConversionCSV)
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
-            if (!is.null(namesConversionCSV)) {
-                message("    * Reading CSV file and matching names !!")
-                fastaNames <- names(readFasta)
+            trimmingMethodSA <- ""
+            if (csvRegexChecker) {
+                message("You are using Regex Method ",
+                        "to group reads in FASTA file (No CSV file)!")
+                readFastaNames <- names(readFasta)
+                forwardSelectInputFiles <- readFastaNames[grepl(suffixForwardRegExp,
+                                                                readFastaNames)]
+                reverseSelectInputFiles <- readFastaNames[grepl(suffixReverseRegExp,
+                                                                readFastaNames)]
+                # Find possible consensus Name for forward and reverse reads
+                forwardContigName <-
+                    unlist(str_split(forwardSelectInputFiles, suffixForwardRegExp,
+                                     n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+                reverseContigName <-
+                    unlist(str_split(reverseSelectInputFiles, suffixReverseRegExp,
+                                     n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+                contigNames <- union(forwardContigName, reverseContigName)
+                SangerContigList <- sapply(contigNames, function(contigName) {
+                    new("SangerContig",
+                        inputSource          = inputSource,
+                        fastaFileName        = fastaFileName,
+                        namesConversionCSV   = namesConversionCSV,
+                        parentDirectory      = parentDirectory,
+                        contigName           = contigName,
+                        suffixForwardRegExp  = suffixForwardRegExp,
+                        suffixReverseRegExp  = suffixReverseRegExp,
+                        refAminoAcidSeq      = refAminoAcidSeq,
+                        minReadsNum          = minReadsNum,
+                        minReadLength        = minReadLength,
+                        minFractionCall      = minFractionCall,
+                        maxFractionLost      = maxFractionLost,
+                        geneticCode          = geneticCode,
+                        acceptStopCodons     = acceptStopCodons,
+                        readingFrame         = readingFrame,
+                        processorsNum        = processorsNum)
+                })
+            } else if (csvCSVChecker) {
+                message("**** You are using CSV Name Conversion Method ",
+                        "to group reads in FASTA file (with CSV file)!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
-
-
-                # for (originalName in unique(as.character(csvFile$original_read_name))) {
-                #     csvFileSelectedContig <- csvFile[csvFile$original_read_name == originalName,]
-                #     print(csvFileSelectedContig)
-                #     print("---------------------------------------------------")
-                # }
-                #
-                # as.character(csvFile$original_read_name)
-                #
-                # csvFile
-
-
-                # # nameLayer <- list()
-                # originalDic <- list()
-                # for (name in unique(as.character(csvFile$contig_name))) {
-                #     csvFileSelectedContig <- csvFile[csvFile$contig_name == name,]
-                #     SamecontigNum <- length(rownames(csvFileSelectedContig))
-                #     if (SamecontigNum < 2) {
-                #         stop("Each contig reads number should be more than 2!")
-                #     }
-                #
-                #     # dirLayer <- list()
-                #     for (direction in c("F", "R")) {
-                #         csvFileSelectedDirection <- csvFileSelectedContig[csvFileSelectedContig$read_direction == direction,]
-                #         countDirLayer <- c()
-                #         for (row in 1:nrow(csvFileSelectedDirection)) {
-                #             originalName <- as.character(csvFileSelectedDirection[row,]$original_read_name)
-                #             countDirLayer <- c(countDirLayer, originalName)
-                #         }
-                #         # dirLayer[[direction]] <- countDirLayer
-                #
-                #         originalDic[[originalName]][[name]][[direction]] <- countDirLayer
-                #         # print(dirLayer)
-                #     }
-                #     # nameLayer[[name]] <- dirLayer
-                # }
-
-
-
-
-                # originalDic <- list()
-                # for (originalName in unique(as.character(csvFile$original_read_name))) {
-                #     nameLayer <- list()
-                #     for (name in unique(as.character(csvFile$contig_name))) {
-                #         csvFileSelectedContig <- csvFile[csvFile$contig_name == name,]
-                #         SamecontigNum <- length(rownames(csvFileSelectedContig))
-                #         if (SamecontigNum < 2) {
-                #             stop("Each contig reads number should be more than 2!")
-                #         }
-                #
-                #         for (direction in c("F", "R")) {
-                #             csvFileSelectedDirection <- csvFileSelectedContig[csvFileSelectedContig$read_direction == direction,]
-                #             if (nrow(csvFileSelectedDirection) == 1) {
-                #                 nameLayer[[name]] <- direction
-                #             }
-                #         }
-                #         nameLayer[[name]] <- dirLayer
-                #     }
-                #     originalDic[[originalName]] <- nameLayer
-                # }
                 contigNames <- unique(as.character(csvFile$contig_name))
+                SangerContigList <- sapply(contigNames, function(contigName) {
+                    new("SangerContig",
+                        inputSource          = inputSource,
+                        fastaFileName        = fastaFileName,
+                        namesConversionCSV   = namesConversionCSV,
+                        parentDirectory      = parentDirectory,
+                        contigName           = contigName,
+                        suffixForwardRegExp  = suffixForwardRegExp,
+                        suffixReverseRegExp  = suffixReverseRegExp,
+                        refAminoAcidSeq      = refAminoAcidSeq,
+                        minReadsNum          = minReadsNum,
+                        minReadLength        = minReadLength,
+                        minFractionCall      = minFractionCall,
+                        maxFractionLost      = maxFractionLost,
+                        geneticCode          = geneticCode,
+                        acceptStopCodons     = acceptStopCodons,
+                        readingFrame         = readingFrame,
+                        processorsNum        = processorsNum)
+                })
             }
-
-
-            # fastaNames <- names(readFasta)
-            # forwardSelect <- fastaNames[grepl(suffixForwardRegExp, fastaNames)]
-            # reverseSelect <- fastaNames[grepl(suffixReverseRegExp, fastaNames)]
-            #
-            # # Find possible consensus Name for forward and reverse reads
-            # forwardContigName <-
-            #     unlist(str_split(forwardSelect, suffixForwardRegExp,
-            #                      n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
-            # reverseContigName <-
-            #     unlist(str_split(reverseSelect, suffixReverseRegExp,
-            #                      n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
-            # contigNames <- union(forwardContigName, reverseContigName)
-            # contigNumber <- length(contigNames)
-
-
-
-
-
-
-            SangerContigList <- sapply(contigNames, function(contigName) {
-                new("SangerContig",
-                    inputSource          = inputSource,
-                    fastaFileName        = fastaFileName,
-                    namesConversionCSV   = namesConversionCSV,
-                    parentDirectory      = parentDirectory,
-                    contigName           = contigName,
-                    suffixForwardRegExp  = suffixForwardRegExp,
-                    suffixReverseRegExp  = suffixReverseRegExp,
-                    refAminoAcidSeq      = refAminoAcidSeq,
-                    minReadsNum          = minReadsNum,
-                    minReadLength        = minReadLength,
-                    minFractionCall      = minFractionCall,
-                    maxFractionLost      = maxFractionLost,
-                    geneticCode          = geneticCode,
-                    acceptStopCodons     = acceptStopCodons,
-                    readingFrame         = readingFrame,
-                    processorsNum        = processorsNum)
-            })
         }
         acResult <- alignContigs(SangerContigList, geneticCode,
                                  refAminoAcidSeq, minFractionCallSA,
@@ -411,4 +383,3 @@ setMethod("initialize",
                    contigsAlignment      = aln,
                    contigsTree           = aln.tree)
 })
-
