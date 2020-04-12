@@ -50,7 +50,6 @@ suffixReverseRegExp <- "_[0-9]*_R.ab1"
 sangerAlignment <- new("SangerAlignment",
                        inputSource           = "ABIF",
                        parentDirectory       = parentDir,
-                       namesConversionCSV    = namesConversionCSV,
                        suffixForwardRegExp   = suffixForwardRegExp,
                        suffixReverseRegExp   = suffixReverseRegExp,
                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -102,7 +101,8 @@ sangerAlignmentFa <- new("SangerAlignment",
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
                      "SangerAlignment", "Sanger_all_reads.fa")
-namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion.csv")
+namesConversionCSV <- file.path(rawDataDir, "fasta",
+                                "SangerAlignment", "names_conversion.csv")
 sangerAlignmentFa <- new("SangerAlignment",
                          inputSource           = "FASTA",
                          fastaFileName         = fastaFN,

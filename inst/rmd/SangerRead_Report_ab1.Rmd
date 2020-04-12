@@ -126,17 +126,27 @@ AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
 colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
 rownames(AAStringDF) <- NULL
 width <- rep(90, length(AAStringDF))
-styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
-styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
-styleList <- c(styleList1, styleList2)
-suppressWarnings(suppressMessages(
+if (length(AAStringDF) == 0) {
+  suppressWarnings(suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+  )) 
+} else {
+  styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+  styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+  styleList <- c(styleList1, styleList2)
+  suppressWarnings(suppressMessages(
     excelTable(data = AAStringDF, columns = data.frame(width = width),
                defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
                style = styleList)
-))
+  )) 
+}
 ```
 <h3> Amino Acids Sequence frameshit 1  </h3>
 ```{r echo=FALSE, warning=FALSE}

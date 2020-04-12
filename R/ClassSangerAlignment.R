@@ -262,8 +262,8 @@ setMethod("initialize",
                         "to group AB1 files!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
 
-                message("**** Contig number in your Csv file is ", length(unique(csvFile$contig_name)))
-                contigNames <- as.character(unique(csvFile$contig_name))
+                message("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
+                contigNames <- as.character(unique(csvFile$contig))
                 SangerContigList <- sapply(contigNames, function(contigName) {
                     new("SangerContig",
                         inputSource          = inputSource,
@@ -296,7 +296,7 @@ setMethod("initialize",
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             trimmingMethodSA <- ""
             if (csvRegexChecker) {
-                message("You are using Regex Method ",
+                message("**** You are using Regex Method ",
                         "to group reads in FASTA file (No CSV file)!")
                 readFastaNames <- names(readFasta)
                 forwardSelectInputFiles <- readFastaNames[grepl(suffixForwardRegExp,
@@ -334,7 +334,7 @@ setMethod("initialize",
                 message("**** You are using CSV Name Conversion Method ",
                         "to group reads in FASTA file (with CSV file)!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
-                contigNames <- unique(as.character(csvFile$contig_name))
+                contigNames <- unique(as.character(csvFile$contig))
                 SangerContigList <- sapply(contigNames, function(contigName) {
                     new("SangerContig",
                         inputSource          = inputSource,

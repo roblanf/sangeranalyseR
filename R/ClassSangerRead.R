@@ -6,7 +6,6 @@
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @slot readFileName The filename of the target input file. It can be \code{"ABIF"} or \code{"FASTA"} file.
 #' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
-#' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot abifRawData A S4 class containing all fields in the ABIF file. It is defined in sangerseqR package.
 #' @slot QualityReport A S4 class containing quality trimming related inputs and trimming results.
 #' @slot ChromatogramParam A S4 class containing chromatogram inputs.
@@ -104,7 +103,6 @@ setClass(
             readFeature         = "character",
             readFileName        = "character",
             fastaReadName       = "characterORNULL",
-            namesConversionCSV  = "characterORNULL",
             geneticCode         = "character",
             abifRawData         = "abifORNULL",
             QualityReport       = "QualityReportORNULL",
@@ -128,7 +126,6 @@ setMethod("initialize",
                    readFeature          = "",
                    readFileName         = "",
                    fastaReadName        = NULL,
-                   namesConversionCSV   = NULL,
                    geneticCode          = GENETIC_CODE,
                    TrimmingMethod       = "M1",
                    M1TrimmingCutoff     = 0.0001,
@@ -154,8 +151,6 @@ setMethod("initialize",
             ##### --------------------------------------------------------------
             ##### Inside prechecking.
             ##### --------------------------------------------------------------
-            errors <- checkNamesConversionCSV(namesConversionCSV,
-                                              inputSource, errors)
             ##### --------------------------------------------------------------
             ##### Input parameter prechecking for TrimmingMethod. [abif only]
             ##### --------------------------------------------------------------
@@ -254,11 +249,6 @@ setMethod("initialize",
             trimmedStartPos <- QualityReport@trimmedStartPos
             trimmedFinishPos <- QualityReport@trimmedFinishPos
         } else if (inputSource == "FASTA") {
-            errors <- checkNamesConversionCSV(namesConversionCSV,
-                                              inputSource, errors)
-            if(length(errors) != 0) {
-                stop(errors)
-            }
             abifRawData <- NULL
             primarySeqID <- "From fasta file"
             secondarySeqID <- ""
@@ -303,7 +293,6 @@ setMethod("initialize",
     callNextMethod(.Object,
                    inputSource         = inputSource,
                    fastaReadName       = fastaReadName,
-                   namesConversionCSV  = namesConversionCSV,
                    readFeature         = readFeature,
                    readFileName        = readFileName,
                    geneticCode         = geneticCode,

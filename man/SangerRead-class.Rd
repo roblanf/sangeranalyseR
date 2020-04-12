@@ -18,8 +18,6 @@ An S4 class extending sangerseq S4 class which corresponds to a single ABIF file
 
 \item{\code{fastaReadName}}{If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
 
-\item{\code{namesConversionCSV}}{The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
-
 \item{\code{abifRawData}}{A S4 class containing all fields in the ABIF file. It is defined in sangerseqR package.}
 
 \item{\code{QualityReport}}{A S4 class containing quality trimming related inputs and trimming results.}

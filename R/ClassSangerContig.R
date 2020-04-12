@@ -262,23 +262,23 @@ setMethod("initialize",
                     "to group AB1 files!")
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
             if (is.null(contigName)) {
-                if (length(unique(csvFile$contig_name)) != 1) {
+                if (length(unique(csvFile$contig)) != 1) {
                     stop("Error! There are ",
-                         length(unique(csvFile$contig_name)) ,
+                         length(unique(csvFile$contig)) ,
                          " contigName in the CSV file. ",
                          "There should be only one contigName in the CSV file.")
                 } else {
-                    message("**** Contig number in your Csv file is ", length(unique(csvFile$contig_name)))
-                    contigNameCSV <- as.character(unique(csvFile$contig_name))
-                    selectedCsvFile <- csvFile[csvFile$contig_name == contigNameCSV, ]
-                    forwardCsv <- selectedCsvFile[selectedCsvFile$read_direction == "F", ]
-                    reverseCsv <- selectedCsvFile[selectedCsvFile$read_direction == "R", ]
+                    message("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
+                    contigNameCSV <- as.character(unique(csvFile$contig))
+                    selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
+                    forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
+                    reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
                 }
             } else if (!is.null(contigName)) {
                 message("**** Your contig name is ", contigName)
-                selectedCsvFile <- csvFile[csvFile$contig_name == contigName, ]
-                forwardCsv <- selectedCsvFile[selectedCsvFile$read_direction == "F", ]
-                reverseCsv <- selectedCsvFile[selectedCsvFile$read_direction == "R", ]
+                selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
+                forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
+                reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
             }
             forwardNumber <- length(nrow(forwardCsv))
             reverseNumber <- length(nrow(reverseCsv))
@@ -354,10 +354,10 @@ setMethod("initialize",
                     showTrimmed          = showTrimmed)
             })
         } else if (ab1CSVChecker) {
-            forwardOriginal <- as.character(forwardCsv$original_read_name)
+            forwardOriginal <- as.character(forwardCsv$reads)
             fAbsoluteAB1 <- file.path(parentDirectory, forwardOriginal)
             if (!all(file.exists(fAbsoluteAB1))) {
-                stop("One of your 'original_read_name' in the csv file ",
+                stop("One of your 'reads' in the csv file ",
                      "does not match any ab1 files in '", parentDirectory, "'")
             }
             # sapply to create forward SangerRead list.
@@ -382,10 +382,10 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
-            reverseOriginal <- as.character(reverseCsv$original_read_name)
+            reverseOriginal <- as.character(reverseCsv$reads)
             rAbsoluteAB1 <- file.path(parentDirectory, reverseOriginal)
             if (!all(file.exists(rAbsoluteAB1))) {
-                stop("One of your 'original_read_name' in the csv file ",
+                stop("One of your 'reads' in the csv file ",
                      "does not match any ab1 files in '", parentDirectory, "'")
             }
             # sapply to create reverse SangerRead list.
@@ -422,7 +422,7 @@ setMethod("initialize",
         fastaNames <- names(readFasta)
         if (csvRegexChecker) {
             # Csv-Regex input
-            message("You are using Regular Expression Method ",
+            message("**** You are using Regular Expression Method ",
                     "to group reads in FASTA file (No CSV file)!")
             # Regex
             ### ----------------------------------------------------------------
@@ -453,7 +453,6 @@ setMethod("initialize",
                     readFeature        = "Forward Read",
                     readFileName       = fastaFileName,
                     fastaReadName      = forwardName,
-                    namesConversionCSV = namesConversionCSV,
                     geneticCode        = geneticCode)
             })
             ### ----------------------------------------------------------------
@@ -465,33 +464,32 @@ setMethod("initialize",
                     readFeature        = "Reverse Read",
                     readFileName       = fastaFileName,
                     fastaReadName      = reverseName,
-                    namesConversionCSV = namesConversionCSV,
                     geneticCode        = geneticCode)
             })
         } else if (csvCSVChecker) {
             # Csv-CSV input
-            message("You are using CSV Name Conversion Method ",
+            message("**** You are using CSV Name Conversion Method ",
                     "to group reads in FASTA file (with Csv file)!")
             message("    * Reading CSV file and matching names !!")
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
             if (is.null(contigName)) {
-                if (length(unique(csvFile$contig_name)) != 1) {
+                if (length(unique(csvFile$contig)) != 1) {
                     stop("Error! There are ",
-                         length(unique(csvFile$contig_name)) ,
+                         length(unique(csvFile$contig)) ,
                          " contigName in the CSV file. ",
                          "There should be only one contigName in the CSV file.")
                 } else {
-                    message("**** Contig number in your Csv file is ", length(unique(csvFile$contig_name)))
-                    contigNameCSV <- as.character(unique(csvFile$contig_name))
-                    selectedCsvFile <- csvFile[csvFile$contig_name == contigNameCSV, ]
-                    forwardCsv <- selectedCsvFile[selectedCsvFile$read_direction == "F", ]
-                    reverseCsv <- selectedCsvFile[selectedCsvFile$read_direction == "R", ]
+                    message("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
+                    contigNameCSV <- as.character(unique(csvFile$contig))
+                    selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
+                    forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
+                    reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
                 }
             } else if (!is.null(contigName)) {
                 message("**** Your contig name is ", contigName)
-                selectedCsvFile <- csvFile[csvFile$contig_name == contigName, ]
-                forwardCsv <- selectedCsvFile[selectedCsvFile$read_direction == "F", ]
-                reverseCsv <- selectedCsvFile[selectedCsvFile$read_direction == "R", ]
+                selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
+                forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
+                reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
             }
             forwardNumber <- length(nrow(forwardCsv))
             reverseNumber <- length(nrow(reverseCsv))
@@ -505,13 +503,13 @@ setMethod("initialize",
             if (length(errors) != 0) {
                 stop(errors)
             }
-            forwardOriginal <- as.character(forwardCsv$original_read_name)
-            reverseOriginal <- as.character(reverseCsv$original_read_name)
+            forwardOriginal <- as.character(forwardCsv$reads)
+            reverseOriginal <- as.character(reverseCsv$reads)
             if (!(forwardOriginal %in% names(readFasta) &&
                 reverseOriginal %in% names(readFasta))) {
-                stop("The 'original_read_name' in forwardOriginal is ",
+                stop("The 'reads' in forwardOriginal is ",
                      "different from read names in FASTA file ('",
-                     fastaFileName, "')\n  *'original_read_name': ",
+                     fastaFileName, "')\n  *'reads': ",
                      paste(forwardOriginal, sep = " "), "\n  *read names ",
                      "in FASTA file: ", paste(names(readFasta), sep = " "))
             }
@@ -525,7 +523,6 @@ setMethod("initialize",
                     readFeature        = "Forward Read",
                     readFileName       = fastaFileName,
                     fastaReadName      = forwardName,
-                    namesConversionCSV = namesConversionCSV,
                     geneticCode        = geneticCode)
             })
             ### ----------------------------------------------------------------
@@ -537,7 +534,6 @@ setMethod("initialize",
                     readFeature        = "Reverse Read",
                     readFileName       = fastaFileName,
                     fastaReadName      = reverseName,
-                    namesConversionCSV = namesConversionCSV,
                     geneticCode        = geneticCode)
             })
             trimmingMethodSC <- ""
