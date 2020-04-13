@@ -3,12 +3,10 @@ SRfastaRFN <- file.path(inputFilesPath,
                         "fasta",
                         "SangerRead",
                         "Achl_ACHLO006-09_2_R.fa")
-namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerRead", "names_conversion_2.csv")
 fastaReadRName <- "Achl_ACHLO006-09_2_R"
 sangerReadRFa <- new("SangerRead",
                      inputSource        = "FASTA",
                      readFeature        = "Reverse Read",
                      readFileName       = SRfastaRFN,
                      fastaReadName      = fastaReadRName,
-                     namesConversionCSV = namesConversionCSV,
                      geneticCode        = GENETIC_CODE)
