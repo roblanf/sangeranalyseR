@@ -199,7 +199,7 @@ setMethod("initialize",
                 !is.null(suffixForwardRegExp) &&
                 !is.null(suffixReverseRegExp)
             ab1CSVChecker <- !is.null(namesConversionCSV)
-            trimmingMethodSA = TrimmingMethod
+            trimmingMethodSA <- TrimmingMethod
             if (ab1RegexChecker) {
                 ### ----------------------------------------------------------------
                 ##### Automatically finding contig name by forward&reverse suffix
@@ -258,6 +258,12 @@ setMethod("initialize",
                                    processorsNum        = processorsNum)
                            })
             } else if (ab1CSVChecker) {
+                errors <- checkAb1FastaCsv(parentDirectory, fastaFileName,
+                                           namesConversionCSV, inputSource,
+                                           errors)
+                if (length(errors) != 0) {
+                    stop(errors)
+                }
                 message("**** You are using CSV Name Conversion Method ",
                         "to group AB1 files!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
@@ -331,6 +337,12 @@ setMethod("initialize",
                         processorsNum        = processorsNum)
                 })
             } else if (csvCSVChecker) {
+                errors <- checkAb1FastaCsv(parentDirectory, fastaFileName,
+                                           namesConversionCSV, inputSource,
+                                           errors)
+                if (length(errors) != 0) {
+                    stop(errors)
+                }
                 message("**** You are using CSV Name Conversion Method ",
                         "to group reads in FASTA file (with CSV file)!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)

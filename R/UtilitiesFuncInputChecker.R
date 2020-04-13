@@ -287,3 +287,62 @@ checkShowTrimmed <- function(showTrimmed, errors) {
     return(errors)
 }
 
+checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
+                             namesConversionCSV, inputSource, errors) {
+    warnings <- character()
+    if (inputSource == "ABIF") {
+        csvFile <- read.csv(namesConversionCSV, header = TRUE)
+        csvReads <- as.character(csvFile$reads)
+        parentDirFiles <- list.files(parentDirectory)
+        sourceReads <- parentDirFiles[grepl("\\.ab1$", parentDirFiles)]
+    } else if (inputSource == "FASTA") {
+        csvFile <- read.csv(namesConversionCSV, header = TRUE)
+        csvReads <- as.character(csvFile$reads)
+        readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+        sourceReads <- names(readFasta)
+    }
+
+    # Check that all reads in the read folder are listed in the csv
+    readInCsvWarningMsg <-
+        sapply(sourceReads,
+               function(sourceRead) {
+                   if (!(sourceRead %in% csvReads)) {
+                       msg <- paste("\n'", sourceRead, "' is not in the ",
+                                    "csv file (", namesConversionCSV, ")",
+                                    sep = "")
+                       return(msg)}
+                   return()})
+    warnings <- c(warnings, unlist(readInCsvWarningMsg), use.names = FALSE)
+
+    # Check all reads listed in the csv file are in the reads folder
+    readInSourceWarningMsg <-
+        sapply(csvReads,
+               function(csvRead) {
+                   if (!(csvRead %in% sourceReads)) {
+                       msg <- paste("\n'", csvRead, "' is not in the ",
+                                    "parent directory.", sep = "")
+                       return(msg)}
+                   return()})
+    warnings <- c(warnings, unlist(readInSourceWarningMsg), use.names = FALSE)
+
+    # csv file has all of the columns, no extra columns
+    if (!("contig" %in% colnames(csvFile))) {
+        msg <- paste("\n'contig' is not in the csv file (",
+                     namesConversionCSV, ")", sep = "")
+        errors <- c(errors, msg)
+    } else if (!("direction" %in% colnames(csvFile))) {
+        msg <- paste("\n'direction' is not in the csv file (",
+                     namesConversionCSV, ")", sep = "")
+        errors <- c(errors, msg)
+    } else if (!("reads" %in% colnames(csvFile))) {
+        msg <- paste("\n'reads' is not in the csv file (",
+                     namesConversionCSV, ")", sep = "")
+        errors <- c(errors, msg)
+    }
+
+    if (length(warnings) != 0) {
+        warning(warnings)
+    }
+    message("End 'checkAb1FastaCsv'.")
+    return(errors)
+}
