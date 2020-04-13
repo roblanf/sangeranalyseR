@@ -232,7 +232,6 @@ SangerContig <- function(inputSource            = "ABIF",
 #' @param readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @param readFileName The filename of the target ABIF file.
 #' @param fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
-#' @param namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @param geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @param TrimmingMethod TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
@@ -273,7 +272,6 @@ SangerRead <- function(inputSource           = "ABIF",
                        readFeature           = "",
                        readFileName          = "",
                        fastaReadName         = "",
-                       namesConversionCSV    = NULL,
                        geneticCode           = GENETIC_CODE,
                        TrimmingMethod        = "M1",
                        M1TrimmingCutoff      = 0.0001,
@@ -288,7 +286,6 @@ SangerRead <- function(inputSource           = "ABIF",
                    readFeature          = readFeature,
                    readFileName         = readFileName,
                    fastaReadName        = fastaReadName,
-                   namesConversionCSV   = namesConversionCSV,
                    geneticCode          = geneticCode,
                    TrimmingMethod       = TrimmingMethod,
                    M1TrimmingCutoff     = M1TrimmingCutoff,

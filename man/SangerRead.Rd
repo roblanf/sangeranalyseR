@@ -5,11 +5,11 @@
 \title{SangerRead}
 \usage{
 SangerRead(inputSource = "ABIF", readFeature = "", readFileName = "",
-  fastaReadName = "", namesConversionCSV = NULL,
-  geneticCode = GENETIC_CODE, TrimmingMethod = "M1",
-  M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
-  M2SlidingWindowSize = NULL, baseNumPerRow = 100,
-  heightPerRow = 200, signalRatioCutoff = 0.33, showTrimmed = TRUE)
+  fastaReadName = "", geneticCode = GENETIC_CODE,
+  TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
+  M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
+  baseNumPerRow = 100, heightPerRow = 200, signalRatioCutoff = 0.33,
+  showTrimmed = TRUE)
 }
 \arguments{
 \item{inputSource}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
@@ -19,8 +19,6 @@ SangerRead(inputSource = "ABIF", readFeature = "", readFileName = "",
 \item{readFileName}{The filename of the target ABIF file.}
 
 \item{fastaReadName}{If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.}
-
-\item{namesConversionCSV}{The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
 
 \item{geneticCode}{Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
 
