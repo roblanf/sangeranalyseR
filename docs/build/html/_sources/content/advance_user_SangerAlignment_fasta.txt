@@ -52,7 +52,7 @@ Here, we have another more complicated example.
    Figure 3. *SangerAlignment* **FASTA** input file.
 
 
-:ref:`Figure_3<SangerAlignment_fasta_input>` shows the **FASTA** input file and the read names in it will be mapping conversed by **CSV** file showed in :ref:`Figure_2<SangerAlignment_read_names_conversion>` (Only two reads are showed). sangeranalyseR will first match the :code:`contigName` to exclude unrelated reads. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with read names. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, ":code:`_[0-9]*_F.ab1$`", ":code:`_[0-9]*_R.ab1$`" for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
+:ref:`Figure_3<SangerAlignment_fasta_input>` shows the **FASTA** input file and the read names in it will be mapping conversed by **CSV** file showed in :ref:`Figure_2<SangerAlignment_read_names_conversion>` (Only two reads are showed). sangeranalyseR will first match the :code:`contigName` to exclude unrelated reads. The direction of reads in each contig will be grouped by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp` with read names. Therefore, it is important to carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, ":code:`_[0-9]+_F`", ":code:`_[0-9]+_R`" for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
 
 .. _sangeranalyseR_filename_convention_SangerAlignment_fasta:
 .. figure::  ../image/sangeranalyseR_filename_convention_fasta.png
@@ -61,7 +61,7 @@ Here, we have another more complicated example.
 
    Figure 4. Suggested read naming regulation in **FASTA** file - *SangerAlignment*.
 
-:ref:`Figure_4<sangeranalyseR_filename_convention_SangerAlignment_fasta>` shows the suggested reads naming regulation. Users are strongly recommended to follow this reads naming regulation and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
+:ref:`Figure_4<sangeranalyseR_filename_convention_SangerAlignment_fasta>` shows the suggested reads naming regulation. Users are strongly recommended to follow this reads naming regulation and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]+_F`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]+_R`" to reduce any chance of error.
 
 |
 
@@ -74,8 +74,8 @@ After preparing the input directory, we can create the *SangerAlignment* S4 inst
    sangerAlignmentFa <- SangerAlignment(inputSource           = "FASTA",
                                         fastaFileName         = "Sanger_all_reads.fa",
                                         namesConversionCSV    = "names_conversion.csv",
-                                        suffixForwardRegExp   = "[0-9]*_F$",
-                                        suffixReverseRegExp   = "[0-9]*_R$",
+                                        suffixForwardRegExp   = "_[0-9]+_F",
+                                        suffixReverseRegExp   = "_[0-9]+_R",
                                         refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN"
                                         )
 

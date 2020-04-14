@@ -1,8 +1,8 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="English" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="English" > <!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   
@@ -13,40 +13,40 @@
 
   
   
-  
+
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
     
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Advanced User Guide - SangerContig (FASTA)" href="advance_user_SangerContig_fasta.html" />
-    <link rel="prev" title="Advanced User Guide - SangerAlignment (AB1)" href="advance_user_SangerAlignment_ab1.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="sangeranalyseR  documentation" href="../index.html"/>
+        <link rel="next" title="Advanced User Guide - SangerContig (FASTA)" href="advance_user_SangerContig_fasta.html"/>
+        <link rel="prev" title="Advanced User Guide - SangerAlignment (AB1)" href="advance_user_SangerAlignment_ab1.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
-   
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -77,10 +77,7 @@
           
             
             
-              
-            
-            
-              <ul class="current">
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="beginner.html">Beginners Guide</a></li>
@@ -111,54 +108,34 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">sangeranalyseR</a>
-        
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">sangeranalyseR</a>
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html">Docs</a> &raquo;</li>
-        
-      <li>Advanced User Guide - <em>SangerRead</em> (<strong>FASTA</strong>)</li>
-    
-    
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Advanced User Guide - <em>SangerRead</em> (<strong>FASTA</strong>)</li>
       <li class="wy-breadcrumbs-aside">
         
-            
-            <a href="../_sources/content/advance_user_SangerRead_fasta.rst.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/content/advance_user_SangerRead_fasta.txt" rel="nofollow"> View page source</a>
           
         
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -169,7 +146,7 @@
 <p><em>SangerRead</em> is the lowest level in sangeranalyseR showed in <a class="reference internal" href="#sangerread-hierarchy-fasta"><span class="std std-ref">Figure_1</span></a> which corresponds to a single read in Sanger sequencing. In this section, we are going to go through detailed sangeranalyseR data analysis steps in <em>SangerRead level</em> from <strong>FASTA</strong> file input.</p>
 <div class="figure align-center" id="id1">
 <span id="sangerread-hierarchy-fasta"></span><a class="reference internal image-reference" href="../_images/SangerRead_hierarchy.png"><img alt="../_images/SangerRead_hierarchy.png" src="../_images/SangerRead_hierarchy.png" style="width: 626.6px; height: 217.8px;" /></a>
-<p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerRead</em> level.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerRead</em> level.</span></p>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -183,31 +160,31 @@
 </div>
 <div class="section" id="creating-sangerread-instance-from-fasta">
 <h2>Creating <em>SangerRead</em> instance from <strong>FASTA</strong><a class="headerlink" href="#creating-sangerread-instance-from-fasta" title="Permalink to this headline">¶</a></h2>
-<p>After preparing the <em>SangerRead</em> input <strong>FASTA</strong> file, the next step is to create the <em>SangerRead</em> S4 instance by running <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal notranslate"><span class="pre">new</span></code> method which makes instance creation more intuitive. Most of the input parameters have their own default values. In the constructor below, we list important parameters. The filename is assigned to <code class="code docutils literal notranslate"><span class="pre">readFileName</span></code>. Inside <strong>FASTA</strong> file, the string in the first line after &quot;&gt;&quot; is the name of the read. Users need to assign the read name to <code class="code docutils literal notranslate"><span class="pre">fastaReadName</span></code> which is used to match the target read in <strong>FASTA</strong> input file. <a class="reference internal" href="#sangerread-fasta-input-file"><span class="std std-ref">Figure 2</span></a> is a valid <strong>FASTA</strong> file and the value of <code class="code docutils literal notranslate"><span class="pre">fastaReadName</span></code> is <code class="code docutils literal notranslate"><span class="pre">Achl_ACHLO006-09_1_Forward</span></code>.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">sangerReadFfa</span> <span class="o">&lt;-</span> <span class="nf">new</span><span class="p">(</span><span class="s">&quot;SangerRead&quot;</span><span class="p">,</span>
-                     <span class="n">inputSource</span>          <span class="o">=</span> <span class="s">&quot;FASTA&quot;</span><span class="p">,</span>
-                     <span class="n">readFeature</span>          <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
-                     <span class="n">readFileName</span>         <span class="o">=</span> <span class="s">&quot;ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa&quot;</span><span class="p">,</span>
-                     <span class="n">fastaReadName</span>        <span class="o">=</span> <span class="s">&quot;Achl_ACHLO006-09_1_Forward&quot;</span><span class="p">,</span>
-                     <span class="n">geneticCode</span>          <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">)</span>
+<p>After preparing the <em>SangerRead</em> input <strong>FASTA</strong> file, the next step is to create the <em>SangerRead</em> S4 instance by running <code class="code docutils literal"><span class="pre">SangerRead</span></code> constructor function or <code class="code docutils literal"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal"><span class="pre">new</span></code> method which makes instance creation more intuitive. Most of the input parameters have their own default values. In the constructor below, we list important parameters. The filename is assigned to <code class="code docutils literal"><span class="pre">readFileName</span></code>. Inside <strong>FASTA</strong> file, the string in the first line after &#8220;&gt;&#8221; is the name of the read. Users need to assign the read name to <code class="code docutils literal"><span class="pre">fastaReadName</span></code> which is used to match the target read in <strong>FASTA</strong> input file. <a class="reference internal" href="#sangerread-fasta-input-file"><span class="std std-ref">Figure 2</span></a> is a valid <strong>FASTA</strong> file and the value of <code class="code docutils literal"><span class="pre">fastaReadName</span></code> is <code class="code docutils literal"><span class="pre">Achl_ACHLO006-09_1_Forward</span></code>.</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span>sangerReadFfa <span class="o">&lt;-</span> new<span class="p">(</span><span class="s">&quot;SangerRead&quot;</span><span class="p">,</span>
+                     inputSource          <span class="o">=</span> <span class="s">&quot;FASTA&quot;</span><span class="p">,</span>
+                     readFeature          <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
+                     readFileName         <span class="o">=</span> <span class="s">&quot;ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa&quot;</span><span class="p">,</span>
+                     fastaReadName        <span class="o">=</span> <span class="s">&quot;Achl_ACHLO006-09_1_Forward&quot;</span><span class="p">,</span>
+                     geneticCode          <span class="o">=</span> GENETIC_CODE<span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-center" id="id2">
-<span id="sangerread-fasta-input-file"></span><a class="reference internal image-reference" href="../_images/SangerRead_fasta_input_file.png"><img alt="../_images/SangerRead_fasta_input_file.png" src="../_images/SangerRead_fasta_input_file.png" style="width: 854.4000000000001px; height: 183.20000000000002px;" /></a>
-<p class="caption"><span class="caption-text">Figure 2. <em>SangerRead</em> <strong>FASTA</strong> input file.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<span id="sangerread-fasta-input-file"></span><a class="reference internal image-reference" href="../_images/SangerRead_fasta_input_file.png"><img alt="../_images/SangerRead_fasta_input_file.png" src="../_images/SangerRead_fasta_input_file.png" style="width: 854.4px; height: 183.2px;" /></a>
+<p class="caption"><span class="caption-text">Figure 2. <em>SangerRead</em> <strong>FASTA</strong> input file.</span></p>
 </div>
-<p>The inputs of <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function and <code class="code docutils literal notranslate"><span class="pre">new</span></code> method are same. For more details about <em>SangerRead</em> inputs and slots definition, please refer to <a class="reference external" href="http://packages.python.org/an_example_pypi_project/">sangeranalyseR reference manual (need update after upload function manul)</a>.</p>
+<p>The inputs of <code class="code docutils literal"><span class="pre">SangerRead</span></code> constructor function and <code class="code docutils literal"><span class="pre">new</span></code> method are same. For more details about <em>SangerRead</em> inputs and slots definition, please refer to <a class="reference external" href="http://packages.python.org/an_example_pypi_project/">sangeranalyseR reference manual (need update after upload function manul)</a>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="writing-sangerread-fasta-files-fasta">
 <h2>Writing <em>SangerRead</em> FASTA files <sub>(FASTA)</sub><a class="headerlink" href="#writing-sangerread-fasta-files-fasta" title="Permalink to this headline">¶</a></h2>
-<p>Users can write the <em>SangerRead</em> instance to <strong>FASTA</strong> files. Because the <strong>FASTA</strong> input does not support quality trimming and base calling, in this example, the sequence of the written <strong>FASTA</strong> file will be same as the input <strong>FASTA</strong> file. Moreover, users can set the compression level through the one-line function <code class="code docutils literal notranslate"><span class="pre">writeFasta</span></code> which mainly depends on <code class="code docutils literal notranslate"><span class="pre">writeXStringSet</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">Biostrings</a> R package.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">sangerReadFfa</span><span class="p">,</span>
-           <span class="n">outputDir</span>         <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
-           <span class="n">compress</span>          <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-           <span class="n">compression_level</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">)</span>
+<p>Users can write the <em>SangerRead</em> instance to <strong>FASTA</strong> files. Because the <strong>FASTA</strong> input does not support quality trimming and base calling, in this example, the sequence of the written <strong>FASTA</strong> file will be same as the input <strong>FASTA</strong> file. Moreover, users can set the compression level through the one-line function <code class="code docutils literal"><span class="pre">writeFasta</span></code> which mainly depends on <code class="code docutils literal"><span class="pre">writeXStringSet</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">Biostrings</a> R package.</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span>writeFasta<span class="p">(</span>sangerReadFfa<span class="p">,</span>
+           outputDir         <span class="o">=</span> <span class="kp">tempdir</span><span class="p">(),</span>
+           compress          <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
+           compression_level <span class="o">=</span> <span class="kc">NA</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Users can download the <a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/SangerRead/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa">output FASTA file</a> of this example.</p>
@@ -218,26 +195,25 @@
 <div class="section" id="generating-sangerread-report-fasta">
 <h2>Generating <em>SangerRead</em> report <sub>(FASTA)</sub><a class="headerlink" href="#generating-sangerread-report-fasta" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least, users can save <em>SangerRead</em> instance into a report after the analysis. The report will be generated in <strong>HTML</strong> by knitting <strong>Rmd</strong> files. The results in the report are static.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">sangerReadFfa</span><span class="p">,</span>
-               <span class="n">outputDir</span> <span class="o">=</span> <span class="nf">tempdir</span><span class="p">())</span>
+<div class="highlight-R"><div class="highlight"><pre><span></span>generateReport<span class="p">(</span>sangerReadFfa<span class="p">,</span>
+               outputDir <span class="o">=</span> <span class="kp">tempdir</span><span class="p">())</span>
 </pre></div>
 </div>
-<p><a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/SangerRead/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_fasta.html">SangerRead_Report_fasta.html</a> is the generated <em>SangerRead</em> report html of this example. Users can access to '<em>Basic Information</em>', '<em>DNA Sequence</em>' and '<em>Amino Acids Sequence</em>' sections inside this report.</p>
+<p><a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/SangerRead/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_fasta.html">SangerRead_Report_fasta.html</a> is the generated <em>SangerRead</em> report html of this example. Users can access to &#8216;<em>Basic Information</em>&#8216;, &#8216;<em>DNA Sequence</em>&#8216; and &#8216;<em>Amino Acids Sequence</em>&#8216; sections inside this report.</p>
 </div>
 </div>
 
 
            </div>
-           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="advance_user_SangerContig_fasta.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerContig (FASTA)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="advance_user_SangerContig_fasta.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerContig (FASTA)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="advance_user_SangerAlignment_ab1.html" class="btn btn-neutral float-left" title="Advanced User Guide - SangerAlignment (AB1)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="advance_user_SangerAlignment_ab1.html" class="btn btn-neutral" title="Advanced User Guide - SangerAlignment (AB1)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -246,11 +222,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Kuan-Hao Chao
+        &copy; Copyright 2019, Kuan-Hao Chao.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -263,15 +239,35 @@
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>

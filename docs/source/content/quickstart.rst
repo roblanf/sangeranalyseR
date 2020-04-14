@@ -15,8 +15,8 @@ The most minimal example gets the job done in three lines of code. More details 
 .. code-block:: R
 
    my_aligned_contigs <- SangerAlignment(parentDirectory     = "./my_data/",
-                                         suffixForwardRegExp = "_[0-9]*_F.ab1$",
-                                         suffixReverseRegExp = "_[0-9]*_R.ab1$")
+                                         suffixForwardRegExp = "_[0-9]+_F+",
+                                         suffixReverseRegExp = "_[0-9]+_R +")
 
    writeFasta(my_aligned_contigs)
 
@@ -39,8 +39,8 @@ Step 2: Load and analyse your data
 .. code-block:: R
 
    my_aligned_contigs <- SangerAlignment(parentDirectory     = "./my_data/",
-                                         suffixForwardRegExp = "_[0-9]*_F.ab1$",
-                                         suffixReverseRegExp = "_[0-9]*_R.ab1$")
+                                         suffixForwardRegExp = "_[0-9]+_F+",
+                                         suffixReverseRegExp = "_[0-9]+_R +")
 
 
 This command loads, trims, builds contigs, and aligns contigs. All of these are done with sensible default values, which can be changed. I

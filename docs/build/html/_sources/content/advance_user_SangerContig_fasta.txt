@@ -50,7 +50,7 @@ Here, we have an example:
 
    Figure 3. *SangerContig* **FASTA** input file.
 
-:ref:`Figure_3<SangerContig_fasta_input>` shows the **FASTA** input file and the read names in it will be mapped onto the **CSV** file showed in :ref:`Figure_2<SangerContig_read_names_conversion>`. sangeranalyseR will first match the :code:`contigName` to exclude unrelated reads and then separate the forward and reverse reads by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. Therefore, it is important to make sure all target reads share the same :code:`contigName` and carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, ":code:`_[0-9]*_F$`", ":code:`_[0-9]*_R$`" for matching forward and reverse reads are highly suggested. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
+:ref:`Figure_3<SangerContig_fasta_input>` shows the **FASTA** input file and the read names in it will be mapped onto the **CSV** file showed in :ref:`Figure_2<SangerContig_read_names_conversion>`. sangeranalyseR will first match the :code:`contigName` to exclude unrelated reads and then separate the forward and reverse reads by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. Therefore, it is important to make sure all target reads share the same :code:`contigName` and carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, ":code:`__[0-9]+_F`", ":code:`__[0-9]+_R`" for matching forward and reverse reads are highly suggested. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
 
 .. _sangeranalyseR_filename_convention_SangerContig_fasta:
 .. figure::  ../image/sangeranalyseR_filename_convention_fasta.png
@@ -59,7 +59,7 @@ Here, we have an example:
 
    Figure 4. Suggested read naming regulation in **FASTA** file - *SangerContig*.
 
-:ref:`Figure_4<sangeranalyseR_filename_convention_SangerContig_fasta>` shows the suggested read naming regulation which is used in the "analysis_read_name" column in **CSV** file (:ref:`Figure_2<SangerContig_read_names_conversion>`). Users are strongly recommended to follow this file naming regulation and use :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R$`" to reduce any chance of error.
+:ref:`Figure_4<sangeranalyseR_filename_convention_SangerContig_fasta>` shows the suggested read naming regulation which is used in the "analysis_read_name" column in **CSV** file (:ref:`Figure_2<SangerContig_read_names_conversion>`). Users are strongly recommended to follow this file naming regulation and use :code:`suffixForwardRegExp` : ":code:`__[0-9]+_F`" and :code:`suffixReverseRegExp` : ":code:`__[0-9]+_R`" to reduce any chance of error.
 
 |
 
@@ -74,8 +74,8 @@ After preparing the input directory, we can create the *SangerContig* S4 instanc
                                   fastaFileName         = "Achl_ACHLO006-09.fa",
                                   namesConversionCSV    = "names_conversion_1.csv",
                                   contigName            = "Achl_ACHLO006-09",
-                                  suffixForwardRegExp   = "_[0-9]*_F$",
-                                  suffixReverseRegExp   = "_[0-9]*_R$",
+                                  suffixForwardRegExp   = "__[0-9]+_F",
+                                  suffixReverseRegExp   = "__[0-9]+_R",
                                   refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
 
 

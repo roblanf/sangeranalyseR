@@ -108,7 +108,7 @@ In the previous :ref:`Creating *SangerRead* instance from **AB1**` part, the con
 
 Writing *SangerRead* FASTA files :sub:`(AB1)`
 -------------------------------------------------
-Users can write the *SangerRead* instance to **FASTA** files. The trimmed read sequence will be written into a **FASTA** file. Below is the one-line function that users need to run. This function mainly depends on :code:`writeXStringSet` function in `Biostrings <https://bioconductor.org/packages/release/bioc/html/Biostrings.html>`_ R package. Users can set the compression level through :code:`writeFastaSA` function.
+Users can write the *SangerRead* instance to **FASTA** files. The trimmed read sequence will be written into a **FASTA** file. Below is the one-line function that users need to run. This function mainly depends on :code:`writeXStringSet` function in `Biostrings <https://bioconductor.org/packages/release/bioc/html/Biostrings.html>`_ R package. Users can set the compression level through :code:`writeFasta` function.
 
 .. code-block:: R
 

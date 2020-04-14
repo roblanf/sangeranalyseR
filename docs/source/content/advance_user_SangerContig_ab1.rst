@@ -47,7 +47,7 @@ Here, we have an example:
 
 :ref:`Figure_2<SangerContig_file_structure>` shows the file naming regulation and hierarchy. In this example, :code:`ACHLO` is the parent directory that contains all **AB1** files. They must be in the first layer of the directory.
 
-sangeranalyseR will first match the :code:`contigName` to exclude unrelated files and then separate the forward and reverse reads by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. Therefore, it is important to make sure all target **AB1** files share the same :code:`contigName` and carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1$"`, :code:`"_[0-9]*_R.ab1$"` for matching forward and reverse reads are highly suggested and are used as default. Moreover, it is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
+sangeranalyseR will first match the :code:`contigName` to exclude unrelated files and then separate the forward and reverse reads by matching :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. Therefore, it is important to make sure all target **AB1** files share the same :code:`contigName` and carefully select :code:`suffixForwardRegExp` and :code:`suffixReverseRegExp`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]+_F"`, :code:`"_[0-9]+_R"` for matching forward and reverse reads are highly suggested and are used as default. Moreover, it is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.
 
 .. _sangeranalyseR_filename_convention_SangerContig:
 .. figure::  ../image/sangeranalyseR_filename_convention.png
@@ -56,7 +56,7 @@ sangeranalyseR will first match the :code:`contigName` to exclude unrelated file
 
    Figure 3. Suggested **AB1** file naming regulation - *SangerContig*.
 
-:ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig>` shows the suggested **AB1** file naming regulation. Users are strongly recommended to follow this file naming regulation and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]*_F.ab1$`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]*_R.ab1$`" to reduce any chance of error.
+:ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig>` shows the suggested **AB1** file naming regulation. Users are strongly recommended to follow this file naming regulation and use the default :code:`suffixForwardRegExp` : ":code:`_[0-9]+_F`" and :code:`suffixReverseRegExp` : ":code:`_[0-9]+_R`" to reduce any chance of error.
 
 
 |

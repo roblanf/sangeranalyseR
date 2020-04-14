@@ -10,17 +10,16 @@ This guide is for users who are starting with :code:`.ab1` files. If you are sta
 Step 1: Preparing your input files
 ----------------------------------
 
-sangeranalyseR takes as input a group of **AB1** files. It groups these into contigs using the first part of the filename. Once the individual contigs are built, all the contigs are aligned and a simple phylogenetic tree is made. This section explains how users should organize their files before running sangeranalyseR.
+sangeranalyseR takes as input a group of **.ab1** files, which it then groups together into contigs. Once the individual contigs are built, all the contigs are aligned and a simple phylogenetic tree is made. This section explains how you should organize your files before running sangeranalyseR.
 
-First, users need to prepare a directory and put all their **AB1** files inside it. Files can be organised in as many sub-folders as you like, but all read files should follow naming convention a naming convention in which the filename starts with the contig name, ends with the read direction, and has the **.ab1** extentsion (more in the note below).
+First, prepare a directory and put all your **.ab1** files inside it (there can be other files in there too, sangeranalyseR will ignore anything without a `.ab1` file extension). Files can be organised in as many sub-folders as you like. sangeranalyseR will recursively search all the directories inside :code:`parentDirectory` and find all files that end with **.ab1**.
 
-.. note::
+Second, give sangeranalyseR the information it needs to group reads into contigs. To do this, sangeranalyseR needs two pieces of information about each read: the direction of the read (forward or reverse), and the contig that it should be grouped into. There are two ways you can give sangeranalyseR this information:
 
-  * All the input files must have the **.ab1** file extension. sangeranalyseR uses this to find valid **.ab1** files.
-  * The start of each input file must be used to determine the contig. I.e. all reads that belong to the same contig should have the same beginning to their file name.
-  * The end of the filename should specify which direction the read was sequenced in (i.e. forward or reverse).
+* using the file name itself
+* using a three-column csv file
 
-When loading your files you'll need to specify three parameters: :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`. These tell sangeranalyseR how to find and group your files. An example will help. Imagine you have sequenced four contigs with a forward and reverse read, all from the same species, but from different locations. In this case you might have arranged your data something like :ref:`Figure_1<SangerAlignment_file_structure_beginner>`, below.
+We'll cover both approaches using the following example. Imagine you have sequenced four contigs with a forward and reverse read, all from the same species, but from different locations. In this case you might have arranged your data something like :ref:`Figure_1<SangerAlignment_file_structure_beginner>`, below.
 
 .. _SangerAlignment_file_structure_beginner:
 .. figure::  ../image/SangerAlignment_file_structure_beginner.png
@@ -29,31 +28,47 @@ When loading your files you'll need to specify three parameters: :code:`parentDi
 
    Figure 1. Input ab1 files inside the parent directory, :code:`./tmp/`.
 
-To use sangeranalyseR you would set the three parameters for this example as follows:
+When using the filenames to group the reads, you'll need to specify three parameters: :code:`parentDirectory`, :code:`suffixForwardRegExp`, and :code:`suffixReverseRegExp`: 
 
-* :code:`parentDirectory`: this is the directory that contains all the **AB1** files. In this example, the reads are in the :code:`/tmp/` directory, so for convenience we'll just say that :code:`parentDirectory` should be :code:`/path/to/tmp/`. In your case, it should be the absolute path to the folder that contains your reads.
+* :code:`parentDirectory`: this is the directory that contains all the **.ab1** files. In this example, the reads are in the :code:`/tmp/` directory, so for convenience we'll just say that :code:`parentDirectory` should be :code:`/path/to/tmp/`. In your case, it should be the absolute path to the folder that contains your reads.
 
-* :code:`suffixForwardRegExp`: This is a regular expression (if you don't know what this is, don't panic - it's just a way of recognising text that you will get the hang of fast), which tells sangeranalyseR how much of the end of a filename to use to determine a forward read. All the reads that are in forward direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]*_F.ab1$`. This regular expression just says that the forward suffix is an underscore, followed by any number from 0-9, followed by another underscore then 'F.ab1'. What's important to realise is that whatever is *not* captured by this regex is then by default the contig name. So in this case the regex also determines that the contig name for the first read is 'Achl_RBNII397-13'.
+* :code:`suffixForwardRegExp`: This is a regular expression (if you don't know what this is, don't panic - it's just a way of recognising text that you will get the hang of fast), which tells sangeranalyseR how to use the end of a filename to determine a forward read. All the reads that are in forward direction have to contain this in their filename suffix. There are lots of ways to do this, but for this example, one uesful way to do it is :code:`_[0-9]+_F`. This regular expression just says that the forward suffix is an underscore, followed at least one digit from 0-9, followed by another underscore then 'F'. The regex does not have to match to the end of the file name, but it's important to realise is that whatever comes before the part of the filename captured by this regex is by default the contig name. So in this case the regex also determines that the contig name for the first read is 'Achl_RBNII397-13'.
 
-* :code:`suffixReverseRegExp`: This is just the same as for the forward read, except that it determines the suffix for reverse reads. All the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]*_R.ab1$`. I.e. all we've done is switch the 'F' in the forward read for an 'R' in the reverse read.
+* :code:`suffixReverseRegExp`: This is just the same as for the forward read, except that it determines the suffix for reverse reads. All the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is :code:`_[0-9]+_R`. I.e. all we've done is switch the 'F' in the forward read for an 'R' in the reverse read.
 
-The individual read files inside the :code:`parentDirectory` do not need to be in the same folder. You can have as many nested subfolders as you like. sangeranalyseR will recursively search all the directories inside :code:`parentDirectory` and find all files that end with **.ab1** and then try to match the forward or reverse suffix. Files with the same contig name will be categorized in the same group and be aligned into a contig. Therefore, it is very important to make sure that filenames are correctly and systematically named. In this example, there are four contigs that will be detected: :code:`Achl_RBNII397-13`, :code:`Achl_RBNII396-13`, :code:`Achl_ACHLO006-09` and :code:`Achl_ACHLO007-09`.
+If you don't want to use the regex method, you can use the csv method instead. To use this method, just prepare an input **.csv** file with three columns:
+
+* contig: the name of the contig that reads should be grouped into
+* direction: "F" or "R" for forward and reverse reads, respectively
+* reads: the full file name (just the name, not the path) of the read to be grouped
+
 
 |
 
 Step 2: Loading and analysing your data
 ---------------------------------------
-After preparing the input directory, we can create and align our contigs with just a single line of R code. In technical jargon, we are creating a *SangerAlignment* S4 instance.
+After preparing the input files, you can create and align your contigs with just a single line of R code. In technical jargon, we are creating a *SangerAlignment* S4 instance.
 
 It's important to note that this function is designed to be both *simple* and *flexible*. It's simple in that it has sensible defaults for all the usual things like trimming reads. But it's flexible in that you can change any and all of these defaults to suit your particular data and analyses. Here we just cover the simplest usage. The more flexible things are covered in the Advanced sections of the user guide.
 
 So, let's create our contigs from our reads, and align them.
 
+Here's how to do it using the regex method:
+
 .. code-block:: R
 
    my_aligned_contigs <- SangerAlignment(parentDirectory     = "/path/to/tmp/",
-                                         suffixForwardRegExp = "_[0-9]*_F.ab1$",
-                                         suffixReverseRegExp = "_[0-9]*_R.ab1$")
+                                         suffixForwardRegExp = "_[0-9]+_F",
+                                         suffixReverseRegExp = "_[0-9]+_R")
+
+
+Here's how to do it using the csv file method
+
+.. code-block:: R
+
+   my_aligned_contigs <- SangerAlignment(parentDirectory     = "/path/to/tmp/",
+                                         namesConversionCSV  = "/path/to/csvfile")
+
 
 :code:`my_aligned_contigs` is now a *SangerAlignment* S4 object which contains all of your reads, all the information on how they were trimmed, processed, and aligned, their chromatograms, and an alignment and phylogeny of all of your assembled contigs. The next section explains how to start digging into the details of that object.
 
