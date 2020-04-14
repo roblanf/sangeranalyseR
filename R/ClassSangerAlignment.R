@@ -3,7 +3,6 @@ setOldClass("phylo")
 
 setClassUnion("DNAStringORNULL", c("DNAString", "NULL"))
 setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
-setClassUnion("phyloORNULL", c("phylo", "NULL"))
 
 #' @title SangerAlignment
 #'
@@ -121,7 +120,7 @@ setClass("SangerAlignment",
                         contigList                  = "list",
                         contigsConsensus            = "DNAStringORNULL",
                         contigsAlignment            = "DNAStringSetORNULL",
-                        contigsTree                 = "phyloORNULL"
+                        contigsTree                 = "phylo"
          ),
 )
 

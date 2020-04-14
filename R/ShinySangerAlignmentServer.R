@@ -1562,7 +1562,8 @@ SangerAlignmentServer <- function(input, output, session) {
             if (sangerAlignmentParam[["contigsTree"]]$tip.label != '') {
                 plotOutput("SATreePlot")
             } else {
-                h4("*** The number of contigs is less than 3, so 'Contigs Tree' cannot be created. ***",
+                h4("*** The number of contigs is less than 3 or quality of reads are too low.
+                   'Contigs Tree' cannot be created. ***",
                    style="font-weight: bold; font-style: italic;")
             }
         }

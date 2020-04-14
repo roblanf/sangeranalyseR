@@ -114,7 +114,7 @@ shiny::includeHTML(browseSeqHTML)
 <div style="overflow: scroll;">
 ```{r results='asis', echo=FALSE, warning=FALSE}
 if (params$SangerAlignment@contigsTree$tip.label == '') {
-  cat("<p style='font-size: 13px; font-weight:bold'> The number of contigs is less than 3, so tree is not created. </p>")
+  cat("<p style='font-size: 13px; font-weight:bold'> The number of contigs is less than 3 or quality of reads are too low. 'Contigs Tree' cannot be created. </p>")
 } else {
   plot(params$SangerAlignment@contigsTree) 
 }

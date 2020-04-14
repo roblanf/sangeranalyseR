@@ -83,7 +83,7 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
             # Making a rough NJ tree. Labels are rows in the summary df
             #    (If tree cannot be created ==> NULL)
             aln.tree = read.tree(text="();")
-            try({
+            tryCatch({
                 aln.tree = bionjs(aln.dist)
                 aln.tree$tip.label <- names(aln)
                 # deal with -ve branches
@@ -91,10 +91,17 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
                 # judge seuqences using the tree
                 aln.tree$edge.length[which(aln.tree$edge.length<0)] =
                     abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])
-            },
-            silent = TRUE
-            )
+            }, warning = function(warning_condition) {
+                message("The number of contigs is less than 3 or quality of reads ",
+                        "are too low. 'Contigs Tree' cannot be created.")
+            }, error = function(error_condition) {
+                message("The number of contigs is less than 3 or quality of reads ",
+                        "are too low. 'Contigs Tree' cannot be created.")
+                aln.tree = read.tree(text="();")
+            })
         } else {
+            message("The number of contigs is less than 3 or quality of reads ",
+                    "are too low. 'Contigs Tree' cannot be created.")
             aln.tree = read.tree(text="();")
         }
 
