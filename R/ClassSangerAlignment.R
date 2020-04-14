@@ -1,6 +1,10 @@
 #' @export
 setOldClass("phylo")
 
+setClassUnion("DNAStringORNULL", c("DNAString", "NULL"))
+setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
+setClassUnion("phyloORNULL", c("phylo", "NULL"))
+
 #' @title SangerAlignment
 #'
 #' @description  An S4 class containing SangerContigs lists and contigs alignment results which corresponds to a final alignment in Sanger sequencing.
@@ -115,9 +119,9 @@ setClass("SangerAlignment",
                         geneticCode                 = "character",
                         refAminoAcidSeq             = "character",
                         contigList                  = "list",
-                        contigsConsensus            = "DNAString",
-                        contigsAlignment            = "DNAStringSet",
-                        contigsTree                 = "phylo"
+                        contigsConsensus            = "DNAStringORNULL",
+                        contigsAlignment            = "DNAStringSetORNULL",
+                        contigsTree                 = "phyloORNULL"
          ),
 )
 

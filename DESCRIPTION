@@ -1,7 +1,7 @@
 Package: sangeranalyseR
 Type: Package
 Title: sangeranalyseR: a suite of functions for the analysis of Sanger sequence data in R
-Version: 0.99.12
+Version: 0.99.13
 Date: 2015-12-18
 Author: Rob Lanfear <rob.lanfear@gmail.com>, Kuan-Hao Chao <ntueeb05howard@gmail.com>
 Maintainer: Rob Lanfear <rob.lanfear@gmail.com>, Kuan-Hao Chao <ntueeb05howard@gmail.com>
@@ -36,11 +36,11 @@ Depends:
     tools,
     rmarkdown,
     kableExtra,
-    seqinr
+    seqinr,
+    BiocStyle
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: 
-    BiocStyle,
     knitr,
     testthat (>= 2.1.0)
 Collate: 
