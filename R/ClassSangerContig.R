@@ -171,6 +171,7 @@ setMethod("initialize",
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
     errors <- character()
+    warnings <- character()
     errors <- checkInputSource (inputSource, errors)
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking for contigSeq parameter
@@ -226,8 +227,6 @@ setMethod("initialize",
                                       forwardSelectInputFiles)
             reverseAllReads <- lapply(parentDirectory, file.path,
                                       reverseSelectInputFiles)
-            forwardNumber <- length(forwardAllReads[[1]])
-            reverseNumber <- length(reverseAllReads[[1]])
             ### ----------------------------------------------------------------
             ### 'forwardAllReads'  files prechecking (must exist)
             ### ----------------------------------------------------------------
@@ -280,17 +279,7 @@ setMethod("initialize",
                 forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
                 reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
             }
-            forwardNumber <- length(nrow(forwardCsv))
-            reverseNumber <- length(nrow(reverseCsv))
         }
-        ### ----------------------------------------------------------------
-        ### 'forwardNumber' + 'reverseNumber' number > 2
-        ### ----------------------------------------------------------------
-        if ((forwardNumber + reverseNumber) < 2) {
-            msg <- "\n'Number of total reads has to be more than two."
-            errors <- c(errors, msg)
-        }
-
         ### ----------------------------------------------------------------
         ### Input parameter prechecking for TrimmingMethod.
         ### ----------------------------------------------------------------
@@ -314,44 +303,60 @@ setMethod("initialize",
         if (length(errors) != 0) {
             stop(errors)
         }
-        trimmingMethodSC = TrimmingMethod
+        trimmingMethodSC <- TrimmingMethod
         if (ab1RegexChecker) {
             # sapply to create SangerRead list.
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
             forwardReadList <- sapply(forwardAllReads[[1]], function(forwardN){
-                new("SangerRead",
-                    inputSource          = inputSource,
-                    readFeature          = "Forward Read",
-                    readFileName         = forwardN,
-                    geneticCode          = geneticCode,
-                    TrimmingMethod       = TrimmingMethod,
-                    M1TrimmingCutoff     = M1TrimmingCutoff,
-                    M2CutoffQualityScore = M2CutoffQualityScore,
-                    M2SlidingWindowSize  = M2SlidingWindowSize,
-                    baseNumPerRow        = baseNumPerRow,
-                    heightPerRow         = heightPerRow,
-                    signalRatioCutoff    = signalRatioCutoff,
-                    showTrimmed          = showTrimmed)
+                newSangerRead<- new("SangerRead",
+                                    inputSource          = inputSource,
+                                    readFeature          = "Forward Read",
+                                    readFileName         = forwardN,
+                                    geneticCode          = geneticCode,
+                                    TrimmingMethod       = TrimmingMethod,
+                                    M1TrimmingCutoff     = M1TrimmingCutoff,
+                                    M2CutoffQualityScore = M2CutoffQualityScore,
+                                    M2SlidingWindowSize  = M2SlidingWindowSize,
+                                    baseNumPerRow        = baseNumPerRow,
+                                    heightPerRow         = heightPerRow,
+                                    signalRatioCutoff    = signalRatioCutoff,
+                                    showTrimmed          = showTrimmed)
+                seqLen <- length(newSangerRead@primarySeq)
+                if (seqLen < minReadLength) {
+                    message("   * Read length is shorter than 'minReadLength' ",
+                            minReadLength, ".\n     This read is skipped!!")
+                    NULL
+                } else {
+                    newSangerRead
+                }
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
             reverseReadList <- sapply(reverseAllReads[[1]], function(reverseN){
-                new("SangerRead",
-                    inputSource          = inputSource,
-                    readFeature          = "Reverse Read",
-                    readFileName         = reverseN,
-                    geneticCode          = geneticCode,
-                    TrimmingMethod       = TrimmingMethod,
-                    M1TrimmingCutoff     = M1TrimmingCutoff,
-                    M2CutoffQualityScore = M2CutoffQualityScore,
-                    M2SlidingWindowSize  = M2SlidingWindowSize,
-                    baseNumPerRow        = baseNumPerRow,
-                    heightPerRow         = heightPerRow,
-                    signalRatioCutoff    = signalRatioCutoff,
-                    showTrimmed          = showTrimmed)
+                newSangerRead <- new("SangerRead",
+                                     inputSource          = inputSource,
+                                     readFeature          = "Reverse Read",
+                                     readFileName         = reverseN,
+                                     geneticCode          = geneticCode,
+                                     TrimmingMethod       = TrimmingMethod,
+                                     M1TrimmingCutoff     = M1TrimmingCutoff,
+                                     M2CutoffQualityScore = M2CutoffQualityScore,
+                                     M2SlidingWindowSize  = M2SlidingWindowSize,
+                                     baseNumPerRow        = baseNumPerRow,
+                                     heightPerRow         = heightPerRow,
+                                     signalRatioCutoff    = signalRatioCutoff,
+                                     showTrimmed          = showTrimmed)
+                seqLen <- length(newSangerRead@primarySeq)
+                if (seqLen < minReadLength) {
+                    message("   * Read length is shorter than 'minReadLength' ",
+                            minReadLength, ".\n     This read is skipped!!")
+                    NULL
+                } else {
+                    newSangerRead
+                }
             })
         } else if (ab1CSVChecker) {
             forwardOriginal <- as.character(forwardCsv$reads)
@@ -365,19 +370,27 @@ setMethod("initialize",
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
             forwardReadList <- sapply(fAbsoluteAB1, function(forwardN){
-                new("SangerRead",
-                    inputSource          = inputSource,
-                    readFeature          = "Forward Read",
-                    readFileName         = forwardN,
-                    geneticCode          = geneticCode,
-                    TrimmingMethod       = TrimmingMethod,
-                    M1TrimmingCutoff     = M1TrimmingCutoff,
-                    M2CutoffQualityScore = M2CutoffQualityScore,
-                    M2SlidingWindowSize  = M2SlidingWindowSize,
-                    baseNumPerRow        = baseNumPerRow,
-                    heightPerRow         = heightPerRow,
-                    signalRatioCutoff    = signalRatioCutoff,
-                    showTrimmed          = showTrimmed)
+                newSangerRead <- new("SangerRead",
+                                     inputSource          = inputSource,
+                                     readFeature          = "Forward Read",
+                                     readFileName         = forwardN,
+                                     geneticCode          = geneticCode,
+                                     TrimmingMethod       = TrimmingMethod,
+                                     M1TrimmingCutoff     = M1TrimmingCutoff,
+                                     M2CutoffQualityScore = M2CutoffQualityScore,
+                                     M2SlidingWindowSize  = M2SlidingWindowSize,
+                                     baseNumPerRow        = baseNumPerRow,
+                                     heightPerRow         = heightPerRow,
+                                     signalRatioCutoff    = signalRatioCutoff,
+                                     showTrimmed          = showTrimmed)
+                seqLen <- length(newSangerRead@primarySeq)
+                if (seqLen < minReadLength) {
+                    message("   * Read length is shorter than 'minReadLength' ",
+                            minReadLength, ".\n     This read is skipped!!")
+                    NULL
+                } else {
+                    newSangerRead
+                }
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
@@ -393,19 +406,28 @@ setMethod("initialize",
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
             reverseReadList <- sapply(rAbsoluteAB1, function(reverseN){
-                new("SangerRead",
-                    inputSource          = inputSource,
-                    readFeature          = "Reverse Read",
-                    readFileName         = reverseN,
-                    geneticCode          = geneticCode,
-                    TrimmingMethod       = TrimmingMethod,
-                    M1TrimmingCutoff     = M1TrimmingCutoff,
-                    M2CutoffQualityScore = M2CutoffQualityScore,
-                    M2SlidingWindowSize  = M2SlidingWindowSize,
-                    baseNumPerRow        = baseNumPerRow,
-                    heightPerRow         = heightPerRow,
-                    signalRatioCutoff    = signalRatioCutoff,
-                    showTrimmed          = showTrimmed)
+                newSangerRead <-
+                    new("SangerRead",
+                        inputSource          = inputSource,
+                        readFeature          = "Reverse Read",
+                        readFileName         = reverseN,
+                        geneticCode          = geneticCode,
+                        TrimmingMethod       = TrimmingMethod,
+                        M1TrimmingCutoff     = M1TrimmingCutoff,
+                        M2CutoffQualityScore = M2CutoffQualityScore,
+                        M2SlidingWindowSize  = M2SlidingWindowSize,
+                        baseNumPerRow        = baseNumPerRow,
+                        heightPerRow         = heightPerRow,
+                        signalRatioCutoff    = signalRatioCutoff,
+                        showTrimmed          = showTrimmed)
+                seqLen <- length(newSangerRead@primarySeq)
+                if (seqLen < minReadLength) {
+                    message("   * Read length is shorter than 'minReadLength' ",
+                            minReadLength, ".\n     This read is skipped!!")
+                    NULL
+                } else {
+                    newSangerRead
+                }
             })
         }
     } else if (inputSource == "FASTA") {
@@ -539,25 +561,69 @@ setMethod("initialize",
             trimmingMethodSC <- ""
         }
     }
-    CSResult <- calculateContigSeq (inputSource      = inputSource,
-                                    forwardReadList  = forwardReadList,
-                                    reverseReadList  = reverseReadList,
-                                    refAminoAcidSeq  = refAminoAcidSeq,
-                                    minFractionCall  = minFractionCall,
-                                    maxFractionLost  = maxFractionLost,
-                                    geneticCode      = geneticCode,
-                                    acceptStopCodons = acceptStopCodons,
-                                    readingFrame     = readingFrame,
-                                    processorsNum    = processorsNum)
-    contigGapfree <- CSResult$consensusGapfree
-    diffsDf <- CSResult$diffsDf
-    aln2 <- CSResult$aln2
-    dist <- CSResult$dist
-    dend <- CSResult$dend
-    indels <- CSResult$indels
-    stopsDf <- CSResult$stopsDf
-    spDf <- CSResult$spDf
-    message("  >> 'SangerContig' S4 instance is created !!")
+    
+    ### ----------------------------------------------------------------
+    ### 'forwardNumber' + 'reverseNumber' number >= 2
+    ### ----------------------------------------------------------------
+    forwardReadList <- Filter(Negate(is.null), forwardReadList)
+    reverseReadList <- Filter(Negate(is.null), reverseReadList)
+    forwardNumber <- length(forwardReadList)
+    reverseNumber <- length(reverseReadList)
+    if ((forwardNumber + reverseNumber) >= minReadsNum) {
+        CSResult <- calculateContigSeq (inputSource      = inputSource,
+                                        forwardReadList  = forwardReadList,
+                                        reverseReadList  = reverseReadList,
+                                        refAminoAcidSeq  = refAminoAcidSeq,
+                                        minFractionCall  = minFractionCall,
+                                        maxFractionLost  = maxFractionLost,
+                                        geneticCode      = geneticCode,
+                                        acceptStopCodons = acceptStopCodons,
+                                        readingFrame     = readingFrame,
+                                        processorsNum    = processorsNum)
+        contigGapfree <- CSResult$consensusGapfree
+        contigLen <- length(contigGapfree)
+        if (contigLen >= minReadLength) {
+            ## This is the only part that is correct!
+            diffsDf <- CSResult$diffsDf
+            aln2 <- CSResult$aln2
+            dist <- CSResult$dist
+            dend <- CSResult$dend
+            indels <- CSResult$indels
+            stopsDf <- CSResult$stopsDf
+            spDf <- CSResult$spDf
+            message("  >> 'SangerContig' S4 instance is created !!")
+        } else {
+            msg <- paste("   * Read length is shorter than 'minReadLength' ",
+                         minReadLength, ".\n     This read is skipped!!",
+                         sep = " ")
+            warnings <- c(warnings, msg)
+            warning(warnings)
+            contigGapfree <- DNAString()
+            diffsDf <- data.frame()
+            aln2 <- DNAStringSet()
+            dist <- matrix()
+            dend <- list()
+            indels <- data.frame()
+            stopsDf <- data.frame()
+            spDf <- data.frame()
+        }
+    } else {
+        msg <- paste("\nNumber of total reads has to be more than",
+                     minReadsNum, "('minReadsNum' that you set)", sep = " ")
+        warnings <- c(warnings, msg)
+        warning(warnings)
+        contigGapfree <- DNAString()
+        diffsDf <- data.frame()
+        aln2 <- DNAStringSet()
+        dist <- matrix()
+        dend <- list()
+        indels <- data.frame()
+        stopsDf <- data.frame()
+        spDf <- data.frame()
+    }
+    if (length(errors) != 0) {
+        stop(errors)
+    }
     callNextMethod(.Object,
                    inputSource            = inputSource,
                    fastaFileName          = fastaFileName,
