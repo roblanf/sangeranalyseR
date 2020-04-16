@@ -167,11 +167,11 @@ setMethod("initialize",
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
                    processorsNum          = NULL) {
+    errors <- character()
+    warnings <- character()
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
-    errors <- character()
-    warnings <- character()
     errors <- checkInputSource (inputSource, errors)
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking for contigSeq parameter
@@ -202,14 +202,11 @@ setMethod("initialize",
         ### 'forwardAllReads' & 'reverseAllReads' files prechecking
         ### ----------------------------------------------------------------
         parentDirFiles <- list.files(parentDirectory)
-
         ab1RegexChecker <- is.null(namesConversionCSV) &&
             !is.null(contigName) &&
             !is.null(suffixForwardRegExp) &&
             !is.null(suffixReverseRegExp)
-
         ab1CSVChecker <- !is.null(namesConversionCSV)
-
         if (ab1RegexChecker) {
             # Regex input
             message("**** You are using Regular Expression Method",
@@ -230,30 +227,34 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### 'forwardAllReads'  files prechecking (must exist)
             ### ----------------------------------------------------------------
-            forwardAllErrorMsg <- sapply(c(forwardAllReads[[1]]),
-                                         function(filePath) {
-                                             if (!file.exists(filePath)) {
-                                                 msg <- paste("\n'", filePath, "' forward read file does ",
-                                                              "not exist.\n", sep = "")
-                                                 return(msg)
-                                             }
-                                             return()
-                                         })
+            forwardAllErrorMsg <- 
+                sapply(c(forwardAllReads[[1]]),
+                       function(filePath) {
+                           if (!file.exists(filePath)) {
+                               msg <- paste("\n'", filePath, 
+                                            "' forward read file does ",
+                                            "not exist.\n", sep = "")
+                               return(msg)
+                           }
+                           return()
+                       })
             errors <- c(errors, unlist(forwardAllErrorMsg), use.names = FALSE)
 
             ### ----------------------------------------------------------------
             ### 'reverseAllReads'  files prechecking (must exist)
             ### ----------------------------------------------------------------
-            reverseAllErrorMsg <- sapply(c(reverseAllReads[[1]]),
-                                         function(filePath) {
-                                             if (!file.exists(filePath)) {
-                                                 msg <- paste("\n'", filePath, "'",
-                                                              " reverse read file does not exist.\n",
-                                                              sep = "")
-                                                 return(msg)
-                                             }
-                                             return()
-                                         })
+            reverseAllErrorMsg <- 
+                sapply(c(reverseAllReads[[1]]),
+                       function(filePath) {
+                           if (!file.exists(filePath)) {
+                               msg <- 
+                                   paste("\n'", filePath, "'",
+                                         " reverse read file does not exist.\n",
+                                         sep = "")
+                               return(msg)
+                           }
+                           return()
+                       })
             errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
         } else if (ab1CSVChecker) {
             # CSV input

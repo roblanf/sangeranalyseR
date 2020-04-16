@@ -1,13 +1,20 @@
 Package: sangeranalyseR
 Type: Package
 Title: sangeranalyseR: a suite of functions for the analysis of Sanger sequence data in R
-Version: 0.99.15
+Version: 0.99.16
 Date: 2015-12-18
 Author: Rob Lanfear <rob.lanfear@gmail.com>, Kuan-Hao Chao <ntueeb05howard@gmail.com>
 Maintainer: Rob Lanfear <rob.lanfear@gmail.com>, Kuan-Hao Chao <ntueeb05howard@gmail.com>
 biocViews: Genetics, Alignment, Sequencing, SangerSeq, Preprocessing, 
            QualityControl, Visualization, GUI
-Description: This package implements bioinformatic methods to process and make inferences from Sanger sequencing reads, particularly those sequenced with ABI machines.
+Description: This package builds on sangerseqR to allow users to create contigs
+             from collections of Sanger sequencing reads. It provides a wide 
+             range of options for a number of commonly-performed actions 
+             including read trimming, detecting secondary peaks, and detecting 
+             indels using a reference sequence. All parameters can be adjusted 
+             interactively either in R or in the associated Shiny applications. 
+             There is extensive online documentation, and the package can outputs 
+             detailed HTML reports, including chromatograms.
 License: GPL-2
 Encoding: UTF-8
 Depends: 
