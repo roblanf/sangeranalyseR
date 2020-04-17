@@ -324,13 +324,15 @@ setMethod("initialize",
                                     heightPerRow         = heightPerRow,
                                     signalRatioCutoff    = signalRatioCutoff,
                                     showTrimmed          = showTrimmed)
-                seqLen <- length(newSangerRead@primarySeq)
-                if (seqLen < minReadLength) {
+                trimmedStartPos <- newSangerRead@QualityReport@trimmedStartPos
+                trimmedFinishPos <- newSangerRead@QualityReport@trimmedFinishPos
+                seqLen <- trimmedFinishPos - trimmedStartPos
+                if (seqLen >= minReadLength) {
+                    newSangerRead
+                } else {
                     message("   * Read length is shorter than 'minReadLength' ",
                             minReadLength, ".\n     This read is skipped!!")
                     NULL
-                } else {
-                    newSangerRead
                 }
             })
             ### ----------------------------------------------------------------
@@ -350,13 +352,15 @@ setMethod("initialize",
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
                                      showTrimmed          = showTrimmed)
-                seqLen <- length(newSangerRead@primarySeq)
-                if (seqLen < minReadLength) {
+                trimmedStartPos <- newSangerRead@QualityReport@trimmedStartPos
+                trimmedFinishPos <- newSangerRead@QualityReport@trimmedFinishPos
+                seqLen <- trimmedFinishPos - trimmedStartPos
+                if (seqLen >= minReadLength) {
+                    newSangerRead
+                } else {
                     message("   * Read length is shorter than 'minReadLength' ",
                             minReadLength, ".\n     This read is skipped!!")
                     NULL
-                } else {
-                    newSangerRead
                 }
             })
         } else if (ab1CSVChecker) {
@@ -384,13 +388,15 @@ setMethod("initialize",
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
                                      showTrimmed          = showTrimmed)
-                seqLen <- length(newSangerRead@primarySeq)
-                if (seqLen < minReadLength) {
+                trimmedStartPos <- newSangerRead@QualityReport@trimmedStartPos
+                trimmedFinishPos <- newSangerRead@QualityReport@trimmedFinishPos
+                seqLen <- trimmedFinishPos - trimmedStartPos
+                if (seqLen >= minReadLength) {
+                    newSangerRead
+                } else {
                     message("   * Read length is shorter than 'minReadLength' ",
                             minReadLength, ".\n     This read is skipped!!")
                     NULL
-                } else {
-                    newSangerRead
                 }
             })
             ### ----------------------------------------------------------------
@@ -421,13 +427,15 @@ setMethod("initialize",
                         heightPerRow         = heightPerRow,
                         signalRatioCutoff    = signalRatioCutoff,
                         showTrimmed          = showTrimmed)
-                seqLen <- length(newSangerRead@primarySeq)
-                if (seqLen < minReadLength) {
+                trimmedStartPos <- newSangerRead@QualityReport@trimmedStartPos
+                trimmedFinishPos <- newSangerRead@QualityReport@trimmedFinishPos
+                seqLen <- trimmedFinishPos - trimmedStartPos
+                if (seqLen >= minReadLength) {
+                    newSangerRead
+                } else {
                     message("   * Read length is shorter than 'minReadLength' ",
                             minReadLength, ".\n     This read is skipped!!")
                     NULL
-                } else {
-                    newSangerRead
                 }
             })
         }
@@ -471,23 +479,39 @@ setMethod("initialize",
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
             forwardReadList <- sapply(forwardSelectNames, function(forwardName){
-                new("SangerRead",
-                    inputSource        = inputSource,
-                    readFeature        = "Forward Read",
-                    readFileName       = fastaFileName,
-                    fastaReadName      = forwardName,
-                    geneticCode        = geneticCode)
+                newSangerRead <- new("SangerRead",
+                                     inputSource        = inputSource,
+                                     readFeature        = "Forward Read",
+                                     readFileName       = fastaFileName,
+                                     fastaReadName      = forwardName,
+                                     geneticCode        = geneticCode)
+                seqLen <- length(newSangerRead@primarySeq)
+                if (seqLen >= minReadLength) {
+                    newSangerRead
+                } else {
+                    message("   * Read length is shorter than 'minReadLength' ",
+                            minReadLength, ".\n     This read is skipped!!")
+                    NULL
+                }
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
             reverseReadList <- sapply(reverseSelectNames, function(reverseName){
-                new("SangerRead",
-                    inputSource        = inputSource,
-                    readFeature        = "Reverse Read",
-                    readFileName       = fastaFileName,
-                    fastaReadName      = reverseName,
-                    geneticCode        = geneticCode)
+                newSangerRead <- new("SangerRead",
+                                     inputSource        = inputSource,
+                                     readFeature        = "Reverse Read",
+                                     readFileName       = fastaFileName,
+                                     fastaReadName      = reverseName,
+                                     geneticCode        = geneticCode)
+                seqLen <- length(newSangerRead@primarySeq)
+                if (seqLen >= minReadLength) {
+                    newSangerRead
+                } else {
+                    message("   * Read length is shorter than 'minReadLength' ",
+                            minReadLength, ".\n     This read is skipped!!")
+                    NULL
+                }
             })
         } else if (csvCSVChecker) {
             # Csv-CSV input
@@ -541,23 +565,39 @@ setMethod("initialize",
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
             forwardReadList <- sapply(forwardOriginal, function(forwardName){
-                new("SangerRead",
-                    inputSource        = inputSource,
-                    readFeature        = "Forward Read",
-                    readFileName       = fastaFileName,
-                    fastaReadName      = forwardName,
-                    geneticCode        = geneticCode)
+                newSangerRead <- new("SangerRead",
+                                     inputSource        = inputSource,
+                                     readFeature        = "Forward Read",
+                                     readFileName       = fastaFileName,
+                                     fastaReadName      = forwardName,
+                                     geneticCode        = geneticCode)
+                seqLen <- length(newSangerRead@primarySeq)
+                if (seqLen >= minReadLength) {
+                    newSangerRead
+                } else {
+                    message("   * Read length is shorter than 'minReadLength' ",
+                            minReadLength, ".\n     This read is skipped!!")
+                    NULL
+                }
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
             reverseReadList <- sapply(reverseOriginal, function(reverseName){
-                new("SangerRead",
-                    inputSource        = inputSource,
-                    readFeature        = "Reverse Read",
-                    readFileName       = fastaFileName,
-                    fastaReadName      = reverseName,
-                    geneticCode        = geneticCode)
+                newSangerRead <- new("SangerRead",
+                                     inputSource        = inputSource,
+                                     readFeature        = "Reverse Read",
+                                     readFileName       = fastaFileName,
+                                     fastaReadName      = reverseName,
+                                     geneticCode        = geneticCode)
+                seqLen <- length(newSangerRead@primarySeq)
+                if (seqLen >= minReadLength) {
+                    newSangerRead
+                } else {
+                    message("   * Read length is shorter than 'minReadLength' ",
+                            minReadLength, ".\n     This read is skipped!!")
+                    NULL
+                }
             })
             trimmingMethodSC <- ""
         }
@@ -583,31 +623,15 @@ setMethod("initialize",
                                         processorsNum    = processorsNum)
         contigGapfree <- CSResult$consensusGapfree
         contigLen <- length(contigGapfree)
-        if (contigLen >= minReadLength) {
-            ## This is the only part that is correct!
-            diffsDf <- CSResult$diffsDf
-            aln2 <- CSResult$aln2
-            dist <- CSResult$dist
-            dend <- CSResult$dend
-            indels <- CSResult$indels
-            stopsDf <- CSResult$stopsDf
-            spDf <- CSResult$spDf
-            message("  >> 'SangerContig' S4 instance is created !!")
-        } else {
-            msg <- paste("   * Read length is shorter than 'minReadLength' ",
-                         minReadLength, ".\n     This read is skipped!!",
-                         sep = " ")
-            warnings <- c(warnings, msg)
-            warning(warnings)
-            contigGapfree <- DNAString()
-            diffsDf <- data.frame()
-            aln2 <- DNAStringSet()
-            dist <- matrix()
-            dend <- list()
-            indels <- data.frame()
-            stopsDf <- data.frame()
-            spDf <- data.frame()
-        }
+        ## This is the only part that is correct!
+        diffsDf <- CSResult$diffsDf
+        aln2 <- CSResult$aln2
+        dist <- CSResult$dist
+        dend <- CSResult$dend
+        indels <- CSResult$indels
+        stopsDf <- CSResult$stopsDf
+        spDf <- CSResult$spDf
+        message("  >> 'SangerContig' S4 instance is created !!")
     } else {
         msg <- paste("\nNumber of total reads has to be more than",
                      minReadsNum, "('minReadsNum' that you set)", sep = " ")

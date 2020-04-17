@@ -153,9 +153,6 @@ setMethod("initialize",
                    refAminoAcidSeq        = "",
                    minReadsNum            = 2,
                    minReadLength          = 20,
-                   
-                   
-
                    minFractionCall        = 0.5,
                    maxFractionLost        = 0.5,
                    geneticCode            = GENETIC_CODE,
@@ -271,14 +268,8 @@ setMethod("initialize",
                                        processorsNum        = processorsNum)
                                forwardNumber <- length(newSangerContig@forwardReadList)
                                reverseNumber <- length(newSangerContig@reverseReadList)
-                               contigLen <- length(newSangerContig@contigSeq)
-                               message("** contigLen: ", contigLen)
                                if ((forwardNumber + reverseNumber) >= minReadsNum) {
-                                   if (contigLen >= minReadLength) {
-                                       newSangerContig
-                                   } else {
-                                       NULL
-                                   }
+                                   newSangerContig
                                } else {
                                    NULL
                                } 
@@ -315,14 +306,8 @@ setMethod("initialize",
                             processorsNum        = processorsNum)
                     forwardNumber <- length(newSangerContig@forwardReadList)
                     reverseNumber <- length(newSangerContig@reverseReadList)
-                    contigLen <- length(newSangerContig@contigSeq)
-                    message("** contigLen: ", contigLen)
                     if ((forwardNumber + reverseNumber) >= minReadsNum) {
-                        if (contigLen >= minReadLength) {
-                            newSangerContig
-                        } else {
-                            NULL
-                        }
+                        newSangerContig
                     } else {
                         NULL
                     } 
@@ -378,14 +363,8 @@ setMethod("initialize",
                             processorsNum        = processorsNum)
                     forwardNumber <- length(newSangerContig@forwardReadList)
                     reverseNumber <- length(newSangerContig@reverseReadList)
-                    contigLen <- length(newSangerContig@contigSeq)
-                    message("** contigLen: ", contigLen)
                     if ((forwardNumber + reverseNumber) >= minReadsNum) {
-                        if (contigLen >= minReadLength) {
-                            newSangerContig
-                        } else {
-                            NULL
-                        }
+                        newSangerContig
                     } else {
                         NULL
                     } 
@@ -422,14 +401,8 @@ setMethod("initialize",
                             processorsNum        = processorsNum)
                     forwardNumber <- length(newSangerContig@forwardReadList)
                     reverseNumber <- length(newSangerContig@reverseReadList)
-                    contigLen <- length(newSangerContig@contigSeq)
-                    message("** contigLen: ", contigLen)
                     if ((forwardNumber + reverseNumber) >= minReadsNum) {
-                        if (contigLen >= minReadLength) {
-                            newSangerContig
-                        } else {
-                            NULL
-                        }
+                        newSangerContig
                     } else {
                         NULL
                     } 
