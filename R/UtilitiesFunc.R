@@ -57,17 +57,17 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
     ### Aligning consensus reads
     ### ------------------------------------------------------------------------
     if(length(SangerContigDNASet) > 1) {
-        message("Aligning consensus reads ... ")
+        log_info("Aligning consensus reads ... ")
         if(refAminoAcidSeq != ""){
             aln = AlignTranslation(SangerContigDNASet,
                                    geneticCode = geneticCode,
                                    processors = processorsNum,
                                    verbose = FALSE)
         }else{
-            message('Before building!!')
+            log_info('Before building!!')
             aln = AlignSeqs(SangerContigDNASet, processors = processorsNum,
                             verbose = FALSE)
-            message('After building!!')
+            log_info('After building!!')
         }
         # Making a rough NJ tree. Labels are rows in the summary df
 
@@ -92,15 +92,15 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
                 aln.tree$edge.length[which(aln.tree$edge.length<0)] =
                     abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])
             }, warning = function(warning_condition) {
-                message("The number of contigs is less than 3 or quality of reads ",
+                log_info("The number of contigs is less than 3 or quality of reads ",
                         "are too low. 'Contigs Tree' cannot be created.")
             }, error = function(error_condition) {
-                message("The number of contigs is less than 3 or quality of reads ",
+                log_info("The number of contigs is less than 3 or quality of reads ",
                         "are too low. 'Contigs Tree' cannot be created.")
                 aln.tree = read.tree(text="();")
             })
         } else {
-            message("The number of contigs is less than 3 or quality of reads ",
+            log_info("The number of contigs is less than 3 or quality of reads ",
                     "are too low. 'Contigs Tree' cannot be created.")
             aln.tree = read.tree(text="();")
         }
@@ -211,7 +211,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     if(length(frReadSet) < 2) {
         error <- paste("\n'Valid abif files should be more than 2.\n",
                        sep = "")
-        stop(error)
+        log_error(error)
     }
     processorsNum <- getProcessors(processorsNum)
 
@@ -219,7 +219,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     ### Amino acid reference sequence CorrectFrameshifts correction
     ### ------------------------------------------------------------------------
     if (refAminoAcidSeq != "") {
-        message("Correcting frameshifts in reads using amino acid",
+        log_info("Correcting frameshifts in reads using amino acid",
                 "reference sequence")
         # My test refAminoAcidSeq data
         # no_N_string <- str_replace_all(frReadSet[1], "N", "T")
@@ -249,7 +249,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         error <- paste("\n'After running 'CorrectFrameshifts' function, ",
                        "forward and reverse reads should be more than 2.\n",
                        sep = "")
-        stop(error)
+        log_error(error)
     }
     ### ------------------------------------------------------------------------
     ### Reads with stop codons elimination
@@ -271,7 +271,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         old_length = length(frReadSet)
         frReadSet = frReadSet[which(stops==0)]
         # Modify
-        message(old_length - length(frReadSet),
+        log_info(old_length - length(frReadSet),
                 "reads with stop codons removed")
     }
 
@@ -279,7 +279,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         error <- paste("\n'After removing reads with stop codons, ",
                        "forward and reverse reads should be more than 2.\n",
                        sep = "")
-        stop(error)
+        log_error(error)
     }
 
     ### ------------------------------------------------------------------------
@@ -345,7 +345,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
 MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
                                 qualityPhredScoresRaw,
                                 signalRatioCutoff, readFeature) {
-    message("          * Making basecall !!")
+    log_info("          * Making basecall !!")
     #get peaks for each base
     Apeaks <- getpeaks(traceMatrix[,1])
     Cpeaks <- getpeaks(traceMatrix[,2])
@@ -411,12 +411,12 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
             primary <- c(primary, Bases[1])
             Bases2 <- Bases[2:4]
             sortedBase2<- sort(Bases2[!is.na(Bases2)])
-            # message("Collapse: ", paste(sortedBase2, collapse=""))
+            # log_info("Collapse: ", paste(sortedBase2, collapse=""))
             dicValue <- paste(sortedBase2, collapse="")
             secondaryLetter <- names(IUPAC_CODE_MAP[IUPAC_CODE_MAP == dicValue])
             # secondaryLetter <-
             #     mergeIUPACLetters(paste(sortedBase2, collapse=""))
-            # message("secondaryLetter: ", secondaryLetter)
+            # log_info("secondaryLetter: ", secondaryLetter)
             secondary <- c(secondary, secondaryLetter)
         }
         else {
@@ -435,7 +435,7 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     }
     peakPosMatrix <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     peakAmpMatrix <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
-    message("          * Updating slots in 'SangerRead' instance !!")
+    log_info("          * Updating slots in 'SangerRead' instance !!")
     return(list("qualityPhredScores" = qualityPhredScores,
                 "peakPosMatrix" = peakPosMatrix,
                 "peakAmpMatrix" = peakAmpMatrix,
@@ -523,7 +523,7 @@ countStopSodons <- function(sequence,
         error <- paste("\nCannot calculate stop codons on sequence of length ",
                        length(sequence), " in reading frame ", readingFrame,
                        ".\n", sep = "")
-        stop(error)
+        log_error(error)
     }
     # this comes almost straight from the BioStrings manual
     tri = trinucleotideFrequency(sequence[readingFrame:length(sequence)],step=3)
@@ -709,7 +709,7 @@ M2inside_calculate_trimming <-function(qualityPhredScores,
 ### ----------------------------------------------------------------------------
 QualityBasePlotly <- function(trimmedStartPos, trimmedFinishPos,
                               readLen, qualityPlotDf, x,  y) {
-    p <- suppressPlotlyMessage(
+    p <- suppressPlotlylog_info(
         plot_ly(data=qualityPlotDf,
                 x=~Index) %>%
             add_markers(y=~Score,

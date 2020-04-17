@@ -106,7 +106,7 @@ SangerAlignmentServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
             h1(input$sidebar_menu)
-            message(">>>>>>>> Inside 'Contigs Alignment Overview Page _'")
+            log_info(">>>>>>>> Inside 'Contigs Alignment Overview Page _'")
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p("Input Parameters: ",
@@ -274,7 +274,7 @@ SangerAlignmentServer <- function(input, output, session) {
                     sidebar_menu[[3]] == "Contig" &&
                     sidebar_menu[[4]] == "Overview" &&
                     sidebar_menu[[5]] == "Page") {
-                    message(">>>>>>>> Inside '", input$sidebar_menu, "'")
+                    log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
                     contigParam[["contigName"]] <<-
                         SangerAlignment@
                         contigList[[contigIndex]]@contigName
@@ -801,7 +801,7 @@ SangerAlignmentServer <- function(input, output, session) {
                             reverseReadList[[readIndex]]@readFileName
                     }
 
-                    message(">>>>>>>> Inside '", input$sidebar_menu, "'")
+                    log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
                     h1(input$sidebar_menu)
                     fluidRow(
                         useShinyjs(),
@@ -1114,7 +1114,7 @@ SangerAlignmentServer <- function(input, output, session) {
     ### observeEvent: Button Close UI
     ### ------------------------------------------------------------------------
     observeEvent(input$closeUI, {
-        message("@@@@@@@ 'close button' has been clicked")
+        log_info("@@@@@@@ 'close button' has been clicked")
         btn <- input$closeUI
         stopApp()
     })
@@ -1124,7 +1124,7 @@ SangerAlignmentServer <- function(input, output, session) {
     observeEvent(input$saveS4, {
         shinyjs::disable("closeUI")
         shinyjs::disable("saveS4")
-        message("@@@@@@@ 'save button' has been clicked")
+        log_info("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory,
                                  "SangerAlignment.Rda")
         showNotification(
@@ -1155,7 +1155,7 @@ SangerAlignmentServer <- function(input, output, session) {
         ### Save SangerContig quality S4 object
         ### --------------------------------------------------------------------
         saveRDS(SangerAlignment, file=newS4Object)
-        message("New S4 object is store as: ", newS4Object)
+        log_info("New S4 object is store as: ", newS4Object)
         NEW_SANGER_ALIGNED_CONSENSUS_READ_SET <<- readRDS(file=newS4Object)
         shinyjs::enable("saveS4")
         shinyjs::enable("closeUI")
@@ -1166,8 +1166,8 @@ SangerAlignmentServer <- function(input, output, session) {
     observeEvent(input$recalculateButtonSA, {
         shinyjs::disable("closeUI")
         shinyjs::disable("recalculateButtonSA")
-        message("######## Reactive button clicked !!!")
-        message("######## Start re-aligning contigs")
+        log_info("######## Reactive button clicked !!!")
+        log_info("######## Start re-aligning contigs")
         if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
             CSSetResult <-
                 alignContigs (SangerAlignment@contigList,
@@ -1182,7 +1182,7 @@ SangerAlignmentServer <- function(input, output, session) {
             sangerAlignmentParam[["contigsConsensus"]] <<- SangerAlignment@contigsConsensus
             sangerAlignmentParam[["contigsAlignment"]] <<- as.character(SangerAlignment@contigsAlignment)
             sangerAlignmentParam[["contigsTree"]] <<- SangerAlignment@contigsTree
-            message("######## Finish contigs re-alignment")
+            log_info("######## Finish contigs re-alignment")
         }
         shinyjs::enable("recalculateButtonSA")
         shinyjs::enable("closeUI")
@@ -1193,8 +1193,8 @@ SangerAlignmentServer <- function(input, output, session) {
     observeEvent(input$recalculateButton, {
         shinyjs::disable("closeUI")
         shinyjs::disable("recalculateButton")
-        message("@@@@@@@ 'Reactive button' has been clicked")
-        message("######## Start recalculating contig")
+        log_info("@@@@@@@ 'Reactive button' has been clicked")
+        log_info("######## Start recalculating contig")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(contigIndex)) {
@@ -1472,8 +1472,8 @@ SangerAlignmentServer <- function(input, output, session) {
     ### observeEvent: Button chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$saveChromatogramParam, {
-        message("@@@@@@@ 'Reactive button' has been clicked")
-        message("######## Start recalculating chromatogram")
+        log_info("@@@@@@@ 'Reactive button' has been clicked")
+        log_info("######## Start recalculating chromatogram")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         readIndex <- strtoi(sidebar_menu[[4]])
@@ -1754,7 +1754,7 @@ SangerAlignmentServer <- function(input, output, session) {
         if (!is.na(contigIndex)) {
             SangerReadBFN <-
                 SangerAlignmentParam[[contigIndex]]$SangerReadBFN
-            suppressPlotlyMessage(
+            suppressPlotlylog_info(
                 plot_ly(x = SangerReadBFN,
                         y = SangerReadBFN,
                         z = contigParam[["distanceMatrix"]],
@@ -2219,7 +2219,7 @@ SangerAlignmentServer <- function(input, output, session) {
                 rawSeqLength <-
                     SangerAlignment@contigList[[contigIndex]]@
                     forwardReadList[[readIndex]]@QualityReport@rawSeqLength
-                message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (forward)")
+                log_info(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (forward)")
                 ### ----------------------------------------------------------------
                 ### Re-run 'MakeBaseCall' function
                 ### ----------------------------------------------------------------
@@ -2283,7 +2283,7 @@ SangerAlignmentServer <- function(input, output, session) {
                 rawSeqLength <-
                     SangerAlignment@contigList[[contigIndex]]@
                     reverseReadList[[readIndex]]@QualityReport@rawSeqLength
-                message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (reverse)")
+                log_info(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (reverse)")
                 ### ----------------------------------------------------------------
                 ### Re-run 'MakeBaseCall' function
                 ### ----------------------------------------------------------------
@@ -2344,7 +2344,7 @@ SangerAlignmentServer <- function(input, output, session) {
                     as.character(SangerAlignment@contigList[[contigIndex]]@
                                      reverseReadList[[readIndex]]@primaryAASeqS3)
             }
-            # message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
+            # log_info(">>>>>>>>>>>> 'MakeBaseCalls' finished")
             chromatogram(hetcalls,
                          width = strtoi(
                              ChromatogramParam[["baseNumPerRow"]]),

@@ -44,7 +44,8 @@ Depends:
     rmarkdown,
     kableExtra,
     seqinr,
-    BiocStyle
+    BiocStyle,
+    logger
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: 

@@ -31,4 +31,5 @@
 #' @importFrom excelR excelTable excelOutput renderExcel
 #' @importFrom seqinr read.fasta
 #' @importFrom parallel mclapply detectCores
+#' @import logger
 NULL

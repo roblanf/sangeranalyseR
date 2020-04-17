@@ -20,7 +20,7 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
         plotting <- preQualityBasePlot(object@QualityReport)
         plotting
     } else if (object@inputSource == "FASTA") {
-        message("SangerRead with 'FASTA' inputSource ",
+        log_info("SangerRead with 'FASTA' inputSource ",
                 "cannot plot quality plots")
     }
 })
@@ -82,10 +82,10 @@ setMethod("updateQualityParam",  "SangerRead",
             object@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
             return(object)
         } else {
-            stop(errors)
+            log_error(errors)
         }
     } else if (object@inputSource == "FASTA") {
-        message("SangerRead with 'FASTA' inputSource ",
+        log_info("SangerRead with 'FASTA' inputSource ",
                 "cannot update quality parameters")
     }
 })
@@ -136,10 +136,10 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
             object@ChromatogramParam@signalRatioCutoff <- signalRatioCutoff
             return(object)
         } else {
-            stop(errors)
+            log_error(errors)
         }
     } else if (object@inputSource == "FASTA") {
-        message("SangerRead with 'FASTA' inputSource cannot do base calling")
+        log_info("SangerRead with 'FASTA' inputSource cannot do base calling")
     }
 })
 
@@ -167,9 +167,9 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
-        message(">>> outputDir : ", outputDir)
+        log_info(">>> outputDir : ", outputDir)
     }
-    message("Start writing '", object@readFileName, "' to FASTA format ...")
+    log_info("Start writing '", object@readFileName, "' to FASTA format ...")
     fastaFilename <- gsub(file_ext(basename(object@readFileName)), "fa",
                           basename(object@readFileName))
     outputFilename <- file.path(outputDir, fastaFilename)
@@ -196,7 +196,7 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
                     filepath = outputFilename,
                     compress = compress,
                     compression_level = compression_level)
-    message("\n >> '", outputFilename, "' is written")
+    log_info("\n >> '", outputFilename, "' is written")
     return(outputFilename)
 })
 
@@ -230,7 +230,7 @@ setMethod("generateReportSR", "SangerRead",
     if (is.null(outputDir)) {
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
-        message(">>> outputDir : ", outputDir)
+        log_info(">>> outputDir : ", outputDir)
     }
     if (object@inputSource == "ABIF") {
         readName <- sub('\\.ab1$', '', basename(object@readFileName))

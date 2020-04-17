@@ -343,6 +343,6 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
     if (length(warnings) != 0) {
         warning(warnings)
     }
-    message("End 'checkAb1FastaCsv'.")
+    log_info("End 'checkAb1FastaCsv'.")
     return(errors)
 }

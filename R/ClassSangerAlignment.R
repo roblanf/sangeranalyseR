@@ -202,7 +202,7 @@ setMethod("initialize",
             errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
             errors <- checkShowTrimmed (showTrimmed, errors)
             if (length(errors) != 0) {
-                stop(errors)
+                log_error(errors)
             }
             ab1RegexChecker <- is.null(namesConversionCSV) &&
                 !is.null(suffixForwardRegExp) &&
@@ -213,7 +213,7 @@ setMethod("initialize",
                 ### ----------------------------------------------------------------
                 ##### Automatically finding contig name by forward&reverse suffix
                 ### ----------------------------------------------------------------
-                message("**** You are using Regex Method to group AB1 files!")
+                log_info("**** You are using Regex Method to group AB1 files!")
                 parentDirFiles <- list.files(parentDirectory, recursive = TRUE)
                 forwardSelectInputFiles <- parentDirFiles[grepl(suffixForwardRegExp,
                                                                 parentDirFiles)]
@@ -279,13 +279,13 @@ setMethod("initialize",
                                            namesConversionCSV, inputSource,
                                            errors)
                 if (length(errors) != 0) {
-                    stop(errors)
+                    log_error(errors)
                 }
-                message("**** You are using CSV Name Conversion Method ",
+                log_info("**** You are using CSV Name Conversion Method ",
                         "to group AB1 files!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
 
-                message("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
+                log_info("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
                 contigNames <- as.character(unique(csvFile$contig))
                 SangerContigList <- sapply(contigNames, function(contigName) {
                     newSangerContig <- 
@@ -318,7 +318,7 @@ setMethod("initialize",
             errors <- checkNamesConversionCSV(namesConversionCSV,
                                               inputSource, errors)
             if(length(errors) != 0) {
-                stop(errors)
+                log_error(errors)
             }
             csvRegexChecker <- is.null(namesConversionCSV) &&
                 !is.null(suffixForwardRegExp) &&
@@ -327,7 +327,7 @@ setMethod("initialize",
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             trimmingMethodSA <- ""
             if (csvRegexChecker) {
-                message("**** You are using Regex Method ",
+                log_info("**** You are using Regex Method ",
                         "to group reads in FASTA file (No CSV file)!")
                 readFastaNames <- names(readFasta)
                 forwardSelectInputFiles <- readFastaNames[grepl(suffixForwardRegExp,
@@ -374,9 +374,9 @@ setMethod("initialize",
                                            namesConversionCSV, inputSource,
                                            errors)
                 if (length(errors) != 0) {
-                    stop(errors)
+                    log_error(errors)
                 }
-                message("**** You are using CSV Name Conversion Method ",
+                log_info("**** You are using CSV Name Conversion Method ",
                         "to group reads in FASTA file (with CSV file)!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
                 contigNames <- unique(as.character(csvFile$contig))
@@ -409,18 +409,18 @@ setMethod("initialize",
                 })
             }
         }
-        message("SangerContigList length: ", length(SangerContigList))
+        log_info("SangerContigList length: ", length(SangerContigList))
         SangerContigList <- Filter(Negate(is.null), SangerContigList)
-        message("SangerContigList length: ", length(SangerContigList))
+        log_info("SangerContigList length: ", length(SangerContigList))
         acResult <- alignContigs(SangerContigList, geneticCode,
                                  refAminoAcidSeq, minFractionCallSA,
                                  maxFractionLostSA, processorsNum)
         consensus <- acResult[["consensus"]]
         aln <- acResult[["aln"]]
         aln.tree <- acResult[["aln.tree"]]
-        message("  >> 'SangerAlignment' S4 instance is created !!")
+        log_info("  >> 'SangerAlignment' S4 instance is created !!")
     } else {
-        stop(errors)
+        log_error(errors)
     }
     callNextMethod(.Object,
                    inputSource           = inputSource,

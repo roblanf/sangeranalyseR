@@ -102,7 +102,7 @@ dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
 observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV) {
     observeEvent(input$sidebar_menu, {
         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
-        message("menuItem: ", menuItem)
+        log_info("menuItem: ", menuItem)
         html("rightHeader", menuItem)
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
     })
@@ -119,7 +119,7 @@ observeEventDynamicHeaderSC <- function(input, output, session, trimmedRV) {
 #         menuItem <- switch(input$sidebar_menu, input$sidebar_menu)
 #         html("rightHeader", menuItem)
 #         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-#         # message("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
+#         # log_info("strtoi(sidebar_menu[[1]]): ", strtoi(sidebar_menu[[1]]))
 #         if (!is.na(suppressWarnings(as.numeric(sidebar_menu[[1]])))) {
 #         #     trimmedRV[["trimmedStartPos"]] <-
 #         #         SangerReadQualReport[[

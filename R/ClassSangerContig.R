@@ -188,7 +188,7 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     errors <- checkProcessorsNum(processorsNum, errors)
     if (length(errors) != 0 ) {
-        stop(errors)
+        log_error(errors)
     }
     processorsNum <- getProcessors (processorsNum)
     if (inputSource == "ABIF") {
@@ -196,8 +196,9 @@ setMethod("initialize",
         errors <- checkNamesConversionCSV(namesConversionCSV,
                                           inputSource, errors)
         if (length(errors) != 0 ) {
-            stop(errors)
+            log_error(errors)
         }
+        log_info("******** Contig Name: ", contigName)
         ### ----------------------------------------------------------------
         ### 'forwardAllReads' & 'reverseAllReads' files prechecking
         ### ----------------------------------------------------------------
@@ -209,7 +210,7 @@ setMethod("initialize",
         ab1CSVChecker <- !is.null(namesConversionCSV)
         if (ab1RegexChecker) {
             # Regex input
-            message("**** You are using Regular Expression Method",
+            log_info("**** You are using Regular Expression Method",
                     " to group AB1 files!")
             contigSubGroupFiles <-
                 parentDirFiles[grepl(contigName,
@@ -258,24 +259,24 @@ setMethod("initialize",
             errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
         } else if (ab1CSVChecker) {
             # CSV input
-            message("**** You are using CSV Name Conversion Method ",
+            log_info("**** You are using CSV Name Conversion Method ",
                     "to group AB1 files!")
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
             if (is.null(contigName)) {
                 if (length(unique(csvFile$contig)) != 1) {
-                    stop("Error! There are ",
+                    log_error("Error! There are ",
                          length(unique(csvFile$contig)) ,
                          " contigName in the CSV file. ",
                          "There should be only one contigName in the CSV file.")
                 } else {
-                    message("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
+                    log_info("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
                     contigNameCSV <- as.character(unique(csvFile$contig))
                     selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
                     forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
                     reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
                 }
             } else if (!is.null(contigName)) {
-                message("**** Your contig name is ", contigName)
+                log_info("**** Your contig name is ", contigName)
                 selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
                 forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
                 reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
@@ -302,7 +303,7 @@ setMethod("initialize",
         ### Prechecking success. Start to create multiple reads.
         ### ----------------------------------------------------------------
         if (length(errors) != 0) {
-            stop(errors)
+            log_error(errors)
         }
         trimmingMethodSC <- TrimmingMethod
         if (ab1RegexChecker) {
@@ -324,16 +325,6 @@ setMethod("initialize",
                                     heightPerRow         = heightPerRow,
                                     signalRatioCutoff    = signalRatioCutoff,
                                     showTrimmed          = showTrimmed)
-                trimmedStartPos <- newSangerRead@QualityReport@trimmedStartPos
-                trimmedFinishPos <- newSangerRead@QualityReport@trimmedFinishPos
-                seqLen <- trimmedFinishPos - trimmedStartPos
-                if (seqLen >= minReadLength) {
-                    newSangerRead
-                } else {
-                    message("   * Read length is shorter than 'minReadLength' ",
-                            minReadLength, ".\n     This read is skipped!!")
-                    NULL
-                }
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
@@ -352,22 +343,12 @@ setMethod("initialize",
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
                                      showTrimmed          = showTrimmed)
-                trimmedStartPos <- newSangerRead@QualityReport@trimmedStartPos
-                trimmedFinishPos <- newSangerRead@QualityReport@trimmedFinishPos
-                seqLen <- trimmedFinishPos - trimmedStartPos
-                if (seqLen >= minReadLength) {
-                    newSangerRead
-                } else {
-                    message("   * Read length is shorter than 'minReadLength' ",
-                            minReadLength, ".\n     This read is skipped!!")
-                    NULL
-                }
             })
         } else if (ab1CSVChecker) {
             forwardOriginal <- as.character(forwardCsv$reads)
             fAbsoluteAB1 <- file.path(parentDirectory, forwardOriginal)
             if (!all(file.exists(fAbsoluteAB1))) {
-                stop("One of your 'reads' in the csv file ",
+                log_error("One of your 'reads' in the csv file ",
                      "does not match any ab1 files in '", parentDirectory, "'")
             }
             # sapply to create forward SangerRead list.
@@ -388,16 +369,6 @@ setMethod("initialize",
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
                                      showTrimmed          = showTrimmed)
-                trimmedStartPos <- newSangerRead@QualityReport@trimmedStartPos
-                trimmedFinishPos <- newSangerRead@QualityReport@trimmedFinishPos
-                seqLen <- trimmedFinishPos - trimmedStartPos
-                if (seqLen >= minReadLength) {
-                    newSangerRead
-                } else {
-                    message("   * Read length is shorter than 'minReadLength' ",
-                            minReadLength, ".\n     This read is skipped!!")
-                    NULL
-                }
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
@@ -405,7 +376,7 @@ setMethod("initialize",
             reverseOriginal <- as.character(reverseCsv$reads)
             rAbsoluteAB1 <- file.path(parentDirectory, reverseOriginal)
             if (!all(file.exists(rAbsoluteAB1))) {
-                stop("One of your 'reads' in the csv file ",
+                log_error("One of your 'reads' in the csv file ",
                      "does not match any ab1 files in '", parentDirectory, "'")
             }
             # sapply to create reverse SangerRead list.
@@ -427,18 +398,26 @@ setMethod("initialize",
                         heightPerRow         = heightPerRow,
                         signalRatioCutoff    = signalRatioCutoff,
                         showTrimmed          = showTrimmed)
-                trimmedStartPos <- newSangerRead@QualityReport@trimmedStartPos
-                trimmedFinishPos <- newSangerRead@QualityReport@trimmedFinishPos
-                seqLen <- trimmedFinishPos - trimmedStartPos
-                if (seqLen >= minReadLength) {
-                    newSangerRead
-                } else {
-                    message("   * Read length is shorter than 'minReadLength' ",
-                            minReadLength, ".\n     This read is skipped!!")
-                    NULL
-                }
             })
         }
+        forwardReadListFilter <- lapply(forwardReadList, function(read) {
+            trimmedLen <- read@QualityReport@trimmedFinishPos - 
+                read@QualityReport@trimmedStartPos
+            if (trimmedLen >= minReadLength) {
+                read
+            } else {
+                NULL
+            }
+        })
+        reverseReadListFilter <- lapply(reverseReadList, function(read) {
+            trimmedLen <- read@QualityReport@trimmedFinishPos - 
+                read@QualityReport@trimmedStartPos
+            if (trimmedLen >= minReadLength) {
+                read
+            } else {
+                NULL
+            }
+        })
     } else if (inputSource == "FASTA") {
         csvRegexChecker <- is.null(namesConversionCSV) &&
             !is.null(contigName) &&
@@ -447,13 +426,13 @@ setMethod("initialize",
         csvCSVChecker <- !is.null(namesConversionCSV)
         errors <- checkFastaFileName(fastaFileName, errors)
         if(length(errors) != 0) {
-            stop(errors)
+            log_error(errors)
         }
         readFasta <- read.fasta(fastaFileName, as.string = TRUE)
         fastaNames <- names(readFasta)
         if (csvRegexChecker) {
             # Csv-Regex input
-            message("**** You are using Regular Expression Method ",
+            log_info("**** You are using Regular Expression Method ",
                     "to group reads in FASTA file (No CSV file)!")
             # Regex
             ### ----------------------------------------------------------------
@@ -485,14 +464,6 @@ setMethod("initialize",
                                      readFileName       = fastaFileName,
                                      fastaReadName      = forwardName,
                                      geneticCode        = geneticCode)
-                seqLen <- length(newSangerRead@primarySeq)
-                if (seqLen >= minReadLength) {
-                    newSangerRead
-                } else {
-                    message("   * Read length is shorter than 'minReadLength' ",
-                            minReadLength, ".\n     This read is skipped!!")
-                    NULL
-                }
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
@@ -504,36 +475,28 @@ setMethod("initialize",
                                      readFileName       = fastaFileName,
                                      fastaReadName      = reverseName,
                                      geneticCode        = geneticCode)
-                seqLen <- length(newSangerRead@primarySeq)
-                if (seqLen >= minReadLength) {
-                    newSangerRead
-                } else {
-                    message("   * Read length is shorter than 'minReadLength' ",
-                            minReadLength, ".\n     This read is skipped!!")
-                    NULL
-                }
             })
         } else if (csvCSVChecker) {
             # Csv-CSV input
-            message("**** You are using CSV Name Conversion Method ",
+            log_info("**** You are using CSV Name Conversion Method ",
                     "to group reads in FASTA file (with Csv file)!")
-            message("    * Reading CSV file and matching names !!")
+            log_info("    * Reading CSV file and matching names !!")
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
             if (is.null(contigName)) {
                 if (length(unique(csvFile$contig)) != 1) {
-                    stop("Error! There are ",
+                    log_error("Error! There are ",
                          length(unique(csvFile$contig)) ,
                          " contigName in the CSV file. ",
                          "There should be only one contigName in the CSV file.")
                 } else {
-                    message("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
+                    log_info("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
                     contigNameCSV <- as.character(unique(csvFile$contig))
                     selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
                     forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
                     reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
                 }
             } else if (!is.null(contigName)) {
-                message("**** Your contig name is ", contigName)
+                log_info("**** Your contig name is ", contigName)
                 selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
                 forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
                 reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
@@ -548,13 +511,13 @@ setMethod("initialize",
             ### Prechecking success. Start to create multiple reads.
             ### ----------------------------------------------------------------
             if (length(errors) != 0) {
-                stop(errors)
+                log_error(errors)
             }
             forwardOriginal <- as.character(forwardCsv$reads)
             reverseOriginal <- as.character(reverseCsv$reads)
             if (!(forwardOriginal %in% names(readFasta) &&
                 reverseOriginal %in% names(readFasta))) {
-                stop("The 'reads' in forwardOriginal is ",
+                log_error("The 'reads' in forwardOriginal is ",
                      "different from read names in FASTA file ('",
                      fastaFileName, "')\n  *'reads': ",
                      paste(forwardOriginal, sep = " "), "\n  *read names ",
@@ -571,14 +534,6 @@ setMethod("initialize",
                                      readFileName       = fastaFileName,
                                      fastaReadName      = forwardName,
                                      geneticCode        = geneticCode)
-                seqLen <- length(newSangerRead@primarySeq)
-                if (seqLen >= minReadLength) {
-                    newSangerRead
-                } else {
-                    message("   * Read length is shorter than 'minReadLength' ",
-                            minReadLength, ".\n     This read is skipped!!")
-                    NULL
-                }
             })
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
@@ -590,30 +545,43 @@ setMethod("initialize",
                                      readFileName       = fastaFileName,
                                      fastaReadName      = reverseName,
                                      geneticCode        = geneticCode)
-                seqLen <- length(newSangerRead@primarySeq)
-                if (seqLen >= minReadLength) {
-                    newSangerRead
-                } else {
-                    message("   * Read length is shorter than 'minReadLength' ",
-                            minReadLength, ".\n     This read is skipped!!")
-                    NULL
-                }
             })
             trimmingMethodSC <- ""
         }
+        
+        forwardReadListFilter <- lapply(forwardReadList, function(read) {
+            seqLen <- length(read@primarySeq)
+            if (seqLen >= minReadLength) {
+                read
+            } else {
+                log_info("   * Read length is shorter than 'minReadLength' ",
+                        minReadLength, ".\n     This read is skipped!!")
+                NULL
+            }
+        })
+        reverseReadListFilter <- lapply(reverseReadList, function(read) {
+            seqLen <- length(read@primarySeq)
+            if (seqLen >= minReadLength) {
+                read
+            } else {
+                log_info("   * Read length is shorter than 'minReadLength' ",
+                         minReadLength, ".\n     This read is skipped!!")
+                NULL
+            }
+        })
     }
     
     ### ----------------------------------------------------------------
     ### 'forwardNumber' + 'reverseNumber' number >= 2
     ### ----------------------------------------------------------------
-    forwardReadList <- Filter(Negate(is.null), forwardReadList)
-    reverseReadList <- Filter(Negate(is.null), reverseReadList)
-    forwardNumber <- length(forwardReadList)
-    reverseNumber <- length(reverseReadList)
+    forwardReadListFilter <- Filter(Negate(is.null), forwardReadListFilter)
+    reverseReadListFilter <- Filter(Negate(is.null), reverseReadListFilter)
+    forwardNumber <- length(forwardReadListFilter)
+    reverseNumber <- length(reverseReadListFilter)
     if ((forwardNumber + reverseNumber) >= minReadsNum) {
         CSResult <- calculateContigSeq (inputSource      = inputSource,
-                                        forwardReadList  = forwardReadList,
-                                        reverseReadList  = reverseReadList,
+                                        forwardReadList  = forwardReadListFilter,
+                                        reverseReadList  = reverseReadListFilter,
                                         refAminoAcidSeq  = refAminoAcidSeq,
                                         minFractionCall  = minFractionCall,
                                         maxFractionLost  = maxFractionLost,
@@ -631,12 +599,12 @@ setMethod("initialize",
         indels <- CSResult$indels
         stopsDf <- CSResult$stopsDf
         spDf <- CSResult$spDf
-        message("  >> 'SangerContig' S4 instance is created !!")
+        log_info("  >> 'SangerContig' S4 instance is created !!")
     } else {
         msg <- paste("\nNumber of total reads has to be more than",
                      minReadsNum, "('minReadsNum' that you set)", sep = " ")
         warnings <- c(warnings, msg)
-        warning(warnings)
+        log_warn(warnings)
         contigGapfree <- DNAString()
         diffsDf <- data.frame()
         aln2 <- DNAStringSet()
@@ -647,7 +615,7 @@ setMethod("initialize",
         spDf <- data.frame()
     }
     if (length(errors) != 0) {
-        stop(errors)
+        log_error(errors)
     }
     callNextMethod(.Object,
                    inputSource            = inputSource,

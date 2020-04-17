@@ -95,7 +95,7 @@ SangerContigServer <- function(input, output, session) {
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (input$sidebar_menu == "Sanger Contig Overview") {
-            message(">>>>>>>> Inside '", input$sidebar_menu, "'")
+            log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
             ### ----------------------------------------------------------------
             ### Dynamic page navigation: SangerContig overview page
             ### ----------------------------------------------------------------
@@ -358,7 +358,7 @@ SangerContigServer <- function(input, output, session) {
             ### ----------------------------------------------------------------
             ### Dynamic page navigation: SangerRead page
             ### ----------------------------------------------------------------
-            message(">>>>>>>> Inside '", input$sidebar_menu, "'")
+            log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
             if (directionParam == "Forward") {
                 sequenceParam[["primarySeq"]] <<-
                     as.character(SangerContig@
@@ -811,7 +811,7 @@ SangerContigServer <- function(input, output, session) {
     ### observeEvent: Button Close UI
     ### ------------------------------------------------------------------------
     observeEvent(input$closeUI, {
-        message("@@@@@@@ 'close button' has been clicked")
+        log_info("@@@@@@@ 'close button' has been clicked")
         btn <- input$closeUI
         stopApp()
     })
@@ -821,7 +821,7 @@ SangerContigServer <- function(input, output, session) {
     observeEvent(input$saveS4, {
         shinyjs::disable("closeUI")
         shinyjs::disable("saveS4")
-        message("@@@@@@@ 'save button' has been clicked")
+        log_info("@@@@@@@ 'save button' has been clicked")
         newS4Object <- file.path(shinyDirectory, "SangerContig.Rda")
         showNotification(
             ui = column(12,
@@ -851,7 +851,7 @@ SangerContigServer <- function(input, output, session) {
         ### Save SangerContig quality S4 object
         ### --------------------------------------------------------------------
         saveRDS(SangerContig, file=newS4Object)
-        message("New S4 object is store as: ", newS4Object)
+        log_info("New S4 object is store as: ", newS4Object)
         NEW_SANGER_CONTIG <<- readRDS(file=newS4Object)
         shinyjs::enable("saveS4")
         shinyjs::enable("closeUI")
@@ -862,8 +862,8 @@ SangerContigServer <- function(input, output, session) {
     observeEvent(input$recalculateButton, {
         shinyjs::disable("closeUI")
         shinyjs::disable("recalculateButton")
-        message("@@@@@@@ 'Reactive button' has been clicked")
-        message("######## Start to recalculate contig")
+        log_info("@@@@@@@ 'Reactive button' has been clicked")
+        log_info("######## Start to recalculate contig")
         CSResult<-
             calculateContigSeq (SangerContig@inputSource,
                                 SangerContig@forwardReadList,
@@ -890,7 +890,7 @@ SangerContigServer <- function(input, output, session) {
         contigParam[["indelsDF"]] <<- SangerContig@indelsDF
         contigParam[["stopCodonsDF"]] <<- SangerContig@stopCodonsDF
         contigParam[["secondaryPeakDF"]] <<- SangerContig@secondaryPeakDF
-        message("######## Finish recalculating contig")
+        log_info("######## Finish recalculating contig")
         shinyjs::enable("recalculateButton")
         shinyjs::enable("closeUI")
     })
@@ -898,8 +898,8 @@ SangerContigServer <- function(input, output, session) {
     ### observeEvent: Button chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$saveChromatogramParam, {
-        message("@@@@@@@ 'Reactive button' has been clicked")
-        message("######## Start recalculating chromatogram")
+        log_info("@@@@@@@ 'Reactive button' has been clicked")
+        log_info("######## Start recalculating chromatogram")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
@@ -1694,7 +1694,7 @@ SangerContigServer <- function(input, output, session) {
                 rawSeqLength <-
                     SangerContig@forwardReadList[[readIndex]]@
                     QualityReport@rawSeqLength
-                message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (forward)")
+                log_info(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (forward)")
                 ### ----------------------------------------------------------------
                 ### Re-run 'MakeBaseCall' function
                 ### ----------------------------------------------------------------
@@ -1748,7 +1748,7 @@ SangerContigServer <- function(input, output, session) {
                 rawSeqLength <-
                     SangerContig@reverseReadList[[readIndex]]@
                     QualityReport@rawSeqLength
-                message(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (reverse)")
+                log_info(">>>>>>>>>>>> Re-running 'MakeBaseCalls' function (reverse)")
                 ### ----------------------------------------------------------------
                 ### Re-run 'MakeBaseCall' function
                 ### ----------------------------------------------------------------
@@ -1800,7 +1800,7 @@ SangerContigServer <- function(input, output, session) {
                         readIndex]]@primaryAASeqS3)
             }
 
-            # message(">>>>>>>>>>>> 'MakeBaseCalls' finished")
+            # log_info(">>>>>>>>>>>> 'MakeBaseCalls' finished")
             chromatogram(hetcalls,
                          width = strtoi(
                              ChromatogramParam[["baseNumPerRow"]]),

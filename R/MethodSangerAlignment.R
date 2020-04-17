@@ -67,10 +67,10 @@ setMethod("updateQualityParam",  "SangerAlignment",
             object@contigsTree <- acResult[["aln.tree"]]
             return(object)
         } else {
-            stop(errors)
+            log_error(errors)
         }
     } else if (object@inputSource == "FASTA") {
-        message("SangerAlignment with 'FASTA' inputSource ",
+        log_info("SangerAlignment with 'FASTA' inputSource ",
                 "cannot update quality parameters")
     }
 })
@@ -99,7 +99,7 @@ setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
             outputDir <- tempdir()
             suppressWarnings(dir.create(outputDir, recursive = TRUE))
         }
-        message(">>> outputDir : ", outputDir)
+        log_info(">>> outputDir : ", outputDir)
 
         if (dir.exists(outputDir)) {
             shinyOptions(sangerAlignment = list(object))
@@ -107,10 +107,10 @@ setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
             newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer)
             return(newSangerAlignment)
         } else {
-            stop("'", outputDir, "' is not valid. Please check again")
+            log_error("'", outputDir, "' is not valid. Please check again")
         }
     } else if (object@inputSource == "FASTA") {
-        message("SangerAlignment with 'FASTA' inputSource ",
+        log_info("SangerAlignment with 'FASTA' inputSource ",
                 "cannot run Shiny app\n (You don't need to ",
                 "do trimming or base calling)")
     }
@@ -144,7 +144,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
     ### ------------------------------------------------------------------------
     if (selection != "all" && selection != "contigs_alignment" &&
         selection != "contigs_unalignment" && selection != "all_reads") {
-        stop(paste0("\nSelection must be 'all', 'contigs_alignment',",
+        log_error(paste0("\nSelection must be 'all', 'contigs_alignment',",
                     " 'contigs_unalignment' or 'all_reads'."))
     }
     ### ------------------------------------------------------------------------
@@ -154,13 +154,13 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
-    message(">>> outputDir : ", outputDir)
-    message("Start to write 'SangerAlignment' to FASTA format ...")
+    log_info(">>> outputDir : ", outputDir)
+    log_info("Start to write 'SangerAlignment' to FASTA format ...")
     ### ------------------------------------------------------------------------
     ### Writing 'contigs alignment' result to FASTA file
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "contigs_alignment") {
-        message("\n    >> Writing 'alignment' to FASTA ...")
+        log_info("\n    >> Writing 'alignment' to FASTA ...")
         alignmentObject = object@contigsAlignment
         writeXStringSet(alignmentObject,
                         file.path(outputDir, "Sanger_contigs_alignment.fa"),
@@ -172,7 +172,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
     ### Writing 'all contigs' to FASTA file
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "contigs_unalignment") {
-        message("\n    >> Writing 'contigs' to FASTA ...")
+        log_info("\n    >> Writing 'contigs' to FASTA ...")
         contigsList <- sapply(object@contigList, function(contig) {
             contig@contigSeq
         })
@@ -187,7 +187,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
     # ### Writing 'contigs consensus read' to FASTA file
     # ### ----------------------------------------------------------------------
     # if (selection == "all" || selection == "consensusRead") {
-    #     message("\n    >> Writing 'consensusRead' to FASTA ...")
+    #     log_info("\n    >> Writing 'consensusRead' to FASTA ...")
     #     contigsConsensusDNASet<- DNAStringSet(object@contigsConsensus)
     #     names(contigsConsensusDNASet) <- "Sanger Consensus Read"
     #     writeXStringSet(contigsConsensusDNASet,
@@ -200,7 +200,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
     ### Writing 'all reads' to FASTA file
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "all_reads") {
-        message("\n    >> Writing all single reads to FASTA ...")
+        log_info("\n    >> Writing all single reads to FASTA ...")
         fRDNASet <- sapply(object@contigList, function(contig) {
             fRDNAStringSet <- sapply(contig@forwardReadList, function(forwardRead) {
                 primaryDNA <- as.character(forwardRead@primarySeq)
@@ -237,7 +237,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
                         compression_level = compression_level)
     }
 
-    message("\nFinish writing 'SangerAlignment' to FASTA format")
+    log_info("\nFinish writing 'SangerAlignment' to FASTA format")
 })
 
 ## =============================================================================
@@ -268,7 +268,7 @@ setMethod("generateReportSA", "SangerAlignment",
     # if (object@inputSource == "ABIF") {
     #
     # } else if (object@inputSource == "FASTA") {
-    #     message("SangerContig with 'FASTA' inputSource ",
+    #     log_info("SangerContig with 'FASTA' inputSource ",
     #             "cannot run Shiny app\n (You don't need to ",
     #             "do trimming or base calling)")
     # }
@@ -279,7 +279,7 @@ setMethod("generateReportSA", "SangerAlignment",
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
-    message(">>> outputDir : ", outputDir)
+    log_info(">>> outputDir : ", outputDir)
     ### ------------------------------------------------------------------------
     ### Make sure the directory is exist (SangerAlignment level)
     ###  => SangerContig, SangerRead level directory will be created recursively
@@ -295,7 +295,7 @@ setMethod("generateReportSA", "SangerAlignment",
     # Start for loop
     if (includeSangerContig) {
         contigsFN <- sapply(object@contigList, function (objContig) {
-            message("!!! outputHtml: ", outputHtml)
+            log_info("!!! outputHtml: ", outputHtml)
             generateReportSC(objContig, outputDir = outputDirSA,
                              navigationAlignmentFN = outputHtml,
                              includeSangerRead = includeSangerRead)

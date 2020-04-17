@@ -167,12 +167,12 @@ setMethod("initialize",
             errors <- checkSignalRatioCutoff(signalRatioCutoff,errors)
             errors <- checkShowTrimmed(showTrimmed, errors)
             if(length(errors) != 0) {
-                stop(errors)
+                log_error(errors)
             }
-            message(readFeature, ": Creating abif & sangerseq ...")
-            message("    * Creating ", readFeature , " raw abif ...")
+            log_info(readFeature, ": Creating abif & sangerseq ...")
+            log_info("    * Creating ", readFeature , " raw abif ...")
             abifRawData = read.abif(readFileName)
-            message("    * Creating ", readFeature , " raw sangerseq ...")
+            log_info("    * Creating ", readFeature , " raw sangerseq ...")
             readSangerseq = sangerseq(abifRawData)
             primarySeqID = readSangerseq@primarySeqID
             secondarySeqID = readSangerseq@secondarySeqID
@@ -253,7 +253,7 @@ setMethod("initialize",
             primarySeqID <- "From fasta file"
             secondarySeqID <- ""
             primarySeqRaw <- DNAString()
-            message(readFeature, ": Creating SangerRead from FASTA ...")
+            log_info(readFeature, ": Creating SangerRead from FASTA ...")
             readFasta <- read.fasta(readFileName, as.string = TRUE)
             ### ----------------------------------------------------------------
             ### Get the Target Filename !!
@@ -261,8 +261,8 @@ setMethod("initialize",
             fastaNames <- names(readFasta)
             targetFastaName <- fastaNames[fastaNames == fastaReadName]
             if(isEmpty(targetFastaName)) {
-                stop(paste0("The name '", fastaReadName, "' is not in the '",
-                            basename(readFileName),"' FASTA file"))
+                log_error(paste0("The name '", fastaReadName, "' is not in the '",
+                                 basename(readFileName),"' FASTA file"))
             }
             primarySeq <- DNAString(as.character(readFasta[[targetFastaName]]))
             if (readFeature == "Reverse Read") {
@@ -285,10 +285,10 @@ setMethod("initialize",
         primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
         primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
         primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-        message("  >> 'SangerRead' S4 instance is created !!")
+        log_info("  >> 'SangerRead' S4 instance is created !!")
         ### ====================================================================
     } else {
-        stop(errors)
+        log_error(errors)
     }
     callNextMethod(.Object,
                    inputSource         = inputSource,

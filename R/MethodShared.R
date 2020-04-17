@@ -19,19 +19,19 @@
 launchApp <- function(object, outputDir = NULL) {
     if(isS4(object)) {
         if (class(object)[1] == 'SangerAlignment') {
-            message("Your input is 'SangerAlignment' S4 instance")
+            log_info("Your input is 'SangerAlignment' S4 instance")
             shinyApp <- launchAppSA(object, outputDir = outputDir)
             return(shinyApp)
         } else if (class(object)[1] == 'SangerContig') {
-            message("Your input is 'SangerContig' S4 instance")
+            log_info("Your input is 'SangerContig' S4 instance")
             shinyApp <- launchAppSC(object, outputDir = outputDir)
             return(shinyApp)
         } else {
-            stop("'object' must be 'SangerAlignment' or ",
+            log_error("'object' must be 'SangerAlignment' or ",
                  "'SangerContig' S4 instance!")
         }
     } else {
-        stop("'object' must be S4 instance!")
+        log_error("'object' must be S4 instance!")
     }
 }
 
@@ -62,28 +62,28 @@ writeFasta <- function(object, outputDir = NULL, compress  = FALSE,
                        compression_level = NA, selection = "all") {
     if(isS4(object)) {
         if (class(object)[1] == 'SangerAlignment') {
-            message("Your input is 'SangerAlignment' S4 instance")
+            log_info("Your input is 'SangerAlignment' S4 instance")
             writeFastaSA(object, outputDir = outputDir,
                          compress  = compress,
                          compression_level = compression_level,
                          selection = selection)
         } else if (class(object)[1] == 'SangerContig') {
-            message("Your input is 'SangerContig' S4 instance")
+            log_info("Your input is 'SangerContig' S4 instance")
             writeFastaSC(object, outputDir = outputDir,
                          compress  = compress,
                          compression_level = compression_level,
                          selection = selection)
         } else if (class(object)[1] == 'SangerRead') {
-            message("Your input is 'SangerRead' S4 instance")
+            log_info("Your input is 'SangerRead' S4 instance")
             writeFastaSR(object, outputDir = outputDir,
                          compress  = compress,
                          compression_level = compression_level)
         } else {
-            stop("'object' must be 'SangerAlignment', 'SangerContig', or ",
+            log_error("'object' must be 'SangerAlignment', 'SangerContig', or ",
                  "'SangerRead' S4 instance!")
         }
     } else {
-        stop("'object' must be S4 instance!")
+        log_error("'object' must be S4 instance!")
     }
 }
 
@@ -115,27 +115,27 @@ generateReport <- function(object, outputDir = NULL,
                            includeSangerRead = TRUE, ...) {
     if(isS4(object)) {
         if (class(object)[1] == 'SangerAlignment') {
-            message("Your input is 'SangerAlignment' S4 instance")
+            log_info("Your input is 'SangerAlignment' S4 instance")
             outputHtml <-
                 generateReportSA(object, outputDir = outputDir,
                                  includeSangerContig = includeSangerContig,
                                  includeSangerRead = includeSangerContig, ...)
             return(outputHtml)
         } else if (class(object)[1] == 'SangerContig') {
-            message("Your input is 'SangerContig' S4 instance")
+            log_info("Your input is 'SangerContig' S4 instance")
             outputHtml <-
                 generateReportSC(object, outputDir = outputDir,
                                  includeSangerRead = includeSangerRead, ...)
             return(outputHtml)
         } else if (class(object)[1] == 'SangerRead') {
-            message("Your input is 'SangerRead' S4 instance")
+            log_info("Your input is 'SangerRead' S4 instance")
             outputHtml <- generateReportSR(object, outputDir = outputDir, ...)
             return(outputHtml)
         } else {
-            stop("'object' must be 'SangerAlignment', 'SangerContig', or ",
+            log_error("'object' must be 'SangerAlignment', 'SangerContig', or ",
                  "'SangerRead' S4 instance!")
         }
     } else {
-        stop("'object' must be S4 instance!")
+        log_error("'object' must be S4 instance!")
     }
 }
