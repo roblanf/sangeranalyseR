@@ -221,7 +221,7 @@ setMethod("initialize",
             reverseSelectInputFiles <-
                 contigSubGroupFiles[grepl(suffixReverseRegExp,
                                           contigSubGroupFiles)]
-            forwardAllReads <- lapply(parentDirectory, file.path,
+            forwardAllReads <- lapply(parentDirectory, file.path, 
                                       forwardSelectInputFiles)
             reverseAllReads <- lapply(parentDirectory, file.path,
                                       reverseSelectInputFiles)
@@ -269,7 +269,8 @@ setMethod("initialize",
                          " contigName in the CSV file. ",
                          "There should be only one contigName in the CSV file.")
                 } else {
-                    log_info("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
+                    log_info("**** Contig number in your Csv file is ", 
+                             length(unique(csvFile$contig)))
                     contigNameCSV <- as.character(unique(csvFile$contig))
                     selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
                     forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
@@ -290,7 +291,6 @@ setMethod("initialize",
                                  M2CutoffQualityScore,
                                  M2SlidingWindowSize,
                                  errors)
-
         ### ----------------------------------------------------------------
         ##### Input parameter prechecking for ChromatogramParam
         ### ----------------------------------------------------------------
@@ -434,7 +434,6 @@ setMethod("initialize",
             # Csv-Regex input
             log_info("**** You are using Regular Expression Method ",
                     "to group reads in FASTA file (No CSV file)!")
-            # Regex
             ### ----------------------------------------------------------------
             ### Find names with the given contigName
             ### ----------------------------------------------------------------
@@ -480,7 +479,6 @@ setMethod("initialize",
             # Csv-CSV input
             log_info("**** You are using CSV Name Conversion Method ",
                     "to group reads in FASTA file (with Csv file)!")
-            log_info("    * Reading CSV file and matching names !!")
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
             if (is.null(contigName)) {
                 if (length(unique(csvFile$contig)) != 1) {
@@ -578,6 +576,8 @@ setMethod("initialize",
     reverseReadListFilter <- Filter(Negate(is.null), reverseReadListFilter)
     forwardNumber <- length(forwardReadListFilter)
     reverseNumber <- length(reverseReadListFilter)
+    # message("@@ forwardNumber: ", forwardNumber)
+    # message("@@ reverseNumber: ", reverseNumber)
     if ((forwardNumber + reverseNumber) >= minReadsNum) {
         CSResult <- calculateContigSeq (inputSource      = inputSource,
                                         forwardReadList  = forwardReadListFilter,
@@ -599,7 +599,7 @@ setMethod("initialize",
         indels <- CSResult$indels
         stopsDf <- CSResult$stopsDf
         spDf <- CSResult$spDf
-        log_info("  >> 'SangerContig' S4 instance is created !!")
+        log_success("  >> 'SangerContig' S4 instance is created !!")
     } else {
         msg <- paste("\nNumber of total reads has to be more than",
                      minReadsNum, "('minReadsNum' that you set)", sep = " ")
@@ -625,8 +625,8 @@ setMethod("initialize",
                    contigName             = contigName,
                    suffixForwardRegExp    = suffixForwardRegExp,
                    suffixReverseRegExp    = suffixReverseRegExp,
-                   forwardReadList        = forwardReadList,
-                   reverseReadList        = reverseReadList,
+                   forwardReadList        = forwardReadListFilter,
+                   reverseReadList        = reverseReadListFilter,
                    trimmingMethodSC       = trimmingMethodSC,
                    minReadsNum            = minReadsNum,
                    minReadLength          = minReadLength,

@@ -1,3 +1,5 @@
 .onAttach <- function(libname, pkgname) {
-    packageStartupMessage("Welcome to sangeranalyseR")
+  log_layout(layout_glue_colors)
+  log_threshold(TRACE)
+  packageStartupMessage("Welcome to sangeranalyseR")
 }

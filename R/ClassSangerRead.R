@@ -285,7 +285,7 @@ setMethod("initialize",
         primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
         primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
         primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-        log_info("  >> 'SangerRead' S4 instance is created !!")
+        log_success("  >> 'SangerRead' S4 instance is created !!")
         ### ====================================================================
     } else {
         log_error(errors)

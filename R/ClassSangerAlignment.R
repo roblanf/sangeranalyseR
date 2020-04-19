@@ -179,6 +179,9 @@ setMethod("initialize",
     ##### Input parameter prechecking for processorsNum
     ##### ----------------------------------------------------------------------
     errors <- checkProcessorsNum(processorsNum, errors)
+    log_info('*************************************************')
+    log_info('**** Start creating SangerAlignment instance ****')
+    log_info('*************************************************')
     if (length(errors) == 0) {
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
@@ -205,28 +208,29 @@ setMethod("initialize",
                 log_error(errors)
             }
             ab1RegexChecker <- is.null(namesConversionCSV) &&
-                !is.null(suffixForwardRegExp) &&
-                !is.null(suffixReverseRegExp)
+                !is.null(suffixForwardRegExp) && !is.null(suffixReverseRegExp)
             ab1CSVChecker <- !is.null(namesConversionCSV)
             trimmingMethodSA <- TrimmingMethod
             if (ab1RegexChecker) {
-                ### ----------------------------------------------------------------
-                ##### Automatically finding contig name by forward&reverse suffix
-                ### ----------------------------------------------------------------
+                ### ------------------------------------------------------------
+                ### Automatically finding contig name by forward&reverse suffix
+                ### ------------------------------------------------------------
                 log_info("**** You are using Regex Method to group AB1 files!")
                 parentDirFiles <- list.files(parentDirectory, recursive = TRUE)
-                forwardSelectInputFiles <- parentDirFiles[grepl(suffixForwardRegExp,
-                                                                parentDirFiles)]
-                reverseSelectInputFiles <- parentDirFiles[grepl(suffixReverseRegExp,
-                                                                parentDirFiles)]
+                forwardSelectInputFiles <- 
+                    parentDirFiles[grepl(suffixForwardRegExp, parentDirFiles)]
+                reverseSelectInputFiles <- 
+                    parentDirFiles[grepl(suffixReverseRegExp, parentDirFiles)]
 
                 # Find possible consensus Name for forward and reverse reads
                 forwardContigName <-
-                    unlist(str_split(forwardSelectInputFiles, suffixForwardRegExp,
-                                     n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+                    unlist(str_split(forwardSelectInputFiles, 
+                                     suffixForwardRegExp, n = Inf, 
+                                     simplify = FALSE))[c(TRUE, FALSE)]
                 reverseContigName <-
-                    unlist(str_split(reverseSelectInputFiles, suffixReverseRegExp,
-                                     n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
+                    unlist(str_split(reverseSelectInputFiles, 
+                                     suffixReverseRegExp, n = Inf, 
+                                     simplify = FALSE))[c(TRUE, FALSE)]
 
                 contigName <- union(forwardContigName, reverseContigName)
                 contigNumber <- length(contigName)
@@ -266,8 +270,10 @@ setMethod("initialize",
                                        acceptStopCodons     = acceptStopCodons,
                                        readingFrame         = readingFrame,
                                        processorsNum        = processorsNum)
-                               forwardNumber <- length(newSangerContig@forwardReadList)
-                               reverseNumber <- length(newSangerContig@reverseReadList)
+                               forwardNumber <- 
+                                   length(newSangerContig@forwardReadList)
+                               reverseNumber <- 
+                                   length(newSangerContig@reverseReadList)
                                if ((forwardNumber + reverseNumber) >= minReadsNum) {
                                    newSangerContig
                                } else {
@@ -284,7 +290,6 @@ setMethod("initialize",
                 log_info("**** You are using CSV Name Conversion Method ",
                         "to group AB1 files!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
-
                 log_info("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
                 contigNames <- as.character(unique(csvFile$contig))
                 SangerContigList <- sapply(contigNames, function(contigName) {
@@ -409,16 +414,16 @@ setMethod("initialize",
                 })
             }
         }
-        log_info("SangerContigList length: ", length(SangerContigList))
+        # message("SangerContigList length: ", length(SangerContigList))
         SangerContigList <- Filter(Negate(is.null), SangerContigList)
-        log_info("SangerContigList length: ", length(SangerContigList))
+        # message("SangerContigList length: ", length(SangerContigList))
         acResult <- alignContigs(SangerContigList, geneticCode,
                                  refAminoAcidSeq, minFractionCallSA,
                                  maxFractionLostSA, processorsNum)
         consensus <- acResult[["consensus"]]
         aln <- acResult[["aln"]]
         aln.tree <- acResult[["aln.tree"]]
-        log_info("  >> 'SangerAlignment' S4 instance is created !!")
+        log_success("  >> 'SangerAlignment' S4 instance is created !!")
     } else {
         log_error(errors)
     }
