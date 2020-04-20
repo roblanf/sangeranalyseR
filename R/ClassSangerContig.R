@@ -192,26 +192,38 @@ setMethod("initialize",
     }
     processorsNum <- getProcessors (processorsNum)
     if (inputSource == "ABIF") {
-        errors <- checkParentDirectory (parentDirectory, errors)
-        errors <- checkNamesConversionCSV(namesConversionCSV,
-                                          inputSource, errors)
-        if (length(errors) != 0 ) {
-            log_error(errors)
-        }
         log_info("******** Contig Name: ", contigName)
-        ### ----------------------------------------------------------------
+        ### --------------------------------------------------------------------
         ### 'forwardAllReads' & 'reverseAllReads' files prechecking
-        ### ----------------------------------------------------------------
-        parentDirFiles <- list.files(parentDirectory)
+        ### --------------------------------------------------------------------
         ab1RegexChecker <- is.null(namesConversionCSV) &&
             !is.null(contigName) &&
             !is.null(suffixForwardRegExp) &&
             !is.null(suffixReverseRegExp)
         ab1CSVChecker <- !is.null(namesConversionCSV)
+        errors <- checkParentDirectory (parentDirectory, errors)
         if (ab1RegexChecker) {
+            errors <- checkNamesConversionCSV(parentDirectory, fastaFileName,
+                                              namesConversionCSV, inputSource, 
+                                              "ab1Regex", errors)
+            if (length(errors) != 0 ) {
+                log_error(errors)
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             # Regex input
             log_info("**** You are using Regular Expression Method",
-                    " to group AB1 files!")
+                     " to group AB1 files!")
+            parentDirFiles <- list.files(parentDirectory)
             contigSubGroupFiles <-
                 parentDirFiles[grepl(contigName,
                                      parentDirFiles, fixed=TRUE)]
@@ -258,6 +270,25 @@ setMethod("initialize",
                        })
             errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
         } else if (ab1CSVChecker) {
+            errors <- checkNamesConversionCSV(parentDirectory, fastaFileName, 
+                                              namesConversionCSV, inputSource, 
+                                              "ab1CSV", errors)
+            if (length(errors) != 0 ) {
+                log_error(errors)
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             # CSV input
             log_info("**** You are using CSV Name Conversion Method ",
                     "to group AB1 files!")
@@ -418,6 +449,19 @@ setMethod("initialize",
                 NULL
             }
         })
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     } else if (inputSource == "FASTA") {
         csvRegexChecker <- is.null(namesConversionCSV) &&
             !is.null(contigName) &&
@@ -431,6 +475,26 @@ setMethod("initialize",
         readFasta <- read.fasta(fastaFileName, as.string = TRUE)
         fastaNames <- names(readFasta)
         if (csvRegexChecker) {
+            errors <- checkNamesConversionCSV(parentDirectory, fastaFileName,
+                                              namesConversionCSV, inputSource, 
+                                              "csvRegex", errors)
+            if (length(errors) != 0 ) {
+                log_error(errors)
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             # Csv-Regex input
             log_info("**** You are using Regular Expression Method ",
                     "to group reads in FASTA file (No CSV file)!")
@@ -476,6 +540,29 @@ setMethod("initialize",
                                      geneticCode        = geneticCode)
             })
         } else if (csvCSVChecker) {
+            errors <- checkNamesConversionCSV(parentDirectory, fastaFileName, 
+                                              namesConversionCSV, inputSource, 
+                                              "csvCSV", errors)
+            if (length(errors) != 0 ) {
+                log_error(errors)
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             # Csv-CSV input
             log_info("**** You are using CSV Name Conversion Method ",
                     "to group reads in FASTA file (with Csv file)!")

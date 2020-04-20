@@ -185,8 +185,6 @@ setMethod("initialize",
     if (length(errors) == 0) {
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
-            errors <- checkNamesConversionCSV(namesConversionCSV,
-                                              inputSource, errors)
             ### ----------------------------------------------------------------
             ##### 'parentDirectory' prechecking
             ### ----------------------------------------------------------------
@@ -212,6 +210,13 @@ setMethod("initialize",
             ab1CSVChecker <- !is.null(namesConversionCSV)
             trimmingMethodSA <- TrimmingMethod
             if (ab1RegexChecker) {
+                errors <- 
+                    checkNamesConversionCSV(parentDirectory, fastaFileName,
+                                            namesConversionCSV, inputSource, 
+                                            "ab1Regex", errors)
+                if (length(errors) != 0) {
+                    log_error(errors)
+                }
                 ### ------------------------------------------------------------
                 ### Automatically finding contig name by forward&reverse suffix
                 ### ------------------------------------------------------------
@@ -281,9 +286,10 @@ setMethod("initialize",
                                } 
                            })
             } else if (ab1CSVChecker) {
-                errors <- checkAb1FastaCsv(parentDirectory, fastaFileName,
-                                           namesConversionCSV, inputSource,
-                                           errors)
+                errors <- 
+                    checkNamesConversionCSV(parentDirectory, fastaFileName,
+                                            namesConversionCSV, inputSource, 
+                                            "ab1CSV", errors)
                 if (length(errors) != 0) {
                     log_error(errors)
                 }
@@ -320,8 +326,6 @@ setMethod("initialize",
             }
         } else if (inputSource == "FASTA") {
             errors <- checkFastaFileName(fastaFileName, errors)
-            errors <- checkNamesConversionCSV(namesConversionCSV,
-                                              inputSource, errors)
             if(length(errors) != 0) {
                 log_error(errors)
             }
@@ -332,6 +336,13 @@ setMethod("initialize",
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             trimmingMethodSA <- ""
             if (csvRegexChecker) {
+                errors <- 
+                    checkNamesConversionCSV(parentDirectory, fastaFileName,
+                                            namesConversionCSV, inputSource, 
+                                            "csvRegex", errors)
+                if (length(errors) != 0) {
+                    log_error(errors)
+                }
                 log_info("**** You are using Regex Method ",
                         "to group reads in FASTA file (No CSV file)!")
                 readFastaNames <- names(readFasta)
@@ -375,9 +386,10 @@ setMethod("initialize",
                     } 
                 })
             } else if (csvCSVChecker) {
-                errors <- checkAb1FastaCsv(parentDirectory, fastaFileName,
-                                           namesConversionCSV, inputSource,
-                                           errors)
+                errors <- 
+                    checkNamesConversionCSV(parentDirectory, fastaFileName,
+                                            namesConversionCSV, inputSource, 
+                                            "csvCSV", errors)
                 if (length(errors) != 0) {
                     log_error(errors)
                 }

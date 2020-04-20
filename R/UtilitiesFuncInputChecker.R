@@ -15,27 +15,6 @@ checkFastaFileName <- function(fastaFileName, errors) {
     return(errors)
 }
 
-checkNamesConversionCSV <- function (namesConversionCSV, inputSource, errors) {
-    if (inputSource == "ABIF") {
-        if(!is.null(namesConversionCSV)) {
-            if (!file.exists(namesConversionCSV)) {
-                msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
-                             " file does not exist.\n", sep = "")
-                errors <- c(errors, msg)
-            }
-        }
-    } else if (inputSource == "FASTA") {
-        if(!is.null(namesConversionCSV)) {
-            if (!file.exists(namesConversionCSV)) {
-                msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
-                             " file does not exist.\n", sep = "")
-                errors <- c(errors, msg)
-            }
-        }
-    }
-    return(errors)
-}
-
 checkReadFileName <- function(readFileName, inputSource, errors) {
     if (!file.exists(readFileName)) {
         cat ("readFileName", readFileName)
@@ -287,6 +266,73 @@ checkShowTrimmed <- function(showTrimmed, errors) {
     return(errors)
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+# parentDirectory, fastaFileName,
+# namesConversionCSV, inputSource, errors
+checkNamesConversionCSV <- function (parentDirectory, fastaFileName,
+                                     namesConversionCSV, inputSource, 
+                                     nameConvMethod, errors) {
+    if (nameConvMethod == "ab1Regex") {
+        warnMessage <- paste("**** You are using Regular Expression Method",
+                             "to group AB1 files!", sep = " ")
+    } else if (nameConvMethod == "ab1CSV") {
+        warnMessage <- paste("**** You are using CSV Name Conversion Method",
+                             "to group AB1 files!", sep = " ")
+    } else if (nameConvMethod == "csvRegex") {
+        warnMessage <- paste("**** You are using Regular Expression Method",
+                             "to group reads in FASTA file (No CSV file)!", 
+                             sep = " ")
+    } else if (nameConvMethod == "csvCSV") {
+        warnMessage <- paste("**** You are using CSV Name Conversion Method",
+                             "to group reads in FASTA file (with Csv file)!",
+                             sep = " ")
+    }
+    
+    if (nameConvMethod == "ab1Regex" || nameConvMethod == "csvRegex") {
+        # CSV file needs to be NULL
+        if(!is.null(namesConversionCSV)) {
+            log_warn(warnMessage)
+            msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
+                         " needs to be null.\n", sep = "")
+            errors <- c(errors, msg)
+        }
+    } else if (nameConvMethod == "ab1CSV" || nameConvMethod == "csvCSV") {
+        if(is.null(namesConversionCSV)) {
+            log_warn(warnMessage)
+            msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
+                         " cannot be null.\n", sep = "")
+            errors <- c(errors, msg)
+        } else {
+            if (!file.exists(namesConversionCSV)) {
+                msg <- paste("\nnamesConversionCSV: '",  
+                             namesConversionCSV, "'",
+                             " file does not exist.\n", sep = "")
+                errors <- c(errors, msg)
+            } else {
+                ## CSV file is not null and it exists!
+                errors <- 
+                    checkAb1FastaCsv(parentDirectory, fastaFileName,
+                                     namesConversionCSV, inputSource, errors)
+            }
+        }
+    }
+    # if (inputSource == "ABIF") {
+    # } else if (inputSource == "FASTA") {
+    # }
+    return(errors)
+}
+
 checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
                              namesConversionCSV, inputSource, errors) {
     warnings <- character()
@@ -301,8 +347,9 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
         readFasta <- read.fasta(fastaFileName, as.string = TRUE)
         sourceReads <- names(readFasta)
     }
-
-    # Check that all reads in the read folder are listed in the csv
+    ############################################################################
+    ### Check 1: all reads in the read folder are listed in the csv
+    ############################################################################
     readInCsvWarningMsg <-
         sapply(sourceReads,
                function(sourceRead) {
@@ -314,7 +361,9 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
                    return()})
     warnings <- c(warnings, unlist(readInCsvWarningMsg), use.names = FALSE)
 
-    # Check all reads listed in the csv file are in the reads folder
+    ############################################################################
+    ### Check 2: all reads listed in the csv file are in the reads folder
+    ############################################################################
     readInSourceWarningMsg <-
         sapply(csvReads,
                function(csvRead) {
@@ -326,6 +375,9 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
     warnings <- c(warnings, unlist(readInSourceWarningMsg), use.names = FALSE)
 
     # csv file has all of the columns, no extra columns
+    ############################################################################
+    ### Check 3: csv file has all of the columns, no extra columns
+    ############################################################################
     if (!("contig" %in% colnames(csvFile))) {
         msg <- paste("\n'contig' is not in the csv file (",
                      namesConversionCSV, ")", sep = "")
