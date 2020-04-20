@@ -192,10 +192,10 @@ setMethod("initialize",
         log_error(errors)
     }
     processorsNum <- getProcessors (processorsNum)
+    log_info("******** Contig Name: ", contigName)
     if (inputSource == "ABIF") {
-        log_info("******** Contig Name: ", contigName)
         ### --------------------------------------------------------------------
-        ### 'forwardAllReads' & 'reverseAllReads' files prechecking
+        ### 'ABIF' condition checking!
         ### --------------------------------------------------------------------
         ab1RegexChecker <- is.null(namesConversionCSV) &&
             !is.null(contigName) &&
@@ -210,17 +210,6 @@ setMethod("initialize",
             if (length(errors) != 0 ) {
                 log_error(errors)
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             # Regex input
             log_info("**** You are using Regular Expression Method",
                      " to group AB1 files!")
@@ -277,19 +266,6 @@ setMethod("initialize",
             if (length(errors) != 0 ) {
                 log_error(errors)
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             # CSV input
             log_info("**** You are using CSV Name Conversion Method ",
                     "to group AB1 files!")
@@ -311,8 +287,8 @@ setMethod("initialize",
             } else if (!is.null(contigName)) {
                 log_info("**** Your contig name is ", contigName)
                 selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
-                forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
-                reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
+                forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F",]
+                reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R",]
             }
         }
         ### ----------------------------------------------------------------
@@ -330,16 +306,14 @@ setMethod("initialize",
         errors <- checkHeightPerRow (baseNumPerRow, errors)
         errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
         errors <- checkShowTrimmed (showTrimmed, errors)
-
-        ### ----------------------------------------------------------------
-        ### Prechecking success. Start to create multiple reads.
-        ### ----------------------------------------------------------------
         if (length(errors) != 0) {
             log_error(errors)
         }
+        ### ----------------------------------------------------------------
+        ### Prechecking success. Start to create multiple reads.
+        ### ----------------------------------------------------------------
         trimmingMethodSC <- TrimmingMethod
         if (ab1RegexChecker) {
-            # sapply to create SangerRead list.
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
@@ -450,20 +424,10 @@ setMethod("initialize",
                 NULL
             }
         })
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     } else if (inputSource == "FASTA") {
+        ### --------------------------------------------------------------------
+        ### 'FASTA' condition checking!
+        ### --------------------------------------------------------------------
         csvRegexChecker <- is.null(namesConversionCSV) &&
             !is.null(contigName) &&
             !is.null(suffixForwardRegExp) &&
@@ -482,20 +446,6 @@ setMethod("initialize",
             if (length(errors) != 0 ) {
                 log_error(errors)
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             # Csv-Regex input
             log_info("**** You are using Regular Expression Method ",
                     "to group reads in FASTA file (No CSV file)!")
@@ -547,23 +497,6 @@ setMethod("initialize",
             if (length(errors) != 0 ) {
                 log_error(errors)
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             # Csv-CSV input
             log_info("**** You are using CSV Name Conversion Method ",
                     "to group reads in FASTA file (with Csv file)!")
@@ -644,16 +577,15 @@ setMethod("initialize",
             }
         })
     }
-    
-    ### ----------------------------------------------------------------
-    ### 'forwardNumber' + 'reverseNumber' number >= 2
-    ### ----------------------------------------------------------------
+    ### ------------------------------------------------------------------------
+    ### 'forwardNumber' + 'reverseNumber' number >= minReadsNum && 2
+    ### ------------------------------------------------------------------------
     forwardReadListFilter <- Filter(Negate(is.null), forwardReadListFilter)
     reverseReadListFilter <- Filter(Negate(is.null), reverseReadListFilter)
     forwardNumber <- length(forwardReadListFilter)
     reverseNumber <- length(reverseReadListFilter)
     readNumber <- forwardNumber + reverseNumber
-    if (readNumber >= minReadsNum) {
+    if (readNumber >= minReadsNum && readNumber >= 2) {
         CSResult <- calculateContigSeq (inputSource      = inputSource,
                                         forwardReadList  = forwardReadListFilter,
                                         reverseReadList  = reverseReadListFilter,

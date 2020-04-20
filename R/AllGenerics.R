@@ -206,6 +206,44 @@ setGeneric("launchAppSA", function(object, outputDir = NULL) {
     standardGeneric("launchAppSA")
 })
 
+
+
+
+
+
+
+
+
+
+
+
+
+### ============================================================================
+### Defined in SangerRead, SangerContig, SangerAlignment
+### ============================================================================
+#' Method readTable
+#' @name readTable
+#' @rdname readTable-methods
+#'
+#' @param object A SangerRead, SangerContig, or SangerAlignment S4 instance.
+#' @param ... Further generateReportSR-related parameters.
+#'
+#' @return None.
+#'
+#' @exportMethod readTable
+#' @examples
+#' data(sangerReadFData)
+#' data(sangerContigData)
+#' data(sangerAlignmentData)
+#' \dontrun{
+#' readTable(sangerReadFData)
+#' readTable(sangerContigData)
+#' readTable(sangerAlignmentData)
+#' }
+setGeneric("readTable", function(object, ...) {
+    standardGeneric("readTable")
+})
+
 ### ============================================================================
 ### Defined in SangerRead, SangerContig, SangerAlignment
 ### ============================================================================

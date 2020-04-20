@@ -276,8 +276,6 @@ checkShowTrimmed <- function(showTrimmed, errors) {
 
 
 
-
-
 # parentDirectory, fastaFileName,
 # namesConversionCSV, inputSource, errors
 checkNamesConversionCSV <- function (logLevel, parentDirectory, fastaFileName,
@@ -392,9 +390,20 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
                      namesConversionCSV, ")", sep = "")
         errors <- c(errors, msg)
     }
+    
+    ############################################################################
+    ### Check 4: F/R column has only F's and R's.
+    ############################################################################
+    csvFileDirLen <- length(unique(as.character(csvFile$direction)))
+    if (!((csvFileDirLen == 1 || csvFileDirLen == 2) && 
+          ('F' %in% unique(as.character(csvFile$direction)) || 
+           'R' %in% unique(as.character(csvFile$direction))))) {
+        msg <- paste("\nIn the 'direction' column of your CSV file, 
+                     you can only have 'F' and 'R' ", sep = "")
+        errors <- c(errors, msg)
+    }
     if (length(warnings) != 0) {
         log_warn(warnings)
     }
-    log_info("End 'checkAb1FastaCsv'.")
     return(errors)
 }

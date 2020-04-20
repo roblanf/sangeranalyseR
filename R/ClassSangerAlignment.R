@@ -14,15 +14,9 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' @slot parentDirectory If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerAlignment, all reads in subdirectories will be scanned recursively. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
 #' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
-#' 
-#' 
-#' 
 #' @slot trimmingMethodSA The read trimming method for all SangerRead S4 instances in SangerAlignment. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerReads must have the same trimming method.
 #' @slot minFractionCallSA Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.
 #' @slot maxFractionLostSA Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.
-#' 
-#' 
-#' 
 #' @slot geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @slot refAminoAcidSeq An amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand. The default value is \code{""}.
 #' @slot contigList A list storing all SangerContigs S4 instances.
@@ -226,7 +220,7 @@ setMethod("initialize",
                     parentDirFiles[grepl(suffixForwardRegExp, parentDirFiles)]
                 reverseSelectInputFiles <- 
                     parentDirFiles[grepl(suffixReverseRegExp, parentDirFiles)]
-
+                
                 # Find possible consensus Name for forward and reverse reads
                 forwardContigName <-
                     unlist(str_split(forwardSelectInputFiles, 
@@ -280,7 +274,9 @@ setMethod("initialize",
                                    length(newSangerContig@forwardReadList)
                                reverseNumber <- 
                                    length(newSangerContig@reverseReadList)
-                               if ((forwardNumber + reverseNumber) >= minReadsNum) {
+                               readNumber <- forwardNumber + reverseNumber
+                               if (readNumber >= minReadsNum && 
+                                   readNumber >= 2) {
                                    newSangerContig
                                } else {
                                    NULL

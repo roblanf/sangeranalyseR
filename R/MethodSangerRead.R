@@ -261,3 +261,156 @@ setMethod("generateReportSR", "SangerRead",
                                 navigationAlignmentFN = navigationAlignmentFN))
     return(outputHtml)
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+## =============================================================================
+## Generating summary table for SangerRead instance
+## =============================================================================
+#' A SangerRead method which generates summary table for SangerRead instance
+#'
+#' @title readTable
+#' @name SangerRead-class-readTable
+#' @aliases readTable,readTable-method
+#'
+#' @param object A SangerRead S4 instance.
+#'
+#' @return None
+#'
+#' @examples
+#' data(sangerReadFData)
+#' data(sangerContigData)
+#' data(sangerAlignmentData)
+#' \dontrun{
+#' readTable(sangerReadFData)
+#' readTable(sangerContigData)
+#' readTable(sangerAlignmentData)
+#' }
+setMethod("readTable", "SangerRead", function(object) {
+    
+    
+    object@inputSource
+    object@readFeature
+    
+    # read name,
+    object@readFileName
+    object@fastaReadName
+    
+    # trimming method,
+    object@QualityReport@TrimmingMethod
+    
+    # trimming cutoff,
+    object@QualityReport@M1TrimmingCutoff
+    object@QualityReport@M2CutoffQualityScore
+    object@QualityReport@M2SlidingWindowSize
+    # read length before trimming,
+    object@QualityReport@rawSeqLength
+    
+    # read length after trimming,
+    object@QualityReport@trimmedSeqLength
+    
+    # read quality before trimming,
+    object@QualityReport@rawMeanQualityScore
+    
+    # read quality after trimming,
+    object@QualityReport@trimmedMeanQualityScore
+    
+    
+    primaryDNA <- as.character(object@primarySeq)
+    secondaryDNA <- as.character(object@secondarySeq)
+    
+    # passed secondary peak cutoff [yesn/no],
+    object@ChromatogramParam@signalRatioCutoff
+    
+    
+    
+    # read included in contig [yes/no],
+    trimmedStartPos <- object@QualityReport@trimmedStartPos
+    trimmedFinishPos <- object@QualityReport@trimmedFinishPos
+    primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
+    secondaryDNA <- substr(secondaryDNA, trimmedStartPos+1,trimmedFinishPos)
+    cat("SangerRead S4 instance\n",
+        "          Input Source : ", object@inputSource, "\n",
+        "          Read Feature : ", object@readFeature, "\n",
+        "         Read FileName : ", basename(object@readFileName), "\n",
+        "    Trimming Method SR : ", object@QualityReport@TrimmingMethod, "\n",
+        "      Primary Sequence : ", primaryDNA, "\n",
+        "    Secondary Sequence : ", secondaryDNA, "\n"
+    )
+    
+    
+    
+    if (object@inputSource == "ABIF") {
+        primaryDNA <- as.character(object@primarySeq)
+        secondaryDNA <- as.character(object@secondarySeq)
+        trimmedStartPos <- object@QualityReport@trimmedStartPos
+        trimmedFinishPos <- object@QualityReport@trimmedFinishPos
+        primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
+        secondaryDNA <- substr(secondaryDNA, trimmedStartPos+1,trimmedFinishPos)
+        cat("SangerRead S4 instance\n",
+            "          Input Source : ", object@inputSource, "\n",
+            "          Read Feature : ", object@readFeature, "\n",
+            "         Read FileName : ", basename(object@readFileName), "\n",
+            "    Trimming Method SR : ", object@QualityReport@TrimmingMethod, "\n",
+            "      Primary Sequence : ", primaryDNA, "\n",
+            "    Secondary Sequence : ", secondaryDNA, "\n"
+        )
+    } else if (object@inputSource == "FASTA") {
+        cat("SangerRead S4 instance\n",
+            "          Input Source : ", object@inputSource, "\n",
+            "          Read Feature : ", object@readFeature, "\n",
+            "         Read FileName : ", basename(object@readFileName), "\n",
+            "       Fasta Read Name : ", object@fastaReadName, "\n",
+            "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
+            "      Primary Sequence : ", as.character(object@primarySeq), "\n"
+        )
+    }
+})
+
+
+
+# sangerContigData@inputSource
+# sangerContigData@fastaFileName
+# sangerContigData@namesConversionCSV
+# sangerContigData@parentDirectory
+# 
+# # contig name,
+# sangerContigData@contigName
+# sangerContigData@suffixForwardRegExp
+# sangerContigData@suffixReverseRegExp
+# sangerContigData@minReadsNum
+# # passed length cutoff [yes/no],
+# sangerContigData@minReadLength
+# sangerContigData@refAminoAcidSeq
+# sangerContigData@minFractionCall
+# sangerContigData@maxFractionLost
+# sangerContigData@acceptStopCodons
+# sangerContigData@readingFrame
+# sangerContigData@contigSeq
+# sangerContigData@alignment
+# sangerContigData@differencesDF
+# sangerContigData@distanceMatrix
+# sangerContigData@dendrogram
+# sangerContigData@indelsDF
+# sangerContigData@stopCodonsDF
+# sangerContigData@secondaryPeakDF
+# 
+# # number of indels,
+# # passed indel cutoff [yes/no]
+# sangerContigData@indelsDF
+# 
+# # secondary peak cutoff,
+# # number of secondary peaks
+# sangerContigData@secondaryPeakDF
+# 
+# # passed quality cutoff [yes/no],
