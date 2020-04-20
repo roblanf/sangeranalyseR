@@ -6,7 +6,7 @@
 \alias{readTable,readTable-method}
 \title{readTable}
 \usage{
-\S4method{readTable}{SangerRead}(object)
+\S4method{readTable}{SangerRead}(object, indentation = 0)
 }
 \arguments{
 \item{object}{A SangerRead S4 instance.}

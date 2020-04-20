@@ -4,10 +4,12 @@
 \alias{readTable}
 \title{Method readTable}
 \usage{
-readTable(object, ...)
+readTable(object, indentation, ...)
 }
 \arguments{
 \item{object}{A SangerRead, SangerContig, or SangerAlignment S4 instance.}
+
+\item{indentation}{The indentation for different level printing}
 
 \item{...}{Further generateReportSR-related parameters.}
 }

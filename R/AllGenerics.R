@@ -226,6 +226,7 @@ setGeneric("launchAppSA", function(object, outputDir = NULL) {
 #' @rdname readTable-methods
 #'
 #' @param object A SangerRead, SangerContig, or SangerAlignment S4 instance.
+#' @param indentation The indentation for different level printing
 #' @param ... Further generateReportSR-related parameters.
 #'
 #' @return None.
@@ -240,7 +241,7 @@ setGeneric("launchAppSA", function(object, outputDir = NULL) {
 #' readTable(sangerContigData)
 #' readTable(sangerAlignmentData)
 #' }
-setGeneric("readTable", function(object, ...) {
+setGeneric("readTable", function(object, indentation, ...) {
     standardGeneric("readTable")
 })
 

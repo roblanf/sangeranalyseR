@@ -284,7 +284,8 @@ setMethod("generateReportSR", "SangerRead",
 #' readTable(sangerContigData)
 #' readTable(sangerAlignmentData)
 #' }
-setMethod("readTable", "SangerRead", function(object) {
+setMethod("readTable", "SangerRead", function(object, indentation = 0) {
+    space <- paste(rep(' ', indentation), collapse = "")
     inputSource <- object@inputSource
     readFeature <- object@readFeature
     readFileNameAbs <- object@readFileName
@@ -308,60 +309,58 @@ setMethod("readTable", "SangerRead", function(object) {
         primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
         secondaryDNA <- substr(secondaryDNA, trimmedStartPos+1,trimmedFinishPos)
         if (TrimmingMethod == "M1") {
-            cat("SangerRead S4 instance\n",
-                "                 Input source : ", inputSource, "\n",
-                "                 Read feature : ", readFeature, "\n",
-                "          Read fileName (abs) : ", readFileNameAbs, "\n",
-                "         Read fileName (base) : ", readFileNameBase, "\n",
-                "              Trimming method : ", TrimmingMethod, "\n",
-                "              Trimming cutoff : ", M1TrimmingCutoff, "\n",
-                "     Trimming start base pair : ", trimmedStartPos, "\n",
-                "    Trimming finish base pair : ", trimmedFinishPos, "\n",
-                "  Read length before trimming : ", rawSeqLength, "\n",
-                "   Read length after trimming : ", trimmedSeqLength, "\n",
-                " Read quality before trimming : ", rawMeanQualityScore, "\n",
-                "  Read quality after trimming : ", trimmedMeanQualityScore,"\n",
-                "        Secondary peak cutoff : ", signalRatioCutoff,"\n",
-                "             Primary Sequence : ", primaryDNA, "\n",
-                "           Secondary Sequence : ", secondaryDNA, "\n"
+            cat(space, "SangerRead S4 instance\n",
+                space, "                 Input source : ", inputSource, "\n",
+                space, "                 Read feature : ", readFeature, "\n",
+                space, "          Read fileName (abs) : ", readFileNameAbs, "\n",
+                space, "         Read fileName (base) : ", readFileNameBase, "\n",
+                space, "              Trimming method : ", TrimmingMethod, "\n",
+                space, "              Trimming cutoff : ", M1TrimmingCutoff, "\n",
+                space, "     Trimming start base pair : ", trimmedStartPos, "\n",
+                space, "    Trimming finish base pair : ", trimmedFinishPos, "\n",
+                space, "  Read length before trimming : ", rawSeqLength, "\n",
+                space, "   Read length after trimming : ", trimmedSeqLength, "\n",
+                space, " Read quality before trimming : ", rawMeanQualityScore, "\n",
+                space, "  Read quality after trimming : ", trimmedMeanQualityScore,"\n",
+                space, "        Secondary peak cutoff : ", signalRatioCutoff,"\n",
+                space, "             Primary Sequence : ", primaryDNA, "\n",
+                space, "           Secondary Sequence : ", secondaryDNA, "\n"
             )
         } else if (TrimmingMethod == "M2") {
-            cat("SangerRead S4 instance\n",
-                "                 Input source : ", inputSource, "\n",
-                "                 Read feature : ", readFeature, "\n",
-                "          Read fileName (abs) : ", readFileNameAbs, "\n",
-                "         Read fileName (base) : ", readFileNameBase, "\n",
-                "              Trimming method : ", TrimmingMethod, "\n",
-                "              Trimming cutoff : ", M2CutoffQualityScore, "\n",
-                "      Trimming sliding window : ", M2SlidingWindowSize, "\n",
-                "     Trimming start base pair : ", trimmedStartPos, "\n",
-                "    Trimming finish base pair : ", trimmedFinishPos, "\n",
-                "  Read length before trimming : ", rawSeqLength, "\n",
-                "   Read length after trimming : ", trimmedSeqLength, "\n",
-                " Read quality before trimming : ", rawMeanQualityScore, "\n",
-                "  Read quality after trimming : ", trimmedMeanQualityScore,"\n",
-                "        Secondary peak cutoff : ", signalRatioCutoff,"\n",
-                "             Primary Sequence : ", primaryDNA, "\n",
-                "           Secondary Sequence : ", secondaryDNA, "\n"
+            cat(space, "SangerRead S4 instance\n",
+                space, "                 Input source : ", inputSource, "\n",
+                space, "                 Read feature : ", readFeature, "\n",
+                space, "          Read fileName (abs) : ", readFileNameAbs, "\n",
+                space, "         Read fileName (base) : ", readFileNameBase, "\n",
+                space, "              Trimming method : ", TrimmingMethod, "\n",
+                space, "              Trimming cutoff : ", M2CutoffQualityScore, "\n",
+                space, "      Trimming sliding window : ", M2SlidingWindowSize, "\n",
+                space, "     Trimming start base pair : ", trimmedStartPos, "\n",
+                space, "    Trimming finish base pair : ", trimmedFinishPos, "\n",
+                space, "  Read length before trimming : ", rawSeqLength, "\n",
+                space, "   Read length after trimming : ", trimmedSeqLength, "\n",
+                space, " Read quality before trimming : ", rawMeanQualityScore, "\n",
+                space, "  Read quality after trimming : ", trimmedMeanQualityScore,"\n",
+                space, "        Secondary peak cutoff : ", signalRatioCutoff,"\n",
+                space, "             Primary Sequence : ", primaryDNA, "\n",
+                space, "           Secondary Sequence : ", secondaryDNA, "\n"
             )
         }
     } else if (object@inputSource == "FASTA") {
         fastaReadName <- object@fastaReadName
         seqLength <- length(object@primarySeq)
         primarySeq <- as.character(object@primarySeq)
-        cat("SangerRead S4 instance\n",
-            "                 Input source : ", inputSource, "\n",
-            "                 Read feature : ", readFeature, "\n",
-            "          Read fileName (abs) : ", readFileNameAbs, "\n",
-            "         Read fileName (base) : ", readFileNameBase, "\n",
-            "              Fasta Read Name : ", fastaReadName, "\n",
-            "                  Read length : ", seqLength, "\n",
-            "             Primary Sequence : ", primarySeq, "\n"
+        cat(space, "SangerRead S4 instance\n",
+            space, "                 Input source : ", inputSource, "\n",
+            space, "                 Read feature : ", readFeature, "\n",
+            space, "          Read fileName (abs) : ", readFileNameAbs, "\n",
+            space, "         Read fileName (base) : ", readFileNameBase, "\n",
+            space, "              Fasta Read Name : ", fastaReadName, "\n",
+            space, "                  Read length : ", seqLength, "\n",
+            space, "             Primary Sequence : ", primarySeq, "\n"
         )
     }
 })
-
-
 
 # sangerContigData@inputSource
 # sangerContigData@fastaFileName
