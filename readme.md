@@ -5,4 +5,4 @@
 sangeranalyseR
 ==============
 
-Documentation: [[link](https://sangeranalyser.readthedocs.io/en/latest/)]
+Documentation: [[link](https://sangeranalyser-documentation.readthedocs.io/en/latest/)]
