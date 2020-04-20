@@ -166,7 +166,8 @@ setMethod("initialize",
                    maxFractionLost        = 0.5,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
-                   processorsNum          = NULL) {
+                   processorsNum          = NULL, 
+                   logLevel               = TRUE) {
     errors <- character()
     warnings <- character()
     ### ------------------------------------------------------------------------
@@ -203,9 +204,9 @@ setMethod("initialize",
         ab1CSVChecker <- !is.null(namesConversionCSV)
         errors <- checkParentDirectory (parentDirectory, errors)
         if (ab1RegexChecker) {
-            errors <- checkNamesConversionCSV(parentDirectory, fastaFileName,
-                                              namesConversionCSV, inputSource, 
-                                              "ab1Regex", errors)
+            errors <- checkNamesConversionCSV(logLevel, parentDirectory, 
+                                              fastaFileName, namesConversionCSV, 
+                                              inputSource, "ab1Regex", errors)
             if (length(errors) != 0 ) {
                 log_error(errors)
             }
@@ -270,9 +271,9 @@ setMethod("initialize",
                        })
             errors <- c(errors, unlist(reverseAllErrorMsg), use.names = FALSE)
         } else if (ab1CSVChecker) {
-            errors <- checkNamesConversionCSV(parentDirectory, fastaFileName, 
-                                              namesConversionCSV, inputSource, 
-                                              "ab1CSV", errors)
+            errors <- checkNamesConversionCSV(logLevel, parentDirectory, 
+                                              fastaFileName, namesConversionCSV, 
+                                              inputSource, "ab1CSV", errors)
             if (length(errors) != 0 ) {
                 log_error(errors)
             }
@@ -475,9 +476,9 @@ setMethod("initialize",
         readFasta <- read.fasta(fastaFileName, as.string = TRUE)
         fastaNames <- names(readFasta)
         if (csvRegexChecker) {
-            errors <- checkNamesConversionCSV(parentDirectory, fastaFileName,
-                                              namesConversionCSV, inputSource, 
-                                              "csvRegex", errors)
+            errors <- checkNamesConversionCSV(logLevel, parentDirectory, 
+                                              fastaFileName, namesConversionCSV, 
+                                              inputSource, "csvRegex", errors)
             if (length(errors) != 0 ) {
                 log_error(errors)
             }
@@ -540,9 +541,9 @@ setMethod("initialize",
                                      geneticCode        = geneticCode)
             })
         } else if (csvCSVChecker) {
-            errors <- checkNamesConversionCSV(parentDirectory, fastaFileName, 
-                                              namesConversionCSV, inputSource, 
-                                              "csvCSV", errors)
+            errors <- checkNamesConversionCSV(logLevel, parentDirectory, 
+                                              fastaFileName, namesConversionCSV,
+                                              inputSource, "csvCSV", errors)
             if (length(errors) != 0 ) {
                 log_error(errors)
             }
@@ -585,18 +586,6 @@ setMethod("initialize",
                 selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
                 forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
                 reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
-            }
-            forwardNumber <- length(nrow(forwardCsv))
-            reverseNumber <- length(nrow(reverseCsv))
-            if ((forwardNumber + reverseNumber) < 2) {
-                msg <- "\n'Number of total reads has to be more than two."
-                errors <- c(errors, msg)
-            }
-            ### ----------------------------------------------------------------
-            ### Prechecking success. Start to create multiple reads.
-            ### ----------------------------------------------------------------
-            if (length(errors) != 0) {
-                log_error(errors)
             }
             forwardOriginal <- as.character(forwardCsv$reads)
             reverseOriginal <- as.character(reverseCsv$reads)
@@ -663,9 +652,8 @@ setMethod("initialize",
     reverseReadListFilter <- Filter(Negate(is.null), reverseReadListFilter)
     forwardNumber <- length(forwardReadListFilter)
     reverseNumber <- length(reverseReadListFilter)
-    # message("@@ forwardNumber: ", forwardNumber)
-    # message("@@ reverseNumber: ", reverseNumber)
-    if ((forwardNumber + reverseNumber) >= minReadsNum) {
+    readNumber <- forwardNumber + reverseNumber
+    if (readNumber >= minReadsNum) {
         CSResult <- calculateContigSeq (inputSource      = inputSource,
                                         forwardReadList  = forwardReadListFilter,
                                         reverseReadList  = reverseReadListFilter,
@@ -688,8 +676,9 @@ setMethod("initialize",
         spDf <- CSResult$spDf
         log_success("  >> 'SangerContig' S4 instance is created !!")
     } else {
-        msg <- paste("\nNumber of total reads has to be more than",
-                     minReadsNum, "('minReadsNum' that you set)", sep = " ")
+        msg <- paste("The number of your total reads is ", readNumber, ".",
+                     "\nNumber of total reads has to be equal or more than ",
+                     minReadsNum, " ('minReadsNum' that you set)", sep = "")
         warnings <- c(warnings, msg)
         log_warn(warnings)
         contigGapfree <- DNAString()

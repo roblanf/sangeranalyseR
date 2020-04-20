@@ -211,9 +211,9 @@ setMethod("initialize",
             trimmingMethodSA <- TrimmingMethod
             if (ab1RegexChecker) {
                 errors <- 
-                    checkNamesConversionCSV(parentDirectory, fastaFileName,
-                                            namesConversionCSV, inputSource, 
-                                            "ab1Regex", errors)
+                    checkNamesConversionCSV(TRUE, parentDirectory, 
+                                            fastaFileName, namesConversionCSV, 
+                                            inputSource, "ab1Regex", errors)
                 if (length(errors) != 0) {
                     log_error(errors)
                 }
@@ -274,7 +274,8 @@ setMethod("initialize",
                                        geneticCode          = geneticCode,
                                        acceptStopCodons     = acceptStopCodons,
                                        readingFrame         = readingFrame,
-                                       processorsNum        = processorsNum)
+                                       processorsNum        = processorsNum, 
+                                       logLevel             = FALSE)
                                forwardNumber <- 
                                    length(newSangerContig@forwardReadList)
                                reverseNumber <- 
@@ -287,9 +288,9 @@ setMethod("initialize",
                            })
             } else if (ab1CSVChecker) {
                 errors <- 
-                    checkNamesConversionCSV(parentDirectory, fastaFileName,
-                                            namesConversionCSV, inputSource, 
-                                            "ab1CSV", errors)
+                    checkNamesConversionCSV(TRUE, parentDirectory, 
+                                            fastaFileName, namesConversionCSV, 
+                                            inputSource, "ab1CSV", errors)
                 if (length(errors) != 0) {
                     log_error(errors)
                 }
@@ -314,7 +315,8 @@ setMethod("initialize",
                             geneticCode          = geneticCode,
                             acceptStopCodons     = acceptStopCodons,
                             readingFrame         = readingFrame,
-                            processorsNum        = processorsNum)
+                            processorsNum        = processorsNum, 
+                            logLevel             = FALSE)
                     forwardNumber <- length(newSangerContig@forwardReadList)
                     reverseNumber <- length(newSangerContig@reverseReadList)
                     if ((forwardNumber + reverseNumber) >= minReadsNum) {
@@ -337,9 +339,9 @@ setMethod("initialize",
             trimmingMethodSA <- ""
             if (csvRegexChecker) {
                 errors <- 
-                    checkNamesConversionCSV(parentDirectory, fastaFileName,
-                                            namesConversionCSV, inputSource, 
-                                            "csvRegex", errors)
+                    checkNamesConversionCSV(TRUE, parentDirectory, 
+                                            fastaFileName, namesConversionCSV, 
+                                            inputSource, "csvRegex", errors)
                 if (length(errors) != 0) {
                     log_error(errors)
                 }
@@ -376,7 +378,8 @@ setMethod("initialize",
                             geneticCode          = geneticCode,
                             acceptStopCodons     = acceptStopCodons,
                             readingFrame         = readingFrame,
-                            processorsNum        = processorsNum)
+                            processorsNum        = processorsNum, 
+                            logLevel             = FALSE)
                     forwardNumber <- length(newSangerContig@forwardReadList)
                     reverseNumber <- length(newSangerContig@reverseReadList)
                     if ((forwardNumber + reverseNumber) >= minReadsNum) {
@@ -387,9 +390,9 @@ setMethod("initialize",
                 })
             } else if (csvCSVChecker) {
                 errors <- 
-                    checkNamesConversionCSV(parentDirectory, fastaFileName,
-                                            namesConversionCSV, inputSource, 
-                                            "csvCSV", errors)
+                    checkNamesConversionCSV(TRUE, parentDirectory, 
+                                            fastaFileName, namesConversionCSV, 
+                                            inputSource, "csvCSV", errors)
                 if (length(errors) != 0) {
                     log_error(errors)
                 }
@@ -415,7 +418,8 @@ setMethod("initialize",
                             geneticCode          = geneticCode,
                             acceptStopCodons     = acceptStopCodons,
                             readingFrame         = readingFrame,
-                            processorsNum        = processorsNum)
+                            processorsNum        = processorsNum,
+                            logLevel             = FALSE)
                     forwardNumber <- length(newSangerContig@forwardReadList)
                     reverseNumber <- length(newSangerContig@reverseReadList)
                     if ((forwardNumber + reverseNumber) >= minReadsNum) {

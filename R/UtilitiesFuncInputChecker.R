@@ -280,7 +280,7 @@ checkShowTrimmed <- function(showTrimmed, errors) {
 
 # parentDirectory, fastaFileName,
 # namesConversionCSV, inputSource, errors
-checkNamesConversionCSV <- function (parentDirectory, fastaFileName,
+checkNamesConversionCSV <- function (logLevel, parentDirectory, fastaFileName,
                                      namesConversionCSV, inputSource, 
                                      nameConvMethod, errors) {
     if (nameConvMethod == "ab1Regex") {
@@ -298,34 +298,35 @@ checkNamesConversionCSV <- function (parentDirectory, fastaFileName,
                              "to group reads in FASTA file (with Csv file)!",
                              sep = " ")
     }
-    
-    if (nameConvMethod == "ab1Regex" || nameConvMethod == "csvRegex") {
-        # CSV file needs to be NULL
-        if(!is.null(namesConversionCSV)) {
-            log_warn(warnMessage)
-            msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
-                         " needs to be null.\n", sep = "")
-            errors <- c(errors, msg)
-        }
-    } else if (nameConvMethod == "ab1CSV" || nameConvMethod == "csvCSV") {
-        if(is.null(namesConversionCSV)) {
-            log_warn(warnMessage)
-            msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
-                         " cannot be null.\n", sep = "")
-            errors <- c(errors, msg)
-        } else {
-            if (!file.exists(namesConversionCSV)) {
-                msg <- paste("\nnamesConversionCSV: '",  
-                             namesConversionCSV, "'",
-                             " file does not exist.\n", sep = "")
+    if (logLevel) {
+        if (nameConvMethod == "ab1Regex" || nameConvMethod == "csvRegex") {
+            # CSV file needs to be NULL
+            if(!is.null(namesConversionCSV)) {
+                log_warn(warnMessage)
+                msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
+                             " needs to be null.\n", sep = "")
+                errors <- c(errors, msg)
+            }
+        } else if (nameConvMethod == "ab1CSV" || nameConvMethod == "csvCSV") {
+            if(is.null(namesConversionCSV)) {
+                log_warn(warnMessage)
+                msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
+                             " cannot be null.\n", sep = "")
                 errors <- c(errors, msg)
             } else {
-                ## CSV file is not null and it exists!
-                errors <- 
-                    checkAb1FastaCsv(parentDirectory, fastaFileName,
-                                     namesConversionCSV, inputSource, errors)
+                if (!file.exists(namesConversionCSV)) {
+                    msg <- paste("\nnamesConversionCSV: '",  
+                                 namesConversionCSV, "'",
+                                 " file does not exist.\n", sep = "")
+                    errors <- c(errors, msg)
+                } else {
+                    ## CSV file is not null and it exists!
+                    errors <- 
+                        checkAb1FastaCsv(parentDirectory, fastaFileName,
+                                         namesConversionCSV, inputSource, errors)
+                }
             }
-        }
+        }    
     }
     # if (inputSource == "ABIF") {
     # } else if (inputSource == "FASTA") {
@@ -391,9 +392,8 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
                      namesConversionCSV, ")", sep = "")
         errors <- c(errors, msg)
     }
-
     if (length(warnings) != 0) {
-        warning(warnings)
+        log_warn(warnings)
     }
     log_info("End 'checkAb1FastaCsv'.")
     return(errors)
