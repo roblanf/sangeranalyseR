@@ -52,7 +52,7 @@ setMethod("initialize",
                   ### Prechecking success.
                   ### ----------------------------------------------------------
               } else {
-                  log_error(errors)
+                log_error(paste(errors, collapse = ""))
               }
               callNextMethod(.Object, ...,
                              baseNumPerRow     = baseNumPerRow,

@@ -197,7 +197,7 @@ setMethod("initialize",
             errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
             errors <- checkShowTrimmed (showTrimmed, errors)
             if (length(errors) != 0) {
-                log_error(errors)
+                log_error(paste(errors, collapse = ""))
             }
             ab1RegexChecker <- is.null(namesConversionCSV) &&
                 !is.null(suffixForwardRegExp) && !is.null(suffixReverseRegExp)
@@ -209,7 +209,7 @@ setMethod("initialize",
                                             fastaFileName, namesConversionCSV, 
                                             inputSource, "ab1Regex", errors)
                 if (length(errors) != 0) {
-                    log_error(errors)
+                    log_error(paste(errors, collapse = ""))
                 }
                 ### ------------------------------------------------------------
                 ### Automatically finding contig name by forward&reverse suffix
@@ -239,7 +239,7 @@ setMethod("initialize",
                 ##### Creating each SangerContig (store as SangerContigList)
                 ### ----------------------------------------------------------------
                 SangerContigList <-
-                    sapply(contigName,
+                    lapply(contigName,
                            function(eachConsRead) {
                                insideDirName<- dirname(eachConsRead)
                                insideContigName <- basename(eachConsRead)
@@ -282,20 +282,21 @@ setMethod("initialize",
                                    NULL
                                } 
                            })
+                names(SangerContigList) <- contigName
             } else if (ab1CSVChecker) {
                 errors <- 
                     checkNamesConversionCSV(TRUE, parentDirectory, 
                                             fastaFileName, namesConversionCSV, 
                                             inputSource, "ab1CSV", errors)
                 if (length(errors) != 0) {
-                    log_error(errors)
+                    log_error(paste(errors, collapse = ""))
                 }
                 log_info("**** You are using CSV Name Conversion Method ",
                         "to group AB1 files!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
                 log_info("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
                 contigNames <- as.character(unique(csvFile$contig))
-                SangerContigList <- sapply(contigNames, function(contigName) {
+                SangerContigList <- lapply(contigNames, function(contigName) {
                     newSangerContig <- 
                         new("SangerContig",
                             inputSource          = inputSource,
@@ -321,11 +322,12 @@ setMethod("initialize",
                         NULL
                     } 
                 })
+                names(SangerContigList) <- contigNames
             }
         } else if (inputSource == "FASTA") {
             errors <- checkFastaFileName(fastaFileName, errors)
             if(length(errors) != 0) {
-                log_error(errors)
+                log_error(paste(errors, collapse = ""))
             }
             csvRegexChecker <- is.null(namesConversionCSV) &&
                 !is.null(suffixForwardRegExp) &&
@@ -339,7 +341,7 @@ setMethod("initialize",
                                             fastaFileName, namesConversionCSV, 
                                             inputSource, "csvRegex", errors)
                 if (length(errors) != 0) {
-                    log_error(errors)
+                    log_error(paste(errors, collapse = ""))
                 }
                 log_info("**** You are using Regex Method ",
                         "to group reads in FASTA file (No CSV file)!")
@@ -356,7 +358,7 @@ setMethod("initialize",
                     unlist(str_split(reverseSelectInputFiles, suffixReverseRegExp,
                                      n = Inf, simplify = FALSE))[c(TRUE, FALSE)]
                 contigNames <- union(forwardContigName, reverseContigName)
-                SangerContigList <- sapply(contigNames, function(contigName) {
+                SangerContigList <- lapply(contigNames, function(contigName) {
                     newSangerContig <- 
                         new("SangerContig",
                             inputSource          = inputSource,
@@ -384,19 +386,20 @@ setMethod("initialize",
                         NULL
                     } 
                 })
+                names(SangerContigList) <- contigNames
             } else if (csvCSVChecker) {
                 errors <- 
                     checkNamesConversionCSV(TRUE, parentDirectory, 
                                             fastaFileName, namesConversionCSV, 
                                             inputSource, "csvCSV", errors)
                 if (length(errors) != 0) {
-                    log_error(errors)
+                    log_error(paste(errors, collapse = ""))
                 }
                 log_info("**** You are using CSV Name Conversion Method ",
                         "to group reads in FASTA file (with CSV file)!")
                 csvFile <- read.csv(namesConversionCSV, header = TRUE)
                 contigNames <- unique(as.character(csvFile$contig))
-                SangerContigList <- sapply(contigNames, function(contigName) {
+                SangerContigList <- lapply(contigNames, function(contigName) {
                     newSangerContig <- 
                         new("SangerContig",
                             inputSource          = inputSource,
@@ -424,6 +427,8 @@ setMethod("initialize",
                         NULL
                     } 
                 })
+                names(SangerContigList) <- contigNames
+
             }
         }
         # message("SangerContigList length: ", length(SangerContigList))
@@ -437,7 +442,7 @@ setMethod("initialize",
         aln.tree <- acResult[["aln.tree"]]
         log_success("  >> 'SangerAlignment' S4 instance is created !!")
     } else {
-        log_error(errors)
+        log_error(paste(errors, collapse = ""))
     }
     callNextMethod(.Object,
                    inputSource           = inputSource,

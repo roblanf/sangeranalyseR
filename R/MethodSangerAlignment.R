@@ -44,7 +44,7 @@ setMethod("updateQualityParam",  "SangerAlignment",
                                  errors)
         if (length(errors) == 0) {
             newContigList <-
-                sapply(object@contigList,
+                lapply(object@contigList,
                        function(contig) {
                            contig <-
                                updateQualityParam(
@@ -67,7 +67,7 @@ setMethod("updateQualityParam",  "SangerAlignment",
             object@contigsTree <- acResult[["aln.tree"]]
             return(object)
         } else {
-            log_error(errors)
+            log_error(paste(errors, collapse = ""))
         }
     } else if (object@inputSource == "FASTA") {
         log_info("SangerAlignment with 'FASTA' inputSource ",
@@ -173,7 +173,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "contigs_unalignment") {
         log_info("\n    >> Writing 'contigs' to FASTA ...")
-        contigsList <- sapply(object@contigList, function(contig) {
+        contigsList <- lapply(object@contigList, function(contig) {
             contig@contigSeq
         })
         contigsListDNASet<- DNAStringSet(contigsList)
@@ -201,8 +201,8 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "all_reads") {
         log_info("\n    >> Writing all single reads to FASTA ...")
-        fRDNASet <- sapply(object@contigList, function(contig) {
-            fRDNAStringSet <- sapply(contig@forwardReadList, function(forwardRead) {
+        fRDNASet <- lapply(object@contigList, function(contig) {
+            fRDNAStringSet <- lapply(contig@forwardReadList, function(forwardRead) {
                 primaryDNA <- as.character(forwardRead@primarySeq)
                 if (object@inputSource == "ABIF") {
                     trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
@@ -214,8 +214,8 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
             names(fRDNAStringSet) <- basename(names(fRDNAStringSet))
             fRDNAStringSet
         })
-        rRDNASet <- sapply(object@contigList, function(contig) {
-            rRDNAStringSet <- sapply(contig@reverseReadList, function(reverseRead) {
+        rRDNASet <- lapply(object@contigList, function(contig) {
+            rRDNAStringSet <- lapply(contig@reverseReadList, function(reverseRead) {
                 primaryDNA <- as.character(reverseRead@primarySeq)
                 if (object@inputSource == "ABIF") {
                     # Trim first and then reverse complement
@@ -294,7 +294,7 @@ setMethod("generateReportSA", "SangerAlignment",
 
     # Start for loop
     if (includeSangerContig) {
-        contigsFN <- sapply(object@contigList, function (objContig) {
+        contigsFN <- lapply(object@contigList, function (objContig) {
             log_info("!!! outputHtml: ", outputHtml)
             generateReportSC(objContig, outputDir = outputDirSA,
                              navigationAlignmentFN = outputHtml,

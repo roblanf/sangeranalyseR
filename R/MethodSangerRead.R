@@ -82,7 +82,7 @@ setMethod("updateQualityParam",  "SangerRead",
             object@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
             return(object)
         } else {
-            log_error(errors)
+            log_error(paste(errors, collapse = ""))
         }
     } else if (object@inputSource == "FASTA") {
         log_info("SangerRead with 'FASTA' inputSource ",
@@ -136,7 +136,7 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
             object@ChromatogramParam@signalRatioCutoff <- signalRatioCutoff
             return(object)
         } else {
-            log_error(errors)
+            log_error(paste(errors, collapse = ""))
         }
     } else if (object@inputSource == "FASTA") {
         log_info("SangerRead with 'FASTA' inputSource cannot do base calling")

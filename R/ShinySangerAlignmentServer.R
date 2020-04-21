@@ -25,17 +25,17 @@ SangerAlignmentServer <- function(input, output, session) {
         forwardReadNum <- length(SangerReadFReadList)
         reverseReadNum <- length(SangerReadRReadsList)
         # readFeature
-        forwardReadFeature <- sapply(1:forwardReadNum, function(j)
+        forwardReadFeature <- lapply(1:forwardReadNum, function(j)
             paste0(j, " ",
                    SangerReadFReadList[[j]]@readFeature))
-        reverseReadFeature <- sapply(1:reverseReadNum, function(j)
+        reverseReadFeature <- lapply(1:reverseReadNum, function(j)
             paste0(j, " ",
                    SangerReadRReadsList[[j]]@readFeature))
         SangerReadFeature <- c(forwardReadFeature, reverseReadFeature)
         # readFileName (basename)
-        forwardReadBFN <- sapply(1:forwardReadNum, function(j)
+        forwardReadBFN <- lapply(1:forwardReadNum, function(j)
             basename(SangerReadFReadList[[j]]@readFileName))
-        reverseReadBFN <- sapply(1:reverseReadNum, function(j)
+        reverseReadBFN <- lapply(1:reverseReadNum, function(j)
             basename(SangerReadRReadsList[[j]]@readFileName))
         SangerReadBFN <- c(forwardReadBFN, reverseReadBFN)
         return(list(SCName = SCName,

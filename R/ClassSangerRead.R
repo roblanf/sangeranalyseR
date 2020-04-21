@@ -167,7 +167,7 @@ setMethod("initialize",
             errors <- checkSignalRatioCutoff(signalRatioCutoff,errors)
             errors <- checkShowTrimmed(showTrimmed, errors)
             if(length(errors) != 0) {
-                log_error(errors)
+                log_error(paste(errors, collapse = ""))
             }
             log_info(readFeature, ": Creating abif & sangerseq ...")
             log_info("    * Creating ", readFeature , " raw abif ...")
@@ -288,7 +288,7 @@ setMethod("initialize",
         log_success("  >> 'SangerRead' S4 instance is created !!")
         ### ====================================================================
     } else {
-        log_error(errors)
+        log_error(paste(errors, collapse = ""))
     }
     callNextMethod(.Object,
                    inputSource         = inputSource,

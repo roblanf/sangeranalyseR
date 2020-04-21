@@ -21,7 +21,6 @@ setMethod('show', 'SangerRead', function(object){
             "          Read Feature : ", object@readFeature, "\n",
             "         Read FileName : ", basename(object@readFileName), "\n",
             "       Fasta Read Name : ", object@fastaReadName, "\n",
-            "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
             "      Primary Sequence : ", as.character(object@primarySeq), "\n"
         )
     }

@@ -43,7 +43,7 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
                                  errors)
         if (length(errors) == 0) {
             newForwardReadList <-
-                sapply(object@forwardReadList,
+                lapply(object@forwardReadList,
                        function(forwardRead) {
                            forwardRead <-
                                updateQualityParam(
@@ -55,7 +55,7 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
                        })
             object@forwardReadList <- newForwardReadList
             newReverseReadList <-
-                sapply(object@reverseReadList,
+                lapply(object@reverseReadList,
                        function(reverseRead) {
                            updforwardRead <-
                                updateQualityParam(
@@ -88,7 +88,7 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
             object@secondaryPeakDF <- CSResult$spDf
             return(object)
         } else {
-            log_error(errors)
+            log_error(paste(errors, collapse = ""))
         }
     } else if (object@inputSource == "FASTA") {
         log_info("SangerContig with 'FASTA' inputSource ",
@@ -198,7 +198,7 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "reads_unalignment") {
         log_info("\n    >> Writing all single reads to FASTA ...")
-        fRDNAStringSet <- sapply(object@forwardReadList, function(forwardRead) {
+        fRDNAStringSet <- lapply(object@forwardReadList, function(forwardRead) {
             primaryDNA <- as.character(forwardRead@primarySeq)
             ### ----------------------------------------------------------------
             ### Only read in ABIF file format needs to do trimming
@@ -212,7 +212,7 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
             return(primaryDNA)
         })
         names(fRDNAStringSet) <- basename(names(fRDNAStringSet))
-        rRDNAStringSet <- sapply(object@reverseReadList, function(reverseRead) {
+        rRDNAStringSet <- lapply(object@reverseReadList, function(reverseRead) {
             ### ----------------------------------------------------------------
             ### Only read in ABIF file format needs to do trimming
             ### ----------------------------------------------------------------
@@ -313,11 +313,11 @@ setMethod("generateReportSC", "SangerContig",
     reverseReads <- object@reverseReadList
 
     if(includeSangerRead) {
-        forwardReadFN <- sapply(forwardReads, generateReportSR,
+        forwardReadFN <- lapply(forwardReads, generateReportSR,
                                 outputDir = outputDirSC,
                                 navigationContigFN = outputHtml,
                                 navigationAlignmentFN = navigationAlignmentFN)
-        reverseReadFN <- sapply(reverseReads, generateReportSR,
+        reverseReadFN <- lapply(reverseReads, generateReportSR,
                                 outputDir = outputDirSC,
                                 navigationContigFN = outputHtml,
                                 navigationAlignmentFN = navigationAlignmentFN)

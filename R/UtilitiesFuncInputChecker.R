@@ -300,14 +300,14 @@ checkNamesConversionCSV <- function (logLevel, parentDirectory, fastaFileName,
         if (nameConvMethod == "ab1Regex" || nameConvMethod == "csvRegex") {
             # CSV file needs to be NULL
             if(!is.null(namesConversionCSV)) {
-                log_warn(warnMessage)
+                invisible(lapply(warnMessage, log_warn))
                 msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
                              " needs to be null.\n", sep = "")
                 errors <- c(errors, msg)
             }
         } else if (nameConvMethod == "ab1CSV" || nameConvMethod == "csvCSV") {
             if(is.null(namesConversionCSV)) {
-                log_warn(warnMessage)
+                invisible(lapply(warnMessage, log_warn))
                 msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
                              " cannot be null.\n", sep = "")
                 errors <- c(errors, msg)
@@ -350,7 +350,7 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
     ### Check 1: all reads in the read folder are listed in the csv
     ############################################################################
     readInCsvWarningMsg <-
-        sapply(sourceReads,
+        lapply(sourceReads,
                function(sourceRead) {
                    if (!(sourceRead %in% csvReads)) {
                        msg <- paste("\n'", sourceRead, "' is not in the ",
@@ -364,7 +364,7 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
     ### Check 2: all reads listed in the csv file are in the reads folder
     ############################################################################
     readInSourceWarningMsg <-
-        sapply(csvReads,
+        lapply(csvReads,
                function(csvRead) {
                    if (!(csvRead %in% sourceReads)) {
                        msg <- paste("\n'", csvRead, "' is not in the ",
@@ -403,7 +403,8 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
         errors <- c(errors, msg)
     }
     if (length(warnings) != 0) {
-        log_warn(warnings)
+        invisible(lapply(warnings, log_warn))
     }
     return(errors)
 }
+

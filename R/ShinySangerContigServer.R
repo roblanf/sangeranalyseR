@@ -26,16 +26,16 @@ SangerContigServer <- function(input, output, session) {
     reverseReadNum <- length(SangerContig@reverseReadList)
     SangerReadNum <- forwardReadNum + reverseReadNum
     # readFeature
-    forwardReadFeature <- sapply(1:forwardReadNum, function(i)
+    forwardReadFeature <- lapply(1:forwardReadNum, function(i)
         paste0(i, " ",
                SangerContig@forwardReadList[[i]]@readFeature))
-    reverseReadFeature <- sapply(1:reverseReadNum, function(i)
+    reverseReadFeature <- lapply(1:reverseReadNum, function(i)
         paste0(i, " ",
                SangerContig@reverseReadList[[i]]@readFeature))
     # readFileName (basename) (Fixed)
-    forwardReadBFN <- sapply(1:forwardReadNum, function(i)
+    forwardReadBFN <- lapply(1:forwardReadNum, function(i)
         basename(SangerContig@forwardReadList[[i]]@readFileName))
-    reverseReadBFN <- sapply(1:reverseReadNum, function(i)
+    reverseReadBFN <- lapply(1:reverseReadNum, function(i)
         basename(SangerContig@reverseReadList[[i]]@readFileName))
     SangerReadBFN <- c(forwardReadBFN, reverseReadBFN)
 

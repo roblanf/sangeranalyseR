@@ -49,7 +49,7 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
     ### Creating SangerContigList DNAStringSet
     ### ------------------------------------------------------------------------
     SangerContigDNAList <-
-        sapply(SangerContigList, function(SangerContig) {
+        lapply(SangerContigList, function(SangerContig) {
             as.character(SangerContig@contigSeq)
         })
     SangerContigDNASet <- DNAStringSet(SangerContigDNAList)
@@ -182,7 +182,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     ### ------------------------------------------------------------------------
     ### forward & reverse character reads list string creation
     ### ------------------------------------------------------------------------
-    fRDNAStringSet <- sapply(forwardReadList, function(forwardRead) {
+    fRDNAStringSet <- lapply(forwardReadList, function(forwardRead) {
         primaryDNA <- as.character(forwardRead@primarySeq)
         if (inputSource == "ABIF") {
             trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
@@ -191,7 +191,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         }
         return(primaryDNA)
     })
-    rRDNAStringSet <- sapply(reverseReadList, function(reverseRead) {
+    rRDNAStringSet <- lapply(reverseReadList, function(reverseRead) {
         primaryDNA <- as.character(reverseRead@primarySeq)
         if (inputSource == "ABIF") {
             trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
@@ -528,7 +528,7 @@ countStopSodons <- function(sequence,
     # this comes almost straight from the BioStrings manual
     tri = trinucleotideFrequency(sequence[readingFrame:length(sequence)],step=3)
     names(tri) <- geneticCode[names(tri)]
-    freqs = sapply(split(tri, names(tri)), sum)
+    freqs = lapply(split(tri, names(tri)), sum)
     stops = freqs["*"]
     return(as.numeric(stops))
 }
