@@ -266,16 +266,6 @@ checkShowTrimmed <- function(showTrimmed, errors) {
     return(errors)
 }
 
-
-
-
-
-
-
-
-
-
-
 # parentDirectory, fastaFileName,
 # namesConversionCSV, inputSource, errors
 checkNamesConversionCSV <- function (logLevel, parentDirectory, fastaFileName,

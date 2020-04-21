@@ -231,15 +231,15 @@ setMethod("initialize",
                                      suffixReverseRegExp, n = Inf, 
                                      simplify = FALSE))[c(TRUE, FALSE)]
 
-                contigName <- union(forwardContigName, reverseContigName)
-                contigNumber <- length(contigName)
+                contigNames <- union(forwardContigName, reverseContigName)
+                contigNumber <- length(contigNames)
 
                 # Create contig for all list of contigNumber
                 ### ----------------------------------------------------------------
                 ##### Creating each SangerContig (store as SangerContigList)
                 ### ----------------------------------------------------------------
                 SangerContigList <-
-                    lapply(contigName,
+                    lapply(contigNames,
                            function(eachConsRead) {
                                insideDirName<- dirname(eachConsRead)
                                insideContigName <- basename(eachConsRead)
@@ -282,7 +282,7 @@ setMethod("initialize",
                                    NULL
                                } 
                            })
-                names(SangerContigList) <- contigName
+                names(SangerContigList) <- contigNames
             } else if (ab1CSVChecker) {
                 errors <- 
                     checkNamesConversionCSV(TRUE, parentDirectory, 

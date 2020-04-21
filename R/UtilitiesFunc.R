@@ -49,9 +49,9 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
     ### Creating SangerContigList DNAStringSet
     ### ------------------------------------------------------------------------
     SangerContigDNAList <-
-        lapply(SangerContigList, function(SangerContig) {
+        vapply(SangerContigList, function(SangerContig) {
             as.character(SangerContig@contigSeq)
-        })
+        }, FUN.VALUE = character(1))
     SangerContigDNASet <- DNAStringSet(SangerContigDNAList)
     ### ------------------------------------------------------------------------
     ### Aligning consensus reads
