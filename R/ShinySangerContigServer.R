@@ -26,17 +26,17 @@ SangerContigServer <- function(input, output, session) {
     reverseReadNum <- length(SangerContig@reverseReadList)
     SangerReadNum <- forwardReadNum + reverseReadNum
     # readFeature
-    forwardReadFeature <- lapply(1:forwardReadNum, function(i)
+    forwardReadFeature <- vapply(seq_len(forwardReadNum), function(i)
         paste0(i, " ",
-               SangerContig@forwardReadList[[i]]@readFeature))
-    reverseReadFeature <- lapply(1:reverseReadNum, function(i)
+               SangerContig@forwardReadList[[i]]@readFeature), character(1))
+    reverseReadFeature <- vapply(seq_len(reverseReadNum), function(i)
         paste0(i, " ",
-               SangerContig@reverseReadList[[i]]@readFeature))
+               SangerContig@reverseReadList[[i]]@readFeature), character(1))
     # readFileName (basename) (Fixed)
-    forwardReadBFN <- lapply(1:forwardReadNum, function(i)
-        basename(SangerContig@forwardReadList[[i]]@readFileName))
-    reverseReadBFN <- lapply(1:reverseReadNum, function(i)
-        basename(SangerContig@reverseReadList[[i]]@readFileName))
+    forwardReadBFN <- vapply(seq_len(forwardReadNum), function(i)
+        basename(SangerContig@forwardReadList[[i]]@readFileName), character(1))
+    reverseReadBFN <- vapply(seq_len(reverseReadNum), function(i)
+        basename(SangerContig@reverseReadList[[i]]@readFileName), character(1))
     SangerReadBFN <- c(forwardReadBFN, reverseReadBFN)
 
     ### ------------------------------------------------------------------------
@@ -1215,7 +1215,7 @@ SangerContigServer <- function(input, output, session) {
     })
     output$SCrefAminoAcidSeqDF <- renderExcel({
         refAminoAcidSeqVec <- strsplit(SangerContig@refAminoAcidSeq, "")[[1]]
-        names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
+        names(refAminoAcidSeqVec) <- c(seq_len(length(refAminoAcidSeqVec)))
         suppressMessages(
             excelTable(data =
                            t(data.frame(refAminoAcidSeqVec)),

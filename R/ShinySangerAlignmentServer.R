@@ -11,7 +11,7 @@ SangerAlignmentServer <- function(input, output, session) {
     shinyDirectory <- getShinyOption("shinyDirectory")
     SangerAlignment <- SangerAlignment[[1]]
     SangerAlignmentNum <- length(SangerAlignment@contigList)
-    SangerAlignmentParam <- lapply(1:SangerAlignmentNum, function(i) {
+    SangerAlignmentParam <- lapply(seq_len(SangerAlignmentNum), function(i) {
         ### --------------------------------------------------------------------
         ### SangerContig-related parameters initialization.
         ### --------------------------------------------------------------------
@@ -25,18 +25,18 @@ SangerAlignmentServer <- function(input, output, session) {
         forwardReadNum <- length(SangerReadFReadList)
         reverseReadNum <- length(SangerReadRReadsList)
         # readFeature
-        forwardReadFeature <- lapply(1:forwardReadNum, function(j)
+        forwardReadFeature <- vapply(seq_len(forwardReadNum), function(j)
             paste0(j, " ",
-                   SangerReadFReadList[[j]]@readFeature))
-        reverseReadFeature <- lapply(1:reverseReadNum, function(j)
+                   SangerReadFReadList[[j]]@readFeature), character(1))
+        reverseReadFeature <- vapply(seq_len(reverseReadNum), function(j)
             paste0(j, " ",
-                   SangerReadRReadsList[[j]]@readFeature))
+                   SangerReadRReadsList[[j]]@readFeature), character(1))
         SangerReadFeature <- c(forwardReadFeature, reverseReadFeature)
         # readFileName (basename)
-        forwardReadBFN <- lapply(1:forwardReadNum, function(j)
-            basename(SangerReadFReadList[[j]]@readFileName))
-        reverseReadBFN <- lapply(1:reverseReadNum, function(j)
-            basename(SangerReadRReadsList[[j]]@readFileName))
+        forwardReadBFN <- vapply(seq_len(forwardReadNum), function(j)
+            basename(SangerReadFReadList[[j]]@readFileName), character(1))
+        reverseReadBFN <- vapply(seq_len(reverseReadNum), function(j)
+            basename(SangerReadRReadsList[[j]]@readFileName), character(1))
         SangerReadBFN <- c(forwardReadBFN, reverseReadBFN)
         return(list(SCName = SCName,
                     forwardReadNum = forwardReadNum,
@@ -1631,7 +1631,7 @@ SangerAlignmentServer <- function(input, output, session) {
     output$SArefAminoAcidSeqDF <- renderExcel({
         refAminoAcidSeqVec <-
             strsplit(SangerAlignment@refAminoAcidSeq, "")[[1]]
-        names(refAminoAcidSeqVec) <- c(1:length(refAminoAcidSeqVec))
+        names(refAminoAcidSeqVec) <- c(seq_len(length(refAminoAcidSeqVec)))
         suppressMessages(
             excelTable(data =
                            t(data.frame(refAminoAcidSeqVec)),
@@ -1754,7 +1754,7 @@ SangerAlignmentServer <- function(input, output, session) {
         if (!is.na(contigIndex)) {
             SangerReadBFN <-
                 SangerAlignmentParam[[contigIndex]]$SangerReadBFN
-            suppressPlotlylog_info(
+            suppressPlotlyMessage(
                 plot_ly(x = SangerReadBFN,
                         y = SangerReadBFN,
                         z = contigParam[["distanceMatrix"]],

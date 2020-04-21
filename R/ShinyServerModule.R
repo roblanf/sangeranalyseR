@@ -5,12 +5,12 @@ dynamicMenuSideBarSC <- function(input, output, session,
                                   forwardReadNum, reverseReadNum,
                                   forwardReadFeature, reverseReadFeature) {
     output$singleReadMenu <- renderMenu({
-        fmenuSub_list <- lapply(1:forwardReadNum, function(i) {
+        fmenuSub_list <- lapply(seq_len(forwardReadNum), function(i) {
             list(menuSubItem(text = paste(strsplit(forwardReadFeature[i], " ")[[1]][1],
                                           "Forward SangerRead"),
                           tabName = forwardReadFeature[i], icon = icon("minus")))
         })
-        rmenuSub_list <- lapply(1:reverseReadNum, function(i) {
+        rmenuSub_list <- lapply(seq_len(reverseReadNum), function(i) {
             list(menuSubItem(text = paste(strsplit(forwardReadFeature[i], " ")[[1]][1],
                                           "Reverse SangerRead"),
                           tabName = reverseReadFeature[i], icon = icon("minus")))
@@ -38,20 +38,20 @@ dynamicMenuSideBarSC <- function(input, output, session,
 dynamicMenuSideBarSA <- function(input, output, session, SangerAlignmentParam) {
     output$singleReadMenu <- renderMenu({
         SangerCSNum <- length(SangerAlignmentParam)
-        menu_list <- lapply(1:SangerCSNum, function(i) {
+        menu_list <- lapply(seq_len(SangerCSNum), function(i) {
             forwardReadNum <- SangerAlignmentParam[[i]]$forwardReadNum
             reverseReadNum <- SangerAlignmentParam[[i]]$reverseReadNum
 
             forwardReadFeature <- SangerAlignmentParam[[i]]$forwardReadFeature
             reverseReadFeature <- SangerAlignmentParam[[i]]$reverseReadFeature
-            fmenuSub_list <- lapply(1:forwardReadNum, function(j) {
+            fmenuSub_list <- lapply(seq_len(forwardReadNum), function(j) {
                 list(menuSubItem(text = paste(i, "-",
                                               strsplit(forwardReadFeature[j], " ")[[1]][1],
                                               "Forward SangerRead"),
                                  tabName = paste(i, "Contig -", forwardReadFeature[j]),
                                  icon = icon("minus")))
             })
-            rmenuSub_list <- lapply(1:reverseReadNum, function(j) {
+            rmenuSub_list <- lapply(seq_len(reverseReadNum), function(j) {
                 list(menuSubItem(text = paste(i, "-",
                                               strsplit(reverseReadFeature[j], " ")[[1]][1],
                                               "Reverse SangerRead"),
@@ -613,7 +613,7 @@ qualityQualityBasePlotDisplay <- function(input, output, session,
     trimmedStartPos <- trimmedRV[["trimmedStartPos"]]
     trimmedFinishPos <- trimmedRV[["trimmedFinishPos"]]
     readLen = length(qualityPhredScores)
-    qualityPlotDf<- data.frame(1:length(qualityPhredScores),
+    qualityPlotDf<- data.frame(seq_len(length(qualityPhredScores)),
                                qualityPhredScores)
     colnames(qualityPlotDf) <- c("Index", "Score")
     x <- list(

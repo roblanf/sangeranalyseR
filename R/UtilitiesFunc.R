@@ -150,7 +150,7 @@ nPairwiseDiffs <- function(pattern, subject){
 countCoincidentSp <- function(aln, processorsNum){
     # make a data frame of columns in the alignment that have
     # more than one secondary peak
-    is = 1:aln@ranges@width[1]
+    is = seq_len(aln@ranges@width[1])
     r = mclapply(is, oneAmbiguousColumn, aln=aln, mc.cores = processorsNum)
     r = Filter(Negate(is.null), r)
 
@@ -292,7 +292,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         aln = AlignSeqs(frReadSet,
                         processors = processorsNum, verbose = FALSE)
     }
-    names(aln) = paste(1:length(aln), "Read",
+    names(aln) = paste(seq_len(length(aln)), "Read",
                        basename(names(aln)), sep="_")
     consensus = ConsensusSequence(aln,
                                   minInformation = minFractionCall,
@@ -356,7 +356,7 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     primarypeaks <- peakPosMatrixRaw[,1]
     diffs <- diff(c(0,primarypeaks))
     starts <- primarypeaks - 0.5*diffs
-    stops <- c(primarypeaks[1:(length(primarypeaks)-1)] +
+    stops <- c(primarypeaks[seq_len((length(primarypeaks)-1))] +
                    0.5*diffs[2:length(diffs)],
                primarypeaks[length(diffs)] + 0.5*diffs[length(diffs)]
     )
@@ -370,7 +370,7 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     tempPosMatrix <- matrix(nrow=length(starts), ncol=4)
     tempAmpMatrix <- matrix(nrow=length(starts), ncol=4)
     indexBaseCall <- c()
-    for(i in 1:length(starts)) {
+    for(i in seq_len(length(starts))) {
         Apeak <- peakvalues(Apeaks, starts[i], stops[i])
         Cpeak <- peakvalues(Cpeaks, starts[i], stops[i])
         Gpeak <- peakvalues(Gpeaks, starts[i], stops[i])
@@ -654,7 +654,7 @@ M2inside_calculate_trimming <-function(qualityPhredScores,
         totalThresholdScore <- M2CutoffQualityScore * M2SlidingWindowSize
         trimmedStartPos = 1
         trimmedFinishPos = 2
-        for (i in 1:(rawSeqLength-M2SlidingWindowSize+1)) {
+        for (i in seq_len((rawSeqLength-M2SlidingWindowSize+1))) {
             totalScore <-
                 sum(qualityPhredScores[i:(i+M2SlidingWindowSize-1)])
             if (totalScore > totalThresholdScore) {
@@ -663,7 +663,7 @@ M2inside_calculate_trimming <-function(qualityPhredScores,
             }
         }
         qualityPhredScoresRev <- rev(qualityPhredScores)
-        for (i in 1:(rawSeqLength-M2SlidingWindowSize+1)) {
+        for (i in seq_len((rawSeqLength-M2SlidingWindowSize+1))) {
             totalScore <-
                 sum(qualityPhredScoresRev[i:(i+M2SlidingWindowSize-1)])
             if (totalScore > totalThresholdScore) {
@@ -709,7 +709,7 @@ M2inside_calculate_trimming <-function(qualityPhredScores,
 ### ----------------------------------------------------------------------------
 QualityBasePlotly <- function(trimmedStartPos, trimmedFinishPos,
                               readLen, qualityPlotDf, x,  y) {
-    p <- suppressPlotlylog_info(
+    p <- suppressPlotlyMessage(
         plot_ly(data=qualityPlotDf,
                 x=~Index) %>%
             add_markers(y=~Score,

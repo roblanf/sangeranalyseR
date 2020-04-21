@@ -3,7 +3,7 @@ preQualityBasePlot <- function(object) {
     trimmedFinishPos = object@trimmedFinishPos
     qualityPhredScores = object@qualityPhredScores
     readLen = length(qualityPhredScores)
-    qualityPlotDf<- data.frame(1:length(qualityPhredScores),
+    qualityPlotDf<- data.frame(seq_len(length(qualityPhredScores)),
                                qualityPhredScores)
     colnames(qualityPlotDf) <- c("Index", "Score")
     x <- list(
