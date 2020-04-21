@@ -1,7 +1,7 @@
 Package: sangeranalyseR
 Type: Package
 Title: sangeranalyseR: a suite of functions for the analysis of Sanger sequence data in R
-Version: 0.99.18
+Version: 0.99.19
 Date: 2015-12-18
 Author: Rob Lanfear <rob.lanfear@gmail.com>, Kuan-Hao Chao <ntueeb05howard@gmail.com>
 Maintainer: Kuan-Hao Chao <ntueeb05howard@gmail.com>
