@@ -23,8 +23,8 @@ test_that("sangerAlignmentFa Initial test", {
 ### ============================================================================
 ### SangerAlignment Functions test
 ### ============================================================================
-test_that("sangerAlignmentFa update quality trimming parameters test 1 - M1", {
-    expect_message(updateQualityParam(sangerAlignmentFa),
-                   paste("SangerAlignment with 'FASTA' inputSource",
-                         "cannot update quality parameters"))
-})
+# test_that("sangerAlignmentFa update quality trimming parameters test 1 - M1", {
+#     expect_message(updateQualityParam(sangerAlignmentFa),
+#                    paste("SangerAlignment with 'FASTA' inputSource",
+#                          "cannot update quality parameters"))
+# })

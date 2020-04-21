@@ -124,22 +124,22 @@ test_that("SangerAlignment update quality trimming parameters test 2 - M2", {
         })
     })
 })
-
-test_that("sangerAlignment update quality trimming parameters 3 (M2CutoffQualityScore bigger than threashold)", {
-    expect_error(updateQualityParam(sangerAlignment,
-                                    TrimmingMethod       = "M2",
-                                    M1TrimmingCutoff     = NULL,
-                                    M2CutoffQualityScore = 61,
-                                    M2SlidingWindowSize  = 41,
-                                    processorsNum        = 1),
-                 "\nYour input M2CutoffQualityScore is: '61' is invalid.'M2CutoffQualityScore' shouldbe between 0 and 60.\n\nYour input M2SlidingWindowSize is: '41' is invalid.'M2SlidingWindowSize' shouldbe between 0 and 40.\n", fixed = TRUE)
-})
-test_that("sangerAlignment update quality trimming parameters 4 (M2CutoffQualityScore smaller than threashold)", {
-    expect_error(updateQualityParam(sangerAlignment,
-                                    TrimmingMethod       = "M2",
-                                    M1TrimmingCutoff     = NULL,
-                                    M2CutoffQualityScore = -1,
-                                    M2SlidingWindowSize  = -1,
-                                    processorsNum        = 1),
-                 "\nYour input M2CutoffQualityScore is: '-1' is invalid.'M2CutoffQualityScore' shouldbe between 0 and 60.\n\nYour input M2SlidingWindowSize is: '-1' is invalid.'M2SlidingWindowSize' shouldbe between 0 and 40.\n", fixed = TRUE)
-})
+# 
+# test_that("sangerAlignment update quality trimming parameters 3 (M2CutoffQualityScore bigger than threashold)", {
+#     expect_error(updateQualityParam(sangerAlignment,
+#                                     TrimmingMethod       = "M2",
+#                                     M1TrimmingCutoff     = NULL,
+#                                     M2CutoffQualityScore = 61,
+#                                     M2SlidingWindowSize  = 41,
+#                                     processorsNum        = 1),
+#                  "\nYour input M2CutoffQualityScore is: '61' is invalid.'M2CutoffQualityScore' shouldbe between 0 and 60.\n\nYour input M2SlidingWindowSize is: '41' is invalid.'M2SlidingWindowSize' shouldbe between 0 and 40.\n", fixed = TRUE)
+# })
+# test_that("sangerAlignment update quality trimming parameters 4 (M2CutoffQualityScore smaller than threashold)", {
+#     expect_error(updateQualityParam(sangerAlignment,
+#                                     TrimmingMethod       = "M2",
+#                                     M1TrimmingCutoff     = NULL,
+#                                     M2CutoffQualityScore = -1,
+#                                     M2SlidingWindowSize  = -1,
+#                                     processorsNum        = 1),
+#                  "\nYour input M2CutoffQualityScore is: '-1' is invalid.'M2CutoffQualityScore' shouldbe between 0 and 60.\n\nYour input M2SlidingWindowSize is: '-1' is invalid.'M2SlidingWindowSize' shouldbe between 0 and 40.\n", fixed = TRUE)
+# })

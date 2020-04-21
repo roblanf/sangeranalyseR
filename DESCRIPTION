@@ -1,7 +1,7 @@
 Package: sangeranalyseR
 Type: Package
 Title: sangeranalyseR: a suite of functions for the analysis of Sanger sequence data in R
-Version: 0.99.17
+Version: 0.99.18
 Date: 2015-12-18
 Author: Rob Lanfear <rob.lanfear@gmail.com>, Kuan-Hao Chao <ntueeb05howard@gmail.com>
 Maintainer: Kuan-Hao Chao <ntueeb05howard@gmail.com>
@@ -18,7 +18,7 @@ Description: This package builds on sangerseqR to allow users to create contigs
 License: GPL-2
 Encoding: UTF-8
 Depends: 
-    R (>= 3.6.1),
+    R (>= 4.0.0),
     stringr,
     ape,
     Biostrings,

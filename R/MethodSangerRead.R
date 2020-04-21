@@ -269,9 +269,10 @@ setMethod("generateReportSR", "SangerRead",
 #'
 #' @title readTable
 #' @name SangerRead-class-readTable
-#' @aliases readTable,readTable-method
+#' @aliases readTable,SangerRead-method
 #'
 #' @param object A SangerRead S4 instance.
+#' @param indentation The indentation for different level printing.
 #'
 #' @return None
 #'
@@ -361,39 +362,3 @@ setMethod("readTable", "SangerRead", function(object, indentation = 0) {
         )
     }
 })
-
-# sangerContigData@inputSource
-# sangerContigData@fastaFileName
-# sangerContigData@namesConversionCSV
-# sangerContigData@parentDirectory
-# 
-# # contig name,
-# sangerContigData@contigName
-# sangerContigData@suffixForwardRegExp
-# sangerContigData@suffixReverseRegExp
-# sangerContigData@minReadsNum
-# # passed length cutoff [yes/no],
-# sangerContigData@minReadLength
-# sangerContigData@refAminoAcidSeq
-# sangerContigData@minFractionCall
-# sangerContigData@maxFractionLost
-# sangerContigData@acceptStopCodons
-# sangerContigData@readingFrame
-# sangerContigData@contigSeq
-# sangerContigData@alignment
-# sangerContigData@differencesDF
-# sangerContigData@distanceMatrix
-# sangerContigData@dendrogram
-# sangerContigData@indelsDF
-# sangerContigData@stopCodonsDF
-# sangerContigData@secondaryPeakDF
-# 
-# # number of indels,
-# # passed indel cutoff [yes/no]
-# sangerContigData@indelsDF
-# 
-# # secondary peak cutoff,
-# # number of secondary peaks
-# sangerContigData@secondaryPeakDF
-# 
-# # passed quality cutoff [yes/no],

@@ -50,29 +50,29 @@ test_that("SangerRead - FASTA Initial test - reverse", {
 ### ============================================================================
 ### SangerRead FASTA Update Quality Trimming test
 ### ============================================================================
-test_that("SangerRead update quality trimming parameters 10 (M2CutoffQualityScore smaller than threashold)", {
-    expect_error(new("SangerRead",
-                     inputSource   = "FASTA",
-                     readFeature   = "Forward Read",
-                     readFileName  = SRfastaFFN,
-                     fastaReadName = "Random_read_name",
-                     geneticCode   = GENETIC_CODE),
-                 "The name 'Random_read_name' is not in the 'Achl_ACHLO006-09_1_F.fa' FASTA file", fixed = TRUE)
-})
+# test_that("SangerRead update quality trimming parameters 10 (M2CutoffQualityScore smaller than threashold)", {
+#     expect_error(new("SangerRead",
+#                      inputSource   = "FASTA",
+#                      readFeature   = "Forward Read",
+#                      readFileName  = SRfastaFFN,
+#                      fastaReadName = "Random_read_name",
+#                      geneticCode   = GENETIC_CODE),
+#                  "The name 'Random_read_name' is not in the 'Achl_ACHLO006-09_1_F.fa' FASTA file", fixed = TRUE)
+# })
 
 ### ============================================================================
 ### SangerRead Functions test
 ### ============================================================================
 test_that("SangerRead - FASTA functions test -forward", {
-    expect_message(qualityBasePlot(sangerReadFFa),
-                 paste("SangerRead with 'FASTA' inputSource",
-                       "cannot plot quality plots"))
-    expect_message(updateQualityParam(sangerReadFFa),
-                 paste("SangerRead with 'FASTA' inputSource",
-                 "cannot update quality parameters"))
-    expect_message(MakeBaseCalls(sangerReadFFa),
-                 paste("SangerRead with 'FASTA'",
-                       "inputSource cannot do base calling"))
+    # expect_message(qualityBasePlot(sangerReadFFa),
+    #              paste("SangerRead with 'FASTA' inputSource",
+    #                    "cannot plot quality plots"))
+    # expect_message(updateQualityParam(sangerReadFFa),
+    #              paste("SangerRead with 'FASTA' inputSource",
+    #              "cannot update quality parameters"))
+    # expect_message(MakeBaseCalls(sangerReadFFa),
+    #              paste("SangerRead with 'FASTA'",
+    #                    "inputSource cannot do base calling"))
 
     outputFasta <- writeFastaSR(sangerReadFFa)
     expect_true(file.exists(outputFasta))
@@ -95,15 +95,15 @@ test_that("SangerRead - FASTA functions test -forward", {
     unlink(outputFasta)
 })
 test_that("SangerRead - FASTA functions test -reverse", {
-    expect_message(qualityBasePlot(sangerReadRFa),
-                   paste("SangerRead with 'FASTA' inputSource",
-                         "cannot plot quality plots"))
-    expect_message(updateQualityParam(sangerReadRFa),
-                   paste("SangerRead with 'FASTA' inputSource",
-                         "cannot update quality parameters"))
-    expect_message(MakeBaseCalls(sangerReadRFa),
-                   paste("SangerRead with 'FASTA'",
-                         "inputSource cannot do base calling"))
+    # expect_message(qualityBasePlot(sangerReadRFa),
+    #                paste("SangerRead with 'FASTA' inputSource",
+    #                      "cannot plot quality plots"))
+    # expect_message(updateQualityParam(sangerReadRFa),
+    #                paste("SangerRead with 'FASTA' inputSource",
+    #                      "cannot update quality parameters"))
+    # expect_message(MakeBaseCalls(sangerReadRFa),
+    #                paste("SangerRead with 'FASTA'",
+    #                      "inputSource cannot do base calling"))
 
     outputFasta <- writeFastaSR(sangerReadRFa)
     expect_true(file.exists(outputFasta))

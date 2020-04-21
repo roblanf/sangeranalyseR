@@ -201,8 +201,8 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "all_reads") {
         log_info("\n    >> Writing all single reads to FASTA ...")
-        fRDNASet <- lapply(object@contigList, function(contig) {
-            fRDNAStringSet <- lapply(contig@forwardReadList, function(forwardRead) {
+        fRDNASet <- vapply(object@contigList, function(contig) {
+            fRDNAStringSet <- vapply(contig@forwardReadList, function(forwardRead) {
                 primaryDNA <- as.character(forwardRead@primarySeq)
                 if (object@inputSource == "ABIF") {
                     trimmedStartPos <- forwardRead@QualityReport@trimmedStartPos
@@ -210,12 +210,12 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
                     primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
                 }
                 return(primaryDNA)
-            })
+            }, character(1))
             names(fRDNAStringSet) <- basename(names(fRDNAStringSet))
             fRDNAStringSet
-        })
-        rRDNASet <- lapply(object@contigList, function(contig) {
-            rRDNAStringSet <- lapply(contig@reverseReadList, function(reverseRead) {
+        }, character(1))
+        rRDNASet <- vapply(object@contigList, function(contig) {
+            rRDNAStringSet <- vapply(contig@reverseReadList, function(reverseRead) {
                 primaryDNA <- as.character(reverseRead@primarySeq)
                 if (object@inputSource == "ABIF") {
                     # Trim first and then reverse complement
@@ -226,10 +226,10 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
                     primaryDNA <- as.character(reverseComplement(DNAString(primaryDNA)))
                 }
                 return(primaryDNA)
-            })
+            }, character(1))
             names(rRDNAStringSet) <- basename(names(rRDNAStringSet))
             rRDNAStringSet
-        })
+        }, character(1))
         allDNASet <- DNAStringSet(c(fRDNASet, rRDNASet))
         writeXStringSet(allDNASet,
                         file.path(outputDir, "Sanger_all_trimmed_reads.fa"),
