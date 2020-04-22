@@ -162,8 +162,8 @@ setGeneric("writeFastaSC", function(object,outputDir = NULL,
 #' data(sangerReadFData)
 #' writeFastaSR(sangerReadFData)
 setGeneric("writeFastaSR", function(object,outputDir = NULL,
-                                  compress  = FALSE,
-                                  compression_level = NA) {
+                                    compress  = FALSE,
+                                    compression_level = NA) {
     standardGeneric("writeFastaSR")
 })
 
@@ -241,7 +241,7 @@ setGeneric("launchAppSA", function(object, outputDir = NULL) {
 #' readTable(sangerContigData)
 #' readTable(sangerAlignmentData)
 #' }
-setGeneric("readTable", function(object, indentation, ...) {
+setGeneric("readTable", function(object, indentation = 0, ...) {
     standardGeneric("readTable")
 })
 

@@ -21,7 +21,7 @@ setMethod("qualityBasePlot",  "SangerRead", function(object){
         plotting
     } else if (object@inputSource == "FASTA") {
         log_info("SangerRead with 'FASTA' inputSource ",
-                "cannot plot quality plots")
+                 "cannot plot quality plots")
     }
 })
 
@@ -55,40 +55,40 @@ setMethod("updateQualityParam",  "SangerRead",
                    M1TrimmingCutoff       = 0.0001,
                    M2CutoffQualityScore   = NULL,
                    M2SlidingWindowSize    = NULL){
-    if (object@inputSource == "ABIF") {
-        ### --------------------------------------------------------------------
-        ### Updating SangerRead quality parameters
-        ###   Trimming parameters is checked in 'QualityReport' method
-        ### --------------------------------------------------------------------
-        errors <- character()
-        errors <- checkTrimParam(TrimmingMethod,
-                                 M1TrimmingCutoff,
-                                 M2CutoffQualityScore,
-                                 M2SlidingWindowSize,
-                                 errors)
-        if (length(errors) == 0) {
-            object@QualityReport <-
-                updateQualityParam(object@QualityReport,
-                                   TrimmingMethod,
-                                   M1TrimmingCutoff,
-                                   M2CutoffQualityScore,
-                                   M2SlidingWindowSize)
-            AASeqResult    <- calculateAASeq (object@primarySeq,
-                                              object@QualityReport@trimmedStartPos,
-                                              object@QualityReport@trimmedFinishPos,
-                                              object@geneticCode)
-            object@primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
-            object@primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
-            object@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-            return(object)
-        } else {
-            log_error(paste(errors, collapse = ""))
-        }
-    } else if (object@inputSource == "FASTA") {
-        log_info("SangerRead with 'FASTA' inputSource ",
-                "cannot update quality parameters")
-    }
-})
+              if (object@inputSource == "ABIF") {
+                  ### --------------------------------------------------------------------
+                  ### Updating SangerRead quality parameters
+                  ###   Trimming parameters is checked in 'QualityReport' method
+                  ### --------------------------------------------------------------------
+                  errors <- character()
+                  errors <- checkTrimParam(TrimmingMethod,
+                                           M1TrimmingCutoff,
+                                           M2CutoffQualityScore,
+                                           M2SlidingWindowSize,
+                                           errors)
+                  if (length(errors) == 0) {
+                      object@QualityReport <-
+                          updateQualityParam(object@QualityReport,
+                                             TrimmingMethod,
+                                             M1TrimmingCutoff,
+                                             M2CutoffQualityScore,
+                                             M2SlidingWindowSize)
+                      AASeqResult    <- calculateAASeq (object@primarySeq,
+                                                        object@QualityReport@trimmedStartPos,
+                                                        object@QualityReport@trimmedFinishPos,
+                                                        object@geneticCode)
+                      object@primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
+                      object@primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
+                      object@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+                      return(object)
+                  } else {
+                      log_error(paste(errors, collapse = ""))
+                  }
+              } else if (object@inputSource == "FASTA") {
+                  log_info("SangerRead with 'FASTA' inputSource ",
+                           "cannot update quality parameters")
+              }
+          })
 
 ## =============================================================================
 ## Base calling for primarySeq in SangerRead
@@ -124,7 +124,7 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
             object@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
             object@primarySeq <- MBCResult[["primarySeq"]]
             object@secondarySeq <- MBCResult[["secondarySeq"]]
-
+            
             AASeqResult <-
                 calculateAASeq (object@primarySeq,
                                 object@QualityReport@trimmedStartPos,
@@ -223,44 +223,44 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 setMethod("generateReportSR", "SangerRead",
           function(object, outputDir,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {
-    # Another Rmd for SangerRead with FASTA file source
-    ### ------------------------------------------------------------------------
-    ### Make sure the input directory is not NULL
-    ### ------------------------------------------------------------------------
-    if (is.null(outputDir)) {
-        outputDir <- tempdir()
-        suppressWarnings(dir.create(outputDir, recursive = TRUE))
-        log_info(">>> outputDir : ", outputDir)
-    }
-    if (object@inputSource == "ABIF") {
-        readName <- sub('\\.ab1$', '', basename(object@readFileName))
-    } else if (object@inputSource == "FASTA") {
-        readName <- sub('\\.fa$', '', basename(object@readFileName))
-        readName <- sub('\\.fasta$', '', readName)
-    }
-    outputDirSR <- file.path(outputDir, readName)
-    ### ------------------------------------------------------------------------
-    ### Make sure the directory is exist (SangerRead level)
-    ### ------------------------------------------------------------------------
-    if (!dir.exists(outputDirSR)) {
-        suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
-    }
-    rootDir <- system.file(package = "sangeranalyseR")
-    if (object@inputSource == "ABIF") {
-        originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_ab1.Rmd")
-        outputHtml <- file.path(outputDirSR, "SangerRead_Report_ab1.html")
-    } else if (object@inputSource == "FASTA") {
-        originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_fasta.Rmd")
-        outputHtml <- file.path(outputDirSR, "SangerRead_Report_fasta.html")
-    }
-    res <- render(input = originRmd,
-                  output_dir = outputDirSR,
-                  params = list(SangerRead = object,
-                                outputDir = outputDirSR,
-                                navigationContigFN = navigationContigFN,
-                                navigationAlignmentFN = navigationAlignmentFN))
-    return(outputHtml)
-})
+              # Another Rmd for SangerRead with FASTA file source
+              ### ------------------------------------------------------------------------
+              ### Make sure the input directory is not NULL
+              ### ------------------------------------------------------------------------
+              if (is.null(outputDir)) {
+                  outputDir <- tempdir()
+                  suppressWarnings(dir.create(outputDir, recursive = TRUE))
+                  log_info(">>> outputDir : ", outputDir)
+              }
+              if (object@inputSource == "ABIF") {
+                  readName <- sub('\\.ab1$', '', basename(object@readFileName))
+              } else if (object@inputSource == "FASTA") {
+                  readName <- sub('\\.fa$', '', basename(object@readFileName))
+                  readName <- sub('\\.fasta$', '', readName)
+              }
+              outputDirSR <- file.path(outputDir, readName)
+              ### ------------------------------------------------------------------------
+              ### Make sure the directory is exist (SangerRead level)
+              ### ------------------------------------------------------------------------
+              if (!dir.exists(outputDirSR)) {
+                  suppressWarnings(dir.create(outputDirSR, recursive = TRUE))
+              }
+              rootDir <- system.file(package = "sangeranalyseR")
+              if (object@inputSource == "ABIF") {
+                  originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_ab1.Rmd")
+                  outputHtml <- file.path(outputDirSR, "SangerRead_Report_ab1.html")
+              } else if (object@inputSource == "FASTA") {
+                  originRmd <- file.path(rootDir, "rmd", "SangerRead_Report_fasta.Rmd")
+                  outputHtml <- file.path(outputDirSR, "SangerRead_Report_fasta.html")
+              }
+              res <- render(input = originRmd,
+                            output_dir = outputDirSR,
+                            params = list(SangerRead = object,
+                                          outputDir = outputDirSR,
+                                          navigationContigFN = navigationContigFN,
+                                          navigationAlignmentFN = navigationAlignmentFN))
+              return(outputHtml)
+          })
 
 ## =============================================================================
 ## Generating summary table for SangerRead instance
@@ -291,6 +291,11 @@ setMethod("readTable", "SangerRead", function(object, indentation = 0) {
     readFeature <- object@readFeature
     readFileNameAbs <- object@readFileName
     readFileNameBase <- basename(object@readFileName)
+    if (indentation == 0) {
+        log_info("********************************************")
+        log_info("******** SangerRead readTable print ********")
+        log_info("********************************************")
+    }
     if (object@inputSource == "ABIF") {
         TrimmingMethod <- object@QualityReport@TrimmingMethod
         M1TrimmingCutoff <- object@QualityReport@M1TrimmingCutoff
