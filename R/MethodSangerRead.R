@@ -114,6 +114,7 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
         if (length(errors) == 0) {
             traceMatrix <- object@traceMatrix
             peakPosMatrixRaw <- object@peakPosMatrixRaw
+            ## Always pick the raw quality score 
             qualityPhredScoresRaw <- object@abifRawData@data$PCON.2
             readFeature <- object@readFeature
             MBCResult <-

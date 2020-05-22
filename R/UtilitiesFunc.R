@@ -354,6 +354,8 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
 
     #get window around primary basecall peaks
     primarypeaks <- peakPosMatrixRaw[,1]
+    print("peakPosMatrixRaw: ")
+    print(peakPosMatrixRaw)
     diffs <- diff(c(0,primarypeaks))
     starts <- primarypeaks - 0.5*diffs
     stops <- c(primarypeaks[seq_len((length(primarypeaks)-1))] +
@@ -436,6 +438,11 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     peakPosMatrix <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     peakAmpMatrix <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     log_info("          * Updating slots in 'SangerRead' instance !!")
+    print(qualityPhredScores)
+    print(peakPosMatrix)
+    print(peakAmpMatrix)
+    print(primarySeq)
+    print(secondarySeq)
     return(list("qualityPhredScores" = qualityPhredScores,
                 "peakPosMatrix" = peakPosMatrix,
                 "peakAmpMatrix" = peakAmpMatrix,

@@ -434,6 +434,9 @@ setMethod("initialize",
         # message("SangerContigList length: ", length(SangerContigList))
         SangerContigList <- Filter(Negate(is.null), SangerContigList)
         # message("SangerContigList length: ", length(SangerContigList))
+        
+        # alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
+        #                          minFractionCallSA, maxFractionLostSA, processorsNum) {
         acResult <- alignContigs(SangerContigList, geneticCode,
                                  refAminoAcidSeq, minFractionCallSA,
                                  maxFractionLostSA, processorsNum)

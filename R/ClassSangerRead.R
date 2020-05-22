@@ -173,33 +173,51 @@ setMethod("initialize",
             log_info("    * Creating ", readFeature , " raw abif ...")
             abifRawData = read.abif(readFileName)
             log_info("    * Creating ", readFeature , " raw sangerseq ...")
-            readSangerseq = sangerseq(abifRawData)
-            primarySeqID = readSangerseq@primarySeqID
-            secondarySeqID = readSangerseq@secondarySeqID
+            readSangerseq <- sangerseq(abifRawData)
+            primarySeqID <- readSangerseq@primarySeqID
+            secondarySeqID <- readSangerseq@secondarySeqID
 
             ### ----------------------------------------------------------------
             ### With non-raw & raw primarySeq / secondarySeq
             ### ----------------------------------------------------------------
-            primarySeqRaw = readSangerseq@primarySeq
-            primarySeq = readSangerseq@primarySeq
-            secondarySeqRaw = readSangerseq@secondarySeq
-            secondarySeq = readSangerseq@secondarySeq
-            if (readFeature == "Reverse Read") {
-                primarySeqRaw =
+            if (readFeature == "Forward Read") {
+                primarySeqRaw    <- readSangerseq@primarySeq
+                primarySeq       <- readSangerseq@primarySeq
+                secondarySeqRaw  <- readSangerseq@secondarySeq
+                secondarySeq     <- readSangerseq@secondarySeq
+                traceMatrix      <- readSangerseq@traceMatrix
+                peakPosMatrixRaw <- readSangerseq@peakPosMatrix
+                peakPosMatrix    <- readSangerseq@peakPosMatrix
+                peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
+                peakAmpMatrix    <- readSangerseq@peakAmpMatrix
+            } else if (readFeature == "Reverse Read") {
+                primarySeqRaw <- 
                     reverseComplement(readSangerseq@primarySeq)
-                primarySeq =
+                primarySeq <- 
                     reverseComplement(readSangerseq@primarySeq)
-                secondarySeqRaw =
+                secondarySeqRaw <- 
                     reverseComplement(readSangerseq@secondarySeq)
-                secondarySeq =
+                secondarySeq <- 
                     reverseComplement(readSangerseq@secondarySeq)
-            }
-            traceMatrix      <- readSangerseq@traceMatrix
-            peakPosMatrixRaw <- readSangerseq@peakPosMatrix
-            peakPosMatrix    <- readSangerseq@peakPosMatrix
-            peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
-            peakAmpMatrix    <- readSangerseq@peakAmpMatrix
 
+                # traceMatrix      <-
+                #     apply(readSangerseq@traceMatrix, 2, rev)
+                # peakPosMatrixRaw <-
+                #     apply(readSangerseq@peakPosMatrix, 2, rev)
+                # peakPosMatrix    <-
+                #     apply(readSangerseq@peakPosMatrix, 2, rev)
+                # peakAmpMatrixRaw <-
+                #     apply(readSangerseq@peakAmpMatrix, 2, rev)
+                # peakAmpMatrix    <-
+                #     apply(readSangerseq@peakAmpMatrix, 2, rev)
+                
+                traceMatrix      <- readSangerseq@traceMatrix
+                peakPosMatrixRaw <- readSangerseq@peakPosMatrix
+                peakPosMatrix    <- readSangerseq@peakPosMatrix
+                peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
+                peakAmpMatrix    <- readSangerseq@peakAmpMatrix
+            }
+            
             ### ----------------------------------------------------------------
             ### Definition of 'PCON.1' & 'PCON.2'
             ##### PCON.1: char => Per-base quality values (edited)
@@ -208,10 +226,22 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### 1. Running 'MakeBaseCall'!
             ### ----------------------------------------------------------------
+            
+            ## Reverse the 'traceMatrix' and 'peakPosMatrixRaw' before running
+            ##   MakeBaseCallsInside function.
             MBCResult <-
                 MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                      abifRawData@data$PCON.2,
                                      signalRatioCutoff, readFeature)
+            
+            
+            
+            
+            
+            
+            
+            
+            
 
             ### ================================================================
             ### 2. Update Once (Only during creation)
