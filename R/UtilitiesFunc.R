@@ -197,10 +197,10 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         if (inputSource == "ABIF") {
             trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
             trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
-            # primaryDNA <- substr(primaryDNA, DNALen - trimmedFinishPos + 1,
-            #                      DNALen - trimmedStartPos)
-            primaryDNA <- substr(primaryDNA, trimmedStartPos + 1,
-                                 DNALen - trimmedFinishPos)
+            primaryDNA <- substr(primaryDNA, DNALen - trimmedFinishPos + 1,
+                                 DNALen - trimmedStartPos)
+            # primaryDNA <- substr(primaryDNA, trimmedStartPos + 1,
+            #                      trimmedFinishPos)
         }
         return(primaryDNA)
     })
@@ -225,10 +225,6 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     if (refAminoAcidSeq != "") {
         log_info("Correcting frameshifts in reads using amino acid",
                 "reference sequence")
-        # My test refAminoAcidSeq data
-        # no_N_string <- str_replace_all(frReadSet[1], "N", "T")
-        # example.dna <- DNAStringSet(c(`IGHV1-18*01`=no_N_string))
-        # refAminoAcidSeq <- translate(example.dna)
         # Verbose should be FALSE, but I get error when calling it
         corrected =
             CorrectFrameshifts(myXStringSet = frReadSet,
@@ -423,9 +419,6 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
         primarySeq <- DNAString(paste(primary, collapse=""))
         secondarySeq <- DNAString(paste(secondary, collapse=""))
     } else if (readFeature == "Reverse Read") {
-        # qualityPhredScores <- rev(qualityPhredScoresRaw[indexBaseCall])
-        # primarySeq <- reverseComplement(DNAString(paste(primary, collapse="")))
-        # secondarySeq <- reverseComplement(DNAString(paste(secondary, collapse="")))
         qualityPhredScores <- qualityPhredScoresRaw[indexBaseCall]
         primarySeq <- DNAString(paste(primary, collapse=""))
         secondarySeq <- DNAString(paste(secondary, collapse=""))
