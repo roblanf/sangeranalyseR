@@ -223,7 +223,6 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
                     trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
                     primaryDNA <- substr(primaryDNA,
                                          trimmedStartPos+1, trimmedFinishPos)
-                    primaryDNA <- as.character(reverseComplement(DNAString(primaryDNA)))
                 }
                 return(primaryDNA)
             }, character(1))

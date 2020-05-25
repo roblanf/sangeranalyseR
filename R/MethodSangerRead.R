@@ -188,9 +188,9 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
     ### ------------------------------------------------------------------------
     ### When writing out FASTA, reverse read need to reverseComplement back ~
     ### ------------------------------------------------------------------------
-    if (object@readFeature == "Reverse Read") {
-        targetSeq <- reverseComplement(targetSeq)
-    }
+    # if (object@readFeature == "Reverse Read") {
+    #     targetSeq <- reverseComplement(targetSeq)
+    # }
     writeTarget <- DNAStringSet(targetSeq)
     names(writeTarget) <- basename(object@readFileName)
     writeXStringSet(writeTarget,

@@ -7,8 +7,11 @@ test_that("sangerReadF vs sangerReadFFa Initial test", {
 })
 
 test_that("sangerReadR vs sangerReadRFa Initial test", {
+    DNALen <- length(sangerReadR@primarySeq)
     expect_equal(sangerReadR@readFeature, sangerReadRFa@readFeature)
-    expect_equal(substr(as.character(sangerReadR@primarySeq), sangerReadR@QualityReport@trimmedStartPos+1, sangerReadR@QualityReport@trimmedFinishPos), as.character(sangerReadRFa@primarySeq))
+    expect_equal(substr(as.character(sangerReadR@primarySeq), 
+                        sangerReadR@QualityReport@trimmedStartPos + 1, sangerReadR@QualityReport@trimmedFinishPos), 
+                 as.character(sangerReadRFa@primarySeq))
     expect_equal(as.character(sangerReadR@primaryAASeqS1), as.character(sangerReadRFa@primaryAASeqS1))
     expect_equal(as.character(sangerReadR@primaryAASeqS2), as.character(sangerReadRFa@primaryAASeqS2))
     expect_equal(as.character(sangerReadR@primaryAASeqS3), as.character(sangerReadRFa@primaryAASeqS3))

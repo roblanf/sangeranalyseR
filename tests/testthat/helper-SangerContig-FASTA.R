@@ -4,7 +4,7 @@ SCfastaFN <- file.path(inputFilesPath, "fasta",
 contigName <- "Achl_ACHLO006-09"
 suffixForwardRegExpFa <- "_[0-9]*_F"
 suffixReverseRegExpFa <- "_[0-9]*_R"
-namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
+namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerContig", "names_conversion_1.csv")
 sangerContigFa <- new("SangerContig",
                       inputSource           = "FASTA",
                       fastaFileName         = SCfastaFN,
@@ -19,7 +19,7 @@ sangerContigFa <- new("SangerContig",
 SCfastaFN2 <- file.path(inputFilesPath, "fasta",
                        "SangerContig", "Achl_RBNII384-13.fa")
 contigName2 <- "Achl_RBNII384-13"
-namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_2.csv")
+namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerContig", "names_conversion_2.csv")
 sangerContigFa2 <- new("SangerContig",
                       inputSource           = "FASTA",
                       fastaFileName         = SCfastaFN2,

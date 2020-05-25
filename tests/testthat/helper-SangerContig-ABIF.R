@@ -39,3 +39,4 @@ sangerContig2 <- new("SangerContig",
                     signalRatioCutoff     = 0.33,
                     showTrimmed           = TRUE,
                     processorsNum         = 2)
+

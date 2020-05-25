@@ -202,26 +202,6 @@ setMethod("initialize",
                 peakPosMatrix    <- readSangerseq@peakPosMatrix
                 peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
                 peakAmpMatrix    <- readSangerseq@peakAmpMatrix
-                
-                # primarySeqRaw <- 
-                #     reverseComplement(readSangerseq@primarySeq)
-                # primarySeq <- 
-                #     reverseComplement(readSangerseq@primarySeq)
-                # secondarySeqRaw <- 
-                #     reverseComplement(readSangerseq@secondarySeq)
-                # secondarySeq <- 
-                #     reverseComplement(readSangerseq@secondarySeq)
-
-                # traceMatrix      <-
-                #     apply(readSangerseq@traceMatrix, 2, rev)
-                # peakPosMatrixRaw <-
-                #     apply(readSangerseq@peakPosMatrix, 2, rev)
-                # peakPosMatrix    <-
-                #     apply(readSangerseq@peakPosMatrix, 2, rev)
-                # peakAmpMatrixRaw <-
-                #     apply(readSangerseq@peakAmpMatrix, 2, rev)
-                # peakAmpMatrix    <-
-                #     apply(readSangerseq@peakAmpMatrix, 2, rev)
             }
             
             ### ----------------------------------------------------------------
@@ -239,16 +219,6 @@ setMethod("initialize",
                 MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                      abifRawData@data$PCON.2,
                                      signalRatioCutoff, readFeature)
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
             ### ================================================================
             ### 2. Update Once (Only during creation)
             ###    Basecall primary seq length will be same !
@@ -301,9 +271,6 @@ setMethod("initialize",
                                  basename(readFileName),"' FASTA file"))
             }
             primarySeq <- DNAString(as.character(readFasta[[targetFastaName]]))
-            # if (readFeature == "Reverse Read") {
-            #     primarySeq <- reverseComplement(primarySeq)
-            # }
             secondarySeqRaw   <- DNAString()
             secondarySeq      <- DNAString()
             traceMatrix       <- matrix()

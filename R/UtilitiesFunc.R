@@ -197,10 +197,9 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         if (inputSource == "ABIF") {
             trimmedStartPos <- reverseRead@QualityReport@trimmedStartPos
             trimmedFinishPos <- reverseRead@QualityReport@trimmedFinishPos
+            ## Trimming on the original reads (not reverseComplement).
             primaryDNA <- substr(primaryDNA, DNALen - trimmedFinishPos + 1,
                                  DNALen - trimmedStartPos)
-            # primaryDNA <- substr(primaryDNA, trimmedStartPos + 1,
-            #                      trimmedFinishPos)
         }
         return(primaryDNA)
     })
