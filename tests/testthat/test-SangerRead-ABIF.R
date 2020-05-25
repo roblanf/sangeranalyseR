@@ -546,3 +546,4 @@ test_that("sangerReadF writeFastaSR", {
     close(con)
     unlink(outputFasta)
 })
+
