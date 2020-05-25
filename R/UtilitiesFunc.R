@@ -352,11 +352,25 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     Gpeaks <- getpeaks(traceMatrix[,3])
     Tpeaks <- getpeaks(traceMatrix[,4])
 
-    #get window around primary basecall peaks
+    
+    
+    
+    peakPosMatrixRaw <-
+        apply(peakPosMatrixRaw, 2, rev)
     primarypeaks <- peakPosMatrixRaw[,1]
-    print("peakPosMatrixRaw: ")
-    print(peakPosMatrixRaw)
-    diffs <- diff(c(0,primarypeaks))
+    diffs <- diff(c(primarypeaks, 0))
+    diffs <- abs(diffs)
+    
+    
+    
+    
+    #get window around primary basecall peaks
+    # primarypeaks <- peakPosMatrixRaw[,1]
+    # print("peakPosMatrixRaw: ")
+    # print(peakPosMatrixRaw)
+    # diffs <- diff(c(0,primarypeaks))
+    print("diffs: ")
+    print(diffs)
     starts <- primarypeaks - 0.5*diffs
     stops <- c(primarypeaks[seq_len((length(primarypeaks)-1))] +
                    0.5*diffs[2:length(diffs)],

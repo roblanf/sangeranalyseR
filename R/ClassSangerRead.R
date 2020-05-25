@@ -200,22 +200,22 @@ setMethod("initialize",
                 secondarySeq <- 
                     reverseComplement(readSangerseq@secondarySeq)
 
-                # traceMatrix      <-
-                #     apply(readSangerseq@traceMatrix, 2, rev)
-                # peakPosMatrixRaw <-
-                #     apply(readSangerseq@peakPosMatrix, 2, rev)
-                # peakPosMatrix    <-
-                #     apply(readSangerseq@peakPosMatrix, 2, rev)
-                # peakAmpMatrixRaw <-
-                #     apply(readSangerseq@peakAmpMatrix, 2, rev)
-                # peakAmpMatrix    <-
-                #     apply(readSangerseq@peakAmpMatrix, 2, rev)
+                traceMatrix      <-
+                    apply(readSangerseq@traceMatrix, 2, rev)
+                peakPosMatrixRaw <-
+                    apply(readSangerseq@peakPosMatrix, 2, rev)
+                peakPosMatrix    <-
+                    apply(readSangerseq@peakPosMatrix, 2, rev)
+                peakAmpMatrixRaw <-
+                    apply(readSangerseq@peakAmpMatrix, 2, rev)
+                peakAmpMatrix    <-
+                    apply(readSangerseq@peakAmpMatrix, 2, rev)
                 
-                traceMatrix      <- readSangerseq@traceMatrix
-                peakPosMatrixRaw <- readSangerseq@peakPosMatrix
-                peakPosMatrix    <- readSangerseq@peakPosMatrix
-                peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
-                peakAmpMatrix    <- readSangerseq@peakAmpMatrix
+                # traceMatrix      <- readSangerseq@traceMatrix
+                # peakPosMatrixRaw <- readSangerseq@peakPosMatrix
+                # peakPosMatrix    <- readSangerseq@peakPosMatrix
+                # peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
+                # peakAmpMatrix    <- readSangerseq@peakAmpMatrix
             }
             
             ### ----------------------------------------------------------------
