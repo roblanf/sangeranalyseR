@@ -351,26 +351,21 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     Cpeaks <- getpeaks(traceMatrix[,2])
     Gpeaks <- getpeaks(traceMatrix[,3])
     Tpeaks <- getpeaks(traceMatrix[,4])
-
     
     
     
-    peakPosMatrixRaw <-
-        apply(peakPosMatrixRaw, 2, rev)
-    primarypeaks <- peakPosMatrixRaw[,1]
-    diffs <- diff(c(primarypeaks, 0))
-    diffs <- abs(diffs)
+    # peakPosMatrixRaw <-
+    #     apply(peakPosMatrixRaw, 2, rev)
+    # primarypeaks <- peakPosMatrixRaw[,1]
+    # diffs <- diff(c(primarypeaks, 0))
+    # diffs <- abs(diffs)
     
     
     
     
     #get window around primary basecall peaks
-    # primarypeaks <- peakPosMatrixRaw[,1]
-    # print("peakPosMatrixRaw: ")
-    # print(peakPosMatrixRaw)
-    # diffs <- diff(c(0,primarypeaks))
-    print("diffs: ")
-    print(diffs)
+    primarypeaks <- peakPosMatrixRaw[,1]
+    diffs <- diff(c(0,primarypeaks))
     starts <- primarypeaks - 0.5*diffs
     stops <- c(primarypeaks[seq_len((length(primarypeaks)-1))] +
                    0.5*diffs[2:length(diffs)],
@@ -405,14 +400,8 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
         signals <- c(Apeak[1], Cpeak[1], Gpeak[1], Tpeak[1])
 
         tempAmpMatrix[i,] <- signals
-        # print(tempAmpMatrix[i,])
-
         positions <- c(Apeak[2], Cpeak[2], Gpeak[2], Tpeak[2])
-
         tempPosMatrix[i,] <- positions
-        # print(tempPosMatrix[i,])
-
-
         signalratios <- signals/max(signals, na.rm=TRUE)
         Bases <- c("A", "C", "G", "T")
         Bases[signalratios < signalRatioCutoff] <- NA
@@ -427,7 +416,6 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
             primary <- c(primary, Bases[1])
             Bases2 <- Bases[2:4]
             sortedBase2<- sort(Bases2[!is.na(Bases2)])
-            # log_info("Collapse: ", paste(sortedBase2, collapse=""))
             dicValue <- paste(sortedBase2, collapse="")
             secondaryLetter <- names(IUPAC_CODE_MAP[IUPAC_CODE_MAP == dicValue])
             # secondaryLetter <-
@@ -445,18 +433,21 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
         primarySeq <- DNAString(paste(primary, collapse=""))
         secondarySeq <- DNAString(paste(secondary, collapse=""))
     } else if (readFeature == "Reverse Read") {
-        qualityPhredScores <- rev(qualityPhredScoresRaw[indexBaseCall])
-        primarySeq <- reverseComplement(DNAString(paste(primary, collapse="")))
-        secondarySeq <- reverseComplement(DNAString(paste(secondary, collapse="")))
+        # qualityPhredScores <- rev(qualityPhredScoresRaw[indexBaseCall])
+        # primarySeq <- reverseComplement(DNAString(paste(primary, collapse="")))
+        # secondarySeq <- reverseComplement(DNAString(paste(secondary, collapse="")))
+        qualityPhredScores <- qualityPhredScoresRaw[indexBaseCall]
+        primarySeq <- DNAString(paste(primary, collapse=""))
+        secondarySeq <- DNAString(paste(secondary, collapse=""))
     }
     peakPosMatrix <- tempPosMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     peakAmpMatrix <- tempAmpMatrix[rowSums(!is.na(tempPosMatrix)) > 0,]
     log_info("          * Updating slots in 'SangerRead' instance !!")
-    print(qualityPhredScores)
-    print(peakPosMatrix)
-    print(peakAmpMatrix)
-    print(primarySeq)
-    print(secondarySeq)
+    # print(qualityPhredScores)
+    # print(peakPosMatrix)
+    # print(peakAmpMatrix)
+    # print(primarySeq)
+    # print(secondarySeq)
     return(list("qualityPhredScores" = qualityPhredScores,
                 "peakPosMatrix" = peakPosMatrix,
                 "peakAmpMatrix" = peakAmpMatrix,

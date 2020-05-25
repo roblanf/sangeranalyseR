@@ -191,31 +191,37 @@ setMethod("initialize",
                 peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
                 peakAmpMatrix    <- readSangerseq@peakAmpMatrix
             } else if (readFeature == "Reverse Read") {
-                primarySeqRaw <- 
-                    reverseComplement(readSangerseq@primarySeq)
-                primarySeq <- 
-                    reverseComplement(readSangerseq@primarySeq)
-                secondarySeqRaw <- 
-                    reverseComplement(readSangerseq@secondarySeq)
-                secondarySeq <- 
-                    reverseComplement(readSangerseq@secondarySeq)
-
-                traceMatrix      <-
-                    apply(readSangerseq@traceMatrix, 2, rev)
-                peakPosMatrixRaw <-
-                    apply(readSangerseq@peakPosMatrix, 2, rev)
-                peakPosMatrix    <-
-                    apply(readSangerseq@peakPosMatrix, 2, rev)
-                peakAmpMatrixRaw <-
-                    apply(readSangerseq@peakAmpMatrix, 2, rev)
-                peakAmpMatrix    <-
-                    apply(readSangerseq@peakAmpMatrix, 2, rev)
                 
-                # traceMatrix      <- readSangerseq@traceMatrix
-                # peakPosMatrixRaw <- readSangerseq@peakPosMatrix
-                # peakPosMatrix    <- readSangerseq@peakPosMatrix
-                # peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
-                # peakAmpMatrix    <- readSangerseq@peakAmpMatrix
+                primarySeqRaw    <- readSangerseq@primarySeq
+                primarySeq       <- readSangerseq@primarySeq
+                secondarySeqRaw  <- readSangerseq@secondarySeq
+                secondarySeq     <- readSangerseq@secondarySeq
+                
+                traceMatrix      <- readSangerseq@traceMatrix
+                peakPosMatrixRaw <- readSangerseq@peakPosMatrix
+                peakPosMatrix    <- readSangerseq@peakPosMatrix
+                peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
+                peakAmpMatrix    <- readSangerseq@peakAmpMatrix
+                
+                # primarySeqRaw <- 
+                #     reverseComplement(readSangerseq@primarySeq)
+                # primarySeq <- 
+                #     reverseComplement(readSangerseq@primarySeq)
+                # secondarySeqRaw <- 
+                #     reverseComplement(readSangerseq@secondarySeq)
+                # secondarySeq <- 
+                #     reverseComplement(readSangerseq@secondarySeq)
+
+                # traceMatrix      <-
+                #     apply(readSangerseq@traceMatrix, 2, rev)
+                # peakPosMatrixRaw <-
+                #     apply(readSangerseq@peakPosMatrix, 2, rev)
+                # peakPosMatrix    <-
+                #     apply(readSangerseq@peakPosMatrix, 2, rev)
+                # peakAmpMatrixRaw <-
+                #     apply(readSangerseq@peakAmpMatrix, 2, rev)
+                # peakAmpMatrix    <-
+                #     apply(readSangerseq@peakAmpMatrix, 2, rev)
             }
             
             ### ----------------------------------------------------------------
@@ -295,9 +301,9 @@ setMethod("initialize",
                                  basename(readFileName),"' FASTA file"))
             }
             primarySeq <- DNAString(as.character(readFasta[[targetFastaName]]))
-            if (readFeature == "Reverse Read") {
-                primarySeq <- reverseComplement(primarySeq)
-            }
+            # if (readFeature == "Reverse Read") {
+            #     primarySeq <- reverseComplement(primarySeq)
+            # }
             secondarySeqRaw   <- DNAString()
             secondarySeq      <- DNAString()
             traceMatrix       <- matrix()
