@@ -83,8 +83,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#system-requirements">System requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#install-the-development-version">Install the development version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#install-from-bioconductor">Install from Bioconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-the-development-version">Install the development version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#where-to-go-from-here">Where to go from here ?</a></li>
 </ul>
 </li>
@@ -169,9 +169,30 @@
 <div class="section" id="system-requirements">
 <h2>System requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>R &gt;= 3.6.0 (current)</p></li>
+<li><p>R &gt;= 4.0.0 (current)</p></li>
 <li><p><a class="reference external" href="https://rstudio.com">Rstudio (recommended)</a></p></li>
 </ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="install-from-bioconductor">
+<h2>Install from Bioconductor<a class="headerlink" href="#install-from-bioconductor" title="Permalink to this headline">¶</a></h2>
+<p>sangeranalyseR is on <a class="reference external" href="https://bioconductor.org/packages/devel/bioc/html/sangeranalyseR.html">Bioconductor 3.12 development</a> now.</p>
+<div class="figure align-center" id="id1">
+<span id="sangeranalyser-bioconductor"></span><img alt="../_images/bioconductor.png" src="../_images/bioconductor.png" />
+<p class="caption"><span class="caption-text">Figure 1. sangeranalyseR on Bioconductor 3.12 development.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>To install this package, start R (version &quot;4.0&quot;) and enter:</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">if </span><span class="p">(</span><span class="o">!</span><span class="nf">requireNamespace</span><span class="p">(</span><span class="s">&quot;BiocManager&quot;</span><span class="p">,</span> <span class="n">quietly</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span>
+    <span class="nf">install.packages</span><span class="p">(</span><span class="s">&quot;BiocManager&quot;</span><span class="p">)</span>
+
+<span class="c1"># The following initializes usage of Bioc devel</span>
+<span class="n">BiocManager</span><span class="o">::</span><span class="nf">install</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&#39;devel&#39;</span><span class="p">)</span>
+
+<span class="n">BiocManager</span><span class="o">::</span><span class="nf">install</span><span class="p">(</span><span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -190,17 +211,6 @@
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
-</div>
-</div>
-<div class="section" id="install-from-bioconductor">
-<h2>Install from Bioconductor<a class="headerlink" href="#install-from-bioconductor" title="Permalink to this headline">¶</a></h2>
-<p>NB: This is currently a placeholder - the package isn't on Bioconductor yet...
-After uploading to bioconductor !!!!</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">if </span><span class="p">(</span><span class="o">!</span><span class="nf">requireNamespace</span><span class="p">(</span><span class="s">&quot;BiocManager&quot;</span><span class="p">))</span>
-   <span class="nf">install.packages</span><span class="p">(</span><span class="s">&quot;BiocManager&quot;</span><span class="p">)</span>
-   <span class="n">BiocManager</span><span class="o">::</span><span class="nf">install</span><span class="p">()</span>
-<span class="n">BiocManager</span><span class="o">::</span><span class="nf">install</span><span class="p">(</span><span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
-</pre></div>
 </div>
 <p>After installing <code class="code docutils literal notranslate"><span class="pre">sangeranalyseR</span></code>, load it in R console.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">sangeranalyseR</span><span class="p">)</span>

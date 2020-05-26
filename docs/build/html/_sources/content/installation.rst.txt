@@ -3,11 +3,35 @@ Installation
 
 System requirements
 -------------------
-* R >= 3.6.0 (current)
+* R >= 4.0.0 (current)
 * `Rstudio (recommended) <https://rstudio.com>`_
 
 |
 
+Install from Bioconductor
+-------------------------
+
+sangeranalyseR is on `Bioconductor 3.12 development <https://bioconductor.org/packages/devel/bioc/html/sangeranalyseR.html>`_ now.
+
+.. _sangeranalyseR_bioconductor:
+.. figure::  ../image/bioconductor.png
+   :align:   center
+
+   Figure 1. sangeranalyseR on Bioconductor 3.12 development.
+
+To install this package, start R (version "4.0") and enter:
+
+.. code-block:: R
+
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+        install.packages("BiocManager")
+
+    # The following initializes usage of Bioc devel
+    BiocManager::install(version='devel')
+
+    BiocManager::install("sangeranalyseR")
+
+|
 
 Install the development version
 -------------------------------
@@ -28,20 +52,8 @@ Then run the following code in your R console to install the newest version from
    install_github("roblanf/sangeranalyseR", ref = "develop")
    library(sangeranalyseR)
 
+
 |
-
-Install from Bioconductor
--------------------------
-NB: This is currently a placeholder - the package isn't on Bioconductor yet...
-After uploading to bioconductor !!!!
-
-.. code-block:: R
-
-   if (!requireNamespace("BiocManager"))
-      install.packages("BiocManager")
-      BiocManager::install()
-   BiocManager::install("sangeranalyseR")
-
 
 After installing :code:`sangeranalyseR`, load it in R console.
 
