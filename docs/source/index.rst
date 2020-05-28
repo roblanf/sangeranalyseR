@@ -26,6 +26,12 @@ One really important feature that sangeranalyseR doesn't have is the ability to 
 
 |
 
+User Manual
+===========
+If you are already familiar with sangeranalyseR and want to have a quick look at function signatures, please refer to `sangeranalyseR user manual <https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_
+
+|
+
 User support
 ============
 Please go through the :ref:`Documentation` below first. If you have questions about using the package, a bug report, or a feature request, please use the GitHub issue tracker here:
@@ -57,6 +63,7 @@ Documentation
    content/advance_user_SangerRead_fasta
    content/advance_user_SangerContig_fasta
    content/advance_user_SangerAlignment_fasta
+   content/how_to_page
    content/conclusion
    content/license
    content/contact
