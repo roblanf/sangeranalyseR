@@ -64,6 +64,7 @@ Documentation
    content/advance_user_SangerContig_fasta
    content/advance_user_SangerAlignment_fasta
    content/how_to_page
+   content/function_manual
    content/conclusion
    content/license
    content/contact
