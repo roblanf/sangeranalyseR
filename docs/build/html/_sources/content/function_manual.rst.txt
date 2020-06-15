@@ -1,10 +1,27 @@
 User Manual (functions)
 =======================
 
-This is the link to `sangeranalyseR user manual  <https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_.
+This is the link to `sangeranalyseR user manual  <https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_. Following are parameters for **SangerRead**, **SangerContig**, and **SangerAlignment** constructors.
 
-SangerRead
-----------
+SangerRead Constructor Parameters
+---------------------------------
+
+.. code-block:: R
+
+   SangerRead(inputSource = "ABIF",
+              readFeature = "",
+              readFileName = "",
+              fastaReadName = "",
+              geneticCode = GENETIC_CODE,
+              TrimmingMethod = "M1",
+              M1TrimmingCutoff = 0.0001,
+              M2CutoffQualityScore = NULL,
+              M2SlidingWindowSize = NULL,
+              baseNumPerRow = 100,
+              heightPerRow = 200,
+              signalRatioCutoff = 0.33,
+              showTrimmed = TRUE)
+
 * **inputSource**: The input source of the raw file. It must be *"ABIF"* or *"FASTA"*. The default value is *"ABIF"*.
 * **readFeature**: The direction of the Sanger read. The value must be *"Forward Read"* or *"Reverse Read"*.
 * **readFileName**: The absolute filename of the target ABIF or FASTA file.
@@ -21,10 +38,10 @@ SangerRead
 
 |
 
-SangerContig
-------------
+SangerContig Constructor Parameters
+-----------------------------------
 
 |
 
-SangerAlignment
----------------
+SangerAlignment Constructor Parameters
+--------------------------------------

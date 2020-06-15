@@ -92,9 +92,9 @@
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerAlignment_fasta.html">Advanced User Guide - <em>SangerAlignment</em> (<strong>FASTA</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_page.html">How to ...</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Manual (functions)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#sangerread">SangerRead</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sangercontig">SangerContig</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sangeralignment">SangerAlignment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sangerread-constructor-parameters">SangerRead Constructor Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sangercontig-constructor-parameters">SangerContig Constructor Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sangeralignment-constructor-parameters">SangerAlignment Constructor Parameters</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
@@ -167,9 +167,24 @@
             
   <div class="section" id="user-manual-functions">
 <h1>User Manual (functions)<a class="headerlink" href="#user-manual-functions" title="Permalink to this headline">¶</a></h1>
-<p>This is the link to <a class="reference external" href="https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf">sangeranalyseR user manual</a>.</p>
-<div class="section" id="sangerread">
-<h2>SangerRead<a class="headerlink" href="#sangerread" title="Permalink to this headline">¶</a></h2>
+<p>This is the link to <a class="reference external" href="https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf">sangeranalyseR user manual</a>. Following are parameters for <strong>SangerRead</strong>, <strong>SangerContig</strong>, and <strong>SangerAlignment</strong> constructors.</p>
+<div class="section" id="sangerread-constructor-parameters">
+<h2>SangerRead Constructor Parameters<a class="headerlink" href="#sangerread-constructor-parameters" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">SangerRead</span><span class="p">(</span><span class="n">inputSource</span> <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
+           <span class="n">readFeature</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+           <span class="n">readFileName</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+           <span class="n">fastaReadName</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+           <span class="n">geneticCode</span> <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">,</span>
+           <span class="n">TrimmingMethod</span> <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
+           <span class="n">M1TrimmingCutoff</span> <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
+           <span class="n">M2CutoffQualityScore</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+           <span class="n">M2SlidingWindowSize</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+           <span class="n">baseNumPerRow</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span>
+           <span class="n">heightPerRow</span> <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
+           <span class="n">signalRatioCutoff</span> <span class="o">=</span> <span class="m">0.33</span><span class="p">,</span>
+           <span class="n">showTrimmed</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
 <ul class="simple">
 <li><p><strong>inputSource</strong>: The input source of the raw file. It must be <em>&quot;ABIF&quot;</em> or <em>&quot;FASTA&quot;</em>. The default value is <em>&quot;ABIF&quot;</em>.</p></li>
 <li><p><strong>readFeature</strong>: The direction of the Sanger read. The value must be <em>&quot;Forward Read&quot;</em> or <em>&quot;Reverse Read&quot;</em>.</p></li>
@@ -189,14 +204,14 @@
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="sangercontig">
-<h2>SangerContig<a class="headerlink" href="#sangercontig" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sangercontig-constructor-parameters">
+<h2>SangerContig Constructor Parameters<a class="headerlink" href="#sangercontig-constructor-parameters" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="sangeralignment">
-<h2>SangerAlignment<a class="headerlink" href="#sangeralignment" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sangeralignment-constructor-parameters">
+<h2>SangerAlignment Constructor Parameters<a class="headerlink" href="#sangeralignment-constructor-parameters" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

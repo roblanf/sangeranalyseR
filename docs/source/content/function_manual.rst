@@ -1,10 +1,29 @@
 User Manual (functions)
 =======================
 
-This is the link to `sangeranalyseR user manual  <https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_.
+This is the link to `sangeranalyseR user manual  <https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_. Following are parameters for **SangerRead**, **SangerContig**, and **SangerAlignment** constructors.
 
-SangerRead
-----------
+|
+
+SangerRead Constructor Parameters
+---------------------------------
+
+.. code-block:: R
+
+   SangerRead(inputSource = "ABIF",
+              readFeature = "",
+              readFileName = "",
+              fastaReadName = "",
+              geneticCode = GENETIC_CODE,
+              TrimmingMethod = "M1",
+              M1TrimmingCutoff = 0.0001,
+              M2CutoffQualityScore = NULL,
+              M2SlidingWindowSize = NULL,
+              baseNumPerRow = 100,
+              heightPerRow = 200,
+              signalRatioCutoff = 0.33,
+              showTrimmed = TRUE)
+
 * **inputSource**: The input source of the raw file. It must be *"ABIF"* or *"FASTA"*. The default value is *"ABIF"*.
 * **readFeature**: The direction of the Sanger read. The value must be *"Forward Read"* or *"Reverse Read"*.
 * **readFileName**: The absolute filename of the target ABIF or FASTA file.
@@ -21,10 +40,90 @@ SangerRead
 
 |
 
-SangerContig
-------------
+SangerContig Constructor Parameters
+-----------------------------------
+
+.. code-block:: R
+
+   SangerContig(inputSource            = "ABIF",
+                fastaFileName          = "",
+                namesConversionCSV     = NULL,
+                parentDirectory        = "",
+                contigName             = "",
+                suffixForwardRegExp    = "_F.ab1",
+                suffixReverseRegExp    = "_R.ab1",
+                TrimmingMethod         = "M1",
+                M1TrimmingCutoff       = 0.0001,
+                M2CutoffQualityScore   = NULL,
+                M2SlidingWindowSize    = NULL,
+                baseNumPerRow          = 100,
+                heightPerRow           = 200,
+                signalRatioCutoff      = 0.33,
+                showTrimmed            = TRUE,
+                refAminoAcidSeq        = "",
+                minReadsNum            = 2,
+                minReadLength          = 20,
+                minFractionCall        = 0.5,
+                maxFractionLost        = 0.5,
+                geneticCode            = GENETIC_CODE,
+                acceptStopCodons       = TRUE,
+                readingFrame           = 1,
+                processorsNum          = NULL)
+
+* **inputSource**: The input source of the raw file. It must be *"ABIF"* or *"FASTA"*. The default value is *"ABIF"*.
+* **fastaFileName**: If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+* **namesConversionCSV**: The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
+* **parentDirectory**:
+* **contigName**:
+* **suffixForwardRegExp**:
+* **suffixReverseRegExp**:
+* **TrimmingMethod**:
+* **M1TrimmingCutoff**:
+* **M2CutoffQualityScore**:
+* **M2SlidingWindowSize**:
+* **baseNumPerRow**:
+* **heightPerRow**:
+* **signalRatioCutoff**:
+* **showTrimmed**:
+* **refAminoAcidSeq**:
+* **minReadsNum**:
+* **minReadLength**:
+* **minFractionCall**:
+* **maxFractionLost**:
+* **geneticCode**:
+* **acceptStopCodons**:
+* **readingFrame**:
+* **processorsNum**:
 
 |
 
-SangerAlignment
----------------
+SangerAlignment Constructor Parameters
+--------------------------------------
+
+.. code-block:: R
+
+   SangerAlignment(inputSource            = "ABIF",
+                   fastaFileName          = "",
+                   namesConversionCSV     = NULL,
+                   parentDirectory        = "",
+                   suffixForwardRegExp    = "_F.ab1",
+                   suffixReverseRegExp    = "_R.ab1",
+                   TrimmingMethod         = "M1",
+                   M1TrimmingCutoff       = 0.0001,
+                   M2CutoffQualityScore   = NULL,
+                   M2SlidingWindowSize    = NULL,
+                   baseNumPerRow          = 100,
+                   heightPerRow           = 200,
+                   signalRatioCutoff      = 0.33,
+                   showTrimmed            = TRUE,
+                   refAminoAcidSeq        = "",
+                   minReadsNum            = 2,
+                   minReadLength          = 20,
+                   minFractionCall        = 0.5,
+                   maxFractionLost        = 0.5,
+                   geneticCode            = GENETIC_CODE,
+                   acceptStopCodons       = TRUE,
+                   readingFrame           = 1,
+                   minFractionCallSA      = 0.5,
+                   maxFractionLostSA      = 0.5,
+                   processorsNum          = NULL)
