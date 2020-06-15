@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How to ... &mdash; sangeranalyseR  documentation</title>
+  <title>User Manual (functions) &mdash; sangeranalyseR  documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="User Manual (functions)" href="function_manual.html" />
-    <link rel="prev" title="Advanced User Guide - SangerAlignment (FASTA)" href="advance_user_SangerAlignment_fasta.html" /> 
+    <link rel="next" title="Conclusion" href="conclusion.html" />
+    <link rel="prev" title="How to ..." href="how_to_page.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,12 +90,13 @@
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerRead_fasta.html">Advanced User Guide - <em>SangerRead</em> (<strong>FASTA</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerContig_fasta.html">Advanced User Guide - <em>SangerContig</em> (<strong>FASTA</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerAlignment_fasta.html">Advanced User Guide - <em>SangerAlignment</em> (<strong>FASTA</strong>)</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">How to ...</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-deal-with-secondary-peaks">How to deal with secondary peaks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-work-with-fasta-files-for-input">How to work with FASTA files for input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_page.html">How to ...</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Manual (functions)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sangerread">SangerRead</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sangercontig">SangerContig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sangeralignment">SangerAlignment</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="function_manual.html">User Manual (functions)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -145,13 +146,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>How to ...</li>
+      <li>User Manual (functions)</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/content/how_to_page.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/content/function_manual.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -164,13 +165,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="how-to">
-<h1>How to ...<a class="headerlink" href="#how-to" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="how-to-deal-with-secondary-peaks">
-<h2>How to deal with secondary peaks<a class="headerlink" href="#how-to-deal-with-secondary-peaks" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="user-manual-functions">
+<h1>User Manual (functions)<a class="headerlink" href="#user-manual-functions" title="Permalink to this headline">¶</a></h1>
+<p>This is the link to <a class="reference external" href="https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf">sangeranalyseR user manual</a>.</p>
+<div class="section" id="sangerread">
+<h2>SangerRead<a class="headerlink" href="#sangerread" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>inputSource</strong>: The input source of the raw file. It must be <em>&quot;ABIF&quot;</em> or <em>&quot;FASTA&quot;</em>. The default value is <em>&quot;ABIF&quot;</em>.</p></li>
+<li><p><strong>readFeature</strong>: The direction of the Sanger read. The value must be <em>&quot;Forward Read&quot;</em> or <em>&quot;Reverse Read&quot;</em>.</p></li>
+<li><p><strong>readFileName</strong>: The absolute filename of the target ABIF or FASTA file.</p></li>
+<li><p><strong>fastaReadName</strong>:  If <em>&quot;inputSource&quot;</em> is <em>&quot;FASTA&quot;</em>, then this value has to be the name of the read inside the FASTA file; if <em>&quot;inputSource&quot;</em> is <em>&quot;ABIF&quot;</em>, then this value is <em>&quot;NULL&quot;</em> by default.</p></li>
+<li><p><strong>geneticCode</strong>: Named character vector in the same format as <em>&quot;GENETIC_CODE&quot;</em> (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the <em>&quot;getGeneticCode()&quot;</em> function. The default is the standard code.</p></li>
+<li><p><strong>TrimmingMethod</strong>: The read trimming method for the <em>SangerRead</em>. The value must be <em>&quot;M1&quot;</em> (the default) or <em>&quot;M2&quot;</em>, which represents <em>&quot;method 1&quot;</em> or <em>&quot;method 2&quot;</em> respectively. M1 is the modified Mott's trimming algorithm that can also be found in Phred/Phrap and Biopython. M2 is like trimmomatic's sliding window method.</p></li>
+<li><p><strong>M1TrimmingCutoff</strong>: The cutoff for the trimming method 1. If <em>TrimmingMethod</em> is <em>&quot;M1&quot;</em>, then the default value is <em>&quot;0.0001&quot;</em>. Otherwise, the value must be <em>&quot;NULL&quot;</em>.</p></li>
+<li><p><strong>M2CutoffQualityScore</strong>: The trimming cutoff quality score for the trimming method 2. If <em>TrimmingMethod</em> is <em>&quot;M2&quot;</em>, then the default value is <em>&quot;20&quot;</em>. Otherwise, the value must be <em>&quot;NULL&quot;</em>. This parameter works with <em>M2SlidingWindowSize</em>.</p></li>
+<li><p><strong>M2SlidingWindowSize</strong>: The trimming sliding window size for the trimming method 2. If <em>TrimmingMethod</em> is <em>&quot;M2&quot;</em>, then the default value is <em>&quot;10&quot;</em>. Otherwise, the value must be <em>&quot;NULL&quot;</em>. This parameter works with <em>M2CutoffQualityScore</em>.</p></li>
+<li><p><strong>baseNumPerRow</strong>: This parameter is related to chromatogram and defines maximum base pairs in each row. The default value is <em>&quot;100&quot;</em>.</p></li>
+<li><p><strong>heightPerRow</strong>: This parameter is related to chromatogram and defines the height of each row in chromatogram. The default value is <em>&quot;200&quot;</em>.</p></li>
+<li><p><strong>signalRatioCutoff</strong>: The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is <em>&quot;0.33&quot;</em>. This parameter is related to chromatogram.</p></li>
+<li><p><strong>showTrimmed</strong>: The logical value storing whether to show trimmed base pairs in chromatogram. The default value is <em>&quot;TRUE&quot;</em>.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
 </div>
-<div class="section" id="how-to-work-with-fasta-files-for-input">
-<h2>How to work with FASTA files for input<a class="headerlink" href="#how-to-work-with-fasta-files-for-input" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="sangercontig">
+<h2>SangerContig<a class="headerlink" href="#sangercontig" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="sangeralignment">
+<h2>SangerAlignment<a class="headerlink" href="#sangeralignment" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -182,10 +208,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="function_manual.html" class="btn btn-neutral float-right" title="User Manual (functions)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="conclusion.html" class="btn btn-neutral float-right" title="Conclusion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="advance_user_SangerAlignment_fasta.html" class="btn btn-neutral float-left" title="Advanced User Guide - SangerAlignment (FASTA)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="how_to_page.html" class="btn btn-neutral float-left" title="How to ..." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

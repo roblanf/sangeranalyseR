@@ -4,9 +4,9 @@
 #'
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
-#' @slot readFileName The filename of the target input file. It can be \code{"ABIF"} or \code{"FASTA"} file.
+#' @slot readFileName The filename of the target input file.
 #' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
-#' @slot abifRawData A S4 class containing all fields in the ABIF file. It is defined in sangerseqR package.
+#' @slot abifRawData An S4 class containing all fields in the ABIF file. It is the abif class defined in sangerseqR package.
 #' @slot QualityReport A S4 class containing quality trimming related inputs and trimming results.
 #' @slot ChromatogramParam A S4 class containing chromatogram inputs.
 #' @slot primaryAASeqS1 A polypeptide translated from primary DNA sequence starting from the first nucleic acid.

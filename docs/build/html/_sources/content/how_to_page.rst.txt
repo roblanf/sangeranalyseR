@@ -2,7 +2,6 @@ How to ...
 ==========
 
 
-
 How to deal with secondary peaks
 --------------------------------
 
