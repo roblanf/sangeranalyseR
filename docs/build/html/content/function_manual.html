@@ -168,6 +168,9 @@
   <div class="section" id="user-manual-functions">
 <h1>User Manual (functions)<a class="headerlink" href="#user-manual-functions" title="Permalink to this headline">¶</a></h1>
 <p>This is the link to <a class="reference external" href="https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf">sangeranalyseR user manual</a>. Following are parameters for <strong>SangerRead</strong>, <strong>SangerContig</strong>, and <strong>SangerAlignment</strong> constructors.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <div class="section" id="sangerread-constructor-parameters">
 <h2>SangerRead Constructor Parameters<a class="headerlink" href="#sangerread-constructor-parameters" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">SangerRead</span><span class="p">(</span><span class="n">inputSource</span> <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
@@ -206,12 +209,118 @@
 </div>
 <div class="section" id="sangercontig-constructor-parameters">
 <h2>SangerContig Constructor Parameters<a class="headerlink" href="#sangercontig-constructor-parameters" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">SangerContig</span><span class="p">(</span><span class="n">inputSource</span>            <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
+             <span class="n">fastaFileName</span>          <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+             <span class="n">namesConversionCSV</span>     <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+             <span class="n">parentDirectory</span>        <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+             <span class="n">contigName</span>             <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+             <span class="n">suffixForwardRegExp</span>    <span class="o">=</span> <span class="s">&quot;_F.ab1&quot;</span><span class="p">,</span>
+             <span class="n">suffixReverseRegExp</span>    <span class="o">=</span> <span class="s">&quot;_R.ab1&quot;</span><span class="p">,</span>
+             <span class="n">TrimmingMethod</span>         <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
+             <span class="n">M1TrimmingCutoff</span>       <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
+             <span class="n">M2CutoffQualityScore</span>   <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+             <span class="n">M2SlidingWindowSize</span>    <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+             <span class="n">baseNumPerRow</span>          <span class="o">=</span> <span class="m">100</span><span class="p">,</span>
+             <span class="n">heightPerRow</span>           <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
+             <span class="n">signalRatioCutoff</span>      <span class="o">=</span> <span class="m">0.33</span><span class="p">,</span>
+             <span class="n">showTrimmed</span>            <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+             <span class="n">refAminoAcidSeq</span>        <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+             <span class="n">minReadsNum</span>            <span class="o">=</span> <span class="m">2</span><span class="p">,</span>
+             <span class="n">minReadLength</span>          <span class="o">=</span> <span class="m">20</span><span class="p">,</span>
+             <span class="n">minFractionCall</span>        <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+             <span class="n">maxFractionLost</span>        <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+             <span class="n">geneticCode</span>            <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">,</span>
+             <span class="n">acceptStopCodons</span>       <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+             <span class="n">readingFrame</span>           <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+             <span class="n">processorsNum</span>          <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>inputSource</strong>: The input source of the raw file. It must be <em>&quot;ABIF&quot;</em> or <em>&quot;FASTA&quot;</em>. The default value is <em>&quot;ABIF&quot;</em>.</p></li>
+<li><p><strong>fastaFileName</strong>: If <em>&quot;inputSource&quot;</em> is <em>&quot;FASTA&quot;</em>, then this value has to be the name of the FASTA file; if <em>&quot;inputSource&quot;</em> is <em>&quot;ABIF&quot;</em>, then this value is <em>&quot;NULL&quot;</em> by default.</p></li>
+<li><p><strong>namesConversionCSV</strong>: The absolute filename of CSV file that provides read names  following the naming regulation. If <em>&quot;inputSource&quot;</em> is <em>&quot;FASTA&quot;</em>, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if <em>&quot;inputSource&quot;</em> is <em>&quot;ABIF&quot;</em>, then this value is <em>&quot;NULL&quot;</em> by default.</p></li>
+<li><p><strong>parentDirectory</strong>: The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.</p></li>
+<li><p><strong>contigName</strong>: The contig name of all the reads in <em>&quot;parentDirectory&quot;</em>.</p></li>
+<li><p><strong>suffixForwardRegExp</strong>: The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be &quot;_F.ab1&quot;.</p></li>
+<li><p><strong>suffixReverseRegExp</strong>: The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be &quot;_R.ab1&quot;.</p></li>
+<li><p><strong>TrimmingMethod</strong>: The read trimming method for the <em>SangerRead</em>. The value must be <em>&quot;M1&quot;</em> (the default) or <em>&quot;M2&quot;</em>, which represents <em>&quot;method 1&quot;</em> or <em>&quot;method 2&quot;</em> respectively. M1 is the modified Mott's trimming algorithm that can also be found in Phred/Phrap and Biopython. M2 is like trimmomatic's sliding window method.</p></li>
+<li><p><strong>M1TrimmingCutoff</strong>: The cutoff for the trimming method 1. If <em>TrimmingMethod</em> is <em>&quot;M1&quot;</em>, then the default value is <em>&quot;0.0001&quot;</em>. Otherwise, the value must be <em>&quot;NULL&quot;</em>.</p></li>
+<li><p><strong>M2CutoffQualityScore</strong>: The trimming cutoff quality score for the trimming method 2. If <em>TrimmingMethod</em> is <em>&quot;M2&quot;</em>, then the default value is <em>&quot;20&quot;</em>. Otherwise, the value must be <em>&quot;NULL&quot;</em>. This parameter works with <em>M2SlidingWindowSize</em>.</p></li>
+<li><p><strong>M2SlidingWindowSize</strong>: The trimming sliding window size for the trimming method 2. If <em>TrimmingMethod</em> is <em>&quot;M2&quot;</em>, then the default value is <em>&quot;10&quot;</em>. Otherwise, the value must be <em>&quot;NULL&quot;</em>. This parameter works with <em>M2CutoffQualityScore</em>.</p></li>
+<li><p><strong>baseNumPerRow</strong>: This parameter is related to chromatogram and defines maximum base pairs in each row. The default value is <em>&quot;100&quot;</em>.</p></li>
+<li><p><strong>heightPerRow</strong>: This parameter is related to chromatogram and defines the height of each row in chromatogram. The default value is <em>&quot;200&quot;</em>.</p></li>
+<li><p><strong>signalRatioCutoff</strong>: The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is <em>&quot;0.33&quot;</em>. This parameter is related to chromatogram.</p></li>
+<li><p><strong>showTrimmed</strong>: The logical value storing whether to show trimmed base pairs in chromatogram. The default value is <em>&quot;TRUE&quot;</em>.</p></li>
+<li><p><strong>refAminoAcidSeq</strong>: An amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or &quot;+&quot;) strand. The default value is &quot;&quot;.</p></li>
+<li><p><strong>minReadsNum</strong>: The minimum number of reads required to make a consensus sequence, must be 2 or more. The default value is <em>&quot;2&quot;</em>.</p></li>
+<li><p><strong>minReadLength</strong>: Reads shorter than this will not be included in the readset. The default <em>&quot;20&quot;</em> means that all reads with length of 20 or more will be included. Note that this is the length of a read after it has been trimmed.</p></li>
+<li><p><strong>minFractionCall</strong>: Minimum fraction of the sequences required to call a consensus sequence for SangerContig at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.</p></li>
+<li><p><strong>maxFractionLost</strong>: Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerContig (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.</p></li>
+<li><p><strong>geneticCode</strong>: Named character vector in the same format as code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.</p></li>
+<li><p><strong>acceptStopCodons</strong>: The logical value code{TRUE} or code{FALSE}. code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; code{FALSE}: reject reads with stop codons. If code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).</p></li>
+<li><p><strong>readingFrame</strong>: code{1}, code{2}, or code{3}. Only used if code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a code{refAminoAcidSeq}, then the frame should always be code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.</p></li>
+<li><p><strong>processorsNum</strong>: The number of processors to use, or NULL (the default) for all available processors.</p></li>
+</ul>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="sangeralignment-constructor-parameters">
 <h2>SangerAlignment Constructor Parameters<a class="headerlink" href="#sangeralignment-constructor-parameters" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">inputSource</span>            <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
+                <span class="n">fastaFileName</span>          <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">namesConversionCSV</span>     <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                <span class="n">parentDirectory</span>        <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">suffixForwardRegExp</span>    <span class="o">=</span> <span class="s">&quot;_F.ab1&quot;</span><span class="p">,</span>
+                <span class="n">suffixReverseRegExp</span>    <span class="o">=</span> <span class="s">&quot;_R.ab1&quot;</span><span class="p">,</span>
+                <span class="n">TrimmingMethod</span>         <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
+                <span class="n">M1TrimmingCutoff</span>       <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
+                <span class="n">M2CutoffQualityScore</span>   <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                <span class="n">M2SlidingWindowSize</span>    <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                <span class="n">baseNumPerRow</span>          <span class="o">=</span> <span class="m">100</span><span class="p">,</span>
+                <span class="n">heightPerRow</span>           <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
+                <span class="n">signalRatioCutoff</span>      <span class="o">=</span> <span class="m">0.33</span><span class="p">,</span>
+                <span class="n">showTrimmed</span>            <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+                <span class="n">refAminoAcidSeq</span>        <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">minReadsNum</span>            <span class="o">=</span> <span class="m">2</span><span class="p">,</span>
+                <span class="n">minReadLength</span>          <span class="o">=</span> <span class="m">20</span><span class="p">,</span>
+                <span class="n">minFractionCall</span>        <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+                <span class="n">maxFractionLost</span>        <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+                <span class="n">geneticCode</span>            <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">,</span>
+                <span class="n">acceptStopCodons</span>       <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+                <span class="n">readingFrame</span>           <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+                <span class="n">minFractionCallSA</span>      <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+                <span class="n">maxFractionLostSA</span>      <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+                <span class="n">processorsNum</span>          <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>inputSource</strong>: The input source of the raw file. It must be <em>&quot;ABIF&quot;</em> or <em>&quot;FASTA&quot;</em>. The default value is <em>&quot;ABIF&quot;</em>.</p></li>
+<li><p><strong>fastaFileName</strong>: If <em>&quot;inputSource&quot;</em> is <em>&quot;FASTA&quot;</em>, then this value has to be the name of the FASTA file; if <em>&quot;inputSource&quot;</em> is <em>&quot;ABIF&quot;</em>, then this value is <em>&quot;NULL&quot;</em> by default.</p></li>
+<li><p><strong>namesConversionCSV</strong>: The file path to the CSV file that provides read names that follow the naming regulation. If <em>&quot;inputSource&quot;</em> is <em>&quot;FASTA&quot;</em>, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if <em>&quot;inputSource&quot;</em> is <em>&quot;ABIF&quot;</em>, then this value is <em>&quot;NULL&quot;</em> by default.</p></li>
+<li><p><strong>parentDirectory</strong>: The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.</p></li>
+<li><p><strong>suffixForwardRegExp</strong>: The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be &quot;_F.ab1&quot;.</p></li>
+<li><p><strong>suffixReverseRegExp</strong>: The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be &quot;_R.ab1&quot;.</p></li>
+<li><p><strong>TrimmingMethod</strong>: The read trimming method for the <em>SangerRead</em>. The value must be <em>&quot;M1&quot;</em> (the default) or <em>&quot;M2&quot;</em>, which represents <em>&quot;method 1&quot;</em> or <em>&quot;method 2&quot;</em> respectively. M1 is the modified Mott's trimming algorithm that can also be found in Phred/Phrap and Biopython. M2 is like trimmomatic's sliding window method.</p></li>
+<li><p><strong>M1TrimmingCutoff</strong>: The cutoff for the trimming method 1. If <em>TrimmingMethod</em> is <em>&quot;M1&quot;</em>, then the default value is <em>&quot;0.0001&quot;</em>. Otherwise, the value must be <em>&quot;NULL&quot;</em>.</p></li>
+<li><p><strong>M2CutoffQualityScore</strong>: The trimming cutoff quality score for the trimming method 2. If <em>TrimmingMethod</em> is <em>&quot;M2&quot;</em>, then the default value is <em>&quot;20&quot;</em>. Otherwise, the value must be <em>&quot;NULL&quot;</em>. This parameter works with <em>M2SlidingWindowSize</em>.</p></li>
+<li><p><strong>M2SlidingWindowSize</strong>: The trimming sliding window size for the trimming method 2. If <em>TrimmingMethod</em> is <em>&quot;M2&quot;</em>, then the default value is <em>&quot;10&quot;</em>. Otherwise, the value must be <em>&quot;NULL&quot;</em>. This parameter works with <em>M2CutoffQualityScore</em>.</p></li>
+<li><p><strong>baseNumPerRow</strong>: This parameter is related to chromatogram and defines maximum base pairs in each row. The default value is <em>&quot;100&quot;</em>.</p></li>
+<li><p><strong>heightPerRow</strong>: This parameter is related to chromatogram and defines the height of each row in chromatogram. The default value is <em>&quot;200&quot;</em>.</p></li>
+<li><p><strong>signalRatioCutoff</strong>: The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is <em>&quot;0.33&quot;</em>. This parameter is related to chromatogram.</p></li>
+<li><p><strong>showTrimmed</strong>: The logical value storing whether to show trimmed base pairs in chromatogram. The default value is <em>&quot;TRUE&quot;</em>.</p></li>
+<li><p><strong>refAminoAcidSeq</strong>: An amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or &quot;+&quot;) strand. The default value is &quot;&quot;.</p></li>
+<li><p><strong>minReadsNum</strong>: The minimum number of reads required to make a consensus sequence, must be 2 or more. The default value is <em>&quot;2&quot;</em>.</p></li>
+<li><p><strong>minReadLength</strong>: Reads shorter than this will not be included in the readset. The default <em>&quot;20&quot;</em> means that all reads with length of 20 or more will be included. Note that this is the length of a read after it has been trimmed.</p></li>
+<li><p><strong>minFractionCall</strong>: Minimum fraction of the sequences required to call a consensus sequence for SangerContig at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.</p></li>
+<li><p><strong>maxFractionLost</strong>: Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerContig (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.</p></li>
+<li><p><strong>geneticCode</strong>: Named character vector in the same format as code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.</p></li>
+<li><p><strong>acceptStopCodons</strong>: The logical value code{TRUE} or code{FALSE}. code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; code{FALSE}: reject reads with stop codons. If code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).</p></li>
+<li><p><strong>readingFrame</strong>: code{1}, code{2}, or code{3}. Only used if code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a code{refAminoAcidSeq}, then the frame should always be code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.</p></li>
+<li><p><strong>minFractionCallSA</strong>: Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.</p></li>
+<li><p><strong>maxFractionLostSA</strong>: Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.</p></li>
+<li><p><strong>processorsNum</strong>: The number of processors to use, or NULL (the default) for all available processors.</p></li>
+</ul>
 </div>
 </div>
 
