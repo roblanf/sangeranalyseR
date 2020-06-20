@@ -1,7 +1,7 @@
 User Manual (functions)
 =======================
 
-This is the link to `sangeranalyseR user manual  <https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_. Following are input parameters for **SangerRead**, **SangerContig**, and **SangerAlignment** constructors.
+Following are input parameters for **SangerRead**, **SangerContig**, and **SangerAlignment** constructors. For more detials about other functions, please refer to the `sangeranalyseR user manual  <https://bioconductor.org/packages/devel/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_.  
 
 |
 

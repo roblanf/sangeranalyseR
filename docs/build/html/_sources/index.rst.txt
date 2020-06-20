@@ -59,12 +59,12 @@ Documentation
    content/advance_user_SangerRead_ab1
    content/advance_user_SangerContig_ab1
    content/advance_user_SangerAlignment_ab1
-
    content/advance_user_SangerRead_fasta
    content/advance_user_SangerContig_fasta
    content/advance_user_SangerAlignment_fasta
    content/how_to_page
    content/function_manual
+   content/frequent_questions
    content/conclusion
    content/license
    content/contact
