@@ -1,4 +1,6 @@
-Frequently Asked Questions
+.. list-table:: title
+
+  Frequently Asked Questions
 ==========================
 
 |
