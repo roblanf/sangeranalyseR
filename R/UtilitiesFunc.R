@@ -114,8 +114,14 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
                                       noConsensusChar = "-",
                                       ambiguity = TRUE)[[1]]
     } else {
+        consensus = NULL
         aln = NULL
-        aln.tree = NULL
+        phyloT <- as.phylo(rtree(n = 2))
+        phyloT$edge <- matrix(c(0,0,0,0), 2, 2)
+        phyloT$tip.label <- NULL
+        phyloT$edge.length <- NULL
+        phyloT$Nnode <- NULL
+        aln.tree = phyloT
     }
     return(list("consensus" = consensus,
                 "aln"       = aln,
