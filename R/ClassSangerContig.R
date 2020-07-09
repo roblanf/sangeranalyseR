@@ -615,6 +615,28 @@ setMethod("initialize",
         stopsDf <- CSResult$stopsDf
         spDf <- CSResult$spDf
         log_success("  >> 'SangerContig' S4 instance is created !!")
+    } else if (readNumber >= minReadsNum && readNumber == 1) {
+        msg <- paste("There is only one read in your SangerContig.")
+        warnings <- c(warnings, msg)
+        invisible(lapply(warnings, log_warn))
+        if (forwardNumber == 1) {
+            forwardReadListFilter[[1]]
+            primaryDNA <- 
+                SangerReadInnerTrimming(forwardReadListFilter[[1]], inputSource)
+            contigGapfree <- DNAString(primaryDNA)
+        } else if (reverseNumber == 1) {
+            primaryDNA <- 
+                SangerReadInnerTrimming(reverseReadListFilter[[1]], inputSource)
+            contigGapfree <- DNAString(primaryDNA)
+        }
+        diffsDf <- data.frame()
+        aln2 <- DNAStringSet()
+        dist <- matrix()
+        dend <- list()
+        indels <- data.frame()
+        stopsDf <- data.frame()
+        spDf <- data.frame()
+        log_success("  >> 'SangerContig' S4 instance is created !!")
     } else {
         msg <- paste("The number of your total reads is ", readNumber, ".",
                      "\nNumber of total reads has to be equal or more than ",

@@ -216,12 +216,12 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                 unlist(rRDNAStringSet)))
     frReadFeatureList <- c(rep("Forward Reads", length(fRDNAStringSet)),
                            rep("Reverse Reads", length(rRDNAStringSet)))
-
-    if(length(frReadSet) < 2) {
-        error <- paste("\n'Valid abif files should be more than 2.\n",
-                       sep = "")
-        log_error(error)
-    }
+    # Read number in each contig can be 1!
+    # if(length(frReadSet) < 2) {
+    #     error <- paste("\n'Valid abif files should be more than 2.\n",
+    #                    sep = "")
+    #     log_error(error)
+    # }
     processorsNum <- getProcessors(processorsNum)
 
     ### ------------------------------------------------------------------------
@@ -769,3 +769,15 @@ vline <- function(x = 0, color = "red") {
     )
 }
 
+SangerReadInnerTrimming <- function(SangerReadInst, inputSource) {
+    primaryDNA <- as.character(SangerReadInst@primarySeq)
+    if (inputSource == "ABIF") {
+        trimmedStartPos <- 
+            SangerReadInst@QualityReport@trimmedStartPos
+        trimmedFinishPos <- 
+            SangerReadInst@QualityReport@trimmedFinishPos
+        primaryDNA <- 
+            substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
+    }
+    return(primaryDNA)
+}

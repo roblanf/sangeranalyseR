@@ -276,7 +276,7 @@ setMethod("initialize",
                                    length(newSangerContig@reverseReadList)
                                readNumber <- forwardNumber + reverseNumber
                                if (readNumber >= minReadsNum && 
-                                   readNumber >= 2) {
+                                   readNumber >= 1) {
                                    newSangerContig
                                } else {
                                    NULL
@@ -464,9 +464,3 @@ setMethod("initialize",
                    contigsAlignment      = aln,
                    contigsTree           = aln.tree)
 })
-
-
-
-
-# my_aligned_contigs <- SangerAlignment(parentDirectory = "/Users/chaokuan-hao/Documents/ANU_2019_Semester_2/Lanfear_Lab/sangeranalyseR_test_data/fwdSeq", suffixForwardRegExp = "1.ab1", minReadsNum = 1)
-
