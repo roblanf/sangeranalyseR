@@ -72,7 +72,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList, loadingSpin = TRUE)
+               style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
 ))
 ```
 </div>
@@ -100,7 +100,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList)
+               style = styleList, autoWidth = FALSE)
 ))
 ```
 <h3> Amino Acids Sequence frameshit 1  </h3>
@@ -122,7 +122,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList)
+               style = styleList, autoWidth = FALSE)
 ))
 ```
 <h3> Amino Acids Sequence frameshit 2 </h3>
@@ -145,7 +145,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList)
+               style = styleList, autoWidth = FALSE)
 ))
 ```
 </div>

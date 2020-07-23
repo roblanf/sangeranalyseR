@@ -85,7 +85,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList, loadingSpin = TRUE)
+               style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
 ))
 ```
 </div>

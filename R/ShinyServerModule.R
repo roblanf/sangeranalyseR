@@ -650,7 +650,7 @@ primarySeqDisplay <- function(sequenceParam) {
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                   style = styleList, loadingSpin = TRUE)
+                   style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
     )
 }
 secondarySeqDisplay <- function(sequenceParam) {
@@ -671,7 +671,7 @@ secondarySeqDisplay <- function(sequenceParam) {
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                   style = styleList, loadingSpin = TRUE)
+                   style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
     )
 }
 qualityScoreDisplay <- function(PhredScore) {
@@ -680,6 +680,13 @@ qualityScoreDisplay <- function(PhredScore) {
     colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
     rownames(PhredScoreDF) <- NULL
     styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
+    message(length(PhredScoreDF))
+    width <- rep(80, length(PhredScoreDF))
+    # styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+    # styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+    # styleList <- c(styleList1, styleList2)
+    # excelTable(data = AAStringDF, columns = data.frame(width = width),
+    
     suppressMessages(
         excelTable(data =
                        PhredScoreDF, defaultColWidth = 30, editable = FALSE,
@@ -687,7 +694,7 @@ qualityScoreDisplay <- function(PhredScore) {
                    allowInsertRow = FALSE, allowInsertColumn = FALSE,
                    allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
                    style = styleList, allowRenameColumn = FALSE,
-                   loadingSpin = TRUE)
+                   loadingSpin = TRUE, , autoWidth = FALSE)
     )
 }
 PrimAASeqS1Display <- function(sequenceParam) {
@@ -715,7 +722,7 @@ PrimAASeqS1Display <- function(sequenceParam) {
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                   style = styleList, loadingSpin = TRUE)
+                   style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
     )
 }
 PrimAASeqS2Display <- function(sequenceParam) {
@@ -736,7 +743,7 @@ PrimAASeqS2Display <- function(sequenceParam) {
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                   style = styleList, loadingSpin = TRUE)
+                   style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
     )
 }
 PrimAASeqS3Display <- function(sequenceParam) {
@@ -758,7 +765,7 @@ PrimAASeqS3Display <- function(sequenceParam) {
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                   style = styleList, loadingSpin = TRUE)
+                   style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
     )
 }
 primarySeqTrimmedDisplay <- function(input, output, session,
@@ -787,7 +794,7 @@ primarySeqTrimmedDisplay <- function(input, output, session,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                   style = styleList, loadingSpin = TRUE)
+                   style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
     )
 }
 
@@ -817,7 +824,7 @@ secondSeqTrimmedDisplay <- function(input, output, session,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                    allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-                   style = styleList, loadingSpin = TRUE)
+                   style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
     )
 }
 

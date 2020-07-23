@@ -113,7 +113,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList, loadingSpin = TRUE)
+               style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
 ))
 ```
 <div style="overflow: scroll;">
@@ -132,7 +132,8 @@ suppressWarnings(suppressMessages(
                  defaultColWidth = 50, editable = FALSE, rowResize = FALSE,
                  columnResize = FALSE, allowInsertRow = FALSE,
                  allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                 allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+                 allowDeleteColumn = FALSE, allowRenameColumn = FALSE, 
+                 autoWidth = FALSE)
 ))
 ```
 </div>
@@ -149,7 +150,8 @@ if (params$SangerContig@refAminoAcidSeq != "") {
                    defaultColWidth = 50, editable = FALSE, rowResize = FALSE,
                    columnResize = FALSE, allowInsertRow = FALSE,
                    allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+                   allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+                   autoWidth = FALSE)
     ))
 } else {
       cat("<p style='font-size: 13px; font-weight:bold'> 'refAminoAcidSeq' is empty. There are no 'refAminoAcidSeq' in this SangerContig. </p>")
