@@ -67,13 +67,14 @@ CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
 GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
 styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
 suppressWarnings(suppressMessages(
-    excelTable(data = primarySeqDF, defaultColWidth = 30,
+ table <- excelTable(data = primarySeqDF, defaultColWidth = 30,
                editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
                style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
 ))
+table
 ```
 <h3> Secondary Sequence </h3>
 ```{r echo=FALSE, warning=FALSE}
