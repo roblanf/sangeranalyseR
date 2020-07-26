@@ -315,9 +315,12 @@ setMethod("readTable", "SangerRead", function(object, indentation = 0) {
         trimmedFinishPos <- object@QualityReport@trimmedFinishPos
         primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
         secondaryDNA <- substr(secondaryDNA, trimmedStartPos+1,trimmedFinishPos)
+        cat(space, " ##############################\n", 
+            space, "### SangerRead S4 instance ###\n", 
+            space, "##############################\n")
+        
         if (TrimmingMethod == "M1") {
-            cat(space, "SangerRead S4 instance\n",
-                space, "                 Input source : ", inputSource, "\n",
+            cat(space, "                 Input source : ", inputSource, "\n",
                 space, "                 Read feature : ", readFeature, "\n",
                 space, "          Read fileName (abs) : ", readFileNameAbs, "\n",
                 space, "         Read fileName (base) : ", readFileNameBase, "\n",
@@ -334,8 +337,7 @@ setMethod("readTable", "SangerRead", function(object, indentation = 0) {
                 space, "           Secondary Sequence : ", secondaryDNA, "\n"
             )
         } else if (TrimmingMethod == "M2") {
-            cat(space, "SangerRead S4 instance\n",
-                space, "                 Input source : ", inputSource, "\n",
+            cat(space, "                 Input source : ", inputSource, "\n",
                 space, "                 Read feature : ", readFeature, "\n",
                 space, "          Read fileName (abs) : ", readFileNameAbs, "\n",
                 space, "         Read fileName (base) : ", readFileNameBase, "\n",
@@ -357,8 +359,7 @@ setMethod("readTable", "SangerRead", function(object, indentation = 0) {
         fastaReadName <- object@fastaReadName
         seqLength <- length(object@primarySeq)
         primarySeq <- as.character(object@primarySeq)
-        cat(space, "SangerRead S4 instance\n",
-            space, "                 Input source : ", inputSource, "\n",
+        cat(space, "                 Input source : ", inputSource, "\n",
             space, "                 Read feature : ", readFeature, "\n",
             space, "          Read fileName (abs) : ", readFileNameAbs, "\n",
             space, "         Read fileName (base) : ", readFileNameBase, "\n",

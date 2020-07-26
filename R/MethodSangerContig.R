@@ -368,7 +368,6 @@ setMethod("readTable", "SangerContig", function(object, indentation = 0) {
     inputSource <- object@inputSource
     namesConversionCSV <- object@namesConversionCSV
     contigName <- object@contigName
-    
     suffixForwardRegExp <- object@suffixForwardRegExp
     suffixReverseRegExp <- object@suffixReverseRegExp
     minReadsNum <- object@minReadsNum
@@ -379,6 +378,10 @@ setMethod("readTable", "SangerContig", function(object, indentation = 0) {
     acceptStopCodons <- object@acceptStopCodons
     readingFrame <- object@readingFrame
     contigSeq <- object@contigSeq
+    
+    forwardReadList <- object@forwardReadList
+    reverseReadList <- object@reverseReadList
+    
     differencesDF <- object@differencesDF
     distanceMatrix <- object@distanceMatrix
     indelsDF <- object@indelsDF
@@ -390,57 +393,23 @@ setMethod("readTable", "SangerContig", function(object, indentation = 0) {
         log_info("******** SangerContig readTable print ********")
         log_info("**********************************************")
     }
-    # if (object@inputSource == "ABIF") {
-    #     if (TrimmingMethod == "M1") {
-    #         cat(space, "SangerRead S4 instance\n",
-    #             space, "                 Input source : ", inputSource, "\n",
-    #             space, "                 Read feature : ", readFeature, "\n",
-    #             space, "          Read fileName (abs) : ", readFileNameAbs, "\n",
-    #             space, "         Read fileName (base) : ", readFileNameBase, "\n",
-    #             space, "              Trimming method : ", TrimmingMethod, "\n",
-    #             space, "              Trimming cutoff : ", M1TrimmingCutoff, "\n",
-    #             space, "     Trimming start base pair : ", trimmedStartPos, "\n",
-    #             space, "    Trimming finish base pair : ", trimmedFinishPos, "\n",
-    #             space, "  Read length before trimming : ", rawSeqLength, "\n",
-    #             space, "   Read length after trimming : ", trimmedSeqLength, "\n",
-    #             space, " Read quality before trimming : ", rawMeanQualityScore, "\n",
-    #             space, "  Read quality after trimming : ", trimmedMeanQualityScore,"\n",
-    #             space, "        Secondary peak cutoff : ", signalRatioCutoff,"\n",
-    #             space, "             Primary Sequence : ", primaryDNA, "\n",
-    #             space, "           Secondary Sequence : ", secondaryDNA, "\n"
-    #         )
-    #     } else if (TrimmingMethod == "M2") {
-    #         cat(space, "SangerRead S4 instance\n",
-    #             space, "                 Input source : ", inputSource, "\n",
-    #             space, "                 Read feature : ", readFeature, "\n",
-    #             space, "          Read fileName (abs) : ", readFileNameAbs, "\n",
-    #             space, "         Read fileName (base) : ", readFileNameBase, "\n",
-    #             space, "              Trimming method : ", TrimmingMethod, "\n",
-    #             space, "              Trimming cutoff : ", M2CutoffQualityScore, "\n",
-    #             space, "      Trimming sliding window : ", M2SlidingWindowSize, "\n",
-    #             space, "     Trimming start base pair : ", trimmedStartPos, "\n",
-    #             space, "    Trimming finish base pair : ", trimmedFinishPos, "\n",
-    #             space, "  Read length before trimming : ", rawSeqLength, "\n",
-    #             space, "   Read length after trimming : ", trimmedSeqLength, "\n",
-    #             space, " Read quality before trimming : ", rawMeanQualityScore, "\n",
-    #             space, "  Read quality after trimming : ", trimmedMeanQualityScore,"\n",
-    #             space, "        Secondary peak cutoff : ", signalRatioCutoff,"\n",
-    #             space, "             Primary Sequence : ", primaryDNA, "\n",
-    #             space, "           Secondary Sequence : ", secondaryDNA, "\n"
-    #         )
-    #     }
-    # } else if (object@inputSource == "FASTA") {
-    #     fastaReadName <- object@fastaFileName
-    #     seqLength <- length(object@primarySeq)
-    #     primarySeq <- as.character(object@primarySeq)
-    #     cat(space, "SangerRead S4 instance\n",
-    #         space, "                 Input source : ", inputSource, "\n",
-    #         space, "                 Read feature : ", readFeature, "\n",
-    #         space, "          Read fileName (abs) : ", readFileNameAbs, "\n",
-    #         space, "         Read fileName (base) : ", readFileNameBase, "\n",
-    #         space, "              Fasta Read Name : ", fastaReadName, "\n",
-    #         space, "                  Read length : ", seqLength, "\n",
-    #         space, "             Primary Sequence : ", primarySeq, "\n"
-    #     )
-    # }
+    cat(" ################################\n", 
+        "### SangerContig S4 instance ###\n", 
+        "################################\n")
+    cat(space, "                 Input source : ", inputSource, "\n",
+        space, "    Names conversion CSV file : ", namesConversionCSV, "\n",
+        space, "                  Contig name : ", contigName, "\n",
+        space, "         Suffix forward regex : ", suffixForwardRegExp, "\n",
+        space, "         Suffix reverse regex : ", suffixReverseRegExp, "\n",
+        space, "         Minimum reads number : ", minReadsNum, "\n",
+        space, "          Minimum read length : ", minReadLength, "\n",
+        space, "        Minimum fraction call : ", minFractionCall, "\n",
+        space, "Reference amino acid sequence : ", refAminoAcidSeq, "\n",
+        space, "        Maximum fraction lost : ", maxFractionLost, "\n",
+        space, "           Accept stop codons : ", acceptStopCodons, "\n",
+        space, "                Reading frame : ", readingFrame, "\n",
+        space, "              Contig sequence : ", as.character(contigSeq), "\n"
+    )
+    lapply(forwardReadList, readTable, indentation = 1)
+    lapply(reverseReadList, readTable, indentation = 1)
 })

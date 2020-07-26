@@ -1,0 +1,343 @@
+---
+title: "'SangerRead' Report"
+author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+    fig_caption: yes
+  BiocStyle::pdf_document: default
+#bibliography: bibliography.bib
+params:
+  SangerRead: NULL
+  outputDir: ""
+  navigationContig: FALSE
+  navigationContigFN: NULL
+  navigationAlignmentFN: NULL
+fontsize: 14pt
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+---
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div style="margin-left:50px; padding-left:-50;margin-top:50px; margin-bottom:50px; border-left: 4px solid #d3d6db;">
+`r if(!is.null(params$navigationAlignmentFN)){ "<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerAlignment Level</p>" }`
+`r if(!is.null(params$navigationContigFN)){ "<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerContig Level</p>" }`
+<p style = "font-size: 15px; font-weight: bold; margin-left:-20px"><i class="fa fa-arrow-circle-right" style="margin-right: 10px; color: green"></i>SangerRead Level</p>
+</div>
+
+
+```{r echo=FALSE}
+library(sangeranalyseR)
+```
+
+# Basic Information:
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<div style="overflow: scroll;">
+<ul style="list-style-type:disc;">
+  <li>**Output Directory : **  <span><i>`r params$outputDir`</i></span></li>
+
+  <li>**Input Directory : **  <span><i>`r dirname(params$SangerRead@readFileName)`</i></span></li>
+
+  <li>**Input Filename : **  <span><i>`r basename(params$SangerRead@readFileName)`</i></span></li>
+
+  <li>**Read Feature : **  <span>*`r params$SangerRead@readFeature`*</span></li>
+</ul>
+</div>
+</details>
+
+--- 
+
+# DNA Seqence
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<div style="overflow: scroll;">
+<h3> Primary Sequence </h3>
+```{r echo=FALSE, warning=FALSE}
+primarySeq <- unlist(strsplit(as.character(params$SangerRead@primarySeq), ""))
+primarySeqDF <- data.frame(t(data.frame(primarySeq)), stringsAsFactors = FALSE)
+colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
+rownames(primarySeqDF) <- NULL
+AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
+TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
+CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
+GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
+styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+suppressWarnings(suppressMessages(
+ table <- excelTable(data = primarySeqDF, defaultColWidth = 30,
+               editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
+))
+table
+```
+<h3> Secondary Sequence </h3>
+```{r echo=FALSE, warning=FALSE}
+secondarySeq <-unlist(strsplit(as.character(params$SangerRead@secondarySeq), ""))
+secondarySeqDF <- data.frame(t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
+colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
+rownames(secondarySeqDF) <- NULL
+AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
+TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
+CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
+GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
+styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
+suppressWarnings(suppressMessages(
+    excelTable(data = secondarySeqDF, defaultColWidth = 30,
+               editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
+))
+```
+<h3> Phred Quality Scores </h3>
+```{r echo=FALSE, warning=FALSE}
+PhredScoreDF <- data.frame(t(data.frame(params$SangerRead@QualityReport@qualityPhredScores)), stringsAsFactors = FALSE)
+colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
+rownames(PhredScoreDF) <- NULL
+styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
+suppressWarnings(suppressMessages(
+    excelTable(data = PhredScoreDF, defaultColWidth = 30, editable = FALSE,
+               rowResize = FALSE, columnResize = FALSE,
+               allowInsertRow = FALSE, allowInsertColumn = FALSE,
+               allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
+               style = styleList, allowRenameColumn = FALSE,
+               loadingSpin = TRUE, autoWidth = FALSE)
+))
+```
+</div>
+</details>
+
+---
+
+# Amino Acids Sequence
+
+<details class="description"> <summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+<div style="overflow: scroll;">
+<h3> Amino Acids Sequence frameshit 0 </h3>
+```{r echo=FALSE, warning=FALSE}
+AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS1))
+AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+rownames(AAStringDF) <- NULL
+width <- rep(90, length(AAStringDF))
+if (length(AAStringDF) == 0) {
+  suppressWarnings(suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, autoWidth = FALSE)
+  )) 
+} else {
+  styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+  styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+  styleList <- c(styleList1, styleList2)
+  suppressWarnings(suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList, autoWidth = FALSE)
+  )) 
+}
+```
+<h3> Amino Acids Sequence frameshit 1  </h3>
+```{r echo=FALSE, warning=FALSE}
+AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS2))
+AAString <- rbind(NA, AAString)
+AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+rownames(AAStringDF) <- NULL
+width <- rep(90, length(AAStringDF) - 1)
+width <- c(30, width)
+styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+styleList <- c(styleList1, styleList2)
+styleList[['A1']] <- 'background-color: black;'
+suppressWarnings(suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList, autoWidth = FALSE)
+))
+```
+<h3> Amino Acids Sequence frameshit 2 </h3>
+```{r echo=FALSE, warning=FALSE}
+AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS3))
+AAString <- rbind(NA, NA, AAString)
+AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
+colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
+rownames(AAStringDF) <- NULL
+width <- rep(90, length(AAStringDF) - 2)
+width <- c(30, 30, width)
+styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
+styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")
+styleList <- c(styleList1, styleList2)
+styleList[['A1']] <- 'background-color: black;'
+styleList[['B1']] <- 'background-color: black;'
+suppressWarnings(suppressMessages(
+    excelTable(data = AAStringDF, columns = data.frame(width = width),
+               defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
+               columnResize = FALSE, allowInsertRow = FALSE,
+               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+               style = styleList, autoWidth = FALSE)
+))
+```
+</div>
+</details>
+
+--- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Quality Trimming
+
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+
+<ul style="list-style-type:disc;">
+
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M1"){"<li>**Trimming Method**: <span class='tab'><i> Method 1 'Logarithmic Scale Trimming' </i></span></li>"}`
+
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){"<li>**Trimming Method**: <span class='tab'><i> Method 2 'Logarithmic Scale Sliding Window Trimming' </i></span></li>"}`
+
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M1"){paste("<li>**M1 Trimming Cutoff**: <span class='tab'><i>", params$SangerRead@QualityReport@M1TrimmingCutoff, "</i></span></li>")}`
+
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){paste("<li>**M2 Cutoff Quality Score**: <span class='tab'><i>", params$SangerRead@QualityReport@M2CutoffQualityScore, "</i></span></li>")}`
+
+`r if(params$SangerRead@QualityReport@TrimmingMethod == "M2"){paste("<li>**M2 Cutoff Quality Score**: <span class='tab'><i>", params$SangerRead@QualityReport@M2SlidingWindowSize, "</i></span></li>")}`
+
+  <li>**Raw Sequence Length**:  <span class="tab"><i>`r params$SangerRead@QualityReport@rawSeqLength`</i></span></li>
+  
+  <li>**Trimmed Sequence Length**:  <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedSeqLength`</i></span></li>
+  
+  <li>**Trimmed Start Point**:  <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedStartPos`</i></span></li>
+  
+  <li>**Trimmed End Point**:  <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedFinishPos`</i></span></li>
+  
+  <li>**Raw Mean Quality Score**:  <span class="tab"><i>`r params$SangerRead@QualityReport@rawMeanQualityScore`</i></span></li>
+
+  <li>**Trimmed Mean Quality Score**:  <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedMeanQualityScore`</i></span></li>
+  
+  <li>**Raw Min Quality Score**:  <span class="tab"><i>`r params$SangerRead@QualityReport@rawMinQualityScore`</i></span></li>
+  
+  <li>**Trimmed Min Quality Score**: <span class="tab"><i>`r params$SangerRead@QualityReport@trimmedMinQualityScore`</i></span></li>
+  
+  <li>**Remaining Read Ratio**: <span class="tab"><i>`r round(params$SangerRead@QualityReport@remainingRatio * 100, 2)` %</i></span></li>
+
+</ul>
+<div style="overflow: scroll;">
+```{r echo=FALSE}
+qualityBasePlot(params$SangerRead)
+```
+<div>
+</details>
+  
+--- 
+
+
+
+# Chromatogram
+<details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
+
+<ul style="list-style-type:disc;">
+
+  <li>**Signal Ratio Cutoff**:  <span class="tab">*`r params$SangerRead@ChromatogramParam@signalRatioCutoff`*</span></li>
+
+  <li>**Base Number Per Row**:  <span class="tab">*`r params$SangerRead@ChromatogramParam@baseNumPerRow`*</span></li>
+
+  <li>**Height Per Row**:  <span class="tab">*`r params$SangerRead@ChromatogramParam@heightPerRow`*</span></li>
+  
+  <li>**Show Trimmed Region**:  <span class="tab">*`r params$SangerRead@ChromatogramParam@showTrimmed`*</span></li>
+  
+</ul>
+
+```{r echo=FALSE}
+readName <- sub('\\.ab1$', '', basename(params$SangerRead@readFileName))
+hetcalls <- MakeBaseCalls(params$SangerRead,
+                          signalRatioCutoff = params$SangerRead@ChromatogramParam@signalRatioCutoff)
+chromatogram(hetcalls,
+             width = strtoi(params$SangerRead@ChromatogramParam@baseNumPerRow) - 20,
+             height = round(params$SangerRead@ChromatogramParam@heightPerRow * 2.6 / 200, 2),
+             trim5 = params$SangerRead@QualityReport@trimmedStartPos,
+             trim3 = (params$SangerRead@QualityReport@rawSeqLength - params$SangerRead@QualityReport@trimmedFinishPos),
+             showtrim = params$SangerRead@ChromatogramParam@showTrimmed,
+             showcalls = "both", filename = file.path(params$outputDir, "Chromatogram.pdf"))
+```
+
+<br>
+<br>
+
+[Click Here to Open Chromatogram in New Page ](`r file.path(".", "Chromatogram.pdf")`)
+
+![Alt](`r file.path(params$outputDir, "Chromatogram.pdf")`){width=100% height=500px}.
+
+</details>
+
+--- 
+
+
+`r if(!is.null(params$navigationContigFN)){paste0('<br><br><a style="margin-left:-20px" href="', file.path("..", basename(params$navigationContigFN)), '" class="btn btn-success btn-block btn-lg active" role="button">Back to \'SangerContig\' Report</a>')}`
+
+
+<style>
+li{
+    margin-top: 16px;
+}
+li:first-child {
+    margin-top:0;
+}
+.tab {position:absolute;left:380px; }
+
+.jexcel_content { 
+    height: 60px !important;
+}
+
+details.description[open] summary::after {
+  content: attr(data-open);
+  color: #d45050;
+  border-bottom: 2px solid #d45050;
+}
+
+details.description:not([open]) summary::after {
+  content: attr(data-close);
+  color: #4c9c6b;
+  border-bottom: 2px solid #4c9c6b;
+}
+
+.description {
+border-left: 4px solid #d3d6db;
+padding-left: 10px;
+}
+.description summary{
+  font-weight: bold;
+  font-size: 10px;
+  color: #383838;
+}
+
+</style>
