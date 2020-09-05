@@ -18,7 +18,7 @@ Description: This package builds on sangerseqR to allow users to create contigs
 License: GPL-2
 Encoding: UTF-8
 Depends: 
-    R (>= 4.0.0),
+    R (>= 3.6.0),
     stringr,
     ape,
     Biostrings,

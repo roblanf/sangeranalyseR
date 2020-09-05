@@ -67,14 +67,13 @@ CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
 GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
 styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
 suppressWarnings(suppressMessages(
- table <- excelTable(data = primarySeqDF, defaultColWidth = 30,
-               editable = FALSE, rowResize = FALSE,
-               columnResize = FALSE, allowInsertRow = FALSE,
-               allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-               allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
+  excelTable(data = primarySeqDF, defaultColWidth = 30,
+             editable = FALSE, rowResize = FALSE,
+             columnResize = FALSE, allowInsertRow = FALSE,
+             allowInsertColumn = FALSE, allowDeleteRow = FALSE,
+             allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
+             style = styleList, loadingSpin = TRUE)
 ))
-table
 ```
 <h3> Secondary Sequence </h3>
 ```{r echo=FALSE, warning=FALSE}
@@ -93,7 +92,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
+               style = styleList, loadingSpin = TRUE)
 ))
 ```
 <h3> Phred Quality Scores </h3>
@@ -108,7 +107,7 @@ suppressWarnings(suppressMessages(
                allowInsertRow = FALSE, allowInsertColumn = FALSE,
                allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
                style = styleList, allowRenameColumn = FALSE,
-               loadingSpin = TRUE, autoWidth = FALSE)
+               loadingSpin = TRUE)
 ))
 ```
 </div>
@@ -133,7 +132,7 @@ if (length(AAStringDF) == 0) {
                defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-               allowDeleteColumn = FALSE, autoWidth = FALSE)
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
   )) 
 } else {
   styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
@@ -145,7 +144,7 @@ if (length(AAStringDF) == 0) {
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList, autoWidth = FALSE)
+               style = styleList)
   )) 
 }
 ```
@@ -168,7 +167,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList, autoWidth = FALSE)
+               style = styleList)
 ))
 ```
 <h3> Amino Acids Sequence frameshit 2 </h3>
@@ -191,7 +190,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList, autoWidth = FALSE)
+               style = styleList)
 ))
 ```
 </div>
