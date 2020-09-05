@@ -72,7 +72,7 @@ suppressWarnings(suppressMessages(
              columnResize = FALSE, allowInsertRow = FALSE,
              allowInsertColumn = FALSE, allowDeleteRow = FALSE,
              allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-             style = styleList, loadingSpin = TRUE)
+             style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
 ))
 ```
 <h3> Secondary Sequence </h3>
@@ -92,7 +92,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList, loadingSpin = TRUE)
+               style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
 ))
 ```
 <h3> Phred Quality Scores </h3>
@@ -107,7 +107,7 @@ suppressWarnings(suppressMessages(
                allowInsertRow = FALSE, allowInsertColumn = FALSE,
                allowDeleteRow = FALSE, allowDeleteColumn = FALSE,
                style = styleList, allowRenameColumn = FALSE,
-               loadingSpin = TRUE)
+               loadingSpin = TRUE, autoWidth = FALSE)
 ))
 ```
 </div>
@@ -132,7 +132,8 @@ if (length(AAStringDF) == 0) {
                defaultColWidth = 90, editable = FALSE, rowResize = FALSE,
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
-               allowDeleteColumn = FALSE, allowRenameColumn = FALSE)
+               allowDeleteColumn = FALSE, allowRenameColumn = FALSE, 
+               autoWidth = FALSE)
   )) 
 } else {
   styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
@@ -144,7 +145,7 @@ if (length(AAStringDF) == 0) {
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList)
+               style = styleList, autoWidth = FALSE)
   )) 
 }
 ```
@@ -167,7 +168,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList)
+               style = styleList, autoWidth = FALSE)
 ))
 ```
 <h3> Amino Acids Sequence frameshit 2 </h3>
@@ -190,7 +191,7 @@ suppressWarnings(suppressMessages(
                columnResize = FALSE, allowInsertRow = FALSE,
                allowInsertColumn = FALSE, allowDeleteRow = FALSE,
                allowDeleteColumn = FALSE, allowRenameColumn = FALSE,
-               style = styleList)
+               style = styleList, autoWidth = FALSE)
 ))
 ```
 </div>
