@@ -12,6 +12,7 @@ params:
   SangerAlignment: NULL
   outputDir: ""
   contigsFN: NULL
+  colors: NULL
 fontsize: 14pt
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
@@ -70,14 +71,33 @@ if (params$SangerAlignment@inputSource == "ABIF" && !is.null(params$SangerAlignm
 <div style="overflow: scroll;">
 <br>
 ```{r echo=FALSE, warning=FALSE}
+if (params$colors == "default") {
+  A_color = "#1eff00"
+  T_color = "#ff7a7a"
+  C_color = "#7ac3ff"
+  G_color = "#c9c9c9"
+  unknown_color = "purple"
+} else if (params$colors == "cb_friendly") {
+  A_color = rgb(122, 122, 122, max = 255)
+  T_color = rgb(199, 199, 199, max = 255)
+  C_color = rgb(0, 114, 178, max = 255)
+  G_color = rgb(213, 94, 0, max = 255)
+  unknown_color = rgb(204, 121, 167, max = 255)
+} else {
+  A_color = colors[1]
+  T_color = colors[2]
+  C_color = colors[3]
+  G_color = colors[4]
+  unknown_color = colors[5]
+}
 contigSeqsCon <- unlist(strsplit(as.character(params$SangerAlignment@contigsConsensus), ""))
 contigSeqsConDF <- data.frame(t(data.frame(contigSeqsCon)), stringsAsFactors = FALSE)
 colnames(contigSeqsConDF) <- substr(colnames(contigSeqsConDF), 2, 100)
 rownames(contigSeqsConDF) <- NULL
-AstyleList <- SetCharStyleList(contigSeqsConDF, "A", "#1eff00")
-TstyleList <- SetCharStyleList(contigSeqsConDF, "T", "#ff7a7a")
-CstyleList <- SetCharStyleList(contigSeqsConDF, "C", "#7ac3ff")
-GstyleList <- SetCharStyleList(contigSeqsConDF, "G", "#c9c9c9")
+AstyleList <- SetCharStyleList(contigSeqsConDF, "A", A_color)
+TstyleList <- SetCharStyleList(contigSeqsConDF, "T", T_color)
+CstyleList <- SetCharStyleList(contigSeqsConDF, "C", C_color)
+GstyleList <- SetCharStyleList(contigSeqsConDF, "G", G_color)
 styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
 suppressWarnings(suppressMessages(
     excelTable(data = contigSeqsConDF, defaultColWidth = 30,

@@ -9,6 +9,7 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     SangerAlignment <- getShinyOption("sangerAlignment")
     shinyDirectory <- getShinyOption("shinyDirectory")
+    colors <- getShinyOption("colors")
     SangerAlignment <- SangerAlignment[[1]]
     SangerAlignmentNum <- length(SangerAlignment@contigList)
     SangerAlignmentParam <- lapply(seq_len(SangerAlignmentNum), function(i) {
@@ -1837,7 +1838,7 @@ SangerAlignmentServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[5]]
         if (!is.na(contigIndex) &&
             !is.na(readIndex)) {
-            primarySeqDisplay (sequenceParam)
+            primarySeqDisplay (sequenceParam, colors=colors)
         }
     })
     output$secondSeqDF <- renderExcel({
@@ -1847,7 +1848,7 @@ SangerAlignmentServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[5]]
         if (!is.na(contigIndex) &&
             !is.na(readIndex)) {
-            secondarySeqDisplay (sequenceParam)
+            secondarySeqDisplay (sequenceParam, colors=colors)
         }
     })
     output$qualityScoreDF <- renderExcel({
@@ -1902,10 +1903,6 @@ SangerAlignmentServer <- function(input, output, session) {
         }
     })
 
-
-
-
-
     output$primarySeqTrimmedDF <- renderExcel({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
@@ -1914,7 +1911,7 @@ SangerAlignmentServer <- function(input, output, session) {
         if (!is.na(contigIndex) &&
             !is.na(readIndex)) {
             primarySeqTrimmedDisplay (input, output, session,
-                                      sequenceParam, trimmedRV)
+                                      sequenceParam, trimmedRV, colors=colors)
         }
     })
 
@@ -1926,7 +1923,7 @@ SangerAlignmentServer <- function(input, output, session) {
         if (!is.na(contigIndex) &&
             !is.na(readIndex)) {
             secondSeqTrimmedDisplay (input, output, session,
-                                     sequenceParam, trimmedRV)
+                                     sequenceParam, trimmedRV, colors=colors)
         }
     })
     output$qualityScoreTrimmedDF <- renderExcel({
@@ -2345,15 +2342,15 @@ SangerAlignmentServer <- function(input, output, session) {
                                      reverseReadList[[readIndex]]@primaryAASeqS3)
             }
             # log_info(">>>>>>>>>>>> 'MakeBaseCalls' finished")
-            chromatogram(hetcalls,
-                         width = strtoi(
-                             ChromatogramParam[["baseNumPerRow"]]),
-                         height = 2,
-                         trim5 = trimmedRV[["trimmedStartPos"]],
-                         trim3 = rawSeqLength -
-                             trimmedRV[["trimmedFinishPos"]],
-                         showtrim = (ChromatogramParam[["showTrimmed"]]),
-                         showcalls = "both")
+            chromatogram_overwrite(hetcalls,
+                                   width = strtoi(
+                                       ChromatogramParam[["baseNumPerRow"]]),
+                                   height = 2,
+                                   trim5 = trimmedRV[["trimmedStartPos"]],
+                                   trim3 = rawSeqLength -
+                                       trimmedRV[["trimmedFinishPos"]],
+                                   showtrim = (ChromatogramParam[["showTrimmed"]]),
+                                   showcalls = "both", colors = colors)
             removeNotification(id = "chromatogramNotification")
             shinyjs::enable("ChromatogramBasePerRow")
             shinyjs::enable("ChromatogramHeightPerRow")

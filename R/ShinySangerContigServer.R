@@ -9,6 +9,7 @@ SangerContigServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     SangerContig <- getShinyOption("sangerContig")
     shinyDirectory <- getShinyOption("shinyDirectory")
+    colors <- getShinyOption("colors")
     SangerContig <- SangerContig[[1]]
     trimmingMethod <- SangerContig@trimmingMethodSC
     if (trimmingMethod == "M1") {
@@ -1342,7 +1343,7 @@ SangerContigServer <- function(input, output, session) {
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(readIndex)) {
-            primarySeqDisplay (sequenceParam)
+            primarySeqDisplay (sequenceParam, colors=colors)
         }
     })
     ### ------------------------------------------------------------------------
@@ -1354,7 +1355,7 @@ SangerContigServer <- function(input, output, session) {
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(readIndex)) {
-            secondarySeqDisplay (sequenceParam)
+            secondarySeqDisplay (sequenceParam, colors=colors)
         }
     })
     ### ------------------------------------------------------------------------
@@ -1421,7 +1422,7 @@ SangerContigServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[2]]
         if (!is.na(readIndex)) {
             primarySeqTrimmedDisplay (input, output, session,
-                                      sequenceParam, trimmedRV)
+                                      sequenceParam, trimmedRV, colors=colors)
         }
     })
     ### ------------------------------------------------------------------------
@@ -1434,7 +1435,7 @@ SangerContigServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[2]]
         if (!is.na(readIndex)) {
             secondSeqTrimmedDisplay (input, output, session,
-                                     sequenceParam, trimmedRV)
+                                     sequenceParam, trimmedRV, colors=colors)
         }
     })
     ### ------------------------------------------------------------------------
@@ -1801,7 +1802,7 @@ SangerContigServer <- function(input, output, session) {
             }
 
             # log_info(">>>>>>>>>>>> 'MakeBaseCalls' finished")
-            chromatogram(hetcalls,
+            chromatogram_overwrite(hetcalls,
                          width = strtoi(
                              ChromatogramParam[["baseNumPerRow"]]),
                          height = 2,
@@ -1809,7 +1810,7 @@ SangerContigServer <- function(input, output, session) {
                          trim3 = rawSeqLength -
                              trimmedRV[["trimmedFinishPos"]],
                          showtrim = (ChromatogramParam[["showTrimmed"]]),
-                         showcalls = "both")
+                         showcalls = "both", colors = colors)
             removeNotification(id = "chromatogramNotification")
             shinyjs::enable("ChromatogramBasePerRow")
             shinyjs::enable("ChromatogramHeightPerRow")

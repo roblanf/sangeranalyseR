@@ -214,15 +214,21 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 #' @param outputDir The output directory of the generated HTML report.
 #' @param navigationContigFN The internal parameter passed to HTML report. Users should not modify this parameter on their own.
 #' @param navigationAlignmentFN The internal parameter passed to HTML report. Users should not modify this parameter on their own.
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
 #'
 #' @return The output absolute path to the SangerRead's HTML file.
 #'
 #' @examples
 #' data("sangerReadFData")
 #' \dontrun{
-#' generateReportSR(sangerReadFData)}
+#' generateReportSR(sangerReadFData)
+#' generateReportSR(sangerReadFData, colors="cb_friendly")}
 setMethod("generateReportSR", "SangerRead",
-          function(object, outputDir,
+          function(object, outputDir, colors,
                    navigationContigFN = NULL, navigationAlignmentFN = NULL) {
               # Another Rmd for SangerRead with FASTA file source
               ### ------------------------------------------------------------------------
@@ -259,7 +265,8 @@ setMethod("generateReportSR", "SangerRead",
                             params = list(SangerRead = object,
                                           outputDir = outputDirSR,
                                           navigationContigFN = navigationContigFN,
-                                          navigationAlignmentFN = navigationAlignmentFN))
+                                          navigationAlignmentFN = navigationAlignmentFN,
+                                          colors = colors))
               return(outputHtml)
           })
 

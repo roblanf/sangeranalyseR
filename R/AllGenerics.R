@@ -176,7 +176,12 @@ setGeneric("writeFastaSR", function(object,outputDir = NULL,
 #'
 #' @param object A SangerContig S4 instance.
 #' @param outputDir The output directory of the saved new SangerContig S4 instance.
-#'
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
+#'     
 #' @return A \code{shiny.appobj} object.
 #'
 #' @exportMethod launchAppSC
@@ -184,7 +189,7 @@ setGeneric("writeFastaSR", function(object,outputDir = NULL,
 #' data(sangerContigData)
 #' \dontrun{
 #' launchAppSC(sangerContigData)}
-setGeneric("launchAppSC", function(object, outputDir = NULL) {
+setGeneric("launchAppSC", function(object, outputDir = NULL, colors = "default") {
     standardGeneric("launchAppSC")
 })
 
@@ -194,6 +199,11 @@ setGeneric("launchAppSC", function(object, outputDir = NULL) {
 #'
 #' @param object A SangerAlignment S4 instance.
 #' @param outputDir The output directory of the saved new SangerAlignment S4 instance.
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
 #'
 #' @return A \code{shiny.appobj} object.
 #'
@@ -202,21 +212,9 @@ setGeneric("launchAppSC", function(object, outputDir = NULL) {
 #' data(sangerAlignmentData)
 #' \dontrun{
 #' launchAppSA(sangerAlignmentData)}
-setGeneric("launchAppSA", function(object, outputDir = NULL) {
+setGeneric("launchAppSA", function(object, outputDir = NULL, colors = "default") {
     standardGeneric("launchAppSA")
 })
-
-
-
-
-
-
-
-
-
-
-
-
 
 ### ============================================================================
 ### Defined in SangerRead, SangerContig, SangerAlignment
@@ -254,6 +252,11 @@ setGeneric("readTable", function(object, indentation = 0, ...) {
 #'
 #' @param object A SangerRead S4 instance.
 #' @param outputDir The output directory of the generated HTML report.
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
 #' @param ... Further generateReportSR-related parameters.
 #'
 #' @return The output absolute path to the SangerRead's HTML file.
@@ -263,7 +266,7 @@ setGeneric("readTable", function(object, indentation = 0, ...) {
 #' data(sangerReadFData)
 #' \dontrun{
 #' generateReportSR(sangerReadFData)}
-setGeneric("generateReportSR", function(object, outputDir = NULL, ...) {
+setGeneric("generateReportSR", function(object, outputDir = NULL, colors="default", ...) {
     standardGeneric("generateReportSR")
 })
 
@@ -274,6 +277,11 @@ setGeneric("generateReportSR", function(object, outputDir = NULL, ...) {
 #' @param object A SangerContig S4 instance.
 #' @param outputDir The output directory of the generated HTML report.
 #' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
 #' @param ... Further generateReportSC-related parameters.
 #'
 #' @return The output absolute path to the SangerContig's HTML file.
@@ -284,7 +292,7 @@ setGeneric("generateReportSR", function(object, outputDir = NULL, ...) {
 #' \dontrun{
 #' generateReportSC(sangerContigData)}
 setGeneric("generateReportSC", function(object, outputDir = NULL,
-                                        includeSangerRead = TRUE, ...) {
+                                        includeSangerRead = TRUE, colors="default", ...) {
     standardGeneric("generateReportSC")
 })
 
@@ -296,6 +304,11 @@ setGeneric("generateReportSC", function(object, outputDir = NULL,
 #' @param outputDir The output directory of the generated HTML report.
 #' @param includeSangerContig The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
 #' @param ... Further generateReportSA-related parameters.
 #'
 #' @return The output absolute path to the SangerAlignment's HTML file.
@@ -307,6 +320,6 @@ setGeneric("generateReportSC", function(object, outputDir = NULL,
 #' generateReportSA(sangerAlignmentData)}
 setGeneric("generateReportSA", function(object, outputDir = NULL,
                                         includeSangerContig = TRUE,
-                                        includeSangerRead = TRUE, ...) {
+                                        includeSangerRead = TRUE, colors="default", ...) {
     standardGeneric("generateReportSA")
 })

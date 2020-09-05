@@ -14,6 +14,7 @@ params:
   navigationContig: FALSE
   navigationContigFN: NULL
   navigationAlignmentFN: NULL
+  colors: NULL
 fontsize: 14pt
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
@@ -57,14 +58,33 @@ library(sangeranalyseR)
 <div style="overflow: scroll;">
 <h3> Primary Sequence </h3>
 ```{r echo=FALSE, warning=FALSE}
+if (params$colors == "default") {
+  A_color = "#1eff00"
+  T_color = "#ff7a7a"
+  C_color = "#7ac3ff"
+  G_color = "#c9c9c9"
+  unknown_color = "purple"
+} else if (params$colors == "cb_friendly") {
+  A_color = rgb(122, 122, 122, max = 255)
+  T_color = rgb(199, 199, 199, max = 255)
+  C_color = rgb(0, 114, 178, max = 255)
+  G_color = rgb(213, 94, 0, max = 255)
+  unknown_color = rgb(204, 121, 167, max = 255)
+} else {
+  A_color = params$colors[1]
+  T_color = params$colors[2]
+  C_color = params$colors[3]
+  G_color = params$colors[4]
+  unknown_color = params$colors[5]
+}
 primarySeq <- unlist(strsplit(as.character(params$SangerRead@primarySeq), ""))
 primarySeqDF <- data.frame(t(data.frame(primarySeq)), stringsAsFactors = FALSE)
 colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
 rownames(primarySeqDF) <- NULL
-AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
-TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
-CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
-GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
+AstyleList <- SetCharStyleList(primarySeqDF, "A", A_color)
+TstyleList <- SetCharStyleList(primarySeqDF, "T", T_color)
+CstyleList <- SetCharStyleList(primarySeqDF, "C", C_color)
+GstyleList <- SetCharStyleList(primarySeqDF, "G", G_color)
 styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
 suppressWarnings(suppressMessages(
   excelTable(data = primarySeqDF, defaultColWidth = 30,
@@ -77,14 +97,33 @@ suppressWarnings(suppressMessages(
 ```
 <h3> Secondary Sequence </h3>
 ```{r echo=FALSE, warning=FALSE}
+if (params$colors == "default") {
+  A_color = "#1eff00"
+  T_color = "#ff7a7a"
+  C_color = "#7ac3ff"
+  G_color = "#c9c9c9"
+  unknown_color = "purple"
+} else if (params$colors == "cb_friendly") {
+  A_color = rgb(122, 122, 122, max = 255)
+  T_color = rgb(199, 199, 199, max = 255)
+  C_color = rgb(0, 114, 178, max = 255)
+  G_color = rgb(213, 94, 0, max = 255)
+  unknown_color = rgb(204, 121, 167, max = 255)
+} else {
+  A_color = params$colors[1]
+  T_color = params$colors[2]
+  C_color = params$colors[3]
+  G_color = params$colors[4]
+  unknown_color = params$colors[5]
+}
 secondarySeq <-unlist(strsplit(as.character(params$SangerRead@secondarySeq), ""))
 secondarySeqDF <- data.frame(t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
 colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
 rownames(secondarySeqDF) <- NULL
-AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
-TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
-CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
-GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
+AstyleList <- SetCharStyleList(secondarySeqDF, "A", A_color)
+TstyleList <- SetCharStyleList(secondarySeqDF, "T", T_color)
+CstyleList <- SetCharStyleList(secondarySeqDF, "C", C_color)
+GstyleList <- SetCharStyleList(secondarySeqDF, "G", G_color)
 styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
 suppressWarnings(suppressMessages(
     excelTable(data = secondarySeqDF, defaultColWidth = 30,
@@ -199,23 +238,6 @@ suppressWarnings(suppressMessages(
 
 --- 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Quality Trimming
 
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
@@ -281,13 +303,14 @@ qualityBasePlot(params$SangerRead)
 readName <- sub('\\.ab1$', '', basename(params$SangerRead@readFileName))
 hetcalls <- MakeBaseCalls(params$SangerRead,
                           signalRatioCutoff = params$SangerRead@ChromatogramParam@signalRatioCutoff)
-chromatogram(hetcalls,
+chromatogram_overwrite(hetcalls,
              width = strtoi(params$SangerRead@ChromatogramParam@baseNumPerRow) - 20,
              height = round(params$SangerRead@ChromatogramParam@heightPerRow * 2.6 / 200, 2),
              trim5 = params$SangerRead@QualityReport@trimmedStartPos,
              trim3 = (params$SangerRead@QualityReport@rawSeqLength - params$SangerRead@QualityReport@trimmedFinishPos),
              showtrim = params$SangerRead@ChromatogramParam@showTrimmed,
-             showcalls = "both", filename = file.path(params$outputDir, "Chromatogram.pdf"))
+             showcalls = "both", filename = file.path(params$outputDir, "Chromatogram.pdf"),
+             colors=colors)
 ```
 
 <br>

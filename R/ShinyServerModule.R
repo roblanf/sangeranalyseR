@@ -632,17 +632,36 @@ qualityQualityBasePlotDisplay <- function(input, output, session,
 ### ============================================================================
 ### SangerRead Sequence Render Function (DNA / AA) dynamic
 ### ============================================================================
-primarySeqDisplay <- function(sequenceParam) {
+primarySeqDisplay <- function(sequenceParam, colors) {
+    if (colors == "default") {
+        A_color = "#1eff00"
+        T_color = "#ff7a7a"
+        C_color = "#7ac3ff"
+        G_color = "#c9c9c9"
+        unknown_color = "purple"
+    } else if (colors == "cb_friendly") {
+        A_color = rgb(122, 122, 122, max = 255)
+        T_color = rgb(199, 199, 199, max = 255)
+        C_color = rgb(0, 114, 178, max = 255)
+        G_color = rgb(213, 94, 0, max = 255)
+        unknown_color = rgb(204, 121, 167, max = 255)
+    } else {
+        A_color = colors[1]
+        T_color = colors[2]
+        C_color = colors[3]
+        G_color = colors[4]
+        unknown_color = colors[5]
+    }
     primarySeq <- unlist(strsplit(
         sequenceParam[["primarySeq"]], ""))
     primarySeqDF <- data.frame(
         t(data.frame(primarySeq)), stringsAsFactors = FALSE)
     colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
     rownames(primarySeqDF) <- NULL
-    AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
-    TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
-    CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
-    GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
+    AstyleList <- SetCharStyleList(primarySeqDF, "A", A_color)
+    TstyleList <- SetCharStyleList(primarySeqDF, "T", T_color)
+    CstyleList <- SetCharStyleList(primarySeqDF, "C", C_color)
+    GstyleList <- SetCharStyleList(primarySeqDF, "G", G_color)
     styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
     suppressMessages(
         excelTable(data = primarySeqDF, defaultColWidth = 30,
@@ -653,17 +672,36 @@ primarySeqDisplay <- function(sequenceParam) {
                    style = styleList, loadingSpin = TRUE, autoWidth = FALSE)
     )
 }
-secondarySeqDisplay <- function(sequenceParam) {
+secondarySeqDisplay <- function(sequenceParam, colors) {
+    if (colors == "default") {
+        A_color = "#1eff00"
+        T_color = "#ff7a7a"
+        C_color = "#7ac3ff"
+        G_color = "#c9c9c9"
+        unknown_color = "purple"
+    } else if (colors == "cb_friendly") {
+        A_color = rgb(122, 122, 122, max = 255)
+        T_color = rgb(199, 199, 199, max = 255)
+        C_color = rgb(0, 114, 178, max = 255)
+        G_color = rgb(213, 94, 0, max = 255)
+        unknown_color = rgb(204, 121, 167, max = 255)
+    } else {
+        A_color = colors[1]
+        T_color = colors[2]
+        C_color = colors[3]
+        G_color = colors[4]
+        unknown_color = colors[5]
+    }
     secondarySeq <-unlist(strsplit(
         sequenceParam[["secondarySeq"]], ""))
     secondarySeqDF <- data.frame(
         t(data.frame(secondarySeq)), stringsAsFactors = FALSE)
     colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
     rownames(secondarySeqDF) <- NULL
-    AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
-    TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
-    CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
-    GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
+    AstyleList <- SetCharStyleList(secondarySeqDF, "A", A_color)
+    TstyleList <- SetCharStyleList(secondarySeqDF, "T", T_color)
+    CstyleList <- SetCharStyleList(secondarySeqDF, "C", C_color)
+    GstyleList <- SetCharStyleList(secondarySeqDF, "G", G_color)
     styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
     suppressMessages(
         excelTable(data = secondarySeqDF, defaultColWidth = 30,
@@ -769,7 +807,26 @@ PrimAASeqS3Display <- function(sequenceParam) {
     )
 }
 primarySeqTrimmedDisplay <- function(input, output, session,
-                                     sequenceParam, trimmedRV) {
+                                     sequenceParam, trimmedRV, colors) {
+    if (colors == "default") {
+        A_color = "#1eff00"
+        T_color = "#ff7a7a"
+        C_color = "#7ac3ff"
+        G_color = "#c9c9c9"
+        unknown_color = "purple"
+    } else if (colors == "cb_friendly") {
+        A_color = rgb(122, 122, 122, max = 255)
+        T_color = rgb(199, 199, 199, max = 255)
+        C_color = rgb(0, 114, 178, max = 255)
+        G_color = rgb(213, 94, 0, max = 255)
+        unknown_color = rgb(204, 121, 167, max = 255)
+    } else {
+        A_color = colors[1]
+        T_color = colors[2]
+        C_color = colors[3]
+        G_color = colors[4]
+        unknown_color = colors[5]
+    }
     primarySeq <- unlist(strsplit(
         substr(sequenceParam[["primarySeq"]],
                trimmedRV[["trimmedStartPos"]] + 1,
@@ -783,10 +840,10 @@ primarySeqTrimmedDisplay <- function(input, output, session,
         colnames(primarySeqDF) <- substr(colnames(primarySeqDF), 2, 100)
     }
     rownames(primarySeqDF) <- NULL
-    AstyleList <- SetCharStyleList(primarySeqDF, "A", "#1eff00")
-    TstyleList <- SetCharStyleList(primarySeqDF, "T", "#ff7a7a")
-    CstyleList <- SetCharStyleList(primarySeqDF, "C", "#7ac3ff")
-    GstyleList <- SetCharStyleList(primarySeqDF, "G", "#c9c9c9")
+    AstyleList <- SetCharStyleList(primarySeqDF, "A", A_color)
+    TstyleList <- SetCharStyleList(primarySeqDF, "T", T_color)
+    CstyleList <- SetCharStyleList(primarySeqDF, "C", C_color)
+    GstyleList <- SetCharStyleList(primarySeqDF, "G", G_color)
     styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
     suppressMessages(
         excelTable(data = primarySeqDF, defaultColWidth = 30,
@@ -799,7 +856,26 @@ primarySeqTrimmedDisplay <- function(input, output, session,
 }
 
 secondSeqTrimmedDisplay <- function(input, output, session,
-                                    sequenceParam, trimmedRV) {
+                                    sequenceParam, trimmedRV, colors) {
+    if (colors == "default") {
+        A_color = "#1eff00"
+        T_color = "#ff7a7a"
+        C_color = "#7ac3ff"
+        G_color = "#c9c9c9"
+        unknown_color = "purple"
+    } else if (colors == "cb_friendly") {
+        A_color = rgb(122, 122, 122, max = 255)
+        T_color = rgb(199, 199, 199, max = 255)
+        C_color = rgb(0, 114, 178, max = 255)
+        G_color = rgb(213, 94, 0, max = 255)
+        unknown_color = rgb(204, 121, 167, max = 255)
+    } else {
+        A_color = colors[1]
+        T_color = colors[2]
+        C_color = colors[3]
+        G_color = colors[4]
+        unknown_color = colors[5]
+    }
     secondarySeq <- unlist(strsplit(
         substr(sequenceParam[["secondarySeq"]],
                trimmedRV[["trimmedStartPos"]] + 1,
@@ -813,10 +889,10 @@ secondSeqTrimmedDisplay <- function(input, output, session,
         colnames(secondarySeqDF) <- substr(colnames(secondarySeqDF), 2, 100)
     }
     rownames(secondarySeqDF) <- NULL
-    AstyleList <- SetCharStyleList(secondarySeqDF, "A", "#1eff00")
-    TstyleList <- SetCharStyleList(secondarySeqDF, "T", "#ff7a7a")
-    CstyleList <- SetCharStyleList(secondarySeqDF, "C", "#7ac3ff")
-    GstyleList <- SetCharStyleList(secondarySeqDF, "G", "#c9c9c9")
+    AstyleList <- SetCharStyleList(secondarySeqDF, "A", A_color)
+    TstyleList <- SetCharStyleList(secondarySeqDF, "T", T_color)
+    CstyleList <- SetCharStyleList(secondarySeqDF, "C", C_color)
+    GstyleList <- SetCharStyleList(secondarySeqDF, "G", G_color)
     styleList <- c(AstyleList, TstyleList, CstyleList, GstyleList)
     suppressMessages(
         excelTable(data = secondarySeqDF, defaultColWidth = 30,

@@ -104,13 +104,18 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 #'
 #' @param object A SangerContig S4 instance.
 #' @param outputDir The output directory of the saved new SangerContig S4 instance.
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
 #'
 #' @return A \code{shiny.appobj} object.
 #'
-#' @examples
+#' @examples 
 #' data("sangerContigData")
-#' RShinySC <- launchAppSC(sangerContigData)
-setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL) {
+#' RShinySC <- launchAppSC(sangerContigData, colors="cb_friendly")
+setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL, colors = "default") {
     if (object@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
         ### Checking SangerContig input parameter is a list containing
@@ -124,6 +129,7 @@ setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL) {
         if (dir.exists(outputDir)) {
             shinyOptions(sangerContig = list(object))
             shinyOptions(shinyDirectory = outputDir)
+            shinyOptions(colors = colors)
             newSangerContig <-
                 shinyApp(SangerContigUI, SangerContigServer)
             return(newSangerContig)
@@ -266,16 +272,22 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
 #' @param outputDir The output directory of the generated HTML report.
 #' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #' @param navigationAlignmentFN The internal parameter passed to HTML report. Users should not modify this parameter on their own.
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
 #'
 #' @return The output absolute path to the SangerContig's HTML file.
 #'
 #' @examples
 #' data("sangerContigData")
 #' \dontrun{
-#' generateReportSC(sangerContigData)}
+#' generateReportSC(sangerContigData)
+#' generateReportSC(sangerContigData, colors="cb_friendly")}
 setMethod("generateReportSC", "SangerContig",
-          function(object, outputDir, includeSangerRead = TRUE,
-                   navigationAlignmentFN = NULL) {
+          function(object, outputDir, includeSangerRead = TRUE, 
+                   colors, navigationAlignmentFN = NULL) {
     # if (object@inputSource == "ABIF") {
     #
     # } else if (object@inputSource == "FASTA") {
@@ -314,10 +326,12 @@ setMethod("generateReportSC", "SangerContig",
     if(includeSangerRead) {
         forwardReadFN <- lapply(forwardReads, generateReportSR,
                                 outputDir = outputDirSC,
+                                colors = colors,
                                 navigationContigFN = outputHtml,
                                 navigationAlignmentFN = navigationAlignmentFN)
         reverseReadFN <- lapply(reverseReads, generateReportSR,
                                 outputDir = outputDirSC,
+                                colors = colors,
                                 navigationContigFN = outputHtml,
                                 navigationAlignmentFN = navigationAlignmentFN)
     } else {
@@ -330,7 +344,8 @@ setMethod("generateReportSC", "SangerContig",
                                 outputDir = outputDirSC,
                                 forwardReadFN = forwardReadFN,
                                 reverseReadFN = reverseReadFN,
-                                navigationAlignmentFN = navigationAlignmentFN))
+                                navigationAlignmentFN = navigationAlignmentFN,
+                                colors = colors))
     return(outputHtml)
 })
 

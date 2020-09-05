@@ -83,13 +83,19 @@ setMethod("updateQualityParam",  "SangerAlignment",
 #'
 #' @param object A SangerAlignment S4 instance.
 #' @param outputDir The output directory of the saved new SangerContig S4 instance.
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
 #'
 #' @return A \code{shiny.appobj} object.
 #'
 #' @examples
 #' data("sangerAlignmentData")
-#' RShinySA <- launchAppSA(sangerAlignmentData)
-setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
+#' RShinySA <- launchAppSA(sangerAlignmentData, colors="cb_friendly")
+setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL, 
+                                                     colors = "default") {
     if (object@inputSource == "ABIF") {
         ### --------------------------------------------------------------------
         ### Checking SangerAlignment input parameter is a list containing
@@ -104,6 +110,7 @@ setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL) {
         if (dir.exists(outputDir)) {
             shinyOptions(sangerAlignment = list(object))
             shinyOptions(shinyDirectory = outputDir)
+            shinyOptions(colors = colors)
             newSangerAlignment <- shinyApp(SangerAlignmentUI, SangerAlignmentServer)
             return(newSangerAlignment)
         } else {
@@ -252,25 +259,23 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
 #' @param outputDir The output directory of the generated HTML report.
 #' @param includeSangerContig The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
 #' @param includeSangerRead The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.
+#' @param colors A vector for users to set the colors of (A, T, C, G, else). 
+#'   There are three options for users to choose from. 
+#'     1. "default":  (green, blue, black, red, purple). 
+#'     2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+#'     3. Users can set their own colors with a vector with five elements.
 #'
 #' @return The output absolute path to the SangerAlignment's HTML file.
 #'
 #' @examples
 #' data("sangerAlignmentData")
 #' \dontrun{
-#' generateReportSA(sangerAlignmentData)}
+#' generateReportSA(sangerAlignmentData)
+#' generateReportSA(sangerAlignmentData, colors="cb_friendly")}
 setMethod("generateReportSA", "SangerAlignment",
           function(object, outputDir,
-                   includeSangerContig = TRUE,
-                   includeSangerRead = TRUE) {
-
-    # if (object@inputSource == "ABIF") {
-    #
-    # } else if (object@inputSource == "FASTA") {
-    #     log_info("SangerContig with 'FASTA' inputSource ",
-    #             "cannot run Shiny app\n (You don't need to ",
-    #             "do trimming or base calling)")
-    # }
+                   includeSangerContig = TRUE, includeSangerRead = TRUE,
+                   colors) {
     ### ------------------------------------------------------------------------
     ### Make sure the input directory is not NULL
     ### ------------------------------------------------------------------------
@@ -296,8 +301,9 @@ setMethod("generateReportSA", "SangerAlignment",
         contigsFN <- lapply(object@contigList, function (objContig) {
             log_info("!!! outputHtml: ", outputHtml)
             generateReportSC(objContig, outputDir = outputDirSA,
-                             navigationAlignmentFN = outputHtml,
-                             includeSangerRead = includeSangerRead)
+                             includeSangerRead = includeSangerRead,
+                             colors=colors,
+                             navigationAlignmentFN = outputHtml)
         })
     } else {
         contigsFN <- NULL
@@ -306,6 +312,7 @@ setMethod("generateReportSA", "SangerAlignment",
                   output_dir = outputDirSA,
                   params = list(SangerAlignment = object,
                                 outputDir = outputDirSA,
-                                contigsFN = contigsFN))
+                                contigsFN = contigsFN, 
+                                colors = colors))
     return(outputHtml)
 })
