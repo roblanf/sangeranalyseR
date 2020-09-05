@@ -20,7 +20,9 @@
 #' data(sangerAlignmentData)
 #' \dontrun{
 #' launchApp(sangerContigData)
-#' launchApp(sangerAlignmentData)}
+#' launchApp(sangerContigData, colors="cb_friendly")
+#' launchApp(sangerAlignmentData)
+#' launchApp(sangerAlignmentData, colors="cb_friendly")}
 launchApp <- function(object, outputDir = NULL, colors="default") {
     if(isS4(object)) {
         if (class(object)[1] == 'SangerAlignment') {
@@ -118,11 +120,14 @@ writeFasta <- function(object, outputDir = NULL, compress  = FALSE,
 #' data(sangerAlignmentData)
 #' \dontrun{
 #' generateReport(sangerReadFData)
+#' generateReport(sangerReadFData, colors="cb_friendly")
 #' generateReport(sangerContigData)
-#' generateReport(sangerAlignmentData)}
+#' generateReport(sangerContigData, colors="cb_friendly")
+#' generateReport(sangerAlignmentData)
+#' generateReport(sangerAlignmentData, colors="cb_friendly")}
 generateReport <- function(object, outputDir = NULL,
                            includeSangerContig = TRUE,
-                           includeSangerRead = TRUE, ...) {
+                           includeSangerRead = TRUE, colors="default", ...) {
     if(isS4(object)) {
         if (class(object)[1] == 'SangerAlignment') {
             log_info("Your input is 'SangerAlignment' S4 instance")

@@ -93,6 +93,7 @@ setMethod("updateQualityParam",  "SangerAlignment",
 #'
 #' @examples
 #' data("sangerAlignmentData")
+#' RShinySA <- launchAppSA(sangerAlignmentData)
 #' RShinySA <- launchAppSA(sangerAlignmentData, colors="cb_friendly")
 setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL, 
                                                      colors = "default") {

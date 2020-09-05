@@ -114,6 +114,7 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
 #'
 #' @examples 
 #' data("sangerContigData")
+#' RShinySC <- launchAppSC(sangerContigData)
 #' RShinySC <- launchAppSC(sangerContigData, colors="cb_friendly")
 setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL, colors = "default") {
     if (object@inputSource == "ABIF") {
