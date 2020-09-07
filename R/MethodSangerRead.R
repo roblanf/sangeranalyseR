@@ -225,7 +225,7 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 #' @examples
 #' data("sangerReadFData")
 #' \dontrun{
-#' generateReportSR(sangerReadFData)
+#' generateReportSR(sangerReadFData, "~/Documents")
 #' generateReportSR(sangerReadFData, colors="cb_friendly")}
 setMethod("generateReportSR", "SangerRead",
           function(object, outputDir, colors,

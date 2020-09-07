@@ -782,7 +782,7 @@ SangerReadInnerTrimming <- function(SangerReadInst, inputSource) {
     return(primaryDNA)
 }
 
-
+#' @export
 chromatogram_overwrite <- function(obj, trim5=0, trim3=0, 
                                    showcalls=c("primary", "secondary", "both", "none"), 
                                    width=100, height=2, cex.mtext=1, cex.base=1, ylim=3, 
@@ -858,7 +858,9 @@ chromatogram_overwrite <- function(obj, trim5=0, trim3=0,
     tracewidth <- width*valuesperbase
     breaks <- seq(1,nrow(traces), by=tracewidth)
     numplots <- length(breaks)
-    if(!is.null(filename)) pdf(filename, width=8.5, height=height*numplots) 
+    if(!is.null(filename)) {
+        pdf(filename, width=8.5, height=height*numplots) 
+    }
     par(mar=c(2,2,2,1), mfrow=c(numplots, 1))
     basecallwarning1 = 0
     basecallwarning2 = 0
