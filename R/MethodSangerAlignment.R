@@ -162,6 +162,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
+    outputDir <- normalizePath(outputDir)
     log_info(">>> outputDir : ", outputDir)
     log_info("Start to write 'SangerAlignment' to FASTA format ...")
     ### ------------------------------------------------------------------------
@@ -284,6 +285,7 @@ setMethod("generateReportSA", "SangerAlignment",
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
+    outputDir <- normalizePath(outputDir)
     log_info(">>> outputDir : ", outputDir)
     ### ------------------------------------------------------------------------
     ### Make sure the directory is exist (SangerAlignment level)
@@ -293,6 +295,7 @@ setMethod("generateReportSA", "SangerAlignment",
     if (!dir.exists(outputDirSA)) {
         suppressWarnings(dir.create(outputDirSA, recursive = TRUE))
     }
+    log_info("dir.exists(outputDirSA): ", dir.exists(outputDirSA))
     rootDir <- system.file(package = "sangeranalyseR")
     originRmd <- file.path(rootDir, "rmd", "SangerAlignment_Report.Rmd")
     outputHtml <- file.path(outputDirSA, "SangerAlignment_Report.html")

@@ -91,7 +91,7 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
             stop(errors)
         }
     } else if (object@inputSource == "FASTA") {
-        message("SangerContig with 'FASTA' inputSource ",
+        log_info("SangerContig with 'FASTA' inputSource ",
                 "cannot update quality parameters")
     }
 })
@@ -126,7 +126,7 @@ setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL, colo
             outputDir <- tempdir()
             suppressWarnings(dir.create(outputDir, recursive = TRUE))
         }
-        message(">>> outputDir : ", outputDir)
+        log_info(">>> outputDir : ", outputDir)
         if (dir.exists(outputDir)) {
             shinyOptions(sangerContig = list(object))
             shinyOptions(shinyDirectory = outputDir)
@@ -138,7 +138,7 @@ setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL, colo
             stop("'", outputDir, "' is not valid. Please check again")
         }
     } else if (object@inputSource == "FASTA") {
-        message("SangerContig with 'FASTA' inputSource ",
+        log_info("SangerContig with 'FASTA' inputSource ",
                 "cannot run Shiny app\n (You don't need to ",
                 "do trimming or base calling)")
     }
@@ -179,14 +179,15 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
-    message(">>> outputDir : ", outputDir)
+    outputDir <- normalizePath(outputDir)
+    log_info(">>> outputDir : ", outputDir)
     contigName = object@contigName
-    message("Start to write '", contigName, "' to FASTA format ...")
+    log_info("Start to write '", contigName, "' to FASTA format ...")
     ### ------------------------------------------------------------------------
     ### Writing alignment result to FASTA file (Exclude consensus read)
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "reads_alignment") {
-        message("\n    >> Writing alignment to FASTA ...")
+        log_info("\n    >> Writing alignment to FASTA ...")
         alignmentObject = object@alignment
         alignmentObject$Consensus <- NULL
         writeAlignment <- append(alignmentObject, list(object@contigSeq))
@@ -204,7 +205,7 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
     ### Writing all single read into FASTA file
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "reads_unalignment") {
-        message("\n    >> Writing all single reads to FASTA ...")
+        log_info("\n    >> Writing all single reads to FASTA ...")
         fRDNAStringSet <- lapply(object@forwardReadList, function(forwardRead) {
             primaryDNA <- as.character(forwardRead@primarySeq)
             ### ----------------------------------------------------------------
@@ -248,7 +249,7 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
     ### Writing consensus read into FASTA file
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "contig") {
-        message("\n    >> Writing consensus read to FASTA ...")
+        log_info("\n    >> Writing consensus read to FASTA ...")
 
         writeTarget <- DNAStringSet(object@contigSeq)
         names(writeTarget) <- paste0(contigName, "_contig")
@@ -257,7 +258,7 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
                         compress = compress,
                         compression_level = compression_level)
     }
-    message("\nFinish writing '", contigName, "' to FASTA format")
+    log_info("\nFinish writing '", contigName, "' to FASTA format")
 })
 
 ## =============================================================================
@@ -292,7 +293,7 @@ setMethod("generateReportSC", "SangerContig",
     # if (object@inputSource == "ABIF") {
     #
     # } else if (object@inputSource == "FASTA") {
-    #     message("SangerContig with 'FASTA' inputSource ",
+    #     log_info("SangerContig with 'FASTA' inputSource ",
     #             "cannot run Shiny app\n (You don't need to ",
     #             "do trimming or base calling)")
     # }
@@ -303,7 +304,8 @@ setMethod("generateReportSC", "SangerContig",
         outputDir <- tempdir()
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
-    message(">>> outputDir : ", outputDir)
+    outputDir <- normalizePath(outputDir)
+    log_info(">>> outputDir : ", outputDir)
     ### ------------------------------------------------------------------------
     ### Make sure the directory is exist (SangerContig level)
     ###  => SangerRead level directory will be created recursively

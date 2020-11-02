@@ -859,6 +859,9 @@ chromatogram_overwrite <- function(obj, trim5=0, trim3=0,
     breaks <- seq(1,nrow(traces), by=tracewidth)
     numplots <- length(breaks)
     if(!is.null(filename)) {
+        if (! dir.exists(dirname(filename))) {
+            dir.create(dirname(filename))
+        }
         pdf(filename, width=8.5, height=height*numplots) 
     }
     par(mar=c(2,2,2,1), mfrow=c(numplots, 1))

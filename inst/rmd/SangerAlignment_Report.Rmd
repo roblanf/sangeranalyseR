@@ -1,6 +1,6 @@
 ---
 title: "'SangerAlignment' Report"
-author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+author: "Author: Kuan-Hao Chao (kuanhao.chao@gmail.com)"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
 output: 
   BiocStyle::html_document:
