@@ -171,10 +171,15 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
     if (selection == "all" || selection == "contigs_alignment") {
         log_info("\n    >> Writing 'alignment' to FASTA ...")
         alignmentObject = object@contigsAlignment
-        writeXStringSet(alignmentObject,
-                        file.path(outputDir, "Sanger_contigs_alignment.fa"),
-                        compress = compress,
-                        compression_level = compression_level)
+        if (!is.null(alignmentObject)) {
+            writeXStringSet(alignmentObject,
+                            file.path(outputDir, "Sanger_contigs_alignment.fa"),
+                            compress = compress,
+                            compression_level = compression_level)
+        } else {
+            log_warn("The alignment in your SangerAlignment object is NULL. ",
+                     "No 'Sanger_contigs_alignment.fa' will be written.")
+        }
     }
 
     ### ------------------------------------------------------------------------
