@@ -2,11 +2,15 @@
 title: "'SangerContig' Report"
 author: "Author: Kuan-Hao Chao (kuanhao.chao@gmail.com)"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
-output: 
-  BiocStyle::html_document:
+output:
+  html_document:
+    toc: true
     toc_float: true
-    fig_caption: yes
-  BiocStyle::pdf_document: default
+# output: 
+#   BiocStyle::html_document:
+#     toc_float: true
+#     fig_caption: yes
+#   BiocStyle::pdf_document: default
 #bibliography: bibliography.bib
 params:
   SangerContig: NULL
@@ -22,14 +26,13 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div style="margin-left:50px; padding-left:-50;margin-top:50px; margin-bottom:50px; border-left: 4px solid #d3d6db;">
 `r if(!is.null(params$navigationAlignmentFN)){ "<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerAlignment Level</p>" }`
-<p style = "font-size: 15px; font-weight: bold; margin-left:-20px"><i class="fa fa-arrow-circle-right" style="margin-right: 10px; color: green"></i>SangerContig Level</p>
-<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerRead Level</p>
+<p style = "font-size: 15px; font-weight: bold; margin-left:10px"><i class="fas fa-arrow-circle-right" style="margin-right: 10px; color: green"></i>SangerContig Level</p>
+<p style='font-size: 15px; margin-left: 35px; color: gray;'>SangerRead Level</p>
 </div>
 
 ```{r echo=FALSE}

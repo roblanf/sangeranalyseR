@@ -29,3 +29,6 @@ sangeranalyseR.Rproj
 */.DS_Store
 
 .DS_Store
+
+inst/rmd/test.Rmd
+inst/rmd/test.html

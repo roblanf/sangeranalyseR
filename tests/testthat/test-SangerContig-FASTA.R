@@ -21,13 +21,3 @@ test_that("sangerContigFa Initial test", {
     expect_equal(length(sangerContigFa@reverseReadList), 1)
 })
 
-
-### ============================================================================
-### SangerContig Functions test
-### ============================================================================
-test_that("sangerContigFa - FASTA functions test -forward", {
-    expect_message(updateQualityParam(sangerContigFa),
-                   paste("SangerContig with 'FASTA' inputSource",
-                         "cannot update quality parameters"))
-})
-
