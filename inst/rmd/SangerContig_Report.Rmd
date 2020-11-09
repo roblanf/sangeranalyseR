@@ -30,7 +30,7 @@ vignette: >
 
 
 <div style="margin-left:50px; padding-left:-50;margin-top:50px; margin-bottom:50px; border-left: 4px solid #d3d6db;">
-`r if(!is.null(params$navigationAlignmentFN)){ "<p style='font-size: 15px; margin-left: 2px; color: gray;'>SangerAlignment Level</p>" }`
+`r if(!is.null(params$navigationAlignmentFN)){ "<p style='font-size: 15px; margin-left: 35px; color: gray;'>SangerAlignment Level</p>" }`
 <p style = "font-size: 15px; font-weight: bold; margin-left:10px"><i class="fas fa-arrow-circle-right" style="margin-right: 10px; color: green"></i>SangerContig Level</p>
 <p style='font-size: 15px; margin-left: 35px; color: gray;'>SangerRead Level</p>
 </div>
