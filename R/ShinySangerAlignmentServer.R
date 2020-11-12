@@ -1545,14 +1545,24 @@ SangerAlignmentServer <- function(input, output, session) {
             browseSeqHTML <-
                 file.path(shinyDirectory,
                           "_SangerAlignment_BrowseSeqs.html")
-            BrowseSeqs(DNAStringSet(sangerAlignmentParam[["contigsAlignment"]]) ,
-                       openURL=FALSE, htmlFile=browseSeqHTML)
-            column(width = 12,
-                   includeHTML(browseSeqHTML),
-                   style = paste("height:100%; ",
-                                 "overflow-y: hidden;",
-                                 "overflow-x: scroll;")
-            )
+            if (!identical(sangerAlignmentParam[["contigsAlignment"]], character(0))) {
+                BrowseSeqs(DNAStringSet(sangerAlignmentParam[["contigsAlignment"]]) ,
+                           openURL=FALSE, htmlFile=browseSeqHTML)
+            }
+            log_info("file.exists(browseSeqHTML): ", file.exists(browseSeqHTML))
+            log_info("(browseSeqHTML): ", (browseSeqHTML))
+            if (file.exists(browseSeqHTML)) {
+                column(width = 12,
+                       includeHTML(browseSeqHTML),
+                       style = paste("height:100%; ",
+                                     "overflow-y: hidden;",
+                                     "overflow-x: scroll;")
+                )                
+            } else {
+                h4("*** The number of contigs is less than 2.
+                   sCannot create 'BrowseSeqs' alignment. ***",
+                   style="font-weight: bold; font-style: italic;")
+            }
         }
     })
     ### ------------------------------------------------------------------------
@@ -1560,7 +1570,8 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     output$SATreePlotUI <- renderUI({
         if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
-            if (sangerAlignmentParam[["contigsTree"]]$tip.label != '') {
+            if (sangerAlignmentParam[["contigsTree"]]$tip.label != '' && 
+                !is.null(sangerAlignmentParam[["contigsTree"]]$tip.label)) {
                 plotOutput("SATreePlot")
             } else {
                 h4("*** The number of contigs is less than 3 or quality of reads are too low.
