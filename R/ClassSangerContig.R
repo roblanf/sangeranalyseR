@@ -614,7 +614,23 @@ setMethod("initialize",
         indels <- CSResult$indels
         stopsDf <- CSResult$stopsDf
         spDf <- CSResult$spDf
-        log_success("  >> 'SangerContig' S4 instance is created !!")
+        log_success("**********************************************************")
+        log_success("******** 'SangerContig' S4 instance is created !! ********")
+        log_success("**********************************************************")
+        log_success("  * >> ", readNumber, " reads are created from ", inputSource, " file.")
+        if (is.null(namesConversionCSV)) {
+            log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
+            log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
+        } else {
+            log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
+            log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
+        }
+        if (TrimmingMethod == "M1") {
+            log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+        } else if (TrimmingMethod == "M2") {
+            log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
+        }
+        log_success("  * >> For more information, please run 'readTable(object)'.")
     } else if (readNumber >= minReadsNum && readNumber == 1) {
         msg <- paste("There is only one read in your SangerContig.")
         warnings <- c(warnings, msg)
@@ -636,7 +652,23 @@ setMethod("initialize",
         indels <- data.frame()
         stopsDf <- data.frame()
         spDf <- data.frame()
-        log_success("  >> 'SangerContig' S4 instance is created !!")
+        log_success("**********************************************************")
+        log_success("******** 'SangerContig' S4 instance is created !! ********")
+        log_success("**********************************************************")
+        log_success("  * >> 1 read is created from ", inputSource, " file.")
+        if (is.null(namesConversionCSV)) {
+            log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
+            log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
+        } else {
+            log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
+            log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
+        }
+        if (TrimmingMethod == "M1") {
+            log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+        } else if (TrimmingMethod == "M2") {
+            log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
+        }
+        log_success("  * >> For more information, please run 'readTable(object)'.")
     } else {
         msg <- paste("The number of your total reads is ", readNumber, ".",
                      "\nNumber of total reads has to be equal or more than ",
