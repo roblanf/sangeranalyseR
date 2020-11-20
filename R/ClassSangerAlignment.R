@@ -458,15 +458,18 @@ setMethod("initialize",
         log_success("******** 'SangerAlignment' S4 instance is created !! ********")
         log_success("*************************************************************")
         if (is.null(namesConversionCSV)) {
-            log_success("  * >> ", contigNum, " contigs detected from ", inputSource, " file according to 'regular expression'.")
+            log_success("  * >> ", contigNum, " contigs detected from 'regular expression'.")
         } else {
-            log_success("  * >> ", contigNum, " contigs detected from ", inputSource, " file according to 'csv file'.")
+            log_success("  * >> ", contigNum, " contigs detected from 'csv file'.")
         }
+        readNum <- 0
         for (contig in SangerContigList) {
             log_success("      * >> Contig '", contig@contigName, "':")
             log_success("          * >> ", length(contig@forwardReadList), " forward reads.")
             log_success("          * >> ", length(contig@reverseReadList), " reverse reads.")
+            readNum <- readNum + length(contig@forwardReadList) + length(contig@reverseReadList)
         }
+        log_success("  * >> ", readNum, " reads created from ", inputSource, " file.")
         if (TrimmingMethod == "M1") {
             log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
         } else if (TrimmingMethod == "M2") {
