@@ -288,7 +288,16 @@ setMethod("initialize",
         primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
         primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
         primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-        log_success("  >> 'SangerRead' S4 instance is created !!")
+        log_success("********************************************************")
+        log_success("******** 'SangerRead' S4 instance is created !! ********")
+        log_success("********************************************************")
+        log_success("  * One '", readFeature, "' is created from ", inputSource, " file")
+        if (TrimmingMethod == "M1") {
+            log_success("  * Read is trimmed by 'M1 - Mott’s trimming algorithm'")
+        } else if (TrimmingMethod == "M2") {
+            log_success("  * Read is trimmed by 'M2 - sliding window method'")
+        }
+        log_success("  * For more information, please run 'readTable(object)'.")
         ### ====================================================================
     } else {
         log_error(paste(errors, collapse = ""))
