@@ -443,7 +443,37 @@ setMethod("initialize",
         consensus <- acResult[["consensus"]]
         aln <- acResult[["aln"]]
         aln.tree <- acResult[["aln.tree"]]
-        log_success("  >> 'SangerAlignment' S4 instance is created !!")
+        
+        
+        
+        
+        contigNum <- length(SangerContigList)
+        
+        # 100 reads detected
+        # 12 contigs detected from [regular expression / csv file]
+        # 25 forward reads assigned to 12 contigs according to [regular expression / csv file]
+        # 3 reverse reads assigned to 2 contigs according to [regular expression / csv file]
+        # for more information see [object]
+        log_success("*************************************************************")
+        log_success("******** 'SangerAlignment' S4 instance is created !! ********")
+        log_success("*************************************************************")
+        if (is.null(namesConversionCSV)) {
+            log_success("  * >> ", contigNum, " contigs detected from ", inputSource, " file according to 'regular expression'.")
+        } else {
+            log_success("  * >> ", contigNum, " contigs detected from ", inputSource, " file according to 'csv file'.")
+        }
+        for (contig in SangerContigList) {
+            log_success("      * >> Contig '", contig@contigName, "':")
+            log_success("          * >> ", length(contig@forwardReadList), " forward reads.")
+            log_success("          * >> ", length(contig@reverseReadList), " reverse reads.")
+        }
+        if (TrimmingMethod == "M1") {
+            log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+        } else if (TrimmingMethod == "M2") {
+            log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
+        }
+        log_success("  * >> For more information, please run 'readTable(object)'.")
+
     } else {
         log_error(paste(errors, collapse = ""))
     }
