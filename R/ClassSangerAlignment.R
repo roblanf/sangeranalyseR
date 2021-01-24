@@ -230,10 +230,9 @@ setMethod("initialize",
                     unlist(str_split(reverseSelectInputFiles, 
                                      suffixReverseRegExp, n = Inf, 
                                      simplify = FALSE))[c(TRUE, FALSE)]
-
                 contigNames <- union(forwardContigName, reverseContigName)
                 contigNumber <- length(contigNames)
-
+                
                 # Create contig for all list of contigNumber
                 ### ----------------------------------------------------------------
                 ##### Creating each SangerContig (store as SangerContigList)

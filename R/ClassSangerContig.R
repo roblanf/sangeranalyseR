@@ -214,15 +214,18 @@ setMethod("initialize",
             log_info("**** You are using Regular Expression Method",
                      " to group AB1 files!")
             parentDirFiles <- list.files(parentDirectory)
-            contigSubGroupFiles <-
-                parentDirFiles[grepl(contigName,
-                                     parentDirFiles, fixed=TRUE)]
+
             forwardSelectInputFiles <-
-                contigSubGroupFiles[grepl(suffixForwardRegExp,
-                                          contigSubGroupFiles)]
+                parentDirFiles[grepl(paste0(contigName, suffixForwardRegExp),
+                                     parentDirFiles)]
             reverseSelectInputFiles <-
-                contigSubGroupFiles[grepl(suffixReverseRegExp,
-                                          contigSubGroupFiles)]
+                parentDirFiles[grepl(paste0(contigName, suffixReverseRegExp),
+                                     parentDirFiles)]
+            # print("** forwardSelectInputFiles: ")
+            # print(forwardSelectInputFiles)
+            # print("** reverseSelectInputFiles")
+            # print(reverseSelectInputFiles)
+            
             forwardAllReads <- lapply(parentDirectory, file.path,
                                       forwardSelectInputFiles)
             reverseAllReads <- lapply(parentDirectory, file.path,
