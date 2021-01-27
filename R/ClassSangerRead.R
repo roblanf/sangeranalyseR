@@ -38,7 +38,7 @@
 #'                     readFileName          = A_chloroticaFFN,
 #'                     geneticCode           = GENETIC_CODE,
 #'                     TrimmingMethod        = "M1",
-#'                     M1TrimmingCutoff      = 0.0001,
+#'                     M1TrimmingCutoff      = 10,
 #'                     M2CutoffQualityScore  = NULL,
 #'                     M2SlidingWindowSize   = NULL,
 #'                     baseNumPerRow         = 100,
@@ -139,9 +139,10 @@ setMethod("initialize",
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
     errors <- character()
+    # First check read filename exists (Must)
+    errors <- checkReadFileName (readFileName, inputSource, errors)
     errors <- checkInputSource (inputSource, errors)
     errors <- checkReadFeature (readFeature, errors)
-    errors <- checkReadFileName (readFileName, inputSource, errors)
     errors <- checkGeneticCode (geneticCode, errors)
     ### ------------------------------------------------------------------------
     ### Prechecking success. Start to create 'SangerRead'
@@ -283,6 +284,7 @@ setMethod("initialize",
             trimmedStartPos <- 0
             trimmedFinishPos <- length(primarySeq)
         }
+        log_success("***************HAHAHAHs***************************")
         AASeqResult    <- calculateAASeq (primarySeq, trimmedStartPos,
                                           trimmedFinishPos, geneticCode)
         primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
@@ -301,6 +303,9 @@ setMethod("initialize",
         ### ====================================================================
     } else {
         log_error(paste(errors, collapse = ""))
+
+        # Create df to store reads that failed to be created
+        
     }
     callNextMethod(.Object,
                    inputSource         = inputSource,

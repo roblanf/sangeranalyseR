@@ -444,8 +444,6 @@ setMethod("initialize",
         aln.tree <- acResult[["aln.tree"]]
         
         
-        
-        
         contigNum <- length(SangerContigList)
         
         # 100 reads detected
@@ -474,7 +472,9 @@ setMethod("initialize",
         } else if (TrimmingMethod == "M2") {
             log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
         }
-        log_success("  * >> For more information, please run 'readTable(object)'.")
+        # log_success("  * >> For more information, please run 'readTable(object)'.")
+        
+        # Add reads checking.
 
     } else {
         log_error(paste(errors, collapse = ""))
