@@ -15,13 +15,17 @@ checkFastaFileName <- function(fastaFileName, errors) {
     return(errors)
 }
 
-checkReadFileName <- function(readFileName, inputSource, errors) {
+checkReadFileNameExist <- function(readFileName, errors) {
     if (!file.exists(readFileName)) {
-        cat ("readFileName", readFileName)
         msg <- paste("\n'", readFileName, "'",
                      " file does not exist.\n", sep = "")
         errors <- c(errors, msg)
     }
+    return(errors)
+}
+
+
+checkReadFileName <- function(readFileName, inputSource, errors) {
     if (inputSource == "ABIF") {
         if (is.na(str_extract(basename(readFileName), ".ab1$"))) {
             msg <- paste("\n'", readFileName, "'",
@@ -241,7 +245,7 @@ checkHeightPerRow <- function(heightPerRow, errors) {
         errors <- c(errors, msg)
     }
     if (heightPerRow < 50 || heightPerRow > 600) {
-        msg <- "\n'heightPerRow' must be between 0 and 200.\n"
+        msg <- "\n'heightPerRow' must be between 50 and 200.\n"
         errors <- c(errors, msg)
     }
     return(errors)

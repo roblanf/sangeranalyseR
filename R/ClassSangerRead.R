@@ -2,6 +2,7 @@
 #'
 #' @description  An S4 class extending sangerseq S4 class which corresponds to a single ABIF file in Sanger sequencing.
 #'
+#' @slot creationResult 
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @slot readFileName The filename of the target input file.
@@ -38,7 +39,7 @@
 #'                     readFileName          = A_chloroticaFFN,
 #'                     geneticCode           = GENETIC_CODE,
 #'                     TrimmingMethod        = "M1",
-#'                     M1TrimmingCutoff      = 10,
+#'                     M1TrimmingCutoff      = 0.0001,
 #'                     M2CutoffQualityScore  = NULL,
 #'                     M2SlidingWindowSize   = NULL,
 #'                     baseNumPerRow         = 100,
@@ -99,7 +100,8 @@ setClass(
     ###     * Inherit from 'sangerseq' from sangerseqR.
     ### ------------------------------------------------------------------------
     contains="sangerseq",
-    slots=c(inputSource         = "character",
+    slots=c(creationResult      = "logical",
+            inputSource         = "character",
             readFeature         = "character",
             readFileName        = "character",
             fastaReadName       = "characterORNULL",
@@ -135,179 +137,213 @@ setMethod("initialize",
                    heightPerRow         = 200,
                    signalRatioCutoff    = 0.33,
                    showTrimmed          = TRUE) {
-    ### ------------------------------------------------------------------------
-    ### Input parameter prechecking
-    ### ------------------------------------------------------------------------
+    creationResult <- TRUE
     errors <- character()
-    # First check read filename exists (Must)
-    errors <- checkReadFileName (readFileName, inputSource, errors)
-    errors <- checkInputSource (inputSource, errors)
-    errors <- checkReadFeature (readFeature, errors)
-    errors <- checkGeneticCode (geneticCode, errors)
-    ### ------------------------------------------------------------------------
-    ### Prechecking success. Start to create 'SangerRead'
-    ### ------------------------------------------------------------------------
+    ############################################################################
+    ### First layer of pre-checking: filename exists (Must)
+    ############################################################################
+    errors <- checkReadFileNameExist (readFileName, errors)
     if (length(errors) == 0) {
-        if (inputSource == "ABIF") {
-            ##### --------------------------------------------------------------
-            ##### Inside prechecking.
-            ##### --------------------------------------------------------------
-            ##### --------------------------------------------------------------
-            ##### Input parameter prechecking for TrimmingMethod. [abif only]
-            ##### --------------------------------------------------------------
-            errors <- checkTrimParam(TrimmingMethod,
-                                     M1TrimmingCutoff,
-                                     M2CutoffQualityScore,
-                                     M2SlidingWindowSize,
-                                     errors)
-            ##### --------------------------------------------------------------
-            ##### Input parameter prechecking for ChromatogramParam. [abif only]
-            ##### --------------------------------------------------------------
-            errors <- checkBaseNumPerRow(baseNumPerRow, errors)
-            errors <- checkHeightPerRow(baseNumPerRow, errors)
-            errors <- checkSignalRatioCutoff(signalRatioCutoff,errors)
-            errors <- checkShowTrimmed(showTrimmed, errors)
+        ########################################################################
+        ### Second layer of checking: Check parameters for both ABIF and FASTA
+        ########################################################################
+        errors <- checkReadFileName (readFileName, inputSource, errors)
+        errors <- checkInputSource (inputSource, errors)
+        errors <- checkReadFeature (readFeature, errors)
+        errors <- checkGeneticCode (geneticCode, errors)
+        if (length(errors) == 0) {
+            if (inputSource == "ABIF") {
+                ################################################################
+                ### Third layer of checking: Check parameters for ABIF only
+                ################################################################
+                ##### ----------------------------------------------------------
+                ##### Input parameter prechecking for TrimmingMethod.
+                ##### ----------------------------------------------------------
+                errors <- checkTrimParam(TrimmingMethod,
+                                         M1TrimmingCutoff,
+                                         M2CutoffQualityScore,
+                                         M2SlidingWindowSize,
+                                         errors)
+                ##### ----------------------------------------------------------
+                ##### Input parameter prechecking for ChromatogramParam.
+                ##### ----------------------------------------------------------
+                errors <- checkBaseNumPerRow(baseNumPerRow, errors)
+                errors <- checkHeightPerRow(heightPerRow, errors)
+                errors <- checkSignalRatioCutoff(signalRatioCutoff,errors)
+                errors <- checkShowTrimmed(showTrimmed, errors)
+                if(length(errors) == 0) {
+                    log_info(readFeature, ": Creating abif & sangerseq ...")
+                    log_info("    * Creating ", readFeature , " raw abif ...")
+                    abifRawData = read.abif(readFileName)
+                    log_info("    * Creating ", readFeature , " raw sangerseq ...")
+                    readSangerseq <- sangerseq(abifRawData)
+                    primarySeqID <- readSangerseq@primarySeqID
+                    secondarySeqID <- readSangerseq@secondarySeqID
+                    
+                    ### --------------------------------------------------------
+                    ### With non-raw & raw primarySeq / secondarySeq
+                    ### --------------------------------------------------------
+                    if (readFeature == "Forward Read") {
+                        primarySeqRaw    <- readSangerseq@primarySeq
+                        primarySeq       <- readSangerseq@primarySeq
+                        secondarySeqRaw  <- readSangerseq@secondarySeq
+                        secondarySeq     <- readSangerseq@secondarySeq
+                        traceMatrix      <- readSangerseq@traceMatrix
+                        peakPosMatrixRaw <- readSangerseq@peakPosMatrix
+                        peakPosMatrix    <- readSangerseq@peakPosMatrix
+                        peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
+                        peakAmpMatrix    <- readSangerseq@peakAmpMatrix
+                    } else if (readFeature == "Reverse Read") {
+                        primarySeqRaw    <- readSangerseq@primarySeq
+                        primarySeq       <- readSangerseq@primarySeq
+                        secondarySeqRaw  <- readSangerseq@secondarySeq
+                        secondarySeq     <- readSangerseq@secondarySeq
+                        traceMatrix      <- readSangerseq@traceMatrix
+                        peakPosMatrixRaw <- readSangerseq@peakPosMatrix
+                        peakPosMatrix    <- readSangerseq@peakPosMatrix
+                        peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
+                        peakAmpMatrix    <- readSangerseq@peakAmpMatrix
+                    }
+                    
+                    ### --------------------------------------------------------
+                    ### Definition of 'PCON.1' & 'PCON.2'
+                    ##### PCON.1: char => Per-base quality values (edited)
+                    ##### PCON.2: char => Per-base quality values
+                    ### --------------------------------------------------------
+                    ### --------------------------------------------------------
+                    ### 1. Running 'MakeBaseCall'!
+                    ### --------------------------------------------------------
+                    ## Reverse the 'traceMatrix' and 'peakPosMatrixRaw' before 
+                    ##   running MakeBaseCallsInside function.
+                    MBCResult <-
+                        MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
+                                             abifRawData@data$PCON.2,
+                                             signalRatioCutoff, readFeature)
+                    ### ========================================================
+                    ### 2. Update Once (Only during creation)
+                    ###    Basecall primary seq length will be same !
+                    ###    Quality Score is reversed in MakeBaseCallsInside 
+                    ###    function !!
+                    ### ========================================================
+                    qualityPhredScores <- MBCResult[["qualityPhredScores"]]
+                    ### --------------------------------------------------------
+                    ##### 'QualityReport' creation
+                    ### --------------------------------------------------------
+                    QualityReport <-
+                        new("QualityReport",
+                            qualityPhredScores    = qualityPhredScores,
+                            TrimmingMethod        = TrimmingMethod,
+                            M1TrimmingCutoff      = M1TrimmingCutoff,
+                            M2CutoffQualityScore  = M2CutoffQualityScore,
+                            M2SlidingWindowSize   = M2SlidingWindowSize)
+                    
+                    ### ========================================================
+                    ### 3. Update everytime
+                    ### ========================================================
+                    primarySeq <- MBCResult[["primarySeq"]]
+                    secondarySeq <- MBCResult[["secondarySeq"]]
+                    peakPosMatrix <- MBCResult[["peakPosMatrix"]]
+                    peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
+                    ### --------------------------------------------------------
+                    ##### 'QualityReport' & 'ChromatogramParam' creation
+                    ### --------------------------------------------------------
+                    ChromatogramParam <-
+                        new("ChromatogramParam",
+                            baseNumPerRow     = baseNumPerRow,
+                            heightPerRow      = heightPerRow,
+                            signalRatioCutoff = signalRatioCutoff,
+                            showTrimmed       = showTrimmed)
+                    trimmedStartPos <- QualityReport@trimmedStartPos
+                    trimmedFinishPos <- QualityReport@trimmedFinishPos
+                }
+            } else if (inputSource == "FASTA") {
+                abifRawData <- NULL
+                primarySeqID <- "From fasta file"
+                secondarySeqID <- ""
+                primarySeqRaw <- DNAString()
+                log_info(readFeature, ": Creating SangerRead from FASTA ...")
+                readFasta <- read.fasta(readFileName, as.string = TRUE)
+                ### ------------------------------------------------------------
+                ### Get the Target Filename !!
+                ### ------------------------------------------------------------
+                fastaNames <- names(readFasta)
+                targetFastaName <- fastaNames[fastaNames == fastaReadName]
+                if(isEmpty(targetFastaName)) {
+                    log_error(paste0("The name '", fastaReadName, 
+                                     "' is not in the '", 
+                                     basename(readFileName),
+                                     "' FASTA file"))
+                }
+                primarySeq <- 
+                    DNAString(as.character(readFasta[[targetFastaName]]))
+                secondarySeqRaw   <- DNAString()
+                secondarySeq      <- DNAString()
+                traceMatrix       <- matrix()
+                peakPosMatrixRaw  <- matrix()
+                peakPosMatrix     <- matrix()
+                peakAmpMatrixRaw  <- matrix()
+                peakAmpMatrix     <- matrix()
+                QualityReport     <- NULL
+                ChromatogramParam <- NULL
+                trimmedStartPos <- 0
+                trimmedFinishPos <- length(primarySeq)
+            }
+            
+            ## Double check again that there are no errors
             if(length(errors) != 0) {
-                log_error(paste(errors, collapse = ""))
+                primaryAASeqS1 <- AAString("")
+                primaryAASeqS2 <- AAString("")
+                primaryAASeqS3 <- AAString("")
+            } else {
+                AASeqResult    <- calculateAASeq (primarySeq, trimmedStartPos,
+                                                  trimmedFinishPos, geneticCode)
+                primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
+                primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
+                primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+                log_success("********************************************************")
+                log_success("******** 'SangerRead' S4 instance is created !! ********")
+                log_success("********************************************************")
+                log_success("  * >> One '", readFeature, "' is created from ", inputSource, " file.")
+                if (TrimmingMethod == "M1") {
+                    log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+                } else if (TrimmingMethod == "M2") {
+                    log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
+                }
+                log_success("  * >> For more information, please run 'readTable(object)'.")
+                ### ============================================================
             }
-            log_info(readFeature, ": Creating abif & sangerseq ...")
-            log_info("    * Creating ", readFeature , " raw abif ...")
-            abifRawData = read.abif(readFileName)
-            log_info("    * Creating ", readFeature , " raw sangerseq ...")
-            readSangerseq <- sangerseq(abifRawData)
-            primarySeqID <- readSangerseq@primarySeqID
-            secondarySeqID <- readSangerseq@secondarySeqID
-
-            ### ----------------------------------------------------------------
-            ### With non-raw & raw primarySeq / secondarySeq
-            ### ----------------------------------------------------------------
-            if (readFeature == "Forward Read") {
-                primarySeqRaw    <- readSangerseq@primarySeq
-                primarySeq       <- readSangerseq@primarySeq
-                secondarySeqRaw  <- readSangerseq@secondarySeq
-                secondarySeq     <- readSangerseq@secondarySeq
-                traceMatrix      <- readSangerseq@traceMatrix
-                peakPosMatrixRaw <- readSangerseq@peakPosMatrix
-                peakPosMatrix    <- readSangerseq@peakPosMatrix
-                peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
-                peakAmpMatrix    <- readSangerseq@peakAmpMatrix
-            } else if (readFeature == "Reverse Read") {
-                
-                primarySeqRaw    <- readSangerseq@primarySeq
-                primarySeq       <- readSangerseq@primarySeq
-                secondarySeqRaw  <- readSangerseq@secondarySeq
-                secondarySeq     <- readSangerseq@secondarySeq
-                
-                traceMatrix      <- readSangerseq@traceMatrix
-                peakPosMatrixRaw <- readSangerseq@peakPosMatrix
-                peakPosMatrix    <- readSangerseq@peakPosMatrix
-                peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
-                peakAmpMatrix    <- readSangerseq@peakAmpMatrix
-            }
-            
-            ### ----------------------------------------------------------------
-            ### Definition of 'PCON.1' & 'PCON.2'
-            ##### PCON.1: char => Per-base quality values (edited)
-            ##### PCON.2: char => Per-base quality values
-            ### ----------------------------------------------------------------
-            ### ----------------------------------------------------------------
-            ### 1. Running 'MakeBaseCall'!
-            ### ----------------------------------------------------------------
-            
-            ## Reverse the 'traceMatrix' and 'peakPosMatrixRaw' before running
-            ##   MakeBaseCallsInside function.
-            MBCResult <-
-                MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
-                                     abifRawData@data$PCON.2,
-                                     signalRatioCutoff, readFeature)
-            ### ================================================================
-            ### 2. Update Once (Only during creation)
-            ###    Basecall primary seq length will be same !
-            ###    Quality Score is reversed in MakeBaseCallsInside function !!
-            ### ================================================================
-            qualityPhredScores <- MBCResult[["qualityPhredScores"]]
-            ### ----------------------------------------------------------------
-            ##### 'QualityReport' creation
-            ### ----------------------------------------------------------------
-            QualityReport <-
-                new("QualityReport",
-                    qualityPhredScores    = qualityPhredScores,
-                    TrimmingMethod        = TrimmingMethod,
-                    M1TrimmingCutoff      = M1TrimmingCutoff,
-                    M2CutoffQualityScore  = M2CutoffQualityScore,
-                    M2SlidingWindowSize   = M2SlidingWindowSize)
-
-            ### ================================================================
-            ### 3. Update everytime
-            ### ================================================================
-            primarySeq <- MBCResult[["primarySeq"]]
-            secondarySeq <- MBCResult[["secondarySeq"]]
-            peakPosMatrix <- MBCResult[["peakPosMatrix"]]
-            peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
-            ### ----------------------------------------------------------------
-            ##### 'QualityReport' & 'ChromatogramParam' creation
-            ### ----------------------------------------------------------------
-            ChromatogramParam <-
-                new("ChromatogramParam",
-                    baseNumPerRow     = baseNumPerRow,
-                    heightPerRow      = heightPerRow,
-                    signalRatioCutoff = signalRatioCutoff,
-                    showTrimmed       = showTrimmed)
-            trimmedStartPos <- QualityReport@trimmedStartPos
-            trimmedFinishPos <- QualityReport@trimmedFinishPos
-        } else if (inputSource == "FASTA") {
-            abifRawData <- NULL
-            primarySeqID <- "From fasta file"
-            secondarySeqID <- ""
-            primarySeqRaw <- DNAString()
-            log_info(readFeature, ": Creating SangerRead from FASTA ...")
-            readFasta <- read.fasta(readFileName, as.string = TRUE)
-            ### ----------------------------------------------------------------
-            ### Get the Target Filename !!
-            ### ----------------------------------------------------------------
-            fastaNames <- names(readFasta)
-            targetFastaName <- fastaNames[fastaNames == fastaReadName]
-            if(isEmpty(targetFastaName)) {
-                log_error(paste0("The name '", fastaReadName, "' is not in the '",
-                                 basename(readFileName),"' FASTA file"))
-            }
-            primarySeq <- DNAString(as.character(readFasta[[targetFastaName]]))
-            secondarySeqRaw   <- DNAString()
-            secondarySeq      <- DNAString()
-            traceMatrix       <- matrix()
-            peakPosMatrixRaw  <- matrix()
-            peakPosMatrix     <- matrix()
-            peakAmpMatrixRaw  <- matrix()
-            peakAmpMatrix     <- matrix()
-            QualityReport     <- NULL
-            ChromatogramParam <- NULL
-            trimmedStartPos <- 0
-            trimmedFinishPos <- length(primarySeq)
         }
-        log_success("***************HAHAHAHs***************************")
-        AASeqResult    <- calculateAASeq (primarySeq, trimmedStartPos,
-                                          trimmedFinishPos, geneticCode)
-        primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
-        primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
-        primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-        log_success("********************************************************")
-        log_success("******** 'SangerRead' S4 instance is created !! ********")
-        log_success("********************************************************")
-        log_success("  * >> One '", readFeature, "' is created from ", inputSource, " file.")
-        if (TrimmingMethod == "M1") {
-            log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
-        } else if (TrimmingMethod == "M2") {
-            log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
-        }
-        log_success("  * >> For more information, please run 'readTable(object)'.")
-        ### ====================================================================
-    } else {
+    }
+    
+    if (length(errors) != 0) {
+        creationResult <- FALSE
         log_error(paste(errors, collapse = ""))
-
         # Create df to store reads that failed to be created
-        
+        inputSource         = ""
+        fastaReadName       = ""
+        readFeature         = ""
+        readFileName        = ""
+        geneticCode         = ""
+        primarySeqID        = ""
+        primarySeqRaw       = DNAString("")
+        primarySeq          = DNAString("")
+        secondarySeqID      = ""
+        secondarySeqRaw     = DNAString("")
+        secondarySeq        = DNAString("")
+        primaryAASeqS1      = AAString("")
+        primaryAASeqS2      = AAString("")
+        primaryAASeqS3      = AAString("")
+        traceMatrix         = matrix()
+        peakPosMatrix       = matrix()
+        peakPosMatrixRaw    = matrix()
+        peakAmpMatrix       = matrix()
+        peakAmpMatrixRaw    = matrix()
+        abifRawData         = NULL
+        QualityReport       = NULL
+        ChromatogramParam   = NULL
     }
     callNextMethod(.Object,
+                   creationResult      = creationResult,
                    inputSource         = inputSource,
                    fastaReadName       = fastaReadName,
                    readFeature         = readFeature,
