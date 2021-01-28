@@ -3,6 +3,8 @@
 #' @description  An S4 class extending sangerseq S4 class which corresponds to a single ABIF file in Sanger sequencing.
 #'
 #' @slot creationResult 
+#' @slot errorMessages
+#' @slot errorTypes
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @slot readFileName The filename of the target input file.
@@ -101,6 +103,8 @@ setClass(
     ### ------------------------------------------------------------------------
     contains="sangerseq",
     slots=c(creationResult      = "logical",
+            errorMessages       = "character",
+            errorTypes          = "character",
             inputSource         = "character",
             readFeature         = "character",
             readFileName        = "character",
@@ -138,20 +142,20 @@ setMethod("initialize",
                    signalRatioCutoff    = 0.33,
                    showTrimmed          = TRUE) {
     creationResult <- TRUE
-    errors <- character()
+    errors <- list(character(0), character(0))
     ############################################################################
     ### First layer of pre-checking: filename exists (Must)
     ############################################################################
-    errors <- checkReadFileNameExist (readFileName, errors)
-    if (length(errors) == 0) {
+    errors <- checkReadFileNameExist (readFileName, errors[[1]], errors[[2]])
+    if (length(errors[[1]]) == 0) {
         ########################################################################
         ### Second layer of checking: Check parameters for both ABIF and FASTA
         ########################################################################
-        errors <- checkReadFileName (readFileName, inputSource, errors)
-        errors <- checkInputSource (inputSource, errors)
-        errors <- checkReadFeature (readFeature, errors)
-        errors <- checkGeneticCode (geneticCode, errors)
-        if (length(errors) == 0) {
+        errors <- checkReadFileName (readFileName, inputSource, errors[[1]], errors[[2]])
+        errors <- checkInputSource (inputSource, errors[[1]], errors[[2]])
+        errors <- checkReadFeature (readFeature, errors[[1]], errors[[2]])
+        errors <- checkGeneticCode (geneticCode, errors[[1]], errors[[2]])
+        if (length(errors[[1]]) == 0) {
             if (inputSource == "ABIF") {
                 ################################################################
                 ### Third layer of checking: Check parameters for ABIF only
@@ -163,15 +167,15 @@ setMethod("initialize",
                                          M1TrimmingCutoff,
                                          M2CutoffQualityScore,
                                          M2SlidingWindowSize,
-                                         errors)
+                                         errors[[1]], errors[[2]])
                 ##### ----------------------------------------------------------
                 ##### Input parameter prechecking for ChromatogramParam.
                 ##### ----------------------------------------------------------
-                errors <- checkBaseNumPerRow(baseNumPerRow, errors)
-                errors <- checkHeightPerRow(heightPerRow, errors)
-                errors <- checkSignalRatioCutoff(signalRatioCutoff,errors)
-                errors <- checkShowTrimmed(showTrimmed, errors)
-                if(length(errors) == 0) {
+                errors <- checkBaseNumPerRow(baseNumPerRow, errors[[1]], errors[[2]])
+                errors <- checkHeightPerRow(heightPerRow, errors[[1]], errors[[2]])
+                errors <- checkSignalRatioCutoff(signalRatioCutoff, errors[[1]], errors[[2]])
+                errors <- checkShowTrimmed(showTrimmed, errors[[1]], errors[[2]])
+                if(length(errors[[1]]) == 0) {
                     log_info(readFeature, ": Creating abif & sangerseq ...")
                     log_info("    * Creating ", readFeature , " raw abif ...")
                     abifRawData = read.abif(readFileName)
@@ -290,7 +294,7 @@ setMethod("initialize",
             }
             
             ## Double check again that there are no errors
-            if(length(errors) != 0) {
+            if(length(errors[[1]]) != 0) {
                 primaryAASeqS1 <- AAString("")
                 primaryAASeqS2 <- AAString("")
                 primaryAASeqS3 <- AAString("")
@@ -315,9 +319,10 @@ setMethod("initialize",
         }
     }
     
-    if (length(errors) != 0) {
+    if (length(errors[[1]]) != 0) {
         creationResult <- FALSE
-        log_error(paste(errors, collapse = ""))
+        sapply(paste0(errors[[1]], errors[[2]], '\n') , 
+               log_error, simplify = FALSE)
         # Create df to store reads that failed to be created
         inputSource         = ""
         fastaReadName       = ""
@@ -344,6 +349,8 @@ setMethod("initialize",
     }
     callNextMethod(.Object,
                    creationResult      = creationResult,
+                   errorMessages       = errors[[1]],
+                   errorTypes          = errors[[2]],
                    inputSource         = inputSource,
                    fastaReadName       = fastaReadName,
                    readFeature         = readFeature,

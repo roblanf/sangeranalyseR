@@ -81,8 +81,8 @@ setMethod("initialize",
               ### --------------------------------------------------------------
               ### Input parameter prechecking
               ### --------------------------------------------------------------
-              errors <- character()
-              errors <- checkQualityPhredScores (qualityPhredScores, errors)
+              errors <- list(character(0), character(0))
+              errors <- checkQualityPhredScores (qualityPhredScores, errors[[1]], errors[[2]])
 
               ##### ------------------------------------------------------------
               ##### Input parameter prechecking for TrimmingMethod.
@@ -91,8 +91,8 @@ setMethod("initialize",
                                        M1TrimmingCutoff,
                                        M2CutoffQualityScore,
                                        M2SlidingWindowSize,
-                                       errors)
-              if (length(errors) == 0) {
+                                       errors[[1]], errors[[2]])
+              if (length(errors[[1]]) == 0) {
                   ### ----------------------------------------------------------
                   ### Prechecking success.
                   ### ----------------------------------------------------------

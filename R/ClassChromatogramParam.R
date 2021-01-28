@@ -42,12 +42,12 @@ setMethod("initialize",
               ### --------------------------------------------------------------
               ### Input parameter prechecking
               ### --------------------------------------------------------------
-              errors <- character()
-              errors <- checkBaseNumPerRow (baseNumPerRow, errors)
-              errors <- checkHeightPerRow (baseNumPerRow, errors)
-              errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
-              errors <- checkShowTrimmed (showTrimmed, errors)
-              if (length(errors) == 0) {
+              errors <- list(character(0), character(0))
+              errors <- checkBaseNumPerRow (baseNumPerRow, errors[[1]], errors[[2]])
+              errors <- checkHeightPerRow (baseNumPerRow, errors[[1]], errors[[2]])
+              errors <- checkSignalRatioCutoff (signalRatioCutoff, errors[[1]], errors[[2]])
+              errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
+              if (length(errors[[1]]) == 0) {
                   ### ----------------------------------------------------------
                   ### Prechecking success.
                   ### ----------------------------------------------------------
