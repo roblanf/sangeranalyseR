@@ -25,6 +25,17 @@ checkFastaFileName <- function(inputSource, fastaFileName, errors, errorTypes) {
     return(list(errors, errorTypes))
 }
 
+checkProcessMethod <- function(processMethod, errors, errorTypes) {
+    if (processMethod != "ab1Regex" && processMethod != "ab1CSV" &&
+        processMethod != "fastaRegex" && processMethod != "fastaCSV") {
+        msg <- "\n'processMethod' must be 'ab1Regex', 'ab1CSV', 'fastaRegex', or 'fastaCSV'\n"
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    }
+    return(list(errors, errorTypes))
+}
+
+
 checkReadFileNameExist <- function(readFileName, errors, errorTypes) {
     if (!file.exists(readFileName)) {
         msg <- paste("\n'", readFileName, "'",

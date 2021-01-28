@@ -51,6 +51,7 @@
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
+#'                      processMethod         = "ab1Regex",
 #'                      parentDirectory       = parentDir,
 #'                      contigName            = contigName,
 #'                      suffixForwardRegExp   = suffixForwardRegExp,
@@ -121,6 +122,7 @@ setClass("SangerContig",
                         errorMessages             = "character",
                         errorTypes                = "character",
                         inputSource               = "character",
+                        processMethod             = "character",
                         fastaFileName             = "characterORNULL",
                         namesConversionCSV        = "characterORNULL",
                         parentDirectory           = "characterORNULL",
@@ -155,6 +157,7 @@ setMethod("initialize",
           "SangerContig",
           function(.Object,
                    inputSource            = "ABIF",
+                   processMethod          = "ab1Regex",
                    fastaFileName          = NULL,
                    namesConversionCSV     = NULL,
                    parentDirectory        = NULL,
@@ -185,10 +188,11 @@ setMethod("initialize",
     ############################################################################
     ### First layer of pre-checking: SangerContig input parameter prechecking
     ############################################################################
-    errors <- checkInputSource (inputSource, errors[[1]], errors[[2]])
+    errors <- checkInputSource(inputSource, errors[[1]], errors[[2]])
+    errors <- checkProcessMethod(processMethod, errors[[1]], errors[[2]])
     errors <- checkFastaFileName(inputSource, fastaFileName,
                                  errors[[1]], errors[[2]])
-    errors <- checkNamesConversionCSV(nameConvMethod, namesConversionCSV, 
+    errors <- checkNamesConversionCSV(processMethod, namesConversionCSV, 
                                       contigName, suffixForwardRegExp,
                                       suffixReverseRegExp, inputSource, 
                                       errors[[1]], errors[[2]])
@@ -523,124 +527,121 @@ setMethod("initialize",
                 }
             })
         }
-    }
-    
-    ### ------------------------------------------------------------------------
-    ### 'forwardNumber' + 'reverseNumber' number >= minReadsNum && 2
-    ### ------------------------------------------------------------------------
-    forwardReadListFilter <- Filter(Negate(is.null), forwardReadListFilter)
-    reverseReadListFilter <- Filter(Negate(is.null), reverseReadListFilter)
-    forwardNumber <- length(forwardReadListFilter)
-    reverseNumber <- length(reverseReadListFilter)
-    readNumber <- forwardNumber + reverseNumber
-    if (readNumber >= minReadsNum && readNumber >= 2) {
-        CSResult <- calculateContigSeq (inputSource      = inputSource,
-                                        forwardReadList  = forwardReadListFilter,
-                                        reverseReadList  = reverseReadListFilter,
-                                        refAminoAcidSeq  = refAminoAcidSeq,
-                                        minFractionCall  = minFractionCall,
-                                        maxFractionLost  = maxFractionLost,
-                                        geneticCode      = geneticCode,
-                                        acceptStopCodons = acceptStopCodons,
-                                        readingFrame     = readingFrame,
-                                        processorsNum    = processorsNum)
-        contigGapfree <- CSResult$consensusGapfree
-        contigLen <- length(contigGapfree)
-        ## This is the only part that is correct!
-        diffsDf <- CSResult$diffsDf
-        aln2 <- CSResult$aln2
-        dist <- CSResult$dist
-        dend <- CSResult$dend
-        indels <- CSResult$indels
-        stopsDf <- CSResult$stopsDf
-        spDf <- CSResult$spDf
-        log_success("**********************************************************")
-        log_success("******** 'SangerContig' S4 instance is created !! ********")
-        log_success("**********************************************************")
-        log_success("  * >> ", readNumber, " reads are created from ", inputSource, " file.")
-        if (is.null(namesConversionCSV)) {
-            log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
-            log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
+        ### ------------------------------------------------------------------------
+        ### 'forwardNumber' + 'reverseNumber' number >= minReadsNum && 2
+        ### ------------------------------------------------------------------------
+        forwardReadListFilter <- Filter(Negate(is.null), forwardReadListFilter)
+        reverseReadListFilter <- Filter(Negate(is.null), reverseReadListFilter)
+        forwardNumber <- length(forwardReadListFilter)
+        reverseNumber <- length(reverseReadListFilter)
+        readNumber <- forwardNumber + reverseNumber
+        if (readNumber >= minReadsNum && readNumber >= 2) {
+            CSResult <- calculateContigSeq (inputSource      = inputSource,
+                                            forwardReadList  = forwardReadListFilter,
+                                            reverseReadList  = reverseReadListFilter,
+                                            refAminoAcidSeq  = refAminoAcidSeq,
+                                            minFractionCall  = minFractionCall,
+                                            maxFractionLost  = maxFractionLost,
+                                            geneticCode      = geneticCode,
+                                            acceptStopCodons = acceptStopCodons,
+                                            readingFrame     = readingFrame,
+                                            processorsNum    = processorsNum)
+            contigGapfree <- CSResult$consensusGapfree
+            contigLen <- length(contigGapfree)
+            ## This is the only part that is correct!
+            diffsDf <- CSResult$diffsDf
+            aln2 <- CSResult$aln2
+            dist <- CSResult$dist
+            dend <- CSResult$dend
+            indels <- CSResult$indels
+            stopsDf <- CSResult$stopsDf
+            spDf <- CSResult$spDf
+            log_success("**********************************************************")
+            log_success("******** 'SangerContig' S4 instance is created !! ********")
+            log_success("**********************************************************")
+            log_success("  * >> ", readNumber, " reads are created from ", inputSource, " file.")
+            if (is.null(namesConversionCSV)) {
+                log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
+                log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
+            } else {
+                log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
+                log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
+            }
+            if (TrimmingMethod == "M1") {
+                log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+            } else if (TrimmingMethod == "M2") {
+                log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
+            }
+            log_success("  * >> For more information, please run 'readTable(object)'.")
+        } else if (readNumber >= minReadsNum && readNumber == 1) {
+            msg <- paste("There is only one read in your SangerContig.")
+            warnings <- c(warnings, msg)
+            invisible(lapply(warnings, log_warn))
+            if (forwardNumber == 1) {
+                forwardReadListFilter[[1]]
+                primaryDNA <- 
+                    SangerReadInnerTrimming(forwardReadListFilter[[1]], inputSource)
+                contigGapfree <- DNAString(primaryDNA)
+            } else if (reverseNumber == 1) {
+                primaryDNA <- 
+                    SangerReadInnerTrimming(reverseReadListFilter[[1]], inputSource)
+                contigGapfree <- DNAString(primaryDNA)
+            }
+            diffsDf <- data.frame()
+            aln2 <- DNAStringSet()
+            dist <- matrix()
+            dend <- list()
+            indels <- data.frame()
+            stopsDf <- data.frame()
+            spDf <- data.frame()
+            log_success("**********************************************************")
+            log_success("******** 'SangerContig' S4 instance is created !! ********")
+            log_success("**********************************************************")
+            log_success("  * >> 1 read is created from ", inputSource, " file.")
+            if (is.null(namesConversionCSV)) {
+                log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
+                log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
+            } else {
+                log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
+                log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
+            }
+            if (TrimmingMethod == "M1") {
+                log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+            } else if (TrimmingMethod == "M2") {
+                log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
+            }
+            log_success("  * >> For more information, please run 'readTable(object)'.")
         } else {
-            log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
-            log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
+            msg <- paste("The number of your total reads is ", readNumber, ".",
+                         "\nNumber of total reads has to be equal or more than ",
+                         minReadsNum, " ('minReadsNum' that you set)", sep = "")
+            warnings <- c(warnings, msg)
+            invisible(lapply(warnings, log_warn))
+            contigGapfree <- DNAString()
+            diffsDf <- data.frame()
+            aln2 <- DNAStringSet()
+            dist <- matrix()
+            dend <- list()
+            indels <- data.frame()
+            stopsDf <- data.frame()
+            spDf <- data.frame()
         }
-        if (TrimmingMethod == "M1") {
-            log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
-        } else if (TrimmingMethod == "M2") {
-            log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
-        }
-        log_success("  * >> For more information, please run 'readTable(object)'.")
-    } else if (readNumber >= minReadsNum && readNumber == 1) {
-        msg <- paste("There is only one read in your SangerContig.")
-        warnings <- c(warnings, msg)
-        invisible(lapply(warnings, log_warn))
-        if (forwardNumber == 1) {
-            forwardReadListFilter[[1]]
-            primaryDNA <- 
-                SangerReadInnerTrimming(forwardReadListFilter[[1]], inputSource)
-            contigGapfree <- DNAString(primaryDNA)
-        } else if (reverseNumber == 1) {
-            primaryDNA <- 
-                SangerReadInnerTrimming(reverseReadListFilter[[1]], inputSource)
-            contigGapfree <- DNAString(primaryDNA)
-        }
-        diffsDf <- data.frame()
-        aln2 <- DNAStringSet()
-        dist <- matrix()
-        dend <- list()
-        indels <- data.frame()
-        stopsDf <- data.frame()
-        spDf <- data.frame()
-        log_success("**********************************************************")
-        log_success("******** 'SangerContig' S4 instance is created !! ********")
-        log_success("**********************************************************")
-        log_success("  * >> 1 read is created from ", inputSource, " file.")
-        if (is.null(namesConversionCSV)) {
-            log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
-            log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
-        } else {
-            log_success("  * >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
-            log_success("  * >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
-        }
-        if (TrimmingMethod == "M1") {
-            log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
-        } else if (TrimmingMethod == "M2") {
-            log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
-        }
-        log_success("  * >> For more information, please run 'readTable(object)'.")
-    } else {
-        msg <- paste("The number of your total reads is ", readNumber, ".",
-                     "\nNumber of total reads has to be equal or more than ",
-                     minReadsNum, " ('minReadsNum' that you set)", sep = "")
-        warnings <- c(warnings, msg)
-        invisible(lapply(warnings, log_warn))
-        contigGapfree <- DNAString()
-        diffsDf <- data.frame()
-        aln2 <- DNAStringSet()
-        dist <- matrix()
-        dend <- list()
-        indels <- data.frame()
-        stopsDf <- data.frame()
-        spDf <- data.frame()
     }
-    
-    
-    
     
     if (length(errors[[1]]) != 0) {
         creationResult <- FALSE
         sapply(paste0(errors[[1]], errors[[2]], '\n') , 
                log_error, simplify = FALSE)
         inputSource            = ""
+        processMethod          = ""
         fastaFileName          = NULL
         namesConversionCSV     = NULL
         parentDirectory        = NULL
         contigName             = NULL
         suffixForwardRegExp    = NULL
         suffixReverseRegExp    = NULL
-        forwardReadList        = list()
-        reverseReadList        = list()
+        forwardReadListFilter  = list()
+        reverseReadListFilter  = list()
         trimmingMethodSC       = ""
         minReadsNum            = 0
         minReadLength          = 0
@@ -650,20 +651,21 @@ setMethod("initialize",
         geneticCode            = ""
         acceptStopCodons       = FALSE
         readingFrame           = 0
-        contigSeq              = DNAString()
-        differencesDF          = data.frame()
-        alignment              = DNAStringSet()
-        distanceMatrix         = matrix()
-        dendrogram             = list()
-        indelsDF               = data.frame()
-        stopCodonsDF           = data.frame()
-        secondaryPeakDF        = data.frame()
+        contigGapfree          = DNAString()
+        diffsDf                = data.frame()
+        aln2                   = DNAStringSet()
+        dist                   = matrix()
+        dend                   = list()
+        indels                 = data.frame()
+        stopsDf                = data.frame()
+        spDf                   = data.frame()
     }
     callNextMethod(.Object,
                    creationResult         = creationResult,
                    errorMessages          = errors[[1]],
                    errorTypes             = errors[[2]],
                    inputSource            = inputSource,
+                   processMethod          = processMethod,
                    fastaFileName          = fastaFileName,
                    namesConversionCSV     = namesConversionCSV,
                    parentDirectory        = parentDirectory,
