@@ -43,6 +43,10 @@
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
+#' 
+#' ## ContigName less than two reads error
+#' ## forward / reverse reads match error
+#' 
 #' ## Input From ABIF file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
@@ -218,7 +222,7 @@ setMethod("initialize",
                                  M2SlidingWindowSize,
                                  errors[[1]], errors[[2]])
         errors <- checkBaseNumPerRow (baseNumPerRow, errors[[1]], errors[[2]])
-        errors <- checkHeightPerRow (baseNumPerRow, errors[[1]], errors[[2]])
+        errors <- checkHeightPerRow (heightPerRow, errors[[1]], errors[[2]])
         errors <- checkSignalRatioCutoff (signalRatioCutoff, errors[[1]], errors[[2]])
         errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
         trimmingMethodSC <- TrimmingMethod    

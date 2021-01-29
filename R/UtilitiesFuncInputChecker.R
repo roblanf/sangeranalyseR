@@ -297,7 +297,7 @@ checkHeightPerRow <- function(heightPerRow, errors, errorTypes) {
         errorTypes <- c(errorTypes, "PARAMETER_TYPE_ERROR")
     }
     if (heightPerRow < 50 || heightPerRow > 600) {
-        msg <- "\n'heightPerRow' must be between 50 and 200.\n"
+        msg <- "\n'heightPerRow' must be between 50 and 600.\n"
         errors <- c(errors, msg)
         errorTypes <- c(errorTypes, "PARAMETER_RANGE_ERROR")
     }
