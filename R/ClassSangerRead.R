@@ -321,7 +321,7 @@ setMethod("initialize",
     
     if (length(errors[[1]]) != 0) {
         creationResult <- FALSE
-        sapply(paste0(errors[[1]], errors[[2]], '\n') , 
+        sapply(paste0(errors[[2]], errors[[1]], '\n') , 
                log_error, simplify = FALSE)
         # Create df to store reads that failed to be created
         inputSource         = ""

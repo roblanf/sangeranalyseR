@@ -33,38 +33,43 @@ setMethod('show', 'SangerRead', function(object){
 
 
 setMethod('show', 'SangerContig', function(object){
-    if (object@inputSource == "ABIF") {
-        cat("SangerContig S4 instance\n",
-            "          Input Source : ", object@inputSource, "\n",
-            "      Parent Directory : ", object@parentDirectory, "\n",
-            "           Contig Name : ", object@contigName, "\n",
-            " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
-            " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
-            "    Trimming Method SC : ", object@trimmingMethodSC, "\n",
-            "         'minReadsNum' : ", object@minReadsNum, "\n",
-            "       'minReadLength' : ", object@minReadLength, "\n",
-            "     'minFractionCall' : ", object@minFractionCall, "\n",
-            "     'maxFractionLost' : ", object@maxFractionLost, "\n",
-            "    'acceptStopCodons' : ", object@acceptStopCodons, "\n",
-            "        'readingFrame' : ", object@readingFrame, "\n",
-            "       Contig Sequence : ", as.character(object@contigSeq), "\n"
-        )
-    } else if (object@inputSource == "FASTA") {
-        cat("SangerContig S4 instance\n",
-            "          Input Source : ", object@inputSource, "\n",
-            "       Fasta File Name : ", object@fastaFileName, "\n",
-            "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
-            "           Contig Name : ", object@contigName, "\n",
-            " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
-            " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
-            "         'minReadsNum' : ", object@minReadsNum, "\n",
-            "       'minReadLength' : ", object@minReadLength, "\n",
-            "     'minFractionCall' : ", object@minFractionCall, "\n",
-            "     'maxFractionLost' : ", object@maxFractionLost, "\n",
-            "    'acceptStopCodons' : ", object@acceptStopCodons, "\n",
-            "        'readingFrame' : ", object@readingFrame, "\n",
-            "       Contig Sequence : ", as.character(object@contigSeq), "\n"
-        )
+    if (object@creationResult) {
+        if (object@inputSource == "ABIF") {
+            cat("SangerContig S4 instance\n",
+                "          Input Source : ", object@inputSource, "\n",
+                "      Parent Directory : ", object@parentDirectory, "\n",
+                "           Contig Name : ", object@contigName, "\n",
+                " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
+                " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
+                "    Trimming Method SC : ", object@trimmingMethodSC, "\n",
+                "         'minReadsNum' : ", object@minReadsNum, "\n",
+                "       'minReadLength' : ", object@minReadLength, "\n",
+                "     'minFractionCall' : ", object@minFractionCall, "\n",
+                "     'maxFractionLost' : ", object@maxFractionLost, "\n",
+                "    'acceptStopCodons' : ", object@acceptStopCodons, "\n",
+                "        'readingFrame' : ", object@readingFrame, "\n",
+                "       Contig Sequence : ", as.character(object@contigSeq), "\n"
+            )
+        } else if (object@inputSource == "FASTA") {
+            cat("SangerContig S4 instance\n",
+                "          Input Source : ", object@inputSource, "\n",
+                "       Fasta File Name : ", object@fastaFileName, "\n",
+                "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
+                "           Contig Name : ", object@contigName, "\n",
+                " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
+                " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
+                "         'minReadsNum' : ", object@minReadsNum, "\n",
+                "       'minReadLength' : ", object@minReadLength, "\n",
+                "     'minFractionCall' : ", object@minFractionCall, "\n",
+                "     'maxFractionLost' : ", object@maxFractionLost, "\n",
+                "    'acceptStopCodons' : ", object@acceptStopCodons, "\n",
+                "        'readingFrame' : ", object@readingFrame, "\n",
+                "       Contig Sequence : ", as.character(object@contigSeq), "\n"
+            )
+        } 
+    } else {
+        sapply(paste0(object@errorTypes, object@errorMessages, '\n') , 
+               log_error, simplify = FALSE)
     }
 })
 
