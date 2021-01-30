@@ -44,12 +44,12 @@
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
 #' 
-#' ## ContigName less than two reads error
 #' ## forward / reverse reads match error
 #' 
 #' ## Input From ABIF file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
+#' parentDir <- "~/Desktop/TMP/"
 #' contigName <- "Achl_RBNII384-13"
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
@@ -62,13 +62,14 @@
 #'                      suffixReverseRegExp   = suffixReverseRegExp,
 #'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                      TrimmingMethod        = "M1",
-#'                      M1TrimmingCutoff      = 0.0001,
+#'                      M1TrimmingCutoff      = 0.0000000000001,
 #'                      M2CutoffQualityScore  = NULL,
 #'                      M2SlidingWindowSize   = NULL,
 #'                      baseNumPerRow         = 100,
 #'                      heightPerRow          = 200,
 #'                      signalRatioCutoff     = 0.33,
 #'                      showTrimmed           = TRUE,
+#'                      minReadsNum = 1,
 #'                      processorsNum         = 2)
 #'
 #' ## Input From ABIF file format (Csv three column method)
@@ -579,8 +580,6 @@ setMethod("initialize",
             log_success("  * >> For more information, please run 'readTable(object)'.")
         } else if (readNumber >= minReadsNum && readNumber == 1) {
             msg <- paste("There is only one read in your SangerContig.")
-            warnings <- c(warnings, msg)
-            invisible(lapply(warnings, log_warn))
             if (forwardNumber == 1) {
                 forwardReadListFilter[[1]]
                 primaryDNA <- 
@@ -615,20 +614,15 @@ setMethod("initialize",
                 log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
             }
             log_success("  * >> For more information, please run 'readTable(object)'.")
-        } else {
-            msg <- paste("The number of your total reads is ", readNumber, ".",
-                         "\nNumber of total reads has to be equal or more than ",
-                         minReadsNum, " ('minReadsNum' that you set)", sep = "")
             warnings <- c(warnings, msg)
             invisible(lapply(warnings, log_warn))
-            contigGapfree <- DNAString()
-            diffsDf <- data.frame()
-            aln2 <- DNAStringSet()
-            dist <- matrix()
-            dend <- list()
-            indels <- data.frame()
-            stopsDf <- data.frame()
-            spDf <- data.frame()
+        } else {
+            msg <- paste0("\nThe number of your total reads is ", readNumber, ".",
+                          "\nNumber of total reads has to be equal or more than ",
+                          minReadsNum, " ('minReadsNum' that you set)\n")
+            
+            errors[[1]] <- c(errors[[1]], msg)
+            errors[[2]] <- c(errors[[2]], "READ_NUMBER_ERROR")
         }
     }
     

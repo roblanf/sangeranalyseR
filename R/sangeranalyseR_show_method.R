@@ -34,6 +34,8 @@ setMethod('show', 'SangerRead', function(object){
 
 setMethod('show', 'SangerContig', function(object){
     if (object@creationResult) {
+        forReadNum <- length(object@forwardReadList)
+        revReadNum <- length(object@reverseReadList)
         if (object@inputSource == "ABIF") {
             cat("SangerContig S4 instance\n",
                 "          Input Source : ", object@inputSource, "\n",
@@ -48,7 +50,9 @@ setMethod('show', 'SangerContig', function(object){
                 "     'maxFractionLost' : ", object@maxFractionLost, "\n",
                 "    'acceptStopCodons' : ", object@acceptStopCodons, "\n",
                 "        'readingFrame' : ", object@readingFrame, "\n",
-                "       Contig Sequence : ", as.character(object@contigSeq), "\n"
+                "       Contig Sequence : ", as.character(object@contigSeq), "\n",
+                " Forward reads in the contig >> ", forReadNum, "\n",
+                " Reverse reads in the contig >> ", revReadNum, "\n"
             )
         } else if (object@inputSource == "FASTA") {
             cat("SangerContig S4 instance\n",
@@ -64,9 +68,14 @@ setMethod('show', 'SangerContig', function(object){
                 "     'maxFractionLost' : ", object@maxFractionLost, "\n",
                 "    'acceptStopCodons' : ", object@acceptStopCodons, "\n",
                 "        'readingFrame' : ", object@readingFrame, "\n",
-                "       Contig Sequence : ", as.character(object@contigSeq), "\n"
+                "       Contig Sequence : ", as.character(object@contigSeq), "\n",
+                " Forward reads in the contig >> ", forReadNum, "\n",
+                " Reverse reads in the contig >> ", revReadNum, "\n"
             )
         } 
+        if (forReadNum+revReadNum == 1) {
+        log_warn("There is only one read in your SangerContig.\n")
+        }
     } else {
         sapply(paste0(object@errorTypes, object@errorMessages, '\n') , 
                log_error, simplify = FALSE)

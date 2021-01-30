@@ -190,6 +190,11 @@ checkMinReadsNum <- function(minReadsNum, errors, errorTypes) {
         errors <- c(errors, msg)
         errorTypes <- c(errorTypes, "PARAMETER_TYPE_ERROR")
     }
+    if (minReadsNum == 0) {
+        msg <- "\n'minReadsNum' cannot be zero.\n"
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    }
     return(list(errors, errorTypes))
 }
 
