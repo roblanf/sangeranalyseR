@@ -73,12 +73,13 @@ setMethod('show', 'SangerContig', function(object){
                 " Reverse reads in the contig >> ", revReadNum, "\n"
             )
         } 
-        if (forReadNum+revReadNum == 1) {
-        log_warn("There is only one read in your SangerContig.\n")
-        }
+        log_success("'", object@contigName, "'", " is successfully created!")
     } else {
         sapply(paste0(object@errorTypes, object@errorMessages, '\n') , 
                log_error, simplify = FALSE)
+    }
+    if (length(object@warningMessages) > 0) {
+        sapply(paste0(object@warningMessages, '\n') , log_warn, simplify = FALSE)
     }
 })
 

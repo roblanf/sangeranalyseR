@@ -459,4 +459,3 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
     }
     return(list(errors, errorTypes))
 }
-

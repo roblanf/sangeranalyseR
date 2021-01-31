@@ -4,10 +4,11 @@
 #' @slot creationResult
 #' @slot errorMessages
 #' @slot errorTypes
+#' @slot warningMessages
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot processMethod The method to create a contig from reads. The value is \code{"ab1Regex"}, \code{"ab1CSV"}, \code{"fastaRegex"}, \code{"fastaCSV"}
 #' 
-#' 
+#' @slot readResultTable
 #' 
 #' 
 #' 
@@ -45,13 +46,12 @@
 #' @examples
 #' 
 #' ## forward / reverse reads match error
-#' 
 #' ## Input From ABIF file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' parentDir <- "~/Desktop/TMP/"
 #' contigName <- "Achl_RBNII384-13"
-#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
+#' suffixForwardRegExp <- "_[0-9]*_F.ab12"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
@@ -62,7 +62,7 @@
 #'                      suffixReverseRegExp   = suffixReverseRegExp,
 #'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                      TrimmingMethod        = "M1",
-#'                      M1TrimmingCutoff      = 0.0000000000001,
+#'                      M1TrimmingCutoff      = 0.0001,
 #'                      M2CutoffQualityScore  = NULL,
 #'                      M2SlidingWindowSize   = NULL,
 #'                      baseNumPerRow         = 100,
@@ -126,8 +126,10 @@ setClass("SangerContig",
          representation(creationResult            = "logical",
                         errorMessages             = "character",
                         errorTypes                = "character",
+                        warningMessages           = "character",
                         inputSource               = "character",
                         processMethod             = "character",
+                        readResultTable           = "data.frame",
                         fastaFileName             = "characterORNULL",
                         namesConversionCSV        = "characterORNULL",
                         parentDirectory           = "characterORNULL",
@@ -189,7 +191,10 @@ setMethod("initialize",
                    logLevel               = TRUE) {
     creationResult <- TRUE
     errors <- list(character(0), character(0))
-    warnings <- character()
+    warnings <- c(character(0))
+    readResultTableName <- c("readName","creationResult", "errorType", 
+                             "errorMessage", "inputSource", "direction")
+    readResultTable <- data.frame()
     ############################################################################
     ### First layer of pre-checking: SangerContig input parameter prechecking
     ############################################################################
@@ -377,26 +382,83 @@ setMethod("initialize",
                         showTrimmed          = showTrimmed)
             })
             names(reverseReadList) <- rAbsoluteAB1
-            
         }
         if (inputSource == "ABIF") {
             forwardReadListFilter <- lapply(forwardReadList, function(read) {
-                trimmedLen <- read@QualityReport@trimmedFinishPos -
-                    read@QualityReport@trimmedStartPos
-                if (trimmedLen >= minReadLength) {
-                    read
+                if (read@creationResult) {
+                    trimmedLen <- read@QualityReport@trimmedFinishPos -
+                        read@QualityReport@trimmedStartPos
+                    if (trimmedLen >= minReadLength) {
+                        ### Success: readResultTable (SangerContig Level)
+                        row <- data.frame(basename(read@readFileName), 
+                                          read@creationResult, "None", "None", 
+                                          read@inputSource, read@readFeature)
+                        names(row) <- readResultTableName
+                        readResultTable <<- rbind(readResultTable, row)
+                        read
+                    } else {
+                        msg <- paste0(read@readFileName, 
+                                      " is shorter than 'minReadLength' ",
+                                      minReadLength,". This read is created but skipped!\n")
+                        warnings <<- c(warnings, msg)
+                        log_warn(msg)
+                        ### Failed: readResultTable (SangerContig Level)
+                        row <- data.frame(basename(read@readFileName), 
+                                          FALSE, "TRIMMED_READ_ERROR", msg, 
+                                          read@inputSource,  read@readFeature)
+                        names(row) <- readResultTableName
+                        readResultTable <<- rbind(readResultTable, row)
+                        NULL
+                    }
                 } else {
+                    ### Failed: readResultTable (SangerRead Level)
+                    row <- data.frame(basename(read@readFileName), 
+                                      read@creationResult, read@errorTypes, 
+                                      read@errorMessages, read@inputSource, 
+                                      read@readFeature)
+                    names(row) <- readResultTableName
+                    readResultTable <<- rbind(readResultTable, row)
                     NULL
                 }
             })
             reverseReadListFilter <- lapply(reverseReadList, function(read) {
-                trimmedLen <- read@QualityReport@trimmedFinishPos -
-                    read@QualityReport@trimmedStartPos
-                if (trimmedLen >= minReadLength) {
-                    read
+                if (read@creationResult) {
+                    trimmedLen <- read@QualityReport@trimmedFinishPos -
+                        read@QualityReport@trimmedStartPos
+                    if (trimmedLen >= minReadLength) {
+                        ### Success: readResultTable (SangerContig Level)
+                        row <- data.frame(basename(read@readFileName), 
+                                          read@creationResult, "None", "None", 
+                                          read@inputSource, read@readFeature)
+                        names(row) <- readResultTableName
+                        readResultTable <<- rbind(readResultTable, row)
+                        read
+                    } else {
+                        msg <- paste0(read@readFileName, 
+                                      " is shorter than 'minReadLength' ",
+                                      minReadLength,". This read is created but skipped!\n")
+                        warnings <<- c(warnings, msg)
+                        log_warn(msg)
+                        ### Failed: readResultTable (SangerContig Level)
+                        row <- data.frame(basename(read@readFileName), 
+                                          FALSE, "TRIMMED_READ_ERROR", msg, 
+                                          read@inputSource,  read@readFeature)
+                        names(row) <- readResultTableName
+                        readResultTable <<- rbind(readResultTable, row)
+                        NULL
+                    }
                 } else {
+                    ### --------------------------------------------------------
+                    ### Failed: readResultTable (SangerRead Level)
+                    ### --------------------------------------------------------
+                    row <- data.frame(basename(read@readFileName), 
+                                      read@creationResult, read@errorTypes, 
+                                      read@errorMessages, read@inputSource, 
+                                      read@readFeature)
+                    names(row) <- readResultTableName
+                    readResultTable <<- rbind(readResultTable, row)
                     NULL
-                }
+                }                 
             })            
         }
         
@@ -516,8 +578,9 @@ setMethod("initialize",
                 if (seqLen >= minReadLength) {
                     read
                 } else {
-                    log_info("   * Read length is shorter than 'minReadLength' ",
-                             minReadLength, ".\n     This read is skipped!!")
+                    log_warn("   * ", read@fastaReadName, 
+                             " is shorter than 'minReadLength' ", 
+                             minReadLength, ". This read is created but skipped!!\n")
                     NULL
                 }
             })
@@ -526,8 +589,9 @@ setMethod("initialize",
                 if (seqLen >= minReadLength) {
                     read
                 } else {
-                    log_info("   * Read length is shorter than 'minReadLength' ",
-                             minReadLength, ".\n     This read is skipped!!")
+                    log_warn("   * ", read@fastaReadName,
+                             " is shorter than 'minReadLength' ",
+                             minReadLength, ". This read is created but skipped!!\n")
                     NULL
                 }
             })
@@ -658,12 +722,17 @@ setMethod("initialize",
         stopsDf                = data.frame()
         spDf                   = data.frame()
     }
+    if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
+        names(readResultTable) <- readResultTableName
+    }
     callNextMethod(.Object,
                    creationResult         = creationResult,
                    errorMessages          = errors[[1]],
                    errorTypes             = errors[[2]],
+                   warningMessages        = warnings,
                    inputSource            = inputSource,
                    processMethod          = processMethod,
+                   readResultTable        = readResultTable,
                    fastaFileName          = fastaFileName,
                    namesConversionCSV     = namesConversionCSV,
                    parentDirectory        = parentDirectory,
