@@ -313,8 +313,6 @@ setMethod("initialize",
                 } else if (TrimmingMethod == "M2") {
                     log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
                 }
-                log_success("  * >> For more information, please run 'readTable(object)'.")
-                ### ============================================================
             }
         }
     }
@@ -347,6 +345,7 @@ setMethod("initialize",
         QualityReport       = NULL
         ChromatogramParam   = NULL
     }
+    log_debug("  * >> For more information, please run 'object' or 'readTable(object)'.")
     callNextMethod(.Object,
                    creationResult      = creationResult,
                    errorMessages       = errors[[1]],

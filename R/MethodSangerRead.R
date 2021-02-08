@@ -377,4 +377,8 @@ setMethod("readTable", "SangerRead", function(object, indentation = 0) {
             space, "             Primary Sequence : ", primarySeq, "\n"
         )
     }
+    if (length(object@errorMessages) || length(object@errorTypes)) {
+        invisible(sapply(paste0(object@errorTypes, object@errorMessages, '\n') , 
+                         log_error, simplify = FALSE))
+    } 
 })

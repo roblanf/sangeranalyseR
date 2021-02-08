@@ -51,7 +51,7 @@
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 #' parentDir <- "~/Desktop/TMP/"
 #' contigName <- "Achl_RBNII384-13"
-#' suffixForwardRegExp <- "_[0-9]*_F.ab12"
+#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
@@ -384,6 +384,12 @@ setMethod("initialize",
             names(reverseReadList) <- rAbsoluteAB1
         }
         if (inputSource == "ABIF") {
+            log_info()
+            log_info("********************************************************")
+            log_info("**************** Creating 'SangerContig' ***************")
+            log_info("********************************************************")
+            readNum <- length(forwardReadList) + length(reverseReadList)
+            log_info("The number of reads detected: ", readNum)
             forwardReadListFilter <- lapply(forwardReadList, function(read) {
                 if (read@creationResult) {
                     trimmedLen <- read@QualityReport@trimmedFinishPos -
@@ -461,10 +467,6 @@ setMethod("initialize",
                 }                 
             })            
         }
-        
-        
-        
-        
         if (inputSource == "FASTA" && processMethod == "fastaRegex") {
             log_info("**** You are using Regular Expression Method ",
                      "to group reads in FASTA file (No CSV file)!")
@@ -511,6 +513,16 @@ setMethod("initialize",
                                      geneticCode        = geneticCode)
             })
             names(reverseReadList) <- reverseSelectNames
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         } else if (inputSource == "FASTA" && processMethod == "fastaCSV") {
             log_info("**** You are using CSV Name Conversion Method ",
                      "to group reads in FASTA file (with Csv file)!")
@@ -573,6 +585,12 @@ setMethod("initialize",
         }
         
         if (inputSource == "FASTA") {
+            log_info()
+            log_info("********************************************************")
+            log_info("**************** Creating 'SangerContig' ***************")
+            log_info("********************************************************")
+            readNum <- length(forwardReadList) + length(reverseReadList)
+            log_info("The number of reads detected: ", readNum)
             forwardReadListFilter <- lapply(forwardReadList, function(read) {
                 seqLen <- length(read@primarySeq)
                 if (seqLen >= minReadLength) {
@@ -724,6 +742,7 @@ setMethod("initialize",
     }
     if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
         names(readResultTable) <- readResultTableName
+        log_debug("Run 'object@readResultTable' to check the results of each Sanger reads")
     }
     callNextMethod(.Object,
                    creationResult         = creationResult,
