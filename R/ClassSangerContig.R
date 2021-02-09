@@ -111,6 +111,7 @@
 #' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
+#'                       processMethod         = "fastaCSV",
 #'                       fastaFileName         = fastaFN,
 #'                       namesConversionCSV    = namesConversionCSV,
 #'                       refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -232,13 +233,14 @@ setMethod("initialize",
         ####################################################################
         ### Second layer of pre-checking: 'ABIF' condition checking!
         ####################################################################
-        errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
-                                   namesConversionCSV, inputSource, 
-                                   errors[[1]], errors[[2]])
         readFasta <- read.fasta(fastaFileName, as.string = TRUE)
         fastaNames <- names(readFasta)
     }
-
+    if (processMethod=="ab1CSV" || processMethod=="fastaCSV") {
+        errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
+                                   namesConversionCSV, inputSource, 
+                                   errors[[1]], errors[[2]])
+    }
     if (length(errors[[1]]) == 0 ) {
         log_info("######## Contig Name: ", contigName)
         processorsNum <- getProcessors (processorsNum)

@@ -385,25 +385,12 @@ checkNamesConversionCSV <- function(nameConvMethod, namesConversionCSV,
 checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
                              namesConversionCSV, inputSource, 
                              errors, errorTypes) {
-    
-    if (is.null(namesConversionCSV) || !file.exists(namesConversionCSV)) {
+    if (!file.exists(namesConversionCSV)) {
         msg <- paste("\nnamesConversionCSV: '",  
                      namesConversionCSV, "'",
                      " file does not exist.\n", sep = "")
         errors <- c(errors, msg)
         errorTypes <- c(errorTypes, "FILE_NOT_EXISTS_ERROR")
-        
-        
-        # msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
-        #              " needs to be null.\n", sep = "")
-        # errors <- c(errors, msg)
-        # errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-        
-        
-        
-        
-        
-        
     } else {
         warnings <- character()
         if (inputSource == "ABIF") {
