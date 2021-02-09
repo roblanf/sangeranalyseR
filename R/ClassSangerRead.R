@@ -140,6 +140,8 @@ setMethod("initialize",
                    showTrimmed          = TRUE) {
     creationResult <- TRUE
     errors <- list(character(0), character(0))
+    readResultTableName <- c("readName","creationResult", "errorType", 
+                             "errorMessage", "inputSource", "direction")
     ############################################################################
     ### First layer of pre-checking: filename exists (Must)
     ############################################################################
@@ -223,7 +225,8 @@ setMethod("initialize",
                     MBCResult <-
                         MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                              abifRawData@data$PCON.2,
-                                             signalRatioCutoff, readFeature)
+                                             signalRatioCutoff, readFeature, 
+                                             printLevel)
                     ### ========================================================
                     ### 2. Update Once (Only during creation)
                     ###    Basecall primary seq length will be same !
@@ -310,19 +313,22 @@ setMethod("initialize",
                 log_success("********************************************************")
                 log_success("******** 'SangerRead' S4 instance is created !! ********")
                 log_success("********************************************************")
-                log_success("  * >> '", basename(readFileName), "' SangerRead is created.")
-                log_success("  * >> One '", readFeature, "' is created from ", inputSource, " file.")
+                log_success("   >> '", basename(readFileName), "' SangerRead is created.")
+                log_success("   >> One '", readFeature, "' is created from ", inputSource, " file.")
                 
                 if (TrimmingMethod == "M1" && printLevel == "SangerRead") {
-                    log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+                    log_success("   >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
                 } else if (TrimmingMethod == "M2" && printLevel == "SangerRead") {
-                    log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
+                    log_success("   >> Read is trimmed by 'M2 - sliding window method'.")
                 }
             }
         }
     }
     if (length(errors[[1]]) != 0) {
         creationResult <- FALSE
+        readResultTable <- data.frame(basename(readFileName), 
+                                      creationResult, errors[[2]], errors[[1]], 
+                                      inputSource, readFeature)
         sapply(paste0(errors[[2]], errors[[1]], '\n') , 
                log_error, simplify = FALSE)
         # Create df to store reads that failed to be created
@@ -348,14 +354,27 @@ setMethod("initialize",
         abifRawData         = NULL
         QualityReport       = NULL
         ChromatogramParam   = NULL
+    } else {
+        readResultTable <- data.frame(basename(readFileName), 
+                                      creationResult, "None", "None", 
+                                      inputSource, readFeature)
     }
+    
     if (printLevel == "SangerRead") {
-        log_debug("  * >> For more information, please run 'object' or 'readTable(object)'.")
+        log_debug("   >> For more information, please run 'object' or 'readTable(object)'.")
+        # Print the readResultTable clue
+        if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
+            names(readResultTable) <- readResultTableName
+            log_debug("   >> Run 'object@objectResults@readResultTable' ",
+                      "to check the results of each Sanger reads")
+        }
     }
+    names(readResultTable) <- readResultTableName
     objectResults <- new("ObjectResults", creationResult = creationResult,
                          errorMessages = errors[[1]], errorTypes = errors[[2]],
-                         warningMessages = character(0), warningTypes = character(0),
-                         printLevel = printLevel)
+                         warningMessages = character(0), 
+                         warningTypes = character(0), printLevel = printLevel, 
+                         readResultTable = readResultTable)
     callNextMethod(.Object,
                    objectResults       = objectResults,
                    inputSource         = inputSource,

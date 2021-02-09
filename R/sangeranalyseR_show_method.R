@@ -25,6 +25,7 @@ setMethod('show', 'SangerRead', function(object){
                 "      Primary Sequence : ", as.character(object@primarySeq), "\n"
             )
         }
+        log_success("'", basename(object@readFileName), "'", " is successfully created!")
     } else {
         sapply(paste0(object@objectResults@errorTypes, object@objectResults@errorMessages, '\n') , 
                log_error, simplify = FALSE)
