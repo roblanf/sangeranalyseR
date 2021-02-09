@@ -1,6 +1,6 @@
 # the show method:
 setMethod('show', 'SangerRead', function(object){
-    if (object@creationResult) {
+    if (object@objectResults@creationResult) {
         if (object@inputSource == "ABIF") {
             primaryDNA <- as.character(object@primarySeq)
             secondaryDNA <- as.character(object@secondarySeq)
@@ -26,14 +26,14 @@ setMethod('show', 'SangerRead', function(object){
             )
         }
     } else {
-        sapply(paste0(object@errorTypes, object@errorMessages, '\n') , 
+        sapply(paste0(object@objectResults@errorTypes, object@objectResults@errorMessages, '\n') , 
                log_error, simplify = FALSE)
     }
 })
 
 
 setMethod('show', 'SangerContig', function(object){
-    if (object@creationResult) {
+    if (object@objectResults@creationResult) {
         forReadNum <- length(object@forwardReadList)
         revReadNum <- length(object@reverseReadList)
         if (object@inputSource == "ABIF") {
@@ -75,10 +75,10 @@ setMethod('show', 'SangerContig', function(object){
         } 
         log_success("'", object@contigName, "'", " is successfully created!")
     } else {
-        sapply(paste0(object@errorTypes, object@errorMessages, '\n') , 
+        sapply(paste0(object@objectResults@errorTypes, object@objectResults@errorMessages, '\n') , 
                log_error, simplify = FALSE)
     }
-    if (length(object@warningMessages) > 0) {
+    if (length(object@objectResults@warningMessages) > 0) {
         sapply(paste0(object@warningMessages, '\n') , log_warn, simplify = FALSE)
     }
 })

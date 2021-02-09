@@ -2,9 +2,7 @@
 #'
 #' @description  An S4 class extending sangerseq S4 class which corresponds to a single ABIF file in Sanger sequencing.
 #'
-#' @slot creationResult 
-#' @slot errorMessages
-#' @slot errorTypes
+#' @slot objectResults
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @slot readFileName The filename of the target input file.
@@ -102,9 +100,7 @@ setClass(
     ###     * Inherit from 'sangerseq' from sangerseqR.
     ### ------------------------------------------------------------------------
     contains="sangerseq",
-    slots=c(creationResult      = "logical",
-            errorMessages       = "character",
-            errorTypes          = "character",
+    slots=c(objectResults       = "ObjectResults",
             inputSource         = "character",
             readFeature         = "character",
             readFileName        = "character",
@@ -128,6 +124,7 @@ setClass(
 setMethod("initialize",
           "SangerRead",
           function(.Object,
+                   printLevel           = "SangerRead",
                    inputSource          = "ABIF",
                    readFeature          = "",
                    readFileName         = "",
@@ -176,10 +173,14 @@ setMethod("initialize",
                 errors <- checkSignalRatioCutoff(signalRatioCutoff, errors[[1]], errors[[2]])
                 errors <- checkShowTrimmed(showTrimmed, errors[[1]], errors[[2]])
                 if(length(errors[[1]]) == 0) {
-                    log_info(readFeature, ": Creating abif & sangerseq ...")
-                    log_info("    * Creating ", readFeature , " raw abif ...")
+                    if (printLevel == "SangerRead") {
+                        log_info(readFeature, ": Creating abif & sangerseq ...")
+                        log_info("    * Creating ", readFeature , " raw abif ...")
+                    }
                     abifRawData = read.abif(readFileName)
-                    log_info("    * Creating ", readFeature , " raw sangerseq ...")
+                    if (printLevel == "SangerRead") {
+                        log_info("    * Creating ", readFeature , " raw sangerseq ...")
+                    }
                     readSangerseq <- sangerseq(abifRawData)
                     primarySeqID <- readSangerseq@primarySeqID
                     secondarySeqID <- readSangerseq@secondarySeqID
@@ -265,7 +266,9 @@ setMethod("initialize",
                 primarySeqID <- "From fasta file"
                 secondarySeqID <- ""
                 primarySeqRaw <- DNAString()
-                log_info(readFeature, ": Creating SangerRead from FASTA ...")
+                if (printLevel == "SangerRead") {
+                    log_info(readFeature, ": Creating SangerRead from FASTA ...")
+                }
                 readFasta <- read.fasta(readFileName, as.string = TRUE)
                 ### ------------------------------------------------------------
                 ### Get the Target Filename !!
@@ -307,16 +310,17 @@ setMethod("initialize",
                 log_success("********************************************************")
                 log_success("******** 'SangerRead' S4 instance is created !! ********")
                 log_success("********************************************************")
+                log_success("  * >> '", basename(readFileName), "' SangerRead is created.")
                 log_success("  * >> One '", readFeature, "' is created from ", inputSource, " file.")
-                if (TrimmingMethod == "M1") {
+                
+                if (TrimmingMethod == "M1" && printLevel == "SangerRead") {
                     log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
-                } else if (TrimmingMethod == "M2") {
+                } else if (TrimmingMethod == "M2" && printLevel == "SangerRead") {
                     log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
                 }
             }
         }
     }
-    
     if (length(errors[[1]]) != 0) {
         creationResult <- FALSE
         sapply(paste0(errors[[2]], errors[[1]], '\n') , 
@@ -345,11 +349,15 @@ setMethod("initialize",
         QualityReport       = NULL
         ChromatogramParam   = NULL
     }
-    log_debug("  * >> For more information, please run 'object' or 'readTable(object)'.")
+    if (printLevel == "SangerRead") {
+        log_debug("  * >> For more information, please run 'object' or 'readTable(object)'.")
+    }
+    objectResults <- new("ObjectResults", creationResult = creationResult,
+                         errorMessages = errors[[1]], errorTypes = errors[[2]],
+                         warningMessages = character(0), warningTypes = character(0),
+                         printLevel = printLevel)
     callNextMethod(.Object,
-                   creationResult      = creationResult,
-                   errorMessages       = errors[[1]],
-                   errorTypes          = errors[[2]],
+                   objectResults       = objectResults,
                    inputSource         = inputSource,
                    fastaReadName       = fastaReadName,
                    readFeature         = readFeature,

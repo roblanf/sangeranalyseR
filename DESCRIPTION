@@ -54,6 +54,7 @@ Suggests:
 Collate: 
     'AllGenerics.R'
     'ClassChromatogramParam.R'
+    'ClassObjectResults.R'
     'ClassQualityReport.R'
     'ClassSangerRead.R'
     'ClassSangerAlignment.R'
