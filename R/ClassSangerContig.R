@@ -72,11 +72,12 @@
 #' namesConversionCSV <- file.path(rawDataDir, "ab1", "SangerContig", "names_conversion_2.csv")
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
+#'                      processMethod         = "ab1CSV",
 #'                      parentDirectory       = parentDir,
 #'                      namesConversionCSV    = namesConversionCSV,
 #'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                      TrimmingMethod        = "M1",
-#'                      M1TrimmingCutoff      = 0.0001,
+#'                      M1TrimmingCutoff      = 0.000001,
 #'                      M2CutoffQualityScore  = NULL,
 #'                      M2SlidingWindowSize   = NULL,
 #'                      baseNumPerRow         = 100,
@@ -95,6 +96,7 @@
 #' suffixReverseRegExpFa <- "_[0-9]*_R$"
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
+#'                       processMethod         = "fastaRegex",
 #'                       fastaFileName         = fastaFN,
 #'                       contigName            = contigName,
 #'                       suffixForwardRegExp   = suffixForwardRegExpFa,
@@ -190,7 +192,7 @@ setMethod("initialize",
     ### First layer of pre-checking: SangerContig input parameter prechecking
     ############################################################################
     errors <- checkInputSource(inputSource, errors[[1]], errors[[2]])
-    errors <- checkProcessMethod(processMethod, errors[[1]], errors[[2]])
+    errors <- checkProcessMethod(inputSource, processMethod, errors[[1]], errors[[2]])
     errors <- checkFastaFileName(inputSource, fastaFileName,
                                  errors[[1]], errors[[2]])
     errors <- checkNamesConversionCSV(processMethod, namesConversionCSV, 
@@ -223,7 +225,7 @@ setMethod("initialize",
         errors <- checkSignalRatioCutoff (signalRatioCutoff, errors[[1]], errors[[2]])
         errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
         trimmingMethodSC <- TrimmingMethod    
-    } else if (inputSource == "CSV") {
+    } else if (inputSource == "FASTA") {
         ### --------------------------------------------------------------------
         ### 'FASTA' condition checking!
         ### --------------------------------------------------------------------
@@ -378,7 +380,8 @@ setMethod("initialize",
             })
             names(reverseReadList) <- rAbsoluteAB1
         }
-        if (inputSource == "ABIF") {
+        if (inputSource == "ABIF" && 
+            (processMethod == "ab1CSV" || processMethod == "ab1Regex")) {
             log_info()
             log_info("########################################################")
             log_info("################ Creating 'SangerContig' ###############")
@@ -578,7 +581,8 @@ setMethod("initialize",
             trimmingMethodSC <- ""
         }
         
-        if (inputSource == "FASTA") {
+        if (inputSource == "FASTA" && 
+            (processMethod == "fastaRegex" || processMethod == "fastaCSV")) {
             log_info()
             log_info("########################################################")
             log_info("################ Creating 'SangerContig' ###############")
