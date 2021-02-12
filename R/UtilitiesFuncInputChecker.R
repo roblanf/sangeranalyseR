@@ -26,24 +26,10 @@ checkFastaFileName <- function(inputSource, fastaFileName, errors, errorTypes) {
 }
 
 checkProcessMethod <- function(inputSource, processMethod, errors, errorTypes) {
-    if (processMethod != "ab1Regex" && processMethod != "ab1CSV" &&
-        processMethod != "fastaRegex" && processMethod != "fastaCSV") {
-        msg <- "\n'processMethod' must be 'ab1Regex', 'ab1CSV', 'fastaRegex', or 'fastaCSV'\n"
+    if (processMethod != "REGEX" && processMethod != "CSV") {
+        msg <- "\n'processMethod' must be 'REGEX' or 'CSV'\n"
         errors <- c(errors, msg)
         errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-    }
-    if (inputSource == "ABIF") {
-        if (processMethod != "ab1Regex" && processMethod != "ab1CSV") {
-            msg <- "\n'Your 'inputSource' is 'ABIF'. Thus, the 'processMethod' must be 'ab1Regex' or 'ab1CSV'.\n"
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-        }
-    } else if (inputSource == "FASTA") {
-        if (processMethod != "fastaRegex" && processMethod != "fastaCSV") {
-            msg <- "\n'Your 'inputSource' is 'FASTA'. Thus, the 'processMethod' must be 'fastaRegex' or 'fastaCSV'\n"
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-        }
     }
     return(list(errors, errorTypes))
 }
@@ -348,7 +334,7 @@ checkNamesConversionCSV <- function(nameConvMethod, namesConversionCSV,
                                     contigName, suffixForwardRegExp,
                                     suffixReverseRegExp, inputSource, 
                                     errors, errorTypes) {
-    if (nameConvMethod == "ab1Regex" || nameConvMethod == "fastaRegex") {
+    if (nameConvMethod == "REGEX") {
         # CSV file needs to be NULL
         if (!is.null(namesConversionCSV)) {
             msg <- paste("\nnamesConversionCSV: '", namesConversionCSV, "'",
@@ -372,7 +358,7 @@ checkNamesConversionCSV <- function(nameConvMethod, namesConversionCSV,
             errors <- c(errors, msg)
             errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
         }
-    } else if (nameConvMethod == "ab1CSV" || nameConvMethod == "fastaCSV") {
+    } else if (nameConvMethod == "CSV") {
         if(is.null(namesConversionCSV)) {
             msg <- paste("\nnamesConversionCSV cannot be null.\n", sep = "")
             errors <- c(errors, msg)

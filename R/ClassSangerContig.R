@@ -5,7 +5,7 @@
 #' @slot objectResults
 #' 
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
-#' @slot processMethod The method to create a contig from reads. The value is \code{"ab1Regex"}, \code{"ab1CSV"}, \code{"fastaRegex"}, \code{"fastaCSV"}
+#' @slot processMethod The method to create a contig from reads. The value is \code{"REGEX"}, \code{"CSV"}
 #' @slot parentDirectory If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerContig, all reads must be in the first layer in this directory. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.
 #' @slot contigName The contig name of all the reads in \code{parentDirectory}.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
@@ -49,7 +49,7 @@
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
-#'                      processMethod         = "ab1Regex",
+#'                      processMethod         = "REGEX",
 #'                      parentDirectory       = parentDir,
 #'                      contigName            = contigName,
 #'                      suffixForwardRegExp   = suffixForwardRegExp,
@@ -72,7 +72,7 @@
 #' namesConversionCSV <- file.path(rawDataDir, "ab1", "SangerContig", "names_conversion_2.csv")
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
-#'                      processMethod         = "ab1CSV",
+#'                      processMethod         = "CSV",
 #'                      parentDirectory       = parentDir,
 #'                      namesConversionCSV    = namesConversionCSV,
 #'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -96,7 +96,7 @@
 #' suffixReverseRegExpFa <- "_[0-9]*_R$"
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
-#'                       processMethod         = "fastaRegex",
+#'                       processMethod         = "REGEX",
 #'                       fastaFileName         = fastaFN,
 #'                       contigName            = contigName,
 #'                       suffixForwardRegExp   = suffixForwardRegExpFa,
@@ -111,7 +111,7 @@
 #' namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerContig", "names_conversion_1.csv")
 #' sangerContigFa <- new("SangerContig",
 #'                       inputSource           = "FASTA",
-#'                       processMethod         = "fastaCSV",
+#'                       processMethod         = "CSV",
 #'                       fastaFileName         = fastaFN,
 #'                       namesConversionCSV    = namesConversionCSV,
 #'                       refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -158,7 +158,7 @@ setMethod("initialize",
           function(.Object,
                    printLevel             = "SangerContig",
                    inputSource            = "ABIF",
-                   processMethod          = "ab1Regex",
+                   processMethod          = "REGEX",
                    fastaFileName          = NULL,
                    namesConversionCSV     = NULL,
                    parentDirectory        = NULL,
@@ -236,7 +236,7 @@ setMethod("initialize",
         readFasta <- read.fasta(fastaFileName, as.string = TRUE)
         fastaNames <- names(readFasta)
     }
-    if (processMethod=="ab1CSV" || processMethod=="fastaCSV") {
+    if (processMethod=="CSV") {
         errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
                                    namesConversionCSV, inputSource, 
                                    errors[[1]], errors[[2]])
@@ -244,7 +244,7 @@ setMethod("initialize",
     if (length(errors[[1]]) == 0 ) {
         log_info("######## Contig Name: ", contigName)
         processorsNum <- getProcessors (processorsNum)
-        if (inputSource == "ABIF" && processMethod == "ab1Regex") {
+        if (inputSource == "ABIF" && processMethod == "REGEX") {
             log_info("  >> You are using Regular Expression Method",
                      " to group AB1 files!")
             parentDirFiles <- list.files(parentDirectory)
@@ -298,7 +298,7 @@ setMethod("initialize",
                                      showTrimmed          = showTrimmed)
             })
             names(reverseReadList) <- reverseAllReads[[1]]
-        } else if (inputSource == "ABIF" && processMethod == "ab1CSV") {
+        } else if (inputSource == "ABIF" && processMethod == "CSV") {
             log_info("**** You are using CSV Name Conversion Method ",
                      "to group AB1 files!")
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
@@ -382,8 +382,7 @@ setMethod("initialize",
             })
             names(reverseReadList) <- rAbsoluteAB1
         }
-        if (inputSource == "ABIF" && 
-            (processMethod == "ab1CSV" || processMethod == "ab1Regex")) {
+        if (inputSource == "ABIF") {
             log_info()
             log_info("########################################################")
             log_info("################ Creating 'SangerContig' ###############")
@@ -472,7 +471,7 @@ setMethod("initialize",
                 }                 
             })            
         }
-        if (inputSource == "FASTA" && processMethod == "fastaRegex") {
+        if (inputSource == "FASTA" && processMethod == "REGEX") {
             log_info("**** You are using Regular Expression Method ",
                      "to group reads in FASTA file (No CSV file)!")
             ### ----------------------------------------------------------------
@@ -520,7 +519,7 @@ setMethod("initialize",
                                      geneticCode        = geneticCode)
             })
             names(reverseReadList) <- reverseSelectNames
-        } else if (inputSource == "FASTA" && processMethod == "fastaCSV") {
+        } else if (inputSource == "FASTA" && processMethod == "CSV") {
             log_info("**** You are using CSV Name Conversion Method ",
                      "to group reads in FASTA file (with Csv file)!")
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
@@ -583,8 +582,7 @@ setMethod("initialize",
             trimmingMethodSC <- ""
         }
         
-        if (inputSource == "FASTA" && 
-            (processMethod == "fastaRegex" || processMethod == "fastaCSV")) {
+        if (inputSource == "FASTA") {
             log_info()
             log_info("########################################################")
             log_info("################ Creating 'SangerContig' ###############")

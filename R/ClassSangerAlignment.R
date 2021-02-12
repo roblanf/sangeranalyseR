@@ -8,7 +8,12 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #'
 #' @description  An S4 class containing SangerContigs lists and contigs alignment results which corresponds to a final alignment in Sanger sequencing.
 #'
+#' @slot objectResults
+#' 
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
+#' @slot processMethod The method to create a contig from reads. The value is \code{"REGEX"}, \code{"CSV"}
+#' 
+#' 
 #' @slot fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
 #' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot parentDirectory If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerAlignment, all reads in subdirectories will be scanned recursively. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.
@@ -37,6 +42,7 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerAlignment <- new("SangerAlignment",
 #'                        inputSource           = "ABIF",
+#'                        processMethod         = "REGEX"
 #'                        parentDirectory       = parentDir,
 #'                        suffixForwardRegExp   = suffixForwardRegExp,
 #'                        suffixReverseRegExp   = suffixReverseRegExp,
@@ -58,6 +64,7 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' "names_conversion.csv")
 #' sangerAlignment <- new("SangerAlignment",
 #'                        inputSource           = "ABIF",
+#'                        processMethod         = "CSV"
 #'                        parentDirectory       = parentDir,
 #'                        namesConversionCSV    = namesConversionCSV,
 #'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -79,6 +86,7 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' suffixReverseRegExpFa <- "_[0-9]*_R$"
 #' sangerAlignmentFa <- new("SangerAlignment",
 #'                          inputSource           = "FASTA",
+#'                          processMethod         = "REGEX"
 #'                          fastaFileName         = fastaFN,
 #'                          suffixForwardRegExp   = suffixForwardRegExpFa,
 #'                          suffixReverseRegExp   = suffixReverseRegExpFa,
@@ -93,6 +101,7 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #'                                 "SangerAlignment", "names_conversion.csv")
 #' sangerAlignmentFa <- new("SangerAlignment",
 #'                          inputSource           = "FASTA",
+#'                          processMethod         = "CSV"
 #'                          fastaFileName         = fastaFN,
 #'                          namesConversionCSV    = namesConversionCSV,
 #'                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
@@ -106,7 +115,9 @@ setClass("SangerAlignment",
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerAlignment'
          ### -------------------------------------------------------------------
-         representation(inputSource                 = "character",
+         representation(objectResults               = "ObjectResults",
+                        inputSource                 = "character",
+                        processMethod               = "character",
                         fastaFileName               = "characterORNULL",
                         namesConversionCSV          = "characterORNULL",
                         parentDirectory             = "characterORNULL",
@@ -130,7 +141,9 @@ setClass("SangerAlignment",
 setMethod("initialize",
           "SangerAlignment",
           function(.Object,
+                   printLevel             = "SangerContig",
                    inputSource            = "ABIF",
+                   processMethod          = "REGEX",
                    fastaFileName          = NULL,
                    namesConversionCSV     = NULL,
                    parentDirectory        = NULL,
@@ -158,44 +171,47 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
-    errors <- character()
+    errors <- list(character(0), character(0))
+    warnings <- c(character(0))
     ##### ------------------------------------------------------------------
     ##### Input parameter prechecking for SangerContig parameter
     ##### ------------------------------------------------------------------
-    errors <- checkMinReadsNum(minReadsNum, errors)
-    errors <- checkMinReadLength(minReadLength, errors)
-    errors <- checkMinFractionCall(minFractionCall, errors)
-    errors <- checkMaxFractionLost(maxFractionLost, errors)
-    errors <- checkGeneticCode(geneticCode, errors)
-    errors <- checkAcceptStopCodons(acceptStopCodons, errors)
-    errors <- checkReadingFrame(readingFrame, errors)
+    errors <- checkMinReadsNum(minReadsNum, errors[[1]], errors[[2]])
+    errors <- checkMinReadLength(minReadLength, errors[[1]], errors[[2]])
+    errors <- checkMinFractionCall(minFractionCall, errors[[1]], errors[[2]])
+    errors <- checkMaxFractionLost(maxFractionLost, errors[[1]], errors[[2]])
+    errors <- checkGeneticCode(geneticCode, errors[[1]], errors[[2]])
+    errors <- checkAcceptStopCodons(acceptStopCodons, errors[[1]], errors[[2]])
+    errors <- checkReadingFrame(readingFrame, errors[[1]], errors[[2]])
     ##### ----------------------------------------------------------------------
     ##### Input parameter prechecking for processorsNum
     ##### ----------------------------------------------------------------------
-    errors <- checkProcessorsNum(processorsNum, errors)
-    log_info('*************************************************')
-    log_info('**** Start creating SangerAlignment instance ****')
-    log_info('*************************************************')
-    if (length(errors) == 0) {
+    errors <- checkProcessorsNum(processorsNum, errors[[1]], errors[[2]])
+    log_info('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+    log_info('%%%% Start creating SangerAlignment instance %%%%')
+    log_info('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+    if (length(errors[[1]]) == 0 ) {
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
             ### ----------------------------------------------------------------
             ##### 'parentDirectory' prechecking
             ### ----------------------------------------------------------------
-            errors <- checkParentDirectory (parentDirectory, errors)
+            errors <- checkParentDirectory (parentDirectory, errors[[1]], errors[[2]])
             ### ----------------------------------------------------------------
             ##### Input parameter prechecking for TrimmingMethod.
             ### ----------------------------------------------------------------
-            errors <- checkTrimParam(TrimmingMethod, M1TrimmingCutoff,
+            errors <- checkTrimParam(TrimmingMethod,
+                                     M1TrimmingCutoff,
                                      M2CutoffQualityScore,
-                                     M2SlidingWindowSize, errors)
+                                     M2SlidingWindowSize,
+                                     errors[[1]], errors[[2]])
             ### ----------------------------------------------------------------
             ##### Input parameter prechecking for ChromatogramParam
             ### ----------------------------------------------------------------
-            errors <- checkBaseNumPerRow (baseNumPerRow, errors)
-            errors <- checkHeightPerRow (baseNumPerRow, errors)
-            errors <- checkSignalRatioCutoff (signalRatioCutoff, errors)
-            errors <- checkShowTrimmed (showTrimmed, errors)
+            errors <- checkBaseNumPerRow (baseNumPerRow, errors[[1]], errors[[2]])
+            errors <- checkHeightPerRow (heightPerRow, errors[[1]], errors[[2]])
+            errors <- checkSignalRatioCutoff (signalRatioCutoff, errors[[1]], errors[[2]])
+            errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
             if (length(errors) != 0) {
                 log_error(paste(errors, collapse = ""))
             }
@@ -451,9 +467,9 @@ setMethod("initialize",
         # 25 forward reads assigned to 12 contigs according to [regular expression / csv file]
         # 3 reverse reads assigned to 2 contigs according to [regular expression / csv file]
         # for more information see [object]
-        log_success("*************************************************************")
-        log_success("******** 'SangerAlignment' S4 instance is created !! ********")
-        log_success("*************************************************************")
+        log_success("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+        log_success("%%%%%%%% 'SangerAlignment' S4 instance is created !! %%%%%%%%")
+        log_success("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
         if (is.null(namesConversionCSV)) {
             log_success("  * >> ", contigNum, " contigs detected from 'regular expression'.")
         } else {
@@ -480,7 +496,9 @@ setMethod("initialize",
         log_error(paste(errors, collapse = ""))
     }
     callNextMethod(.Object,
-                   inputSource           = inputSource,
+                   objectResults          = objectResults,
+                   inputSource            = inputSource,
+                   processMethod          = processMethod,
                    fastaFileName         = fastaFileName,
                    namesConversionCSV    = namesConversionCSV,
                    parentDirectory       = parentDirectory,
