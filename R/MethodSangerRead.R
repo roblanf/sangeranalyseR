@@ -324,9 +324,9 @@ setMethod("readTable", "SangerRead", function(object, indentation = 0) {
         trimmedFinishPos <- object@QualityReport@trimmedFinishPos
         primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
         secondaryDNA <- substr(secondaryDNA, trimmedStartPos+1,trimmedFinishPos)
-        cat(space, " ##############################\n", 
-            space, "### SangerRead S4 instance ###\n", 
-            space, "##############################\n")
+        cat(space, " ------------------------------\n", 
+            space, "--- SangerRead S4 instance ---\n", 
+            space, "------------------------------\n")
         
         if (TrimmingMethod == "M1") {
             cat(space, "                 Input source : ", inputSource, "\n",

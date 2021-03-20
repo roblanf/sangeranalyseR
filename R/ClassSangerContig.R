@@ -209,12 +209,12 @@ setMethod("initialize",
     errors <- checkReadingFrame(readingFrame, errors[[1]], errors[[2]])
     errors <- checkProcessorsNum(processorsNum, errors[[1]], errors[[2]])
     if (inputSource == "ABIF") {
-        ### ----------------------------------------------------------------
+        ### --------------------------------------------------------------------
         ### 'ABIF' condition checking!
-        ### ----------------------------------------------------------------
-        ####################################################################
+        ### --------------------------------------------------------------------
+        ########################################################################
         ### Second layer of pre-checking: 'ABIF' condition checking!
-        ####################################################################
+        ########################################################################
         errors <- checkParentDirectory (parentDirectory, errors[[1]], errors[[2]])
         errors <- checkTrimParam(TrimmingMethod,
                                  M1TrimmingCutoff,
@@ -230,9 +230,9 @@ setMethod("initialize",
         ### --------------------------------------------------------------------
         ### 'FASTA' condition checking!
         ### --------------------------------------------------------------------
-        ####################################################################
+        ########################################################################
         ### Second layer of pre-checking: 'ABIF' condition checking!
-        ####################################################################
+        ########################################################################
         readFasta <- read.fasta(fastaFileName, as.string = TRUE)
         fastaNames <- names(readFasta)
     }
@@ -663,9 +663,9 @@ setMethod("initialize",
                 stopsDf <- data.frame()
                 spDf <- data.frame()
             }
-            log_success("##########################################################")
-            log_success("######## 'SangerContig' S4 instance is created !! ########")
-            log_success("##########################################################")
+            log_success("==========================================================")
+            log_success("======== 'SangerContig' S4 instance is created !! ========")
+            log_success("==========================================================")
             log_success("   >> ", readNumber, " read(s) created from ", inputSource, " file.")
             if (is.null(namesConversionCSV)) {
                 log_success("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
@@ -734,6 +734,7 @@ setMethod("initialize",
     }
     if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
         names(readResultTable) <- readResultTableName
+        log_debug("   >> For more information, please run 'object' or 'readTable(object)'.")
         log_debug("   >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads")
     }
     objectResults <- new("ObjectResults", creationResult = creationResult,

@@ -310,9 +310,9 @@ setMethod("initialize",
                 primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
                 primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
                 primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
-                log_success("********************************************************")
-                log_success("******** 'SangerRead' S4 instance is created !! ********")
-                log_success("********************************************************")
+                log_success("--------------------------------------------------------")
+                log_success("-------- 'SangerRead' S4 instance is created !! --------")
+                log_success("--------------------------------------------------------")
                 log_success("   >> '", basename(readFileName), "' SangerRead is created.")
                 log_success("   >> One '", readFeature, "' is created from ", inputSource, " file.")
                 
@@ -366,7 +366,7 @@ setMethod("initialize",
         if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
             names(readResultTable) <- readResultTableName
             log_debug("   >> Run 'object@objectResults@readResultTable' ",
-                      "to check the results of each Sanger reads")
+                      "to check the result of the Sanger read")
         }
     }
     names(readResultTable) <- readResultTableName

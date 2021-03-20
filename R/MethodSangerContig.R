@@ -411,9 +411,9 @@ setMethod("readTable", "SangerContig", function(object, indentation = 0) {
         log_info("******** SangerContig readTable print ********")
         log_info("**********************************************")
     }
-    cat(" ################################\n", 
-        "### SangerContig S4 instance ###\n", 
-        "################################\n")
+    cat(" ================================\n", 
+        "=== SangerContig S4 instance ===\n", 
+        "================================\n")
     cat(space, "                 Input source : ", inputSource, "\n",
         space, "    Names conversion CSV file : ", namesConversionCSV, "\n",
         space, "                  Contig name : ", contigName, "\n",
@@ -426,7 +426,7 @@ setMethod("readTable", "SangerContig", function(object, indentation = 0) {
         space, "        Maximum fraction lost : ", maxFractionLost, "\n",
         space, "           Accept stop codons : ", acceptStopCodons, "\n",
         space, "                Reading frame : ", readingFrame, "\n",
-        space, "              Contig sequence : ", as.character(contigSeq), "\n"
+        space, "              Contig sequence : ", as.character(contigSeq), "\n\n"
     )
     lapply(forwardReadList, readTable, indentation = 1)
     lapply(reverseReadList, readTable, indentation = 1)
