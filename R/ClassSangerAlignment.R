@@ -174,7 +174,12 @@ setMethod("initialize",
     creationResult <- TRUE
     errors <- list(character(0), character(0))
     warnings <- c(character(0))
-    
+    readResultTableName <- c("readName","creationResult", "errorType", 
+                             "errorMessage", "inputSource", "direction")
+    readResultTable <- data.frame()
+    ############################################################################
+    ### First layer of pre-checking: SangerAlignment input parameter prechecking
+    ############################################################################
     if (printLevel == "SangerAlignment") {
         errors <- checkInputSource(inputSource, errors[[1]], errors[[2]])
         errors <- checkProcessMethod(inputSource, processMethod, errors[[1]], errors[[2]])
@@ -218,7 +223,7 @@ setMethod("initialize",
             ### 'FASTA' condition checking!
             ### --------------------------------------------------------------------
             ########################################################################
-            ### Second layer of pre-checking: 'ABIF' condition checking!
+            ### Second layer of pre-checking: 'FASTA' condition checking!
             ########################################################################
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             fastaNames <- names(readFasta)
@@ -427,6 +432,92 @@ setMethod("initialize",
        
         # message("SangerContigList length: ", length(SangerContigList))
         SangerContigList <- Filter(Negate(is.null), SangerContigList)
+        
+        invisible(
+            lapply(SangerContigList, function(contig) {
+            lapply(contig@forwardReadList, function(read) {
+                if (read@objectResults@creationResult) {
+                    trimmedLen <- read@QualityReport@trimmedFinishPos -
+                        read@QualityReport@trimmedStartPos
+                    if (trimmedLen >= minReadLength) {
+                        ### Success: readResultTable (SangerContig Level)
+                        row <- data.frame(basename(read@readFileName),
+                                          read@objectResults@creationResult,
+                                          "None", "None",
+                                          read@inputSource, read@readFeature)
+                        names(row) <- readResultTableName
+                        readResultTable <<- rbind(readResultTable, row)
+                    } else {
+                        msg <- paste0("  * >> ", read@readFileName,
+                                      " is shorter than 'minReadLength' ",
+                                      minReadLength,". This read is created but skipped!\n")
+                        warnings <<- c(warnings, msg)
+                        log_warn(msg)
+                        ### Failed: readResultTable (SangerContig Level)
+                        row <- data.frame(basename(read@readFileName),
+                                          FALSE, "TRIMMED_READ_ERROR", msg,
+                                          read@inputSource,  read@readFeature)
+                        names(row) <- readResultTableName
+                        readResultTable <<- rbind(readResultTable, row)
+                    }
+                } else {
+                    ### Failed: readResultTable (SangerRead Level)
+                    row <- data.frame(basename(read@readFileName),
+                                      read@objectResults@creationResult,
+                                      read@objectResults@errorTypes,
+                                      read@objectResults@errorMessages,
+                                      read@inputSource, read@readFeature)
+                    names(row) <- readResultTableName
+                    readResultTable <<- rbind(readResultTable, row)
+                }
+            })
+            lapply(contig@reverseReadList, function(read) {
+                if (read@objectResults@creationResult) {
+                    trimmedLen <- read@QualityReport@trimmedFinishPos -
+                        read@QualityReport@trimmedStartPos
+                    if (trimmedLen >= minReadLength) {
+                        ### Success: readResultTable (SangerContig Level)
+                        row <- data.frame(basename(read@readFileName),
+                                          read@objectResults@creationResult,
+                                          "None", "None",
+                                          read@inputSource, read@readFeature)
+                        names(row) <- readResultTableName
+                        readResultTable <<- rbind(readResultTable, row)
+                    } else {
+                        msg <- paste0("  * >> ", read@readFileName,
+                                      " is shorter than 'minReadLength' ",
+                                      minReadLength,". This read is created but skipped!\n")
+                        warnings <<- c(warnings, msg)
+                        log_warn(msg)
+                        ### Failed: readResultTable (SangerContig Level)
+                        row <- data.frame(basename(read@readFileName),
+                                          FALSE, "TRIMMED_READ_ERROR", msg,
+                                          read@inputSource,  read@readFeature)
+                        names(row) <- readResultTableName
+                        readResultTable <<- rbind(readResultTable, row)
+                    }
+                } else {
+                    ### Failed: readResultTable (SangerRead Level)
+                    row <- data.frame(basename(read@readFileName),
+                                      read@objectResults@creationResult,
+                                      read@objectResults@errorTypes,
+                                      read@objectResults@errorMessages,
+                                      read@inputSource, read@readFeature)
+                    names(row) <- readResultTableName
+                    readResultTable <<- rbind(readResultTable, row)
+                }
+            })
+        })
+        )
+
+
+        
+        
+        
+        
+        
+        
+        
         # message("SangerContigList length: ", length(SangerContigList))
         
         # alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
@@ -471,14 +562,53 @@ setMethod("initialize",
         
         # Add reads checking.
 
-    } else {
-        log_error(paste(errors, collapse = ""))
     }
+    # else {
+    #     log_error(paste(errors, collapse = ""))
+    # }
     
+    
+    
+    
+    
+    
+    
+    
+    if (length(errors[[1]]) != 0) {
+        creationResult <- FALSE
+        sapply(paste0(errors[[2]], errors[[1]], '\n') , 
+               log_error, simplify = FALSE)
+        inputSource            = ""
+        processMethod          = ""
+        fastaFileName          = NULL
+        namesConversionCSV     = NULL
+        parentDirectory        = NULL
+        contigName             = NULL
+        suffixForwardRegExp    = NULL
+        suffixReverseRegExp    = NULL
+        forwardReadListFilter  = list()
+        reverseReadListFilter  = list()
+        trimmingMethodSC       = ""
+        minReadsNum            = 0
+        minReadLength          = 0
+        refAminoAcidSeq        = ""
+        minFractionCall        = 0
+        maxFractionLost        = 0
+        geneticCode            = ""
+        acceptStopCodons       = FALSE
+        readingFrame           = 0
+    }
+    if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
+        names(readResultTable) <- readResultTableName
+        log_debug("   >> For more information, please run 'object' or 'readTable(object)'.")
+        log_debug("   >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads")
+    }
     objectResults <- new("ObjectResults", creationResult = creationResult,
                          errorMessages = errors[[1]], errorTypes = errors[[2]],
                          warningMessages = character(0), warningTypes = character(0),
                          printLevel = printLevel, readResultTable = readResultTable)
+    
+    
     callNextMethod(.Object,
                    objectResults          = objectResults,
                    inputSource            = inputSource,

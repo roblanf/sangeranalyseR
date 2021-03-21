@@ -236,7 +236,7 @@ setMethod("initialize",
             ### 'FASTA' condition checking!
             ### ----------------------------------------------------------------
             ####################################################################
-            ### Second layer of pre-checking: 'ABIF' condition checking!
+            ### Second layer of pre-checking: 'FASTA' condition checking!
             ####################################################################
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             fastaNames <- names(readFasta)
