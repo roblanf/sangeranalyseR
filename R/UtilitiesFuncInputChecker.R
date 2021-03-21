@@ -1,3 +1,12 @@
+checkRefAAS <- function(refAminoAcidSeq, errors, errorTypes) {
+    if (typeof(refAminoAcidSeq) != "character") {
+        msg<- "\n'refAminoAcidSeq' must be character type.\n"
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
+    }
+    return(list(errors, errorTypes))
+}
+
 checkFastaFileName <- function(inputSource, fastaFileName, errors, errorTypes) {
     if (inputSource == "FASTA") {
         if (!file.exists(fastaFileName)) {

@@ -141,7 +141,7 @@ setClass("SangerAlignment",
 setMethod("initialize",
           "SangerAlignment",
           function(.Object,
-                   printLevel             = "SangerContig",
+                   printLevel             = "SangerAlignment",
                    inputSource            = "ABIF",
                    processMethod          = "REGEX",
                    fastaFileName          = NULL,
@@ -171,71 +171,63 @@ setMethod("initialize",
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
+    creationResult <- TRUE
     errors <- list(character(0), character(0))
     warnings <- c(character(0))
-    ##### ------------------------------------------------------------------
-    ##### Input parameter prechecking for SangerContig parameter
-    ##### ------------------------------------------------------------------
-    errors <- checkInputSource(inputSource, errors[[1]], errors[[2]])
-    errors <- checkProcessMethod(inputSource, processMethod, errors[[1]], errors[[2]])
-    errors <- checkFastaFileName(inputSource, fastaFileName,
-                                 errors[[1]], errors[[2]])
-    errors <- checkNamesConversionCSV(processMethod, namesConversionCSV, 
-                                      "SangerAlignment", suffixForwardRegExp,
-                                      suffixReverseRegExp, inputSource, 
-                                      errors[[1]], errors[[2]])
-    errors <- checkRefAAS()
     
-    errors <- checkMinReadsNum(minReadsNum, errors[[1]], errors[[2]])
-    errors <- checkMinReadLength(minReadLength, errors[[1]], errors[[2]])
-    errors <- checkMinFractionCall(minFractionCall, errors[[1]], errors[[2]])
-    errors <- checkMaxFractionLost(maxFractionLost, errors[[1]], errors[[2]])
-    
-    errors <- checkMinFractionCall(minFractionCallSA, errors[[1]], errors[[2]])
-    errors <- checkMaxFractionLost(maxFractionLostSA, errors[[1]], errors[[2]])
-    
-    
-    errors <- checkGeneticCode(geneticCode, errors[[1]], errors[[2]])
-    errors <- checkAcceptStopCodons(acceptStopCodons, errors[[1]], errors[[2]])
-    errors <- checkReadingFrame(readingFrame, errors[[1]], errors[[2]])
-    errors <- checkProcessorsNum(processorsNum, errors[[1]], errors[[2]])
-    
-    
-    
-    
-    
-    if (inputSource == "ABIF") {
-        ### --------------------------------------------------------------------
-        ### 'ABIF' condition checking!
-        ### --------------------------------------------------------------------
-        ########################################################################
-        ### Second layer of pre-checking: 'ABIF' condition checking!
-        ########################################################################
-        errors <- checkParentDirectory (parentDirectory, errors[[1]], errors[[2]])
-        errors <- checkTrimParam(TrimmingMethod,
-                                 M1TrimmingCutoff,
-                                 M2CutoffQualityScore,
-                                 M2SlidingWindowSize,
-                                 errors[[1]], errors[[2]])
-        errors <- checkBaseNumPerRow (baseNumPerRow, errors[[1]], errors[[2]])
-        errors <- checkHeightPerRow (heightPerRow, errors[[1]], errors[[2]])
-        errors <- checkSignalRatioCutoff (signalRatioCutoff, errors[[1]], errors[[2]])
-        errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
-        trimmingMethodSA <- TrimmingMethod    
-    } else if (inputSource == "FASTA") {
-        ### --------------------------------------------------------------------
-        ### 'FASTA' condition checking!
-        ### --------------------------------------------------------------------
-        ########################################################################
-        ### Second layer of pre-checking: 'ABIF' condition checking!
-        ########################################################################
-        readFasta <- read.fasta(fastaFileName, as.string = TRUE)
-        fastaNames <- names(readFasta)
-    }
-    if (processMethod=="CSV") {
-        errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
-                                   namesConversionCSV, inputSource, 
-                                   errors[[1]], errors[[2]])
+    if (printLevel == "SangerAlignment") {
+        errors <- checkInputSource(inputSource, errors[[1]], errors[[2]])
+        errors <- checkProcessMethod(inputSource, processMethod, errors[[1]], errors[[2]])
+        errors <- checkFastaFileName(inputSource, fastaFileName,
+                                     errors[[1]], errors[[2]])
+        errors <- checkNamesConversionCSV(processMethod, namesConversionCSV, 
+                                          "SangerAlignment", suffixForwardRegExp,
+                                          suffixReverseRegExp, inputSource, 
+                                          errors[[1]], errors[[2]])
+        errors <- checkRefAAS(refAminoAcidSeq, errors[[1]], errors[[2]])
+        errors <- checkMinReadsNum(minReadsNum, errors[[1]], errors[[2]])
+        errors <- checkMinReadLength(minReadLength, errors[[1]], errors[[2]])
+        errors <- checkMinFractionCall(minFractionCall, errors[[1]], errors[[2]])
+        errors <- checkMaxFractionLost(maxFractionLost, errors[[1]], errors[[2]])
+        errors <- checkMinFractionCall(minFractionCallSA, errors[[1]], errors[[2]])
+        errors <- checkMaxFractionLost(maxFractionLostSA, errors[[1]], errors[[2]])
+        errors <- checkGeneticCode(geneticCode, errors[[1]], errors[[2]])
+        errors <- checkAcceptStopCodons(acceptStopCodons, errors[[1]], errors[[2]])
+        errors <- checkReadingFrame(readingFrame, errors[[1]], errors[[2]])
+        errors <- checkProcessorsNum(processorsNum, errors[[1]], errors[[2]])
+        if (inputSource == "ABIF") {
+            ### --------------------------------------------------------------------
+            ### 'ABIF' condition checking!
+            ### --------------------------------------------------------------------
+            ########################################################################
+            ### Second layer of pre-checking: 'ABIF' condition checking!
+            ########################################################################
+            errors <- checkParentDirectory (parentDirectory, errors[[1]], errors[[2]])
+            errors <- checkTrimParam(TrimmingMethod,
+                                     M1TrimmingCutoff,
+                                     M2CutoffQualityScore,
+                                     M2SlidingWindowSize,
+                                     errors[[1]], errors[[2]])
+            errors <- checkBaseNumPerRow (baseNumPerRow, errors[[1]], errors[[2]])
+            errors <- checkHeightPerRow (heightPerRow, errors[[1]], errors[[2]])
+            errors <- checkSignalRatioCutoff (signalRatioCutoff, errors[[1]], errors[[2]])
+            errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
+            trimmingMethodSA <- TrimmingMethod    
+        } else if (inputSource == "FASTA") {
+            ### --------------------------------------------------------------------
+            ### 'FASTA' condition checking!
+            ### --------------------------------------------------------------------
+            ########################################################################
+            ### Second layer of pre-checking: 'ABIF' condition checking!
+            ########################################################################
+            readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+            fastaNames <- names(readFasta)
+        }
+        if (processMethod=="CSV") {
+            errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
+                                       namesConversionCSV, inputSource, 
+                                       errors[[1]], errors[[2]])
+        }
     }
     
     if (length(errors[[1]]) == 0 ) {
@@ -482,6 +474,11 @@ setMethod("initialize",
     } else {
         log_error(paste(errors, collapse = ""))
     }
+    
+    objectResults <- new("ObjectResults", creationResult = creationResult,
+                         errorMessages = errors[[1]], errorTypes = errors[[2]],
+                         warningMessages = character(0), warningTypes = character(0),
+                         printLevel = printLevel, readResultTable = readResultTable)
     callNextMethod(.Object,
                    objectResults          = objectResults,
                    inputSource            = inputSource,

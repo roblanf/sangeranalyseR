@@ -192,54 +192,60 @@ setMethod("initialize",
     ############################################################################
     ### First layer of pre-checking: SangerContig input parameter prechecking
     ############################################################################
-    errors <- checkInputSource(inputSource, errors[[1]], errors[[2]])
-    errors <- checkProcessMethod(inputSource, processMethod, errors[[1]], errors[[2]])
-    errors <- checkFastaFileName(inputSource, fastaFileName,
-                                 errors[[1]], errors[[2]])
-    errors <- checkNamesConversionCSV(processMethod, namesConversionCSV, 
-                                      contigName, suffixForwardRegExp,
-                                      suffixReverseRegExp, inputSource, 
-                                      errors[[1]], errors[[2]])
-    errors <- checkMinReadsNum(minReadsNum, errors[[1]], errors[[2]])
-    errors <- checkMinReadLength(minReadLength, errors[[1]], errors[[2]])
-    errors <- checkMinFractionCall(minFractionCall, errors[[1]], errors[[2]])
-    errors <- checkMaxFractionLost(maxFractionLost, errors[[1]], errors[[2]])
-    errors <- checkGeneticCode(geneticCode, errors[[1]], errors[[2]])
-    errors <- checkAcceptStopCodons(acceptStopCodons, errors[[1]], errors[[2]])
-    errors <- checkReadingFrame(readingFrame, errors[[1]], errors[[2]])
-    errors <- checkProcessorsNum(processorsNum, errors[[1]], errors[[2]])
-    if (inputSource == "ABIF") {
-        ### --------------------------------------------------------------------
-        ### 'ABIF' condition checking!
-        ### --------------------------------------------------------------------
-        ########################################################################
-        ### Second layer of pre-checking: 'ABIF' condition checking!
-        ########################################################################
-        errors <- checkParentDirectory (parentDirectory, errors[[1]], errors[[2]])
-        errors <- checkTrimParam(TrimmingMethod,
-                                 M1TrimmingCutoff,
-                                 M2CutoffQualityScore,
-                                 M2SlidingWindowSize,
-                                 errors[[1]], errors[[2]])
-        errors <- checkBaseNumPerRow (baseNumPerRow, errors[[1]], errors[[2]])
-        errors <- checkHeightPerRow (heightPerRow, errors[[1]], errors[[2]])
-        errors <- checkSignalRatioCutoff (signalRatioCutoff, errors[[1]], errors[[2]])
-        errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
-        trimmingMethodSC <- TrimmingMethod    
-    } else if (inputSource == "FASTA") {
-        ### --------------------------------------------------------------------
-        ### 'FASTA' condition checking!
-        ### --------------------------------------------------------------------
-        ########################################################################
-        ### Second layer of pre-checking: 'ABIF' condition checking!
-        ########################################################################
-        readFasta <- read.fasta(fastaFileName, as.string = TRUE)
-        fastaNames <- names(readFasta)
-    }
-    if (processMethod=="CSV") {
-        errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
-                                   namesConversionCSV, inputSource, 
-                                   errors[[1]], errors[[2]])
+    if (printLevel == "SangerContig") {
+        errors <- checkInputSource(inputSource, errors[[1]], errors[[2]])
+        errors <- checkProcessMethod(inputSource, processMethod, 
+                                     errors[[1]], errors[[2]])
+        errors <- checkFastaFileName(inputSource, fastaFileName,
+                                     errors[[1]], errors[[2]])
+        errors <- checkNamesConversionCSV(processMethod, namesConversionCSV, 
+                                          contigName, suffixForwardRegExp,
+                                          suffixReverseRegExp, inputSource, 
+                                          errors[[1]], errors[[2]])
+        errors <- checkRefAAS(refAminoAcidSeq, errors[[1]], errors[[2]])
+        errors <- checkMinReadsNum(minReadsNum, errors[[1]], errors[[2]])
+        errors <- checkMinReadLength(minReadLength, errors[[1]], errors[[2]])
+        errors <- checkMinFractionCall(minFractionCall, errors[[1]], errors[[2]])
+        errors <- checkMaxFractionLost(maxFractionLost, errors[[1]], errors[[2]])
+        errors <- checkGeneticCode(geneticCode, errors[[1]], errors[[2]])
+        errors <- checkAcceptStopCodons(acceptStopCodons, errors[[1]], errors[[2]])
+        errors <- checkReadingFrame(readingFrame, errors[[1]], errors[[2]])
+        errors <- checkProcessorsNum(processorsNum, errors[[1]], errors[[2]])
+        if (inputSource == "ABIF") {
+            ### ----------------------------------------------------------------
+            ### 'ABIF' condition checking!
+            ### ----------------------------------------------------------------
+            ####################################################################
+            ### Second layer of pre-checking: 'ABIF' condition checking!
+            ####################################################################
+            errors <- checkParentDirectory (parentDirectory, 
+                                            errors[[1]], errors[[2]])
+            errors <- checkTrimParam(TrimmingMethod,
+                                     M1TrimmingCutoff,
+                                     M2CutoffQualityScore,
+                                     M2SlidingWindowSize,
+                                     errors[[1]], errors[[2]])
+            errors <- checkBaseNumPerRow (baseNumPerRow, errors[[1]], errors[[2]])
+            errors <- checkHeightPerRow (heightPerRow, errors[[1]], errors[[2]])
+            errors <- checkSignalRatioCutoff (signalRatioCutoff, 
+                                              errors[[1]], errors[[2]])
+            errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
+            trimmingMethodSC <- TrimmingMethod    
+        } else if (inputSource == "FASTA") {
+            ### ----------------------------------------------------------------
+            ### 'FASTA' condition checking!
+            ### ----------------------------------------------------------------
+            ####################################################################
+            ### Second layer of pre-checking: 'ABIF' condition checking!
+            ####################################################################
+            readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+            fastaNames <- names(readFasta)
+        }
+        if (processMethod=="CSV") {
+            errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
+                                       namesConversionCSV, inputSource, 
+                                       errors[[1]], errors[[2]])
+        }   
     }
     if (length(errors[[1]]) == 0 ) {
         log_info("######## Contig Name: ", contigName)
