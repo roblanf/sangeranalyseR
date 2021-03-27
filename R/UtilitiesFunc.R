@@ -184,7 +184,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                refAminoAcidSeq, minFractionCall,
                                maxFractionLost, geneticCode,
                                acceptStopCodons, readingFrame,
-                               processorsNum = NULL) {
+                               processorsNum = NULL, printLevel="") {
     ### ------------------------------------------------------------------------
     ### forward & reverse character reads list string creation
     ### ------------------------------------------------------------------------
@@ -228,8 +228,11 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     ### Amino acid reference sequence CorrectFrameshifts correction
     ### ------------------------------------------------------------------------
     if (refAminoAcidSeq != "") {
-        log_info("Correcting frameshifts in reads using amino acid",
-                "reference sequence")
+        if (printLevel == "SangerContig") {
+            log_info("Correcting frameshifts in reads using amino acid",
+                     "reference sequence")   
+        }
+        # verbose_print <- printLevel == "SangerContig"
         # Verbose should be FALSE, but I get error when calling it
         corrected =
             CorrectFrameshifts(myXStringSet = frReadSet,
@@ -237,6 +240,18 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                geneticCode = geneticCode,
                                type = 'both',
                                processors = processorsNum)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         frReadSet = corrected$sequences
         indels = getIndelDf(corrected$indels)
         stops = as.numeric(unlist(mclapply(frReadSet, countStopSodons,

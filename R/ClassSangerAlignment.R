@@ -38,9 +38,10 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' ## Input From ABIF file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
-#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
+#' suffixForwardRegExp <- "_[0-9]*_F.ab12"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerAlignment <- new("SangerAlignment",
+#'                        printLevel = "",
 #'                        inputSource           = "ABIF",
 #'                        processMethod         = "REGEX",
 #'                        parentDirectory       = parentDir,
@@ -236,9 +237,9 @@ setMethod("initialize",
     }
     
     if (length(errors[[1]]) == 0 ) {
-        log_info('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-        log_info('%%%% Start creating SangerAlignment instance %%%%')
-        log_info('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+        log_info('#################################################')
+        log_info('#### Start creating SangerAlignment instance ####')
+        log_info('#################################################')
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
             trimmingMethodSA <- TrimmingMethod    
@@ -492,7 +493,7 @@ setMethod("initialize",
                         #     if (seqLen >= minReadLength) {
                         #         read
                         #     } else {
-                        #         log_warn("  * >> ", read@fastaReadName, 
+                        #         log_warn("  >> ", read@fastaReadName, 
                         #                  " is shorter than 'minReadLength' ", 
                         #                  minReadLength, ". This read is created but skipped!!\n")
                         #         NULL
@@ -503,7 +504,7 @@ setMethod("initialize",
                         #     if (seqLen >= minReadLength) {
                         #         read
                         #     } else {
-                        #         log_warn("  * >> ", read@fastaReadName,
+                        #         log_warn("  >> ", read@fastaReadName,
                         #                  " is shorter than 'minReadLength' ",
                         #                  minReadLength, ". This read is created but skipped!!\n")
                         #         NULL
@@ -537,7 +538,7 @@ setMethod("initialize",
                             names(row) <- readResultTableName
                             readResultTable <<- rbind(readResultTable, row)
                         } else {
-                            msg <- paste0("  * >> ", read@readFileName,
+                            msg <- paste0("  >> ", read@readFileName,
                                           " is shorter than 'minReadLength' ",
                                           minReadLength,". This read is created but skipped!\n")
                             warnings <<- c(warnings, msg)
@@ -583,7 +584,7 @@ setMethod("initialize",
                             names(row) <- readResultTableName
                             readResultTable <<- rbind(readResultTable, row)
                         } else {
-                            msg <- paste0("  * >> ", read@readFileName,
+                            msg <- paste0("  >> ", read@readFileName,
                                           " is shorter than 'minReadLength' ",
                                           minReadLength,". This read is created but skipped!\n")
                             warnings <<- c(warnings, msg)
@@ -640,24 +641,24 @@ setMethod("initialize",
         log_success("######## 'SangerAlignment' S4 instance is created !! ########")
         log_success("#############################################################")
         if (is.null(namesConversionCSV)) {
-            log_success("  * >> ", contigNum, " contigs detected from 'regular expression'.")
+            log_success("  >> ", contigNum, " contigs detected from 'regular expression'.")
         } else {
-            log_success("  * >> ", contigNum, " contigs detected from 'csv file'.")
+            log_success("  >> ", contigNum, " contigs detected from 'csv file'.")
         }
         readNum <- 0
         for (contig in SangerContigList) {
-            log_success("      * >> Contig '", contig@contigName, "':")
-            log_success("          * >> ", length(contig@forwardReadList), " forward reads.")
-            log_success("          * >> ", length(contig@reverseReadList), " reverse reads.")
+            log_success("      >> Contig '", contig@contigName, "':")
+            log_success("          >> ", length(contig@forwardReadList), " forward reads.")
+            log_success("          >> ", length(contig@reverseReadList), " reverse reads.")
             readNum <- readNum + length(contig@forwardReadList) + length(contig@reverseReadList)
         }
-        log_success("  * >> ", readNum, " reads created from ", inputSource, " file.")
+        log_success("  >> ", readNum, " reads created from ", inputSource, " file.")
         if (TrimmingMethod == "M1") {
-            log_success("  * >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+            log_success("  >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
         } else if (TrimmingMethod == "M2") {
-            log_success("  * >> Read is trimmed by 'M2 - sliding window method'.")
+            log_success("  >> Read is trimmed by 'M2 - sliding window method'.")
         }
-        # log_success("  * >> For more information, please run 'readTable(object)'.")
+        # log_success("  >> For more information, please run 'readTable(object)'.")
         
         # Add reads checking.
 

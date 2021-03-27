@@ -248,7 +248,10 @@ setMethod("initialize",
         }   
     }
     if (length(errors[[1]]) == 0 ) {
-        log_info("######## Contig Name: ", contigName)
+        log_info("========================================================")
+        log_info("================ Creating 'SangerContig' ===============")
+        log_info("========================================================")
+        log_info("  >> Contig Name: '", contigName, "'")
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
             trimmingMethodSC <- TrimmingMethod    
@@ -258,8 +261,10 @@ setMethod("initialize",
             fastaNames <- names(readFasta)
         }
         if (inputSource == "ABIF" && processMethod == "REGEX") {
-            log_info("  >> You are using Regular Expression Method",
-                     " to group AB1 files!")
+            if (printLevel == "SangerContig") {
+                log_info("  >> You are using Regular Expression Method",
+                         " to group AB1 files!")
+            }
             parentDirFiles <- list.files(parentDirectory)
             forwardSelectInputFiles <-
                 parentDirFiles[grepl(paste0(contigName, suffixForwardRegExp),
@@ -312,8 +317,10 @@ setMethod("initialize",
             })
             names(reverseReadList) <- reverseAllReads[[1]]
         } else if (inputSource == "ABIF" && processMethod == "CSV") {
-            log_info("**** You are using CSV Name Conversion Method ",
-                     "to group AB1 files!")
+            if (printLevel == "SangerContig") {
+                log_info(">> You are using CSV Name Conversion Method ",
+                         "to group AB1 files!")
+            }
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
             if (is.null(contigName)) {
                 if (length(unique(csvFile$contig)) != 1) {
@@ -322,15 +329,19 @@ setMethod("initialize",
                               " contigName in the CSV file. ",
                               "There should be only one contigName in the CSV file.")
                 } else {
-                    log_info("**** Contig number in your Csv file is ",
-                             length(unique(csvFile$contig)))
+                    if (printLevel == "SangerContig") {
+                        log_info(">> Contig number in your Csv file is ",
+                                 length(unique(csvFile$contig)))
+                    }
                     contigNameCSV <- as.character(unique(csvFile$contig))
                     selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
                     forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
                     reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
                 }
             } else if (!is.null(contigName)) {
-                log_info("**** Your contig name is ", contigName)
+                if (printLevel == "SangerContig") {
+                    log_info(">> Your contig name is ", contigName)
+                }
                 selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
                 forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F",]
                 reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R",]
@@ -396,10 +407,6 @@ setMethod("initialize",
             names(reverseReadList) <- rAbsoluteAB1
         }
         if (inputSource == "ABIF") {
-            log_info()
-            log_info("========================================================")
-            log_info("================ Creating 'SangerContig' ===============")
-            log_info("========================================================")
             readNum <- length(forwardReadList) + length(reverseReadList)
             log_info("   >> The number of reads detected: ", readNum)
             forwardReadListFilter <- lapply(forwardReadList, function(read) {
@@ -416,7 +423,7 @@ setMethod("initialize",
                         readResultTable <<- rbind(readResultTable, row)
                         read
                     } else {
-                        msg <- paste0("  * >> ", read@readFileName, 
+                        msg <- paste0("  >> ", read@readFileName, 
                                       " is shorter than 'minReadLength' ",
                                       minReadLength,". This read is created but skipped!\n")
                         warnings <<- c(warnings, msg)
@@ -455,7 +462,7 @@ setMethod("initialize",
                         readResultTable <<- rbind(readResultTable, row)
                         read
                     } else {
-                        msg <- paste0("  * >> ", read@readFileName, 
+                        msg <- paste0("  >> ", read@readFileName, 
                                       " is shorter than 'minReadLength' ",
                                       minReadLength,". This read is created but skipped!\n")
                         warnings <<- c(warnings, msg)
@@ -485,8 +492,10 @@ setMethod("initialize",
             })            
         }
         if (inputSource == "FASTA" && processMethod == "REGEX") {
-            log_info("**** You are using Regular Expression Method ",
-                     "to group reads in FASTA file (No CSV file)!")
+            if (printLevel == "SangerContig") {
+                log_info(">> You are using Regular Expression Method ",
+                         "to group reads in FASTA file (No CSV file)!")
+            }
             ### ----------------------------------------------------------------
             ### Find names with the given contigName
             ### ----------------------------------------------------------------
@@ -533,8 +542,10 @@ setMethod("initialize",
             })
             names(reverseReadList) <- reverseSelectNames
         } else if (inputSource == "FASTA" && processMethod == "CSV") {
-            log_info("**** You are using CSV Name Conversion Method ",
-                     "to group reads in FASTA file (with Csv file)!")
+            if (printLevel == "SangerContig") {
+                log_info(">> You are using CSV Name Conversion Method ",
+                         "to group reads in FASTA file (with Csv file)!")
+            }
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
             if (is.null(contigName)) {
                 if (length(unique(csvFile$contig)) != 1) {
@@ -543,14 +554,16 @@ setMethod("initialize",
                               " contigName in the CSV file. ",
                               "There should be only one contigName in the CSV file.")
                 } else {
-                    log_info("**** Contig number in your Csv file is ", length(unique(csvFile$contig)))
+                    log_info(">> Contig number in your Csv file is ", length(unique(csvFile$contig)))
                     contigNameCSV <- as.character(unique(csvFile$contig))
                     selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
                     forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
                     reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
                 }
             } else if (!is.null(contigName)) {
-                log_info("**** Your contig name is ", contigName)
+                if (printLevel == "SangerContig") {
+                    log_info(">> Your contig name is ", contigName)
+                }
                 selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
                 forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
                 reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
@@ -596,31 +609,55 @@ setMethod("initialize",
         }
         
         if (inputSource == "FASTA") {
-            log_info()
-            log_info("########################################################")
-            log_info("################ Creating 'SangerContig' ###############")
-            log_info("########################################################")
             readNum <- length(forwardReadList) + length(reverseReadList)
             log_info("The number of reads detected: ", readNum)
             forwardReadListFilter <- lapply(forwardReadList, function(read) {
                 seqLen <- length(read@primarySeq)
                 if (seqLen >= minReadLength) {
+                    row <- data.frame(basename(read@readFileName), 
+                                      read@objectResults@creationResult, 
+                                      "None", "None", 
+                                      read@inputSource, read@readFeature)
+                    names(row) <- readResultTableName
+                    readResultTable <<- rbind(readResultTable, row)
                     read
                 } else {
-                    log_warn("  * >> ", read@fastaReadName, 
-                             " is shorter than 'minReadLength' ", 
-                             minReadLength, ". This read is created but skipped!!\n")
+                    msg <- paste0("  >> ", read@readFileName, 
+                                  " is shorter than 'minReadLength' ",
+                                  minReadLength,". This read is created but skipped!\n")
+                    warnings <<- c(warnings, msg)
+                    log_warn(msg)
+                    ### Failed: readResultTable (SangerContig Level)
+                    row <- data.frame(basename(read@readFileName), 
+                                      FALSE, "TRIMMED_READ_ERROR", msg, 
+                                      read@inputSource,  read@readFeature)
+                    names(row) <- readResultTableName
+                    readResultTable <<- rbind(readResultTable, row)
                     NULL
                 }
             })
             reverseReadListFilter <- lapply(reverseReadList, function(read) {
                 seqLen <- length(read@primarySeq)
                 if (seqLen >= minReadLength) {
+                    row <- data.frame(basename(read@readFileName), 
+                                      read@objectResults@creationResult, 
+                                      "None", "None", 
+                                      read@inputSource, read@readFeature)
+                    names(row) <- readResultTableName
+                    readResultTable <<- rbind(readResultTable, row)
                     read
                 } else {
-                    log_warn("  * >> ", read@fastaReadName,
-                             " is shorter than 'minReadLength' ",
-                             minReadLength, ". This read is created but skipped!!\n")
+                    msg <- paste0("  >> ", read@readFileName, 
+                                  " is shorter than 'minReadLength' ",
+                                  minReadLength,". This read is created but skipped!\n")
+                    warnings <<- c(warnings, msg)
+                    log_warn(msg)
+                    ### Failed: readResultTable (SangerContig Level)
+                    row <- data.frame(basename(read@readFileName), 
+                                      FALSE, "TRIMMED_READ_ERROR", msg, 
+                                      read@inputSource,  read@readFeature)
+                    names(row) <- readResultTableName
+                    readResultTable <<- rbind(readResultTable, row)
                     NULL
                 }
             })
@@ -646,7 +683,8 @@ setMethod("initialize",
                                                 geneticCode      = geneticCode,
                                                 acceptStopCodons = acceptStopCodons,
                                                 readingFrame     = readingFrame,
-                                                processorsNum    = processorsNum)
+                                                processorsNum    = processorsNum,
+                                                printLevel       = printLevel)
                 contigGapfree <- CSResult$consensusGapfree
                 contigLen <- length(contigGapfree)
                 ## This is the only part that is correct!
@@ -679,31 +717,32 @@ setMethod("initialize",
             log_success("==========================================================")
             log_success("======== 'SangerContig' S4 instance is created !! ========")
             log_success("==========================================================")
-            log_success("   >> ", readNumber, " read(s) created from ", inputSource, " file.")
-            if (is.null(namesConversionCSV)) {
-                log_success("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
-                log_success("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
-            } else {
-                log_success("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
-                log_success("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
+            if (printLevel == "SangerContig") {
+                log_info("   >> ", readNumber, " read(s) created from ", inputSource, " file.")
+                if (is.null(namesConversionCSV)) {
+                    log_info("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
+                    log_info("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
+                } else {
+                    log_info("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
+                    log_info("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
+                }
+                # Here are warning messages
+                if (forwardNumber == 0) {
+                    log_warn("  >> No 'forward read' is detected!")
+                }
+                if (reverseNumber == 0) {
+                    log_warn("  >> No 'reverse read' is detected!")
+                }
+                if (readNumber == 1) {
+                    log_warn("   >> There is only one read in your SangerContig.")
+                }
+                
+                if (TrimmingMethod == "M1") {
+                    log_info("   >> Trimmed by 'M1 - Mott’s trimming algorithm'.")
+                } else if (TrimmingMethod == "M2") {
+                    log_info("   >> Trimmed by 'M2 - sliding window method'.")
+                }
             }
-            # Here are warning messages
-            if (forwardNumber == 0) {
-                log_warn("  * >> No 'forward read' is detected!")
-            }
-            if (reverseNumber == 0) {
-                log_warn("  * >> No 'reverse read' is detected!")
-            }
-            if (readNumber == 1) {
-                log_warn("   >> There is only one read in your SangerContig.")
-            }
-            
-            if (TrimmingMethod == "M1") {
-                log_success("   >> Trimmed by 'M1 - Mott’s trimming algorithm'.")
-            } else if (TrimmingMethod == "M2") {
-                log_success("   >> Trimmed by 'M2 - sliding window method'.")
-            }
-            log_success("   >> For more information, please run 'object' or 'readTable(object)'.")
         } else {
             msg <- paste0("\nThe number of your total reads is ", readNumber, ".",
                           "\nNumber of total reads has to be equal or more than ",
@@ -745,10 +784,12 @@ setMethod("initialize",
         stopsDf                = data.frame()
         spDf                   = data.frame()
     }
-    if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
-        names(readResultTable) <- readResultTableName
-        log_debug("   >> For more information, please run 'object' or 'readTable(object)'.")
-        log_debug("   >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads")
+    if (printLevel == "SangerContig") {
+        if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
+            names(readResultTable) <- readResultTableName
+            log_debug("   >> For more information, please run 'object' or 'readTable(object)'.")
+            log_debug("   >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads")
+        }
     }
     objectResults <- new("ObjectResults", creationResult = creationResult,
                          errorMessages = errors[[1]], errorTypes = errors[[2]],

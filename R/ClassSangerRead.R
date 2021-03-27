@@ -151,9 +151,11 @@ setMethod("initialize",
         ### Second layer of checking: Check parameters for both ABIF and FASTA
         ########################################################################
         errors <- checkReadFileName (readFileName, inputSource, errors[[1]], errors[[2]])
-        errors <- checkInputSource (inputSource, errors[[1]], errors[[2]])
-        errors <- checkReadFeature (readFeature, errors[[1]], errors[[2]])
-        errors <- checkGeneticCode (geneticCode, errors[[1]], errors[[2]])
+        if (printLevel == "SangerRead") {
+            errors <- checkInputSource (inputSource, errors[[1]], errors[[2]])
+            errors <- checkReadFeature (readFeature, errors[[1]], errors[[2]])
+            errors <- checkGeneticCode (geneticCode, errors[[1]], errors[[2]])
+        }
         if (length(errors[[1]]) == 0) {
             if (inputSource == "ABIF") {
                 ################################################################
@@ -162,23 +164,25 @@ setMethod("initialize",
                 ##### ----------------------------------------------------------
                 ##### Input parameter prechecking for TrimmingMethod.
                 ##### ----------------------------------------------------------
-                errors <- checkTrimParam(TrimmingMethod,
-                                         M1TrimmingCutoff,
-                                         M2CutoffQualityScore,
-                                         M2SlidingWindowSize,
-                                         errors[[1]], errors[[2]])
-                ##### ----------------------------------------------------------
-                ##### Input parameter prechecking for ChromatogramParam.
-                ##### ----------------------------------------------------------
-                errors <- checkBaseNumPerRow(baseNumPerRow, errors[[1]], errors[[2]])
-                errors <- checkHeightPerRow(heightPerRow, errors[[1]], errors[[2]])
-                errors <- checkSignalRatioCutoff(signalRatioCutoff, errors[[1]], errors[[2]])
-                errors <- checkShowTrimmed(showTrimmed, errors[[1]], errors[[2]])
+                if (printLevel == "SangerRead") {
+                    errors <- checkTrimParam(TrimmingMethod,
+                                             M1TrimmingCutoff,
+                                             M2CutoffQualityScore,
+                                             M2SlidingWindowSize,
+                                             errors[[1]], errors[[2]])
+                    ##### ----------------------------------------------------------
+                    ##### Input parameter prechecking for ChromatogramParam.
+                    ##### ----------------------------------------------------------
+                    errors <- checkBaseNumPerRow(baseNumPerRow, errors[[1]], errors[[2]])
+                    errors <- checkHeightPerRow(heightPerRow, errors[[1]], errors[[2]])
+                    errors <- checkSignalRatioCutoff(signalRatioCutoff, errors[[1]], errors[[2]])
+                    errors <- checkShowTrimmed(showTrimmed, errors[[1]], errors[[2]])
+                }
                 if(length(errors[[1]]) == 0) {
                     if (printLevel == "SangerRead") {
-                        log_info('------------------------------------------------------')
-                        log_info("-------- Start creating 'SangerRead' instance --------")
-                        log_info('------------------------------------------------------')
+                        log_info('------------------------------------------------')
+                        log_info("-------- Creating 'SangerRead' instance --------")
+                        log_info('------------------------------------------------')
                         log_info('>> ', readFeature, ": Creating abif & sangerseq ...")
                         log_info("    >> Creating ", readFeature , " raw abif ...")
                     }
@@ -273,6 +277,9 @@ setMethod("initialize",
                 secondarySeqID <- ""
                 primarySeqRaw <- DNAString()
                 if (printLevel == "SangerRead") {
+                    log_info('------------------------------------------------')
+                    log_info("-------- Creating 'SangerRead' instance --------")
+                    log_info('------------------------------------------------')
                     log_info(readFeature, ": Creating SangerRead from FASTA ...")
                 }
                 readFasta <- read.fasta(readFileName, as.string = TRUE)
@@ -319,9 +326,9 @@ setMethod("initialize",
                 log_success("   >> '", basename(readFileName), "' is created (", readFeature, "; ", inputSource, ").")
                 if (printLevel == "SangerRead") {
                     if (TrimmingMethod == "M1" && printLevel == "SangerRead") {
-                        log_success("   >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+                        log_info("   >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
                     } else if (TrimmingMethod == "M2" && printLevel == "SangerRead") {
-                        log_success("   >> Read is trimmed by 'M2 - sliding window method'.")
+                        log_info("   >> Read is trimmed by 'M2 - sliding window method'.")
                     }   
                 }
             }
