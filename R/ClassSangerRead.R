@@ -176,12 +176,15 @@ setMethod("initialize",
                 errors <- checkShowTrimmed(showTrimmed, errors[[1]], errors[[2]])
                 if(length(errors[[1]]) == 0) {
                     if (printLevel == "SangerRead") {
-                        log_info(readFeature, ": Creating abif & sangerseq ...")
-                        log_info("    * Creating ", readFeature , " raw abif ...")
+                        log_info('------------------------------------------------------')
+                        log_info("-------- Start creating 'SangerRead' instance --------")
+                        log_info('------------------------------------------------------')
+                        log_info('>> ', readFeature, ": Creating abif & sangerseq ...")
+                        log_info("    >> Creating ", readFeature , " raw abif ...")
                     }
                     abifRawData = read.abif(readFileName)
                     if (printLevel == "SangerRead") {
-                        log_info("    * Creating ", readFeature , " raw sangerseq ...")
+                        log_info("    >> Creating ", readFeature , " raw sangerseq ...")
                     }
                     readSangerseq <- sangerseq(abifRawData)
                     primarySeqID <- readSangerseq@primarySeqID
@@ -313,13 +316,13 @@ setMethod("initialize",
                 log_success("--------------------------------------------------------")
                 log_success("-------- 'SangerRead' S4 instance is created !! --------")
                 log_success("--------------------------------------------------------")
-                log_success("   >> '", basename(readFileName), "' SangerRead is created.")
-                log_success("   >> One '", readFeature, "' is created from ", inputSource, " file.")
-                
-                if (TrimmingMethod == "M1" && printLevel == "SangerRead") {
-                    log_success("   >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
-                } else if (TrimmingMethod == "M2" && printLevel == "SangerRead") {
-                    log_success("   >> Read is trimmed by 'M2 - sliding window method'.")
+                log_success("   >> '", basename(readFileName), "' is created (", readFeature, "; ", inputSource, ").")
+                if (printLevel == "SangerRead") {
+                    if (TrimmingMethod == "M1" && printLevel == "SangerRead") {
+                        log_success("   >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+                    } else if (TrimmingMethod == "M2" && printLevel == "SangerRead") {
+                        log_success("   >> Read is trimmed by 'M2 - sliding window method'.")
+                    }   
                 }
             }
         }

@@ -230,7 +230,6 @@ setMethod("initialize",
             errors <- checkSignalRatioCutoff (signalRatioCutoff, 
                                               errors[[1]], errors[[2]])
             errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
-            trimmingMethodSC <- TrimmingMethod    
         } else if (inputSource == "FASTA") {
             ### ----------------------------------------------------------------
             ### 'FASTA' condition checking!
@@ -238,8 +237,9 @@ setMethod("initialize",
             ####################################################################
             ### Second layer of pre-checking: 'FASTA' condition checking!
             ####################################################################
-            readFasta <- read.fasta(fastaFileName, as.string = TRUE)
-            fastaNames <- names(readFasta)
+            # readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+            # fastaNames <- names(readFasta)
+            # trimmingMethodSC <- ""
         }
         if (processMethod=="CSV") {
             errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
@@ -250,6 +250,13 @@ setMethod("initialize",
     if (length(errors[[1]]) == 0 ) {
         log_info("######## Contig Name: ", contigName)
         processorsNum <- getProcessors (processorsNum)
+        if (inputSource == "ABIF") {
+            trimmingMethodSC <- TrimmingMethod    
+        } else if (inputSource == "FASTA") {
+            trimmingMethodSC <- ""
+            readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+            fastaNames <- names(readFasta)
+        }
         if (inputSource == "ABIF" && processMethod == "REGEX") {
             log_info("  >> You are using Regular Expression Method",
                      " to group AB1 files!")
@@ -390,9 +397,9 @@ setMethod("initialize",
         }
         if (inputSource == "ABIF") {
             log_info()
-            log_info("########################################################")
-            log_info("################ Creating 'SangerContig' ###############")
-            log_info("########################################################")
+            log_info("========================================================")
+            log_info("================ Creating 'SangerContig' ===============")
+            log_info("========================================================")
             readNum <- length(forwardReadList) + length(reverseReadList)
             log_info("   >> The number of reads detected: ", readNum)
             forwardReadListFilter <- lapply(forwardReadList, function(read) {
