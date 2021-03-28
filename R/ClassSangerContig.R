@@ -241,7 +241,7 @@ setMethod("initialize",
             # fastaNames <- names(readFasta)
             # trimmingMethodSC <- ""
         }
-        if (processMethod=="CSV") {
+        if (length(errors[[1]]) == 0 && processMethod=="CSV") {
             errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
                                        namesConversionCSV, inputSource, 
                                        errors[[1]], errors[[2]])
@@ -717,26 +717,26 @@ setMethod("initialize",
             log_success("==========================================================")
             log_success("======== 'SangerContig' S4 instance is created !! ========")
             log_success("==========================================================")
+            log_info("   >> ", readNumber, " read(s) created from ", inputSource, " file.")
+            if (is.null(namesConversionCSV)) {
+                log_info("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
+                log_info("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
+            } else {
+                log_info("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
+                log_info("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
+            }
+            # Here are warning messages
+            if (forwardNumber == 0) {
+                log_warn("  >> No 'forward read' is detected!")
+            }
+            if (reverseNumber == 0) {
+                log_warn("  >> No 'reverse read' is detected!")
+            }
+            if (readNumber == 1) {
+                log_warn("   >> There is only one read in your SangerContig.")
+            }
+            
             if (printLevel == "SangerContig") {
-                log_info("   >> ", readNumber, " read(s) created from ", inputSource, " file.")
-                if (is.null(namesConversionCSV)) {
-                    log_info("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
-                    log_info("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
-                } else {
-                    log_info("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
-                    log_info("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
-                }
-                # Here are warning messages
-                if (forwardNumber == 0) {
-                    log_warn("  >> No 'forward read' is detected!")
-                }
-                if (reverseNumber == 0) {
-                    log_warn("  >> No 'reverse read' is detected!")
-                }
-                if (readNumber == 1) {
-                    log_warn("   >> There is only one read in your SangerContig.")
-                }
-                
                 if (TrimmingMethod == "M1") {
                     log_info("   >> Trimmed by 'M1 - Mott’s trimming algorithm'.")
                 } else if (TrimmingMethod == "M2") {

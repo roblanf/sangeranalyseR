@@ -38,16 +38,17 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' ## Input From ABIF file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
-#' suffixForwardRegExp <- "_[0-9]*_F.ab12"
+#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"
 #' sangerAlignment <- new("SangerAlignment",
-#'                        printLevel = "",
+#'                        printLevel            = "SangerAlignment",
 #'                        inputSource           = "ABIF",
 #'                        processMethod         = "REGEX",
+#'                        fastaFileName         = NULL,
+#'                        namesConversionCSV    = NULL,
 #'                        parentDirectory       = parentDir,
 #'                        suffixForwardRegExp   = suffixForwardRegExp,
 #'                        suffixReverseRegExp   = suffixReverseRegExp,
-#'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                        TrimmingMethod        = "M1",
 #'                        M1TrimmingCutoff      = 0.0001,
 #'                        M2CutoffQualityScore  = NULL,
@@ -56,6 +57,16 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #'                        heightPerRow          = 200,
 #'                        signalRatioCutoff     = 0.33,
 #'                        showTrimmed           = TRUE,
+#'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+#'                        minReadsNum           = 2,
+#'                        minReadLength         = 20,
+#'                        minFractionCall       = 0.5,
+#'                        maxFractionLost       = 0.5,
+#'                        geneticCode           = GENETIC_CODE,
+#'                        acceptStopCodons      = TRUE,
+#'                        readingFrame          = 1,
+#'                        minFractionCallSA     = 0.5,
+#'                        maxFractionLostSA     = 0.5,
 #'                        processorsNum         = 2)
 #'
 #' ## Input From ABIF file format (Csv three column)
@@ -218,7 +229,6 @@ setMethod("initialize",
             errors <- checkHeightPerRow (heightPerRow, errors[[1]], errors[[2]])
             errors <- checkSignalRatioCutoff (signalRatioCutoff, errors[[1]], errors[[2]])
             errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
-            # trimmingMethodSA <- TrimmingMethod    
         } else if (inputSource == "FASTA") {
             ### --------------------------------------------------------------------
             ### 'FASTA' condition checking!
@@ -229,7 +239,7 @@ setMethod("initialize",
             # readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             # fastaNames <- names(readFasta)
         }
-        if (processMethod=="CSV") {
+        if (length(errors[[1]]) == 0 && processMethod=="CSV") {
             errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
                                        namesConversionCSV, inputSource, 
                                        errors[[1]], errors[[2]])
@@ -242,9 +252,7 @@ setMethod("initialize",
         log_info('#################################################')
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
-            trimmingMethodSA <- TrimmingMethod    
         } else if (inputSource == "FASTA") {
-            trimmingMethodSA <- ""    
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             fastaNames <- names(readFasta)
         }
@@ -480,49 +488,6 @@ setMethod("initialize",
             lapply(SangerContigList, function(contig) {
                 lapply(contig@forwardReadList, function(read) {
                     if (read@objectResults@creationResult) {
-                        
-                        
-                        
-                        
-                        
-                        
-                        # readNum <- length(forwardReadList) + length(reverseReadList)
-                        # log_info("The number of reads detected: ", readNum)
-                        # forwardReadListFilter <- lapply(forwardReadList, function(read) {
-                        #     seqLen <- length(read@primarySeq)
-                        #     if (seqLen >= minReadLength) {
-                        #         read
-                        #     } else {
-                        #         log_warn("  >> ", read@fastaReadName, 
-                        #                  " is shorter than 'minReadLength' ", 
-                        #                  minReadLength, ". This read is created but skipped!!\n")
-                        #         NULL
-                        #     }
-                        # })
-                        # reverseReadListFilter <- lapply(reverseReadList, function(read) {
-                        #     seqLen <- length(read@primarySeq)
-                        #     if (seqLen >= minReadLength) {
-                        #         read
-                        #     } else {
-                        #         log_warn("  >> ", read@fastaReadName,
-                        #                  " is shorter than 'minReadLength' ",
-                        #                  minReadLength, ". This read is created but skipped!!\n")
-                        #         NULL
-                        #     }
-                        # })
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
                         if (inputSource == "ABIF") {
                             seqLen <- read@QualityReport@trimmedFinishPos -
                                 read@QualityReport@trimmedStartPos
@@ -640,23 +605,31 @@ setMethod("initialize",
         log_success("#############################################################")
         log_success("######## 'SangerAlignment' S4 instance is created !! ########")
         log_success("#############################################################")
-        if (is.null(namesConversionCSV)) {
-            log_success("  >> ", contigNum, " contigs detected from 'regular expression'.")
-        } else {
-            log_success("  >> ", contigNum, " contigs detected from 'csv file'.")
-        }
-        readNum <- 0
-        for (contig in SangerContigList) {
-            log_success("      >> Contig '", contig@contigName, "':")
-            log_success("          >> ", length(contig@forwardReadList), " forward reads.")
-            log_success("          >> ", length(contig@reverseReadList), " reverse reads.")
-            readNum <- readNum + length(contig@forwardReadList) + length(contig@reverseReadList)
-        }
-        log_success("  >> ", readNum, " reads created from ", inputSource, " file.")
-        if (TrimmingMethod == "M1") {
-            log_success("  >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
-        } else if (TrimmingMethod == "M2") {
-            log_success("  >> Read is trimmed by 'M2 - sliding window method'.")
+        
+        if (contigNum > 0) {
+            if (is.null(namesConversionCSV)) {
+                log_success("  >> ", contigNum, " contigs detected from 'regular expression'.")
+            } else {
+                log_success("  >> ", contigNum, " contigs detected from 'csv file'.")
+            }
+            readNum <- 0
+            for (contig in SangerContigList) {
+                log_success("      >> Contig '", contig@contigName, "':")
+                log_success("          >> ", length(contig@forwardReadList), " forward reads.")
+                log_success("          >> ", length(contig@reverseReadList), " reverse reads.")
+                readNum <- readNum + length(contig@forwardReadList) + length(contig@reverseReadList)
+            }
+            log_success("  >> ", readNum, " reads created from ", inputSource, " file.")
+            if (TrimmingMethod == "M1") {
+                log_success("  >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+            } else if (TrimmingMethod == "M2") {
+                log_success("  >> Read is trimmed by 'M2 - sliding window method'.")
+            }   
+        } else if (contigNum == 0) {
+            msg <- paste0("\nThe number of your total contig is 0.",
+                          "\nPlease check your name matching parameters.\n")
+            errors[[1]] <- c(errors[[1]], msg)
+            errors[[2]] <- c(errors[[2]], "CONTIG_NUMBER_ZERO")
         }
         # log_success("  >> For more information, please run 'readTable(object)'.")
         
@@ -680,23 +653,20 @@ setMethod("initialize",
                log_error, simplify = FALSE)
         inputSource            = ""
         processMethod          = ""
-        fastaFileName          = NULL
-        namesConversionCSV     = NULL
-        parentDirectory        = NULL
-        contigName             = NULL
-        suffixForwardRegExp    = NULL
-        suffixReverseRegExp    = NULL
-        forwardReadListFilter  = list()
-        reverseReadListFilter  = list()
-        trimmingMethodSC       = ""
-        minReadsNum            = 0
-        minReadLength          = 0
-        refAminoAcidSeq        = ""
-        minFractionCall        = 0
-        maxFractionLost        = 0
-        geneticCode            = ""
-        acceptStopCodons       = FALSE
-        readingFrame           = 0
+        fastaFileName         = NULL
+        namesConversionCSV    = NULL
+        parentDirectory       = NULL
+        suffixForwardRegExp   = NULL
+        suffixReverseRegExp   = NULL
+        TrimmingMethod        = ""
+        SangerContigList      = list()
+        minFractionCallSA     = 0
+        maxFractionLostSA     = 0
+        geneticCode           = ""
+        consensus             = DNAString()
+        refAminoAcidSeq       = ""
+        aln                   = DNAStringSet()
+        aln.tree              = read.tree(text="();")
     }
     if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
         names(readResultTable) <- readResultTableName
@@ -718,7 +688,7 @@ setMethod("initialize",
                    parentDirectory       = parentDirectory,
                    suffixForwardRegExp   = suffixForwardRegExp,
                    suffixReverseRegExp   = suffixReverseRegExp,
-                   trimmingMethodSA      = trimmingMethodSA,
+                   trimmingMethodSA      = TrimmingMethod,
                    contigList            = SangerContigList,
                    minFractionCallSA     = minFractionCallSA,
                    maxFractionLostSA     = maxFractionLostSA,
