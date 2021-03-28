@@ -72,13 +72,13 @@ setMethod("updateQualityParam",  "QualityReport",
               ##### ------------------------------------------------------------
               ##### Input parameter prechecking for TrimmingMethod.
               ##### ------------------------------------------------------------
-              errors <- character()
+              errors <- list(character(0), character(0))
               errors <- checkTrimParam(TrimmingMethod,
                                        M1TrimmingCutoff,
                                        M2CutoffQualityScore,
                                        M2SlidingWindowSize,
-                                       errors)
-              if (length(errors) == 0) {
+                                       errors[[1]], errors[[2]])
+              if(length(errors[[1]]) == 0) {
                   qualityBaseScores <- object@qualityBaseScores
                   qualityPhredScores <- object@qualityPhredScores
                   if (TrimmingMethod == "M1") {

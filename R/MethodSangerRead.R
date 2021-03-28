@@ -60,13 +60,13 @@ setMethod("updateQualityParam",  "SangerRead",
                   ### Updating SangerRead quality parameters
                   ###   Trimming parameters is checked in 'QualityReport' method
                   ### --------------------------------------------------------------------
-                  errors <- character()
+                  errors <- list(character(0), character(0))
                   errors <- checkTrimParam(TrimmingMethod,
                                            M1TrimmingCutoff,
                                            M2CutoffQualityScore,
                                            M2SlidingWindowSize,
-                                           errors)
-                  if (length(errors) == 0) {
+                                           errors[[1]], errors[[2]])
+                  if(length(errors[[1]]) == 0) {
                       object@QualityReport <-
                           updateQualityParam(object@QualityReport,
                                              TrimmingMethod,
@@ -82,7 +82,8 @@ setMethod("updateQualityParam",  "SangerRead",
                       object@primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
                       return(object)
                   } else {
-                      log_error(paste(errors, collapse = ""))
+                      sapply(paste0(errors[[2]], errors[[1]], '\n') , 
+                             log_error, simplify = FALSE)
                   }
               } else if (object@inputSource == "FASTA") {
                   log_info("SangerRead with 'FASTA' inputSource ",
@@ -109,9 +110,10 @@ setMethod("updateQualityParam",  "SangerRead",
 #' newSangerReadFData <- MakeBaseCalls(sangerReadFData, signalRatioCutoff = 0.22)
 setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
     if (object@inputSource == "ABIF") {
-        errors <- character(0)
-        errors <- checkSignalRatioCutoff(signalRatioCutoff, errors)
-        if (length(errors) == 0) {
+        errors <- list(character(0), character(0))
+        errors <- checkSignalRatioCutoff(signalRatioCutoff,
+                                         errors[[1]], errors[[2]])
+        if (length(errors[[1]]) == 0) {
             traceMatrix <- object@traceMatrix
             peakPosMatrixRaw <- object@peakPosMatrixRaw
             ## Always pick the raw quality score 
@@ -120,7 +122,8 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
             MBCResult <-
                 MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
                                      qualityPhredScoresRaw,
-                                     signalRatioCutoff, readFeature)
+                                     signalRatioCutoff, readFeature,
+                                     printLevel = "SangerRead")
             object@peakPosMatrix <- MBCResult[["peakPosMatrix"]]
             object@peakAmpMatrix <- MBCResult[["peakAmpMatrix"]]
             object@primarySeq <- MBCResult[["primarySeq"]]
@@ -137,8 +140,8 @@ setMethod("MakeBaseCalls", "SangerRead", function(object, signalRatioCutoff) {
             object@ChromatogramParam@signalRatioCutoff <- signalRatioCutoff
             return(object)
         } else {
-            log_error(paste(errors, collapse = ""))
-        }
+            sapply(paste0(errors[[2]], errors[[1]], '\n') , 
+                   log_error, simplify = FALSE)        }
     } else if (object@inputSource == "FASTA") {
         log_info("SangerRead with 'FASTA' inputSource cannot do base calling")
     }

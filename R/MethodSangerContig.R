@@ -35,13 +35,13 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
         ### Updating forward read quality parameters
         ### Quality parameters is checked in 'QualityReport' method
         ### --------------------------------------------------------------------
-        errors <- character()
+        errors <- list(character(0), character(0))
         errors <- checkTrimParam(TrimmingMethod,
                                  M1TrimmingCutoff,
                                  M2CutoffQualityScore,
                                  M2SlidingWindowSize,
-                                 errors)
-        if (length(errors) == 0) {
+                                 errors[[1]], errors[[2]])
+        if (length(errors[[1]]) == 0) {
             newForwardReadList <-
                 lapply(object@forwardReadList,
                        function(forwardRead) {
@@ -88,7 +88,8 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
             object@secondaryPeakDF <- CSResult$spDf
             return(object)
         } else {
-            stop(errors)
+            sapply(paste0(errors[[2]], errors[[1]], '\n') , 
+                   log_error, simplify = FALSE)
         }
     } else if (object@inputSource == "FASTA") {
         log_info("SangerContig with 'FASTA' inputSource ",
