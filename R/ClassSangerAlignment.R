@@ -608,22 +608,22 @@ setMethod("initialize",
         
         if (contigNum > 0) {
             if (is.null(namesConversionCSV)) {
-                log_success("  >> ", contigNum, " contigs detected from 'regular expression'.")
+                log_info("  >> ", contigNum, " contigs detected from 'regular expression'.")
             } else {
-                log_success("  >> ", contigNum, " contigs detected from 'csv file'.")
+                log_info("  >> ", contigNum, " contigs detected from 'csv file'.")
             }
             readNum <- 0
             for (contig in SangerContigList) {
-                log_success("      >> Contig '", contig@contigName, "':")
-                log_success("          >> ", length(contig@forwardReadList), " forward reads.")
-                log_success("          >> ", length(contig@reverseReadList), " reverse reads.")
+                log_info("      >> Contig '", contig@contigName, "':")
+                log_info("          >> ", length(contig@forwardReadList), " forward reads.")
+                log_info("          >> ", length(contig@reverseReadList), " reverse reads.")
                 readNum <- readNum + length(contig@forwardReadList) + length(contig@reverseReadList)
             }
-            log_success("  >> ", readNum, " reads created from ", inputSource, " file.")
+            log_info("  >> ", readNum, " reads created from ", inputSource, " file.")
             if (TrimmingMethod == "M1") {
-                log_success("  >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+                log_info("  >> Reads are trimmed by 'M1 - Mott’s trimming algorithm'.")
             } else if (TrimmingMethod == "M2") {
-                log_success("  >> Read is trimmed by 'M2 - sliding window method'.")
+                log_info("  >> Reads are trimmed by 'M2 - sliding window method'.")
             }   
         } else if (contigNum == 0) {
             msg <- paste0("\nThe number of your total contig is 0.",
@@ -670,7 +670,7 @@ setMethod("initialize",
     }
     if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
         names(readResultTable) <- readResultTableName
-        log_debug("   >> For more information, please run 'object' or 'readTable(object)'.")
+        log_debug("   >> For more information, please run 'object'.")
         log_debug("   >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads")
     }
     objectResults <- new("ObjectResults", creationResult = creationResult,

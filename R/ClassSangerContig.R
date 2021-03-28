@@ -237,9 +237,6 @@ setMethod("initialize",
             ####################################################################
             ### Second layer of pre-checking: 'FASTA' condition checking!
             ####################################################################
-            # readFasta <- read.fasta(fastaFileName, as.string = TRUE)
-            # fastaNames <- names(readFasta)
-            # trimmingMethodSC <- ""
         }
         if (length(errors[[1]]) == 0 && processMethod=="CSV") {
             errors <- checkAb1FastaCsv(parentDirectory, fastaFileName, 
@@ -254,9 +251,7 @@ setMethod("initialize",
         log_info("  >> Contig Name: '", contigName, "'")
         processorsNum <- getProcessors (processorsNum)
         if (inputSource == "ABIF") {
-            trimmingMethodSC <- TrimmingMethod    
         } else if (inputSource == "FASTA") {
-            trimmingMethodSC <- ""
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             fastaNames <- names(readFasta)
         }
@@ -318,7 +313,7 @@ setMethod("initialize",
             names(reverseReadList) <- reverseAllReads[[1]]
         } else if (inputSource == "ABIF" && processMethod == "CSV") {
             if (printLevel == "SangerContig") {
-                log_info(">> You are using CSV Name Conversion Method ",
+                log_info("  >> You are using CSV Name Conversion Method ",
                          "to group AB1 files!")
             }
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
@@ -330,9 +325,9 @@ setMethod("initialize",
                               "There should be only one contigName in the CSV file.")
                 } else {
                     if (printLevel == "SangerContig") {
-                        log_info(">> Contig number in your Csv file is ",
-                                 length(unique(csvFile$contig)))
+                        log_info(">> Your contig name is ", contigName)
                     }
+                    contigName <- unique(csvFile$contig)
                     contigNameCSV <- as.character(unique(csvFile$contig))
                     selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
                     forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
@@ -493,7 +488,7 @@ setMethod("initialize",
         }
         if (inputSource == "FASTA" && processMethod == "REGEX") {
             if (printLevel == "SangerContig") {
-                log_info(">> You are using Regular Expression Method ",
+                log_info("  >> You are using Regular Expression Method ",
                          "to group reads in FASTA file (No CSV file)!")
             }
             ### ----------------------------------------------------------------
@@ -513,7 +508,6 @@ setMethod("initialize",
             reverseSelectNames <-
                 contigSubGroupNames[grepl(suffixReverseRegExp,
                                           contigSubGroupNames)]
-            trimmingMethodSC <- ""
             # lapply to create SangerRead list.
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
@@ -543,7 +537,7 @@ setMethod("initialize",
             names(reverseReadList) <- reverseSelectNames
         } else if (inputSource == "FASTA" && processMethod == "CSV") {
             if (printLevel == "SangerContig") {
-                log_info(">> You are using CSV Name Conversion Method ",
+                log_info("  >> You are using CSV Name Conversion Method ",
                          "to group reads in FASTA file (with Csv file)!")
             }
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
@@ -554,7 +548,10 @@ setMethod("initialize",
                               " contigName in the CSV file. ",
                               "There should be only one contigName in the CSV file.")
                 } else {
-                    log_info(">> Contig number in your Csv file is ", length(unique(csvFile$contig)))
+                    if (printLevel == "SangerContig") {
+                        log_info(">> Your contig name is ", contigName)
+                    }
+                    contigName <- unique(csvFile$contig)
                     contigNameCSV <- as.character(unique(csvFile$contig))
                     selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
                     forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
@@ -605,7 +602,6 @@ setMethod("initialize",
                                      geneticCode        = geneticCode)
             })
             names(reverseReadList) <- reverseOriginal
-            trimmingMethodSC <- ""
         }
         
         if (inputSource == "FASTA") {
@@ -719,11 +715,11 @@ setMethod("initialize",
             log_success("==========================================================")
             log_info("   >> ", readNumber, " read(s) created from ", inputSource, " file.")
             if (is.null(namesConversionCSV)) {
-                log_info("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
-                log_info("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
+                log_info("     >> ", forwardNumber, " reads assigned to 'forward reads' according to 'regular expression'.")
+                log_info("     >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'regular expression'.")
             } else {
-                log_info("   >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
-                log_info("   >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
+                log_info("     >> ", forwardNumber, " reads assigned to 'forward reads' according to 'csv file'.")
+                log_info("     >> ", reverseNumber, " reads assigned to 'reverse reads' according to 'csv file'.")
             }
             # Here are warning messages
             if (forwardNumber == 0) {
@@ -766,7 +762,7 @@ setMethod("initialize",
         suffixReverseRegExp    = NULL
         forwardReadListFilter  = list()
         reverseReadListFilter  = list()
-        trimmingMethodSC       = ""
+        TrimmingMethod         = ""
         minReadsNum            = 0
         minReadLength          = 0
         refAminoAcidSeq        = ""
@@ -787,7 +783,7 @@ setMethod("initialize",
     if (printLevel == "SangerContig") {
         if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
             names(readResultTable) <- readResultTableName
-            log_debug("   >> For more information, please run 'object' or 'readTable(object)'.")
+            log_debug("   >> For more information, please run 'object'")
             log_debug("   >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads")
         }
     }
@@ -807,7 +803,7 @@ setMethod("initialize",
                    suffixReverseRegExp    = suffixReverseRegExp,
                    forwardReadList        = forwardReadListFilter,
                    reverseReadList        = reverseReadListFilter,
-                   trimmingMethodSC       = trimmingMethodSC,
+                   trimmingMethodSC       = TrimmingMethod,
                    minReadsNum            = minReadsNum,
                    minReadLength          = minReadLength,
                    refAminoAcidSeq        = refAminoAcidSeq,

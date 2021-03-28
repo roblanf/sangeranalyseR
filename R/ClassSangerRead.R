@@ -2,7 +2,7 @@
 #'
 #' @description  An S4 class extending sangerseq S4 class which corresponds to a single ABIF file in Sanger sequencing.
 #'
-#' @slot objectResults
+#' @slot objectResults This is the object that stores all information of the creation result.
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @slot readFileName The filename of the target input file.
@@ -34,9 +34,11 @@
 #'                              "ACHLO",
 #'                              "Achl_ACHLO006-09_1_F.ab1")
 #' sangerReadF <- new("SangerRead",
+#'                     printLevel            = "SangerRead",
 #'                     inputSource           = "ABIF",
 #'                     readFeature           = "Forward Read",
 #'                     readFileName          = A_chloroticaFFN,
+#'                     fastaReadName         = NULL,
 #'                     geneticCode           = GENETIC_CODE,
 #'                     TrimmingMethod        = "M1",
 #'                     M1TrimmingCutoff      = 0.0001,
@@ -371,7 +373,7 @@ setMethod("initialize",
     }
     
     if (printLevel == "SangerRead") {
-        log_debug("   >> For more information, please run 'object' or 'readTable(object)'.")
+        log_debug("   >> For more information, please run 'object'.")
         # Print the readResultTable clue
         if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
             names(readResultTable) <- readResultTableName
