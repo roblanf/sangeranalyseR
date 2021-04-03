@@ -276,33 +276,72 @@ SangerAlignmentServer <- function(input, output, session) {
                     sidebar_menu[[4]] == "Overview" &&
                     sidebar_menu[[5]] == "Page") {
                     log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
-                    contigParam[["contigName"]] <<-
-                        SangerAlignment@
-                        contigList[[contigIndex]]@contigName
-                    contigParam[["contigSeq"]] <<-
-                        as.character(SangerAlignment@
-                                         contigList[[contigIndex]]@contigSeq)
-                    contigParam[["differencesDF"]] <<-
-                        SangerAlignment@
-                        contigList[[contigIndex]]@differencesDF
-                    contigParam[["alignment"]] <<-
-                        as.character(SangerAlignment@
-                        contigList[[contigIndex]]@alignment)
-                    contigParam[["distanceMatrix"]] <<-
-                        SangerAlignment@
-                        contigList[[contigIndex]]@distanceMatrix
-                    contigParam[["dendrogram"]] <<-
-                        SangerAlignment@
-                        contigList[[contigIndex]]@dendrogram
-                    contigParam[["indelsDF"]] <<-
-                        SangerAlignment@
-                        contigList[[contigIndex]]@indelsDF
-                    contigParam[["stopCodonsDF"]] <<-
-                        SangerAlignment@
-                        contigList[[contigIndex]]@stopCodonsDF
-                    contigParam[["secondaryPeakDF"]] <<-
-                        SangerAlignment@
-                        contigList[[contigIndex]]@secondaryPeakDF
+                    
+                    shinyjs::disable("closeUI")
+                    shinyjs::disable("recalculateButton")
+                    log_info("@@@@@@@ 'Reactive button' has been clicked")
+                    log_info("######## Start recalculating contig")
+                    sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
+                    contigIndex <- strtoi(sidebar_menu[[1]])
+                    if (!is.na(contigIndex)) {
+                        CSResult<-
+                            calculateContigSeq (
+                                SangerAlignment@contigList[[contigIndex]]@inputSource,
+                                SangerAlignment@contigList[[contigIndex]]@forwardReadList,
+                                SangerAlignment@contigList[[contigIndex]]@reverseReadList,
+                                SangerAlignment@contigList[[contigIndex]]@refAminoAcidSeq,
+                                SangerAlignment@contigList[[contigIndex]]@minFractionCall,
+                                SangerAlignment@contigList[[contigIndex]]@maxFractionLost,
+                                SangerAlignment@contigList[[contigIndex]]@geneticCode,
+                                SangerAlignment@contigList[[contigIndex]]@acceptStopCodons,
+                                SangerAlignment@contigList[[contigIndex]]@readingFrame)
+                        SangerAlignment@contigList[[contigIndex]]@contigSeq <<- CSResult$consensusGapfree
+                        SangerAlignment@contigList[[contigIndex]]@differencesDF <<- CSResult$diffsDf
+                        SangerAlignment@contigList[[contigIndex]]@alignment <<- CSResult$aln2
+                        SangerAlignment@contigList[[contigIndex]]@distanceMatrix <<- CSResult$dist
+                        SangerAlignment@contigList[[contigIndex]]@dendrogram <<- CSResult$dend
+                        SangerAlignment@contigList[[contigIndex]]@indelsDF <<- CSResult$indels
+                        SangerAlignment@contigList[[contigIndex]]@stopCodonsDF <<- CSResult$stopsDf
+                        SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF <<- CSResult$spDf
+                        contigParam[["contigSeq"]] <<- SangerAlignment@contigList[[contigIndex]]@contigSeq
+                        contigParam[["differencesDF"]] <<- SangerAlignment@contigList[[contigIndex]]@differencesDF
+                        contigParam[["alignment"]] <<- as.character(SangerAlignment@contigList[[contigIndex]]@alignment)
+                        contigParam[["distanceMatrix"]] <<-SangerAlignment@contigList[[contigIndex]]@distanceMatrix
+                        contigParam[["dendrogram"]] <<- SangerAlignment@contigList[[contigIndex]]@dendrogram
+                        contigParam[["indelsDF"]] <<- SangerAlignment@contigList[[contigIndex]]@indelsDF
+                        contigParam[["stopCodonsDF"]] <<- SangerAlignment@contigList[[contigIndex]]@stopCodonsDF
+                        contigParam[["secondaryPeakDF"]] <<- SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF
+                    }
+                    log_info("######## Finish recalculating contig")
+                    shinyjs::enable("recalculateButton")
+                    shinyjs::enable("closeUI")
+                    # contigParam[["contigName"]] <<-
+                    #     SangerAlignment@
+                    #     contigList[[contigIndex]]@contigName
+                    # contigParam[["contigSeq"]] <<-
+                    #     as.character(SangerAlignment@
+                    #                      contigList[[contigIndex]]@contigSeq)
+                    # dataTableOutput("SADifferencesDF") <<-
+                    #     SangerAlignment@
+                    #     contigList[[contigIndex]]@differencesDF
+                    # contigParam[["alignment"]] <<-
+                    #     as.character(SangerAlignment@
+                    #     contigList[[contigIndex]]@alignment)
+                    # contigParam[["distanceMatrix"]] <<-
+                    #     SangerAlignment@
+                    #     contigList[[contigIndex]]@distanceMatrix
+                    # contigParam[["dendrogram"]] <<-
+                    #     SangerAlignment@
+                    #     contigList[[contigIndex]]@dendrogram
+                    # contigParam[["indelsDF"]] <<-
+                    #     SangerAlignment@
+                    #     contigList[[contigIndex]]@indelsDF
+                    # contigParam[["stopCodonsDF"]] <<-
+                    #     SangerAlignment@
+                    #     contigList[[contigIndex]]@stopCodonsDF
+                    # contigParam[["secondaryPeakDF"]] <<-
+                    #     SangerAlignment@
+                    #     contigList[[contigIndex]]@secondaryPeakDF
                     fluidRow(
                         useShinyjs(),
                         box(title = tags$p(tagList(icon("dot-circle"),
@@ -509,7 +548,8 @@ SangerAlignmentServer <- function(input, output, session) {
                                 collapsible = TRUE,
                                 status = "success", width = 12,
                                 column(width = 12,
-                                       uiOutput("SADifferencesDFUI"),
+                                       # uiOutput("SADifferencesDFUI"),
+                                       dataTableOutput("SADifferencesDF"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -544,7 +584,8 @@ SangerAlignmentServer <- function(input, output, session) {
                                 status = "success", width = 12,
                                 column(width = 12,
                                        # plot()
-                                       uiOutput("SADistanceMatrixPlotUI"),
+                                       # uiOutput("SADistanceMatrixPlotUI"),
+                                       plotlyOutput("SADistanceMatrixPlot"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -554,7 +595,8 @@ SangerAlignmentServer <- function(input, output, session) {
                                            style =("border-top: 4px hidden #A9A9A9;")),
                                 ),
                                 column(width = 12,
-                                       uiOutput("SADistanceMatrixUI"),
+                                       # uiOutput("SADistanceMatrixUI"),
+                                       dataTableOutput("SADistanceMatrix"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -566,7 +608,8 @@ SangerAlignmentServer <- function(input, output, session) {
                                 collapsible = TRUE,
                                 status = "success", width = 12,
                                 column(width = 12,
-                                       uiOutput("SAIndelsDFUI"),
+                                       # uiOutput("SAIndelsDFUI"),
+                                       dataTableOutput("SAIndelsDF"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -578,7 +621,8 @@ SangerAlignmentServer <- function(input, output, session) {
                                 collapsible = TRUE,
                                 status = "success", width = 12,
                                 column(width = 12,
-                                       uiOutput("SAStopCodonsDFUI"),
+                                       # uiOutput("SAStopCodonsDFUI"),
+                                       dataTableOutput("SAStopCodonsDF"),
                                        style =
                                            paste("height:100%; overflow-y:",
                                                  "scroll;overflow-x: scroll;")
@@ -1227,6 +1271,7 @@ SangerAlignmentServer <- function(input, output, session) {
             contigParam[["stopCodonsDF"]] <<- SangerAlignment@contigList[[contigIndex]]@stopCodonsDF
             contigParam[["secondaryPeakDF"]] <<- SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF
         }
+        log_info("######## Finish recalculating contig")
         shinyjs::enable("recalculateButton")
         shinyjs::enable("closeUI")
     })
@@ -1473,8 +1518,6 @@ SangerAlignmentServer <- function(input, output, session) {
     ### observeEvent: Button chromatogram parameters re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$saveChromatogramParam, {
-        log_info("@@@@@@@ 'Reactive button' has been clicked")
-        log_info("######## Start recalculating chromatogram")
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         readIndex <- strtoi(sidebar_menu[[4]])

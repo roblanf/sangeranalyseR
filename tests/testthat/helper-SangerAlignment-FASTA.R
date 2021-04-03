@@ -6,6 +6,7 @@ suffixReverseRegExpFa <- "_[0-9]*_R"
 namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_conversion.csv")
 sangerAlignmentFa <- new("SangerAlignment",
                          inputSource           = "FASTA",
+                         processMethod         = "CSV",
                          fastaFileName         = fastaFN,
                          namesConversionCSV    = namesConversionCSV,
                          suffixForwardRegExp   = suffixForwardRegExpFa,

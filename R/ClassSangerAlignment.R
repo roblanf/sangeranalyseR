@@ -255,6 +255,10 @@ setMethod("initialize",
         } else if (inputSource == "FASTA") {
             readFasta <- read.fasta(fastaFileName, as.string = TRUE)
             fastaNames <- names(readFasta)
+            TrimmingMethod <- ""
+            M1TrimmingCutoff <- NULL
+            M2CutoffQualityScore <- NULL
+            M2SlidingWindowSize <- NULL
         }
         if (inputSource == "ABIF" && processMethod == "REGEX") {
             log_info("  >> You are using Regular Expression Method",

@@ -5,6 +5,7 @@ suffixForwardRegExp <- "_[0-9]*_F.ab1"
 suffixReverseRegExp <- "_[0-9]*_R.ab1"
 sangerContig <- new("SangerContig",
                     inputSource           = "ABIF",
+                    processMethod         = "REGEX",
                     parentDirectory       = inputFilesParentDir,
                     contigName            = contigName,
                     suffixForwardRegExp   = suffixForwardRegExp,
@@ -25,6 +26,7 @@ contigName2 <- "Achl_RBNII384-13"
 
 sangerContig2 <- new("SangerContig",
                     inputSource           = "ABIF",
+                    processMethod         = "REGEX",
                     parentDirectory       = inputFilesParentDir2,
                     contigName            = contigName2,
                     suffixForwardRegExp   = suffixForwardRegExp,

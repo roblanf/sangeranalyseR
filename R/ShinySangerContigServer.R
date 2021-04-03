@@ -97,6 +97,38 @@ SangerContigServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[2]]
         if (input$sidebar_menu == "Sanger Contig Overview") {
             log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
+            log_info("######## Start to recalculate contig")
+            shinyjs::disable("closeUI")
+            shinyjs::disable("recalculateButton")
+            CSResult<-
+                calculateContigSeq (SangerContig@inputSource,
+                                    SangerContig@forwardReadList,
+                                    SangerContig@reverseReadList,
+                                    SangerContig@refAminoAcidSeq,
+                                    SangerContig@minFractionCall,
+                                    SangerContig@maxFractionLost,
+                                    SangerContig@geneticCode,
+                                    SangerContig@acceptStopCodons,
+                                    SangerContig@readingFrame)
+            SangerContig@contigSeq <<- CSResult$consensusGapfree
+            SangerContig@differencesDF <<- CSResult$diffsDf
+            SangerContig@alignment <<- CSResult$aln2
+            SangerContig@distanceMatrix <<- CSResult$dist
+            SangerContig@dendrogram <<- CSResult$dend
+            SangerContig@indelsDF <<- CSResult$indels
+            SangerContig@stopCodonsDF <<- CSResult$stopsDf
+            SangerContig@secondaryPeakDF <<- CSResult$spDf
+            contigParam[["contigSeq"]] <<- SangerContig@contigSeq
+            contigParam[["differencesDF"]] <<- SangerContig@differencesDF
+            contigParam[["alignment"]] <<- as.character(SangerContig@alignment)
+            contigParam[["distanceMatrix"]] <<-SangerContig@distanceMatrix
+            contigParam[["dendrogram"]] <<- SangerContig@dendrogram
+            contigParam[["indelsDF"]] <<- SangerContig@indelsDF
+            contigParam[["stopCodonsDF"]] <<- SangerContig@stopCodonsDF
+            contigParam[["secondaryPeakDF"]] <<- SangerContig@secondaryPeakDF
+            log_info("######## Finish recalculating contig")
+            shinyjs::enable("recalculateButton")
+            shinyjs::enable("closeUI")
             ### ----------------------------------------------------------------
             ### Dynamic page navigation: SangerContig overview page
             ### ----------------------------------------------------------------
@@ -283,7 +315,8 @@ SangerContigServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               uiOutput("SCDifferencesDFUI"),
+                               # uiOutput("SCDifferencesDFUI"),
+                               dataTableOutput("SCDifferencesDF"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         )
@@ -324,7 +357,8 @@ SangerContigServer <- function(input, output, session) {
                                    style = ("border-top: 4px hidden #A9A9A9;")),
                         ),
                         column(width = 12,
-                               uiOutput("SCDistanceMatrixUI"),
+                               # uiOutput("SCDistanceMatrixUI"),
+                               dataTableOutput("SCDistanceMatrix"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         )
@@ -335,7 +369,8 @@ SangerContigServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               uiOutput("SCIndelsDFUI"),
+                               # uiOutput("SCIndelsDFUI"),
+                               dataTableOutput("SCIndelsDF"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         )
@@ -346,12 +381,13 @@ SangerContigServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               uiOutput("SCStopCodonsDFUI"),
+                               # uiOutput("SCStopCodonsDFUI"),
+                               dataTableOutput("SCStopCodonsDF"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         )
                     )
-                ),
+                )
             )
         } else if (!is.na(strtoi(readIndex)) &&
                    (directionParam == "Forward" ||
@@ -424,6 +460,28 @@ SangerContigServer <- function(input, output, session) {
                 trimmedRV[["remainingRatio"]] <<-
                     round(SangerContig@forwardReadList[[readIndex]]@
                               QualityReport@remainingRatio * 100, 2)
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 SSReadBFN <- basename(
                     SangerContig@forwardReadList[[readIndex]]@readFileName)
                 SSReadAFN <- SangerContig@
@@ -790,24 +848,6 @@ SangerContigServer <- function(input, output, session) {
                                       directionParam, "SangerRead", "Page"))
         }
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ### ------------------------------------------------------------------------
     ### observeEvent: Button Close UI
     ### ------------------------------------------------------------------------
@@ -861,10 +901,11 @@ SangerContigServer <- function(input, output, session) {
     ### observeEvent: Button Contig re-calculating UI
     ### ------------------------------------------------------------------------
     observeEvent(input$recalculateButton, {
-        shinyjs::disable("closeUI")
-        shinyjs::disable("recalculateButton")
+        sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         log_info("@@@@@@@ 'Reactive button' has been clicked")
         log_info("######## Start to recalculate contig")
+        shinyjs::disable("closeUI")
+        shinyjs::disable("recalculateButton")
         CSResult<-
             calculateContigSeq (SangerContig@inputSource,
                                 SangerContig@forwardReadList,
@@ -945,6 +986,15 @@ SangerContigServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
+        
+        log_info("Trimming Button is clicked!!")
+        
+        
+        
+        
+        
+        
+        
         if (!is.na(strtoi(readIndex))) {
             if (SangerContig@trimmingMethodSC == "M1") {
                 if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
@@ -1250,6 +1300,7 @@ SangerContigServer <- function(input, output, session) {
     ### Difference
     ### ------------------------------------------------------------------------
     output$SCDifferencesDFUI <- renderUI({
+        print("** Inside SCDifferencesDFUI !!!")
         if (all(dim(contigParam[["differencesDF"]]) == c(0,0))) {
             h4("*** 'Differences' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")

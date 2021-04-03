@@ -4,6 +4,7 @@ suffixForwardRegExp <- "_[0-9]*_F.ab1"
 suffixReverseRegExp <- "_[0-9]*_R.ab1"
 sangerAlignment <- new("SangerAlignment",
                        inputSource           = "ABIF",
+                       processMethod         = "REGEX",
                        parentDirectory       = parentDir,
                        suffixForwardRegExp   = suffixForwardRegExp,
                        suffixReverseRegExp   = suffixReverseRegExp,
