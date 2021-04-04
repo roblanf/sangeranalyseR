@@ -105,9 +105,33 @@ SangerAlignmentServer <- function(input, output, session) {
     ############################################################################
     output$aligned_contigSeq_content <- renderUI({
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (input$sidebar_menu == "Contigs Alignment Overview Page _") {
+        if (sidebar_menu[[1]] == "Contigs" && 
+            sidebar_menu[[2]] == "Alignment" && 
+            sidebar_menu[[3]] == "Overview" && 
+            sidebar_menu[[4]] == "Page" && 
+            sidebar_menu[[5]] == "_" ) {
             h1(input$sidebar_menu)
             log_info(">>>>>>>> Inside 'Contigs Alignment Overview Page _'")
+            shinyjs::disable("closeUI")
+            shinyjs::disable("recalculateButtonSA")
+            log_info("######## Reactive button clicked !!!")
+            log_info("######## Start re-aligning contigs")
+            CSSetResult <-
+                alignContigs (SangerAlignment@contigList,
+                              SangerAlignment@geneticCode,
+                              SangerAlignment@refAminoAcidSeq,
+                              SangerAlignment@minFractionCallSA,
+                              SangerAlignment@maxFractionLostSA,
+                              1)
+            SangerAlignment@contigsConsensus <<- CSSetResult$consensus
+            SangerAlignment@contigsAlignment <<- CSSetResult$aln
+            SangerAlignment@contigsTree <<- CSSetResult$aln.tree
+            sangerAlignmentParam[["contigsConsensus"]] <<- SangerAlignment@contigsConsensus
+            sangerAlignmentParam[["contigsAlignment"]] <<- as.character(SangerAlignment@contigsAlignment)
+            sangerAlignmentParam[["contigsTree"]] <<- SangerAlignment@contigsTree
+            log_info("######## Finish contigs re-alignment")
+            shinyjs::enable("recalculateButtonSA")
+            shinyjs::enable("closeUI")
             fluidRow(
                 useShinyjs(),
                 box(title = tags$p("Input Parameters: ",
@@ -266,853 +290,820 @@ SangerAlignmentServer <- function(input, output, session) {
                     ),
                 ),
             )
-        } else {
+        } else if (!is.na(strtoi(sidebar_menu[[1]])) &&
+                   sidebar_menu[[2]] == "Sanger" &&
+                   sidebar_menu[[3]] == "Contig" &&
+                   sidebar_menu[[4]] == "Overview" &&
+                   sidebar_menu[[5]] == "Page") {
+            contigIndex <- strtoi(sidebar_menu[[1]])
+            log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
+            shinyjs::disable("closeUI")
+            shinyjs::disable("recalculateButton")
+            log_info("@@@@@@@ 'Reactive button' has been clicked")
+            log_info("In the main")
+            log_info("######## Start recalculating contig")
+            CSResult<-
+                calculateContigSeq (
+                    SangerAlignment@contigList[[contigIndex]]@inputSource,
+                    SangerAlignment@contigList[[contigIndex]]@forwardReadList,
+                    SangerAlignment@contigList[[contigIndex]]@reverseReadList,
+                    SangerAlignment@contigList[[contigIndex]]@refAminoAcidSeq,
+                    SangerAlignment@contigList[[contigIndex]]@minFractionCall,
+                    SangerAlignment@contigList[[contigIndex]]@maxFractionLost,
+                    SangerAlignment@contigList[[contigIndex]]@geneticCode,
+                    SangerAlignment@contigList[[contigIndex]]@acceptStopCodons,
+                    SangerAlignment@contigList[[contigIndex]]@readingFrame)
+            SangerAlignment@contigList[[contigIndex]]@contigSeq <<- CSResult$consensusGapfree
+            SangerAlignment@contigList[[contigIndex]]@differencesDF <<- CSResult$diffsDf
+            SangerAlignment@contigList[[contigIndex]]@alignment <<- CSResult$aln2
+            SangerAlignment@contigList[[contigIndex]]@distanceMatrix <<- CSResult$dist
+            SangerAlignment@contigList[[contigIndex]]@dendrogram <<- CSResult$dend
+            SangerAlignment@contigList[[contigIndex]]@indelsDF <<- CSResult$indels
+            SangerAlignment@contigList[[contigIndex]]@stopCodonsDF <<- CSResult$stopsDf
+            SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF <<- CSResult$spDf
+            contigParam[["contigSeq"]] <<- SangerAlignment@contigList[[contigIndex]]@contigSeq
+            contigParam[["differencesDF"]] <<- SangerAlignment@contigList[[contigIndex]]@differencesDF
+            contigParam[["alignment"]] <<- as.character(SangerAlignment@contigList[[contigIndex]]@alignment)
+            contigParam[["distanceMatrix"]] <<-SangerAlignment@contigList[[contigIndex]]@distanceMatrix
+            contigParam[["dendrogram"]] <<- SangerAlignment@contigList[[contigIndex]]@dendrogram
+            contigParam[["indelsDF"]] <<- SangerAlignment@contigList[[contigIndex]]@indelsDF
+            contigParam[["stopCodonsDF"]] <<- SangerAlignment@contigList[[contigIndex]]@stopCodonsDF
+            contigParam[["secondaryPeakDF"]] <<- SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF
+            log_info("######## Finish recalculating contig")
+            shinyjs::enable("recalculateButton")
+            shinyjs::enable("closeUI")
+            fluidRow(
+                useShinyjs(),
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Basic Information: "),
+                                   style = "font-size: 26px;
+                                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(
+                        style = ("border-top: 0.2px hidden #A9A9A9;")),
+                    fluidRow(
+                        column(width = 12,
+                               actionBttn("recalculateButton",
+                                          "Re-calculate Contig",
+                                          icon = icon("calculator"),
+                                          style = "simple",
+                                          color = "danger",
+                                          block = TRUE, size = "lg")
+                        ),
+                        column(12,
+                               tags$hr(
+                                   style = ("border-top: 2px
+                                                    hidden #A9A9A9;")),
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(tagList(icon("caret-right"),
+                                                     "Output Directory:"),
+                                             style = "font-size: 20px;
+                                                           font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(shinyDirectory),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(
+                                          tagList(icon("caret-right"),
+                                                  "Raw ABI Parent Directory: "),
+                                          style = "font-size: 20px;
+                                                           font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerAlignment@
+                                             parentDirectory),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(
+                                          tagList(icon("caret-right"),
+                                                  "Consenesus Read Name:"),
+                                          style = "font-size: 20px;
+                                                           font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(contigParam[["contigName"]]),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(
+                                          tagList(icon("caret-right"),
+                                                  "Trimming Method: "),
+                                          style = "font-size: 20px;
+                                                           font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SATrimmingMethodName),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(
+                                          tagList(icon("caret-right"),
+                                                  "Forward Suffix RegExp:"),
+                                          style = "font-size: 20px;
+                                                           font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerAlignment@
+                                             suffixForwardRegExp),
+                               )
+                               
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(
+                                          tagList(icon("caret-right"),
+                                                  "Forward Read Number:"),
+                                          style = "font-size: 20px;
+                                                           font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(length(SangerAlignment@
+                                                    contigList[[contigIndex]]@
+                                                    forwardReadList)),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(
+                                          tagList(icon("caret-right"),
+                                                  "Reverse Suffix RegExp:"),
+                                          style = "font-size: 20px;
+                                                           font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(SangerAlignment@
+                                             suffixReverseRegExp),
+                               )
+                        ),
+                        column(12,
+                               column(3,
+                                      tags$p(
+                                          tagList(icon("caret-right"),
+                                                  "Reverse Read Number:"),
+                                          style = "font-size: 20px;
+                                                                  font-weight: bold;"),
+                               ),
+                               column(9,
+                                      h4(length(SangerAlignment@
+                                                    contigList[[contigIndex]]@
+                                                    reverseReadList)),
+                               )
+                        ),
+                    ),
+                    ################################################
+                    #### Add this after having reference sample ####
+                    ################################################
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    box(title = tags$p("Contig Parameters",
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(4,
+                               uiOutput("SAMinReadsNum") ,
+                        ),
+                        column(4,
+                               uiOutput("SAMinReadLength")  ,
+                        ),
+                        column(4,
+                               uiOutput("SAMinFractionCall") ,
+                        ),
+                        column(4,
+                               uiOutput("SAMaxFractionLost") ,
+                        ),
+                        column(4,
+                               uiOutput("SAAcceptStopCodons") ,
+                        ),
+                        column(4,
+                               uiOutput("SAReadingFrame") ,
+                        ),
+                    ),
+                    box(title = tags$p("Genetic Code Data Frame",
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 2,
+                               tags$p("Tri-nucleotide:",
+                                      style = "font-size: 15px;
+                                                           font-weight: bold;"),
+                               tags$p("Amino Acid : ",
+                                      style = "font-size: 15px;
+                                                           font-weight: bold;"),
+                               tags$p("('*' : stop codon) ",
+                                      style = "font-size: 12px;
+                                                           font-weight: italic;"),
+                        ),
+                        column(width = 10,
+                               excelOutput("geneticCodeDF",
+                                           width = "100%",
+                                           height = "50"),
+                               style = paste("height:100%; ",
+                                             "overflow-y: hidden;",
+                                             "overflow-x: scroll;")
+                        ),
+                    ),
+                    uiOutput("SArefAminoAcidSeq") ,
+                ),
+                
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Consensus Read Results: "),
+                                   style = "font-size: 26px;
+                                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style =("border-top: 4px hidden #A9A9A9;")),
+                    box(title = tags$p("Alignment",
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               htmlOutput("contigAlignmentHTML"),
+                        ),
+                    ),
+                    box(title = tags$p("Differences Data frame",
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               # uiOutput("SADifferencesDFUI"),
+                               dataTableOutput("SADifferencesDF"),
+                               style =
+                                   paste("height:100%; overflow-y:",
+                                         "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Dendrogram",
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               plotOutput("dendrogramPlot"),
+                               style =
+                                   paste("height:100%; overflow-y:",
+                                         "scroll;overflow-x: scroll;")
+                        ),
+                        column(width = 12,
+                               tags$hr(
+                                   style =("border-top: 4px hidden #A9A9A9;")),
+                        ),
+                        column(width = 12,
+                               dataTableOutput("dendrogramDF"),
+                               style =
+                                   paste("height:100%; overflow-y:",
+                                         "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Samples Distance",
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               # plot()
+                               # uiOutput("SADistanceMatrixPlotUI"),
+                               plotlyOutput("SADistanceMatrixPlot"),
+                               style =
+                                   paste("height:100%; overflow-y:",
+                                         "scroll;overflow-x: scroll;")
+                        ),
+                        column(width = 12,
+                               tags$hr(
+                                   style =("border-top: 4px hidden #A9A9A9;")),
+                        ),
+                        column(width = 12,
+                               # uiOutput("SADistanceMatrixUI"),
+                               dataTableOutput("SADistanceMatrix"),
+                               style =
+                                   paste("height:100%; overflow-y:",
+                                         "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Indels Data frame",
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               # uiOutput("SAIndelsDFUI"),
+                               dataTableOutput("SAIndelsDF"),
+                               style =
+                                   paste("height:100%; overflow-y:",
+                                         "scroll;overflow-x: scroll;")
+                        )
+                    ),
+                    box(title = tags$p("Stop Codons Data frame",
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               # uiOutput("SAStopCodonsDFUI"),
+                               dataTableOutput("SAStopCodonsDF"),
+                               style =
+                                   paste("height:100%; overflow-y:",
+                                         "scroll;overflow-x: scroll;")
+                        )
+                    )
+                )
+            )
+            
+        } else if (!is.na(strtoi(sidebar_menu[[1]])) &&
+                   sidebar_menu[[2]] == "Contig" &&
+                   sidebar_menu[[3]] == "-" &&
+                   !is.na(strtoi(sidebar_menu[[4]])) &&
+                   (sidebar_menu[[5]] == "Forward" ||
+                    sidebar_menu[[5]] == "Reverse") &&
+                   sidebar_menu[[6]] == "Read") {
             contigIndex <- strtoi(sidebar_menu[[1]])
             readIndex <- strtoi(sidebar_menu[[4]])
             directionParam <- sidebar_menu[[5]]
-            if (!is.na(contigIndex)) {
-                if (sidebar_menu[[2]] == "Sanger" &&
-                    sidebar_menu[[3]] == "Contig" &&
-                    sidebar_menu[[4]] == "Overview" &&
-                    sidebar_menu[[5]] == "Page") {
-                    log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
-                    
-                    shinyjs::disable("closeUI")
-                    shinyjs::disable("recalculateButton")
-                    log_info("@@@@@@@ 'Reactive button' has been clicked")
-                    log_info("######## Start recalculating contig")
-                    sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-                    contigIndex <- strtoi(sidebar_menu[[1]])
-                    if (!is.na(contigIndex)) {
-                        CSResult<-
-                            calculateContigSeq (
-                                SangerAlignment@contigList[[contigIndex]]@inputSource,
-                                SangerAlignment@contigList[[contigIndex]]@forwardReadList,
-                                SangerAlignment@contigList[[contigIndex]]@reverseReadList,
-                                SangerAlignment@contigList[[contigIndex]]@refAminoAcidSeq,
-                                SangerAlignment@contigList[[contigIndex]]@minFractionCall,
-                                SangerAlignment@contigList[[contigIndex]]@maxFractionLost,
-                                SangerAlignment@contigList[[contigIndex]]@geneticCode,
-                                SangerAlignment@contigList[[contigIndex]]@acceptStopCodons,
-                                SangerAlignment@contigList[[contigIndex]]@readingFrame)
-                        SangerAlignment@contigList[[contigIndex]]@contigSeq <<- CSResult$consensusGapfree
-                        SangerAlignment@contigList[[contigIndex]]@differencesDF <<- CSResult$diffsDf
-                        SangerAlignment@contigList[[contigIndex]]@alignment <<- CSResult$aln2
-                        SangerAlignment@contigList[[contigIndex]]@distanceMatrix <<- CSResult$dist
-                        SangerAlignment@contigList[[contigIndex]]@dendrogram <<- CSResult$dend
-                        SangerAlignment@contigList[[contigIndex]]@indelsDF <<- CSResult$indels
-                        SangerAlignment@contigList[[contigIndex]]@stopCodonsDF <<- CSResult$stopsDf
-                        SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF <<- CSResult$spDf
-                        contigParam[["contigSeq"]] <<- SangerAlignment@contigList[[contigIndex]]@contigSeq
-                        contigParam[["differencesDF"]] <<- SangerAlignment@contigList[[contigIndex]]@differencesDF
-                        contigParam[["alignment"]] <<- as.character(SangerAlignment@contigList[[contigIndex]]@alignment)
-                        contigParam[["distanceMatrix"]] <<-SangerAlignment@contigList[[contigIndex]]@distanceMatrix
-                        contigParam[["dendrogram"]] <<- SangerAlignment@contigList[[contigIndex]]@dendrogram
-                        contigParam[["indelsDF"]] <<- SangerAlignment@contigList[[contigIndex]]@indelsDF
-                        contigParam[["stopCodonsDF"]] <<- SangerAlignment@contigList[[contigIndex]]@stopCodonsDF
-                        contigParam[["secondaryPeakDF"]] <<- SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF
-                    }
-                    log_info("######## Finish recalculating contig")
-                    shinyjs::enable("recalculateButton")
-                    shinyjs::enable("closeUI")
-                    # contigParam[["contigName"]] <<-
-                    #     SangerAlignment@
-                    #     contigList[[contigIndex]]@contigName
-                    # contigParam[["contigSeq"]] <<-
-                    #     as.character(SangerAlignment@
-                    #                      contigList[[contigIndex]]@contigSeq)
-                    # dataTableOutput("SADifferencesDF") <<-
-                    #     SangerAlignment@
-                    #     contigList[[contigIndex]]@differencesDF
-                    # contigParam[["alignment"]] <<-
-                    #     as.character(SangerAlignment@
-                    #     contigList[[contigIndex]]@alignment)
-                    # contigParam[["distanceMatrix"]] <<-
-                    #     SangerAlignment@
-                    #     contigList[[contigIndex]]@distanceMatrix
-                    # contigParam[["dendrogram"]] <<-
-                    #     SangerAlignment@
-                    #     contigList[[contigIndex]]@dendrogram
-                    # contigParam[["indelsDF"]] <<-
-                    #     SangerAlignment@
-                    #     contigList[[contigIndex]]@indelsDF
-                    # contigParam[["stopCodonsDF"]] <<-
-                    #     SangerAlignment@
-                    #     contigList[[contigIndex]]@stopCodonsDF
-                    # contigParam[["secondaryPeakDF"]] <<-
-                    #     SangerAlignment@
-                    #     contigList[[contigIndex]]@secondaryPeakDF
-                    fluidRow(
-                        useShinyjs(),
-                        box(title = tags$p(tagList(icon("dot-circle"),
-                                                   "Basic Information: "),
-                                           style = "font-size: 26px;
-                                                           font-weight: bold;"),
-                            solidHeader = TRUE, collapsible = TRUE,
-                            status = "success", width = 12,
-                            tags$hr(
-                                style = ("border-top: 0.2px hidden #A9A9A9;")),
-                            fluidRow(
-                                column(width = 12,
-                                       actionBttn("recalculateButton",
-                                                  "Re-calculate Contig",
-                                                  icon = icon("calculator"),
-                                                  style = "simple",
-                                                  color = "danger",
-                                                  block = TRUE, size = "lg")
-                                ),
-                                column(12,
-                                       tags$hr(
-                                           style = ("border-top: 2px
-                                                    hidden #A9A9A9;")),
-                                ),
-                                column(12,
-                                       column(3,
-                                              tags$p(tagList(icon("caret-right"),
-                                                             "Output Directory:"),
-                                                     style = "font-size: 20px;
-                                                           font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(shinyDirectory),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              tags$p(
-                                                  tagList(icon("caret-right"),
-                                                          "Raw ABI Parent Directory: "),
-                                                  style = "font-size: 20px;
-                                                           font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(SangerAlignment@
-                                                     parentDirectory),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              tags$p(
-                                                  tagList(icon("caret-right"),
-                                                          "Consenesus Read Name:"),
-                                                  style = "font-size: 20px;
-                                                           font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(contigParam[["contigName"]]),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              tags$p(
-                                                  tagList(icon("caret-right"),
-                                                          "Trimming Method: "),
-                                                  style = "font-size: 20px;
-                                                           font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(SATrimmingMethodName),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              tags$p(
-                                                  tagList(icon("caret-right"),
-                                                          "Forward Suffix RegExp:"),
-                                                  style = "font-size: 20px;
-                                                           font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(SangerAlignment@
-                                                     suffixForwardRegExp),
-                                       )
-
-                                ),
-                                column(12,
-                                       column(3,
-                                              tags$p(
-                                                  tagList(icon("caret-right"),
-                                                          "Forward Read Number:"),
-                                                  style = "font-size: 20px;
-                                                           font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(length(SangerAlignment@
-                                                     contigList[[contigIndex]]@
-                                                     forwardReadList)),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              tags$p(
-                                                  tagList(icon("caret-right"),
-                                                          "Reverse Suffix RegExp:"),
-                                                  style = "font-size: 20px;
-                                                           font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(SangerAlignment@
-                                                     suffixReverseRegExp),
-                                       )
-                                ),
-                                column(12,
-                                       column(3,
-                                              tags$p(
-                                                  tagList(icon("caret-right"),
-                                                          "Reverse Read Number:"),
-                                                  style = "font-size: 20px;
-                                                                  font-weight: bold;"),
-                                       ),
-                                       column(9,
-                                              h4(length(SangerAlignment@
-                                                     contigList[[contigIndex]]@
-                                                     reverseReadList)),
-                                       )
-                                ),
-                            ),
-                            ################################################
-                            #### Add this after having reference sample ####
-                            ################################################
-                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                            box(title = tags$p("Contig Parameters",
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(4,
-                                       uiOutput("SAMinReadsNum") ,
-                                ),
-                                column(4,
-                                       uiOutput("SAMinReadLength")  ,
-                                ),
-                                column(4,
-                                       uiOutput("SAMinFractionCall") ,
-                                ),
-                                column(4,
-                                       uiOutput("SAMaxFractionLost") ,
-                                ),
-                                column(4,
-                                       uiOutput("SAAcceptStopCodons") ,
-                                ),
-                                column(4,
-                                       uiOutput("SAReadingFrame") ,
-                                ),
-                            ),
-                            box(title = tags$p("Genetic Code Data Frame",
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(width = 2,
-                                       tags$p("Tri-nucleotide:",
-                                              style = "font-size: 15px;
-                                                           font-weight: bold;"),
-                                       tags$p("Amino Acid : ",
-                                              style = "font-size: 15px;
-                                                           font-weight: bold;"),
-                                       tags$p("('*' : stop codon) ",
-                                              style = "font-size: 12px;
-                                                           font-weight: italic;"),
-                                ),
-                                column(width = 10,
-                                       excelOutput("geneticCodeDF",
-                                                   width = "100%",
-                                                   height = "50"),
-                                       style = paste("height:100%; ",
-                                                     "overflow-y: hidden;",
-                                                     "overflow-x: scroll;")
-                                ),
-                            ),
-                            uiOutput("SArefAminoAcidSeq") ,
-                        ),
-
-                        box(title = tags$p(tagList(icon("dot-circle"),
-                                                   "Consensus Read Results: "),
-                                           style = "font-size: 26px;
-                                                           font-weight: bold;"),
-                            solidHeader = TRUE, collapsible = TRUE,
-                            status = "success", width = 12,
-                            tags$hr(style =("border-top: 4px hidden #A9A9A9;")),
-                            box(title = tags$p("Alignment",
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(width = 12,
-                                       htmlOutput("contigAlignmentHTML"),
-                                ),
-                            ),
-                            box(title = tags$p("Differences Data frame",
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(width = 12,
-                                       # uiOutput("SADifferencesDFUI"),
-                                       dataTableOutput("SADifferencesDF"),
-                                       style =
-                                           paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                                )
-                            ),
-                            box(title = tags$p("Dendrogram",
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(width = 12,
-                                       plotOutput("dendrogramPlot"),
-                                       style =
-                                           paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                                ),
-                                column(width = 12,
-                                       tags$hr(
-                                           style =("border-top: 4px hidden #A9A9A9;")),
-                                ),
-                                column(width = 12,
-                                       dataTableOutput("dendrogramDF"),
-                                       style =
-                                           paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                                )
-                            ),
-                            box(title = tags$p("Samples Distance",
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(width = 12,
-                                       # plot()
-                                       # uiOutput("SADistanceMatrixPlotUI"),
-                                       plotlyOutput("SADistanceMatrixPlot"),
-                                       style =
-                                           paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                                ),
-                                column(width = 12,
-                                       tags$hr(
-                                           style =("border-top: 4px hidden #A9A9A9;")),
-                                ),
-                                column(width = 12,
-                                       # uiOutput("SADistanceMatrixUI"),
-                                       dataTableOutput("SADistanceMatrix"),
-                                       style =
-                                           paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                                )
-                            ),
-                            box(title = tags$p("Indels Data frame",
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(width = 12,
-                                       # uiOutput("SAIndelsDFUI"),
-                                       dataTableOutput("SAIndelsDF"),
-                                       style =
-                                           paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                                )
-                            ),
-                            box(title = tags$p("Stop Codons Data frame",
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(width = 12,
-                                       # uiOutput("SAStopCodonsDFUI"),
-                                       dataTableOutput("SAStopCodonsDF"),
-                                       style =
-                                           paste("height:100%; overflow-y:",
-                                                 "scroll;overflow-x: scroll;")
-                                )
-                            )
-                    )
-                )
-
-                } else if (sidebar_menu[[2]] == "Contig" &&
-                           sidebar_menu[[3]] == "-" &&
-                           !is.na(readIndex) &&
-                           (directionParam == "Forward" ||
-                            directionParam == "Reverse") &&
-                           sidebar_menu[[6]] == "Read") {
-                    if (directionParam == "Forward") {
-                        sequenceParam[["primarySeq"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             forwardReadList[[readIndex]]@primarySeq)
-                        sequenceParam[["secondarySeq"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             forwardReadList[[readIndex]]@secondarySeq)
-                        sequenceParam[["primaryAASeqS1"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             forwardReadList[[readIndex]]@primaryAASeqS1)
-                        sequenceParam[["primaryAASeqS2"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             forwardReadList[[readIndex]]@primaryAASeqS2)
-                        sequenceParam[["primaryAASeqS3"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             forwardReadList[[readIndex]]@primaryAASeqS3)
-                        trimmedParam[["M1TrimmingCutoff"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@
-                            M1TrimmingCutoff
-                        trimmedParam[["M2CutoffQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@
-                            M2CutoffQualityScore
-                        trimmedParam[["M2SlidingWindowSize"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@
-                            M2SlidingWindowSize
-
-                        trimmedRV[["rawSeqLength"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@rawSeqLength
-                        trimmedRV[["rawMeanQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@
-                            rawMeanQualityScore
-                        trimmedRV[["rawMinQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@rawMinQualityScore
-                        trimmedRV[["trimmedStartPos"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@trimmedStartPos
-                        trimmedRV[["trimmedFinishPos"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@trimmedFinishPos
-                        trimmedRV[["trimmedSeqLength"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@trimmedSeqLength
-                        trimmedRV[["trimmedMeanQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@
-                            trimmedMeanQualityScore
-                        trimmedRV[["trimmedMinQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@QualityReport@
-                            trimmedMinQualityScore
-                        trimmedRV[["remainingRatio"]] <<-
-                            round(SangerAlignment@
-                                      contigList[[contigIndex]]@
-                                      forwardReadList[[readIndex]]@QualityReport@
-                                      remainingRatio * 100, 2)
-
-                        ChromatogramParam[["baseNumPerRow"]] <<-
-                            SangerAlignment@contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@ChromatogramParam@
-                            baseNumPerRow
-                        ChromatogramParam[["heightPerRow"]] <<-
-                            SangerAlignment@contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@ChromatogramParam@
-                            heightPerRow
-                        ChromatogramParam[["signalRatioCutoff"]] <<-
-                            SangerAlignment@contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@ChromatogramParam@
-                            signalRatioCutoff
-                        ChromatogramParam[["showTrimmed"]] <<-
-                            SangerAlignment@contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@ChromatogramParam@
-                            showTrimmed
-
-                        SangerReadBFN <-
-                            basename(SangerAlignment@
-                                         contigList[[contigIndex]]@
-                                         forwardReadList[[readIndex]]@readFileName)
-                        SangerReadAFN <-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            forwardReadList[[readIndex]]@readFileName
-                    } else if (directionParam == "Reverse") {
-                        sequenceParam[["primarySeq"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             reverseReadList[[readIndex]]@primarySeq)
-                        sequenceParam[["secondarySeq"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             reverseReadList[[readIndex]]@secondarySeq)
-                        sequenceParam[["primaryAASeqS1"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             reverseReadList[[readIndex]]@primaryAASeqS1)
-                        sequenceParam[["primaryAASeqS2"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             reverseReadList[[readIndex]]@primaryAASeqS2)
-                        sequenceParam[["primaryAASeqS3"]] <<-
-                            as.character(SangerAlignment@
-                                             contigList[[contigIndex]]@
-                                             reverseReadList[[readIndex]]@primaryAASeqS3)
-
-                        trimmedParam[["M1TrimmingCutoff"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@
-                            M1TrimmingCutoff
-                        trimmedParam[["M2CutoffQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@
-                            M2CutoffQualityScore
-                        trimmedParam[["M2SlidingWindowSize"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@
-                            M2SlidingWindowSize
-
-                        trimmedRV[["rawSeqLength"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@rawSeqLength
-                        trimmedRV[["rawMeanQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@
-                            rawMeanQualityScore
-                        trimmedRV[["rawMinQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@rawMinQualityScore
-                        trimmedRV[["trimmedStartPos"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@trimmedStartPos
-                        trimmedRV[["trimmedFinishPos"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@trimmedFinishPos
-                        trimmedRV[["trimmedSeqLength"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@trimmedSeqLength
-                        trimmedRV[["trimmedMeanQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@
-                            trimmedMeanQualityScore
-                        trimmedRV[["trimmedMinQualityScore"]] <<-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@QualityReport@
-                            trimmedMinQualityScore
-                        trimmedRV[["remainingRatio"]] <<-
-                            round(SangerAlignment@
-                                      contigList[[contigIndex]]@
-                                      reverseReadList[[readIndex]]@QualityReport@
-                                      remainingRatio * 100, 2)
-
-                        ChromatogramParam[["baseNumPerRow"]] <<-
-                            SangerAlignment@contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@ChromatogramParam@
-                            baseNumPerRow
-                        ChromatogramParam[["heightPerRow"]] <<-
-                            SangerAlignment@contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@ChromatogramParam@
-                            heightPerRow
-                        ChromatogramParam[["signalRatioCutoff"]] <<-
-                            SangerAlignment@contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@ChromatogramParam@
-                            signalRatioCutoff
-                        ChromatogramParam[["showTrimmed"]] <<-
-                            SangerAlignment@contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@ChromatogramParam@
-                            showTrimmed
-
-                        SangerReadBFN <-
-                            basename(SangerAlignment@
-                                         contigList[[contigIndex]]@
-                                         reverseReadList[[readIndex]]@readFileName)
-                        SangerReadAFN <-
-                            SangerAlignment@
-                            contigList[[contigIndex]]@
-                            reverseReadList[[readIndex]]@readFileName
-                    }
-
-                    log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
-                    h1(input$sidebar_menu)
-                    fluidRow(
-                        useShinyjs(),
-                        box(title = tags$p(tagList(icon("dot-circle"),
-                                                   "Raw File: "),
-                                           style = "font-size: 26px;
-                                                             font-weight: bold;"),
-                            solidHeader = TRUE,
-                            status = "success", width = 12,
-                            h1(SangerReadBFN),
-                            tags$h5(paste("( full path:",
-                                          SangerReadAFN,
-                                          ")"), style = "font-style:italic")),
-                        box(title = tags$p(
-                            tagList(icon("dot-circle"),
-                                    "Primary, Secondary DNA Sequences & Amino Acid Sequence (Before Trimming):"),
-                            style = "font-size: 26px;
-                                                           font-weight: bold;"),
-                            solidHeader = TRUE, collapsible = TRUE,
-                            status = "success", width = 12,
-                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                            column(width = 12,
-                                   tags$p(tagList(icon("bars"),
-                                                  "Primary Sequence"),
-                                          style = "font-size: 22px;
-                                                           font-weight: bold;"),
-                                   excelOutput("primarySeqDF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "Secondary Sequence"),
-                                          style = "font-size: 22px;
-                                                           font-weight: bold;"),
-                                   excelOutput("secondSeqDF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "Quality Phred Score"),
-                                          style = "font-size: 22px;
-                                                           font-weight: bold;"),
-                                   excelOutput("qualityScoreDF",
-                                               width = "100%", height = "50"),
-                                   style = paste("overflow-y: hidden;",
-                                                 "overflow-x: scroll;")
-                            ),
-                        ),
-                        box(title = tags$p(tagList(icon("dot-circle"),
-                                                   "Quality Report: "),
-                                           style = "font-size: 26px;
-                                                           font-weight: bold;"),
-                            solidHeader = TRUE, collapsible = TRUE,
-                            status = "success", width = 12,
-                            tags$hr(
-                                style = ("border-top: 4px hidden #A9A9A9;")),
-                            box(title =
-                                    tags$p(tagList(icon("arrow-circle-right"),
-                                                   "Trimming Parameters Input"),
-                                           style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                fluidRow(
-                                    column(width = 12,
-                                           uiOutput("TrimmingMethodSelectionOutput"),
-                                    ),
-                                ),
-                                column(width = 12,
-                                       uiOutput("TrimmingMethodUI"),
-                                ),
-                                actionBttn("startTrimmingButton",
-                                           "Apply Trimming Parameters",
-                                           style = "simple", color = "danger",
-                                           block = TRUE, size = "lg")
-                            ),
-                            box(title = tags$p(tagList(icon("arrow-circle-left"),
-                                                       "Trimmed Result Output"),
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                fluidRow(
-                                    box(title = tags$p("Before Trimming",
-                                                       style = "font-size: 21px;
-                                                           font-weight: bold;"),
-                                        collapsible = TRUE,
-                                        status = "success", width = 12,
-                                        column(width = 12,
-                                               column(4,
-                                                      uiOutput("rawSeqLength") ,
-                                               ),
-                                               column(4,
-                                                      uiOutput("rawMeanQualityScore"),
-                                               ),
-                                               column(4,
-                                                      uiOutput("rawMinQualityScore"),
-                                               ),
-                                        ),
-                                    ),
-                                ),
-                                fluidRow(
-                                    box(title = tags$p("After Trimming",
-                                                       style = "font-size: 21px;
-                                                           font-weight: bold;"),
-                                        collapsible = TRUE,
-                                        status = "success", width = 12,
-                                        column(width = 12,
-                                               column(4,
-                                                      uiOutput("trimmedSeqLength"),
-                                               ),
-                                               column(4,
-                                                      uiOutput("trimmedMeanQualityScore"),
-                                               ),
-                                               column(4,
-                                                      uiOutput("trimmedMinQualityScore"),
-                                               ),
-                                        ),
-
-                                        column(width = 12,
-                                               column(4,
-                                                      uiOutput("trimmedStartPos") ,
-                                               ),
-                                               column(4,
-                                                      uiOutput("trimmedFinishPos") ,
-                                               ),
-                                               column(4,
-                                                      uiOutput("remainingRatio") ,
-                                               )
-                                        ),
-                                    ),
-                                ),
-                                tags$hr(
-                                    style = ("border-top: 6px double #A9A9A9;")),
-                                fluidRow(
-                                    box(title = tags$p("Quality Trimming Plot",
-                                                       style = "font-size: 21px;
-                                                           font-weight: bold;"),
-                                        collapsible = TRUE,
-                                        status = "success", width = 12,
-                                        plotlyOutput("qualityQualityBasePlot") %>%
-                                            withSpinner()),
-                                ),
-                            ),
-                        ),
-                        box(title =
-                                tags$p(tagList(icon("dot-circle"),
-                                               "DNA Sequence
-                                       (After Trimming):"),
-                                       style = "font-size: 26px;
-                                           font-weight: bold;"),
-                            solidHeader = TRUE, collapsible = TRUE,
-                            status = "success", width = 12,
-                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                            column(width = 12,
-                                   tags$p(tagList(icon("bars"),
-                                                  "Primary Sequence"),
-                                          style = "font-size: 22px;
-                                           font-weight: bold;"),
-                                   excelOutput("primarySeqTrimmedDF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "Secondary Sequence"),
-                                          style = "font-size: 22px;
-                                           font-weight: bold;"),
-                                   excelOutput("secondSeqTrimmedDF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "Quality Phred Score"),
-                                          style = "font-size: 22px;
-                                           font-weight: bold;"),
-                                   excelOutput("qualityScoreTrimmedDF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "AA Sequence 1"),
-                                          style = "font-size: 22px;
-                                                           font-weight: bold;"),
-                                   excelOutput("PrimAASeqS1DF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "AA Sequence 2"),
-                                          style = "font-size: 22px;
-                                                           font-weight: bold;"),
-                                   excelOutput("PrimAASeqS2DF",
-                                               width = "100%", height = "50"),
-                                   tags$br(),
-                                   tags$br(),
-                                   tags$p(tagList(icon("bars"),
-                                                  "AA Sequence 3"),
-                                          style = "font-size: 22px;
-                                                           font-weight: bold;"),
-                                   excelOutput("PrimAASeqS3DF",
-                                               width = "100%", height = "50"),
-                                   style = paste("overflow-y: hidden;",
-                                                 "overflow-x: scroll;")
-                            )
-                        ),
-                        box(title = tags$p(tagList(icon("dot-circle"),
-                                                   "Chromatogram: "),
-                                           style = "font-size: 26px;
-                                                           font-weight: bold;"),
-                            solidHeader = TRUE, collapsible = TRUE,
-                            status = "success", width = 12,
-                            tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-
-                            box(title = tags$p(tagList(icon("arrow-circle-right"),
-                                                       "Chromatogram Input"),
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(3,
-                                       sliderInput("ChromatogramBasePerRow",
-                                                   label = h4("Base Number Per Row"),
-                                                   min = 5,
-                                                   max = 200,
-                                                   value = ChromatogramParam[["baseNumPerRow"]]),
-                                       sliderInput("ChromatogramHeightPerRow",
-                                                   label = h4("Height Per Row"),
-                                                   min = 50,
-                                                   max = 600,
-                                                   value =ChromatogramParam[["heightPerRow"]]),
-                                ),
-                                column(3,
-                                       numericInput(
-                                           "ChromatogramSignalRatioCutoff",
-                                           h3("Signal Ratio Cutoff"),
-                                           value = ChromatogramParam[["signalRatioCutoff"]]),
-                                       checkboxInput(
-                                           "ChromatogramCheckShowTrimmed",
-                                           "Show trimmed region",
-                                           value = ChromatogramParam[["showTrimmed"]])
-                                ),
-                                column(3,
-                                       uiOutput("ChromatogramtrimmedStartPos"),
-                                ),
-                                column(3,
-                                       uiOutput("ChromatogramtrimmedFinishPos"),
-                                ),
-                                actionBttn("saveChromatogramParam",
-                                           "Apply Chromatogram Parameters",
-                                           style = "simple", color = "danger",
-                                           block = TRUE, size = "lg")
-                            ),
-                            box(title = tags$p(tagList(icon("arrow-circle-left"),
-                                                       "Chromatogram Output"),
-                                               style = "font-size: 24px;
-                                                           font-weight: bold;"),
-                                collapsible = TRUE,
-                                status = "success", width = 12,
-                                column(width = 12,
-                                       uiOutput("chromatogramUIOutput"),
-                                )
-                            ),
-                        )
-                    )
-                }
+            if (directionParam == "Forward") {
+                sequenceParam[["primarySeq"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     forwardReadList[[readIndex]]@primarySeq)
+                sequenceParam[["secondarySeq"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     forwardReadList[[readIndex]]@secondarySeq)
+                sequenceParam[["primaryAASeqS1"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     forwardReadList[[readIndex]]@primaryAASeqS1)
+                sequenceParam[["primaryAASeqS2"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     forwardReadList[[readIndex]]@primaryAASeqS2)
+                sequenceParam[["primaryAASeqS3"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     forwardReadList[[readIndex]]@primaryAASeqS3)
+                trimmedParam[["M1TrimmingCutoff"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@
+                    M1TrimmingCutoff
+                trimmedParam[["M2CutoffQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@
+                    M2CutoffQualityScore
+                trimmedParam[["M2SlidingWindowSize"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@
+                    M2SlidingWindowSize
+                
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@
+                    rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@
+                    trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@QualityReport@
+                    trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerAlignment@
+                              contigList[[contigIndex]]@
+                              forwardReadList[[readIndex]]@QualityReport@
+                              remainingRatio * 100, 2)
+                
+                ChromatogramParam[["baseNumPerRow"]] <<-
+                    SangerAlignment@contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@ChromatogramParam@
+                    baseNumPerRow
+                ChromatogramParam[["heightPerRow"]] <<-
+                    SangerAlignment@contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@ChromatogramParam@
+                    heightPerRow
+                ChromatogramParam[["signalRatioCutoff"]] <<-
+                    SangerAlignment@contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@ChromatogramParam@
+                    signalRatioCutoff
+                ChromatogramParam[["showTrimmed"]] <<-
+                    SangerAlignment@contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@ChromatogramParam@
+                    showTrimmed
+                
+                SangerReadBFN <-
+                    basename(SangerAlignment@
+                                 contigList[[contigIndex]]@
+                                 forwardReadList[[readIndex]]@readFileName)
+                SangerReadAFN <-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    forwardReadList[[readIndex]]@readFileName
+            } else if (directionParam == "Reverse") {
+                sequenceParam[["primarySeq"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     reverseReadList[[readIndex]]@primarySeq)
+                sequenceParam[["secondarySeq"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     reverseReadList[[readIndex]]@secondarySeq)
+                sequenceParam[["primaryAASeqS1"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     reverseReadList[[readIndex]]@primaryAASeqS1)
+                sequenceParam[["primaryAASeqS2"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     reverseReadList[[readIndex]]@primaryAASeqS2)
+                sequenceParam[["primaryAASeqS3"]] <<-
+                    as.character(SangerAlignment@
+                                     contigList[[contigIndex]]@
+                                     reverseReadList[[readIndex]]@primaryAASeqS3)
+                
+                trimmedParam[["M1TrimmingCutoff"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@
+                    M1TrimmingCutoff
+                trimmedParam[["M2CutoffQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@
+                    M2CutoffQualityScore
+                trimmedParam[["M2SlidingWindowSize"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@
+                    M2SlidingWindowSize
+                
+                trimmedRV[["rawSeqLength"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@rawSeqLength
+                trimmedRV[["rawMeanQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@
+                    rawMeanQualityScore
+                trimmedRV[["rawMinQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@rawMinQualityScore
+                trimmedRV[["trimmedStartPos"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@trimmedStartPos
+                trimmedRV[["trimmedFinishPos"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@trimmedFinishPos
+                trimmedRV[["trimmedSeqLength"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@trimmedSeqLength
+                trimmedRV[["trimmedMeanQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@
+                    trimmedMeanQualityScore
+                trimmedRV[["trimmedMinQualityScore"]] <<-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@QualityReport@
+                    trimmedMinQualityScore
+                trimmedRV[["remainingRatio"]] <<-
+                    round(SangerAlignment@
+                              contigList[[contigIndex]]@
+                              reverseReadList[[readIndex]]@QualityReport@
+                              remainingRatio * 100, 2)
+                
+                ChromatogramParam[["baseNumPerRow"]] <<-
+                    SangerAlignment@contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@ChromatogramParam@
+                    baseNumPerRow
+                ChromatogramParam[["heightPerRow"]] <<-
+                    SangerAlignment@contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@ChromatogramParam@
+                    heightPerRow
+                ChromatogramParam[["signalRatioCutoff"]] <<-
+                    SangerAlignment@contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@ChromatogramParam@
+                    signalRatioCutoff
+                ChromatogramParam[["showTrimmed"]] <<-
+                    SangerAlignment@contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@ChromatogramParam@
+                    showTrimmed
+                
+                SangerReadBFN <-
+                    basename(SangerAlignment@
+                                 contigList[[contigIndex]]@
+                                 reverseReadList[[readIndex]]@readFileName)
+                SangerReadAFN <-
+                    SangerAlignment@
+                    contigList[[contigIndex]]@
+                    reverseReadList[[readIndex]]@readFileName
             }
+            log_info(">>>>>>>> Inside '", input$sidebar_menu, "'")
+            h1(input$sidebar_menu)
+            fluidRow(
+                useShinyjs(),
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Raw File: "),
+                                   style = "font-size: 26px;
+                                                             font-weight: bold;"),
+                    solidHeader = TRUE,
+                    status = "success", width = 12,
+                    h1(SangerReadBFN),
+                    tags$h5(paste("( full path:",
+                                  SangerReadAFN,
+                                  ")"), style = "font-style:italic")),
+                box(title = tags$p(
+                    tagList(icon("dot-circle"),
+                            "Primary, Secondary DNA Sequences & Amino Acid Sequence (Before Trimming):"),
+                    style = "font-size: 26px;
+                                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    column(width = 12,
+                           tags$p(tagList(icon("bars"),
+                                          "Primary Sequence"),
+                                  style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                           excelOutput("primarySeqDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "Secondary Sequence"),
+                                  style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                           excelOutput("secondSeqDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "Quality Phred Score"),
+                                  style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                           excelOutput("qualityScoreDF",
+                                       width = "100%", height = "50"),
+                           style = paste("overflow-y: hidden;",
+                                         "overflow-x: scroll;")
+                    ),
+                ),
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Quality Report: "),
+                                   style = "font-size: 26px;
+                                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(
+                        style = ("border-top: 4px hidden #A9A9A9;")),
+                    box(title =
+                            tags$p(tagList(icon("arrow-circle-right"),
+                                           "Trimming Parameters Input"),
+                                   style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        fluidRow(
+                            column(width = 12,
+                                   uiOutput("TrimmingMethodSelectionOutput"),
+                            ),
+                        ),
+                        column(width = 12,
+                               uiOutput("TrimmingMethodUI"),
+                        ),
+                        actionBttn("startTrimmingButton",
+                                   "Apply Trimming Parameters",
+                                   style = "simple", color = "danger",
+                                   block = TRUE, size = "lg")
+                    ),
+                    box(title = tags$p(tagList(icon("arrow-circle-left"),
+                                               "Trimmed Result Output"),
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        fluidRow(
+                            box(title = tags$p("Before Trimming",
+                                               style = "font-size: 21px;
+                                                           font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       column(4,
+                                              uiOutput("rawSeqLength") ,
+                                       ),
+                                       column(4,
+                                              uiOutput("rawMeanQualityScore"),
+                                       ),
+                                       column(4,
+                                              uiOutput("rawMinQualityScore"),
+                                       ),
+                                ),
+                            ),
+                        ),
+                        fluidRow(
+                            box(title = tags$p("After Trimming",
+                                               style = "font-size: 21px;
+                                                           font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                column(width = 12,
+                                       column(4,
+                                              uiOutput("trimmedSeqLength"),
+                                       ),
+                                       column(4,
+                                              uiOutput("trimmedMeanQualityScore"),
+                                       ),
+                                       column(4,
+                                              uiOutput("trimmedMinQualityScore"),
+                                       ),
+                                ),
+                                
+                                column(width = 12,
+                                       column(4,
+                                              uiOutput("trimmedStartPos") ,
+                                       ),
+                                       column(4,
+                                              uiOutput("trimmedFinishPos") ,
+                                       ),
+                                       column(4,
+                                              uiOutput("remainingRatio") ,
+                                       )
+                                ),
+                            ),
+                        ),
+                        tags$hr(
+                            style = ("border-top: 6px double #A9A9A9;")),
+                        fluidRow(
+                            box(title = tags$p("Quality Trimming Plot",
+                                               style = "font-size: 21px;
+                                                           font-weight: bold;"),
+                                collapsible = TRUE,
+                                status = "success", width = 12,
+                                plotlyOutput("qualityQualityBasePlot") %>%
+                                    withSpinner()),
+                        ),
+                    ),
+                ),
+                box(title =
+                        tags$p(tagList(icon("dot-circle"),
+                                       "DNA Sequence
+                                       (After Trimming):"),
+                               style = "font-size: 26px;
+                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    column(width = 12,
+                           tags$p(tagList(icon("bars"),
+                                          "Primary Sequence"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("primarySeqTrimmedDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "Secondary Sequence"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("secondSeqTrimmedDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "Quality Phred Score"),
+                                  style = "font-size: 22px;
+                                           font-weight: bold;"),
+                           excelOutput("qualityScoreTrimmedDF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "AA Sequence 1"),
+                                  style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                           excelOutput("PrimAASeqS1DF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "AA Sequence 2"),
+                                  style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                           excelOutput("PrimAASeqS2DF",
+                                       width = "100%", height = "50"),
+                           tags$br(),
+                           tags$br(),
+                           tags$p(tagList(icon("bars"),
+                                          "AA Sequence 3"),
+                                  style = "font-size: 22px;
+                                                           font-weight: bold;"),
+                           excelOutput("PrimAASeqS3DF",
+                                       width = "100%", height = "50"),
+                           style = paste("overflow-y: hidden;",
+                                         "overflow-x: scroll;")
+                    )
+                ),
+                box(title = tags$p(tagList(icon("dot-circle"),
+                                           "Chromatogram: "),
+                                   style = "font-size: 26px;
+                                                           font-weight: bold;"),
+                    solidHeader = TRUE, collapsible = TRUE,
+                    status = "success", width = 12,
+                    tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
+                    
+                    box(title = tags$p(tagList(icon("arrow-circle-right"),
+                                               "Chromatogram Input"),
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(3,
+                               sliderInput("ChromatogramBasePerRow",
+                                           label = h4("Base Number Per Row"),
+                                           min = 5,
+                                           max = 200,
+                                           value = ChromatogramParam[["baseNumPerRow"]]),
+                               sliderInput("ChromatogramHeightPerRow",
+                                           label = h4("Height Per Row"),
+                                           min = 50,
+                                           max = 600,
+                                           value =ChromatogramParam[["heightPerRow"]]),
+                        ),
+                        column(3,
+                               numericInput(
+                                   "ChromatogramSignalRatioCutoff",
+                                   h3("Signal Ratio Cutoff"),
+                                   value = ChromatogramParam[["signalRatioCutoff"]]),
+                               checkboxInput(
+                                   "ChromatogramCheckShowTrimmed",
+                                   "Show trimmed region",
+                                   value = ChromatogramParam[["showTrimmed"]])
+                        ),
+                        column(3,
+                               uiOutput("ChromatogramtrimmedStartPos"),
+                        ),
+                        column(3,
+                               uiOutput("ChromatogramtrimmedFinishPos"),
+                        ),
+                        actionBttn("saveChromatogramParam",
+                                   "Apply Chromatogram Parameters",
+                                   style = "simple", color = "danger",
+                                   block = TRUE, size = "lg")
+                    ),
+                    box(title = tags$p(tagList(icon("arrow-circle-left"),
+                                               "Chromatogram Output"),
+                                       style = "font-size: 24px;
+                                                           font-weight: bold;"),
+                        collapsible = TRUE,
+                        status = "success", width = 12,
+                        column(width = 12,
+                               uiOutput("chromatogramUIOutput"),
+                        )
+                    ),
+                )
+            )
         }
     })
     ############################################################################
@@ -1120,30 +1111,33 @@ SangerAlignmentServer <- function(input, output, session) {
     ############################################################################
     observeEvent(input$sidebar_menu, {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
-        if (input$sidebar_menu == 'Contigs Alignment Overview Page _') {
+        if (sidebar_menu[[1]] == "Contigs" && 
+            sidebar_menu[[2]] == "Alignment" && 
+            sidebar_menu[[3]] == "Overview" && 
+            sidebar_menu[[4]] == "Page" && 
+            sidebar_menu[[5]] == "_") {
             shinyjs::html("rightHeader", "SangerAlignment Overview Page")
-        } else {
+        } else if (!is.na(strtoi(sidebar_menu[[1]])) &&
+                   sidebar_menu[[2]] == "Sanger" &&
+                   sidebar_menu[[3]] == "Contig" &&
+                   sidebar_menu[[4]] == "Overview" &&
+                   sidebar_menu[[5]] == "Page") {
+            contigIndex <- strtoi(sidebar_menu[[1]])
+            shinyjs::html("rightHeader", paste(contigIndex, "SangerContig Overview Page"))
+        } else if (!is.na(strtoi(sidebar_menu[[1]])) &&
+                   sidebar_menu[[2]] == "Contig" &&
+                   sidebar_menu[[3]] == "-" &&
+                   !is.na(strtoi(sidebar_menu[[4]])) &&
+                   (sidebar_menu[[5]] == "Forward" ||
+                    sidebar_menu[[5]] == "Reverse") &&
+                   sidebar_menu[[6]] == "Read") {
             contigIndex <- strtoi(sidebar_menu[[1]])
             readIndex <- strtoi(sidebar_menu[[4]])
             directionParam <- sidebar_menu[[5]]
-            if (!is.na(contigIndex)) {
-                if (sidebar_menu[[2]] == "Sanger" &&
-                    sidebar_menu[[3]] == "Contig" &&
-                    sidebar_menu[[4]] == "Overview" &&
-                    sidebar_menu[[5]] == "Page") {
-                    shinyjs::html("rightHeader", paste(contigIndex, "SangerContig Overview Page"))
-                } else if (sidebar_menu[[2]] == "Contig" &&
-                           sidebar_menu[[3]] == "-" &&
-                           !is.na(readIndex) &&
-                           (directionParam == "Forward" ||
-                            directionParam == "Reverse") &&
-                           sidebar_menu[[6]] == "Read") {
-                    shinyjs::html("rightHeader",
-                                  paste(contigIndex, "SangerContig -",
-                                        readIndex, directionParam,
-                                        "SangerRead", "Page"))
-                }
-            }
+            shinyjs::html("rightHeader",
+                          paste(contigIndex, "SangerContig -",
+                                readIndex, directionParam,
+                                "SangerRead", "Page"))
         }
     })
 
