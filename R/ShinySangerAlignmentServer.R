@@ -283,7 +283,8 @@ SangerAlignmentServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               uiOutput("SATreePlotUI"),
+                               # uiOutput("SATreePlotUI"),
+                               plotOutput("SATreePlot"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         )
@@ -1709,13 +1710,6 @@ SangerAlignmentServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(contigIndex)) {
-            contigParam[["contigName"]] <<-
-                SangerAlignment@
-                contigList[[contigIndex]]@contigName
-            contigParam[["alignment"]] <-
-                SangerAlignment@
-                contigList[[contigIndex]]@alignment
-
             browseSeqHTML <-
                 file.path(shinyDirectory, "BrowseSeqs_html",
                           paste0(sidebar_menu[[1]], "_",
@@ -1741,9 +1735,6 @@ SangerAlignmentServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(contigIndex)) {
-            contigParam[["differencesDF"]] <<-
-                SangerAlignment@
-                contigList[[contigIndex]]@differencesDF
             if (all(dim(contigParam[["differencesDF"]]) == c(0,0))) {
                 h4("*** 'Differences' dataframe is empty. ***",
                    style="font-weight: bold; font-style: italic;")
@@ -1762,10 +1753,6 @@ SangerAlignmentServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(contigIndex)) {
-            contigParam[["dendrogram"]] <<-
-                SangerAlignment@
-                contigList[[contigIndex]]@dendrogram
-            plot(contigParam[["dendrogram"]][[2]])
             ggdendrogram(contigParam[["dendrogram"]][[2]], rotate = TRUE)
         }
     })
@@ -1773,9 +1760,6 @@ SangerAlignmentServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(contigIndex)) {
-            contigParam[["dendrogram"]] <<-
-                SangerAlignment@
-                contigList[[contigIndex]]@dendrogram
             contigParam[["dendrogram"]][[1]]
         }
     })
@@ -1786,9 +1770,6 @@ SangerAlignmentServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(contigIndex)) {
-            contigParam[["distanceMatrix"]] <<-
-                SangerAlignment@
-                contigList[[contigIndex]]@distanceMatrix
             if (all(dim(contigParam[["distanceMatrix"]]) == c(0,0))) {
                 h4("*** 'Distance' dataframe is empty. (Cannot plot)***",
                    style="font-weight: bold; font-style: italic;")
@@ -1816,9 +1797,6 @@ SangerAlignmentServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(contigIndex)) {
-            contigParam[["distanceMatrix"]] <<-
-                SangerAlignment@
-                contigList[[contigIndex]]@distanceMatrix
             if (all(dim(contigParam[["distanceMatrix"]]) == c(0,0))) {
                 h4("*** 'Distance' dataframe is empty. ***",
                    style="font-weight: bold; font-style: italic;")
@@ -1837,9 +1815,6 @@ SangerAlignmentServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(contigIndex)) {
-            contigParam[["indelsDF"]] <<-
-                SangerAlignment@
-                contigList[[contigIndex]]@indelsDF
             if (all(dim(contigParam[["indelsDF"]] ) == c(0,0))) {
                 h4("*** 'Indels' data frame is empty. ***",
                    style="font-weight: bold; font-style: italic;")
@@ -1858,9 +1833,6 @@ SangerAlignmentServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         contigIndex <- strtoi(sidebar_menu[[1]])
         if (!is.na(contigIndex)) {
-            contigParam[["stopCodonsDF"]] <<-
-                SangerAlignment@
-                contigList[[contigIndex]]@stopCodonsDF
             if (all(dim(contigParam[["stopCodonsDF"]]) == c(0,0))) {
                 h4("*** 'Stop Codons' dataframe is empty. ***",
                    style="font-weight: bold; font-style: italic;")
