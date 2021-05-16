@@ -27,7 +27,7 @@ setMethod('show', 'SangerRead', function(object){
         }
         log_success("'", basename(object@readFileName), "'", " is successfully created!")
     } else {
-        sapply(paste0(object@objectResults@errorTypes, object@objectResults@errorMessages, '\n') , 
+        sapply(paste0(object@objectResults@errorTypes, '\n',object@objectResults@errorMessages, '\n') , 
                log_error, simplify = FALSE)
     }
 })
@@ -112,7 +112,7 @@ setMethod('show', 'SangerContig', function(object){
         } 
         log_success("'", object@contigName, "'", " is successfully created!")
     } else {
-        sapply(paste0(object@objectResults@errorTypes, object@objectResults@errorMessages, '\n') , 
+        sapply(paste0(object@objectResults@errorTypes, '\n', object@objectResults@errorMessages, '\n') , 
                log_error, simplify = FALSE)
     }
     if (length(object@objectResults@warningMessages) > 0) {
@@ -169,7 +169,7 @@ setMethod('show', 'SangerAlignment', function(object){
         }    
         log_success("'SangerAlignment'", " is successfully created!")
     } else {
-        sapply(paste0(object@objectResults@errorTypes, object@objectResults@errorMessages, '\n') , 
+        sapply(paste0(object@objectResults@errorTypes, '\n', object@objectResults@errorMessages, '\n') , 
                log_error, simplify = FALSE)
     }
     if (length(object@objectResults@warningMessages) > 0) {

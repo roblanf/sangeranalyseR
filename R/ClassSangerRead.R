@@ -32,7 +32,7 @@
 #' A_chloroticaFFN <- file.path(inputFilesPath,
 #'                              "Allolobophora_chlorotica",
 #'                              "ACHLO",
-#'                              "Achl_ACHLO006-09_1_F.ab1")
+#'                              "aAchl_ACHLO006-09_1_F.ab1")
 #' sangerReadF <- new("SangerRead",
 #'                     printLevel            = "SangerRead",
 #'                     inputSource           = "ABIF",
@@ -341,7 +341,7 @@ setMethod("initialize",
         readResultTable <- data.frame(basename(readFileName), 
                                       creationResult, errors[[2]], errors[[1]], 
                                       inputSource, readFeature)
-        sapply(paste0(errors[[2]], errors[[1]], '\n') , 
+        sapply(paste0(errors[[2]], '\n', errors[[1]], '\n') , 
                log_error, simplify = FALSE)
         # Create df to store reads that failed to be created
         inputSource         = ""

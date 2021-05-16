@@ -754,7 +754,7 @@ setMethod("initialize",
     
     if (length(errors[[1]]) != 0) {
         creationResult <- FALSE
-        sapply(paste0(errors[[2]], errors[[1]], '\n') , 
+        sapply(paste0(errors[[2]], '\n', errors[[1]], '\n') , 
                log_error, simplify = FALSE)
         inputSource            = ""
         processMethod          = ""
