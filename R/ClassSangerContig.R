@@ -1,17 +1,16 @@
 #' @title SangerContig
 #'
 #' @description  An S4 class containing forward and reverse SangerRead lists and alignment, consensus read results which corresponds to a contig in Sanger sequencing.
-#' 
-#' @slot objectResults
-#' 
+#' @slot objectResults This is the object that stores all information of the creation result.
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
-#' @slot processMethod The method to create a contig from reads. The value is \code{"REGEX"}, \code{"CSV"}
-#' @slot parentDirectory If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerContig, all reads must be in the first layer in this directory. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.
+#' @slot processMethod The method to create a contig from reads. The value is \code{"REGEX"} or \code{"CSV"}. The default value is \code{"REGEX"}.
+#' @slot fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
+#' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
+#' @slot parentDirectory If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you want to analyse and cannot be NULL. In SangerContig, all reads must be in the first layer in this directory. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.
+#' 
 #' @slot contigName The contig name of all the reads in \code{parentDirectory}.
 #' @slot suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
 #' @slot suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
-#' @slot fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
-#' @slot namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
 #' @slot geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @slot forwardReadList The list of SangerRead S4 instances which are all forward reads.
 #' @slot reverseReadList The list of SangerRead S4 instances which are all reverse reads.
@@ -43,7 +42,6 @@
 #' ## Input From ABIF file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
-#' parentDir <- "~/Desktop/TMP/"
 #' contigName <- "Achl_RBNII384-13"
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"
 #' suffixReverseRegExp <- "_[0-9]*_R.ab1"

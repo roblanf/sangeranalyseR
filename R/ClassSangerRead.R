@@ -7,13 +7,13 @@
 #' @slot readFeature The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.
 #' @slot readFileName The filename of the target input file.
 #' @slot fastaReadName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
+#' @slot geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @slot abifRawData An S4 class containing all fields in the ABIF file. It is the abif class defined in sangerseqR package.
 #' @slot QualityReport A S4 class containing quality trimming related inputs and trimming results.
 #' @slot ChromatogramParam A S4 class containing chromatogram inputs.
 #' @slot primaryAASeqS1 A polypeptide translated from primary DNA sequence starting from the first nucleic acid.
 #' @slot primaryAASeqS2 A polypeptide translated from primary DNA sequence starting from the second nucleic acid.
 #' @slot primaryAASeqS3 A polypeptide translated from primary DNA sequence starting from the third nucleic acid.
-#' @slot geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @slot primarySeqRaw The raw primary sequence from sangerseq class in sangerseqR package before base calling.
 #' @slot secondarySeqRaw The raw secondary sequence from sangerseq class in sangerseqR package before base calling.
 #' @slot peakPosMatrixRaw The raw peak position matrix from sangerseq class in sangerseqR package before base calling.
@@ -32,7 +32,7 @@
 #' A_chloroticaFFN <- file.path(inputFilesPath,
 #'                              "Allolobophora_chlorotica",
 #'                              "ACHLO",
-#'                              "aAchl_ACHLO006-09_1_F.ab1")
+#'                              "Achl_ACHLO006-09_1_F.ab1")
 #' sangerReadF <- new("SangerRead",
 #'                     printLevel            = "SangerRead",
 #'                     inputSource           = "ABIF",

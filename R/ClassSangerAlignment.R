@@ -11,7 +11,7 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' @slot objectResults
 #' 
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
-#' @slot processMethod The method to create a contig from reads. The value is \code{"REGEX"}, \code{"CSV"}
+#' @slot processMethod The method to create a contig from reads. The value is \code{"REGEX"} or \code{"CSV"}. The default value is \code{"REGEX"}.
 #' 
 #' 
 #' @slot fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
