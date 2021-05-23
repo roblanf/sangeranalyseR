@@ -16,7 +16,7 @@ The most minimal example gets the job done in three lines of code. More details 
 
    my_aligned_contigs <- SangerAlignment(parentDirectory     = "./my_data/",
                                          suffixForwardRegExp = "_[0-9]+_F+",
-                                         suffixReverseRegExp = "_[0-9]+_R +")
+                                         suffixReverseRegExp = "_[0-9]+_R+")
 
    writeFasta(my_aligned_contigs)
 

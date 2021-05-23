@@ -176,7 +176,7 @@ setMethod("initialize",
                    readingFrame           = 1,
                    minFractionCallSA      = 0.5,
                    maxFractionLostSA      = 0.5,
-                   processorsNum          = NULL) {
+                   processorsNum          = 1) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
@@ -317,6 +317,7 @@ setMethod("initialize",
                                    readingFrame         = readingFrame,
                                    processorsNum        = processorsNum,
                                    logLevel             = FALSE)
+                           readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                            forwardNumber <-
                                length(newSangerContig@forwardReadList)
                            reverseNumber <-
@@ -367,6 +368,7 @@ setMethod("initialize",
                         readingFrame         = readingFrame,
                         processorsNum        = processorsNum,
                         logLevel             = FALSE)
+                readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 forwardNumber <- length(newSangerContig@forwardReadList)
                 reverseNumber <- length(newSangerContig@reverseReadList)
                 if ((forwardNumber + reverseNumber) >= minReadsNum) {
@@ -424,6 +426,7 @@ setMethod("initialize",
                         readingFrame         = readingFrame,
                         processorsNum        = processorsNum,
                         logLevel             = FALSE)
+                readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 forwardNumber <- length(newSangerContig@forwardReadList)
                 reverseNumber <- length(newSangerContig@reverseReadList)
                 if ((forwardNumber + reverseNumber) >= minReadsNum) {
@@ -468,6 +471,7 @@ setMethod("initialize",
                         readingFrame         = readingFrame,
                         processorsNum        = processorsNum,
                         logLevel             = FALSE)
+                readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 forwardNumber <- length(newSangerContig@forwardReadList)
                 reverseNumber <- length(newSangerContig@reverseReadList)
                 if ((forwardNumber + reverseNumber) >= minReadsNum) {
@@ -481,113 +485,7 @@ setMethod("initialize",
     }
     
     if (length(errors[[1]]) == 0 ) {
-       
-        # message("SangerContigList length: ", length(SangerContigList))
         SangerContigList <- Filter(Negate(is.null), SangerContigList)
-        
-        invisible(
-            lapply(SangerContigList, function(contig) {
-                lapply(contig@forwardReadList, function(read) {
-                    if (read@objectResults@creationResult) {
-                        if (inputSource == "ABIF") {
-                            seqLen <- read@QualityReport@trimmedFinishPos -
-                                read@QualityReport@trimmedStartPos
-                        }else if (inputSource == "FASTA") {
-                            seqLen <- length(read@primarySeq)
-                        }
-                        if (seqLen >= minReadLength) {
-                            ### Success: readResultTable (SangerContig Level)
-                            row <- data.frame(basename(read@readFileName),
-                                              read@objectResults@creationResult,
-                                              "None", "None",
-                                              read@inputSource, read@readFeature)
-                            names(row) <- readResultTableName
-                            readResultTable <<- rbind(readResultTable, row)
-                        } else {
-                            msg <- paste0("  >> ", read@readFileName,
-                                          " is shorter than 'minReadLength' ",
-                                          minReadLength,". This read is created but skipped!\n")
-                            warnings <<- c(warnings, msg)
-                            log_warn(msg)
-                            ### Failed: readResultTable (SangerContig Level)
-                            row <- data.frame(basename(read@readFileName),
-                                              FALSE, "TRIMMED_READ_ERROR", msg,
-                                              read@inputSource,  read@readFeature)
-                            names(row) <- readResultTableName
-                            readResultTable <<- rbind(readResultTable, row)
-                        }
-                        
-                        
-                        
-                        
-                        
-                    } else {
-                        ### Failed: readResultTable (SangerRead Level)
-                        row <- data.frame(basename(read@readFileName),
-                                          read@objectResults@creationResult,
-                                          read@objectResults@errorTypes,
-                                          read@objectResults@errorMessages,
-                                          read@inputSource, read@readFeature)
-                        names(row) <- readResultTableName
-                        readResultTable <<- rbind(readResultTable, row)
-                    }
-                })
-                lapply(contig@reverseReadList, function(read) {
-                    if (read@objectResults@creationResult) {
-                        
-                        if (inputSource == "ABIF") {
-                            seqLen <- read@QualityReport@trimmedFinishPos -
-                                read@QualityReport@trimmedStartPos
-                        }else if (inputSource == "FASTA") {
-                            seqLen <- length(read@primarySeq)
-                        }
-                        if (seqLen >= minReadLength) {
-                            ### Success: readResultTable (SangerContig Level)
-                            row <- data.frame(basename(read@readFileName),
-                                              read@objectResults@creationResult,
-                                              "None", "None",
-                                              read@inputSource, read@readFeature)
-                            names(row) <- readResultTableName
-                            readResultTable <<- rbind(readResultTable, row)
-                        } else {
-                            msg <- paste0("  >> ", read@readFileName,
-                                          " is shorter than 'minReadLength' ",
-                                          minReadLength,". This read is created but skipped!\n")
-                            warnings <<- c(warnings, msg)
-                            log_warn(msg)
-                            ### Failed: readResultTable (SangerContig Level)
-                            row <- data.frame(basename(read@readFileName),
-                                              FALSE, "TRIMMED_READ_ERROR", msg,
-                                              read@inputSource,  read@readFeature)
-                            names(row) <- readResultTableName
-                            readResultTable <<- rbind(readResultTable, row)
-                        }
-                    } else {
-                        ### Failed: readResultTable (SangerRead Level)
-                        row <- data.frame(basename(read@readFileName),
-                                          read@objectResults@creationResult,
-                                          read@objectResults@errorTypes,
-                                          read@objectResults@errorMessages,
-                                          read@inputSource, read@readFeature)
-                        names(row) <- readResultTableName
-                        readResultTable <<- rbind(readResultTable, row)
-                    }
-                })
-            })
-        )
-
-
-        
-        
-        
-        
-        
-        
-        
-        # message("SangerContigList length: ", length(SangerContigList))
-        
-        # alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
-        #                          minFractionCallSA, maxFractionLostSA, processorsNum) {
         acResult <- alignContigs(SangerContigList, geneticCode,
                                  refAminoAcidSeq, minFractionCallSA,
                                  maxFractionLostSA, processorsNum)
@@ -632,21 +530,7 @@ setMethod("initialize",
             errors[[1]] <- c(errors[[1]], msg)
             errors[[2]] <- c(errors[[2]], "CONTIG_NUMBER_ZERO")
         }
-        # log_success("  >> For more information, please run 'readTable(object)'.")
-        
-        # Add reads checking.
-
     }
-    # else {
-    #     log_error(paste(errors, collapse = ""))
-    # }
-    
-    
-    
-    
-    
-    
-    
     
     if (length(errors[[1]]) != 0) {
         creationResult <- FALSE

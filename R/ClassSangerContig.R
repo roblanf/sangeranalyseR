@@ -173,7 +173,7 @@ setMethod("initialize",
                    maxFractionLost        = 0.5,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
-                   processorsNum          = NULL,
+                   processorsNum          = 1,
                    logLevel               = TRUE) {
     creationResult <- TRUE
     errors <- list(character(0), character(0))
@@ -736,11 +736,26 @@ setMethod("initialize",
                 }
             }
         } else {
-            msg <- paste0("\nThe number of your total reads is ", readNumber, ".",
+            msg <- paste0("The number of your total reads is ", readNumber, ".",
                           "\nNumber of total reads has to be equal or more than ",
-                          minReadsNum, " ('minReadsNum' that you set)\n")
+                          minReadsNum, " ('minReadsNum' that you set)")
             errors[[1]] <- c(errors[[1]], msg)
             errors[[2]] <- c(errors[[2]], "READ_NUMBER_ERROR")
+            
+            lapply(forwardReadListFilter, function(read) {
+                row <- data.frame(basename(read@readFileName), FALSE,
+                                  "READ_NUMBER_ERROR", msg,
+                                  read@inputSource, read@readFeature)
+                names(row) <- readResultTableName
+                readResultTable[which(readResultTable$readName == basename(read@readFileName)),] <<- row
+            })
+            lapply(reverseReadListFilter, function(read) {
+                row <- data.frame(basename(read@readFileName), FALSE,
+                                  "READ_NUMBER_ERROR", msg,
+                                  read@inputSource, read@readFeature)
+                names(row) <- readResultTableName
+                readResultTable[which(readResultTable$readName == basename(read@readFileName)),] <<- row
+            })
         }
     }
     
