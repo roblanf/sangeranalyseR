@@ -41,6 +41,7 @@ setMethod('show', 'SangerContig', function(object){
             if (object@processMethod == "REGEX") {
                 cat("SangerContig S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
+                    "        Process Method : ", object@processMethod, "\n",
                     "      Parent Directory : ", object@parentDirectory, "\n",
                     "           Contig Name : ", object@contigName, "\n",
                     " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
@@ -59,6 +60,7 @@ setMethod('show', 'SangerContig', function(object){
             } else if (object@processMethod == "CSV") {
                 cat("SangerContig S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
+                    "        Process Method : ", object@processMethod, "\n",
                     "      Parent Directory : ", object@parentDirectory, "\n",
                     "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
                     "           Contig Name : ", object@contigName, "\n",
@@ -78,6 +80,7 @@ setMethod('show', 'SangerContig', function(object){
             if (object@processMethod == "REGEX") {
                 cat("SangerContig S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
+                    "        Process Method : ", object@processMethod, "\n",
                     "       Fasta File Name : ", object@fastaFileName, "\n",
                     "           Contig Name : ", object@contigName, "\n",
                     " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
@@ -95,6 +98,7 @@ setMethod('show', 'SangerContig', function(object){
             } else if (object@processMethod == "CSV") {
                 cat("SangerContig S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
+                    "        Process Method : ", object@processMethod, "\n",
                     "       Fasta File Name : ", object@fastaFileName, "\n",
                     "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
                     "           Contig Name : ", object@contigName, "\n",
@@ -126,6 +130,7 @@ setMethod('show', 'SangerAlignment', function(object){
             if (object@processMethod == "REGEX") {
                 cat("SangerAlignment S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
+                    "        Process Method : ", object@processMethod, "\n",
                     "      Parent Directory : ", object@parentDirectory, "\n",
                     " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
                     " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
@@ -137,6 +142,7 @@ setMethod('show', 'SangerAlignment', function(object){
             } else if (object@processMethod == "CSV") {
                 cat("SangerAlignment S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
+                    "        Process Method : ", object@processMethod, "\n",
                     "      Parent Directory : ", object@parentDirectory, "\n",
                     "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
                     "    Trimming Method SA : ", object@trimmingMethodSA, "\n",
@@ -149,6 +155,7 @@ setMethod('show', 'SangerAlignment', function(object){
             if (object@processMethod == "REGEX") {
                 cat("SangerAlignment S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
+                    "        Process Method : ", object@processMethod, "\n",
                     "       Fasta File Name : ", object@fastaFileName, "\n",
                     " Suffix Forward RegExp : ", object@suffixForwardRegExp, "\n",
                     " Suffix Reverse RegExp : ", object@suffixReverseRegExp, "\n",
@@ -159,6 +166,7 @@ setMethod('show', 'SangerAlignment', function(object){
             } else if (object@processMethod == "CSV") {
                 cat("SangerAlignment S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
+                    "        Process Method : ", object@processMethod, "\n",
                     "       Fasta File Name : ", object@fastaFileName, "\n",
                     "  Names Conversion CSV : ", object@namesConversionCSV, "\n",
                     "   'minFractionCallSA' : ", object@minFractionCallSA, "\n",
