@@ -1,0 +1,22 @@
+.toggle .header {
+    display: block;
+    clear: both;
+}
+
+.toggle .header:after {
+    content: "  ▶  Press to expand the code block";
+    font-style: italic;
+    font-weight: bold;
+    font-size:13px;
+    margin-left:10px;
+    margin-top:-30px !important;
+}
+
+.toggle .header.open:after {
+    content: "  ▼  Press to close the code block";
+    font-style: italic;
+    font-weight: bold;
+    font-size:13px;
+    margin-left:10px;
+    margin-top:-30px !important;
+}

@@ -1,38 +1,45 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="English" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="English" > <!--<![endif]-->
+<html class="writer-html5" lang="English" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Quick Start Guide &mdash; sangeranalyseR  documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Beginners Guide" href="beginner.html" />
@@ -73,6 +80,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -89,6 +97,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#step-3-optional-explore-your-data">Step 3 (optional): Explore your data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#step-4-output-your-aligned-contigs">Step 4: Output your aligned contigs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#step-5-optional-generate-an-interactive-report">Step 5 (optional): Generate an interactive report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-reproducible-example">A Reproducible Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prepare-your-input-files-loading">1. Prepare your input files &amp; loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load-and-analyse-your-data">2. Load and analyse your data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#explore-your-data">3. Explore your data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-your-aligned-contigs">4. Output your aligned contigs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generate-an-interactive-report">5. Generate an interactive report</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="beginner.html">Beginners Guide</a></li>
@@ -110,6 +126,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -144,18 +161,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Quick Start Guide</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/content/quickstart.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -181,7 +200,7 @@
 <p>The most minimal example gets the job done in three lines of code. More details below.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;./my_data/&quot;</span><span class="p">,</span>
                                       <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_F+&quot;</span><span class="p">,</span>
-                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R +&quot;</span><span class="p">)</span>
+                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R+&quot;</span><span class="p">)</span>
 
 <span class="nf">writeFasta</span><span class="p">(</span><span class="n">my_aligned_contigs</span><span class="p">)</span>
 
@@ -204,7 +223,7 @@
 <h2>Step 2: Load and analyse your data<a class="headerlink" href="#step-2-load-and-analyse-your-data" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;./my_data/&quot;</span><span class="p">,</span>
                                       <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_F+&quot;</span><span class="p">,</span>
-                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R +&quot;</span><span class="p">)</span>
+                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R+&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This command loads, trims, builds contigs, and aligns contigs. All of these are done with sensible default values, which can be changed. I</p>
@@ -238,6 +257,216 @@
 </pre></div>
 </div>
 <p>This will save a detailed interactive HTML report that you can explore.</p>
+<hr class="docutils" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="a-reproducible-example">
+<h2>A Reproducible Example<a class="headerlink" href="#a-reproducible-example" title="Permalink to this headline">¶</a></h2>
+<p>If you are still confused about how to run sangeranalyseR and want to check whether it produces the results that you want, then check this section for more details. Here we demonstrate a simple and reproducible example for using sangeranalyseR to generate a consensus read from 8 sanger ab1 files (4 contigs and each includes a forward and a reverse read).</p>
+<div class="section" id="prepare-your-input-files-loading">
+<h3>1. Prepare your input files &amp; loading<a class="headerlink" href="#prepare-your-input-files-loading" title="Permalink to this headline">¶</a></h3>
+<p>The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">rawDataDir</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
+<span class="n">parentDir</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">rawDataDir</span><span class="p">,</span> <span class="s">&#39;Allolobophora_chlorotica&#39;</span><span class="p">,</span> <span class="s">&#39;ACHLO&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-and-analyse-your-data">
+<h3>2. Load and analyse your data<a class="headerlink" href="#load-and-analyse-your-data" title="Permalink to this headline">¶</a></h3>
+<p>Run the following on-liner to create the sanger alignment object.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">ACHLO_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="n">parentDir</span><span class="p">,</span>
+                                 <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_F+&quot;</span><span class="p">,</span>
+                                 <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R+&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p>Following is the R shell output that you will get.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>INFO [2021-29-05 15:15:06] #################################################
+INFO [2021-29-05 15:15:06] #### Start creating SangerAlignment instance ####
+INFO [2021-29-05 15:15:06] #################################################
+INFO [2021-29-05 15:15:06]   &gt;&gt; You are using Regular Expression Method to group AB1 files!
+INFO [2021-29-05 15:15:06] ========================================================
+INFO [2021-29-05 15:15:06] ================ Creating &#39;SangerContig&#39; ===============
+INFO [2021-29-05 15:15:06] ========================================================
+INFO [2021-29-05 15:15:06]   &gt;&gt; Contig Name: &#39;Achl_ACHLO006-09&#39;
+SUCCESS [2021-29-05 15:15:07] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:07] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-05 15:15:07] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:07]    &gt;&gt; &#39;Achl_ACHLO006-09_1_F.ab1&#39; is created (Forward Read; ABIF).
+SUCCESS [2021-29-05 15:15:08] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:08] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-05 15:15:08] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:08]    &gt;&gt; &#39;Achl_ACHLO006-09_2_R.ab1&#39; is created (Reverse Read; ABIF).
+INFO [2021-29-05 15:15:08]    &gt;&gt; The number of reads detected: 2
+SUCCESS [2021-29-05 15:15:08] ==========================================================
+SUCCESS [2021-29-05 15:15:08] ======== &#39;SangerContig&#39; S4 instance is created !! ========
+SUCCESS [2021-29-05 15:15:08] ==========================================================
+INFO [2021-29-05 15:15:08]    &gt;&gt; 2 read(s) created from ABIF file.
+INFO [2021-29-05 15:15:08]      &gt;&gt; 1 reads assigned to &#39;forward reads&#39; according to &#39;regular expression&#39;.
+INFO [2021-29-05 15:15:08]      &gt;&gt; 1 reads assigned to &#39;reverse reads&#39; according to &#39;regular expression&#39;.
+INFO [2021-29-05 15:15:08] ========================================================
+INFO [2021-29-05 15:15:08] ================ Creating &#39;SangerContig&#39; ===============
+INFO [2021-29-05 15:15:08] ========================================================
+INFO [2021-29-05 15:15:08]   &gt;&gt; Contig Name: &#39;Achl_ACHLO007-09&#39;
+SUCCESS [2021-29-05 15:15:09] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:09] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-05 15:15:09] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:09]    &gt;&gt; &#39;Achl_ACHLO007-09_1_F.ab1&#39; is created (Forward Read; ABIF).
+SUCCESS [2021-29-05 15:15:09] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:09] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-05 15:15:09] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:09]    &gt;&gt; &#39;Achl_ACHLO007-09_2_R.ab1&#39; is created (Reverse Read; ABIF).
+INFO [2021-29-05 15:15:09]    &gt;&gt; The number of reads detected: 2
+SUCCESS [2021-29-05 15:15:09] ==========================================================
+SUCCESS [2021-29-05 15:15:09] ======== &#39;SangerContig&#39; S4 instance is created !! ========
+SUCCESS [2021-29-05 15:15:09] ==========================================================
+INFO [2021-29-05 15:15:09]    &gt;&gt; 2 read(s) created from ABIF file.
+INFO [2021-29-05 15:15:09]      &gt;&gt; 1 reads assigned to &#39;forward reads&#39; according to &#39;regular expression&#39;.
+INFO [2021-29-05 15:15:09]      &gt;&gt; 1 reads assigned to &#39;reverse reads&#39; according to &#39;regular expression&#39;.
+INFO [2021-29-05 15:15:09] ========================================================
+INFO [2021-29-05 15:15:09] ================ Creating &#39;SangerContig&#39; ===============
+INFO [2021-29-05 15:15:09] ========================================================
+INFO [2021-29-05 15:15:09]   &gt;&gt; Contig Name: &#39;Achl_ACHLO040-09&#39;
+SUCCESS [2021-29-05 15:15:10] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:10] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-05 15:15:10] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:10]    &gt;&gt; &#39;Achl_ACHLO040-09_1_F.ab1&#39; is created (Forward Read; ABIF).
+SUCCESS [2021-29-05 15:15:10] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:10] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-05 15:15:10] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:10]    &gt;&gt; &#39;Achl_ACHLO040-09_2_R.ab1&#39; is created (Reverse Read; ABIF).
+INFO [2021-29-05 15:15:10]    &gt;&gt; The number of reads detected: 2
+SUCCESS [2021-29-05 15:15:10] ==========================================================
+SUCCESS [2021-29-05 15:15:10] ======== &#39;SangerContig&#39; S4 instance is created !! ========
+SUCCESS [2021-29-05 15:15:10] ==========================================================
+INFO [2021-29-05 15:15:10]    &gt;&gt; 2 read(s) created from ABIF file.
+INFO [2021-29-05 15:15:10]      &gt;&gt; 1 reads assigned to &#39;forward reads&#39; according to &#39;regular expression&#39;.
+INFO [2021-29-05 15:15:10]      &gt;&gt; 1 reads assigned to &#39;reverse reads&#39; according to &#39;regular expression&#39;.
+INFO [2021-29-05 15:15:10] ========================================================
+INFO [2021-29-05 15:15:10] ================ Creating &#39;SangerContig&#39; ===============
+INFO [2021-29-05 15:15:10] ========================================================
+INFO [2021-29-05 15:15:10]   &gt;&gt; Contig Name: &#39;Achl_ACHLO041-09&#39;
+SUCCESS [2021-29-05 15:15:11] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:11] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-05 15:15:11] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:11]    &gt;&gt; &#39;Achl_ACHLO041-09_1_F.ab1&#39; is created (Forward Read; ABIF).
+SUCCESS [2021-29-05 15:15:11] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:11] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-05 15:15:11] --------------------------------------------------------
+SUCCESS [2021-29-05 15:15:11]    &gt;&gt; &#39;Achl_ACHLO041-09_2_R.ab1&#39; is created (Reverse Read; ABIF).
+INFO [2021-29-05 15:15:11]    &gt;&gt; The number of reads detected: 2
+SUCCESS [2021-29-05 15:15:12] ==========================================================
+SUCCESS [2021-29-05 15:15:12] ======== &#39;SangerContig&#39; S4 instance is created !! ========
+SUCCESS [2021-29-05 15:15:12] ==========================================================
+INFO [2021-29-05 15:15:12]    &gt;&gt; 2 read(s) created from ABIF file.
+INFO [2021-29-05 15:15:12]      &gt;&gt; 1 reads assigned to &#39;forward reads&#39; according to &#39;regular expression&#39;.
+INFO [2021-29-05 15:15:12]      &gt;&gt; 1 reads assigned to &#39;reverse reads&#39; according to &#39;regular expression&#39;.
+INFO [2021-29-05 15:15:12] Aligning consensus reads ...
+INFO [2021-29-05 15:15:12] Before building!!
+INFO [2021-29-05 15:15:12] After building!!
+SUCCESS [2021-29-05 15:15:12] #############################################################
+SUCCESS [2021-29-05 15:15:12] ######## &#39;SangerAlignment&#39; S4 instance is created !! ########
+SUCCESS [2021-29-05 15:15:12] #############################################################
+INFO [2021-29-05 15:15:12]   &gt;&gt; 4 contigs detected from &#39;regular expression&#39;.
+INFO [2021-29-05 15:15:12]       &gt;&gt; Contig &#39;Achl_ACHLO006-09&#39;:
+INFO [2021-29-05 15:15:12]           &gt;&gt; 1 forward reads.
+INFO [2021-29-05 15:15:12]           &gt;&gt; 1 reverse reads.
+INFO [2021-29-05 15:15:12]       &gt;&gt; Contig &#39;Achl_ACHLO007-09&#39;:
+INFO [2021-29-05 15:15:12]           &gt;&gt; 1 forward reads.
+INFO [2021-29-05 15:15:12]           &gt;&gt; 1 reverse reads.
+INFO [2021-29-05 15:15:12]       &gt;&gt; Contig &#39;Achl_ACHLO040-09&#39;:
+INFO [2021-29-05 15:15:12]           &gt;&gt; 1 forward reads.
+INFO [2021-29-05 15:15:12]           &gt;&gt; 1 reverse reads.
+INFO [2021-29-05 15:15:12]       &gt;&gt; Contig &#39;Achl_ACHLO041-09&#39;:
+INFO [2021-29-05 15:15:12]           &gt;&gt; 1 forward reads.
+INFO [2021-29-05 15:15:12]           &gt;&gt; 1 reverse reads.
+INFO [2021-29-05 15:15:12]   &gt;&gt; 8 reads created from ABIF file.
+INFO [2021-29-05 15:15:12]   &gt;&gt; Reads are trimmed by &#39;M1 - Mott’s trimming algorithm&#39;.
+DEBUG [2021-29-05 15:15:12]    &gt;&gt; For more information, please run &#39;object&#39;.
+DEBUG [2021-29-05 15:15:12]    &gt;&gt; Run &#39;object@objectResults@readResultTable&#39; to check the results of each Sanger reads
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="explore-your-data">
+<h3>3. Explore your data<a class="headerlink" href="#explore-your-data" title="Permalink to this headline">¶</a></h3>
+<p>Launch the Shiny app to check the visualized results.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchApp</span><span class="p">(</span><span class="n">ACHLO_contigs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p>Following is the R shell output that you will get.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>INFO [2021-29-05 16:29:51] Your input is &#39;SangerAlignment&#39; S4 instance
+INFO [2021-29-05 16:29:51] &gt;&gt;&gt; outputDir : /var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T//RtmpGkJZBm
+
+Listening on http://127.0.0.1:6285
+INFO [2021-29-05 16:29:55] &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Inside &#39;Contigs Alignment Overview Page _&#39;
+INFO [2021-29-05 16:29:55] ######## Reactive button clicked !!!
+INFO [2021-29-05 16:29:55] ######## Start re-aligning contigs
+INFO [2021-29-05 16:29:55] Aligning consensus reads ...
+INFO [2021-29-05 16:29:55] Before building!!
+INFO [2021-29-05 16:29:55] After building!!
+INFO [2021-29-05 16:29:55] ######## Finish contigs re-alignment
+INFO [2021-29-05 16:29:55] file.exists(browseSeqHTML): TRUE
+INFO [2021-29-05 16:29:55] (browseSeqHTML): /var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T//RtmpGkJZBm/_SangerAlignment_BrowseSeqs.html
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>And a Shiny would popup as showed in Figure 1</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/quickstart_SangerAlignment_Shiny_dashboard.png"><img alt="../_images/quickstart_SangerAlignment_Shiny_dashboard.png" src="../_images/quickstart_SangerAlignment_Shiny_dashboard.png" style="width: 639.5px; height: 347.0px;" /></a>
+<p class="caption"><span class="caption-text">Figure 1. <em>SangerAlignment</em> Shiny dashboard.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="output-your-aligned-contigs">
+<h3>4. Output your aligned contigs<a class="headerlink" href="#output-your-aligned-contigs" title="Permalink to this headline">¶</a></h3>
+<p>Write each contig and the aligned consensus read into FASTA files.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">ACHLO_contigs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p>Following is the R shell output that you will get.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">05</span> <span class="mi">17</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span> <span class="n">Your</span> <span class="nb">input</span> <span class="ow">is</span> <span class="s1">&#39;SangerAlignment&#39;</span> <span class="n">S4</span> <span class="n">instance</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">05</span> <span class="mi">17</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">outputDir</span> <span class="p">:</span> <span class="o">/</span><span class="n">private</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="mi">33</span><span class="o">/</span><span class="mi">7</span><span class="n">v38jdjd2874jcxb6l71m00h0000gn</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">RtmpGkJZBm</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">05</span> <span class="mi">17</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span> <span class="n">Start</span> <span class="n">to</span> <span class="n">write</span> <span class="s1">&#39;SangerAlignment&#39;</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="nb">format</span> <span class="o">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">05</span> <span class="mi">17</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">Writing</span> <span class="s1">&#39;alignment&#39;</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="o">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">05</span> <span class="mi">17</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">Writing</span> <span class="s1">&#39;contigs&#39;</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="o">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">05</span> <span class="mi">17</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">Writing</span> <span class="nb">all</span> <span class="n">single</span> <span class="n">reads</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="o">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">05</span> <span class="mi">17</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span> <span class="n">Finish</span> <span class="n">writing</span> <span class="s1">&#39;SangerAlignment&#39;</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="nb">format</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>And you will get three FASTA files:</p>
+<ol class="arabic simple">
+<li><p><a class="reference download internal" download="" href="../_downloads/6e9ba9dc5591b28e48b70141c8a865e2/Sanger_all_trimmed_reads.fa"><code class="xref download docutils literal notranslate"><span class="pre">Sanger_all_trimmed_reads.fa</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/01a4bf465929deee9a884a9b0868edc5/Sanger_contigs_alignment.fa"><code class="xref download docutils literal notranslate"><span class="pre">Sanger_contigs_alignment.fa</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/faeea2405224d5925577b2f4688b0f2f/Sanger_contigs_unalignment.fa"><code class="xref download docutils literal notranslate"><span class="pre">Sanger_contigs_unalignment.fa</span></code></a></p></li>
+</ol>
+</div>
+<div class="section" id="generate-an-interactive-report">
+<h3>5. Generate an interactive report<a class="headerlink" href="#generate-an-interactive-report" title="Permalink to this headline">¶</a></h3>
+<p>Last but not least, generate an Rmarkdown report to store all the sequence information.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">ACHLO_contigs</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -253,35 +482,36 @@
 </ul>
 </div>
 </div>
+</div>
 
 
            </div>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="beginner.html" class="btn btn-neutral float-right" title="Beginners Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="beginner.html" class="btn btn-neutral float-right" title="Beginners Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Kuan-Hao Chao
+        &#169; Copyright 2019, Kuan-Hao Chao.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -289,7 +519,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
@@ -300,7 +529,18 @@
   
   
     
-   
+  
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").click(function() {
+            $(this).parent().children().not(".header").toggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+        })
+    });
+</script>
+
 
 </body>
 </html>
