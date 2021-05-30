@@ -327,28 +327,24 @@ setMethod("initialize",
             csvFile <- read.csv(namesConversionCSV, header = TRUE)
             if (is.null(contigName)) {
                 if (length(unique(csvFile$contig)) != 1) {
-                    log_error("Error! There are ",
-                              length(unique(csvFile$contig)) ,
-                              " contigName in the CSV file. ",
-                              "There should be only one contigName in the CSV file.")
+                    # If the contigName is null, then it must contain only one 
+                    # contig inside the csv file.
+                    msg <- paste0("Error! There are ",
+                                  length(unique(csvFile$contig)) ,
+                                  " contigName in the CSV file. ",
+                                  "There should be only one contigName in the CSV file.")
+                    errors[[1]] <- c(errors[[1]], msg)
+                    errors[[2]] <- c(errors[[2]], "CSV_CONTIG_NUMBER_ERROR")
                 } else {
-                    if (printLevel == "SangerContig") {
-                        log_info(">> Your contig name is ", contigName)
-                    }
-                    contigName <- unique(csvFile$contig)
-                    contigNameCSV <- as.character(unique(csvFile$contig))
-                    selectedCsvFile <- csvFile[csvFile$contig == contigNameCSV, ]
-                    forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F", ]
-                    reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R", ]
+                    contigName <- as.character(unique(csvFile$contig))
                 }
-            } else if (!is.null(contigName)) {
-                if (printLevel == "SangerContig") {
-                    log_info(">> Your contig name is ", contigName)
-                }
-                selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
-                forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F",]
-                reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R",]
             }
+            if (printLevel == "SangerContig") {
+                log_info(">> Your contig name is ", contigName)
+            }
+            selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
+            forwardCsv <- selectedCsvFile[selectedCsvFile$direction == "F",]
+            reverseCsv <- selectedCsvFile[selectedCsvFile$direction == "R",]
             
             forwardOriginal <- as.character(forwardCsv$reads)
             fAbsoluteAB1 <- file.path(parentDirectory, forwardOriginal)
