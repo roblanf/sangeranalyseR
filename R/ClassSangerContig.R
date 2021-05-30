@@ -36,6 +36,18 @@
 #' @author Kuan-Hao Chao
 #' @include ClassQualityReport.R ClassSangerRead.R
 #' @examples
+#' ## Simple example
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
+#' contigName <- "Achl_RBNII384-13"
+#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
+#' suffixReverseRegExp <- "_[0-9]*_R.ab1"
+#' sangerContig <- new("SangerContig",
+#'                      parentDirectory       = parentDir,
+#'                      contigName            = contigName,
+#'                      suffixForwardRegExp   = suffixForwardRegExp,
+#'                      suffixReverseRegExp   = suffixReverseRegExp)
+#'                      
 #' ## forward / reverse reads match error
 #' ## Input From ABIF file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
@@ -79,7 +91,7 @@
 #'                      processorsNum         = 2)
 #'
 #'
-#' ## Input From FASTA file format (No Csv - Regex)
+#' ## Input From FASTA file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' fastaFN <- file.path(rawDataDir, "fasta",
 #'                      "SangerContig", "Achl_ACHLO006-09.fa")

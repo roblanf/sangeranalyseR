@@ -101,6 +101,19 @@ checkReadFileName <- function(readFileName, inputSource, errors, errorTypes) {
     return(list(errors, errorTypes))
 }
 
+checkTargetFastaName <- function(targetFastaName, fastaReadName, 
+                                 readFileName, errors, errorTypes) {
+    if(isEmpty(targetFastaName)) {
+        msg <- paste0("The name '", fastaReadName, 
+                      "' is not in the '", 
+                      basename(readFileName),
+                      "' FASTA file")
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "FASTA_NAME_NOT_EXIST")
+    }
+    return(list(errors, errorTypes))
+}
+
 checkReadFeature <- function(readFeature, errors, errorTypes) {
     if (typeof(readFeature) != "character") {
         msg<- "'readFeature' must be character type."

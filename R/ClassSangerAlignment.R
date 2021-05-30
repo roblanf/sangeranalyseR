@@ -35,10 +35,10 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' ## Simple example
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
-#' my_aligned_contigs <- SangerAlignment(parentDirectory     = parentDir,
-#'                                       suffixForwardRegExp = "_[0-9]+_F+",
-#'                                       suffixReverseRegExp = "_[0-9]+_R+",
-#'                                       processorsNum       = 1)
+#' my_aligned_contigs <- new("SangerAlignment",
+#'                           parentDirectory     = parentDir,
+#'                           suffixForwardRegExp = "_[0-9]+_F+",
+#'                           suffixReverseRegExp = "_[0-9]+_R+")
 #' 
 #' ## Input From ABIF file format (Regex)
 #' suffixForwardRegExp <- "_[0-9]*_F.ab1"

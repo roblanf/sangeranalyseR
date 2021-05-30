@@ -26,9 +26,18 @@
 #' @include ClassQualityReport.R
 #' @import sangerseqR
 #' @examples
+#' ## Simple example
+#' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
+#' A_chloroticaFFN <- file.path(inputFilesPath,
+#'                              "Allolobophora_chlorotica",
+#'                              "ACHLO",
+#'                              "Achl_ACHLO006-09_1_F.ab1")
+#' sangerReadF <- new("SangerRead",
+#'                     readFeature           = "Forward Read",
+#'                     readFileName          = A_chloroticaFFN)
+#'                           
 #' ## Input From ABIF file format
 #' # Forward Read
-#' inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 #' A_chloroticaFFN <- file.path(inputFilesPath,
 #'                              "Allolobophora_chlorotica",
 #'                              "ACHLO",
@@ -199,27 +208,18 @@ setMethod("initialize",
                     ### --------------------------------------------------------
                     ### With non-raw & raw primarySeq / secondarySeq
                     ### --------------------------------------------------------
-                    if (readFeature == "Forward Read") {
-                        primarySeqRaw    <- readSangerseq@primarySeq
-                        primarySeq       <- readSangerseq@primarySeq
-                        secondarySeqRaw  <- readSangerseq@secondarySeq
-                        secondarySeq     <- readSangerseq@secondarySeq
-                        traceMatrix      <- readSangerseq@traceMatrix
-                        peakPosMatrixRaw <- readSangerseq@peakPosMatrix
-                        peakPosMatrix    <- readSangerseq@peakPosMatrix
-                        peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
-                        peakAmpMatrix    <- readSangerseq@peakAmpMatrix
-                    } else if (readFeature == "Reverse Read") {
-                        primarySeqRaw    <- readSangerseq@primarySeq
-                        primarySeq       <- readSangerseq@primarySeq
-                        secondarySeqRaw  <- readSangerseq@secondarySeq
-                        secondarySeq     <- readSangerseq@secondarySeq
-                        traceMatrix      <- readSangerseq@traceMatrix
-                        peakPosMatrixRaw <- readSangerseq@peakPosMatrix
-                        peakPosMatrix    <- readSangerseq@peakPosMatrix
-                        peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
-                        peakAmpMatrix    <- readSangerseq@peakAmpMatrix
-                    }
+                    primarySeqRaw    <- readSangerseq@primarySeq
+                    primarySeq       <- readSangerseq@primarySeq
+                    secondarySeqRaw  <- readSangerseq@secondarySeq
+                    secondarySeq     <- readSangerseq@secondarySeq
+                    traceMatrix      <- readSangerseq@traceMatrix
+                    peakPosMatrixRaw <- readSangerseq@peakPosMatrix
+                    peakPosMatrix    <- readSangerseq@peakPosMatrix
+                    peakAmpMatrixRaw <- readSangerseq@peakAmpMatrix
+                    peakAmpMatrix    <- readSangerseq@peakAmpMatrix
+                    # if (readFeature == "Forward Read") {
+                    # } else if (readFeature == "Reverse Read") {
+                    # }
                     
                     ### --------------------------------------------------------
                     ### Definition of 'PCON.1' & 'PCON.2'
@@ -290,14 +290,15 @@ setMethod("initialize",
                 ### ------------------------------------------------------------
                 fastaNames <- names(readFasta)
                 targetFastaName <- fastaNames[fastaNames == fastaReadName]
-                if(isEmpty(targetFastaName)) {
-                    log_error(paste0("The name '", fastaReadName, 
-                                     "' is not in the '", 
-                                     basename(readFileName),
-                                     "' FASTA file"))
+                errors <- checkTargetFastaName(targetFastaName, 
+                                               fastaReadName, readFileName, 
+                                               errors[[1]], errors[[2]])
+                if(length(errors[[1]]) == 0) {
+                    primarySeq <- 
+                        DNAString(as.character(readFasta[[targetFastaName]]))
+                } else {
+                    primarySeq <- DNAString("")
                 }
-                primarySeq <- 
-                    DNAString(as.character(readFasta[[targetFastaName]]))
                 secondarySeqRaw   <- DNAString()
                 secondarySeq      <- DNAString()
                 traceMatrix       <- matrix()
@@ -338,9 +339,15 @@ setMethod("initialize",
     }
     if (length(errors[[1]]) != 0) {
         creationResult <- FALSE
-        readResultTable <- data.frame(basename(readFileName), 
-                                      creationResult, errors[[2]], errors[[1]], 
-                                      inputSource, readFeature)
+        if (inputSource == "ABIF") {
+            readResultTable <- data.frame(basename(readFileName), 
+                                          creationResult, errors[[2]], errors[[1]], 
+                                          inputSource, readFeature)   
+        } else if (inputSource == "FASTA") {
+            readResultTable <- data.frame(basename(fastaReadName), 
+                                          creationResult, errors[[2]], errors[[1]], 
+                                          inputSource, readFeature)
+        }
         sapply(paste0(errors[[2]], '\n', errors[[1]], '\n') , 
                log_error, simplify = FALSE)
         # Create df to store reads that failed to be created
@@ -367,9 +374,15 @@ setMethod("initialize",
         QualityReport       = NULL
         ChromatogramParam   = NULL
     } else {
-        readResultTable <- data.frame(basename(readFileName), 
-                                      creationResult, "None", "None", 
-                                      inputSource, readFeature)
+        if (inputSource == "ABIF") {
+            readResultTable <- data.frame(basename(readFileName), 
+                                          creationResult, "None", "None", 
+                                          inputSource, readFeature)
+        } else if (inputSource == "FASTA") {
+            readResultTable <- data.frame(basename(fastaReadName), 
+                                          creationResult, "None", "None", 
+                                          inputSource, readFeature)
+        }
     }
     
     if (printLevel == "SangerRead") {
