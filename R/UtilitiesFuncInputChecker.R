@@ -1,13 +1,3 @@
-checkReadFileNameExist <- function(readFileName, errors, errorTypes) {
-    if (!file.exists(readFileName)) {
-        msg <- paste("'", readFileName, "'",
-                     " file does not exist.", sep = "")
-        errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "FILE_NOT_EXISTS_ERROR")
-    }
-    return(list(errors, errorTypes))
-}
-
 checkInputSource <- function(inputSource, errors, errorTypes) {
     if (typeof(inputSource) != "character") {
         msg<- "'inputSource' must be character type."
@@ -19,48 +9,6 @@ checkInputSource <- function(inputSource, errors, errorTypes) {
             errors <- c(errors, msg)
             errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
         }
-    }
-    return(list(errors, errorTypes))
-}
-
-checkFastaFileName <- function(inputSource, fastaFileName, errors, errorTypes) {
-    if (typeof(fastaFileName) != "character" && !is.null(fastaFileName)) {
-        msg<- "'fastaFileName' must be character type."
-        errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
-    } else {
-        if (inputSource == "FASTA") {
-            if (!file.exists(fastaFileName)) {
-                cat ("fastaFileName", fastaFileName)
-                msg <- paste("'", fastaFileName, "'",
-                             " file does not exist.", sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "FILE_NOT_EXISTS_ERROR")
-            }
-            if (is.na(str_extract(basename(fastaFileName), ".fa$")) &&
-                is.na(str_extract(basename(fastaFileName), ".fasta$"))) {
-                msg <- paste("'", fastaFileName, "'",
-                             " file extension must be '.fa' or '.fasta'.",
-                             sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "FILE_TYPE_ERROR")
-            }
-        } else if (inputSource == "ABIF") {
-            if (!is.null(fastaFileName)) {
-                msg<- "'fastaFileName' must be null (inputSource is 'ABIF')."
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
-            }
-        }   
-    }
-    return(list(errors, errorTypes))
-}
-
-checkRefAAS <- function(refAminoAcidSeq, errors, errorTypes) {
-    if (typeof(refAminoAcidSeq) != "character") {
-        msg<- "'refAminoAcidSeq' must be character type."
-        errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
     }
     return(list(errors, errorTypes))
 }
@@ -80,48 +28,23 @@ checkProcessMethod <- function(inputSource, processMethod, errors, errorTypes) {
     return(list(errors, errorTypes))
 }
 
-checkReadFileName <- function(readFileName, inputSource, errors, errorTypes) {
-    if (inputSource == "ABIF") {
-        if (is.na(str_extract(basename(readFileName), ".ab1$"))) {
-            msg <- paste("'", readFileName, "'",
-                         " file extension must be '.ab1'.", sep = "")
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "FILE_TYPE_ERROR")
-        }
-    } else if (inputSource == "FASTA") {
-        if (is.na(str_extract(basename(readFileName), ".fa$")) &&
-            is.na(str_extract(basename(readFileName), ".fasta$"))) {
-            msg <- paste("'", readFileName, "'",
-                         " file extension must be '.fa' or '.fasta'.",
-                         sep = "")
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "FILE_TYPE_ERROR")
-        }
-    }
-    return(list(errors, errorTypes))
-}
-
-checkTargetFastaName <- function(targetFastaName, fastaReadName, 
-                                 readFileName, errors, errorTypes) {
-    if(isEmpty(targetFastaName)) {
-        msg <- paste0("The name '", fastaReadName, 
-                      "' is not in the '", 
-                      basename(readFileName),
-                      "' FASTA file")
+checkContigName <- function(contigName, errors, errorTypes) {
+    if (is.null(contigName)) {
+        msg<- "'contigName' must not be NULL. 'contigName' is missing."
         errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "FASTA_NAME_NOT_EXIST")
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
     }
     return(list(errors, errorTypes))
 }
 
-checkReadFeature <- function(readFeature, errors, errorTypes) {
-    if (typeof(readFeature) != "character") {
-        msg<- "'readFeature' must be character type."
+checkGeneticCode <- function(geneticCode, errors, errorTypes) {
+    if (typeof(geneticCode) != "character") {
+        msg<- "'geneticCode' must be character type."
         errors <- c(errors, msg)
         errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
     } else {
-        if (readFeature != "Forward Read" && readFeature != "Reverse Read") {
-            msg <- "'readFeature' must be 'Forward Read' or 'Reverse Read'"
+        if(!("*" %in% geneticCode)) {
+            msg <- "'geneticCode' does not specify any stop codons."
             errors <- c(errors, msg)
             errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
         }
@@ -129,93 +52,11 @@ checkReadFeature <- function(readFeature, errors, errorTypes) {
     return(list(errors, errorTypes))
 }
 
-checkQualityPhredScores <- function(qualityPhredScores, errors, errorTypes) {
-    if (length(qualityPhredScores) == 0) {
-        msg <- paste("'qualityPhredScores' length cannot be zero.")
+checkRefAAS <- function(refAminoAcidSeq, errors, errorTypes) {
+    if (typeof(refAminoAcidSeq) != "character") {
+        msg<- "'refAminoAcidSeq' must be character type."
         errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-    }
-    if (!all(qualityPhredScores%%1 == 0)) {
-        msg <- "All elements in 'qualityPhredScores' vector must be integer."
-        errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-    }
-    return(list(errors, errorTypes))
-}
-
-### ============================================================================
-### Quality trimming related: 'TrimmingMethod', 'M1TrimmingCutoff',
-###                           'M2CutoffQualityScore', 'M2SlidingWindowSize'
-### ============================================================================
-checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
-                           M2CutoffQualityScore, M2SlidingWindowSize, 
-                           errors, errorTypes) {
-    if (TrimmingMethod == "M1") {
-        if (!is.numeric(M1TrimmingCutoff)) {
-            msg<- "'M1TrimmingCutoff' must be numeric (You choose M1)."
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "PARAMETER_TYPE_ERROR")
-        } else {
-            # Ristriction about M1TrimmingCutoff !
-            if (M1TrimmingCutoff > 1 || M1TrimmingCutoff < 0) {
-                msg <- paste("Your input M1TrimmingCutoff is: '",
-                             M1TrimmingCutoff, "' is invalid.",
-                             "'M1TrimmingCutoff' should",
-                             "be between 0 and 1.", sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "PARAMETER_RANGE_ERROR")
-            }
-        }
-        if (!is.null(M2CutoffQualityScore)) {
-            msg<- "'M2CutoffQualityScore' must be null (You choose M1)."
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-        }
-        if (!is.null(M2SlidingWindowSize)) {
-            msg<- "'M2SlidingWindowSize' must be null (You choose M1)."
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-        }
-    } else if (TrimmingMethod == "M2") {
-        if (!is.null(M1TrimmingCutoff)) {
-            msg<- "'M1TrimmingCutoff' must be null (You choose M2)."
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-        }
-        if (!is.numeric(M2CutoffQualityScore)) {
-            msg<- "'M2CutoffQualityScore' must be numeric (You choose M2)."
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "PARAMETER_TYPE_ERROR")
-        } else {
-            if (M2CutoffQualityScore > 60 || M2CutoffQualityScore < 0 ||
-                M2CutoffQualityScore%%1!=0) {
-                msg <- paste("Your input M2CutoffQualityScore is: '",
-                             M2CutoffQualityScore, "' is invalid.",
-                             "'M2CutoffQualityScore' should",
-                             "be between 0 and 60.", sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "PARAMETER_RANGE_ERROR")
-            }
-        }
-        if (!is.numeric(M2SlidingWindowSize)) {
-            msg<- "'M2SlidingWindowSize' must be numeric (You choose M2)."
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "PARAMETER_TYPE_ERROR")
-        } else {
-            if (M2SlidingWindowSize > 40 || M2SlidingWindowSize < 0 ||
-                M2SlidingWindowSize%%1!=0) {
-                msg <- paste("Your input M2SlidingWindowSize is: '",
-                             M2SlidingWindowSize, "' is invalid.",
-                             "'M2SlidingWindowSize' should",
-                             "be between 0 and 40.", sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "PARAMETER_RANGE_ERROR")
-            }
-        }
-    } else {
-        msg <- "'TrimmingMethod' must be 'M1' or 'M2'."
-        errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
     }
     return(list(errors, errorTypes))
 }
@@ -259,8 +100,6 @@ checkMinReadLength <- function(minReadLength, errors, errorTypes) {
     return(list(errors, errorTypes))
 }
 
-
-
 checkMinFractionCall <- function(minFractionCall, errors, errorTypes) {
     if (!is.numeric(minFractionCall)) {
         msg <- "'minFractionCall' must be numeric"
@@ -291,22 +130,14 @@ checkMaxFractionLost <- function(maxFractionLost, errors, errorTypes) {
     return(list(errors, errorTypes))
 }
 
-
-checkGeneticCode <- function(geneticCode, errors, errorTypes) {
-    if (typeof(geneticCode) != "character") {
-        msg<- "'geneticCode' must be character type."
+checkAcceptStopCodons <- function(acceptStopCodons, errors, errorTypes) {
+    if (!is.logical(acceptStopCodons)) {
+        msg <- "'acceptStopCodons' must be 'TRUE' or 'FALSE'"
         errors <- c(errors, msg)
         errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-    } else {
-        if(!("*" %in% geneticCode)) {
-            msg <- "'geneticCode' does not specify any stop codons."
-            errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-        }
     }
     return(list(errors, errorTypes))
 }
-
 
 checkReadingFrame <- function(readingFrame, errors, errorTypes) {
     if (!is.numeric(readingFrame)) {
@@ -319,15 +150,6 @@ checkReadingFrame <- function(readingFrame, errors, errorTypes) {
             errors <- c(errors, msg)
             errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
         }
-    }
-    return(list(errors, errorTypes))
-}
-
-checkAcceptStopCodons <- function(acceptStopCodons, errors, errorTypes) {
-    if (!is.logical(acceptStopCodons)) {
-        msg <- "'acceptStopCodons' must be 'TRUE' or 'FALSE'"
-        errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
     }
     return(list(errors, errorTypes))
 }
@@ -348,26 +170,92 @@ checkProcessorsNum <- function(processorsNum, errors, errorTypes) {
 }
 
 ### ============================================================================
-### 'parentDirectory' prechecking
+### 'ABIF_Directory' prechecking
 ### ============================================================================
-checkParentDirectory <- function(parentDirectory, errors, errorTypes) {
-    if (typeof(parentDirectory) != "character" && !is.null(parentDirectory)) {
-        msg<- "'parentDirectory' must be character type."
+checkABIF_Directory <- function(ABIF_Directory, errors, errorTypes) {
+    if (typeof(ABIF_Directory) != "character") {
+        msg<- "'ABIF_Directory' must be character type."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    } else if (is.null(ABIF_Directory)) {
+        msg<- "'ABIF_Directory' cannot be NULL."
         errors <- c(errors, msg)
         errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
     } else {
-        if (!dir.exists(parentDirectory)) {
-            msg <- paste("'", parentDirectory, "'",
+        if (!dir.exists(ABIF_Directory)) {
+            msg <- paste("'", ABIF_Directory, "'",
                          " parent directory does not exist.", sep = "")
             errors <- c(errors, msg)
-            errorTypes <- c(errorTypes, "DIRECTORY_NOT_EXISTS_ERROR")
+            errorTypes <- c(errorTypes, "DIRECTORY_NOT_EXIST_ERROR")
         }
     }
     return(list(errors, errorTypes))
 }
 
 ### ============================================================================
-### 'baseNumPerRow', 'signalRatioCutoff', 'showTrimmed' prechecking
+### Quality trimming related: 'TrimmingMethod', 'M1TrimmingCutoff',
+###                           'M2CutoffQualityScore', 'M2SlidingWindowSize'
+### ============================================================================
+checkTrimParam <- function(TrimmingMethod, M1TrimmingCutoff,
+                           M2CutoffQualityScore, M2SlidingWindowSize, 
+                           errors, errorTypes) {
+    if (TrimmingMethod == "M1") {
+        if (!is.numeric(M1TrimmingCutoff)) {
+            msg<- "'M1TrimmingCutoff' must be numeric (You choose M1)."
+            errors <- c(errors, msg)
+            errorTypes <- c(errorTypes, "PARAMETER_TYPE_ERROR")
+        } else {
+            # Ristriction about M1TrimmingCutoff !
+            if (M1TrimmingCutoff > 1 || M1TrimmingCutoff < 0) {
+                msg <- paste("Your input M1TrimmingCutoff is: '",
+                             M1TrimmingCutoff, "' is invalid.",
+                             "'M1TrimmingCutoff' should",
+                             "be between 0 and 1.", sep = "")
+                errors <- c(errors, msg)
+                errorTypes <- c(errorTypes, "PARAMETER_RANGE_ERROR")
+            }
+        }
+    } else if (TrimmingMethod == "M2") {
+        if (!is.numeric(M2CutoffQualityScore)) {
+            msg<- "'M2CutoffQualityScore' must be numeric (You choose M2)."
+            errors <- c(errors, msg)
+            errorTypes <- c(errorTypes, "PARAMETER_TYPE_ERROR")
+        } else {
+            if (M2CutoffQualityScore > 60 || M2CutoffQualityScore < 0 ||
+                M2CutoffQualityScore%%1!=0) {
+                msg <- paste("Your input M2CutoffQualityScore is: '",
+                             M2CutoffQualityScore, "' is invalid.",
+                             "'M2CutoffQualityScore' should",
+                             "be between 0 and 60.", sep = "")
+                errors <- c(errors, msg)
+                errorTypes <- c(errorTypes, "PARAMETER_RANGE_ERROR")
+            }
+        }
+        if (!is.numeric(M2SlidingWindowSize)) {
+            msg<- "'M2SlidingWindowSize' must be numeric (You choose M2)."
+            errors <- c(errors, msg)
+            errorTypes <- c(errorTypes, "PARAMETER_TYPE_ERROR")
+        } else {
+            if (M2SlidingWindowSize > 40 || M2SlidingWindowSize < 0 ||
+                M2SlidingWindowSize%%1!=0) {
+                msg <- paste("Your input M2SlidingWindowSize is: '",
+                             M2SlidingWindowSize, "' is invalid.",
+                             "'M2SlidingWindowSize' should",
+                             "be between 0 and 40.", sep = "")
+                errors <- c(errors, msg)
+                errorTypes <- c(errorTypes, "PARAMETER_RANGE_ERROR")
+            }
+        }
+    } else {
+        msg <- "'TrimmingMethod' must be 'M1' or 'M2'."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    }
+    return(list(errors, errorTypes))
+}
+
+### ============================================================================
+### 'baseNumPerRow', 'heightPerRow', signalRatioCutoff', 'showTrimmed' prechecking
 ### ============================================================================
 checkBaseNumPerRow <- function(baseNumPerRow, errors, errorTypes) {
     if (!is.numeric(baseNumPerRow)) {
@@ -436,71 +324,174 @@ checkShowTrimmed <- function(showTrimmed, errors, errorTypes) {
     return(list(errors, errorTypes))
 }
 
-
-checkNamesConversionCSV <- function(nameConvMethod, namesConversionCSV, 
-                                    contigName, suffixForwardRegExp,
-                                    suffixReverseRegExp, inputSource, 
-                                    errors, errorTypes) {
-    if (typeof(nameConvMethod) != "character" && !is.null(nameConvMethod)) {
-        msg <- "'nameConvMethod' must be numeric"
+checkFASTA_File <- function(inputSource, FASTA_File, errors, errorTypes) {
+    if (typeof(FASTA_File) != "character") {
+        msg<- "'FASTA_File' must be character type."
         errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "PARAMETER_TYPE_ERROR")
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
+    } else if (is.null(FASTA_File)) {
+        msg<- "'FASTA_File' cannot be NULL."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
     } else {
-        if (nameConvMethod == "REGEX") {
-            # CSV file needs to be NULL
-            if (!is.null(namesConversionCSV)) {
-                msg <- paste("namesConversionCSV: '", namesConversionCSV, "'",
-                             " needs to be null.", sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-            }
-            # contigName, suffixForwardRegExp, suffixReverseRegExp cannot be NULL
-            if (is.null(contigName)) {
-                msg <- paste("contigName cannot be null.", sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-            }
-            if (is.null(suffixForwardRegExp)) {
-                msg <- paste("suffixForwardRegExp cannot be null.", sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
-            }
-            if (is.null(suffixReverseRegExp)) {
-                msg <- paste("suffixReverseRegExp cannot be null.", sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
-            }
-        } else if (nameConvMethod == "CSV") {
-            if(is.null(namesConversionCSV)) {
-                msg <- paste("namesConversionCSV cannot be null.", sep = "")
-                errors <- c(errors, msg)
-                errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
-            }
+        if (!file.exists(FASTA_File)) {
+            cat ("FASTA_File", FASTA_File)
+            msg <- paste("'", FASTA_File, "'",
+                         " file does not exist.", sep = "")
+            errors <- c(errors, msg)
+            errorTypes <- c(errorTypes, "FILE_NOT_EXIST_ERROR")
+        }
+        if (is.na(str_extract(basename(FASTA_File), ".fa$")) &&
+            is.na(str_extract(basename(FASTA_File), ".fasta$"))) {
+            msg <- paste("'", FASTA_File, "'",
+                         " file extension must be '.fa' or '.fasta'.",
+                         sep = "")
+            errors <- c(errors, msg)
+            errorTypes <- c(errorTypes, "FILE_TYPE_ERROR")
         }
     }
     return(list(errors, errorTypes))
 }
 
-checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
-                             namesConversionCSV, inputSource, 
-                             errors, errorTypes) {
-    if (!file.exists(namesConversionCSV)) {
-        msg <- paste("namesConversionCSV: '",  
-                     namesConversionCSV, "'",
+checkREGEX_SuffixForward <- function(REGEX_SuffixForward, errors, errorTypes){
+    if (typeof(REGEX_SuffixForward) != "character") {
+        msg<- "'REGEX_SuffixForward' must be character type."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
+    } else if (is.null(REGEX_SuffixForward)) {
+        msg<- "'REGEX_SuffixForward' cannot be NULL."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    }
+    return(list(errors, errorTypes))
+}
+
+checkREGEX_SuffixReverse <- function(REGEX_SuffixReverse, errors, errorTypes) {
+    if (typeof(REGEX_SuffixReverse) != "character") {
+        msg<- "'REGEX_SuffixReverse' must be character type."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
+    } else if (is.null(REGEX_SuffixReverse)) {
+        msg<- "'REGEX_SuffixReverse' cannot be NULL."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    }
+    return(list(errors, errorTypes))
+}
+
+checkCSV_NamesConversion <- function(CSV_NamesConversion, errors, errorTypes) {
+    if (typeof(CSV_NamesConversion) != "character") {
+        msg<- "'CSV_NamesConversion' must be character type."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")   
+    } else if (is.null(CSV_NamesConversion)) {
+        msg<- "'CSV_NamesConversion' cannot be NULL."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    } else {
+        if (!file.exists(CSV_NamesConversion)) {
+            msg <- paste("'", CSV_NamesConversion, "'",
+                         " file does not exist.", sep = "")
+            errors <- c(errors, msg)
+            errorTypes <- c(errorTypes, "CSV_FILE_NOT_EXIST_ERROR")
+        }
+    }
+    return(list(errors, errorTypes))
+}
+
+checkReadFileNameExist <- function(readFileName, errors, errorTypes) {
+    if (!file.exists(readFileName)) {
+        msg <- paste("'", readFileName, "'",
                      " file does not exist.", sep = "")
         errors <- c(errors, msg)
-        errorTypes <- c(errorTypes, "FILE_NOT_EXISTS_ERROR")
+        errorTypes <- c(errorTypes, "FILE_NOT_EXIST_ERROR")
+    }
+    return(list(errors, errorTypes))
+}
+
+checkReadFileName <- function(readFileName, inputSource, errors, errorTypes) {
+    if (inputSource == "ABIF") {
+        if (is.na(str_extract(basename(readFileName), ".ab1$"))) {
+            msg <- paste("'", readFileName, "'",
+                         " file extension must be '.ab1'.", sep = "")
+            errors <- c(errors, msg)
+            errorTypes <- c(errorTypes, "FILE_TYPE_ERROR")
+        }
+    } else if (inputSource == "FASTA") {
+        if (is.na(str_extract(basename(readFileName), ".fa$")) &&
+            is.na(str_extract(basename(readFileName), ".fasta$"))) {
+            msg <- paste("'", readFileName, "'",
+                         " file extension must be '.fa' or '.fasta'.",
+                         sep = "")
+            errors <- c(errors, msg)
+            errorTypes <- c(errorTypes, "FILE_TYPE_ERROR")
+        }
+    }
+    return(list(errors, errorTypes))
+}
+
+checkTargetFastaName <- function(targetFastaName, fastaReadName, 
+                                 readFileName, errors, errorTypes) {
+    if(isEmpty(targetFastaName)) {
+        msg <- paste0("The name '", fastaReadName, 
+                      "' is not in the '", 
+                      basename(readFileName),
+                      "' FASTA file")
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "FASTA_NAME_NOT_EXIST")
+    }
+    return(list(errors, errorTypes))
+}
+
+checkReadFeature <- function(readFeature, errors, errorTypes) {
+    if (typeof(readFeature) != "character") {
+        msg<- "'readFeature' must be character type."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    } else {
+        if (readFeature != "Forward Read" && readFeature != "Reverse Read") {
+            msg <- "'readFeature' must be 'Forward Read' or 'Reverse Read'"
+            errors <- c(errors, msg)
+            errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+        }
+    }
+    return(list(errors, errorTypes))
+}
+
+checkQualityPhredScores <- function(qualityPhredScores, errors, errorTypes) {
+    if (length(qualityPhredScores) == 0) {
+        msg <- paste("'qualityPhredScores' length cannot be zero.")
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    }
+    if (!all(qualityPhredScores%%1 == 0)) {
+        msg <- "All elements in 'qualityPhredScores' vector must be integer."
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "PARAMETER_VALUE_ERROR")
+    }
+    return(list(errors, errorTypes))
+}
+
+checkAb1FastaCsv <- function(ABIF_Directory, FASTA_File,
+                             CSV_NamesConversion, inputSource, 
+                             errors, errorTypes) {
+    if (!file.exists(CSV_NamesConversion)) {
+        msg <- paste("CSV_NamesConversion: '",  
+                     CSV_NamesConversion, "'",
+                     " file does not exist.", sep = "")
+        errors <- c(errors, msg)
+        errorTypes <- c(errorTypes, "FILE_NOT_EXIST_ERROR")
     } else {
         warnings <- character()
         if (inputSource == "ABIF") {
-            csvFile <- read.csv(namesConversionCSV, header = TRUE)
+            csvFile <- read.csv(CSV_NamesConversion, header = TRUE)
             csvReads <- as.character(csvFile$reads)
-            parentDirFiles <- list.files(parentDirectory)
+            parentDirFiles <- list.files(ABIF_Directory)
             sourceReads <- parentDirFiles[grepl("\\.ab1$", parentDirFiles)]
         } else if (inputSource == "FASTA") {
-            csvFile <- read.csv(namesConversionCSV, header = TRUE)
+            csvFile <- read.csv(CSV_NamesConversion, header = TRUE)
             csvReads <- as.character(csvFile$reads)
-            readFasta <- read.fasta(fastaFileName, as.string = TRUE)
+            readFasta <- read.fasta(FASTA_File, as.string = TRUE)
             sourceReads <- names(readFasta)
         }
         ########################################################################
@@ -511,7 +502,7 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
                    function(sourceRead) {
                        if (!(sourceRead %in% csvReads)) {
                            msg <- paste("'", sourceRead, "' is not in the ",
-                                        "csv file (", namesConversionCSV, ")",
+                                        "csv file (", CSV_NamesConversion, ")",
                                         sep = "")
                            return(msg)}
                        return()})
@@ -537,17 +528,17 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
         ########################################################################
         if (!("contig" %in% colnames(csvFile))) {
             msg <- paste("'contig' is not in the csv file (",
-                         namesConversionCSV, ")", sep = "")
+                         CSV_NamesConversion, ")", sep = "")
             errors <- c(errors, msg)
             errorTypes <- c(errorTypes, "CSV_MISMATCH_ERROR")
         } else if (!("direction" %in% colnames(csvFile))) {
             msg <- paste("'direction' is not in the csv file (",
-                         namesConversionCSV, ")", sep = "")
+                         CSV_NamesConversion, ")", sep = "")
             errors <- c(errors, msg)
             errorTypes <- c(errorTypes, "CSV_MISMATCH_ERROR")
         } else if (!("reads" %in% colnames(csvFile))) {
             msg <- paste("'reads' is not in the csv file (",
-                         namesConversionCSV, ")", sep = "")
+                         CSV_NamesConversion, ")", sep = "")
             errors <- c(errors, msg)
             errorTypes <- c(errorTypes, "CSV_MISMATCH_ERROR")
         }
@@ -569,4 +560,44 @@ checkAb1FastaCsv <- function(parentDirectory, fastaFileName,
         }
     }
     return(list(errors, errorTypes))
+}
+
+checkGreplForward <- function(forwardSelectInputFiles, warnings, warningsType) {
+    if (length(forwardSelectInputFiles) == 0) {
+        msg <- paste0("Your 'contigName' and 'REGEX_SuffixForward' regular ", 
+                      "expression parameters can not match any forward reads.")
+        warnings <- c(warnings, msg)
+        warningsType <- c(warningsType, "REGEX_MATCH_WARN")   
+    }
+    return(list(warnings, warningsType))
+}
+
+checkGreplReverse <- function(reverseSelectInputFiles, warnings, warningsType) {
+    if (length(reverseSelectInputFiles) == 0) {
+        msg <- paste0("Your 'contigName' and 'REGEX_SuffixReverse' regular ", 
+                      "expression parameters can not match any reverse reads.")
+        warnings <- c(warnings, msg)
+        warningsType <- c(warningsType, "REGEX_MATCH_WARN")   
+    }
+    return(list(warnings, warningsType))
+}
+
+checkCSVConvForward <- function(forwardReads, warnings, warningsType) {
+    if (length(forwardReads) == 0) {
+        msg <- paste0("The names of forward reads in your 'CSV_NamesConversion'",
+                      " CSV file do not match any forward reads.")
+        warnings <- c(warnings, msg)
+        warningsType <- c(warningsType, "CSV_MATCH_WARN")   
+    }
+    return(list(warnings, warningsType))
+}
+
+checkCSVConvReverse <- function(reverseReads, warnings, warningsType) {
+    if (length(reverseReads) == 0) {
+        msg <- paste0("The names of reverse reads in your 'CSV_NamesConversion'", 
+                      " CSV file do not match any reverse reads.")
+        warnings <- c(warnings, msg)
+        warningsType <- c(warningsType, "CSV_MATCH_WARN")   
+    }
+    return(list(warnings, warningsType))
 }

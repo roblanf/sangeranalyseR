@@ -175,9 +175,9 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
     outputDir <- normalizePath(outputDir)
     log_info(">>> outputDir : ", outputDir)
     log_info("Start writing '", object@readFileName, "' to FASTA format ...")
-    fastaFilename <- gsub(file_ext(basename(object@readFileName)), "fa",
+    FASTA_File <- gsub(file_ext(basename(object@readFileName)), "fa",
                           basename(object@readFileName))
-    outputFilename <- file.path(outputDir, fastaFilename)
+    outputFilename <- file.path(outputDir, FASTA_File)
     ### ------------------------------------------------------------------------
     ### Add trimming in ABIF file format
     ### ------------------------------------------------------------------------

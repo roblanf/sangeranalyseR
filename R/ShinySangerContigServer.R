@@ -11,14 +11,6 @@ SangerContigServer <- function(input, output, session) {
     shinyDirectory <- getShinyOption("shinyDirectory")
     colors <- getShinyOption("colors")
     SangerContig <- SangerContig[[1]]
-    trimmingMethod <- SangerContig@trimmingMethodSC
-    if (trimmingMethod == "M1") {
-        trimmingMethodName = "Method 1:
-                               'Modified Mott Trimming'"
-    } else if (trimmingMethod == "M2") {
-        trimmingMethodName = "Method 2:
-                               'Trimmomatics Sliding Window Trimming'"
-    }
 
     ### ------------------------------------------------------------------------
     ### SangerRead-related parameters initialization.
@@ -172,7 +164,7 @@ SangerContigServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerContig@parentDirectory),
+                                      h4(SangerContig@ABIF_Directory),
                                )
                         ),
                         column(12,
@@ -189,23 +181,12 @@ SangerContigServer <- function(input, output, session) {
                         column(12,
                                column(3,
                                       tags$p(tagList(icon("caret-right"),
-                                                     "Trimming Method: "),
-                                             style = "font-size: 20px;
-                                       font-weight: bold;"),
-                               ),
-                               column(9,
-                                      h4(trimmingMethodName),
-                               )
-                        ),
-                        column(12,
-                               column(3,
-                                      tags$p(tagList(icon("caret-right"),
                                                      "Forward Suffix RegExp: "),
                                              style = "font-size: 20px;
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerContig@suffixForwardRegExp),
+                                      h4(SangerContig@REGEX_SuffixForward),
                                )
                         ),
                         column(12,
@@ -227,7 +208,7 @@ SangerContigServer <- function(input, output, session) {
                                        font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerContig@suffixReverseRegExp),
+                                      h4(SangerContig@REGEX_SuffixReverse),
                                )
                         ),
                         column(12,
@@ -986,17 +967,15 @@ SangerContigServer <- function(input, output, session) {
         sidebar_menu <- tstrsplit(input$sidebar_menu, " ")
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
-        
         log_info("Trimming Button is clicked!!")
-        
-        
-        
-        
-        
-        
-        
         if (!is.na(strtoi(readIndex))) {
-            if (SangerContig@trimmingMethodSC == "M1") {
+            ## For method, everyone is same, so just pick forward one.
+            if (directionParam == "Forward") {
+                activated_read_list <- SangerContig@forwardReadList
+            } else if (directionParam == "Reverse") {
+                activated_read_list <- SangerContig@reverseReadList
+            }
+            if (activated_read_list[[readIndex]]@QualityReport@TrimmingMethod == "M1") {
                 if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
                     as.numeric(input$M1TrimmingCutoffText) > 0 &&
                     as.numeric(input$M1TrimmingCutoffText) <= 1) {
@@ -1009,11 +988,11 @@ SangerContigServer <- function(input, output, session) {
                     ### Start M1 trimming calculation
                     ### --------------------------------------------------------
                     trimmingPos <- M1inside_calculate_trimming(
-                            SangerContig@forwardReadList[[readIndex]]@
-                                QualityReport@qualityPhredScores,
-                            SangerContig@forwardReadList[[readIndex]]@
-                                QualityReport@qualityBaseScores,
-                            as.numeric(inputM1TrimmingCutoffText))
+                        SangerContig@forwardReadList[[readIndex]]@
+                            QualityReport@qualityPhredScores,
+                        SangerContig@forwardReadList[[readIndex]]@
+                            QualityReport@qualityBaseScores,
+                        as.numeric(inputM1TrimmingCutoffText))
                     SangerContig@forwardReadList[[readIndex]]@
                         QualityReport@M1TrimmingCutoff <<-
                         as.numeric(inputM1TrimmingCutoffText)
@@ -1025,11 +1004,11 @@ SangerContigServer <- function(input, output, session) {
                     ### Start M1 trimming calculation
                     ### --------------------------------------------------------
                     trimmingPos <- M1inside_calculate_trimming(
-                            SangerContig@reverseReadList[[readIndex]]@
-                                QualityReport@qualityPhredScores,
-                            SangerContig@reverseReadList[[readIndex]]@
-                                QualityReport@qualityBaseScores,
-                            as.numeric(inputM1TrimmingCutoffText))
+                        SangerContig@reverseReadList[[readIndex]]@
+                            QualityReport@qualityPhredScores,
+                        SangerContig@reverseReadList[[readIndex]]@
+                            QualityReport@qualityBaseScores,
+                        as.numeric(inputM1TrimmingCutoffText))
                     SangerContig@reverseReadList[[readIndex]]@
                         QualityReport@M1TrimmingCutoff <<-
                         as.numeric(inputM1TrimmingCutoffText)
@@ -1037,7 +1016,7 @@ SangerContigServer <- function(input, output, session) {
                         SangerContig@reverseReadList[[readIndex]]@
                         QualityReport@M1TrimmingCutoff
                 }
-            } else if (SangerContig@trimmingMethodSC == "M2") {
+            } else if (activated_read_list[[readIndex]]@QualityReport@TrimmingMethod == "M2") {
                 if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
                     strtoi(input$M2CutoffQualityScoreText) > 0 &&
                     strtoi(input$M2CutoffQualityScoreText) <= 60 &&
@@ -1193,6 +1172,7 @@ SangerContigServer <- function(input, output, session) {
                     round(SangerContig@reverseReadList[[readIndex]]@
                               QualityReport@remainingRatio * 100, 2)
             }
+            
         }
     })
 
@@ -1522,12 +1502,12 @@ SangerContigServer <- function(input, output, session) {
         readIndex <- strtoi(sidebar_menu[[1]])
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(readIndex))) {
-            if (SangerContig@forwardReadList[[1]]@
+            if (SangerContig@forwardReadList[[readIndex]]@
                 QualityReport@TrimmingMethod == "M1") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
                         'Modified Mott Trimming'")
-            } else if (SangerContig@forwardReadList[[1]]@
+            } else if (SangerContig@forwardReadList[[readIndex]]@
                        QualityReport@TrimmingMethod == "M2") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
@@ -1541,19 +1521,14 @@ SangerContigServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[2]]
         if (!is.na(strtoi(readIndex))) {
             ## For method, everyone is same, so just pick forward one.
-            if (SangerContig@trimmingMethodSC == "M1") {
-                if (directionParam == "Forward") {
-                    if (is.null(SangerContig@forwardReadList[[readIndex]]@
-                                QualityReport@M1TrimmingCutoff)) {
-                        SangerContig@forwardReadList[[readIndex]]@
-                            QualityReport@M1TrimmingCutoff <<-  0.0001
-                    }
-                } else if (directionParam == "Reverse") {
-                    if (is.null(SangerContig@reverseReadList[[readIndex]]@
-                                QualityReport@M1TrimmingCutoff)) {
-                        SangerContig@reverseReadList[[readIndex]]@
-                            QualityReport@M1TrimmingCutoff <<-  0.0001
-                    }
+            if (directionParam == "Forward") {
+                activated_read_list <- SangerContig@forwardReadList
+            } else if (directionParam == "Reverse") {
+                activated_read_list <- SangerContig@reverseReadList
+            }
+            if (activated_read_list[[readIndex]]@QualityReport@TrimmingMethod == "M1") {
+                if (is.null(activated_read_list[[readIndex]]@QualityReport@M1TrimmingCutoff)) {
+                    activated_read_list[[readIndex]]@QualityReport@M1TrimmingCutoff <<-  0.0001
                 }
                 fluidRow(
                     column(6,
@@ -1567,29 +1542,12 @@ SangerContigServer <- function(input, output, session) {
                            ),
                     ),
                 )
-            } else if (SangerContig@trimmingMethodSC == "M2") {
-                if (directionParam == "Forward") {
-                    if (is.null(SangerContig@forwardReadList[[readIndex]]@
-                                QualityReport@M2CutoffQualityScore)) {
-                        SangerContig@forwardReadList[[readIndex]]@
-                            QualityReport@M2CutoffQualityScore <<-  20
-                    }
-                    if (is.null(SangerContig@forwardReadList[[readIndex]]@
-                                QualityReport@M2SlidingWindowSize )) {
-                        SangerContig@forwardReadList[[readIndex]]@
-                            QualityReport@M2SlidingWindowSize <<-  10
-                    }
-                } else if (directionParam == "Reverse") {
-                    if (is.null(SangerContig@reverseReadList[[readIndex]]@
-                                QualityReport@M2CutoffQualityScore)) {
-                        SangerContig@reverseReadList[[readIndex]]@
-                            QualityReport@M2CutoffQualityScore <<-  20
-                    }
-                    if (is.null(SangerContig@reverseReadList[[readIndex]]@
-                                QualityReport@M2SlidingWindowSize )) {
-                        SangerContig@reverseReadList[[readIndex]]@
-                            QualityReport@M2SlidingWindowSize <<-  10
-                    }
+            } else if (activated_read_list[[readIndex]]@QualityReport@TrimmingMethod == "M2") {
+                if (is.null(activated_read_list[[readIndex]]@QualityReport@M2CutoffQualityScore)) {
+                    activated_read_list[[readIndex]]@QualityReport@M2CutoffQualityScore <<-  20
+                }
+                if (is.null(activated_read_list[[readIndex]]@QualityReport@M2SlidingWindowSize )) {
+                    activated_read_list[[readIndex]]@QualityReport@M2SlidingWindowSize <<-  10
                 }
                 fluidRow(
                     column(6,

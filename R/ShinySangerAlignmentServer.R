@@ -172,7 +172,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                    font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerAlignment@parentDirectory),
+                                      h4(SangerAlignment@ABIF_Directory),
                                )
                         ),
                         column(12,
@@ -194,7 +194,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                    font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerAlignment@suffixForwardRegExp),
+                                      h4(SangerAlignment@REGEX_SuffixForward),
                                )
                         ),
                         column(12,
@@ -205,7 +205,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                                    font-weight: bold;"),
                                ),
                                column(9,
-                                      h4(SangerAlignment@suffixReverseRegExp),
+                                      h4(SangerAlignment@REGEX_SuffixReverse),
                                )
                         ),
                         column(12,
@@ -378,7 +378,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                ),
                                column(9,
                                       h4(SangerAlignment@
-                                             parentDirectory),
+                                             ABIF_Directory),
                                )
                         ),
                         column(12,
@@ -415,7 +415,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                ),
                                column(9,
                                       h4(SangerAlignment@
-                                             suffixForwardRegExp),
+                                             REGEX_SuffixForward),
                                )
                                
                         ),
@@ -443,7 +443,7 @@ SangerAlignmentServer <- function(input, output, session) {
                                ),
                                column(9,
                                       h4(SangerAlignment@
-                                             suffixReverseRegExp),
+                                             REGEX_SuffixReverse),
                                )
                         ),
                         column(12,

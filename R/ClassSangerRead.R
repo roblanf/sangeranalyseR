@@ -386,13 +386,12 @@ setMethod("initialize",
     }
     
     if (printLevel == "SangerRead") {
-        log_debug("   >> For more information, please run 'object'.")
-        # Print the readResultTable clue
         if (nrow(readResultTable) != 0 && ncol(readResultTable) != 0) {
             names(readResultTable) <- readResultTableName
-            log_debug("   >> Run 'object@objectResults@readResultTable' ",
-                      "to check the result of the Sanger read")
         }
+        log_debug("   >> For more information, please run 'object'.")
+        log_debug("   >> Run 'object@objectResults@readResultTable' ",
+                  "to check the result of the Sanger read")
     }
     names(readResultTable) <- readResultTableName
     objectResults <- new("ObjectResults", creationResult = creationResult,

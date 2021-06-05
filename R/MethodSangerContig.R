@@ -66,7 +66,6 @@ setMethod("updateQualityParam",  "SangerContig",function(object,
                                    M2SlidingWindowSize    = M2SlidingWindowSize)
                        })
             object@reverseReadList <- newReverseReadList
-            object@trimmingMethodSC <- TrimmingMethod
             CSResult <-
                 calculateContigSeq (inputSource      = object@inputSource,
                                     forwardReadList  = object@forwardReadList,
@@ -385,10 +384,10 @@ setMethod("generateReportSC", "SangerContig",
 setMethod("readTable", "SangerContig", function(object, indentation = 0) {
     space <- paste(rep(' ', indentation), collapse = "")
     inputSource <- object@inputSource
-    namesConversionCSV <- object@namesConversionCSV
+    CSV_NamesConversion <- object@CSV_NamesConversion
     contigName <- object@contigName
-    suffixForwardRegExp <- object@suffixForwardRegExp
-    suffixReverseRegExp <- object@suffixReverseRegExp
+    REGEX_SuffixForward <- object@REGEX_SuffixForward
+    REGEX_SuffixReverse <- object@REGEX_SuffixReverse
     minReadsNum <- object@minReadsNum
     minReadLength <- object@minReadLength
     minFractionCall <- object@minFractionCall
@@ -416,10 +415,10 @@ setMethod("readTable", "SangerContig", function(object, indentation = 0) {
         "=== SangerContig S4 instance ===\n", 
         "================================\n")
     cat(space, "                 Input source : ", inputSource, "\n",
-        space, "    Names conversion CSV file : ", namesConversionCSV, "\n",
+        space, "    Names conversion CSV file : ", CSV_NamesConversion, "\n",
         space, "                  Contig name : ", contigName, "\n",
-        space, "         Suffix forward regex : ", suffixForwardRegExp, "\n",
-        space, "         Suffix reverse regex : ", suffixReverseRegExp, "\n",
+        space, "         Suffix forward regex : ", REGEX_SuffixForward, "\n",
+        space, "         Suffix reverse regex : ", REGEX_SuffixReverse, "\n",
         space, "         Minimum reads number : ", minReadsNum, "\n",
         space, "          Minimum read length : ", minReadLength, "\n",
         space, "        Minimum fraction call : ", minFractionCall, "\n",

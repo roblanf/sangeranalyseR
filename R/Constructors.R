@@ -4,11 +4,11 @@
 #' @description the wrapper function for SangerAlignment
 #'
 #' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
-#' @param fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
-#' @param namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
-#' @param parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.
-#' @param suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
-#' @param suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
+#' @param FASTA_File If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @param CSV_NamesConversion The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
+#' @param ABIF_Directory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.
+#' @param REGEX_SuffixForward The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
+#' @param REGEX_SuffixReverse The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
 #' @param TrimmingMethod TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
@@ -39,13 +39,13 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
-#' suffixForwardRegExp <- "_[0-9]*_F.ab1"
-#' suffixReverseRegExp <- "_[0-9]*_R.ab1"
+#' REGEX_SuffixForward <- "_[0-9]*_F.ab1"
+#' REGEX_SuffixReverse <- "_[0-9]*_R.ab1"
 #' sangerAlignment <- SangerAlignment(
 #'                        inputSource            = "ABIF",
-#'                        parentDirectory       = parentDir,
-#'                        suffixForwardRegExp   = suffixForwardRegExp,
-#'                        suffixReverseRegExp   = suffixReverseRegExp,
+#'                        ABIF_Directory       = parentDir,
+#'                        REGEX_SuffixForward   = REGEX_SuffixForward,
+#'                        REGEX_SuffixReverse   = REGEX_SuffixReverse,
 #'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                        TrimmingMethod        = "M1",
 #'                        M1TrimmingCutoff      = 0.0001,
@@ -59,11 +59,11 @@
 SangerAlignment <- function(printLevel             = "SangerAlignment",
                             inputSource            = "ABIF",
                             processMethod          = "ABIF",
-                            fastaFileName          = NULL,
-                            namesConversionCSV     = NULL,
-                            parentDirectory        = NULL,
-                            suffixForwardRegExp    = NULL,
-                            suffixReverseRegExp    = NULL,
+                            FASTA_File          = NULL,
+                            CSV_NamesConversion     = NULL,
+                            ABIF_Directory        = NULL,
+                            REGEX_SuffixForward    = NULL,
+                            REGEX_SuffixReverse    = NULL,
                             TrimmingMethod         = "M1",
                             M1TrimmingCutoff       = 0.0001,
                             M2CutoffQualityScore   = NULL,
@@ -85,11 +85,11 @@ SangerAlignment <- function(printLevel             = "SangerAlignment",
                             processorsNum          = NULL) {
     newAlignment <- new("SangerAlignment",
                         inputSource            = inputSource,
-                        fastaFileName          = fastaFileName,
-                        namesConversionCSV     = namesConversionCSV,
-                        parentDirectory        = parentDirectory,
-                        suffixForwardRegExp    = suffixForwardRegExp,
-                        suffixReverseRegExp    = suffixReverseRegExp,
+                        FASTA_File          = FASTA_File,
+                        CSV_NamesConversion     = CSV_NamesConversion,
+                        ABIF_Directory        = ABIF_Directory,
+                        REGEX_SuffixForward    = REGEX_SuffixForward,
+                        REGEX_SuffixReverse    = REGEX_SuffixReverse,
                         TrimmingMethod         = TrimmingMethod,
                         M1TrimmingCutoff       = M1TrimmingCutoff,
                         M2CutoffQualityScore   = M2CutoffQualityScore,
@@ -118,12 +118,12 @@ SangerAlignment <- function(printLevel             = "SangerAlignment",
 #' @description the wrapper function for SangerContig
 #'
 #' @param inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
-#' @param fastaFileName If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
-#' @param namesConversionCSV The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
-#' @param parentDirectory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
-#' @param contigName The contig name of all the reads in \code{parentDirectory}.
-#' @param suffixForwardRegExp The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
-#' @param suffixReverseRegExp The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
+#' @param FASTA_File If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.
+#' @param CSV_NamesConversion The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.
+#' @param ABIF_Directory The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.
+#' @param contigName The contig name of all the reads in \code{ABIF_Directory}.
+#' @param REGEX_SuffixForward The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
+#' @param REGEX_SuffixReverse The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
 #' @param TrimmingMethod TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.
 #' @param M1TrimmingCutoff The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.
 #' @param M2CutoffQualityScore The trimming cutoff quality score for the Method 2. If \code{TrimmingMethod} is \code{'M2'}, then the default value is \code{20}. Otherwise, the value must be \code{NULL}. It works with \code{M2SlidingWindowSize}.
@@ -153,14 +153,14 @@ SangerAlignment <- function(printLevel             = "SangerAlignment",
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 #' contigName <- "Achl_ACHLO006-09"
-#' suffixForwardRegExp <- "_F.ab1"
-#' suffixReverseRegExp <- "_R.ab1"
+#' REGEX_SuffixForward <- "_F.ab1"
+#' REGEX_SuffixReverse <- "_R.ab1"
 #' sangerContig <- SangerContig(
 #'                      inputSource           = "ABIF",
-#'                      parentDirectory       = parentDir,
+#'                      ABIF_Directory       = parentDir,
 #'                      contigName            = contigName,
-#'                      suffixForwardRegExp   = suffixForwardRegExp,
-#'                      suffixReverseRegExp   = suffixReverseRegExp,
+#'                      REGEX_SuffixForward   = REGEX_SuffixForward,
+#'                      REGEX_SuffixReverse   = REGEX_SuffixReverse,
 #'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                      TrimmingMethod        = "M2",
 #'                      M1TrimmingCutoff      = NULL,
@@ -174,12 +174,12 @@ SangerAlignment <- function(printLevel             = "SangerAlignment",
 SangerContig <- function(printLevel             = "SangerContig",
                          inputSource            = "ABIF",
                          processMethod          = "REGEX",
-                         fastaFileName          = NULL,
-                         namesConversionCSV     = NULL,
-                         parentDirectory        = NULL,
+                         FASTA_File          = NULL,
+                         CSV_NamesConversion     = NULL,
+                         ABIF_Directory        = NULL,
                          contigName             = NULL,
-                         suffixForwardRegExp    = NULL,
-                         suffixReverseRegExp    = NULL,
+                         REGEX_SuffixForward    = NULL,
+                         REGEX_SuffixReverse    = NULL,
                          geneticCode            = GENETIC_CODE,
                          TrimmingMethod         = "M1",
                          M1TrimmingCutoff       = 0.0001,
@@ -201,12 +201,12 @@ SangerContig <- function(printLevel             = "SangerContig",
                      printLevel             = printLevel,
                      inputSource            = inputSource,
                      processMethod          = processMethod,
-                     fastaFileName          = fastaFileName,
-                     namesConversionCSV     = namesConversionCSV,
-                     parentDirectory        = parentDirectory,
+                     FASTA_File          = FASTA_File,
+                     CSV_NamesConversion     = CSV_NamesConversion,
+                     ABIF_Directory        = ABIF_Directory,
                      contigName             = contigName,
-                     suffixForwardRegExp    = suffixForwardRegExp,
-                     suffixReverseRegExp    = suffixReverseRegExp,
+                     REGEX_SuffixForward    = REGEX_SuffixForward,
+                     REGEX_SuffixReverse    = REGEX_SuffixReverse,
                      geneticCode            = geneticCode,
                      TrimmingMethod         = TrimmingMethod,
                      M1TrimmingCutoff       = M1TrimmingCutoff,
