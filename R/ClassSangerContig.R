@@ -68,7 +68,7 @@
 #'                      heightPerRow          = 200,
 #'                      signalRatioCutoff     = 0.33,
 #'                      showTrimmed           = TRUE,
-#'                      minReadsNum           = 3,
+#'                      minReadsNum           = 2,
 #'                      processorsNum         = 2)
 #'
 #' ## Input From ABIF file format (Csv three column method)
@@ -248,11 +248,6 @@ setMethod("initialize",
             M1TrimmingCutoff = NULL
             M2CutoffQualityScore = NULL
             M2SlidingWindowSize = NULL
-            if (length(errors[[1]]) == 0 ) {
-                # Read FASTA file
-                readFasta <- read.fasta(FASTA_File, as.string = TRUE)
-                fastaNames <- names(readFasta)
-            }
         }
         if (processMethod=="REGEX") {
             ### ----------------------------------------------------------------
@@ -319,6 +314,7 @@ setMethod("initialize",
                                     inputSource          = inputSource,
                                     readFeature          = "Forward Read",
                                     readFileName         = forwardN,
+                                    fastaReadName        = NULL,
                                     geneticCode          = geneticCode,
                                     TrimmingMethod       = TrimmingMethod,
                                     M1TrimmingCutoff     = M1TrimmingCutoff,
@@ -339,6 +335,7 @@ setMethod("initialize",
                                      inputSource          = inputSource,
                                      readFeature          = "Reverse Read",
                                      readFileName         = reverseN,
+                                     fastaReadName        = NULL,
                                      geneticCode          = geneticCode,
                                      TrimmingMethod       = TrimmingMethod,
                                      M1TrimmingCutoff     = M1TrimmingCutoff,
@@ -376,6 +373,7 @@ setMethod("initialize",
                                      inputSource          = inputSource,
                                      readFeature          = "Forward Read",
                                      readFileName         = forwardN,
+                                     fastaReadName        = NULL,
                                      geneticCode          = geneticCode,
                                      TrimmingMethod       = TrimmingMethod,
                                      M1TrimmingCutoff     = M1TrimmingCutoff,
@@ -404,6 +402,7 @@ setMethod("initialize",
                         inputSource          = inputSource,
                         readFeature          = "Reverse Read",
                         readFileName         = reverseN,
+                        fastaReadName        = NULL,
                         geneticCode          = geneticCode,
                         TrimmingMethod       = TrimmingMethod,
                         M1TrimmingCutoff     = M1TrimmingCutoff,
@@ -422,6 +421,9 @@ setMethod("initialize",
                          "to group reads in FASTA file (No CSV file)!")
                 log_info(">> Your contig name is ", contigName)
             }
+            # Read FASTA file
+            readFasta <- read.fasta(FASTA_File, as.string = TRUE)
+            fastaNames <- names(readFasta)
             ### ----------------------------------------------------------------
             ### Find names with the given contigName
             ### ----------------------------------------------------------------
@@ -449,12 +451,20 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             forwardReadList <- lapply(forwardSelectNames, function(forwardName){
                 newSangerRead <- new("SangerRead",
-                                     printLevel         = printLevel,
-                                     inputSource        = inputSource,
-                                     readFeature        = "Forward Read",
-                                     readFileName       = FASTA_File,
-                                     fastaReadName      = forwardName,
-                                     geneticCode        = geneticCode)
+                                     printLevel           = printLevel,
+                                     inputSource          = inputSource,
+                                     readFeature          = "Forward Read",
+                                     readFileName         = FASTA_File,
+                                     fastaReadName        = forwardName,
+                                     geneticCode          = geneticCode,
+                                     TrimmingMethod       = TrimmingMethod,
+                                     M1TrimmingCutoff     = M1TrimmingCutoff,
+                                     M2CutoffQualityScore = M2CutoffQualityScore,
+                                     M2SlidingWindowSize  = M2SlidingWindowSize,
+                                     baseNumPerRow        = baseNumPerRow,
+                                     heightPerRow         = heightPerRow,
+                                     signalRatioCutoff    = signalRatioCutoff,
+                                     showTrimmed          = showTrimmed)
             })
             names(forwardReadList) <- forwardSelectNames
             ### ----------------------------------------------------------------
@@ -467,7 +477,15 @@ setMethod("initialize",
                                      readFeature        = "Reverse Read",
                                      readFileName       = FASTA_File,
                                      fastaReadName      = reverseName,
-                                     geneticCode        = geneticCode)
+                                     geneticCode        = geneticCode,
+                                     TrimmingMethod       = TrimmingMethod,
+                                     M1TrimmingCutoff     = M1TrimmingCutoff,
+                                     M2CutoffQualityScore = M2CutoffQualityScore,
+                                     M2SlidingWindowSize  = M2SlidingWindowSize,
+                                     baseNumPerRow        = baseNumPerRow,
+                                     heightPerRow         = heightPerRow,
+                                     signalRatioCutoff    = signalRatioCutoff,
+                                     showTrimmed          = showTrimmed)
             })
             names(reverseReadList) <- reverseSelectNames
         } else if (inputSource == "FASTA" && processMethod == "CSV") {
@@ -476,6 +494,9 @@ setMethod("initialize",
                          "to group reads in FASTA file (with Csv file)!")
                 log_info(">> Your contig name is ", contigName)
             }
+            # Read FASTA file
+            readFasta <- read.fasta(FASTA_File, as.string = TRUE)
+            fastaNames <- names(readFasta)
             csvFile <- read.csv(CSV_NamesConversion, header = TRUE)
             selectedCsvFile <- csvFile[csvFile$contig == contigName, ]
             # forward CSV matching
@@ -495,7 +516,15 @@ setMethod("initialize",
                                      readFeature        = "Forward Read",
                                      readFileName       = FASTA_File,
                                      fastaReadName      = forwardName,
-                                     geneticCode        = geneticCode)
+                                     geneticCode        = geneticCode,
+                                     TrimmingMethod       = TrimmingMethod,
+                                     M1TrimmingCutoff     = M1TrimmingCutoff,
+                                     M2CutoffQualityScore = M2CutoffQualityScore,
+                                     M2SlidingWindowSize  = M2SlidingWindowSize,
+                                     baseNumPerRow        = baseNumPerRow,
+                                     heightPerRow         = heightPerRow,
+                                     signalRatioCutoff    = signalRatioCutoff,
+                                     showTrimmed          = showTrimmed)
             })
             names(forwardReadList) <- forwardReads
             ### ----------------------------------------------------------------
@@ -514,7 +543,15 @@ setMethod("initialize",
                                      readFeature        = "Reverse Read",
                                      readFileName       = FASTA_File,
                                      fastaReadName      = reverseName,
-                                     geneticCode        = geneticCode)
+                                     geneticCode        = geneticCode,
+                                     TrimmingMethod       = TrimmingMethod,
+                                     M1TrimmingCutoff     = M1TrimmingCutoff,
+                                     M2CutoffQualityScore = M2CutoffQualityScore,
+                                     M2SlidingWindowSize  = M2SlidingWindowSize,
+                                     baseNumPerRow        = baseNumPerRow,
+                                     heightPerRow         = heightPerRow,
+                                     signalRatioCutoff    = signalRatioCutoff,
+                                     showTrimmed          = showTrimmed)
             })
             names(reverseReadList) <- reverseReads
         }
@@ -728,7 +765,7 @@ setMethod("initialize",
         ### Add all successfully created reads into 'readResultTable'
         ########################################################################
         lapply(forwardReadListFilter, function(read) {
-            if (!read@readFileName %in% readResultTable$readName) {
+            if (!basename(read@readFileName) %in% readResultTable$readName) {
                 row <- data.frame(basename(read@readFileName),
                                   read@objectResults@creationResult,
                                   "None", "None",
@@ -738,7 +775,7 @@ setMethod("initialize",
             }
         })
         lapply(reverseReadListFilter, function(read) {
-            if (!read@readFileName %in% readResultTable$readName) {
+            if (!basename(read@readFileName) %in% readResultTable$readName) {
                 row <- data.frame(basename(read@readFileName),
                                   read@objectResults@creationResult,
                                   "None", "None",

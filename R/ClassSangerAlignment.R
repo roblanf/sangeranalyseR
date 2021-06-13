@@ -44,9 +44,9 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #'                        printLevel            = "SangerAlignment",
 #'                        inputSource           = "ABIF",
 #'                        processMethod         = "REGEX",
-#'                        FASTA_File         = NULL,
-#'                        CSV_NamesConversion    = NULL,
-#'                        ABIF_Directory       = parentDir,
+#'                        FASTA_File            = NULL,
+#'                        CSV_NamesConversion   = NULL,
+#'                        ABIF_Directory        = parentDir,
 #'                        REGEX_SuffixForward   = REGEX_SuffixForward,
 #'                        REGEX_SuffixReverse   = REGEX_SuffixReverse,
 #'                        TrimmingMethod        = "M1",
@@ -65,8 +65,6 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #'                        geneticCode           = GENETIC_CODE,
 #'                        acceptStopCodons      = TRUE,
 #'                        readingFrame          = 1,
-#'                        minFractionCall       = 0.5,
-#'                        maxFractionLost       = 0.5,
 #'                        processorsNum         = 2)
 #'
 #' ## Input From ABIF file format (Csv three column)
@@ -173,15 +171,13 @@ setMethod("initialize",
                    maxFractionLost        = 0.5,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
-                   minFractionCall        = 0.5,
-                   maxFractionLost        = 0.5,
                    processorsNum          = 1) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
     creationResult <- TRUE
     errors <- list(character(0), character(0))
-    warnings <- c(character(0))
+    warnings <- list(character(0), character(0))
     readResultTableName <- c("readName","creationResult", "errorType", 
                              "errorMessage", "inputSource", "direction")
     readResultTable <- data.frame()
@@ -191,71 +187,92 @@ setMethod("initialize",
     if (printLevel == "SangerAlignment") {
         errors <- checkInputSource(inputSource, errors[[1]], errors[[2]])
         errors <- checkProcessMethod(inputSource, processMethod, errors[[1]], errors[[2]])
-        errors <- checkFASTA_File(inputSource, FASTA_File,
-                                     errors[[1]], errors[[2]])
-        errors <- checkCSV_NamesConversion(processMethod, CSV_NamesConversion, 
-                                          "SangerAlignment", REGEX_SuffixForward,
-                                          REGEX_SuffixReverse, inputSource, 
-                                          errors[[1]], errors[[2]])
+        errors <- checkGeneticCode(geneticCode, errors[[1]], errors[[2]])
+
         errors <- checkRefAAS(refAminoAcidSeq, errors[[1]], errors[[2]])
         errors <- checkMinReadsNum(minReadsNum, errors[[1]], errors[[2]])
         errors <- checkMinReadLength(minReadLength, errors[[1]], errors[[2]])
         errors <- checkMinFractionCall(minFractionCall, errors[[1]], errors[[2]])
         errors <- checkMaxFractionLost(maxFractionLost, errors[[1]], errors[[2]])
-        errors <- checkMinFractionCall(minFractionCall, errors[[1]], errors[[2]])
-        errors <- checkMaxFractionLost(maxFractionLost, errors[[1]], errors[[2]])
-        errors <- checkGeneticCode(geneticCode, errors[[1]], errors[[2]])
         errors <- checkAcceptStopCodons(acceptStopCodons, errors[[1]], errors[[2]])
         errors <- checkReadingFrame(readingFrame, errors[[1]], errors[[2]])
         errors <- checkProcessorsNum(processorsNum, errors[[1]], errors[[2]])
         if (inputSource == "ABIF") {
-            ### --------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### 'ABIF' condition checking!
-            ### --------------------------------------------------------------------
-            ########################################################################
-            ### Second layer of pre-checking: 'ABIF' condition checking!
-            ########################################################################
-            errors <- checkABIF_Directory (ABIF_Directory, errors[[1]], errors[[2]])
+            ### ----------------------------------------------------------------
+            # Check ABIF_Directory and set FASTA_File to NULL
+            errors <- checkABIF_Directory(ABIF_Directory, 
+                                          errors[[1]], errors[[2]])
+            FASTA_File <- NULL
+            # Check the trimming method
             errors <- checkTrimParam(TrimmingMethod,
                                      M1TrimmingCutoff,
                                      M2CutoffQualityScore,
                                      M2SlidingWindowSize,
                                      errors[[1]], errors[[2]])
+            if (TrimmingMethod == "M1") {
+                M2CutoffQualityScore = NULL
+                M2SlidingWindowSize = NULL
+            } else if (TrimmingMethod == "M2") {
+                M1TrimmingCutoff = NULL
+            }
+            # Check chromatogram parameter
             errors <- checkBaseNumPerRow (baseNumPerRow, errors[[1]], errors[[2]])
             errors <- checkHeightPerRow (heightPerRow, errors[[1]], errors[[2]])
-            errors <- checkSignalRatioCutoff (signalRatioCutoff, errors[[1]], errors[[2]])
+            errors <- checkSignalRatioCutoff (signalRatioCutoff, 
+                                              errors[[1]], errors[[2]])
             errors <- checkShowTrimmed (showTrimmed, errors[[1]], errors[[2]])
         } else if (inputSource == "FASTA") {
-            ### --------------------------------------------------------------------
+            ### ----------------------------------------------------------------
             ### 'FASTA' condition checking!
-            ### --------------------------------------------------------------------
-            ########################################################################
-            ### Second layer of pre-checking: 'FASTA' condition checking!
-            ########################################################################
-            # readFasta <- read.fasta(FASTA_File, as.string = TRUE)
-            # fastaNames <- names(readFasta)
+            ### ----------------------------------------------------------------
+            # Check FASTA_File and set ABIF_Directory to NULL
+            errors <- checkFASTA_File(inputSource, FASTA_File,
+                                      errors[[1]], errors[[2]])
+            ABIF_Directory <- NULL
+            # Set trimming parameters to NULL
+            TrimmingMethod = ""
+            M1TrimmingCutoff = NULL
+            M2CutoffQualityScore = NULL
+            M2SlidingWindowSize = NULL
+            if (length(errors[[1]]) == 0 ) {
+                # Read FASTA file
+                readFasta <- read.fasta(FASTA_File, as.string = TRUE)
+                fastaNames <- names(readFasta)
+            }
         }
-        if (length(errors[[1]]) == 0 && processMethod=="CSV") {
+        if (processMethod=="REGEX") {
+            ### ----------------------------------------------------------------
+            ### 'REGEX' condition checking!
+            ### ----------------------------------------------------------------
+            # Check REGEX_SuffixForward and REGEX_SuffixReverse 
+            #  and set CSV_NamesConversion to NULL
+            errors <- checkREGEX_SuffixForward(REGEX_SuffixForward, 
+                                               errors[[1]], errors[[2]])
+            errors <- checkREGEX_SuffixReverse(REGEX_SuffixReverse, 
+                                               errors[[1]], errors[[2]])
+            CSV_NamesConversion <- NULL
+        } else if (processMethod=="CSV") {
+            ### ----------------------------------------------------------------
+            ### 'CSV' condition checking!
+            ### ----------------------------------------------------------------
+            # Check CSV_NamesConversion and set 
+            #  REGEX_SuffixForward and REGEX_SuffixReverse to NULL
+            errors <- checkCSV_NamesConversion(CSV_NamesConversion, 
+                                               errors[[1]], errors[[2]])
+            REGEX_SuffixForward <- NULL
+            REGEX_SuffixReverse <- NULL
             errors <- checkAb1FastaCsv(ABIF_Directory, FASTA_File, 
                                        CSV_NamesConversion, inputSource, 
                                        errors[[1]], errors[[2]])
         }
     }
-    
     if (length(errors[[1]]) == 0 ) {
         log_info('#################################################')
         log_info('#### Start creating SangerAlignment instance ####')
         log_info('#################################################')
         processorsNum <- getProcessors (processorsNum)
-        if (inputSource == "ABIF") {
-        } else if (inputSource == "FASTA") {
-            readFasta <- read.fasta(FASTA_File, as.string = TRUE)
-            fastaNames <- names(readFasta)
-            TrimmingMethod <- ""
-            M1TrimmingCutoff <- NULL
-            M2CutoffQualityScore <- NULL
-            M2SlidingWindowSize <- NULL
-        }
         if (inputSource == "ABIF" && processMethod == "REGEX") {
             log_info("  >> You are using Regular Expression Method",
                      " to group AB1 files!")
@@ -264,7 +281,10 @@ setMethod("initialize",
                 parentDirFiles[grepl(REGEX_SuffixForward, parentDirFiles)]
             reverseSelectInputFiles <-
                 parentDirFiles[grepl(REGEX_SuffixReverse, parentDirFiles)]
-            
+            warnings <- checkGreplForward(forwardSelectInputFiles, 
+                                          warnings[[1]], warnings[[2]])
+            warnings <- checkGreplReverse(reverseSelectInputFiles, 
+                                          warnings[[1]], warnings[[2]])
             # Find possible consensus Name for forward and reverse reads
             forwardContigName <-
                 unlist(str_split(forwardSelectInputFiles,
@@ -291,13 +311,13 @@ setMethod("initialize",
                                    printLevel           = printLevel,
                                    inputSource          = inputSource,
                                    processMethod        = processMethod,
-                                   FASTA_File        = FASTA_File,
-                                   CSV_NamesConversion   = CSV_NamesConversion,
-                                   ABIF_Directory      =
+                                   ABIF_Directory       =
                                        file.path(ABIF_Directory, insideDirName),
-                                   contigName           = insideContigName,
+                                   FASTA_File           = FASTA_File,
                                    REGEX_SuffixForward  = REGEX_SuffixForward,
                                    REGEX_SuffixReverse  = REGEX_SuffixReverse,
+                                   CSV_NamesConversion  = CSV_NamesConversion,
+                                   contigName           = insideContigName,
                                    geneticCode          = geneticCode,
                                    TrimmingMethod       = TrimmingMethod,
                                    M1TrimmingCutoff     = M1TrimmingCutoff,
@@ -314,16 +334,9 @@ setMethod("initialize",
                                    maxFractionLost      = maxFractionLost,
                                    acceptStopCodons     = acceptStopCodons,
                                    readingFrame         = readingFrame,
-                                   processorsNum        = processorsNum,
-                                   logLevel             = FALSE)
+                                   processorsNum        = processorsNum)
                            readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
-                           forwardNumber <-
-                               length(newSangerContig@forwardReadList)
-                           reverseNumber <-
-                               length(newSangerContig@reverseReadList)
-                           readNumber <- forwardNumber + reverseNumber
-                           if (readNumber >= minReadsNum &&
-                               readNumber >= 1) {
+                           if (newSangerContig@objectResults@creationResult) {
                                newSangerContig
                            } else {
                                NULL
@@ -343,12 +356,12 @@ setMethod("initialize",
                         printLevel           = printLevel,
                         inputSource          = inputSource,
                         processMethod        = processMethod,
-                        FASTA_File        = FASTA_File,
-                        CSV_NamesConversion   = CSV_NamesConversion,
-                        ABIF_Directory      = ABIF_Directory,
-                        contigName           = contigName,
+                        ABIF_Directory       = ABIF_Directory,
+                        FASTA_File           = FASTA_File,
                         REGEX_SuffixForward  = REGEX_SuffixForward,
                         REGEX_SuffixReverse  = REGEX_SuffixReverse,
+                        CSV_NamesConversion  = CSV_NamesConversion,
+                        contigName           = contigName,
                         geneticCode          = geneticCode,
                         TrimmingMethod       = TrimmingMethod,
                         M1TrimmingCutoff     = M1TrimmingCutoff,
@@ -365,12 +378,9 @@ setMethod("initialize",
                         maxFractionLost      = maxFractionLost,
                         acceptStopCodons     = acceptStopCodons,
                         readingFrame         = readingFrame,
-                        processorsNum        = processorsNum,
-                        logLevel             = FALSE)
+                        processorsNum        = processorsNum)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
-                forwardNumber <- length(newSangerContig@forwardReadList)
-                reverseNumber <- length(newSangerContig@reverseReadList)
-                if ((forwardNumber + reverseNumber) >= minReadsNum) {
+                if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
                 } else {
                     NULL
@@ -382,11 +392,15 @@ setMethod("initialize",
         if (inputSource == "FASTA" && processMethod == "REGEX") {
             log_info("**** You are using Regular Expression Method ",
                      "to group reads in FASTA file (No CSV file)!")
-            readFastaNames <- names(readFasta)
-            forwardSelectInputFiles <- readFastaNames[grepl(REGEX_SuffixForward,
-                                                            readFastaNames)]
-            reverseSelectInputFiles <- readFastaNames[grepl(REGEX_SuffixReverse,
-                                                            readFastaNames)]
+            fastaNames <- names(readFasta)
+            forwardSelectInputFiles <- fastaNames[grepl(REGEX_SuffixForward,
+                                                        fastaNames)]
+            reverseSelectInputFiles <- fastaNames[grepl(REGEX_SuffixReverse,
+                                                        fastaNames)]
+            warnings <- checkGreplForward(forwardSelectInputFiles, 
+                                          warnings[[1]], warnings[[2]])
+            warnings <- checkGreplReverse(reverseSelectInputFiles, 
+                                          warnings[[1]], warnings[[2]])
             # Find possible consensus Name for forward and reverse reads
             forwardContigName <-
                 unlist(str_split(forwardSelectInputFiles, REGEX_SuffixForward,
@@ -401,12 +415,12 @@ setMethod("initialize",
                         printLevel           = printLevel,
                         inputSource          = inputSource,
                         processMethod        = processMethod,
-                        FASTA_File        = FASTA_File,
-                        CSV_NamesConversion   = CSV_NamesConversion,
-                        ABIF_Directory      = ABIF_Directory,
-                        contigName           = contigName,
+                        ABIF_Directory       = ABIF_Directory,
+                        FASTA_File           = FASTA_File,
                         REGEX_SuffixForward  = REGEX_SuffixForward,
                         REGEX_SuffixReverse  = REGEX_SuffixReverse,
+                        CSV_NamesConversion  = CSV_NamesConversion,
+                        contigName           = contigName,
                         geneticCode          = geneticCode,
                         TrimmingMethod       = TrimmingMethod,
                         M1TrimmingCutoff     = M1TrimmingCutoff,
@@ -423,12 +437,9 @@ setMethod("initialize",
                         maxFractionLost      = maxFractionLost,
                         acceptStopCodons     = acceptStopCodons,
                         readingFrame         = readingFrame,
-                        processorsNum        = processorsNum,
-                        logLevel             = FALSE)
+                        processorsNum        = processorsNum)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
-                forwardNumber <- length(newSangerContig@forwardReadList)
-                reverseNumber <- length(newSangerContig@reverseReadList)
-                if ((forwardNumber + reverseNumber) >= minReadsNum) {
+                if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
                 } else {
                     NULL
@@ -446,12 +457,12 @@ setMethod("initialize",
                         printLevel           = printLevel,
                         inputSource          = inputSource,
                         processMethod        = processMethod,
-                        FASTA_File        = FASTA_File,
-                        CSV_NamesConversion   = CSV_NamesConversion,
-                        ABIF_Directory      = ABIF_Directory,
-                        contigName           = contigName,
+                        ABIF_Directory       = ABIF_Directory,
+                        FASTA_File           = FASTA_File,
                         REGEX_SuffixForward  = REGEX_SuffixForward,
                         REGEX_SuffixReverse  = REGEX_SuffixReverse,
+                        CSV_NamesConversion  = CSV_NamesConversion,
+                        contigName           = contigName,
                         geneticCode          = geneticCode,
                         TrimmingMethod       = TrimmingMethod,
                         M1TrimmingCutoff     = M1TrimmingCutoff,
@@ -468,12 +479,9 @@ setMethod("initialize",
                         maxFractionLost      = maxFractionLost,
                         acceptStopCodons     = acceptStopCodons,
                         readingFrame         = readingFrame,
-                        processorsNum        = processorsNum,
-                        logLevel             = FALSE)
+                        processorsNum        = processorsNum)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
-                forwardNumber <- length(newSangerContig@forwardReadList)
-                reverseNumber <- length(newSangerContig@reverseReadList)
-                if ((forwardNumber + reverseNumber) >= minReadsNum) {
+                if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
                 } else {
                     NULL
@@ -505,9 +513,9 @@ setMethod("initialize",
         log_success("#############################################################")
         
         if (contigNum > 0) {
-            if (is.null(CSV_NamesConversion)) {
+            if (processMethod == "REGEX") {
                 log_info("  >> ", contigNum, " contigs detected from 'regular expression'.")
-            } else {
+            } else if (processMethod == "CSV") {
                 log_info("  >> ", contigNum, " contigs detected from 'csv file'.")
             }
             readNum <- 0
@@ -524,10 +532,13 @@ setMethod("initialize",
                 log_info("  >> Reads are trimmed by 'M2 - sliding window method'.")
             }   
         } else if (contigNum == 0) {
-            msg <- paste0("\nThe number of your total contig is 0.",
-                          "\nPlease check your name matching parameters.\n")
+            ### ----------------------------------------------------------------
+            ### Failed: SangerAlignment Level
+            ### ----------------------------------------------------------------
+            msg <- paste0("The number of your total contig is 0.",
+                          "\nPlease check your name matching parameters.")
             errors[[1]] <- c(errors[[1]], msg)
-            errors[[2]] <- c(errors[[2]], "CONTIG_NUMBER_ZERO")
+            errors[[2]] <- c(errors[[2]], "CONTIG_NUMBER_ZERO_ERROR")
         }
     }
     
@@ -563,8 +574,6 @@ setMethod("initialize",
                          errorMessages = errors[[1]], errorTypes = errors[[2]],
                          warningMessages = character(0), warningTypes = character(0),
                          printLevel = printLevel, readResultTable = readResultTable)
-    
-    
     callNextMethod(.Object,
                    objectResults          = objectResults,
                    inputSource            = inputSource,

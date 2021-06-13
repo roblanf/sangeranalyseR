@@ -12,7 +12,7 @@ setMethod('show', 'SangerRead', function(object){
                 "          Input Source : ", object@inputSource, "\n",
                 "          Read Feature : ", object@readFeature, "\n",
                 "         Read FileName : ", basename(object@readFileName), "\n",
-                "    Trimming Method SR : ", object@QualityReport@TrimmingMethod, "\n",
+                "       Trimming Method : ", object@QualityReport@TrimmingMethod, "\n",
                 "      Primary Sequence : ", primaryDNA, "\n",
                 "    Secondary Sequence : ", secondaryDNA, "\n"
             )
@@ -42,10 +42,10 @@ setMethod('show', 'SangerContig', function(object){
                 cat("SangerContig S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
                     "        Process Method : ", object@processMethod, "\n",
-                    "      Parent Directory : ", object@ABIF_Directory, "\n",
+                    "        ABIF Directory : ", object@ABIF_Directory, "\n",
+                    "  REGEX Suffix Forward : ", object@REGEX_SuffixForward, "\n",
+                    "  REGEX Suffix Reverse : ", object@REGEX_SuffixReverse, "\n",
                     "           Contig Name : ", object@contigName, "\n",
-                    " Suffix Forward RegExp : ", object@REGEX_SuffixForward, "\n",
-                    " Suffix Reverse RegExp : ", object@REGEX_SuffixReverse, "\n",
                     "         'minReadsNum' : ", object@minReadsNum, "\n",
                     "       'minReadLength' : ", object@minReadLength, "\n",
                     "     'minFractionCall' : ", object@minFractionCall, "\n",
@@ -60,8 +60,8 @@ setMethod('show', 'SangerContig', function(object){
                 cat("SangerContig S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
                     "        Process Method : ", object@processMethod, "\n",
-                    "      Parent Directory : ", object@ABIF_Directory, "\n",
-                    "  Names Conversion CSV : ", object@CSV_NamesConversion, "\n",
+                    "        ABIF Directory : ", object@ABIF_Directory, "\n",
+                    "  CSV Names Conversion : ", object@CSV_NamesConversion, "\n",
                     "           Contig Name : ", object@contigName, "\n",
                     "         'minReadsNum' : ", object@minReadsNum, "\n",
                     "       'minReadLength' : ", object@minReadLength, "\n",
@@ -80,9 +80,9 @@ setMethod('show', 'SangerContig', function(object){
                     "          Input Source : ", object@inputSource, "\n",
                     "        Process Method : ", object@processMethod, "\n",
                     "       Fasta File Name : ", object@FASTA_File, "\n",
+                    "  REGEX Suffix Forward : ", object@REGEX_SuffixForward, "\n",
+                    "  REGEX Suffix Reverse : ", object@REGEX_SuffixReverse, "\n",
                     "           Contig Name : ", object@contigName, "\n",
-                    " Suffix Forward RegExp : ", object@REGEX_SuffixForward, "\n",
-                    " Suffix Reverse RegExp : ", object@REGEX_SuffixReverse, "\n",
                     "         'minReadsNum' : ", object@minReadsNum, "\n",
                     "       'minReadLength' : ", object@minReadLength, "\n",
                     "     'minFractionCall' : ", object@minFractionCall, "\n",
@@ -98,7 +98,7 @@ setMethod('show', 'SangerContig', function(object){
                     "          Input Source : ", object@inputSource, "\n",
                     "        Process Method : ", object@processMethod, "\n",
                     "       Fasta File Name : ", object@FASTA_File, "\n",
-                    "  Names Conversion CSV : ", object@CSV_NamesConversion, "\n",
+                    "  CSV Names Conversion : ", object@CSV_NamesConversion, "\n",
                     "           Contig Name : ", object@contigName, "\n",
                     "         'minReadsNum' : ", object@minReadsNum, "\n",
                     "       'minReadLength' : ", object@minReadLength, "\n",
@@ -129,23 +129,17 @@ setMethod('show', 'SangerAlignment', function(object){
                 cat("SangerAlignment S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
                     "        Process Method : ", object@processMethod, "\n",
-                    "      Parent Directory : ", object@ABIF_Directory, "\n",
-                    " Suffix Forward RegExp : ", object@REGEX_SuffixForward, "\n",
-                    " Suffix Reverse RegExp : ", object@REGEX_SuffixReverse, "\n",
-                    "    Trimming Method SA : ", object@trimmingMethodSA, "\n",
-                    "   'minFractionCallSA' : ", object@minFractionCallSA, "\n",
-                    "   'maxFractionLostSA' : ", object@maxFractionLostSA, "\n",
+                    "        ABIF Directory : ", object@ABIF_Directory, "\n",
+                    "  REGEX Suffix Forward : ", object@REGEX_SuffixForward, "\n",
+                    "  REGEX Suffix Reverse : ", object@REGEX_SuffixReverse, "\n",
                     "     Contigs Consensus : ", as.character(object@contigsConsensus), "\n"
                 )
             } else if (object@processMethod == "CSV") {
                 cat("SangerAlignment S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
                     "        Process Method : ", object@processMethod, "\n",
-                    "      Parent Directory : ", object@ABIF_Directory, "\n",
-                    "  Names Conversion CSV : ", object@CSV_NamesConversion, "\n",
-                    "    Trimming Method SA : ", object@trimmingMethodSA, "\n",
-                    "   'minFractionCallSA' : ", object@minFractionCallSA, "\n",
-                    "   'maxFractionLostSA' : ", object@maxFractionLostSA, "\n",
+                    "        ABIF Directory : ", object@ABIF_Directory, "\n",
+                    "  CSV Names Conversion : ", object@CSV_NamesConversion, "\n",
                     "     Contigs Consensus : ", as.character(object@contigsConsensus), "\n"
                 )
             }
@@ -155,10 +149,8 @@ setMethod('show', 'SangerAlignment', function(object){
                     "          Input Source : ", object@inputSource, "\n",
                     "        Process Method : ", object@processMethod, "\n",
                     "       Fasta File Name : ", object@FASTA_File, "\n",
-                    " Suffix Forward RegExp : ", object@REGEX_SuffixForward, "\n",
-                    " Suffix Reverse RegExp : ", object@REGEX_SuffixReverse, "\n",
-                    "   'minFractionCallSA' : ", object@minFractionCallSA, "\n",
-                    "   'maxFractionLostSA' : ", object@maxFractionLostSA, "\n",
+                    "  REGEX Suffix Forward : ", object@REGEX_SuffixForward, "\n",
+                    "  REGEX Suffix Reverse : ", object@REGEX_SuffixReverse, "\n",
                     "     Contigs Consensus : ", as.character(object@contigsConsensus), "\n"
                 )
             } else if (object@processMethod == "CSV") {
@@ -166,9 +158,7 @@ setMethod('show', 'SangerAlignment', function(object){
                     "          Input Source : ", object@inputSource, "\n",
                     "        Process Method : ", object@processMethod, "\n",
                     "       Fasta File Name : ", object@FASTA_File, "\n",
-                    "  Names Conversion CSV : ", object@CSV_NamesConversion, "\n",
-                    "   'minFractionCallSA' : ", object@minFractionCallSA, "\n",
-                    "   'maxFractionLostSA' : ", object@maxFractionLostSA, "\n",
+                    "  CSV Names Conversion : ", object@CSV_NamesConversion, "\n",
                     "     Contigs Consensus : ", as.character(object@contigsConsensus), "\n"
                 )
             }
