@@ -11,14 +11,11 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' @slot objectResults This is the object that stores all information of the creation result.
 #' @slot inputSource The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.
 #' @slot processMethod The method to create a contig from reads. The value is \code{"REGEX"} or \code{"CSV"}. The default value is \code{"REGEX"}.
-#' @slot FASTA_File If \code{inputSource} is \code{"FASTA"}, then this value has to be the path to a valid FASTA file ; if \code{inputSource} is \code{"ABIF"}, then this value has to be \code{NULL} by default.
 #' @slot ABIF_Directory If \code{inputSource} is \code{"ABIF"}, then this value is the path of a parent directory storing all reads in ABIF format you want to analyse. If \code{inputSource} is \code{"FASTA"}, then this value has to be \code{NULL} by default.
-#' @slot CSV_NamesConversion The file path to the CSV file that provides read names, directions, and their contig groups. If \code{processMethod} is \code{"CSV"}, then this value has to be the path to a valid CSV file; if \code{processMethod} is \code{"REGEX"}, then this value has to be \code{NULL} by default.
+#' @slot FASTA_File If \code{inputSource} is \code{"FASTA"}, then this value has to be the path to a valid FASTA file ; if \code{inputSource} is \code{"ABIF"}, then this value has to be \code{NULL} by default.
 #' @slot REGEX_SuffixForward The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.
 #' @slot REGEX_SuffixReverse The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.
-#' @slot trimmingMethodSA The read trimming method for all SangerRead S4 instances in SangerAlignment. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerReads must have the same trimming method.
-#' @slot minFractionCallSA Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.
-#' @slot maxFractionLostSA Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.
+#' @slot CSV_NamesConversion The file path to the CSV file that provides read names, directions, and their contig groups. If \code{processMethod} is \code{"CSV"}, then this value has to be the path to a valid CSV file; if \code{processMethod} is \code{"REGEX"}, then this value has to be \code{NULL} by default.
 #' @slot geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @slot refAminoAcidSeq An amino acid reference sequence supplied as a string or an AAString object. If your sequences are protein-coding DNA seuqences, and you want to have frameshifts automatically detected and corrected, supply a reference amino acid sequence via this argument. If this argument is supplied, the sequences are then kept in frame for the alignment step. Fwd sequences are assumed to come from the sense (i.e. coding, or "+") strand. The default value is \code{""}.
 #' @slot contigList A list storing all SangerContigs S4 instances.
@@ -68,8 +65,8 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #'                        geneticCode           = GENETIC_CODE,
 #'                        acceptStopCodons      = TRUE,
 #'                        readingFrame          = 1,
-#'                        minFractionCallSA     = 0.5,
-#'                        maxFractionLostSA     = 0.5,
+#'                        minFractionCall       = 0.5,
+#'                        maxFractionLost       = 0.5,
 #'                        processorsNum         = 2)
 #'
 #' ## Input From ABIF file format (Csv three column)
@@ -124,9 +121,8 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 setClass("SangerAlignment",
          # Users need to name their ab1 files in a systematic way. Here is the
          # regulation:
-         #  1. Naming: XXXXX_F[0-9]*.ab1 / XXXXX_R[0-9]*.ab1
+         #  1. Naming: XXXXX_F_[0-9]*.ab1 / XXXXX_R_[0-9]*.ab1
          #        For reads in same contig, XXXXX must be same.
-         #  2. Users can set
          ### -------------------------------------------------------------------
          ### Input type of each variable of 'SangerAlignment'
          ### -------------------------------------------------------------------
@@ -138,9 +134,6 @@ setClass("SangerAlignment",
                         REGEX_SuffixForward         = "characterORNULL",
                         REGEX_SuffixReverse         = "characterORNULL",
                         CSV_NamesConversion         = "characterORNULL",
-                        trimmingMethodSA            = "character",
-                        minFractionCallSA           = "numeric",
-                        maxFractionLostSA           = "numeric",
                         geneticCode                 = "character",
                         refAminoAcidSeq             = "character",
                         contigList                  = "list",
@@ -159,11 +152,12 @@ setMethod("initialize",
                    printLevel             = "SangerAlignment",
                    inputSource            = "ABIF",
                    processMethod          = "REGEX",
-                   FASTA_File          = NULL,
-                   CSV_NamesConversion     = NULL,
-                   ABIF_Directory        = NULL,
+                   ABIF_Directory         = NULL,
+                   FASTA_File             = NULL,
                    REGEX_SuffixForward    = NULL,
                    REGEX_SuffixReverse    = NULL,
+                   CSV_NamesConversion    = NULL,
+                   geneticCode            = GENETIC_CODE,
                    TrimmingMethod         = "M1",
                    M1TrimmingCutoff       = 0.0001,
                    M2CutoffQualityScore   = NULL,
@@ -177,11 +171,10 @@ setMethod("initialize",
                    minReadLength          = 20,
                    minFractionCall        = 0.5,
                    maxFractionLost        = 0.5,
-                   geneticCode            = GENETIC_CODE,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
-                   minFractionCallSA      = 0.5,
-                   maxFractionLostSA      = 0.5,
+                   minFractionCall        = 0.5,
+                   maxFractionLost        = 0.5,
                    processorsNum          = 1) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
@@ -209,8 +202,8 @@ setMethod("initialize",
         errors <- checkMinReadLength(minReadLength, errors[[1]], errors[[2]])
         errors <- checkMinFractionCall(minFractionCall, errors[[1]], errors[[2]])
         errors <- checkMaxFractionLost(maxFractionLost, errors[[1]], errors[[2]])
-        errors <- checkMinFractionCall(minFractionCallSA, errors[[1]], errors[[2]])
-        errors <- checkMaxFractionLost(maxFractionLostSA, errors[[1]], errors[[2]])
+        errors <- checkMinFractionCall(minFractionCall, errors[[1]], errors[[2]])
+        errors <- checkMaxFractionLost(maxFractionLost, errors[[1]], errors[[2]])
         errors <- checkGeneticCode(geneticCode, errors[[1]], errors[[2]])
         errors <- checkAcceptStopCodons(acceptStopCodons, errors[[1]], errors[[2]])
         errors <- checkReadingFrame(readingFrame, errors[[1]], errors[[2]])
@@ -493,8 +486,8 @@ setMethod("initialize",
     if (length(errors[[1]]) == 0 ) {
         SangerContigList <- Filter(Negate(is.null), SangerContigList)
         acResult <- alignContigs(SangerContigList, geneticCode,
-                                 refAminoAcidSeq, minFractionCallSA,
-                                 maxFractionLostSA, processorsNum)
+                                 refAminoAcidSeq, minFractionCall,
+                                 maxFractionLost, processorsNum)
         consensus <- acResult[["consensus"]]
         aln <- acResult[["aln"]]
         aln.tree <- acResult[["aln.tree"]]
@@ -551,8 +544,8 @@ setMethod("initialize",
         REGEX_SuffixReverse   = NULL
         TrimmingMethod        = ""
         SangerContigList      = list()
-        minFractionCallSA     = 0
-        maxFractionLostSA     = 0
+        minFractionCall       = 0
+        maxFractionLost       = 0
         geneticCode           = ""
         consensus             = DNAString()
         refAminoAcidSeq       = ""
@@ -581,10 +574,7 @@ setMethod("initialize",
                    ABIF_Directory       = ABIF_Directory,
                    REGEX_SuffixForward   = REGEX_SuffixForward,
                    REGEX_SuffixReverse   = REGEX_SuffixReverse,
-                   trimmingMethodSA      = TrimmingMethod,
                    contigList            = SangerContigList,
-                   minFractionCallSA     = minFractionCallSA,
-                   maxFractionLostSA     = maxFractionLostSA,
                    geneticCode           = geneticCode,
                    contigsConsensus      = consensus,
                    refAminoAcidSeq       = refAminoAcidSeq,
