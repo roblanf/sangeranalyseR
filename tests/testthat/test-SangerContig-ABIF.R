@@ -3,9 +3,8 @@ test_that("SangerContig Initial test", {
     expect_s4_class(sangerContig, "SangerContig")
     expect_equal(sangerContig@inputSource, "ABIF")
     expect_equal(sangerContig@contigName, "Achl_ACHLO006-09")
-    expect_equal(sangerContig@suffixForwardRegExp, "_[0-9]*_F.ab1")
-    expect_equal(sangerContig@suffixReverseRegExp, "_[0-9]*_R.ab1")
-    expect_equal(sangerContig@trimmingMethodSC, "M1")
+    expect_equal(sangerContig@REGEX_SuffixForward, "_[0-9]*_F.ab1")
+    expect_equal(sangerContig@REGEX_SuffixReverse, "_[0-9]*_R.ab1")
     expect_equal(sangerContig@minReadsNum, 2)
     expect_equal(sangerContig@minReadLength, 20)
     expect_equal(sangerContig@refAminoAcidSeq, "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
@@ -23,7 +22,6 @@ test_that("SangerContig update quality trimming parameters test 1 - M1", {
                                                  M2CutoffQualityScore = NULL,
                                                  M2SlidingWindowSize  = NULL,
                                                  processorsNum        = 1)
-    expect_equal(newTrimmedSangerContig@trimmingMethodSC, "M1")
     sapply(newTrimmedSangerContig@forwardReadList, function(forwardRead) {
         expect_equal(forwardRead@QualityReport@TrimmingMethod, "M1")
         expect_equal(forwardRead@QualityReport@M1TrimmingCutoff, 0.1, tolerance=1e-10)
@@ -44,7 +42,6 @@ test_that("SangerContig update quality trimming parameters test 2 - M2", {
                                                  M2CutoffQualityScore = 30,
                                                  M2SlidingWindowSize  = 15,
                                                  processorsNum        = 1)
-    expect_equal(newTrimmedSangerContig@trimmingMethodSC, "M2")
     sapply(newTrimmedSangerContig@forwardReadList, function(forwardRead) {
         expect_equal(forwardRead@QualityReport@TrimmingMethod, "M2")
         expect_equal(forwardRead@QualityReport@M1TrimmingCutoff, NULL)

@@ -7,9 +7,9 @@ namesConversionCSV <- file.path(rawDataDir, "fasta", "SangerAlignment", "names_c
 sangerAlignmentFa <- new("SangerAlignment",
                          inputSource           = "FASTA",
                          processMethod         = "CSV",
-                         fastaFileName         = fastaFN,
-                         namesConversionCSV    = namesConversionCSV,
-                         suffixForwardRegExp   = suffixForwardRegExpFa,
-                         suffixReverseRegExp   = suffixReverseRegExpFa,
+                         FASTA_File            = fastaFN,
+                         CSV_NamesConversion    = namesConversionCSV,
+                         REGEX_SuffixForward   = suffixForwardRegExpFa,
+                         REGEX_SuffixReverse   = suffixReverseRegExpFa,
                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
                          processorsNum         = 2)

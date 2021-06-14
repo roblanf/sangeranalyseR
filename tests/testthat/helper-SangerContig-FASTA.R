@@ -7,12 +7,12 @@ suffixReverseRegExpFa <- "_[0-9]*_R"
 namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerContig", "names_conversion_1.csv")
 sangerContigFa <- new("SangerContig",
                       inputSource           = "FASTA",
-                      processMethod         = "CSV",
-                      fastaFileName         = SCfastaFN,
+                      processMethod         = "REGEX",
+                      FASTA_File            = SCfastaFN,
                       contigName            = contigName,
-                      suffixForwardRegExp   = suffixForwardRegExpFa,
-                      suffixReverseRegExp   = suffixReverseRegExpFa,
-                      namesConversionCSV    = namesConversionCSV,
+                      REGEX_SuffixForward   = suffixForwardRegExpFa,
+                      REGEX_SuffixReverse   = suffixReverseRegExpFa,
+                      CSV_NamesConversion    = namesConversionCSV,
                       refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
                       processorsNum         = 2)
 
@@ -24,11 +24,11 @@ namesConversionCSV <- file.path(inputFilesPath, "fasta", "SangerContig", "names_
 sangerContigFa2 <- new("SangerContig",
                       inputSource           = "FASTA",
                       processMethod         = "CSV",
-                      fastaFileName         = SCfastaFN2,
-                      namesConversionCSV    = namesConversionCSV,
+                      FASTA_File            = SCfastaFN2,
+                      CSV_NamesConversion   = namesConversionCSV,
                       contigName            = contigName2,
-                      suffixForwardRegExp   = suffixForwardRegExpFa,
-                      suffixReverseRegExp   = suffixReverseRegExpFa,
+                      REGEX_SuffixForward   = suffixForwardRegExpFa,
+                      REGEX_SuffixReverse   = suffixReverseRegExpFa,
                       refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
                       processorsNum         = 2)
 

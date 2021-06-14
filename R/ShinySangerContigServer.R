@@ -969,7 +969,6 @@ SangerContigServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[2]]
         log_info("Trimming Button is clicked!!")
         if (!is.na(strtoi(readIndex))) {
-            ## For method, everyone is same, so just pick forward one.
             if (directionParam == "Forward") {
                 activated_read_list <- SangerContig@forwardReadList
             } else if (directionParam == "Reverse") {

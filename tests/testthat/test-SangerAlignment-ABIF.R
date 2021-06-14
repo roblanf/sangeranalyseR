@@ -2,10 +2,9 @@ test_that("SangerAlignment Initial test", {
     expect_type(sangerAlignment, "S4")
     expect_s4_class(sangerAlignment, "SangerAlignment")
     expect_equal(sangerAlignment@inputSource, "ABIF")
-    expect_equal(sangerAlignment@fastaFileName, NULL)
+    expect_equal(sangerAlignment@FASTA_File, NULL)
     expect_equal(sangerAlignment@suffixForwardRegExp, "_[0-9]*_F.ab1")
     expect_equal(sangerAlignment@suffixReverseRegExp, "_[0-9]*_R.ab1")
-    expect_equal(sangerAlignment@trimmingMethodSA, "M1")
     expect_equal(sangerAlignment@minFractionCallSA, 0.5)
     expect_equal(sangerAlignment@maxFractionLostSA, 0.5)
     expect_equal(sangerAlignment@refAminoAcidSeq, "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
@@ -26,7 +25,6 @@ test_that("SangerAlignment update quality trimming parameters test 1 - M1", {
                                                  M2CutoffQualityScore = NULL,
                                                  M2SlidingWindowSize  = NULL,
                                                  processorsNum        = 1)
-    expect_equal(newTrimmedSangerAlignment@trimmingMethodSA, "M1")
     sapply(newTrimmedSangerAlignment@contigList, function(contig) {
         expect_type(contig, "S4")
         expect_s4_class(contig, "SangerContig")
@@ -79,7 +77,6 @@ test_that("SangerAlignment update quality trimming parameters test 2 - M2", {
                                                     M2CutoffQualityScore = 35,
                                                     M2SlidingWindowSize  = 15,
                                                     processorsNum        = 1)
-    expect_equal(newTrimmedSangerAlignment@trimmingMethodSA, "M2")
     sapply(newTrimmedSangerAlignment@contigList, function(contig) {
         expect_type(contig, "S4")
         expect_s4_class(contig, "SangerContig")

@@ -11,3 +11,4 @@ sangerReadRFa <- new("SangerRead",
                      fastaReadName      = fastaReadRName,
                      geneticCode        = GENETIC_CODE)
 
+

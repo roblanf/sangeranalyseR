@@ -56,7 +56,6 @@ setMethod("updateQualityParam",  "SangerAlignment",
                                    processorsNum          = processorsNum)
                        })
             object@contigList <- newContigList
-            object@trimmingMethodSA <- TrimmingMethod
             acResult <- alignContigs(object@contigList, object@geneticCode,
                                      object@refAminoAcidSeq,
                                      object@minFractionCallSA,

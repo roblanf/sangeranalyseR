@@ -46,13 +46,6 @@ SangerAlignmentServer <- function(input, output, session) {
                     reverseReadFeature = reverseReadFeature,
                     SangerReadBFN = SangerReadBFN))
     })
-    SATrimmingMethod <- SangerAlignment@trimmingMethodSA
-    if (SATrimmingMethod == "M1") {
-        SATrimmingMethodName = "Method 1: 'Modified Mott Trimming'"
-    } else if (SATrimmingMethod == "M2") {
-        SATrimmingMethodName =
-            "Method 2: 'Trimmomatics Sliding Window Trimming'"
-    }
 
     ### ------------------------------------------------------------------------
     ### SangerAlignment reactiveValue
@@ -67,6 +60,7 @@ SangerAlignmentServer <- function(input, output, session) {
     ### ------------------------------------------------------------------------
     contigParam <-
         reactiveValues(
+            contigName  = NULL,
             contigSeq   = NULL,
             differencesDF   = NULL,
             alignment       = NULL,
@@ -120,8 +114,8 @@ SangerAlignmentServer <- function(input, output, session) {
                 alignContigs (SangerAlignment@contigList,
                               SangerAlignment@geneticCode,
                               SangerAlignment@refAminoAcidSeq,
-                              SangerAlignment@minFractionCallSA,
-                              SangerAlignment@maxFractionLostSA,
+                              SangerAlignment@contigList[[1]]@minFractionCall,
+                              SangerAlignment@contigList[[1]]@maxFractionLost,
                               1)
             SangerAlignment@contigsConsensus <<- CSSetResult$consensus
             SangerAlignment@contigsAlignment <<- CSSetResult$aln
@@ -178,17 +172,6 @@ SangerAlignmentServer <- function(input, output, session) {
                         column(12,
                                column(3,
                                       tags$p(tagList(icon("caret-right"),
-                                                     "Trimming Method: "),
-                                             style = "font-size: 20px;
-                                                   font-weight: bold;"),
-                               ),
-                               column(9,
-                                      h4(SATrimmingMethodName),
-                               )
-                        ),
-                        column(12,
-                               column(3,
-                                      tags$p(tagList(icon("caret-right"),
                                                      "Forward Suffix RegExp: "),
                                              style = "font-size: 20px;
                                                    font-weight: bold;"),
@@ -219,19 +202,6 @@ SangerAlignmentServer <- function(input, output, session) {
                                       h4(length(SangerAlignment@
                                                     contigList)),
                                )
-                        ),
-                        tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
-                        box(title = tags$p("Alignment Parameters",
-                                           style = "font-size: 24px;
-                                       font-weight: bold;"),
-                            collapsible = TRUE,
-                            status = "success", width = 12,
-                            column(4,
-                                   uiOutput("SAMinFractionCallSA") ,
-                            ),
-                            column(4,
-                                   uiOutput("SAMaxFractionLostSA") ,
-                            ),
                         ),
                         tags$hr(style = ("border-top: 4px hidden #A9A9A9;")),
                         box(title = tags$p("Genetic Code Data Frame",
@@ -322,6 +292,7 @@ SangerAlignmentServer <- function(input, output, session) {
             SangerAlignment@contigList[[contigIndex]]@indelsDF <<- CSResult$indels
             SangerAlignment@contigList[[contigIndex]]@stopCodonsDF <<- CSResult$stopsDf
             SangerAlignment@contigList[[contigIndex]]@secondaryPeakDF <<- CSResult$spDf
+            contigParam[["contigName"]] <<- SangerAlignment@contigList[[contigIndex]]@contigName
             contigParam[["contigSeq"]] <<- SangerAlignment@contigList[[contigIndex]]@contigSeq
             contigParam[["differencesDF"]] <<- SangerAlignment@contigList[[contigIndex]]@differencesDF
             contigParam[["alignment"]] <<- as.character(SangerAlignment@contigList[[contigIndex]]@alignment)
@@ -391,18 +362,6 @@ SangerAlignmentServer <- function(input, output, session) {
                                ),
                                column(9,
                                       h4(contigParam[["contigName"]]),
-                               )
-                        ),
-                        column(12,
-                               column(3,
-                                      tags$p(
-                                          tagList(icon("caret-right"),
-                                                  "Trimming Method: "),
-                                          style = "font-size: 20px;
-                                                           font-weight: bold;"),
-                               ),
-                               column(9,
-                                      h4(SATrimmingMethodName),
                                )
                         ),
                         column(12,
@@ -1213,8 +1172,8 @@ SangerAlignmentServer <- function(input, output, session) {
                 alignContigs (SangerAlignment@contigList,
                                      SangerAlignment@geneticCode,
                                      SangerAlignment@refAminoAcidSeq,
-                                     SangerAlignment@minFractionCallSA,
-                                     SangerAlignment@maxFractionLostSA,
+                                     SangerAlignment@contigList[[1]]@minFractionCall,
+                                     SangerAlignment@contigList[[1]]@maxFractionLost,
                                      1)
             SangerAlignment@contigsConsensus <<- CSSetResult$consensus
             SangerAlignment@contigsAlignment <<- CSSetResult$aln
@@ -1280,7 +1239,14 @@ SangerAlignmentServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[5]]
         if (!is.na(contigIndex) &&
             !is.na(readIndex)) {
-            if (SangerAlignment@trimmingMethodSA == "M1") {
+            
+            if (directionParam == "Forward") {
+                activated_read_list <- SangerAlignment@contigList[[contigIndex]]@forwardReadList
+            } else if (directionParam == "Reverse") {
+                activated_read_list <- SangerAlignment@contigList[[contigIndex]]@reverseReadList
+            }
+            
+            if (activated_read_list[[readIndex]]@QualityReport@TrimmingMethod == "M1") {
                 if (!is.na(as.numeric(input$M1TrimmingCutoffText)) &&
                     as.numeric(input$M1TrimmingCutoffText) > 0 &&
                     as.numeric(input$M1TrimmingCutoffText) <= 1) {
@@ -1321,7 +1287,7 @@ SangerAlignmentServer <- function(input, output, session) {
                         SangerAlignment@contigList[[contigIndex]]@
                         reverseReadList[[readIndex]]@QualityReport@M1TrimmingCutoff
                 }
-            } else if (SangerAlignment@trimmingMethodSA == "M2") {
+            } else if (activated_read_list[[readIndex]]@QualityReport@TrimmingMethod == "M2") {
                 if (!is.na(strtoi(input$M2CutoffQualityScoreText)) &&
                     strtoi(input$M2CutoffQualityScoreText) > 0 &&
                     strtoi(input$M2CutoffQualityScoreText) <= 60 &&
@@ -1568,13 +1534,6 @@ SangerAlignmentServer <- function(input, output, session) {
     ############################################################################
     ### SangerAlignment
     ############################################################################
-    ### ------------------------------------------------------------------------
-    ### valuebox
-    ### ------------------------------------------------------------------------
-    valueBoxSAMinFractionCallSA(input, output,
-                               SangerAlignment@minFractionCallSA, session)
-    valueBoxSAMaxFractionLostSA(input, output,
-                               SangerAlignment@maxFractionLostSA, session)
     ### ------------------------------------------------------------------------
     ### Alignment
     ### ------------------------------------------------------------------------
@@ -1983,11 +1942,11 @@ SangerAlignmentServer <- function(input, output, session) {
         readIndex <- strtoi(sidebar_menu[[4]])
         if (!is.na(contigIndex) &&
             !is.na(readIndex)) {
-            if (SangerAlignment@trimmingMethodSA == "M1") {
+            if (SangerAlignment@contigList[[contigIndex]]@forwardReadList[[readIndex]]@QualityReport@TrimmingMethod == "M1") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
                             'Modified Mott Trimming'")
-            } else if (SangerAlignment@trimmingMethodSA == "M2") {
+            } else if (SangerAlignment@contigList[[contigIndex]]@forwardReadList[[readIndex]]@QualityReport@TrimmingMethod == "M2") {
                 tagList(icon("check-circle"),
                         "Your trimming method selection :
                             'Trimmomatics Sliding Window Trimming'")
@@ -2001,8 +1960,13 @@ SangerAlignmentServer <- function(input, output, session) {
         directionParam <- sidebar_menu[[5]]
         if (!is.na(contigIndex) &&
             !is.na(readIndex)) {
-            ## For method, everyone is same, so just pick forward one.
-            if (SangerAlignment@trimmingMethodSA == "M1") {
+            if (directionParam == "Forward") {
+                activated_read_list <- SangerAlignment@contigList[[contigIndex]]@forwardReadList
+            } else if (directionParam == "Reverse") {
+                activated_read_list <- SangerAlignment@contigList[[contigIndex]]@reverseReadList
+            }
+            
+            if (activated_read_list[[readIndex]]@QualityReport@TrimmingMethod == "M1") {
                 if (directionParam == "Forward") {
                     if (is.null(SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadList[[readIndex]]@
@@ -2032,9 +1996,7 @@ SangerAlignmentServer <- function(input, output, session) {
                            ),
                     ),
                 )
-            } else if (SangerAlignment@trimmingMethodSA == "M2") {
-
-
+            } else if (activated_read_list[[readIndex]]@QualityReport@TrimmingMethod == "M2") {
                 if (directionParam == "Forward") {
                     if (is.null(SangerAlignment@contigList[[contigIndex]]@
                                 forwardReadList[[readIndex]]@
