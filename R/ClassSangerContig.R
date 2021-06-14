@@ -396,22 +396,21 @@ setMethod("initialize",
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
             reverseReadList <- lapply(rAbsoluteAB1, function(reverseN){
-                newSangerRead <-
-                    new("SangerRead",
-                        printLevel           = printLevel,
-                        inputSource          = inputSource,
-                        readFeature          = "Reverse Read",
-                        readFileName         = reverseN,
-                        fastaReadName        = NULL,
-                        geneticCode          = geneticCode,
-                        TrimmingMethod       = TrimmingMethod,
-                        M1TrimmingCutoff     = M1TrimmingCutoff,
-                        M2CutoffQualityScore = M2CutoffQualityScore,
-                        M2SlidingWindowSize  = M2SlidingWindowSize,
-                        baseNumPerRow        = baseNumPerRow,
-                        heightPerRow         = heightPerRow,
-                        signalRatioCutoff    = signalRatioCutoff,
-                        showTrimmed          = showTrimmed)
+                newSangerRead <- new("SangerRead",
+                                     printLevel           = printLevel,
+                                     inputSource          = inputSource,
+                                     readFeature          = "Reverse Read",
+                                     readFileName         = reverseN,
+                                     fastaReadName        = NULL,
+                                     geneticCode          = geneticCode,
+                                     TrimmingMethod       = TrimmingMethod,
+                                     M1TrimmingCutoff     = M1TrimmingCutoff,
+                                     M2CutoffQualityScore = M2CutoffQualityScore,
+                                     M2SlidingWindowSize  = M2SlidingWindowSize,
+                                     baseNumPerRow        = baseNumPerRow,
+                                     heightPerRow         = heightPerRow,
+                                     signalRatioCutoff    = signalRatioCutoff,
+                                     showTrimmed          = showTrimmed)
             })
             names(reverseReadList) <- rAbsoluteAB1
         }
@@ -472,12 +471,12 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             reverseReadList <- lapply(reverseSelectNames, function(reverseName){
                 newSangerRead <- new("SangerRead",
-                                     printLevel         = printLevel,
-                                     inputSource        = inputSource,
-                                     readFeature        = "Reverse Read",
-                                     readFileName       = FASTA_File,
-                                     fastaReadName      = reverseName,
-                                     geneticCode        = geneticCode,
+                                     printLevel           = printLevel,
+                                     inputSource          = inputSource,
+                                     readFeature          = "Reverse Read",
+                                     readFileName         = FASTA_File,
+                                     fastaReadName        = reverseName,
+                                     geneticCode          = geneticCode,
                                      TrimmingMethod       = TrimmingMethod,
                                      M1TrimmingCutoff     = M1TrimmingCutoff,
                                      M2CutoffQualityScore = M2CutoffQualityScore,
@@ -538,12 +537,12 @@ setMethod("initialize",
                                             warnings[[1]], warnings[[2]])
             reverseReadList <- lapply(reverseReads, function(reverseName){
                 newSangerRead <- new("SangerRead",
-                                     printLevel         = printLevel,
-                                     inputSource        = inputSource,
-                                     readFeature        = "Reverse Read",
-                                     readFileName       = FASTA_File,
-                                     fastaReadName      = reverseName,
-                                     geneticCode        = geneticCode,
+                                     printLevel           = printLevel,
+                                     inputSource          = inputSource,
+                                     readFeature          = "Reverse Read",
+                                     readFileName         = FASTA_File,
+                                     fastaReadName        = reverseName,
+                                     geneticCode          = geneticCode,
                                      TrimmingMethod       = TrimmingMethod,
                                      M1TrimmingCutoff     = M1TrimmingCutoff,
                                      M2CutoffQualityScore = M2CutoffQualityScore,
@@ -585,9 +584,15 @@ setMethod("initialize",
                     ### --------------------------------------------------------
                     ### Failed: readResultTable (SangerContig Level)
                     ### --------------------------------------------------------
-                    row <- data.frame(basename(read@readFileName), 
-                                      FALSE, "MIN_READ_LENGTH_ERROR", msg, 
-                                      read@inputSource,  read@readFeature)
+                    if (inputSource == "ABIF") {
+                        row <- data.frame(basename(read@readFileName), 
+                                          FALSE, "MIN_READ_LENGTH_ERROR", msg, 
+                                          read@inputSource,  read@readFeature)
+                    } else if (inputSource == "FASTA") {
+                        row <- data.frame(basename(read@fastaReadName), 
+                                          FALSE, "MIN_READ_LENGTH_ERROR", msg, 
+                                          read@inputSource,  read@readFeature)
+                    }
                     names(row) <- readResultTableName
                     readResultTable <<- rbind(readResultTable, row)
                     NULL
@@ -596,11 +601,19 @@ setMethod("initialize",
                 ### ------------------------------------------------------------
                 ### Failed: readResultTable (SangerRead Level)
                 ### ------------------------------------------------------------
-                row <- data.frame(basename(read@readFileName), 
-                                  read@objectResults@creationResult, 
-                                  read@objectResults@errorTypes, 
-                                  read@objectResults@errorMessages, 
-                                  read@inputSource, read@readFeature)
+                if (inputSource == "ABIF") {
+                    row <- data.frame(basename(read@readFileName), 
+                                      read@objectResults@creationResult, 
+                                      read@objectResults@errorTypes, 
+                                      read@objectResults@errorMessages, 
+                                      read@inputSource, read@readFeature)
+                } else if (inputSource == "FASTA") {
+                    row <- data.frame(basename(read@fastaReadName), 
+                                      read@objectResults@creationResult, 
+                                      read@objectResults@errorTypes, 
+                                      read@objectResults@errorMessages, 
+                                      read@inputSource, read@readFeature)
+                }
                 names(row) <- readResultTableName
                 readResultTable <<- rbind(readResultTable, row)
                 NULL
@@ -628,9 +641,15 @@ setMethod("initialize",
                     ### --------------------------------------------------------
                     ### Failed: readResultTable (SangerContig Level)
                     ### --------------------------------------------------------
-                    row <- data.frame(basename(read@readFileName), 
-                                      FALSE, "MIN_READ_LENGTH_ERROR", msg, 
-                                      read@inputSource,  read@readFeature)
+                    if (inputSource == "ABIF") {
+                        row <- data.frame(basename(read@readFileName), 
+                                          FALSE, "MIN_READ_LENGTH_ERROR", msg, 
+                                          read@inputSource,  read@readFeature)
+                    } else if (inputSource == "FASTA") {
+                        row <- data.frame(basename(read@fastaReadName), 
+                                          FALSE, "MIN_READ_LENGTH_ERROR", msg, 
+                                          read@inputSource,  read@readFeature)
+                    }
                     names(row) <- readResultTableName
                     readResultTable <<- rbind(readResultTable, row)
                     NULL
@@ -639,11 +658,19 @@ setMethod("initialize",
                 ### ------------------------------------------------------------
                 ### Failed: readResultTable (SangerRead Level)
                 ### ------------------------------------------------------------
-                row <- data.frame(basename(read@readFileName), 
-                                  read@objectResults@creationResult, 
-                                  read@objectResults@errorTypes, 
-                                  read@objectResults@errorMessages, 
-                                  read@inputSource, read@readFeature)
+                if (inputSource == "ABIF") {
+                    row <- data.frame(basename(read@readFileName), 
+                                      read@objectResults@creationResult, 
+                                      read@objectResults@errorTypes, 
+                                      read@objectResults@errorMessages, 
+                                      read@inputSource, read@readFeature)
+                } else if (inputSource == "FASTA") {
+                    row <- data.frame(basename(read@fastaReadName), 
+                                      read@objectResults@creationResult, 
+                                      read@objectResults@errorTypes, 
+                                      read@objectResults@errorMessages, 
+                                      read@inputSource, read@readFeature)
+                }
                 names(row) <- readResultTableName
                 readResultTable <<- rbind(readResultTable, row)
                 NULL
@@ -744,19 +771,29 @@ setMethod("initialize",
             errors[[2]] <- c(errors[[2]], "READ_NUMBER_ERROR")
             
             lapply(forwardReadListFilter, function(read) {
-                row <- data.frame(basename(read@readFileName), FALSE,
-                                  "READ_NUMBER_ERROR", msg,
-                                  read@inputSource, read@readFeature)
+                if (inputSource == "ABIF") {
+                    row <- data.frame(basename(read@readFileName), FALSE,
+                                      "READ_NUMBER_ERROR", msg,
+                                      read@inputSource, read@readFeature)
+                } else if (inputSource == "FASTA") {
+                    row <- data.frame(basename(read@fastaReadName), FALSE,
+                                      "READ_NUMBER_ERROR", msg,
+                                      read@inputSource, read@readFeature)
+                }
                 names(row) <- readResultTableName
-                # readResultTable[which(readResultTable$readName == basename(read@readFileName)),] <<- row
                 readResultTable <<- rbind(readResultTable, row)
             })
             lapply(reverseReadListFilter, function(read) {
-                row <- data.frame(basename(read@readFileName), FALSE,
-                                  "READ_NUMBER_ERROR", msg,
-                                  read@inputSource, read@readFeature)
+                if (inputSource == "ABIF") {
+                    row <- data.frame(basename(read@readFileName), FALSE,
+                                      "READ_NUMBER_ERROR", msg,
+                                      read@inputSource, read@readFeature)
+                } else if (inputSource == "FASTA") {
+                    row <- data.frame(basename(read@fastaReadName), FALSE,
+                                      "READ_NUMBER_ERROR", msg,
+                                      read@inputSource, read@readFeature)
+                }
                 names(row) <- readResultTableName
-                # readResultTable[which(readResultTable$readName == basename(read@readFileName)),] <<- row
                 readResultTable <<- rbind(readResultTable, row)
             })
         }
@@ -766,20 +803,34 @@ setMethod("initialize",
         ########################################################################
         lapply(forwardReadListFilter, function(read) {
             if (!basename(read@readFileName) %in% readResultTable$readName) {
-                row <- data.frame(basename(read@readFileName),
-                                  read@objectResults@creationResult,
-                                  "None", "None",
-                                  read@inputSource, read@readFeature)
+                if (inputSource == "ABIF") {
+                    row <- data.frame(basename(read@readFileName),
+                                      read@objectResults@creationResult,
+                                      "None", "None",
+                                      read@inputSource, read@readFeature)
+                } else if (inputSource == "FASTA") {
+                    row <- data.frame(basename(read@fastaReadName),
+                                      read@objectResults@creationResult,
+                                      "None", "None",
+                                      read@inputSource, read@readFeature)
+                }
                 names(row) <- readResultTableName
                 readResultTable <<- rbind(readResultTable, row)
             }
         })
         lapply(reverseReadListFilter, function(read) {
             if (!basename(read@readFileName) %in% readResultTable$readName) {
-                row <- data.frame(basename(read@readFileName),
-                                  read@objectResults@creationResult,
-                                  "None", "None",
-                                  read@inputSource, read@readFeature)
+                if (inputSource == "ABIF") {
+                    row <- data.frame(basename(read@readFileName),
+                                      read@objectResults@creationResult,
+                                      "None", "None",
+                                      read@inputSource, read@readFeature)
+                } else if (inputSource == "FASTA") {
+                    row <- data.frame(basename(read@fastaReadName),
+                                      read@objectResults@creationResult,
+                                      "None", "None",
+                                      read@inputSource, read@readFeature)
+                }
                 names(row) <- readResultTableName
                 readResultTable <<- rbind(readResultTable, row)
             }
@@ -836,9 +887,9 @@ setMethod("initialize",
                    objectResults          = objectResults,
                    inputSource            = inputSource,
                    processMethod          = processMethod,
-                   FASTA_File          = FASTA_File,
-                   CSV_NamesConversion     = CSV_NamesConversion,
-                   ABIF_Directory        = ABIF_Directory,
+                   FASTA_File             = FASTA_File,
+                   CSV_NamesConversion    = CSV_NamesConversion,
+                   ABIF_Directory         = ABIF_Directory,
                    contigName             = contigName,
                    REGEX_SuffixForward    = REGEX_SuffixForward,
                    REGEX_SuffixReverse    = REGEX_SuffixReverse,

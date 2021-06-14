@@ -326,7 +326,11 @@ setMethod("initialize",
                 log_success("--------------------------------------------------------")
                 log_success("-------- 'SangerRead' S4 instance is created !! --------")
                 log_success("--------------------------------------------------------")
-                log_success("   >> '", basename(readFileName), "' is created (", readFeature, "; ", inputSource, ").")
+                if (inputSource == "ABIF") {
+                    log_success("   >> '", basename(readFileName), "' is created (", readFeature, "; ", inputSource, ").")
+                } else if (inputSource == "FASTA") {
+                    log_success("   >> '", basename(fastaReadName), "' is created (", readFeature, "; ", inputSource, ").")
+                }
                 if (printLevel == "SangerRead") {
                     if (TrimmingMethod == "M1" && printLevel == "SangerRead") {
                         log_info("   >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
