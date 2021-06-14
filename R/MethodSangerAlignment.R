@@ -58,8 +58,8 @@ setMethod("updateQualityParam",  "SangerAlignment",
             object@contigList <- newContigList
             acResult <- alignContigs(object@contigList, object@geneticCode,
                                      object@refAminoAcidSeq,
-                                     object@minFractionCallSA,
-                                     object@maxFractionLostSA,
+                                     object@contigList[[1]]@minFractionCall,
+                                     object@contigList[[1]]@maxFractionLost,
                                      getProcessors(processorsNum))
             object@contigsConsensus <- acResult[["consensus"]]
             object@contigsAlignment <- acResult[["aln"]]

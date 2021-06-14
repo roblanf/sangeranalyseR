@@ -6,8 +6,8 @@ test_that("'alignContigs' function test", {
     contigList <- sangerAlignment@contigList
     geneticCode <- sangerAlignment@geneticCode
     refAminoAcidSeq <- sangerAlignment@refAminoAcidSeq
-    minFractionCallSA <- sangerAlignment@contigList[[contigIndex]]@minFractionCall
-    maxFractionLostSA <- sangerAlignment@contigList[[contigIndex]]@maxFractionLost
+    minFractionCallSA <- sangerAlignment@contigList[[1]]@minFractionCall
+    maxFractionLostSA <- sangerAlignment@contigList[[1]]@maxFractionLost
     alignContigs <- alignContigs (contigList, geneticCode,
                                   refAminoAcidSeq, minFractionCallSA,
                                   maxFractionLostSA, 1)
