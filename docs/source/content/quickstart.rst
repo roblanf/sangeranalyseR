@@ -14,9 +14,9 @@ The most minimal example gets the job done in three lines of code. More details 
 
 .. code-block:: R
 
-   my_aligned_contigs <- SangerAlignment(parentDirectory     = "./my_data/",
-                                         suffixForwardRegExp = "_[0-9]+_F+",
-                                         suffixReverseRegExp = "_[0-9]+_R+")
+   my_aligned_contigs <- SangerAlignment(ABIF_Directory      = "./my_data/",
+                                         REGEX_SuffixForward = "_[0-9]+_F+",
+                                         REGEX_SuffixReverse = "_[0-9]+_R+")
 
    writeFasta(my_aligned_contigs)
 
@@ -38,9 +38,9 @@ Step 2: Load and analyse your data
 
 .. code-block:: R
 
-   my_aligned_contigs <- SangerAlignment(parentDirectory     = "./my_data/",
-                                         suffixForwardRegExp = "_[0-9]+_F+",
-                                         suffixReverseRegExp = "_[0-9]+_R+")
+   my_aligned_contigs <- SangerAlignment(ABIF_Directory      = "./my_data/",
+                                         REGEX_SuffixForward = "_[0-9]+_F+",
+                                         REGEX_SuffixReverse = "_[0-9]+_R+")
 
 
 This command loads, trims, builds contigs, and aligns contigs. All of these are done with sensible default values, which can be changed. I
@@ -106,9 +106,9 @@ Run the following on-liner to create the sanger alignment object.
 
 .. code-block:: R
 
-   ACHLO_contigs <- SangerAlignment(parentDirectory     = parentDir,
-                                    suffixForwardRegExp = "_[0-9]+_F+",
-                                    suffixReverseRegExp = "_[0-9]+_R+")
+   ACHLO_contigs <- SangerAlignment(ABIF_Directory     = parentDir,
+                                    REGEX_SuffixForward = "_[0-9]+_F+",
+                                    REGEX_SuffixReverse = "_[0-9]+_R+")
 
 
 
@@ -120,109 +120,109 @@ Run the following on-liner to create the sanger alignment object.
         Following is the R shell output that you will get.
     .. code-block::
 
-        INFO [2021-29-05 15:15:06] #################################################
-        INFO [2021-29-05 15:15:06] #### Start creating SangerAlignment instance ####
-        INFO [2021-29-05 15:15:06] #################################################
-        INFO [2021-29-05 15:15:06]   >> You are using Regular Expression Method to group AB1 files!
-        INFO [2021-29-05 15:15:06] ========================================================
-        INFO [2021-29-05 15:15:06] ================ Creating 'SangerContig' ===============
-        INFO [2021-29-05 15:15:06] ========================================================
-        INFO [2021-29-05 15:15:06]   >> Contig Name: 'Achl_ACHLO006-09'
-        SUCCESS [2021-29-05 15:15:07] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:07] -------- 'SangerRead' S4 instance is created !! --------
-        SUCCESS [2021-29-05 15:15:07] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:07]    >> 'Achl_ACHLO006-09_1_F.ab1' is created (Forward Read; ABIF).
-        SUCCESS [2021-29-05 15:15:08] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:08] -------- 'SangerRead' S4 instance is created !! --------
-        SUCCESS [2021-29-05 15:15:08] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:08]    >> 'Achl_ACHLO006-09_2_R.ab1' is created (Reverse Read; ABIF).
-        INFO [2021-29-05 15:15:08]    >> The number of reads detected: 2
-        SUCCESS [2021-29-05 15:15:08] ==========================================================
-        SUCCESS [2021-29-05 15:15:08] ======== 'SangerContig' S4 instance is created !! ========
-        SUCCESS [2021-29-05 15:15:08] ==========================================================
-        INFO [2021-29-05 15:15:08]    >> 2 read(s) created from ABIF file.
-        INFO [2021-29-05 15:15:08]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
-        INFO [2021-29-05 15:15:08]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
-        INFO [2021-29-05 15:15:08] ========================================================
-        INFO [2021-29-05 15:15:08] ================ Creating 'SangerContig' ===============
-        INFO [2021-29-05 15:15:08] ========================================================
-        INFO [2021-29-05 15:15:08]   >> Contig Name: 'Achl_ACHLO007-09'
-        SUCCESS [2021-29-05 15:15:09] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:09] -------- 'SangerRead' S4 instance is created !! --------
-        SUCCESS [2021-29-05 15:15:09] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:09]    >> 'Achl_ACHLO007-09_1_F.ab1' is created (Forward Read; ABIF).
-        SUCCESS [2021-29-05 15:15:09] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:09] -------- 'SangerRead' S4 instance is created !! --------
-        SUCCESS [2021-29-05 15:15:09] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:09]    >> 'Achl_ACHLO007-09_2_R.ab1' is created (Reverse Read; ABIF).
-        INFO [2021-29-05 15:15:09]    >> The number of reads detected: 2
-        SUCCESS [2021-29-05 15:15:09] ==========================================================
-        SUCCESS [2021-29-05 15:15:09] ======== 'SangerContig' S4 instance is created !! ========
-        SUCCESS [2021-29-05 15:15:09] ==========================================================
-        INFO [2021-29-05 15:15:09]    >> 2 read(s) created from ABIF file.
-        INFO [2021-29-05 15:15:09]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
-        INFO [2021-29-05 15:15:09]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
-        INFO [2021-29-05 15:15:09] ========================================================
-        INFO [2021-29-05 15:15:09] ================ Creating 'SangerContig' ===============
-        INFO [2021-29-05 15:15:09] ========================================================
-        INFO [2021-29-05 15:15:09]   >> Contig Name: 'Achl_ACHLO040-09'
-        SUCCESS [2021-29-05 15:15:10] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:10] -------- 'SangerRead' S4 instance is created !! --------
-        SUCCESS [2021-29-05 15:15:10] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:10]    >> 'Achl_ACHLO040-09_1_F.ab1' is created (Forward Read; ABIF).
-        SUCCESS [2021-29-05 15:15:10] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:10] -------- 'SangerRead' S4 instance is created !! --------
-        SUCCESS [2021-29-05 15:15:10] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:10]    >> 'Achl_ACHLO040-09_2_R.ab1' is created (Reverse Read; ABIF).
-        INFO [2021-29-05 15:15:10]    >> The number of reads detected: 2
-        SUCCESS [2021-29-05 15:15:10] ==========================================================
-        SUCCESS [2021-29-05 15:15:10] ======== 'SangerContig' S4 instance is created !! ========
-        SUCCESS [2021-29-05 15:15:10] ==========================================================
-        INFO [2021-29-05 15:15:10]    >> 2 read(s) created from ABIF file.
-        INFO [2021-29-05 15:15:10]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
-        INFO [2021-29-05 15:15:10]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
-        INFO [2021-29-05 15:15:10] ========================================================
-        INFO [2021-29-05 15:15:10] ================ Creating 'SangerContig' ===============
-        INFO [2021-29-05 15:15:10] ========================================================
-        INFO [2021-29-05 15:15:10]   >> Contig Name: 'Achl_ACHLO041-09'
-        SUCCESS [2021-29-05 15:15:11] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:11] -------- 'SangerRead' S4 instance is created !! --------
-        SUCCESS [2021-29-05 15:15:11] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:11]    >> 'Achl_ACHLO041-09_1_F.ab1' is created (Forward Read; ABIF).
-        SUCCESS [2021-29-05 15:15:11] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:11] -------- 'SangerRead' S4 instance is created !! --------
-        SUCCESS [2021-29-05 15:15:11] --------------------------------------------------------
-        SUCCESS [2021-29-05 15:15:11]    >> 'Achl_ACHLO041-09_2_R.ab1' is created (Reverse Read; ABIF).
-        INFO [2021-29-05 15:15:11]    >> The number of reads detected: 2
-        SUCCESS [2021-29-05 15:15:12] ==========================================================
-        SUCCESS [2021-29-05 15:15:12] ======== 'SangerContig' S4 instance is created !! ========
-        SUCCESS [2021-29-05 15:15:12] ==========================================================
-        INFO [2021-29-05 15:15:12]    >> 2 read(s) created from ABIF file.
-        INFO [2021-29-05 15:15:12]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
-        INFO [2021-29-05 15:15:12]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
-        INFO [2021-29-05 15:15:12] Aligning consensus reads ...
-        INFO [2021-29-05 15:15:12] Before building!!
-        INFO [2021-29-05 15:15:12] After building!!
-        SUCCESS [2021-29-05 15:15:12] #############################################################
-        SUCCESS [2021-29-05 15:15:12] ######## 'SangerAlignment' S4 instance is created !! ########
-        SUCCESS [2021-29-05 15:15:12] #############################################################
-        INFO [2021-29-05 15:15:12]   >> 4 contigs detected from 'regular expression'.
-        INFO [2021-29-05 15:15:12]       >> Contig 'Achl_ACHLO006-09':
-        INFO [2021-29-05 15:15:12]           >> 1 forward reads.
-        INFO [2021-29-05 15:15:12]           >> 1 reverse reads.
-        INFO [2021-29-05 15:15:12]       >> Contig 'Achl_ACHLO007-09':
-        INFO [2021-29-05 15:15:12]           >> 1 forward reads.
-        INFO [2021-29-05 15:15:12]           >> 1 reverse reads.
-        INFO [2021-29-05 15:15:12]       >> Contig 'Achl_ACHLO040-09':
-        INFO [2021-29-05 15:15:12]           >> 1 forward reads.
-        INFO [2021-29-05 15:15:12]           >> 1 reverse reads.
-        INFO [2021-29-05 15:15:12]       >> Contig 'Achl_ACHLO041-09':
-        INFO [2021-29-05 15:15:12]           >> 1 forward reads.
-        INFO [2021-29-05 15:15:12]           >> 1 reverse reads.
-        INFO [2021-29-05 15:15:12]   >> 8 reads created from ABIF file.
-        INFO [2021-29-05 15:15:12]   >> Reads are trimmed by 'M1 - Mott’s trimming algorithm'.
-        DEBUG [2021-29-05 15:15:12]    >> For more information, please run 'object'.
-        DEBUG [2021-29-05 15:15:12]    >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads
+         INFO [2021-29-06 14:07:37] #################################################
+         INFO [2021-29-06 14:07:37] #### Start creating SangerAlignment instance ####
+         INFO [2021-29-06 14:07:37] #################################################
+         INFO [2021-29-06 14:07:37]   >> You are using Regular Expression Method to group AB1 files!
+         INFO [2021-29-06 14:07:37] ========================================================
+         INFO [2021-29-06 14:07:37] ================ Creating 'SangerContig' ===============
+         INFO [2021-29-06 14:07:37] ========================================================
+         INFO [2021-29-06 14:07:37]   >> Contig Name: 'Achl_ACHLO006-09'
+         SUCCESS [2021-29-06 14:07:39] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:39] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 14:07:39] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:39]    >> 'Achl_ACHLO006-09_1_F.ab1' is created (Forward Read; ABIF).
+         SUCCESS [2021-29-06 14:07:40] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:40] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 14:07:40] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:40]    >> 'Achl_ACHLO006-09_2_R.ab1' is created (Reverse Read; ABIF).
+         INFO [2021-29-06 14:07:40]    >> The number of reads detected: 2
+         SUCCESS [2021-29-06 14:07:40] ==========================================================
+         SUCCESS [2021-29-06 14:07:40] ======== 'SangerContig' S4 instance is created !! ========
+         SUCCESS [2021-29-06 14:07:40] ==========================================================
+         INFO [2021-29-06 14:07:40]    >> 2 read(s) created from ABIF file.
+         INFO [2021-29-06 14:07:40]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
+         INFO [2021-29-06 14:07:40]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
+         INFO [2021-29-06 14:07:41] ========================================================
+         INFO [2021-29-06 14:07:41] ================ Creating 'SangerContig' ===============
+         INFO [2021-29-06 14:07:41] ========================================================
+         INFO [2021-29-06 14:07:41]   >> Contig Name: 'Achl_ACHLO007-09'
+         SUCCESS [2021-29-06 14:07:41] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:41] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 14:07:41] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:41]    >> 'Achl_ACHLO007-09_1_F.ab1' is created (Forward Read; ABIF).
+         SUCCESS [2021-29-06 14:07:42] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:42] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 14:07:42] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:42]    >> 'Achl_ACHLO007-09_2_R.ab1' is created (Reverse Read; ABIF).
+         INFO [2021-29-06 14:07:42]    >> The number of reads detected: 2
+         SUCCESS [2021-29-06 14:07:42] ==========================================================
+         SUCCESS [2021-29-06 14:07:42] ======== 'SangerContig' S4 instance is created !! ========
+         SUCCESS [2021-29-06 14:07:42] ==========================================================
+         INFO [2021-29-06 14:07:42]    >> 2 read(s) created from ABIF file.
+         INFO [2021-29-06 14:07:42]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
+         INFO [2021-29-06 14:07:42]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
+         INFO [2021-29-06 14:07:42] ========================================================
+         INFO [2021-29-06 14:07:42] ================ Creating 'SangerContig' ===============
+         INFO [2021-29-06 14:07:42] ========================================================
+         INFO [2021-29-06 14:07:42]   >> Contig Name: 'Achl_ACHLO040-09'
+         SUCCESS [2021-29-06 14:07:43] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:43] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 14:07:43] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:43]    >> 'Achl_ACHLO040-09_1_F.ab1' is created (Forward Read; ABIF).
+         SUCCESS [2021-29-06 14:07:44] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:44] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 14:07:44] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:44]    >> 'Achl_ACHLO040-09_2_R.ab1' is created (Reverse Read; ABIF).
+         INFO [2021-29-06 14:07:44]    >> The number of reads detected: 2
+         SUCCESS [2021-29-06 14:07:44] ==========================================================
+         SUCCESS [2021-29-06 14:07:44] ======== 'SangerContig' S4 instance is created !! ========
+         SUCCESS [2021-29-06 14:07:44] ==========================================================
+         INFO [2021-29-06 14:07:44]    >> 2 read(s) created from ABIF file.
+         INFO [2021-29-06 14:07:44]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
+         INFO [2021-29-06 14:07:44]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
+         INFO [2021-29-06 14:07:44] ========================================================
+         INFO [2021-29-06 14:07:44] ================ Creating 'SangerContig' ===============
+         INFO [2021-29-06 14:07:44] ========================================================
+         INFO [2021-29-06 14:07:44]   >> Contig Name: 'Achl_ACHLO041-09'
+         SUCCESS [2021-29-06 14:07:45] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:45] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 14:07:45] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:45]    >> 'Achl_ACHLO041-09_1_F.ab1' is created (Forward Read; ABIF).
+         SUCCESS [2021-29-06 14:07:45] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:45] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 14:07:45] --------------------------------------------------------
+         SUCCESS [2021-29-06 14:07:45]    >> 'Achl_ACHLO041-09_2_R.ab1' is created (Reverse Read; ABIF).
+         INFO [2021-29-06 14:07:45]    >> The number of reads detected: 2
+         SUCCESS [2021-29-06 14:07:45] ==========================================================
+         SUCCESS [2021-29-06 14:07:45] ======== 'SangerContig' S4 instance is created !! ========
+         SUCCESS [2021-29-06 14:07:45] ==========================================================
+         INFO [2021-29-06 14:07:45]    >> 2 read(s) created from ABIF file.
+         INFO [2021-29-06 14:07:45]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
+         INFO [2021-29-06 14:07:45]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
+         INFO [2021-29-06 14:07:45] Aligning consensus reads ... 
+         INFO [2021-29-06 14:07:45] Before building!!
+         INFO [2021-29-06 14:07:45] After building!!
+         SUCCESS [2021-29-06 14:07:45] #############################################################
+         SUCCESS [2021-29-06 14:07:45] ######## 'SangerAlignment' S4 instance is created !! ########
+         SUCCESS [2021-29-06 14:07:45] #############################################################
+         INFO [2021-29-06 14:07:45]   >> 4 contigs detected from 'regular expression'.
+         INFO [2021-29-06 14:07:45]       >> Contig 'Achl_ACHLO006-09':
+         INFO [2021-29-06 14:07:45]           >> 1 forward reads.
+         INFO [2021-29-06 14:07:45]           >> 1 reverse reads.
+         INFO [2021-29-06 14:07:45]       >> Contig 'Achl_ACHLO007-09':
+         INFO [2021-29-06 14:07:45]           >> 1 forward reads.
+         INFO [2021-29-06 14:07:45]           >> 1 reverse reads.
+         INFO [2021-29-06 14:07:45]       >> Contig 'Achl_ACHLO040-09':
+         INFO [2021-29-06 14:07:45]           >> 1 forward reads.
+         INFO [2021-29-06 14:07:45]           >> 1 reverse reads.
+         INFO [2021-29-06 14:07:46]       >> Contig 'Achl_ACHLO041-09':
+         INFO [2021-29-06 14:07:46]           >> 1 forward reads.
+         INFO [2021-29-06 14:07:46]           >> 1 reverse reads.
+         INFO [2021-29-06 14:07:46]   >> 8 reads created from ABIF file.
+         INFO [2021-29-06 14:07:46]   >> Reads are trimmed by 'M1 - Mott’s trimming algorithm'.
+         DEBUG [2021-29-06 14:07:46]    >> For more information, please run 'object'.
+         DEBUG [2021-29-06 14:07:46]    >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads
 
 |
 
@@ -242,19 +242,20 @@ Launch the Shiny app to check the visualized results.
         Following is the R shell output that you will get.
      .. code-block::
 
-      INFO [2021-29-05 16:29:51] Your input is 'SangerAlignment' S4 instance
-      INFO [2021-29-05 16:29:51] >>> outputDir : /var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T//RtmpGkJZBm
+      INFO [2021-29-06 14:07:46] Your input is 'SangerAlignment' S4 instance
+      INFO [2021-29-06 14:07:46] >>> outputDir : /var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T//RtmpRAPaMV
 
-      Listening on http://127.0.0.1:6285
-      INFO [2021-29-05 16:29:55] >>>>>>>> Inside 'Contigs Alignment Overview Page _'
-      INFO [2021-29-05 16:29:55] ######## Reactive button clicked !!!
-      INFO [2021-29-05 16:29:55] ######## Start re-aligning contigs
-      INFO [2021-29-05 16:29:55] Aligning consensus reads ...
-      INFO [2021-29-05 16:29:55] Before building!!
-      INFO [2021-29-05 16:29:55] After building!!
-      INFO [2021-29-05 16:29:55] ######## Finish contigs re-alignment
-      INFO [2021-29-05 16:29:55] file.exists(browseSeqHTML): TRUE
-      INFO [2021-29-05 16:29:55] (browseSeqHTML): /var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T//RtmpGkJZBm/_SangerAlignment_BrowseSeqs.html
+      Listening on http://127.0.0.1:7717
+      INFO [2021-29-06 14:07:51] >>>>>>>> Inside 'Contigs Alignment Overview Page _'
+      INFO [2021-29-06 14:07:51] ######## Reactive button clicked !!!
+      INFO [2021-29-06 14:07:51] ######## Start re-aligning contigs
+      INFO [2021-29-06 14:07:51] Aligning consensus reads ... 
+      INFO [2021-29-06 14:07:51] Before building!!
+      INFO [2021-29-06 14:07:52] After building!!
+      INFO [2021-29-06 14:07:52] ######## Finish contigs re-alignment
+      INFO [2021-29-06 14:07:52] file.exists(browseSeqHTML): TRUE
+      INFO [2021-29-06 14:07:52] (browseSeqHTML): /var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T//RtmpRAPaMV/_SangerAlignment_BrowseSeqs.html
+      INFO [2021-29-06 14:07:56] @@@@@@@ 'close button' has been clicked
 
 |
 
@@ -296,9 +297,9 @@ Write each contig and the aligned consensus read into FASTA files.
 
 And you will get three FASTA files:
 
-(1) :download:`Sanger_all_trimmed_reads.fa <../files/Sanger_all_trimmed_reads.fa>`
-(2) :download:`Sanger_contigs_alignment.fa <../files/Sanger_contigs_alignment.fa>`
-(3) :download:`Sanger_contigs_unalignment.fa <../files/Sanger_contigs_unalignment.fa>`
+(1) :download:`Sanger_all_trimmed_reads.fa <../files/beginner/Sanger_all_trimmed_reads.fa>`
+(2) :download:`Sanger_contigs_alignment.fa <../files/beginner/Sanger_contigs_alignment.fa>`
+(3) :download:`Sanger_contigs_unalignment.fa <../files/beginner/Sanger_contigs_unalignment.fa>`
 
 
 5. Generate an interactive report

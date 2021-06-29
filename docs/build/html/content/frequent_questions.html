@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Q: What is the difference between two different trimming methods? &mdash; sangeranalyseR  documentation</title>
+  <title>Frequently Asked Questions &mdash; sangeranalyseR  documentation</title>
   
 
   
@@ -100,7 +100,10 @@
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerAlignment_fasta.html">Advanced User Guide - <em>SangerAlignment</em> (<strong>FASTA</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_page.html">How to ...</a></li>
 <li class="toctree-l1"><a class="reference internal" href="function_manual.html">User Manual (functions)</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Q: What is the difference between two different trimming methods?</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#q-what-is-the-difference-between-two-different-trimming-methods">Q: What is the difference between two different trimming methods?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -153,7 +156,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Q: What is the difference between two different trimming methods?</li>
+      <li>Frequently Asked Questions</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -172,13 +175,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <hr class="docutils" />
+  <div class="section" id="frequently-asked-questions">
+<h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <div class="section" id="q-what-is-the-difference-between-two-different-trimming-methods">
-<h1>Q: What is the difference between two different trimming methods?<a class="headerlink" href="#q-what-is-the-difference-between-two-different-trimming-methods" title="Permalink to this headline">¶</a></h1>
+<h2>Q: What is the difference between two different trimming methods?<a class="headerlink" href="#q-what-is-the-difference-between-two-different-trimming-methods" title="Permalink to this headline">¶</a></h2>
 <p>A: In sangeranalyseR, we provide two trimming methods, <em>&quot;M1&quot;</em> (the default) or <em>&quot;M2&quot;</em>, which represents <em>&quot;method 1&quot;</em> or <em>&quot;method 2&quot;</em> respectively. M1 is the modified Mott's trimming algorithm that can also be found in Phred/Phrap and Biopython. M2 is like trimmomatic's sliding window method. If you want to set M1 as your trimming method, you need to assign <strong>&quot;TrimmingMethod&quot;</strong> to <strong>&quot;M1&quot;</strong> and <strong>&quot;M1TrimmingCutoff&quot;</strong> as the threshold that you want. Its default value is <em>&quot;0.0001&quot;</em>. In contrast, you can assign <strong>&quot;TrimmingMethod&quot;</strong> to <strong>&quot;M2&quot;</strong> if you want to set M2 as your trimming method. <strong>&quot;M2CutoffQualityScore&quot;</strong> and <strong>&quot;M2SlidingWindowSize&quot;</strong> are two parameters that control M2 trimming and their default values are <em>&quot;20&quot;</em> and <em>&quot;10&quot;</em> respectively.</p>
+</div>
 </div>
 
 

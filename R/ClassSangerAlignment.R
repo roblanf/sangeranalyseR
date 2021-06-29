@@ -36,6 +36,15 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #'                           ABIF_Directory     = parentDir,
 #'                           REGEX_SuffixForward = "_[0-9]+_F+",
 #'                           REGEX_SuffixReverse = "_[0-9]+_R+")
+#'                           
+#' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+#' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
+#' CSV_NamesConversion <- file.path(rawDataDir, "ab1", "SangerAlignment",
+#' "names_conversion.csv")
+#' sangerAlignment <- new("SangerAlignment",
+#'                        processMethod          = "CSV",
+#'                        ABIF_Directory         = parentDir,
+#'                        CSV_NamesConversion    = CSV_NamesConversion)
 #' 
 #' ## Input From ABIF file format (Regex)
 #' REGEX_SuffixForward <- "_[0-9]*_F.ab1"

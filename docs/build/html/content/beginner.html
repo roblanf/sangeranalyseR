@@ -108,7 +108,7 @@
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerAlignment_fasta.html">Advanced User Guide - <em>SangerAlignment</em> (<strong>FASTA</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_page.html">How to ...</a></li>
 <li class="toctree-l1"><a class="reference internal" href="function_manual.html">User Manual (functions)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequent_questions.html">Q: What is the difference between two different trimming methods?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequent_questions.html">Frequently Asked Questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -183,14 +183,14 @@
   <div class="section" id="beginners-guide">
 <h1>Beginners Guide<a class="headerlink" href="#beginners-guide" title="Permalink to this headline">¶</a></h1>
 <p>If you haven't already, please follow the steps in the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">Installation</span></a> page to install and load sangeranalyseR.</p>
-<p>This guide is for users who are starting with <code class="code docutils literal notranslate"><span class="pre">.ab1</span></code> files. If you are starting with <strong>FASTA</strong> files, please read through this guide then follow the slightly different path for those starting with FASTA data here: <a class="reference internal" href="advance_user_SangerAlignment_fasta.html#advanced-user-guide-sangeralignment-fasta"><span class="std std-ref">Advanced User Guide - SangerAlignment (FASTA)</span></a>.</p>
+<p>This guide is for users who are starting with <strong>ABIF</strong> (<code class="code docutils literal notranslate"><span class="pre">.ab1</span></code>) files. If you are starting with <strong>FASTA</strong> (<code class="code docutils literal notranslate"><span class="pre">.fasta</span></code> or <code class="code docutils literal notranslate"><span class="pre">.fa</span></code>) files, please read through this guide then follow the slightly different path for those starting with FASTA data here: <a class="reference internal" href="advance_user_SangerAlignment_fasta.html#advanced-user-guide-sangeralignment-fasta"><span class="std std-ref">Advanced User Guide - SangerAlignment (FASTA)</span></a>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <div class="section" id="step-1-preparing-your-input-files">
 <h2>Step 1: Preparing your input files<a class="headerlink" href="#step-1-preparing-your-input-files" title="Permalink to this headline">¶</a></h2>
 <p>sangeranalyseR takes as input a group of <strong>.ab1</strong> files, which it then groups together into contigs. Once the individual contigs are built, all the contigs are aligned and a simple phylogenetic tree is made. This section explains how you should organize your files before running sangeranalyseR.</p>
-<p>First, prepare a directory and put all your <strong>.ab1</strong> files inside it (there can be other files in there too, sangeranalyseR will ignore anything without a <cite>.ab1</cite> file extension). Files can be organised in as many sub-folders as you like. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> and find all files that end with <strong>.ab1</strong>.</p>
+<p>First, prepare a directory and put all your <strong>.ab1</strong> files inside it (there can be other files in there too, sangeranalyseR will ignore anything without a <cite>.ab1</cite> file extension). Files can be organised in as many sub-folders as you like. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code> and find all files that end with <strong>.ab1</strong>.</p>
 <p>Second, give sangeranalyseR the information it needs to group reads into contigs. To do this, sangeranalyseR needs two pieces of information about each read: the direction of the read (forward or reverse), and the contig that it should be grouped into. There are two ways you can give sangeranalyseR this information:</p>
 <ul class="simple">
 <li><p>using the file name itself</p></li>
@@ -201,18 +201,34 @@
 <span id="sangeralignment-file-structure-beginner"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure_beginner.png"><img alt="../_images/SangerAlignment_file_structure_beginner.png" src="../_images/SangerAlignment_file_structure_beginner.png" style="width: 319.0px; height: 385.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<p>When using the filenames to group the reads, you'll need to specify three parameters: <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>, <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>, and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>:</p>
+<p>When using the filenames to group the reads, you'll need to specify three parameters: <code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code>, <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixForward</span></code>, and <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixReverse</span></code>:</p>
 <ul class="simple">
-<li><p><code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code>: this is the directory that contains all the <strong>.ab1</strong> files. In this example, the reads are in the <code class="code docutils literal notranslate"><span class="pre">/tmp/</span></code> directory, so for convenience we'll just say that <code class="code docutils literal notranslate"><span class="pre">parentDirectory</span></code> should be <code class="code docutils literal notranslate"><span class="pre">/path/to/tmp/</span></code>. In your case, it should be the absolute path to the folder that contains your reads.</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code>: This is a regular expression (if you don't know what this is, don't panic - it's just a way of recognising text that you will get the hang of fast), which tells sangeranalyseR how to use the end of a filename to determine a forward read. All the reads that are in forward direction have to contain this in their filename suffix. There are lots of ways to do this, but for this example, one uesful way to do it is <code class="code docutils literal notranslate"><span class="pre">_[0-9]+_F</span></code>. This regular expression just says that the forward suffix is an underscore, followed at least one digit from 0-9, followed by another underscore then 'F'. The regex does not have to match to the end of the file name, but it's important to realise is that whatever comes before the part of the filename captured by this regex is by default the contig name. So in this case the regex also determines that the contig name for the first read is 'Achl_RBNII397-13'.</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>: This is just the same as for the forward read, except that it determines the suffix for reverse reads. All the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_[0-9]+_R</span></code>. I.e. all we've done is switch the 'F' in the forward read for an 'R' in the reverse read.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code>: this is the directory that contains all the <strong>.ab1</strong> files. In this example, the reads are in the <code class="code docutils literal notranslate"><span class="pre">/tmp/</span></code> directory, so for convenience we'll just say that <code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code> should be <code class="code docutils literal notranslate"><span class="pre">/path/to/tmp/</span></code>. In your case, it should be the absolute path to the folder that contains your reads.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixForward</span></code>: This is a regular expression (if you don't know what this is, don't panic - it's just a way of recognising text that you will get the hang of fast), which tells sangeranalyseR how to use the end of a filename to determine a forward read. All the reads that are in forward direction have to contain this in their filename suffix. There are lots of ways to do this, but for this example, one uesful way to do it is <code class="code docutils literal notranslate"><span class="pre">_[0-9]+_F</span></code>. This regular expression just says that the forward suffix is an underscore, followed at least one digit from 0-9, followed by another underscore then 'F'. The regex does not have to match to the end of the file name, but it's important to realise is that whatever comes before the part of the filename captured by this regex is by default the contig name. So in this case the regex also determines that the contig name for the first read is 'Achl_RBNII397-13'.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixReverse</span></code>: This is just the same as for the forward read, except that it determines the suffix for reverse reads. All the reads that are in reverse direction have to contain this in their filename suffix. In this example, its value is <code class="code docutils literal notranslate"><span class="pre">_[0-9]+_R</span></code>. I.e. all we've done is switch the 'F' in the forward read for an 'R' in the reverse read.</p></li>
 </ul>
-<p>If you don't want to use the regex method, you can use the csv method instead. To use this method, just prepare an input <strong>.csv</strong> file with three columns:</p>
+<p>If you don't want to use the regex method, you can use the csv method instead. To use this method, just set <code class="code docutils literal notranslate"><span class="pre">processMethod</span></code> parameter to <code class="code docutils literal notranslate"><span class="pre">csv</span></code> and prepare an input <strong>.csv</strong> file with three columns:</p>
 <ul class="simple">
-<li><p>contig: the name of the contig that reads should be grouped into</p></li>
-<li><p>direction: &quot;F&quot; or &quot;R&quot; for forward and reverse reads, respectively</p></li>
 <li><p>reads: the full file name (just the name, not the path) of the read to be grouped</p></li>
+<li><p>direction: &quot;F&quot; or &quot;R&quot; for forward and reverse reads, respectively</p></li>
+<li><p>contig: the name of the contig that reads should be grouped into</p></li>
 </ul>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p>Following is an example of how you should organize your csv file in this example:</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;reads&quot;</span><span class="p">,</span><span class="s2">&quot;direction&quot;</span><span class="p">,</span><span class="s2">&quot;contig&quot;</span>
+<span class="s2">&quot;Achl_ACHLO006-09_1_F.ab1&quot;</span><span class="p">,</span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="s2">&quot;Achl_ACHLO006-09&quot;</span>
+<span class="s2">&quot;Achl_ACHLO006-09_2_R.ab1&quot;</span><span class="p">,</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;Achl_ACHLO006-09&quot;</span>
+<span class="s2">&quot;Achl_ACHLO007-09_1_F.ab1&quot;</span><span class="p">,</span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="s2">&quot;Achl_ACHLO007-09&quot;</span>
+<span class="s2">&quot;Achl_ACHLO007-09_2_R.ab1&quot;</span><span class="p">,</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;Achl_ACHLO007-09&quot;</span>
+<span class="s2">&quot;Achl_RBNII396-13_1_F.ab1&quot;</span><span class="p">,</span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="s2">&quot;Achl_RBNII396-13&quot;</span>
+<span class="s2">&quot;Achl_RBNII396-13_1_R.ab1&quot;</span><span class="p">,</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;Achl_RBNII396-13&quot;</span>
+<span class="s2">&quot;Achl_RBNII397-13_1_F.ab1&quot;</span><span class="p">,</span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="s2">&quot;Achl_RBNII397-13&quot;</span>
+<span class="s2">&quot;Achl_RBNII397-13_1_R.ab1&quot;</span><span class="p">,</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;Achl_RBNII397-13&quot;</span>
+</pre></div>
+</div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -223,14 +239,16 @@
 <p>It's important to note that this function is designed to be both <em>simple</em> and <em>flexible</em>. It's simple in that it has sensible defaults for all the usual things like trimming reads. But it's flexible in that you can change any and all of these defaults to suit your particular data and analyses. Here we just cover the simplest usage. The more flexible things are covered in the Advanced sections of the user guide.</p>
 <p>So, let's create our contigs from our reads, and align them.</p>
 <p>Here's how to do it using the regex method:</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;/path/to/tmp/&quot;</span><span class="p">,</span>
-                                      <span class="n">suffixForwardRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_F&quot;</span><span class="p">,</span>
-                                      <span class="n">suffixReverseRegExp</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R&quot;</span><span class="p">)</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">ABIF_Directory</span>      <span class="o">=</span> <span class="s">&quot;/path/to/tmp/&quot;</span><span class="p">,</span>
+                                      <span class="n">processMethod</span>       <span class="o">=</span> <span class="s">&quot;REGEX&quot;</span><span class="p">,</span>
+                                      <span class="n">REGEX_SuffixForward</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_F&quot;</span><span class="p">,</span>
+                                      <span class="n">REGEX_SuffixReverse</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Here's how to do it using the csv file method</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">parentDirectory</span>     <span class="o">=</span> <span class="s">&quot;/path/to/tmp/&quot;</span><span class="p">,</span>
-                                      <span class="n">namesConversionCSV</span>  <span class="o">=</span> <span class="s">&quot;/path/to/csvfile&quot;</span><span class="p">)</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">ABIF_Directory</span>      <span class="o">=</span> <span class="s">&quot;/path/to/tmp/&quot;</span><span class="p">,</span>
+                                      <span class="n">processMethod</span>       <span class="o">=</span> <span class="s">&quot;CSV&quot;</span><span class="p">,</span>
+                                      <span class="n">CSV_NamesConversion</span> <span class="o">=</span> <span class="s">&quot;/path/to/csvfile&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><code class="code docutils literal notranslate"><span class="pre">my_aligned_contigs</span></code> is now a <em>SangerAlignment</em> S4 object which contains all of your reads, all the information on how they were trimmed, processed, and aligned, their chromatograms, and an alignment and phylogeny of all of your assembled contigs. The next section explains how to start digging into the details of that object.</p>

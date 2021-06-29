@@ -100,13 +100,20 @@
 <li class="toctree-l2"><a class="reference internal" href="#creating-sangerread-instance-from-fasta">Creating <em>SangerRead</em> instance from <strong>FASTA</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-sangerread-fasta-files-fasta">Writing <em>SangerRead</em> FASTA files <sub>(FASTA)</sub></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-sangerread-report-fasta">Generating <em>SangerRead</em> report <sub>(FASTA)</sub></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-reproducible-example">A Reproducible Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">1. Preparing <em>SangerRead</em> <strong>FASTA</strong> input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">2. Creating <em>SangerRead</em> instance from <strong>FASTA</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">3. Writing <em>SangerRead</em> FASTA files <sub>(FASTA)</sub></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">4. Generating <em>SangerRead</em> report <sub>(FASTA)</sub></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerContig_fasta.html">Advanced User Guide - <em>SangerContig</em> (<strong>FASTA</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerAlignment_fasta.html">Advanced User Guide - <em>SangerAlignment</em> (<strong>FASTA</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_page.html">How to ...</a></li>
 <li class="toctree-l1"><a class="reference internal" href="function_manual.html">User Manual (functions)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequent_questions.html">Q: What is the difference between two different trimming methods?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequent_questions.html">Frequently Asked Questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -180,10 +187,10 @@
             
   <div class="section" id="advanced-user-guide-sangerread-fasta">
 <h1>Advanced User Guide - <em>SangerRead</em> (<strong>FASTA</strong>)<a class="headerlink" href="#advanced-user-guide-sangerread-fasta" title="Permalink to this headline">¶</a></h1>
-<p><em>SangerRead</em> is the lowest level in sangeranalyseR showed in <a class="reference internal" href="#sangerread-hierarchy-fasta"><span class="std std-ref">Figure_1</span></a> which corresponds to a single read in Sanger sequencing. In this section, we are going to go through detailed sangeranalyseR data analysis steps in <em>SangerRead level</em> from <strong>FASTA</strong> file input.</p>
-<div class="figure align-center" id="id1">
+<p><em>SangerRead</em> is the bottommost level in sangeranalyseR (<a class="reference internal" href="#sangerread-hierarchy-fasta"><span class="std std-ref">Figure_1</span></a>) and each <em>SangerRead</em> object corresponds to a single read in Sanger sequencing. In this section, we are going to go through detailed sangeranalyseR data analysis steps in <em>SangerRead level</em> with <strong>FASTA</strong> file input.</p>
+<div class="figure align-center" id="id5">
 <span id="sangerread-hierarchy-fasta"></span><a class="reference internal image-reference" href="../_images/SangerRead_hierarchy.png"><img alt="../_images/SangerRead_hierarchy.png" src="../_images/SangerRead_hierarchy.png" style="width: 626.6px; height: 217.8px;" /></a>
-<p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerRead</em> level.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerRead</em> level.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -206,9 +213,9 @@
                      <span class="n">geneticCode</span>          <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id2">
+<div class="figure align-center" id="id6">
 <span id="sangerread-fasta-input-file"></span><a class="reference internal image-reference" href="../_images/SangerRead_fasta_input_file.png"><img alt="../_images/SangerRead_fasta_input_file.png" src="../_images/SangerRead_fasta_input_file.png" style="width: 854.4000000000001px; height: 183.20000000000002px;" /></a>
-<p class="caption"><span class="caption-text">Figure 2. <em>SangerRead</em> <strong>FASTA</strong> input file.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Figure 2. <em>SangerRead</em> <strong>FASTA</strong> input file.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 <p>The inputs of <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function and <code class="code docutils literal notranslate"><span class="pre">new</span></code> method are same. For more details about <em>SangerRead</em> inputs and slots definition, please refer to <a class="reference external" href="http://packages.python.org/an_example_pypi_project/">sangeranalyseR reference manual (need update after upload function manul)</a>.</p>
 <div class="line-block">
@@ -237,6 +244,109 @@
 </pre></div>
 </div>
 <p><a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/SangerRead/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_fasta.html">SangerRead_Report_fasta.html</a> is the generated <em>SangerRead</em> report html of this example. Users can access to '<em>Basic Information</em>', '<em>DNA Sequence</em>' and '<em>Amino Acids Sequence</em>' sections inside this report.</p>
+<hr class="docutils" />
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="a-reproducible-example">
+<h2>A Reproducible Example<a class="headerlink" href="#a-reproducible-example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>1. Preparing <em>SangerRead</em> <strong>FASTA</strong> input<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">inputFilesPath</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata/&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
+<span class="n">A_chloroticaFFNfa</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">inputFilesPath</span><span class="p">,</span>
+                               <span class="s">&quot;fasta&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;SangerRead&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;Achl_ACHLO006-09_1_F.fa&quot;</span><span class="p">)</span>
+<span class="n">readNameFfa</span> <span class="o">&lt;-</span> <span class="s">&quot;Achl_ACHLO006-09_1_F&quot;</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>2. Creating <em>SangerRead</em> instance from <strong>FASTA</strong><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Run the following on-liner to create the <em>SangerRead</em> object.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerRead instance</span>
+<span class="n">sangerReadFfa</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">inputSource</span>        <span class="o">=</span> <span class="s">&quot;FASTA&quot;</span><span class="p">,</span>
+                            <span class="n">readFeature</span>        <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
+                            <span class="n">readFileName</span>       <span class="o">=</span> <span class="n">A_chloroticaFFNfa</span><span class="p">,</span>
+                            <span class="n">fastaReadName</span>      <span class="o">=</span> <span class="n">readNameFfa</span><span class="p">)</span>
+
+<span class="c1"># using `new` method to create SangerRead instance</span>
+<span class="n">sangerReadFfa</span> <span class="o">&lt;-</span> <span class="nf">new</span><span class="p">(</span><span class="s">&quot;SangerRead&quot;</span><span class="p">,</span>
+                     <span class="n">inputSource</span>        <span class="o">=</span> <span class="s">&quot;FASTA&quot;</span><span class="p">,</span>
+                     <span class="n">readFeature</span>        <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
+                     <span class="n">readFileName</span>       <span class="o">=</span> <span class="n">A_chloroticaFFNfa</span><span class="p">,</span>
+                     <span class="n">fastaReadName</span>      <span class="o">=</span> <span class="n">readNameFfa</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p>Following is the R shell output that you will get.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>INFO [2021-29-06 17:07:40] ------------------------------------------------
+INFO [2021-29-06 17:07:40] -------- Creating &#39;SangerRead&#39; instance --------
+INFO [2021-29-06 17:07:40] ------------------------------------------------
+INFO [2021-29-06 17:07:40] Forward Read: Creating SangerRead from FASTA ...
+SUCCESS [2021-29-06 17:07:41] --------------------------------------------------------
+SUCCESS [2021-29-06 17:07:41] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-06 17:07:41] --------------------------------------------------------
+SUCCESS [2021-29-06 17:07:41]    &gt;&gt; &#39;Achl_ACHLO006-09_1_F&#39; is created (Forward Read; FASTA).
+INFO [2021-29-06 17:07:41]    &gt;&gt; Read is trimmed by &#39;M1 - Mott’s trimming algorithm&#39;.
+DEBUG [2021-29-06 17:07:41]    &gt;&gt; For more information, please run &#39;object&#39;.
+DEBUG [2021-29-06 17:07:41]    &gt;&gt; Run &#39;object@objectResults@readResultTable&#39; to check the result of the Sanger read
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>3. Writing <em>SangerRead</em> FASTA files <sub>(FASTA)</sub><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Write the read into a FASTA file.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">sangerReadFfa</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p>Following is the R shell output that you will get.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">16</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mi">17</span><span class="p">]</span> <span class="n">Your</span> <span class="nb">input</span> <span class="ow">is</span> <span class="s1">&#39;SangerRead&#39;</span> <span class="n">S4</span> <span class="n">instance</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">16</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mi">17</span><span class="p">]</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">outputDir</span> <span class="p">:</span> <span class="o">/</span><span class="n">private</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="mi">33</span><span class="o">/</span><span class="mi">7</span><span class="n">v38jdjd2874jcxb6l71m00h0000gn</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">RtmpRAPaMV</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">16</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mi">17</span><span class="p">]</span> <span class="n">Start</span> <span class="n">writing</span> <span class="s1">&#39;/Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata//Allolobophora_chlorotica/ACHLO/Achl_ACHLO006-09_1_F.ab1&#39;</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="nb">format</span> <span class="o">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">16</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mi">17</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="s1">&#39;/private/var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T/RtmpRAPaMV/Achl_ACHLO006-09_1_F.fa&#39;</span> <span class="ow">is</span> <span class="n">written</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="s2">&quot;/private/var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T/RtmpRAPaMV/Achl_ACHLO006-09_1_F.fa&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>And you will get one FASTA file:</p>
+<ol class="arabic simple">
+<li><p><a class="reference download internal" download="" href="../_downloads/3d881c9414e03ce0d644c45acbf0ff0d/Achl_ACHLO006-09_1_F.fa"><code class="xref download docutils literal notranslate"><span class="pre">Sanger_all_trimmed_reads.fa</span></code></a></p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>4. Generating <em>SangerRead</em> report <sub>(FASTA)</sub><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Last but not least, generate an Rmarkdown report to store all the sequence information.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">sangerReadFfa</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
 </div>
 </div>
 
