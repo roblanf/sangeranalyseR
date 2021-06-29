@@ -173,8 +173,8 @@ Last but not least, users can save *SangerRead* instance into a report after the
 
 
 
-A Reproducible Example
-++++++++++++++++++++++
+A Reproducible Example (*SangerRead*, **ab1**)
++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 1. Preparing *SangerRead* **AB1** input

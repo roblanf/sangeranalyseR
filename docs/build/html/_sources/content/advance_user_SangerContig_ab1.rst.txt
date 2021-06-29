@@ -13,7 +13,7 @@ Advanced User Guide - *SangerContig* (**AB1**)
 |
 
 Preparing *SangerContig* **AB1** input
---------------------------------------
+++++++++++++++++++++++++++++++++++++++++
 
 The main input file format to create *SangerRead* instance is **AB1**. Before starting the analysis, users need to prepare all **AB1** files inside one directory. It is the parent directory and all **AB1** files must be in the first layer of it; in other words, there should not be any directory containing any **AB1** files inside the parent directory. Because sangeranalyseR will group **AB1** files based on their direction automatically, users have to follow the file naming regulations below:
 
@@ -63,7 +63,7 @@ sangeranalyseR will first match the :code:`contigName` to exclude unrelated file
 
 
 Creating *SangerContig* instance from **AB1**
----------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++
 
 After preparing the input directory, we can create the *SangerContig* S4 instance by running :code:`SangerContig` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters.
 
@@ -101,7 +101,7 @@ The inputs of :code:`SangerContig` constructor function and :code:`new` method a
 
 
 Updating *SangerContig* quality trimming parameters
----------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 In the previous :ref:`Creating *SangerContig* instance from **AB1**` part, the constructor function will apply the quality trimming parameters to all reads. After creating the SangerContig S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will update all reads with the new trimming parameters and redo reads alignment. If users want to do quality trimming read by read instead of all at once, please read :ref:`Launching *SangerContig* Shiny app` page.
 
@@ -116,7 +116,7 @@ In the previous :ref:`Creating *SangerContig* instance from **AB1**` part, the c
 |
 
 Launching *SangerContig* Shiny app
-----------------------------------
++++++++++++++++++++++++++++++++++++
 
 We create an interactive local Shiny app for users to go into each *SangerRead* in *SangerContig* instance. Users only need to run one function, :code:`launchApp`, with previously created instance as input and the *SangerContig* Shiny app will pop up. Here, we will go through pages in the two levels, *SangerRead* and *SangerContig* pages.
 
@@ -126,7 +126,7 @@ We create an interactive local Shiny app for users to go into each *SangerRead* 
 
 
 *SangerContig* page (SC app)
-++++++++++++++++++++++++++++
+-----------------------------
 *SangerContig* page is the initial page of *SangerContig* Shiny app. :ref:`Figure 4<SangerContig_shiny_SangerContig_page>` shows the overview page of the contig. Notice that there is a red "Re-calculate Contig" button. Users need to click the button after changing the quality trimming parameters in order to get the updated information. In SangerContig page, there are two expendable tabs, “Forward Reads” and “Reverse Reads” storing the corresponding reads on the left-hand side navigation panel in :ref:`Figure 4<SangerContig_shiny_SangerContig_page>`. See :ref:`*SangerRead* page (SC app)` for more details of the subpage.
 
 .. _SangerContig_shiny_SangerContig_page:
@@ -177,7 +177,8 @@ The information provided in this page are input parameters and contig results in
 
 
 *SangerRead* page (SC app)
-++++++++++++++++++++++++++
+--------------------------
+
 Now, let's go to the next level which is also the lowest level, *SangerRead* page. *SangerRead* page contains all details of a read including its trimming and chromatogram inputs and results. All reads are in "forward" or "reverse" direction. In this example, there is one read in each direction and :ref:`Figure 9<SangerContig_shiny_SangerRead_page>` shows "1 Forward Read" page. This page provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences and quality Phred scores table in this figure are dynamic based on the :code:`signalRatioCutoff` value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in :ref:`Figure 14<SangerContig_shiny_chromatogram_panel>` below will always be same after trimming and their color codings for A/T/C/G are same as well.
 
 .. _SangerContig_shiny_SangerRead_page:
@@ -274,7 +275,7 @@ We have updated the trimming and chromatogram parameters for each read. Now, we 
 |
 
 Writing *SangerContig* FASTA files :sub:`(AB1)`
------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++
 Users can write the *SangerContig* instance to **FASTA** files. There are four options for users to choose from in :code:`selection` parameter.
 
 * :code:`reads_unalignment`: Writing reads into a single **FASTA** file (only trimmed without alignment).
@@ -301,7 +302,7 @@ Users can download the output FASTA file of this example through the following t
 |
 
 Generating *SangerContig* report :sub:`(AB1)`
----------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++
 Last but not least, users can save *SangerContig* instance into a report after the analysis. The report will be generated in **HTML** by knitting **Rmd** files.
 
 
@@ -317,3 +318,165 @@ One thing to pay attention to is that if users have many reads, it will take qui
                   includeSangerRead   = TRUE)
 
 Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.
+
+-----
+
+|
+|
+
+
+A Reproducible Example (*SangerContig*, **ab1**)
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+1. Preparing *SangerContig* **AB1** input
+---------------------------------------------
+The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.
+
+.. code-block:: R
+
+    rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+    parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
+
+|
+
+2. Creating *SangerContig* instance from **AB1**
+----------------------------------------------------
+Run the following on-liner to create the *SangerContig* object.
+
+
+.. code-block:: R
+
+   # using `constructor` function to create SangerRead instance
+   my_sangerContig <- SangerContig(inputSource           = "ABIF",
+                                   processMethod         = "REGEX",
+                                   ABIF_Directory        = parentDir,
+                                   contigName            = "Achl_RBNII384-13",
+                                   REGEX_SuffixForward   = "_[0-9]*_F.ab1",
+                                   REGEX_SuffixReverse   = "_[0-9]*_R.ab1",
+                                   refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
+   
+   # using `new` method to create SangerRead instance
+   my_sangerContig <- new("SangerContig",
+                          inputSource           = "ABIF",
+                          processMethod         = "REGEX",
+                          ABIF_Directory        = parentDir,
+                          contigName            = "Achl_RBNII384-13",
+                          REGEX_SuffixForward   = "_[0-9]*_F.ab1",
+                          REGEX_SuffixReverse   = "_[0-9]*_R.ab1",
+                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
+
+.. container:: toggle
+
+    .. container:: header
+
+        Following is the R shell output that you will get.
+    .. code-block::
+
+         INFO [2021-29-06 17:44:10] ========================================================
+         INFO [2021-29-06 17:44:10] ================ Creating 'SangerContig' ===============
+         INFO [2021-29-06 17:44:10] ========================================================
+         INFO [2021-29-06 17:44:10]   >> Contig Name: 'Achl_RBNII384-13'
+         INFO [2021-29-06 17:44:10]   >> You are using Regular Expression Method to group AB1 files!
+         INFO [2021-29-06 17:44:10] >> Your contig name is Achl_RBNII384-13
+         SUCCESS [2021-29-06 17:44:11] --------------------------------------------------------
+         SUCCESS [2021-29-06 17:44:11] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 17:44:11] --------------------------------------------------------
+         SUCCESS [2021-29-06 17:44:11]    >> 'Achl_RBNII384-13_1_F.ab1' is created (Forward Read; ABIF).
+         SUCCESS [2021-29-06 17:44:12] --------------------------------------------------------
+         SUCCESS [2021-29-06 17:44:12] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 17:44:12] --------------------------------------------------------
+         SUCCESS [2021-29-06 17:44:12]    >> 'Achl_RBNII384-13_2_R.ab1' is created (Reverse Read; ABIF).
+         INFO [2021-29-06 17:44:12]    >> The number of reads detected: 2
+         INFO [2021-29-06 17:44:12] Correcting frameshifts in reads using amino acidreference sequence
+         Assessing frameshifts in nucleotide sequences:
+         |=============================================================================| 100%
+
+         Time difference of 0.2 secs
+         SUCCESS [2021-29-06 17:44:16] ==========================================================
+         SUCCESS [2021-29-06 17:44:16] ======== 'SangerContig' S4 instance is created !! ========
+         SUCCESS [2021-29-06 17:44:16] ==========================================================
+         INFO [2021-29-06 17:44:16]    >> 2 read(s) created from ABIF file.
+         INFO [2021-29-06 17:44:16]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
+         INFO [2021-29-06 17:44:16]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
+         INFO [2021-29-06 17:44:16]    >> Trimmed by 'M1 - Mott’s trimming algorithm'.
+         DEBUG [2021-29-06 17:44:16]    >> For more information, please run 'object'
+         DEBUG [2021-29-06 17:44:16]    >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads
+         
+|
+
+
+3. Updating *SangerContig* quality trimming parameters
+-------------------------------------------------------
+
+.. code-block:: R
+
+      newSangerContig <- updateQualityParam(my_sangerContig,
+                                            TrimmingMethod       = "M2",
+                                            M1TrimmingCutoff     = NULL,
+                                            M2CutoffQualityScore = 20,
+                                            M2SlidingWindowSize  = 15)
+
+|
+
+
+4. Launching *SangerContig* Shiny app
+-----------------------------------------
+
+Launch an interactive Shiny app to view your analysis, change the default settings, and so on.
+
+.. code-block:: R
+
+   launchApp(my_sangerContig)
+
+|
+
+
+5. Writing *SangerContig* FASTA files :sub:`(AB1)`
+--------------------------------------------------
+
+The following function can write the *SangerContig* object into FASTA files. You just need to tell it where with the :code:`outputDir` argument.
+.. code-block:: R
+
+   writeFasta(my_sangerContig)
+
+
+.. container:: toggle
+
+     .. container:: header
+
+        Following is the R shell output that you will get.
+
+     .. code-block::
+
+         INFO [2021-29-06 17:47:19] Your input is 'SangerContig' S4 instance
+         INFO [2021-29-06 17:47:19] >>> outputDir : /private/var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T/RtmpRAPaMV
+         INFO [2021-29-06 17:47:19] Start to write 'Achl_RBNII384-13' to FASTA format ...
+         INFO [2021-29-06 17:47:19] >> Writing alignment to FASTA ...
+         INFO [2021-29-06 17:47:19] >> Writing all single reads to FASTA ...
+         INFO [2021-29-06 17:47:19] >> Writing consensus read to FASTA ...
+         INFO [2021-29-06 17:47:19] Finish writing 'Achl_RBNII384-13' to FASTA format
+
+|
+
+And you will get three FASTA files:
+
+(1) :download:`Achl_RBNII384-13_reads_unalignment.fa <../files/SangerContig_ab1/Achl_RBNII384-13_reads_unalignment.fa>`
+(2) :download:`Achl_RBNII384-13_reads_alignment.fa <../files/SangerContig_ab1/Achl_RBNII384-13_reads_alignment.fa>`
+(3) :download:`Achl_RBNII384-13_contig.fa <../files/SangerContig_ab1/Achl_RBNII384-13_contig.fa>`
+
+|
+
+6. Generating *SangerContig* report :sub:`(AB1)`
+-------------------------------------------------
+
+Last but not least, generate an Rmarkdown report to store all the sequence information.
+
+.. code-block:: R
+
+   generateReport(my_sangerContig)
+
+-----
+
+|
+|

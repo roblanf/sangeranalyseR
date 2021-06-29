@@ -13,7 +13,7 @@ Advanced User Guide - *SangerContig* (**FASTA**)
 |
 
 Preparing *SangerContig* **FASTA** input
-----------------------------------------
++++++++++++++++++++++++++++++++++++++++++
 
 We design the **FASTA** file input for those who do not want to do quality trimming and base calling for each *SangerRead* in *SangerContig*; therefore, it does not contain quality trimming and chromatogram input parameters and results in *SangerRead* slots. Before starting the analysis, users need to prepare one **FASTA** file containing sequence of all reads. Inside the **FASTA** file, the strings starting with ">" before each read are the read names. Because sangeranalyseR will automatically group reads into "Forward Read List" and "Reverse Read List", users have to follow the naming regulations. Below are some regulations:
 
@@ -64,7 +64,7 @@ Here, we have an example:
 |
 
 Creating *SangerContig* instance from **FASTA**
------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 After preparing the input directory, we can create the *SangerContig* S4 instance by running :code:`SangerContig` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters.
 
@@ -87,7 +87,7 @@ The inputs of :code:`SangerContig` constructor function and :code:`new` method a
 
 
 Writing *SangerContig* FASTA files :sub:`(FASTA)`
--------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++
 Users can write the *SangerContig* instance to **FASTA** files. There are four options for users to choose from in :code:`selection` parameter.
 
 * :code:`reads_unalignment`: Writing reads into a single **FASTA** file.
@@ -115,7 +115,7 @@ Users can download the output **FASTA** file of this example through the followi
 |
 
 Generating *SangerContig* report :sub:`(FASTA)`
------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++
 Last but not least, users can save *SangerContig* instance into a report after the analysis. The report will be generated in **HTML** by knitting **Rmd** files.
 
 
@@ -130,3 +130,144 @@ One thing to pay attention to is that if users have many reads, it would take qu
                   includeSangerRead   = TRUE)
 
 Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerContig/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.
+
+
+
+
+
+
+
+-----
+
+|
+|
+
+
+A Reproducible Example (*SangerContig*, **FASTA**)
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+1. Preparing *SangerContig* **FASTA** input
+---------------------------------------------
+The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.
+
+.. code-block:: R
+
+      rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+      fastaFN <- file.path(rawDataDir, "fasta", "SangerContig", "Achl_ACHLO006-09.fa")
+
+|
+
+2. Creating *SangerContig* instance from **FASTA**
+----------------------------------------------------
+Run the following on-liner to create the *SangerContig* object.
+
+
+.. code-block:: R
+
+   # using `constructor` function to create SangerRead instance
+   my_sangerContigFa <- SangerContig(inputSource           = "FASTA",
+                                     processMethod         = "REGEX",
+                                     FASTA_File            = fastaFN,
+                                     contigName            =  "Achl_ACHLO006-09",
+                                     REGEX_SuffixForward   = "_[0-9]*_F$",
+                                     REGEX_SuffixReverse   = "_[0-9]*_R$",
+                                     refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
+   
+   # using `new` method to create SangerRead instance
+   my_sangerContigFa <- new("SangerContig",
+                            inputSource           = "FASTA",
+                            processMethod         = "REGEX",
+                            FASTA_File            = fastaFN,
+                            contigName            = "Achl_ACHLO006-09",
+                            REGEX_SuffixForward   = "_[0-9]*_F$",
+                            REGEX_SuffixReverse   = "_[0-9]*_R$",
+                            refAminoAcidSeq       = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
+
+.. container:: toggle
+
+    .. container:: header
+
+        Following is the R shell output that you will get.
+    .. code-block::
+
+         INFO [2021-29-06 18:13:55] ========================================================
+         INFO [2021-29-06 18:13:55] ================ Creating 'SangerContig' ===============
+         INFO [2021-29-06 18:13:55] ========================================================
+         INFO [2021-29-06 18:13:55]   >> Contig Name: 'Achl_ACHLO006-09'
+         INFO [2021-29-06 18:13:55]   >> You are using Regular Expression Method to group reads in FASTA file (No CSV file)!
+         INFO [2021-29-06 18:13:55] >> Your contig name is Achl_ACHLO006-09
+         SUCCESS [2021-29-06 18:13:56] --------------------------------------------------------
+         SUCCESS [2021-29-06 18:13:56] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 18:13:56] --------------------------------------------------------
+         SUCCESS [2021-29-06 18:13:56]    >> 'Achl_ACHLO006-09_1_F' is created (Forward Read; FASTA).
+         SUCCESS [2021-29-06 18:13:57] --------------------------------------------------------
+         SUCCESS [2021-29-06 18:13:57] -------- 'SangerRead' S4 instance is created !! --------
+         SUCCESS [2021-29-06 18:13:57] --------------------------------------------------------
+         SUCCESS [2021-29-06 18:13:57]    >> 'Achl_ACHLO006-09_2_R' is created (Reverse Read; FASTA).
+         INFO [2021-29-06 18:13:57]    >> The number of reads detected: 2
+         INFO [2021-29-06 18:13:57] Correcting frameshifts in reads using amino acidreference sequence
+         Assessing frameshifts in nucleotide sequences:
+         |=============================================================================| 100%
+
+         Time difference of 0.22 secs
+         SUCCESS [2021-29-06 18:14:07] ==========================================================
+         SUCCESS [2021-29-06 18:14:07] ======== 'SangerContig' S4 instance is created !! ========
+         SUCCESS [2021-29-06 18:14:07] ==========================================================
+         INFO [2021-29-06 18:14:07]    >> 2 read(s) created from FASTA file.
+         INFO [2021-29-06 18:14:07]      >> 1 reads assigned to 'forward reads' according to 'regular expression'.
+         INFO [2021-29-06 18:14:07]      >> 1 reads assigned to 'reverse reads' according to 'regular expression'.
+         DEBUG [2021-29-06 18:14:07]    >> For more information, please run 'object'
+         DEBUG [2021-29-06 18:14:07]    >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads
+
+|
+
+
+3. Writing *SangerContig* FASTA files :sub:`(FASTA)`
+----------------------------------------------------
+
+The following function can write the *SangerContig* object into FASTA files. You just need to tell it where with the :code:`outputDir` argument.
+.. code-block:: R
+
+   writeFasta(my_sangerContigFa)
+
+
+.. container:: toggle
+
+     .. container:: header
+
+        Following is the R shell output that you will get.
+
+     .. code-block::
+
+         INFO [2021-29-06 18:16:32] Your input is 'SangerContig' S4 instance
+         INFO [2021-29-06 18:16:32] >>> outputDir : /private/var/folders/33/7v38jdjd2874jcxb6l71m00h0000gn/T/RtmpRAPaMV
+         INFO [2021-29-06 18:16:32] Start to write 'Achl_ACHLO006-09' to FASTA format ...
+         INFO [2021-29-06 18:16:32] >> Writing alignment to FASTA ...
+         INFO [2021-29-06 18:16:32] >> Writing all single reads to FASTA ...
+         INFO [2021-29-06 18:16:32] >> Writing consensus read to FASTA ...
+         INFO [2021-29-06 18:16:32] Finish writing 'Achl_ACHLO006-09' to FASTA format
+
+|
+
+And you will get three FASTA files:
+
+(1) :download:`Achl_RBNII384-13_reads_unalignment.fa <../files/SangerContig_ab1/Achl_RBNII384-13_reads_unalignment.fa>`
+(2) :download:`Achl_RBNII384-13_reads_alignment.fa <../files/SangerContig_ab1/Achl_RBNII384-13_reads_alignment.fa>`
+(3) :download:`Achl_RBNII384-13_contig.fa <../files/SangerContig_ab1/Achl_RBNII384-13_contig.fa>`
+
+|
+
+4. Generating *SangerContig* report :sub:`(FASTA)`
+---------------------------------------------------
+
+Last but not least, generate an Rmarkdown report to store all the sequence information.
+
+.. code-block:: R
+
+   generateReport(my_sangerContigFa)
+
+-----
+
+|
+|

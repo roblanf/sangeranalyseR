@@ -85,8 +85,8 @@ Last but not least, users can save *SangerRead* instance into a report after the
 
 
 
-A Reproducible Example
-++++++++++++++++++++++
+A Reproducible Example (*SangerRead*, **fasta**)
++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 1. Preparing *SangerRead* **FASTA** input

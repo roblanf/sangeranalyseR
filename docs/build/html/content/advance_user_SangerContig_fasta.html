@@ -101,6 +101,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#creating-sangercontig-instance-from-fasta">Creating <em>SangerContig</em> instance from <strong>FASTA</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-sangercontig-fasta-files-fasta">Writing <em>SangerContig</em> FASTA files <sub>(FASTA)</sub></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-sangercontig-report-fasta">Generating <em>SangerContig</em> report <sub>(FASTA)</sub></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-reproducible-example-sangercontig-fasta">A Reproducible Example (<em>SangerContig</em>, <strong>FASTA</strong>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">1. Preparing <em>SangerContig</em> <strong>FASTA</strong> input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">2. Creating <em>SangerContig</em> instance from <strong>FASTA</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">3. Writing <em>SangerContig</em> FASTA files <sub>(FASTA)</sub></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">4. Generating <em>SangerContig</em> report <sub>(FASTA)</sub></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerAlignment_fasta.html">Advanced User Guide - <em>SangerAlignment</em> (<strong>FASTA</strong>)</a></li>
@@ -181,9 +188,9 @@
   <div class="section" id="advanced-user-guide-sangercontig-fasta">
 <h1>Advanced User Guide - <em>SangerContig</em> (<strong>FASTA</strong>)<a class="headerlink" href="#advanced-user-guide-sangercontig-fasta" title="Permalink to this headline">¶</a></h1>
 <p><em>SangerContig</em> is the second level in sangeranalyseR showed in <a class="reference internal" href="#sangercontig-hierarchy-fasta"><span class="std std-ref">Figure_1</span></a> which corresponds to a contig in Sanger sequencing. Among slots inside it, there are two lists, forward and reverse read list, storing <em>SangerRead</em> in the corresponding direction. In this section, we are going to go through details about sangeranalyseR data analysis in <em>SangerContig</em> level with <strong>FASTA</strong> file input.</p>
-<div class="figure align-center" id="id1">
+<div class="figure align-center" id="id5">
 <span id="sangercontig-hierarchy-fasta"></span><a class="reference internal image-reference" href="../_images/SangerContig_hierarchy.png"><img alt="../_images/SangerContig_hierarchy.png" src="../_images/SangerContig_hierarchy.png" style="width: 586.6px; height: 217.8px;" /></a>
-<p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerContig</em> level.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerContig</em> level.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -209,19 +216,19 @@
 </ul>
 </div>
 <p>No doubt read names in the original <strong>FASTA</strong> file will not follow the naming regulation; however, it is highly not recommended to change the name directly in the raw <strong>FASTA</strong> file. Therefore, we provide a feature to let users do read names mapping conversion by a <strong>CSV</strong> file showed in <a class="reference internal" href="#sangercontig-read-names-conversion"><span class="std std-ref">Figure_2</span></a>. The first column is &quot;original_read_name&quot; which are the read names in the raw <strong>FASTA</strong> file, and the second column is &quot;analysis_read_name&quot; which are the read names that follow the naming regulation. The read names will be mapped onto the names in &quot;original_read_name&quot; without changing the raw <strong>FASTA</strong> file. <code class="code docutils literal notranslate"><span class="pre">namesConversionCSV</span></code> is the parameter that stores the path to this <strong>CSV</strong> file.</p>
-<div class="figure align-center" id="id2">
+<div class="figure align-center" id="id6">
 <span id="sangercontig-read-names-conversion"></span><a class="reference internal image-reference" href="../_images/SangerContig_read_names_conversion.png"><img alt="../_images/SangerContig_read_names_conversion.png" src="../_images/SangerContig_read_names_conversion.png" style="width: 550.4px; height: 80.80000000000001px;" /></a>
-<p class="caption"><span class="caption-text">Figure 2. <em>SangerContig</em> <strong>CSV</strong> file - read names conversion.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Figure 2. <em>SangerContig</em> <strong>CSV</strong> file - read names conversion.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 <p>Here, we have an example:</p>
-<div class="figure align-center" id="id3">
+<div class="figure align-center" id="id7">
 <span id="sangercontig-fasta-input"></span><a class="reference internal image-reference" href="../_images/SangerContig_fasta_input.png"><img alt="../_images/SangerContig_fasta_input.png" src="../_images/SangerContig_fasta_input.png" style="width: 852.8000000000001px; height: 419.20000000000005px;" /></a>
-<p class="caption"><span class="caption-text">Figure 3. <em>SangerContig</em> <strong>FASTA</strong> input file.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Figure 3. <em>SangerContig</em> <strong>FASTA</strong> input file.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
 <p><a class="reference internal" href="#sangercontig-fasta-input"><span class="std std-ref">Figure_3</span></a> shows the <strong>FASTA</strong> input file and the read names in it will be mapped onto the <strong>CSV</strong> file showed in <a class="reference internal" href="#sangercontig-read-names-conversion"><span class="std std-ref">Figure_2</span></a>. sangeranalyseR will first match the <code class="code docutils literal notranslate"><span class="pre">contigName</span></code> to exclude unrelated reads and then separate the forward and reverse reads by matching <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>. Therefore, it is important to make sure all target reads share the same <code class="code docutils literal notranslate"><span class="pre">contigName</span></code> and carefully select <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, &quot;<code class="code docutils literal notranslate"><span class="pre">__[0-9]+_F</span></code>&quot;, &quot;<code class="code docutils literal notranslate"><span class="pre">__[0-9]+_R</span></code>&quot; for matching forward and reverse reads are highly suggested. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.</p>
-<div class="figure align-center" id="id4">
+<div class="figure align-center" id="id8">
 <span id="sangeranalyser-filename-convention-sangercontig-fasta"></span><a class="reference internal image-reference" href="../_images/sangeranalyseR_filename_convention_fasta.png"><img alt="../_images/sangeranalyseR_filename_convention_fasta.png" src="../_images/sangeranalyseR_filename_convention_fasta.png" style="width: 538.25px; height: 28.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 4. Suggested read naming regulation in <strong>FASTA</strong> file - <em>SangerContig</em>.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Figure 4. Suggested read naming regulation in <strong>FASTA</strong> file - <em>SangerContig</em>.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 <p><a class="reference internal" href="#sangeranalyser-filename-convention-sangercontig-fasta"><span class="std std-ref">Figure_4</span></a> shows the suggested read naming regulation which is used in the &quot;analysis_read_name&quot; column in <strong>CSV</strong> file (<a class="reference internal" href="#sangercontig-read-names-conversion"><span class="std std-ref">Figure_2</span></a>). Users are strongly recommended to follow this file naming regulation and use <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> : &quot;<code class="code docutils literal notranslate"><span class="pre">__[0-9]+_F</span></code>&quot; and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code> : &quot;<code class="code docutils literal notranslate"><span class="pre">__[0-9]+_R</span></code>&quot; to reduce any chance of error.</p>
 <div class="line-block">
@@ -284,6 +291,133 @@
 </pre></div>
 </div>
 <p>Users can access to '<em>Basic Information</em>', '<em>SangerContig Input Parameters</em>', '<em>Contig Sequence</em>' and '<em>Contig Results</em>' sections inside the generated <a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/SangerContig/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html">SangerContig html report of this example</a>. Furthermore, users can also navigate through html reports of all forward and reverse <em>SangerRead</em> in this <em>SangerContig</em> report.</p>
+<hr class="docutils" />
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="a-reproducible-example-sangercontig-fasta">
+<h2>A Reproducible Example (<em>SangerContig</em>, <strong>FASTA</strong>)<a class="headerlink" href="#a-reproducible-example-sangercontig-fasta" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>1. Preparing <em>SangerContig</em> <strong>FASTA</strong> input<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">rawDataDir</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
+<span class="n">fastaFN</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">rawDataDir</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">,</span> <span class="s">&quot;SangerContig&quot;</span><span class="p">,</span> <span class="s">&quot;Achl_ACHLO006-09.fa&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>2. Creating <em>SangerContig</em> instance from <strong>FASTA</strong><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Run the following on-liner to create the <em>SangerContig</em> object.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerRead instance</span>
+<span class="n">my_sangerContigFa</span> <span class="o">&lt;-</span> <span class="nf">SangerContig</span><span class="p">(</span><span class="n">inputSource</span>           <span class="o">=</span> <span class="s">&quot;FASTA&quot;</span><span class="p">,</span>
+                                  <span class="n">processMethod</span>         <span class="o">=</span> <span class="s">&quot;REGEX&quot;</span><span class="p">,</span>
+                                  <span class="n">FASTA_File</span>            <span class="o">=</span> <span class="n">fastaFN</span><span class="p">,</span>
+                                  <span class="n">contigName</span>            <span class="o">=</span>  <span class="s">&quot;Achl_ACHLO006-09&quot;</span><span class="p">,</span>
+                                  <span class="n">REGEX_SuffixForward</span>   <span class="o">=</span> <span class="s">&quot;_[0-9]*_F$&quot;</span><span class="p">,</span>
+                                  <span class="n">REGEX_SuffixReverse</span>   <span class="o">=</span> <span class="s">&quot;_[0-9]*_R$&quot;</span><span class="p">,</span>
+                                  <span class="n">refAminoAcidSeq</span>       <span class="o">=</span> <span class="s">&quot;SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN&quot;</span><span class="p">)</span>
+
+<span class="c1"># using `new` method to create SangerRead instance</span>
+<span class="n">my_sangerContigFa</span> <span class="o">&lt;-</span> <span class="nf">new</span><span class="p">(</span><span class="s">&quot;SangerContig&quot;</span><span class="p">,</span>
+                         <span class="n">inputSource</span>           <span class="o">=</span> <span class="s">&quot;FASTA&quot;</span><span class="p">,</span>
+                         <span class="n">processMethod</span>         <span class="o">=</span> <span class="s">&quot;REGEX&quot;</span><span class="p">,</span>
+                         <span class="n">FASTA_File</span>            <span class="o">=</span> <span class="n">fastaFN</span><span class="p">,</span>
+                         <span class="n">contigName</span>            <span class="o">=</span> <span class="s">&quot;Achl_ACHLO006-09&quot;</span><span class="p">,</span>
+                         <span class="n">REGEX_SuffixForward</span>   <span class="o">=</span> <span class="s">&quot;_[0-9]*_F$&quot;</span><span class="p">,</span>
+                         <span class="n">REGEX_SuffixReverse</span>   <span class="o">=</span> <span class="s">&quot;_[0-9]*_R$&quot;</span><span class="p">,</span>
+                         <span class="n">refAminoAcidSeq</span>       <span class="o">=</span> <span class="s">&quot;SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p>Following is the R shell output that you will get.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>INFO [2021-29-06 18:13:55] ========================================================
+INFO [2021-29-06 18:13:55] ================ Creating &#39;SangerContig&#39; ===============
+INFO [2021-29-06 18:13:55] ========================================================
+INFO [2021-29-06 18:13:55]   &gt;&gt; Contig Name: &#39;Achl_ACHLO006-09&#39;
+INFO [2021-29-06 18:13:55]   &gt;&gt; You are using Regular Expression Method to group reads in FASTA file (No CSV file)!
+INFO [2021-29-06 18:13:55] &gt;&gt; Your contig name is Achl_ACHLO006-09
+SUCCESS [2021-29-06 18:13:56] --------------------------------------------------------
+SUCCESS [2021-29-06 18:13:56] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-06 18:13:56] --------------------------------------------------------
+SUCCESS [2021-29-06 18:13:56]    &gt;&gt; &#39;Achl_ACHLO006-09_1_F&#39; is created (Forward Read; FASTA).
+SUCCESS [2021-29-06 18:13:57] --------------------------------------------------------
+SUCCESS [2021-29-06 18:13:57] -------- &#39;SangerRead&#39; S4 instance is created !! --------
+SUCCESS [2021-29-06 18:13:57] --------------------------------------------------------
+SUCCESS [2021-29-06 18:13:57]    &gt;&gt; &#39;Achl_ACHLO006-09_2_R&#39; is created (Reverse Read; FASTA).
+INFO [2021-29-06 18:13:57]    &gt;&gt; The number of reads detected: 2
+INFO [2021-29-06 18:13:57] Correcting frameshifts in reads using amino acidreference sequence
+Assessing frameshifts in nucleotide sequences:
+|=============================================================================| 100%
+
+Time difference of 0.22 secs
+SUCCESS [2021-29-06 18:14:07] ==========================================================
+SUCCESS [2021-29-06 18:14:07] ======== &#39;SangerContig&#39; S4 instance is created !! ========
+SUCCESS [2021-29-06 18:14:07] ==========================================================
+INFO [2021-29-06 18:14:07]    &gt;&gt; 2 read(s) created from FASTA file.
+INFO [2021-29-06 18:14:07]      &gt;&gt; 1 reads assigned to &#39;forward reads&#39; according to &#39;regular expression&#39;.
+INFO [2021-29-06 18:14:07]      &gt;&gt; 1 reads assigned to &#39;reverse reads&#39; according to &#39;regular expression&#39;.
+DEBUG [2021-29-06 18:14:07]    &gt;&gt; For more information, please run &#39;object&#39;
+DEBUG [2021-29-06 18:14:07]    &gt;&gt; Run &#39;object@objectResults@readResultTable&#39; to check the results of each Sanger reads
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>3. Writing <em>SangerContig</em> FASTA files <sub>(FASTA)</sub><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>The following function can write the <em>SangerContig</em> object into FASTA files. You just need to tell it where with the <code class="code docutils literal notranslate"><span class="pre">outputDir</span></code> argument.
+.. code-block:: R</p>
+<blockquote>
+<div><p>writeFasta(my_sangerContigFa)</p>
+</div></blockquote>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p>Following is the R shell output that you will get.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">18</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span> <span class="n">Your</span> <span class="nb">input</span> <span class="ow">is</span> <span class="s1">&#39;SangerContig&#39;</span> <span class="n">S4</span> <span class="n">instance</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">18</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">outputDir</span> <span class="p">:</span> <span class="o">/</span><span class="n">private</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="mi">33</span><span class="o">/</span><span class="mi">7</span><span class="n">v38jdjd2874jcxb6l71m00h0000gn</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">RtmpRAPaMV</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">18</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span> <span class="n">Start</span> <span class="n">to</span> <span class="n">write</span> <span class="s1">&#39;Achl_ACHLO006-09&#39;</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="nb">format</span> <span class="o">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">18</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">Writing</span> <span class="n">alignment</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="o">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">18</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">Writing</span> <span class="nb">all</span> <span class="n">single</span> <span class="n">reads</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="o">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">18</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">Writing</span> <span class="n">consensus</span> <span class="n">read</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="o">...</span>
+<span class="n">INFO</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">29</span><span class="o">-</span><span class="mi">06</span> <span class="mi">18</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span> <span class="n">Finish</span> <span class="n">writing</span> <span class="s1">&#39;Achl_ACHLO006-09&#39;</span> <span class="n">to</span> <span class="n">FASTA</span> <span class="nb">format</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>And you will get three FASTA files:</p>
+<ol class="arabic simple">
+<li><p><a class="reference download internal" download="" href="../_downloads/95ef9378c1407481d69c3bf882a580bb/Achl_RBNII384-13_reads_unalignment.fa"><code class="xref download docutils literal notranslate"><span class="pre">Achl_RBNII384-13_reads_unalignment.fa</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/eeb554b575ee5b29ef733dafbf876c36/Achl_RBNII384-13_reads_alignment.fa"><code class="xref download docutils literal notranslate"><span class="pre">Achl_RBNII384-13_reads_alignment.fa</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/345ac400befc4f176c75732770ec3fcb/Achl_RBNII384-13_contig.fa"><code class="xref download docutils literal notranslate"><span class="pre">Achl_RBNII384-13_contig.fa</span></code></a></p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>4. Generating <em>SangerContig</em> report <sub>(FASTA)</sub><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Last but not least, generate an Rmarkdown report to store all the sequence information.</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">my_sangerContigFa</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
 </div>
 </div>
 
