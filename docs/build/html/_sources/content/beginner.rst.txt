@@ -120,7 +120,7 @@ Step 4: Outputting your aligned contigs
 ---------------------------------------
 Once you're happy with your aligned contigs, you'll want to save them somewhere.
 
-The following function can write the *SangerAlignment* object as a FASTA file. You just need to tell it where with the :code:`outputDir` argument. Here we just wrote the alignment to the same folder that contains our reads.
+The following function can write the *SangerAlignment* object into FASTA files. You just need to tell it where with the :code:`outputDir` argument. Here we just wrote the alignment to the same folder that contains our reads.
 
 .. code-block:: R
 

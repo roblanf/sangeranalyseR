@@ -50,8 +50,8 @@
 #' ## forward / reverse reads match error
 #' ## Input From ABIF file format (Regex)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
-#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
-#' contigName <- "Achl_RBNII384-13"
+#' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
+#' contigName <- "Achl_ACHLO006-09"
 #' REGEX_SuffixForward <- "_[0-9]*_F.ab1"
 #' REGEX_SuffixReverse <- "_[0-9]*_R.ab1"
 #' sangerContig <- new("SangerContig",
@@ -78,8 +78,8 @@
 #' sangerContig <- new("SangerContig",
 #'                      inputSource           = "ABIF",
 #'                      processMethod         = "CSV",
-#'                      ABIF_Directory       = parentDir,
-#'                      CSV_NamesConversion    = CSV_NamesConversion,
+#'                      ABIF_Directory        = parentDir,
+#'                      CSV_NamesConversion   = CSV_NamesConversion,
 #'                      contigName            = "Achl_RBNII384-13",
 #'                      refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                      TrimmingMethod        = "M1",
