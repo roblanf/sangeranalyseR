@@ -134,7 +134,7 @@ After quality trimming, users can write :code:`sangerReadF` into a **FASTA** fil
               compress          = FALSE,
               compression_level = NA)
 
-Users can download the `output FASTA file <https://howardchao.github.io/sangeranalyseR_report/SangerRead/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F.fa>`_ of this example.
+Users can download the :download:`output FASTA file <../files/SangerRead_ab1/Achl_RBNII384-13_1_F.fa>` of this example.
 
 |
 
