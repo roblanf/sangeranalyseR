@@ -50,7 +50,7 @@ In *SangerRead* section, it is not compulsory to follow the file-naming regulati
 Creating *SangerRead* instance from **AB1**
 ++++++++++++++++++++++++++++++++++++++++++++
 
-After preparing the *SangerRead* input **AB1** file, the next step is to create the *SangerRead* instance by running the :code:`SangerRead` constructor function or :code:`new` method. The constructor function is a wrapper for the :code:`new` method which makes instance creation more intuitive. The inputs include **Basic Parameters**, **Trimming Parameters**, and **Chromatogram Parameters**, and all of them have default values. In the example below, we show both *SangerRead* creation methods with important parameters.
+After preparing the *SangerRead* input **AB1** file, the next step is to create the *SangerRead* instance by running :code:`SangerRead` constructor function or :code:`new` method. The constructor function is a wrapper for the :code:`new` method which makes instance creation more intuitive. The inputs include **Basic Parameters**, **Trimming Parameters**, and **Chromatogram Parameters**, and all of them have default values. In the example below, we show both *SangerRead* creation methods with important parameters.
 
 .. code-block:: R
 
@@ -148,7 +148,7 @@ Last but not least, users can save :code:`sangerReadF` into a static **HTML** re
    generateReport(newSangerRead,
                   outputDir = tempdir())
 
-`SangerRead_Report_ab1.html <https://howardchao.github.io/sangeranalyseR_report/SangerRead/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_ab1.html>`_ is the generated *SangerRead* report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*', '*Amino Acids Sequence*', '*Quality Trimming*' and '*Chromatogram*' sections inside this report.
+.. `SangerRead_Report_ab1.html <https://howardchao.github.io/sangeranalyseR_report/SangerRead/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_ab1.html>`_ is the generated *SangerRead* report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*', '*Amino Acids Sequence*', '*Quality Trimming*' and '*Chromatogram*' sections inside this report.
 
 -----
 
@@ -178,7 +178,7 @@ A Reproducible Example (*SangerRead*, **ab1**)
 +++++++++++++++++++++++++++++++++++++++++++++++
 
 
-1. Preparing *SangerRead* **AB1** input
+(1) Preparing *SangerRead* **AB1** input
 ----------------------------------------
 The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.
 
@@ -192,7 +192,7 @@ The data of this example is in the sangeranalyseR package; thus, you can simply 
 
 |
 
-2. Creating *SangerRead* instance from **AB1**
+(2) Creating *SangerRead* instance from **AB1**
 -----------------------------------------------
 Run the following on-liner, SangerRead :code:`constructor` or :code:`new` method, to create the *SangerRead* object.
 
@@ -234,7 +234,7 @@ Run the following on-liner, SangerRead :code:`constructor` or :code:`new` method
 
 |
 
-3. Visualizing *SangerRead* trimmed read
+(3) Visualizing *SangerRead* trimmed read
 -----------------------------------------
 
 Launch an interactive plotly plot to check the trimmed read.
@@ -246,7 +246,7 @@ Launch an interactive plotly plot to check the trimmed read.
 |
 
 
-4. Writing *SangerRead* FASTA file :sub:`(AB1)`
+(4) Writing *SangerRead* FASTA file :sub:`(AB1)`
 -------------------------------------------------
 
 Write the trimmed read into a FASTA file.
@@ -278,7 +278,7 @@ And you will get one FASTA file:
 
 |
 
-5. Generating *SangerRead* report :sub:`(AB1)`
+(5) Generating *SangerRead* report :sub:`(AB1)`
 -----------------------------------------------
 
 Last but not least, generate an Rmarkdown report to store all sequence information.

@@ -100,11 +100,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#writing-sangerread-fasta-file-ab1">Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-sangerread-report-ab1">Generating <em>SangerRead</em> report <sub>(AB1)</sub></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#a-reproducible-example-sangerread-ab1">A Reproducible Example (<em>SangerRead</em>, <strong>ab1</strong>)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">1. Preparing <em>SangerRead</em> <strong>AB1</strong> input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">2. Creating <em>SangerRead</em> instance from <strong>AB1</strong></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id3">3. Visualizing <em>SangerRead</em> trimmed read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id4">4. Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">5. Generating <em>SangerRead</em> report <sub>(AB1)</sub></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">(1) Preparing <em>SangerRead</em> <strong>AB1</strong> input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">(2) Creating <em>SangerRead</em> instance from <strong>AB1</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">(3) Visualizing <em>SangerRead</em> trimmed read</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">(4) Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">(5) Generating <em>SangerRead</em> report <sub>(AB1)</sub></a></li>
 </ul>
 </li>
 </ul>
@@ -114,7 +114,7 @@
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerRead_fasta.html">Advanced User Guide - <em>SangerRead</em> (<strong>FASTA</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerContig_fasta.html">Advanced User Guide - <em>SangerContig</em> (<strong>FASTA</strong>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advance_user_SangerAlignment_fasta.html">Advanced User Guide - <em>SangerAlignment</em> (<strong>FASTA</strong>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how_to_page.html">How to ...</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_page.html">Q &amp; A ...</a></li>
 <li class="toctree-l1"><a class="reference internal" href="function_manual.html">User Manual (functions)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="frequent_questions.html">Frequently Asked Questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
@@ -227,7 +227,7 @@
 </div>
 <div class="section" id="creating-sangerread-instance-from-ab1">
 <h2>Creating <em>SangerRead</em> instance from <strong>AB1</strong><a class="headerlink" href="#creating-sangerread-instance-from-ab1" title="Permalink to this headline">¶</a></h2>
-<p>After preparing the <em>SangerRead</em> input <strong>AB1</strong> file, the next step is to create the <em>SangerRead</em> instance by running the <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for the <code class="code docutils literal notranslate"><span class="pre">new</span></code> method which makes instance creation more intuitive. The inputs include <strong>Basic Parameters</strong>, <strong>Trimming Parameters</strong>, and <strong>Chromatogram Parameters</strong>, and all of them have default values. In the example below, we show both <em>SangerRead</em> creation methods with important parameters.</p>
+<p>After preparing the <em>SangerRead</em> input <strong>AB1</strong> file, the next step is to create the <em>SangerRead</em> instance by running <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for the <code class="code docutils literal notranslate"><span class="pre">new</span></code> method which makes instance creation more intuitive. The inputs include <strong>Basic Parameters</strong>, <strong>Trimming Parameters</strong>, and <strong>Chromatogram Parameters</strong>, and all of them have default values. In the example below, we show both <em>SangerRead</em> creation methods with important parameters.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerRead instance</span>
 <span class="n">sangerReadF</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">inputSource</span>           <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
                           <span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
@@ -312,7 +312,6 @@
                <span class="n">outputDir</span> <span class="o">=</span> <span class="nf">tempdir</span><span class="p">())</span>
 </pre></div>
 </div>
-<p><a class="reference external" href="https://howardchao.github.io/sangeranalyseR_report/SangerRead/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_ab1.html">SangerRead_Report_ab1.html</a> is the generated <em>SangerRead</em> report html of this example. Users can access to '<em>Basic Information</em>', '<em>DNA Sequence</em>', '<em>Amino Acids Sequence</em>', '<em>Quality Trimming</em>' and '<em>Chromatogram</em>' sections inside this report.</p>
 <hr class="docutils" />
 <div class="line-block">
 <div class="line"><br /></div>
@@ -322,7 +321,7 @@
 <div class="section" id="a-reproducible-example-sangerread-ab1">
 <h2>A Reproducible Example (<em>SangerRead</em>, <strong>ab1</strong>)<a class="headerlink" href="#a-reproducible-example-sangerread-ab1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
-<h3>1. Preparing <em>SangerRead</em> <strong>AB1</strong> input<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>(1) Preparing <em>SangerRead</em> <strong>AB1</strong> input<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">inputFilesPath</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata/&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
 <span class="n">A_chloroticaFFN</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">inputFilesPath</span><span class="p">,</span>
@@ -336,7 +335,7 @@
 </div>
 </div>
 <div class="section" id="id2">
-<h3>2. Creating <em>SangerRead</em> instance from <strong>AB1</strong><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>(2) Creating <em>SangerRead</em> instance from <strong>AB1</strong><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Run the following on-liner, SangerRead <code class="code docutils literal notranslate"><span class="pre">constructor</span></code> or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method, to create the <em>SangerRead</em> object.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerRead instance</span>
 <span class="n">sangerReadF</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
@@ -375,7 +374,7 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 </div>
 </div>
 <div class="section" id="id3">
-<h3>3. Visualizing <em>SangerRead</em> trimmed read<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<h3>(3) Visualizing <em>SangerRead</em> trimmed read<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>Launch an interactive plotly plot to check the trimmed read.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">qualityBasePlot</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
@@ -385,7 +384,7 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 </div>
 </div>
 <div class="section" id="id4">
-<h3>4. Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3>(4) Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>Write the trimmed read into a FASTA file.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
@@ -414,7 +413,7 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 </div>
 </div>
 <div class="section" id="id5">
-<h3>5. Generating <em>SangerRead</em> report <sub>(AB1)</sub><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3>(5) Generating <em>SangerRead</em> report <sub>(AB1)</sub><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>Last but not least, generate an Rmarkdown report to store all sequence information.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>

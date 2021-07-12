@@ -1,7 +1,10 @@
 Advanced User Guide - *SangerContig* (**AB1**)
 ==============================================
 
-*SangerContig* is the intermediate level in sangeranalyseR (:ref:`Figure_1<SangerContig_hierarchy>`), and each *SangerContig* instance corresponds to a contig in a Sanger sequencing experiment. Among its slots, there are two lists, forward and reverse read list, storing *SangerRead* in the corresponding direction. In this section, we are going to go through details about sangeranalyseR data analysis in *SangerContig* level with **AB1** file input.
+*SangerContig* is in the intermediate level of sangeranalyseR (:ref:`Figure_1<SangerContig_hierarchy>`), and each *SangerContig* instance corresponds to a contig in a Sanger sequencing experiment. Among its slots, there are two lists, forward and reverse read list, storing *SangerRead* in the corresponding direction. 
+
+In this section, we are going to go through details about a reproducible *SangerContig* analysis example with the **AB1** file input in sangeranalyseR. By running the following example codes, you will get an end-to-end *SangerContig* analysis result. 
+
 
 .. _SangerContig_hierarchy:
 .. figure::  ../image/SangerContig_hierarchy.png
@@ -15,34 +18,21 @@ Advanced User Guide - *SangerContig* (**AB1**)
 Preparing *SangerContig* **AB1** inputs
 ++++++++++++++++++++++++++++++++++++++++
 
-The main input file format to create *SangerRead* instance is **AB1**. Before starting the analysis, users need to prepare all **AB1** files inside one directory, and all of them must be in the first layer of that directory. In other words, there should  be no directories containing any **AB1** files inside it. There are two ways for users to group their **AB1** files which are **"regular expression matching"** and **"CSV file matching"**, and following are instructions of how to prepare and name your **AB1** input files.
+The main input file format to create *SangerContig* instance is **AB1**. Before starting the analysis, users need to prepare one directory containing all **AB1** files, and all of them must be in the first layer of that directory. In other words, there should be no subdirectories. In this example, the data is in the sangeranalyseR package; thus, you can simply get its path by running the following codes:
 
 
+.. code-block:: R
 
-"regular expression matching" inputs preparation
--------------------------------------------------
-For regular expression matching method, sangeranalyseR will group **AB1** files based on their contig names and read directions in their filenames automatically; therefore, users have to follow the file naming regulations below:
+    rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+    parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
 
-.. note::
+The value of :code:`parentDir` is where all **AB1** files are placed. If your operating system is macOS, then its value might look like this:
 
-    *  All the input files must have **.ab1** as its file extension
-    *  All the input files must have the same contig name in its filename.
-    *  Forward or reverse direction also has to be specified in the filename.
+.. code-block:: 
 
+    /Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/Allolobophora_chlorotica/RBNII
 
-
-
-There are four parameters, :code:`ABIF_Directory`, :code:`contigName`, :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`,that users need to provide so that program can automatically match correct **AB1** files and divide them into forward and reverse direction.
-
-.. note::
-
-  * :code:`ABIF_Directory`: The root directory that contains all the **AB1** files. It can be absolute or relative path. We suggest users to put only target **AB1** files inside this directory and don't include any other unrelated files.
-  * :code:`contigName`: It is a regular expression that matches filenames that are going to be included in the *SangerContig* level analysis. :code:`grepl` function in R is used.
-  * :code:`REGEX_SuffixForward`: It is a regular expression that matches all filenames in forward direction. :code:`grepl` function in R is used to select forward reads from all **AB1** files.
-  * :code:`REGEX_SuffixReverse`: It is a regular expression that matches all filenames in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **AB1** files.
-
-Here is an example:
-
+And we showed the files under :code:`parentDir` in :ref:`Figure_2<SangerContig_file_structure>`:
 
 .. _SangerContig_file_structure:
 .. figure::  ../image/SangerContig_file_structure.png
@@ -51,41 +41,85 @@ Here is an example:
 
    Figure 2. *SangerContig* filename regulation.
 
-:ref:`Figure_2<SangerContig_file_structure>` shows the file naming regulation and hierarchy. In this example, :code:`ACHLO` is the parent directory that contains all **AB1** files. They must be in the first layer of the directory.
+:ref:`Figure_2<SangerContig_file_structure>` shows the file-naming regulation and hierarchy. In this example, :code:`RBNII` is the parent directory, and all **AB1** files must be 
+under its first layer. There are two ways for users to group their **AB1** files which are **"regular expression matching"** and **"CSV file matching"**, and following are instructions of how to prepare and name your **AB1** input files.
 
-sangeranalyseR will first match the :code:`contigName` to exclude unrelated files and then separate the forward and reverse reads by matching :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. Therefore, it is important to make sure that all target **AB1** files share the same :code:`contigName` and carefully select :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, :code:`"_[0-9]*_F.ab1"`, :code:`"_[0-9]*_R.ab1"` for matching forward and reverse reads are highly suggested and are used as default. Moreover, it is a good habit to index your reads in the same contig group since there might be more than one read that are in the forward or reverse direction.
+
+(1) "regular expression matching" *SangerContig* inputs (**AB1**)
+-------------------------------------------------------------------
+For regular expression matching method, sangeranalyseR will group **AB1** files based on their contig names and read directions in their filenames automatically; therefore, users have to follow the file-naming regulations below:
+
+.. note::
+
+    *  All the input files must have **.ab1** as its file extension
+    *  All the input files must have the same contig name in its filename.
+    *  Forward or reverse direction has to be specified in the filename.
+
+
+
+
+There are four parameters, :code:`ABIF_Directory`, :code:`contigName`, :code:`REGEX_SuffixForward`, and :code:`REGEX_SuffixReverse`, that define the grouping rule to let sangeranalyseR automatically match correct **AB1** files and divide them into forward and reverse directions.
+
+.. note::
+
+  * :code:`ABIF_Directory`: this is the directory that contains all **AB1** files, and it can be either an absolute or relative path. We suggest users to put only target **AB1** files inside this directory and do not include any other unrelated files.
+
+  * :code:`contigName`: this is a regular expression that matches filenames that are going to be included in the *SangerContig* analysis. :code:`grepl` function in R is used.
+
+  * :code:`REGEX_SuffixForward`: this is a regular expression that matches all filenames in forward direction. :code:`grepl` function in R is used to select forward reads from all **AB1** files.
+
+  * :code:`REGEX_SuffixReverse`: this is a regular expression that matches all filenames in reverse direction. :code:`grepl` function in R is used to select reverse reads from all **AB1** files.
+
+If you don't know what regular expression is, don't panic - it's just a way of recognising text. Please refer to :ref:`What is a regular expression?` for more details. Here is an example of how it works in sangeranalseR:
+
+So how sangeranalyseR works is that it will first match the :code:`contigName` to exclude unrelated files and then separate the forward and reverse reads by matching :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. Therefore, it is important to make sure that all target **AB1** files share the same :code:`contigName` and carefully select :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. The bad file-naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate wrong results. Therefore, it is important to have a consistent naming strategy. So, how should we systematically name **AB1** files? We suggest users to follow the file-naming regulatio in :ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig>`. 
 
 .. _sangeranalyseR_filename_convention_SangerContig:
 .. figure::  ../image/sangeranalyseR_filename_convention.png
    :align:   center
    :scale:   25 %
 
-   Figure 3. Suggested **AB1** file naming regulation - *SangerContig*.
+   Figure 3. Suggested **AB1** file-naming regulation - *SangerContig*.
 
-:ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig>` shows the suggested **AB1** file naming regulation. Users are strongly recommended to follow this file naming regulation and use the default :code:`REGEX_SuffixForward` : ":code:`_[0-9]*_F.ab1`" and :code:`REGEX_SuffixReverse` : ":code:`_[0-9]*_R.ab1`" to reduce any chance of error.
+As you can see, the first part of the regulation is a consensus read name (or contig name), which narrows down the scope of **AB1** files to those we are going to examine. The second part of the regulation is an index. Since there might be more than one read that is in the forward or reverse direction, we recommend you to number your reads in the same contig group. The third part is a direction which is either 'F' (forward) or 'R' (reverse). Last but not least, files have to end with **.ab1** suffix.
 
+To make it more specific, let's go back to the true example. In :ref:`Figure_2<SangerContig_file_structure>`, there are a lot of **AB1** files from different contigs in :code:`RBNII` (:code:`ABIF_Directory`). 
+First, we set :code:`contigName` to :code:`"Achl_RBNII384-13"` to reduce candidates from eight to two **AB1** files, :code:`Achl_RBNII384-13_1_F.ab1` and :code:`Achl_RBNII384-13_2_R.ab1`. Then, we set :code:`REGEX_SuffixForward` to :code:`"_[0-9]*_F.ab1"` and :code:`REGEX_SuffixReverse` to :code:`"_[0-9]*_R.ab1"` to let sangeranalyseR match and group forward and reverse reads automatically. By the regular expression rule, :code:`Achl_RBNII384-13_1_F.ab1` and :code:`Achl_RBNII384-13_2_R.ab1` will be categorized into "forward read list" and "reverse read list" respectively. The reason why we strongly recommended you to follow this file-naming regulation is that by doing so, :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse` can directly adopt the default regular expression matching values, :code:`"_[0-9]*_F.ab1"` and :code:`"_[0-9]*_R.ab1"`, to group reads and reduce chances of error. 
 
+After understanding how parameters work, please refer to :ref:`Creating *SangerContig* instance from **AB1**` below to see how to create 'Achl_RBNII384-13' *SangerContig* instance.
 
-"CSV file matching" inputs preparation
----------------------------------------
-For CSV file matching method, sangeranalyseR will group **AB1** files based on the information in the CSV file automatically; therefore, users have to prepare a CSV with the following regulation:
-
-.. note::
-
-    *  It needs to contain three columns: "reads", "direction", and "contig".
-    *  "reads" column stores the filename of the **AB1** files.
-    *  "direction" column stores the direction of the reads. It must be "F" (forward) or "R" (reverse).
-    *  "contig" column stores the contig name that each read blongs.
-
-
-There are three parameters, :code:`ABIF_Directory`, :code:`contigName`, and :code:`CSV_NamesConversion`,that users need to provide so that program can automatically match correct **AB1** files and divide them into forward and reverse direction.
+(2) "CSV file matching" *SangerContig* inputs (**AB1**)
+--------------------------------------------------------
+For those who are not familiar with regular expression, we provide a second grouping approach, CSV file matching method. sangeranalyseR will group **AB1** files based on the information in a CSV file automatically; therefore, users have to follow the regulations below:
 
 .. note::
 
-  * :code:`ABIF_Directory`: The root directory that contains all the **AB1** files. It can be absolute or relative path. We suggest users to put only target **AB1** files inside this directory and don't include any other unrelated files.
-  * :code:`contigName`: It is a regular expression that matches filenames that are going to be included in the *SangerContig* level analysis. :code:`grepl` function in R is used.
-  * :code:`CSV_NamesConversion`: It is a regular expression that matches all filenames in forward direction. :code:`grepl` function in R is used to select forward reads from all **AB1** files.
+    Here is an :download:`example CSV file <../files/SangerContig_ab1/names_conversion_2.csv>`. 
 
+    *  There must be three columns, "**reads**", "**direction**", and "**contig**", in the CSV file.
+    *  The "**reads**" column stores the filename of **AB1** files that are going to be included in the analysis.
+    *  The "**direction**" column stores the direction of the reads. It must be "F" (forward) or "R" (reverse).
+    *  The "**contig**" column stores the contig name that each read blongs. Reads in the same contig have to have the same contig name, and they will be grouped into the same *SangerContig* instance.
+
+
+There are three parameters, :code:`ABIF_Directory`, :code:`contigName`, and :code:`CSV_NamesConversion`,that define the grouping rule to help sangeranalseR to automatically match correct **AB1** files and divide them into forward and reverse directions.
+
+.. note::
+
+  * :code:`ABIF_Directory`: this is the directory that contains all **AB1** files, and it can be either an absolute or relative path. We suggest users to put only target AB1 files inside this directory and do not include any other unrelated files.
+  * :code:`contigName`: this is a regular expression that matches filenames that are going to be included in the *SangerContig* analysis. :code:`grepl` function in R is used.
+  * :code:`CSV_NamesConversion`: this is the path to the **CSV** file. It can be either an absolute or relative path.
+
+
+
+The main difference between "CSV file matching" and "regular expression matching" is where the grouping rule is written. For "regular expression matching", rules are writtein in filenames, and thus has more naming requirements for users to follow. In contrast, rules of "CSV file matching" are written in an additional **CSV** file so it is more flexible on **AB1** file-naming.
+
+
+So how sangeranalyseR works is that it will first read in the **CSV** file (with "reads", "direction", and "contig" columns), filter out rows whose "contig" is not the value of :code:`contigName` parameter, find the names of **AB1** files listed in "reads", and assign directions to them based on "direction".
+
+To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerContig_ab1/names_conversion_2.csv>` (:code:`CSV_NamesConversion`) and a file directory like :ref:`Figure_2<SangerContig_file_structure>` (:code:`ABIF_Directory`) with some **AB1** files from different contigs. In the **CSV** file, both rows have the contig name :code:`"Achl_RBNII384-13"`, which is what we need to assign to the :code:`contigName` parameter. sangeranalyseR then checks and matches "reads" of these two rows, :code:`"Achl_RBNII384-13_1_F.ab1"` and :code:`"Achl_RBNII384-13_2_R.ab1"`, in :code:`RBNII` directory and reduce candidates from eight to two **AB1** files. Last, these two reads are assigned into "forward read list" and "reverse read list" respectively by the "direction" column.
+
+After understanding how parameters work, please refer to :ref:`Creating *SangerContig* instance from **AB1**` below to see how to create 'Achl_RBNII384-13' *SangerContig* instance.
 
 |
 
@@ -93,11 +127,20 @@ There are three parameters, :code:`ABIF_Directory`, :code:`contigName`, and :cod
 Creating *SangerContig* instance from **AB1**
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-After preparing the input directory, we can create the *SangerContig* S4 instance by running :code:`SangerContig` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Most parameters in the constructor have their own default values. In the constructor below, we list important parameters.
+After preparing the input directory, we can create a *SangerContig* instance by running :code:`SangerContig` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method and it makes instance creation more intuitive. Their input parameters are same, and all of them have their default values. For more details about *SangerContig* inputs and slots definition, please refer to `sangeranalyseR reference manual <https://bioconductor.org/packages/release/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_. We will explain two *SangerContig* instance creation methods, "regular expression matching" and "CSV file matching".
+
+
+
+
+(1) "regular expression matching" *SangerContig* creation (**AB1**)
+---------------------------------------------------------------------
+
+The consturctor function and :code:`new` method below contain four parameters, :code:`ABIF_Directory`, :code:`contigName`, :code:`REGEX_SuffixForward`, and :code:`REGEX_SuffixReverse`, that we mentioned in the previous section. It also includes important parameters like quality trimming, chromatogram visualization, consensus alignment, and so on.
+
 
 .. code-block:: R
 
-   # using `constructor` function to create SangerRead instance
+   # using `constructor` function to create SangerContig instance
     sangerContig <- SangerContig(inputSource            = "ABIF",
                                  ABIF_Directory         = "./tmp/",
                                  contigName             = "Achl_ACHLO006-09",
@@ -121,7 +164,7 @@ After preparing the input directory, we can create the *SangerContig* S4 instanc
                                  readingFrame           = 1,
                                  processorsNum          = NULL)
 
-   # using `new` method to create SangerRead instance
+   # using `new` method to create SangerContig instance
    sangerContig <- new("SangerContig",
                        inputSource            = "ABIF",
                        ABIF_Directory         = "./tmp/",
@@ -147,30 +190,28 @@ After preparing the input directory, we can create the *SangerContig* S4 instanc
                        processorsNum          = NULL)
 
 
-In this example, :code:`contigName` is set to :code:`"Achl_ACHLO006-09"`, so only :code:`"Achl_ACHLO006-09_1_F.ab1"` and :code:`"Achl_ACHLO006-09_2_R.ab1"` will be selected to align to a contig.
+In this example, :code:`contigName` is set to :code:`Achl_ACHLO006-09`, so only ":code:`Achl_ACHLO006-09_1_F.ab1`" and ":code:`Achl_ACHLO006-09_2_R.ab1`" are selected. Moreover, by regular expression pattern matching, ":code:`Achl_ACHLO006-09_1_F.ab1`" is categorized into the forward list, and ":code:`Achl_ACHLO006-09_2_R.ab1`" is categorized into the reverse read. Both reads are aligned into a contig, :code:`sangerContig`, and it will be used as the input for the following functions.
 
-The inputs of :code:`SangerContig` constructor function and :code:`new` method are same. For more details about *SangerContig* inputs and slots definition, please refer to `sangeranalyseR reference manual (need update) <https://bioconductor.org/packages/release/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_. The created *SangerContig* instance, :code:`sangerContig`, is used as the input for the following functions.
-
-After the *SangerContig* instance is created, you can run :code:`sangerContig` to get basic information of the instance or run :code:`sangerContig@objectResults@readResultTable` to check the creation result of every Sanger read.
+Inside the R shell, you can run :code:`sangerContig` to get basic information of the instance or run :code:`sangerContig@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`sangerContig` is successfully created.
 
 Here is the output of :code:`sangerContig`::
 
    SangerContig S4 instance
-           Input Source :  ABIF 
-         Process Method :  REGEX 
-         ABIF Directory :  /Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/Allolobophora_chlorotica/ACHLO 
-   REGEX Suffix Forward :  _[0-9]*_F.ab1 
-   REGEX Suffix Reverse :  _[0-9]*_R.ab1 
-            Contig Name :  Achl_ACHLO006-09 
-          'minReadsNum' :  2 
-        'minReadLength' :  20 
-      'minFractionCall' :  0.5 
-      'maxFractionLost' :  0.5 
-     'acceptStopCodons' :  TRUE 
-         'readingFrame' :  1 
-        Contig Sequence :  TTATATTTTATTCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGGATTACGTCTTGAACGAATTCCCCTGTTTGTCTGAGCTGTGCTAATTACAGTTGTTCTTCTACTTCTATCTTTACCAGTGCTAGCAGGTGCCATTACCATACTTCTTACCGACCGAAACCTCAATACTTCATTCTTTGATCCTGCCGGTGGTGGAGACCCCATCCTC 
-  Forward reads in the contig >>  1 
-  Reverse reads in the contig >>  1 
+           Input Source :  ABIF
+         Process Method :  REGEX
+         ABIF Directory :  /Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/Allolobophora_chlorotica/ACHLO
+   REGEX Suffix Forward :  _[0-9]*_F.ab1
+   REGEX Suffix Reverse :  _[0-9]*_R.ab1
+            Contig Name :  Achl_ACHLO006-09
+          'minReadsNum' :  2
+        'minReadLength' :  20
+      'minFractionCall' :  0.5
+      'maxFractionLost' :  0.5
+     'acceptStopCodons' :  TRUE
+         'readingFrame' :  1
+        Contig Sequence :  TTATATTTTATTCTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGGATTACGTCTTGAACGAATTCCCCTGTTTGTCTGAGCTGTGCTAATTACAGTTGTTCTTCTACTTCTATCTTTACCAGTGCTAGCAGGTGCCATTACCATACTTCTTACCGACCGAAACCTCAATACTTCATTCTTTGATCCTGCCGGTGGTGGAGACCCCATCCTC
+  Forward reads in the contig >>  1
+  Reverse reads in the contig >>  1
    SUCCESS [2021-01-07 11:40:39] 'Achl_ACHLO006-09' is successfully created!
 
 
@@ -183,13 +224,101 @@ Here is the output of :code:`sangerContig@objectResults@readResultTable`::
    2   Achl_ACHLO006-09_2_R.ab1            TRUE       None          None         ABIF  Reverse Read
 
 
+
+
+(2) "CSV file matching" *SangerContig* creation (**AB1**)
+----------------------------------------------------------
+The consturctor function and :code:`new` method below contain three parameters, :code:`ABIF_Directory`, :code:`contigName`, and :code:`CSV_NamesConversion`, that we mentioned in the previous section. It also includes important parameters like quality trimming, chromatogram visualization, consensus alignment, and so on.
+
+.. code-block:: R
+
+   # using `constructor` function to create SangerContig instance
+    sangerContig <- SangerContig(inputSource            = "ABIF",
+                                 ABIF_Directory         = "./tmp/",
+                                 contigName             = "Achl_ACHLO006-09",
+                                 CSV_NamesConversion    = "/path/to/csvfile",
+                                 TrimmingMethod         = "M1",
+                                 M1TrimmingCutoff       = 0.0001,
+                                 M2CutoffQualityScore   = NULL,
+                                 M2SlidingWindowSize    = NULL,
+                                 baseNumPerRow          = 100,
+                                 heightPerRow           = 200,
+                                 signalRatioCutoff      = 0.33,
+                                 showTrimmed            = TRUE,
+                                 refAminoAcidSeq        = "",
+                                 minReadsNum            = 2,
+                                 minReadLength          = 20,
+                                 minFractionCall        = 0.5,
+                                 maxFractionLost        = 0.5,
+                                 geneticCode            = GENETIC_CODE,
+                                 acceptStopCodons       = TRUE,
+                                 readingFrame           = 1,
+                                 processorsNum          = NULL)
+
+   # using `new` method to create SangerContig instance
+   sangerContig <- new("SangerContig",
+                       inputSource            = "ABIF",
+                       ABIF_Directory         = "./tmp/",
+                       contigName             = "Achl_ACHLO006-09",
+                       CSV_NamesConversion    = "/path/to/csvfile",
+                       TrimmingMethod         = "M1",
+                       M1TrimmingCutoff       = 0.0001,
+                       M2CutoffQualityScore   = NULL,
+                       M2SlidingWindowSize    = NULL,
+                       baseNumPerRow          = 100,
+                       heightPerRow           = 200,
+                       signalRatioCutoff      = 0.33,
+                       showTrimmed            = TRUE,
+                       refAminoAcidSeq        = "",
+                       minReadsNum            = 2,
+                       minReadLength          = 20,
+                       minFractionCall        = 0.5,
+                       maxFractionLost        = 0.5,
+                       geneticCode            = GENETIC_CODE,
+                       acceptStopCodons       = TRUE,
+                       readingFrame           = 1,
+                       processorsNum          = NULL)
+
+It will follow rules in the CSV file and create :code:`sangerContig`. After it's created, inside the R shell, you can run :code:`sangerContig` to get basic information of the instance or run :code:`sangerContig@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`sangerContig` is successfully created.
+
+Here is the output of :code:`sangerContig`::
+
+   SangerContig S4 instance
+           Input Source :  ABIF 
+         Process Method :  CSV 
+         ABIF Directory :  /Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/Allolobophora_chlorotica/ACHLO 
+   CSV Names Conversion :  /Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/ab1/SangerContig/names_conversion_1.csv 
+            Contig Name :  Achl_ACHLO006-09 
+          'minReadsNum' :  2 
+        'minReadLength' :  20 
+      'minFractionCall' :  0.5 
+      'maxFractionLost' :  0.5 
+     'acceptStopCodons' :  TRUE 
+         'readingFrame' :  1 
+        Contig Sequence :  GCGGCGGTAGAAAAAGGCGCTGGTAMKGGKTGRASYSKKTATAAGACTTCTAATTCGAATCGASCKMMKMYARCMAGRARYSTTSCYSRSSMRRGMCCRWCTRTASAWTWMKMYMKYTWYTSCMYWCRYWTWKSKAATAATCTTCTTTCTRGTRMKKCYTSTATTCWWSGGGSKATTMRKWWWMTSRCYWYWRYYWTTAATATGCGTTGAAGAGGATTACGTCTTRMWYGRAKYCCCCKRTWTRKCTGAGCTRTKCYMWYKACWSWWSWWCWTSWRMTTCTRWCTWYWYCMSYSMTMRCWGRTSCYWTTASYRTMCTYYKYRSCGRYMGAAAMMKSMRYWSKTMMKKSKTKRAYYSTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTT 
+  Forward reads in the contig >>  1 
+  Reverse reads in the contig >>  1 
+   SUCCESS [2021-09-07 01:23:34] 'Achl_ACHLO006-09' is successfully created!
+
+
+Here is the output of :code:`sangerContig@objectResults@readResultTable`::
+
+
+                       readName  creationResult  errorType  errorMessage  inputSource     direction
+
+   1   Achl_ACHLO006-09_1_F.ab1            TRUE       None          None         ABIF  Forward Read
+   2   Achl_ACHLO006-09_2_R.ab1            TRUE       None          None         ABIF  Reverse Read
+
+
+
+
 |
 
 
 Updating *SangerContig* quality trimming parameters
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-In the previous :ref:`Creating *SangerContig* instance from **AB1**` part, the constructor function will apply the quality trimming parameters to all reads. After creating the SangerContig S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will update all reads with the new trimming parameters and redo reads alignment. If users want to do quality trimming read by read instead of all at once, please read :ref:`Launching *SangerContig* Shiny app` page.
+In the previous :ref:`Creating *SangerContig* instance from **AB1**` part, the constructor function will apply the quality trimming parameters to all reads. After creating the SangerContig S4 instance, users can change the trimming parameters by running :code:`updateQualityParam` function which will update all reads with the new trimming parameters and redo reads alignment. If users want to do quality trimming read by read instead of all at once, please move on to the next section, :ref:`Launching *SangerContig* Shiny app` page.
 
 .. code-block:: R
 
@@ -416,7 +545,7 @@ A Reproducible Example (*SangerContig*, **ab1**)
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-1. Preparing *SangerContig* **AB1** inputs
+(1) Preparing *SangerContig* **AB1** inputs
 ---------------------------------------------
 The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.
 
@@ -427,14 +556,18 @@ The data of this example is in the sangeranalyseR package; thus, you can simply 
 
 |
 
-2. Creating *SangerContig* instance from **AB1**
+(2) Creating *SangerContig* instance from **AB1**
 ----------------------------------------------------
+
+(2.1) "Regular Expression Method" *SangerContig* creation (**AB1**)
+***********************************************************************
+
 Run the following on-liner to create the *SangerContig* instance.
 
 
 .. code-block:: R
 
-   # using `constructor` function to create SangerRead instance
+   # using `constructor` function to create SangerContig instance
    my_sangerContig <- SangerContig(inputSource           = "ABIF",
                                    processMethod         = "REGEX",
                                    ABIF_Directory        = parentDir,
@@ -442,8 +575,8 @@ Run the following on-liner to create the *SangerContig* instance.
                                    REGEX_SuffixForward   = "_[0-9]*_F.ab1",
                                    REGEX_SuffixReverse   = "_[0-9]*_R.ab1",
                                    refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
-   
-   # using `new` method to create SangerRead instance
+
+   # using `new` method to create SangerContig instance
    my_sangerContig <- new("SangerContig",
                           inputSource           = "ABIF",
                           processMethod         = "REGEX",
@@ -489,11 +622,85 @@ Run the following on-liner to create the *SangerContig* instance.
          INFO [2021-29-06 17:44:16]    >> Trimmed by 'M1 - Mott’s trimming algorithm'.
          DEBUG [2021-29-06 17:44:16]    >> For more information, please run 'object'
          DEBUG [2021-29-06 17:44:16]    >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads
-         
+
+|
+
+(2.2) "CSV file matching" *SangerContig* creation (**AB1**)
+*************************************************************
+
+Run the following on-liner to create the *SangerContig* instance.
+
+
+.. code-block:: R
+
+   csv_namesConversion <- file.path(rawDataDir, "ab1", "SangerContig", "names_conversion_2.csv")
+
+   # using `constructor` function to create SangerContig instance
+   my_sangerContig <- SangerContig(inputSource           = "ABIF",
+                                   processMethod         = "CSV",
+                                   ABIF_Directory        = parentDir,
+                                   contigName            = "Achl_RBNII384-13",
+                                   CSV_NamesConversion   = csv_namesConversion,
+                                   refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
+
+
+   # using `new` method to create SangerContig instance
+   my_sangerContig <- new("SangerContig",
+                          inputSource           = "ABIF",
+                          processMethod         = "CSV",
+                          ABIF_Directory        = parentDir,
+                          contigName            = "Achl_RBNII384-13",
+                          CSV_NamesConversion   = csv_namesConversion,
+                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
+
+
+.. container:: toggle
+
+    .. container:: header
+
+        Following is the R shell output that you will get.
+    .. code-block::
+
+      WARN [2021-09-07 01:47:45] 'Achl_RBNII395-13_1_F.ab1' is not in the csv file (/Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/ab1/SangerContig/names_conversion_2.csv)
+      WARN [2021-09-07 01:47:45] 'Achl_RBNII395-13_2_R.ab1' is not in the csv file (/Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/ab1/SangerContig/names_conversion_2.csv)
+      WARN [2021-09-07 01:47:45] 'Achl_RBNII396-13_1_F.ab1' is not in the csv file (/Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/ab1/SangerContig/names_conversion_2.csv)
+      WARN [2021-09-07 01:47:45] 'Achl_RBNII396-13_2_R.ab1' is not in the csv file (/Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/ab1/SangerContig/names_conversion_2.csv)
+      WARN [2021-09-07 01:47:45] 'Achl_RBNII397-13_1_F.ab1' is not in the csv file (/Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/ab1/SangerContig/names_conversion_2.csv)
+      WARN [2021-09-07 01:47:45] 'Achl_RBNII397-13_2_R.ab1' is not in the csv file (/Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/ab1/SangerContig/names_conversion_2.csv)
+      INFO [2021-09-07 01:47:45] ========================================================
+      INFO [2021-09-07 01:47:45] ================ Creating 'SangerContig' ===============
+      INFO [2021-09-07 01:47:45] ========================================================
+      INFO [2021-09-07 01:47:45]   >> Contig Name: 'Achl_RBNII384-13'
+      INFO [2021-09-07 01:47:45]   >> You are using CSV Name Conversion Method to group AB1 files!
+      INFO [2021-09-07 01:47:45] >> Your contig name is Achl_RBNII384-13
+      SUCCESS [2021-09-07 01:47:46] --------------------------------------------------------
+      SUCCESS [2021-09-07 01:47:46] -------- 'SangerRead' S4 instance is created !! --------
+      SUCCESS [2021-09-07 01:47:46] --------------------------------------------------------
+      SUCCESS [2021-09-07 01:47:46]    >> 'Achl_RBNII384-13_1_F.ab1' is created (Forward Read; ABIF).
+      SUCCESS [2021-09-07 01:47:47] --------------------------------------------------------
+      SUCCESS [2021-09-07 01:47:47] -------- 'SangerRead' S4 instance is created !! --------
+      SUCCESS [2021-09-07 01:47:47] --------------------------------------------------------
+      SUCCESS [2021-09-07 01:47:47]    >> 'Achl_RBNII384-13_2_R.ab1' is created (Reverse Read; ABIF).
+      INFO [2021-09-07 01:47:47]    >> The number of reads detected: 2
+      INFO [2021-09-07 01:47:47] Correcting frameshifts in reads using amino acidreference sequence
+      Assessing frameshifts in nucleotide sequences:
+        |================================================================================================| 100%
+
+      Time difference of 0.08 secs
+      SUCCESS [2021-09-07 01:47:51] ==========================================================
+      SUCCESS [2021-09-07 01:47:51] ======== 'SangerContig' S4 instance is created !! ========
+      SUCCESS [2021-09-07 01:47:51] ==========================================================
+      INFO [2021-09-07 01:47:51]    >> 2 read(s) created from ABIF file.
+      INFO [2021-09-07 01:47:51]      >> 1 reads assigned to 'forward reads' according to 'csv file'.
+      INFO [2021-09-07 01:47:51]      >> 1 reads assigned to 'reverse reads' according to 'csv file'.
+      INFO [2021-09-07 01:47:51]    >> Trimmed by 'M1 - Mott’s trimming algorithm'.
+      DEBUG [2021-09-07 01:47:51]    >> For more information, please run 'object'
+      DEBUG [2021-09-07 01:47:51]    >> Run 'object@objectResults@readResultTable' to check the results of each Sanger reads
+
 |
 
 
-3. Updating *SangerContig* quality trimming parameters
+(3) Updating *SangerContig* quality trimming parameters
 -------------------------------------------------------
 
 .. code-block:: R
@@ -507,7 +714,7 @@ Run the following on-liner to create the *SangerContig* instance.
 |
 
 
-4. Launching *SangerContig* Shiny app
+(4) Launching *SangerContig* Shiny app
 -----------------------------------------
 
 Launch an interactive Shiny app to view your analysis, change the default settings, and so on.
@@ -519,8 +726,8 @@ Launch an interactive Shiny app to view your analysis, change the default settin
 |
 
 
-5. Writing *SangerContig* FASTA files :sub:`(AB1)`
---------------------------------------------------
+(5) Writing *SangerContig* FASTA files :sub:`(AB1)`
+-----------------------------------------------------
 
 The following function can write the *SangerContig* instance into FASTA files. You just need to tell it where with the :code:`outputDir` argument.
 .. code-block:: R
@@ -554,7 +761,7 @@ And you will get three FASTA files:
 
 |
 
-6. Generating *SangerContig* report :sub:`(AB1)`
+(6) Generating *SangerContig* report :sub:`(AB1)`
 -------------------------------------------------
 
 Last but not least, generate an Rmarkdown report to store all the sequence information.

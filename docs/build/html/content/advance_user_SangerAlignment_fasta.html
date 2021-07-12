@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="How to ..." href="how_to_page.html" />
+    <link rel="next" title="Q &amp; A ..." href="how_to_page.html" />
     <link rel="prev" title="Advanced User Guide - SangerContig (FASTA)" href="advance_user_SangerContig_fasta.html" /> 
 </head>
 
@@ -104,7 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#generating-sangeralignment-report-fasta">Generating <em>SangerAlignment</em> report <sub>(FASTA)</sub></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="how_to_page.html">How to ...</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_page.html">Q &amp; A ...</a></li>
 <li class="toctree-l1"><a class="reference internal" href="function_manual.html">User Manual (functions)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="frequent_questions.html">Frequently Asked Questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">Conclusion</a></li>
@@ -218,7 +218,7 @@
 <span id="sangeralignment-fasta-input"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_fasta_input.png"><img alt="../_images/SangerAlignment_fasta_input.png" src="../_images/SangerAlignment_fasta_input.png" style="width: 852.0px; height: 472.8px;" /></a>
 <p class="caption"><span class="caption-text">Figure 3. <em>SangerAlignment</em> <strong>FASTA</strong> input file.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#sangeralignment-fasta-input"><span class="std std-ref">Figure_3</span></a> shows the <strong>FASTA</strong> input file and the read names in it will be mapping conversed by <strong>CSV</strong> file showed in <a class="reference internal" href="#sangeralignment-read-names-conversion"><span class="std std-ref">Figure_2</span></a> (Only two reads are showed). sangeranalyseR will first match the <code class="code docutils literal notranslate"><span class="pre">contigName</span></code> to exclude unrelated reads. The direction of reads in each contig will be grouped by matching <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code> with read names. Therefore, it is important to carefully select <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>. The bad file naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, &quot;<code class="code docutils literal notranslate"><span class="pre">_[0-9]+_F</span></code>&quot;, &quot;<code class="code docutils literal notranslate"><span class="pre">_[0-9]+_R</span></code>&quot; for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.</p>
+<p><a class="reference internal" href="#sangeralignment-fasta-input"><span class="std std-ref">Figure_3</span></a> shows the <strong>FASTA</strong> input file and the read names in it will be mapping conversed by <strong>CSV</strong> file showed in <a class="reference internal" href="#sangeralignment-read-names-conversion"><span class="std std-ref">Figure_2</span></a> (Only two reads are showed). sangeranalyseR will first match the <code class="code docutils literal notranslate"><span class="pre">contigName</span></code> to exclude unrelated reads. The direction of reads in each contig will be grouped by matching <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code> with read names. Therefore, it is important to carefully select <code class="code docutils literal notranslate"><span class="pre">suffixForwardRegExp</span></code> and <code class="code docutils literal notranslate"><span class="pre">suffixReverseRegExp</span></code>. The bad file-naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate totally wrong results. Therefore, users should have a consistent naming strategy. In this example, &quot;<code class="code docutils literal notranslate"><span class="pre">_[0-9]+_F</span></code>&quot;, &quot;<code class="code docutils literal notranslate"><span class="pre">_[0-9]+_R</span></code>&quot; for matching forward and reverse reads are highly suggested and are used as default. It is a good habit to index your reads in the same contig group because there might be more than one read that are in the forward or reverse direction.</p>
 <div class="figure align-center" id="id4">
 <span id="sangeranalyser-filename-convention-sangeralignment-fasta"></span><a class="reference internal image-reference" href="../_images/sangeranalyseR_filename_convention_fasta.png"><img alt="../_images/sangeranalyseR_filename_convention_fasta.png" src="../_images/sangeranalyseR_filename_convention_fasta.png" style="width: 538.25px; height: 28.0px;" /></a>
 <p class="caption"><span class="caption-text">Figure 4. Suggested read naming regulation in <strong>FASTA</strong> file - <em>SangerAlignment</em>.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
@@ -296,7 +296,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="how_to_page.html" class="btn btn-neutral float-right" title="How to ..." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="how_to_page.html" class="btn btn-neutral float-right" title="Q &amp; A ..." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="advance_user_SangerContig_fasta.html" class="btn btn-neutral float-left" title="Advanced User Guide - SangerContig (FASTA)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
