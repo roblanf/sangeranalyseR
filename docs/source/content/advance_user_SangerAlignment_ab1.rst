@@ -84,10 +84,6 @@ As you can see, the first part of the regulation is a consensus read name (or co
 To make it more specific, let's go back to the true example. In :ref:`Figure_2<SangerAlignment_file_structure_ab1>`, there are two subdirectories, :code:`ACHLO` and :code:`RBNII`, containing lots of **AB1** files from different contigs in the root directory, :code:`Allolobophora_chlorotica` (:code:`ABIF_Directory`). 
 
 
-
-First, we set :code:`contigName` to :code:`"Achl_RBNII384-13"` to reduce candidates from eight to two **AB1** files, :code:`Achl_RBNII384-13_1_F.ab1` and :code:`Achl_RBNII384-13_2_R.ab1`. 
-
-
 First, we set :code:`REGEX_SuffixForward` to :code:`"_[0-9]*_F.ab1$"` and :code:`REGEX_SuffixReverse` to :code:`"_[0-9]*_R.ab1$"` to let sangeranalyseR match and group forward and reverse reads automatically. By the regular expression rule, :code:`Achl_ACHLO006-09_1_F.ab1`, :code:`Achl_ACHLO007-09_1_F.ab1`, :code:`Achl_ACHLO040-09_1_F.ab1`, :code:`Achl_ACHLO041-09_1_F.ab1`, :code:`Achl_RBNII384-13_1_F.ab1`, :code:`Achl_RBNII395-13_1_F.ab1`, :code:`Achl_RBNII396-13_1_F.ab1`, and :code:`Achl_RBNII397-13_1_F.ab1` are categorized into forward reads, and :code:`Achl_ACHLO006-09_1_R.ab1`, :code:`Achl_ACHLO007-09_1_R.ab1`, :code:`Achl_ACHLO040-09_1_R.ab1`, :code:`Achl_ACHLO041-09_1_R.ab1`, :code:`Achl_RBNII384-13_1_R.ab1`, :code:`Achl_RBNII395-13_1_R.ab1`, :code:`Achl_RBNII396-13_1_R.ab1`, and :code:`Achl_RBNII397-13_1_R.ab1` are categorized into reverse reads. Then, :code:`str_split` function is used to split each filename above into "contig name" and "direction-suffix". Eight contig names are detected in this example which are :code:`Achl_ACHLO006-09`, :code:`Achl_ACHLO007-09`, :code:`Achl_ACHLO040-09`, :code:`Achl_ACHLO041-09`, :code:`Achl_RBNII384-13`, :code:`Achl_RBNII395-13`, :code:`Achl_RBNII396-13`, and :code:`Achl_RBNII397-13`. Last, a loop iterates through all contigs, and sangeranalseR creates each of them into a **SangerContig** instance. You can check :ref:`Advanced User Guide - *SangerContig* (**AB1**)` to see how sangeranalyseR works into **SangerContig** level.
 
 The reason why we strongly recommend you to follow this file-naming regulation is that by doing so, you can directly adopt the example regular expression matching values, :code:`"_[0-9]*_F.ab1$"` and :code:`"_[0-9]*_R.ab1$"` to group reads and reduce chances of error. Everything mentioned above will be done automatically. 
@@ -1104,8 +1100,8 @@ Code summary (*SangerAlignment*, **AB1**)
 |
 
 
-(3) Updating *SangerAlignment* quality trimming parameters
------------------------------------------------------------
+(3) Updating *SangerAlignment* quality trimming parameters :sub:`(AB1)`
+------------------------------------------------------------------------
 
 .. code-block:: R
 
@@ -1118,8 +1114,8 @@ Code summary (*SangerAlignment*, **AB1**)
 |
 
 
-(4) Launching *SangerAlignment* Shiny app
--------------------------------------------
+(4) Launching *SangerAlignment* Shiny app :sub:`(AB1)`
+-------------------------------------------------------
 
 .. code-block:: R
 
