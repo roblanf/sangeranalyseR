@@ -47,8 +47,8 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #'                        CSV_NamesConversion    = CSV_NamesConversion)
 #' 
 #' ## Input From ABIF file format (Regex)
-#' REGEX_SuffixForward <- "_[0-9]*_F.ab1"
-#' REGEX_SuffixReverse <- "_[0-9]*_R.ab1"
+#' REGEX_SuffixForward <- "_[0-9]*_F.ab1$"
+#' REGEX_SuffixReverse <- "_[0-9]*_R.ab1$"
 #' sangerAlignment <- new("SangerAlignment",
 #'                        printLevel            = "SangerAlignment",
 #'                        inputSource           = "ABIF",

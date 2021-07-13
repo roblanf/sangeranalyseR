@@ -39,8 +39,8 @@
 #' @examples
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "RBNII")
-#' REGEX_SuffixForward <- "_[0-9]*_F.ab1"
-#' REGEX_SuffixReverse <- "_[0-9]*_R.ab1"
+#' REGEX_SuffixForward <- "_[0-9]*_F.ab1$"
+#' REGEX_SuffixReverse <- "_[0-9]*_R.ab1$"
 #' sangerAlignment <- SangerAlignment(
 #'                        inputSource            = "ABIF",
 #'                        ABIF_Directory       = parentDir,

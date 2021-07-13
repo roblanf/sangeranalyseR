@@ -99,7 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#updating-sangerread-quality-trimming-parameters">Updating <em>SangerRead</em> quality trimming parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-sangerread-fasta-file-ab1">Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-sangerread-report-ab1">Generating <em>SangerRead</em> report <sub>(AB1)</sub></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#a-reproducible-example-sangerread-ab1">A Reproducible Example (<em>SangerRead</em>, <strong>ab1</strong>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#code-summary-sangerread-ab1">Code summary (<em>SangerRead</em>, <strong>ab1</strong>)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">(1) Preparing <em>SangerRead</em> <strong>AB1</strong> input</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id2">(2) Creating <em>SangerRead</em> instance from <strong>AB1</strong></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id3">(3) Visualizing <em>SangerRead</em> trimmed read</a></li>
@@ -197,7 +197,15 @@
 </div>
 <div class="section" id="preparing-sangerread-ab1-input">
 <h2>Preparing <em>SangerRead</em> <strong>AB1</strong> input<a class="headerlink" href="#preparing-sangerread-ab1-input" title="Permalink to this headline">¶</a></h2>
-<p>The main input file format to create <em>SangerRead</em> instance is <strong>AB1</strong>. Before starting the analysis, users need to prepare one target <strong>AB1</strong> file. The only hard regulation of the filename is that the input file must have <strong>.ab1</strong> as its file extension. There are some suggestions about the filename in the note below:</p>
+<p>The main input file format to create <em>SangerRead</em> instance is <strong>AB1</strong>. Before starting the analysis, users need to prepare one target <strong>AB1</strong> file, and in this example, it is in the sangeranalyseR package; thus, you can simply get its path by running the following codes:</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">inputFilesPath</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata/&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
+<span class="n">A_chloroticaFFN</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">inputFilesPath</span><span class="p">,</span>
+                             <span class="s">&quot;Allolobophora_chlorotica&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;ACHLO&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Achl_ACHLO006-09_1_F.ab1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The only hard regulation of the filename, <code class="code docutils literal notranslate"><span class="pre">Achl_ACHLO006-09_1_F.ab1</span></code> in this example, is that the input file must have <strong>.ab1</strong> as its file extension. There are some suggestions about the filename in the note below:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -227,11 +235,10 @@
 </div>
 <div class="section" id="creating-sangerread-instance-from-ab1">
 <h2>Creating <em>SangerRead</em> instance from <strong>AB1</strong><a class="headerlink" href="#creating-sangerread-instance-from-ab1" title="Permalink to this headline">¶</a></h2>
-<p>After preparing the <em>SangerRead</em> input <strong>AB1</strong> file, the next step is to create the <em>SangerRead</em> instance by running <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for the <code class="code docutils literal notranslate"><span class="pre">new</span></code> method which makes instance creation more intuitive. The inputs include <strong>Basic Parameters</strong>, <strong>Trimming Parameters</strong>, and <strong>Chromatogram Parameters</strong>, and all of them have default values. In the example below, we show both <em>SangerRead</em> creation methods with important parameters.</p>
+<p>After preparing the <em>SangerRead</em> input <strong>AB1</strong> file, <code class="code docutils literal notranslate"><span class="pre">A_chloroticaFFN</span></code> , the next step is to create a <em>SangerRead</em> instance by running <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for the <code class="code docutils literal notranslate"><span class="pre">new</span></code> method which makes instance creation more intuitive. The inputs include <strong>Basic Parameters</strong>, <strong>Trimming Parameters</strong>, and <strong>Chromatogram Parameters</strong>, and all of them have default values. In the example below, we show both <em>SangerRead</em> creation methods with important parameters.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerRead instance</span>
-<span class="n">sangerReadF</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">inputSource</span>           <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
-                          <span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
-                          <span class="n">readFileName</span>          <span class="o">=</span> <span class="s">&quot;Achl_RBNII397-13_1_F.ab1&quot;</span><span class="p">,</span>
+<span class="n">sangerReadF</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
+                          <span class="n">readFileName</span>          <span class="o">=</span> <span class="n">A_chloroticaFFN</span><span class="p">,</span>
                           <span class="n">geneticCode</span>           <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">,</span>
                           <span class="n">TrimmingMethod</span>        <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
                           <span class="n">M1TrimmingCutoff</span>      <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
@@ -244,21 +251,37 @@
 
 <span class="c1"># using `new` method to create SangerRead instance</span>
 <span class="n">sangerReadF</span> <span class="o">&lt;-</span> <span class="nf">new</span><span class="p">(</span><span class="s">&quot;SangerRead&quot;</span><span class="p">,</span>
-                    <span class="n">inputSource</span>           <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
-                    <span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
-                    <span class="n">readFileName</span>          <span class="o">=</span> <span class="s">&quot;Achl_RBNII397-13_1_F.ab1&quot;</span><span class="p">,</span>
-                    <span class="n">geneticCode</span>           <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">,</span>
-                    <span class="n">TrimmingMethod</span>        <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
-                    <span class="n">M1TrimmingCutoff</span>      <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
-                    <span class="n">M2CutoffQualityScore</span>  <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
-                    <span class="n">M2SlidingWindowSize</span>   <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
-                    <span class="n">baseNumPerRow</span>         <span class="o">=</span> <span class="m">100</span><span class="p">,</span>
-                    <span class="n">heightPerRow</span>          <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
-                    <span class="n">signalRatioCutoff</span>     <span class="o">=</span> <span class="m">0.33</span><span class="p">,</span>
-                    <span class="n">showTrimmed</span>           <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+                   <span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
+                   <span class="n">readFileName</span>          <span class="o">=</span> <span class="n">A_chloroticaFFN</span><span class="p">,</span>
+                   <span class="n">geneticCode</span>           <span class="o">=</span> <span class="n">GENETIC_CODE</span><span class="p">,</span>
+                   <span class="n">TrimmingMethod</span>        <span class="o">=</span> <span class="s">&quot;M1&quot;</span><span class="p">,</span>
+                   <span class="n">M1TrimmingCutoff</span>      <span class="o">=</span> <span class="m">0.0001</span><span class="p">,</span>
+                   <span class="n">M2CutoffQualityScore</span>  <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                   <span class="n">M2SlidingWindowSize</span>   <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                   <span class="n">baseNumPerRow</span>         <span class="o">=</span> <span class="m">100</span><span class="p">,</span>
+                   <span class="n">heightPerRow</span>          <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
+                   <span class="n">signalRatioCutoff</span>     <span class="o">=</span> <span class="m">0.33</span><span class="p">,</span>
+                   <span class="n">showTrimmed</span>           <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The inputs of <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function and <code class="code docutils literal notranslate"><span class="pre">new</span></code> method are the same. For more details about <em>SangerRead</em> inputs and slots definition, please refer to the <a class="reference external" href="https://bioconductor.org/packages/release/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf">sangeranalyseR reference manual</a>. The created <em>SangerRead</em> instance, <code class="code docutils literal notranslate"><span class="pre">sangerReadF</span></code>, is used as the input for the following functions.</p>
+<p>Inside the R shell, you can run <code class="code docutils literal notranslate"><span class="pre">sangerReadF</span></code> to get basic information of the instance or run <code class="code docutils literal notranslate"><span class="pre">sangerReadF&#64;objectResults&#64;readResultTable</span></code> to check the creation result of every Sanger read after <code class="code docutils literal notranslate"><span class="pre">sangerReadF</span></code> is successfully created.</p>
+<p>Here is the output of <code class="code docutils literal notranslate"><span class="pre">sangerReadF</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>SangerRead S4 instance
+         Input Source :  ABIF
+         Read Feature :  Forward Read
+         Read FileName :  Achl_ACHLO006-09_1_F.ab1
+      Trimming Method :  M1
+      Primary Sequence :  CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG
+   Secondary Sequence :  CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG
+SUCCESS [2021-12-07 23:31:16] &#39;Achl_ACHLO006-09_1_F.ab1&#39; is successfully created!
+</pre></div>
+</div>
+<p>Here is the output of <code class="code docutils literal notranslate"><span class="pre">sangerReadF&#64;objectResults&#64;readResultTable</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                  <span class="n">readName</span> <span class="n">creationResult</span> <span class="n">errorType</span> <span class="n">errorMessage</span> <span class="n">inputSource</span>    <span class="n">direction</span>
+<span class="mi">1</span> <span class="n">Achl_ACHLO006</span><span class="o">-</span><span class="mi">09_1</span><span class="n">_F</span><span class="o">.</span><span class="n">ab1</span>           <span class="n">TRUE</span>      <span class="kc">None</span>         <span class="kc">None</span>        <span class="n">ABIF</span> <span class="n">Forward</span> <span class="n">Read</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -294,7 +317,7 @@
 <div class="section" id="writing-sangerread-fasta-file-ab1">
 <h2>Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub><a class="headerlink" href="#writing-sangerread-fasta-file-ab1" title="Permalink to this headline">¶</a></h2>
 <p>After quality trimming, users can write <code class="code docutils literal notranslate"><span class="pre">sangerReadF</span></code> into a <strong>FASTA</strong> file. Below is the one-liner that needs to be run. This function, <code class="code docutils literal notranslate"><span class="pre">writeFasta</span></code>, mainly depends on <code class="code docutils literal notranslate"><span class="pre">writeXStringSet</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">Biostrings</a> R package. Users can further set the compression level through it.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">newSangerRead</span><span class="p">,</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">,</span>
            <span class="n">outputDir</span>         <span class="o">=</span> <span class="nf">tempdir</span><span class="p">(),</span>
            <span class="n">compress</span>          <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
            <span class="n">compression_level</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">)</span>
@@ -308,7 +331,7 @@
 <div class="section" id="generating-sangerread-report-ab1">
 <h2>Generating <em>SangerRead</em> report <sub>(AB1)</sub><a class="headerlink" href="#generating-sangerread-report-ab1" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least, users can save <code class="code docutils literal notranslate"><span class="pre">sangerReadF</span></code> into a static <strong>HTML</strong> report by knitting <strong>Rmd</strong> files. In this example, <code class="code docutils literal notranslate"><span class="pre">tempdir</span></code> function will generate a random path.</p>
-<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">newSangerRead</span><span class="p">,</span>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">,</span>
                <span class="n">outputDir</span> <span class="o">=</span> <span class="nf">tempdir</span><span class="p">())</span>
 </pre></div>
 </div>
@@ -318,11 +341,10 @@
 <div class="line"><br /></div>
 </div>
 </div>
-<div class="section" id="a-reproducible-example-sangerread-ab1">
-<h2>A Reproducible Example (<em>SangerRead</em>, <strong>ab1</strong>)<a class="headerlink" href="#a-reproducible-example-sangerread-ab1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="code-summary-sangerread-ab1">
+<h2>Code summary (<em>SangerRead</em>, <strong>ab1</strong>)<a class="headerlink" href="#code-summary-sangerread-ab1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
 <h3>(1) Preparing <em>SangerRead</em> <strong>AB1</strong> input<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p>The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">inputFilesPath</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata/&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
 <span class="n">A_chloroticaFFN</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">inputFilesPath</span><span class="p">,</span>
                              <span class="s">&quot;Allolobophora_chlorotica&quot;</span><span class="p">,</span>
@@ -336,7 +358,6 @@
 </div>
 <div class="section" id="id2">
 <h3>(2) Creating <em>SangerRead</em> instance from <strong>AB1</strong><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<p>Run the following on-liner, SangerRead <code class="code docutils literal notranslate"><span class="pre">constructor</span></code> or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method, to create the <em>SangerRead</em> object.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerRead instance</span>
 <span class="n">sangerReadF</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
                           <span class="n">readFileName</span>          <span class="o">=</span> <span class="n">A_chloroticaFFN</span><span class="p">)</span>
@@ -375,7 +396,6 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 </div>
 <div class="section" id="id3">
 <h3>(3) Visualizing <em>SangerRead</em> trimmed read<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<p>Launch an interactive plotly plot to check the trimmed read.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">qualityBasePlot</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -385,7 +405,6 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 </div>
 <div class="section" id="id4">
 <h3>(4) Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
-<p>Write the trimmed read into a FASTA file.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -414,7 +433,6 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 </div>
 <div class="section" id="id5">
 <h3>(5) Generating <em>SangerRead</em> report <sub>(AB1)</sub><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<p>Last but not least, generate an Rmarkdown report to store all sequence information.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
 </div>

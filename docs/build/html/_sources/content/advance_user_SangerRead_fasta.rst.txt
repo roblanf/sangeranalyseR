@@ -16,7 +16,23 @@ Advanced User Guide - *SangerRead* (**FASTA**)
 Preparing *SangerRead* **FASTA** input
 +++++++++++++++++++++++++++++++++++++++
 
-The **FASTA** input method is designed for those who do not want to do quality trimming and base calling on their Sanger sequencing data; therefore, no quality trimming and chromatogram input parameters are needed. Before starting the analysis, users need to prepare a **FASTA** file. The only hard regulation of the filename is that file extension must be **.fasta** or **.fa**.
+The **FASTA** input method is designed for those who do not want to do quality trimming and base calling on their Sanger sequencing data; therefore, no quality trimming and chromatogram input parameters are needed. Before starting the analysis, users need to prepare a **FASTA** file, and in this example, it is in the sangeranalyseR package; thus, you can simply get its path by running the following codes:
+
+.. code-block:: R
+
+   inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
+   A_chloroticaFFNfa <- file.path(inputFilesPath,
+                                  "fasta",
+                                  "SangerRead",
+                                  "Achl_ACHLO006-09_1_F.fa")
+
+
+
+
+
+
+The only hard regulation of the filename, :code:`Achl_ACHLO006-09_1_F.fa` in this example, is that file extension must be **.fasta** or **.fa**.
+
 
 |
 
@@ -25,23 +41,6 @@ Creating *SangerRead* instance from **FASTA**
 
 After preparing an input **FASTA** file, the next step is to create a *SangerRead* instance by running :code:`SangerRead` constructor function or :code:`new` method. The constructor function is a wrapper for :code:`new` method which makes instance creation more intuitive. All of the input parameters have their default values. We list important parameters in the two *SangerRead* creation methods below. :code:`readFileName` stores the **FASTA** filename, and inside it, the string in the first line after ">" is the name of the read. Users need to assign the name of the read to :code:`fastaReadName` which is used for read-matching. :ref:`Figure 2<SangerRead_fasta_input_file>` is a valid **FASTA** file, :code:`Achl_ACHLO006-09_1_F.fa`, and the value of :code:`fastaReadName` is :code:`Achl_ACHLO006-09_1_F`.
 
-.. code-block:: R
-
-   # using `constructor` function to create SangerRead instance
-   sangerReadFfa <- new("SangerRead",
-                        inputSource          = "FASTA",
-                        readFeature          = "Forward Read",
-                        readFileName         = "Achl_ACHLO006-09_1_F.fa",
-                        fastaReadName        = "Achl_ACHLO006-09_1_F",
-                        geneticCode          = GENETIC_CODE)
-
-   # using `new` method to create SangerRead instance
-   sangerReadFfa <- SangerRead(inputSource          = "FASTA",
-                               readFeature          = "Forward Read",
-                               readFileName         = "Achl_ACHLO006-09_1_F.fa",
-                               fastaReadName        = "Achl_ACHLO006-09_1_F",
-                               geneticCode          = GENETIC_CODE)
-
 .. _SangerRead_fasta_input_file:
 .. figure::  ../image/SangerRead_fasta_input_file.png
    :align:   center
@@ -49,7 +48,49 @@ After preparing an input **FASTA** file, the next step is to create a *SangerRea
 
    Figure 2. *SangerRead* **FASTA** input file.
 
+
+.. code-block:: R
+
+   # using `constructor` function to create SangerRead instance
+   sangerReadFfa <- SangerRead(inputSource        = "FASTA",
+                               readFeature        = "Forward Read",
+                               readFileName       = A_chloroticaFFNfa,
+                               fastaReadName      = "Achl_ACHLO006-09_1_F",
+                               geneticCode        = GENETIC_CODE)
+
+
+   # using `new` method to create SangerRead instance
+   sangerReadFfa <- new("SangerRead",
+                        inputSource        = "FASTA",
+                        readFeature        = "Forward Read",
+                        readFileName       = A_chloroticaFFNfa,
+                        fastaReadName      = "Achl_ACHLO006-09_1_F", 
+                        geneticCode        = GENETIC_CODE)
+
+
+
 The inputs of :code:`SangerRead` constructor function and :code:`new` method are the same. For more details about *SangerRead* inputs and slots definition, please refer to `sangeranalyseR reference manual <https://bioconductor.org/packages/release/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_.
+
+
+Inside the R shell, you can run :code:`sangerReadFfa` to get basic information of the instance or run :code:`sangerReadFfa@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`sangerReadFfa` is successfully created.
+
+Here is the output of :code:`sangerReadFfa`::
+
+   SangerRead S4 instance
+            Input Source :  FASTA 
+            Read Feature :  Forward Read 
+            Read FileName :  Achl_ACHLO006-09_1_F.fa 
+         Fasta Read Name :  Achl_ACHLO006-09_1_F 
+         Primary Sequence :  CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG 
+   SUCCESS [2021-12-07 23:37:43] 'Achl_ACHLO006-09_1_F.fa' is successfully created!
+
+
+Here is the output of :code:`sangerReadFfa@objectResults@readResultTable`::
+   
+               readName creationResult errorType errorMessage inputSource    direction
+   1 Achl_ACHLO006-09_1_F           TRUE      None         None       FASTA Forward Read
+
+
 
 |
 
@@ -97,15 +138,12 @@ Last but not least, users can save :code:`sangerReadFfa` into a static **HTML** 
 
 
 
-
-
-A Reproducible Example (*SangerRead*, **fasta**)
+Code summary (*SangerRead*, **fasta**)
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 (1) Preparing *SangerRead* **FASTA** input
 ------------------------------------------
-The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.
 
 .. code-block:: R
 
@@ -119,7 +157,6 @@ The data of this example is in the sangeranalyseR package; thus, you can simply 
 
 (2) Creating *SangerRead* instance from **FASTA**
 -------------------------------------------------
-Run the following on-liner to create the *SangerRead* object.
 
 
 .. code-block:: R
@@ -163,7 +200,6 @@ Run the following on-liner to create the *SangerRead* object.
 (3) Writing *SangerRead* FASTA files :sub:`(FASTA)`
 ---------------------------------------------------
 
-Write the read into a FASTA file.
 
 .. code-block:: R
 
@@ -196,7 +232,6 @@ And you will get one FASTA file:
 (4) Generating *SangerRead* report :sub:`(FASTA)`
 -------------------------------------------------
 
-Last but not least, generate an Rmarkdown report to store all the sequence information.
 
 .. code-block:: R
 

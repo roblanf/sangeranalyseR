@@ -13,7 +13,20 @@ Advanced User Guide - *SangerRead* (**AB1**)
 
 Preparing *SangerRead* **AB1** input
 +++++++++++++++++++++++++++++++++++++
-The main input file format to create *SangerRead* instance is **AB1**. Before starting the analysis, users need to prepare one target **AB1** file. The only hard regulation of the filename is that the input file must have **.ab1** as its file extension. There are some suggestions about the filename in the note below:
+The main input file format to create *SangerRead* instance is **AB1**. Before starting the analysis, users need to prepare one target **AB1** file, and in this example, it is in the sangeranalyseR package; thus, you can simply get its path by running the following codes:
+
+.. code-block:: R
+
+   inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
+   A_chloroticaFFN <- file.path(inputFilesPath,
+                                "Allolobophora_chlorotica",
+                                "ACHLO",
+                                "Achl_ACHLO006-09_1_F.ab1")
+
+
+
+The only hard regulation of the filename, :code:`Achl_ACHLO006-09_1_F.ab1` in this example, is that the input file must have **.ab1** as its file extension. There are some suggestions about the filename in the note below:
+
 
 .. note::
 
@@ -50,14 +63,13 @@ In *SangerRead* section, it is not compulsory to follow the file-naming regulati
 Creating *SangerRead* instance from **AB1**
 ++++++++++++++++++++++++++++++++++++++++++++
 
-After preparing the *SangerRead* input **AB1** file, the next step is to create the *SangerRead* instance by running :code:`SangerRead` constructor function or :code:`new` method. The constructor function is a wrapper for the :code:`new` method which makes instance creation more intuitive. The inputs include **Basic Parameters**, **Trimming Parameters**, and **Chromatogram Parameters**, and all of them have default values. In the example below, we show both *SangerRead* creation methods with important parameters.
+After preparing the *SangerRead* input **AB1** file, :code:`A_chloroticaFFN` , the next step is to create a *SangerRead* instance by running :code:`SangerRead` constructor function or :code:`new` method. The constructor function is a wrapper for the :code:`new` method which makes instance creation more intuitive. The inputs include **Basic Parameters**, **Trimming Parameters**, and **Chromatogram Parameters**, and all of them have default values. In the example below, we show both *SangerRead* creation methods with important parameters.
 
 .. code-block:: R
 
    # using `constructor` function to create SangerRead instance
-   sangerReadF <- SangerRead(inputSource           = "ABIF",
-                             readFeature           = "Forward Read",
-                             readFileName          = "Achl_RBNII397-13_1_F.ab1",
+   sangerReadF <- SangerRead(readFeature           = "Forward Read",
+                             readFileName          = A_chloroticaFFN,
                              geneticCode           = GENETIC_CODE,
                              TrimmingMethod        = "M1",
                              M1TrimmingCutoff      = 0.0001,
@@ -70,21 +82,43 @@ After preparing the *SangerRead* input **AB1** file, the next step is to create 
 
    # using `new` method to create SangerRead instance
    sangerReadF <- new("SangerRead",
-                       inputSource           = "ABIF",
-                       readFeature           = "Forward Read",
-                       readFileName          = "Achl_RBNII397-13_1_F.ab1",
-                       geneticCode           = GENETIC_CODE,
-                       TrimmingMethod        = "M1",
-                       M1TrimmingCutoff      = 0.0001,
-                       M2CutoffQualityScore  = NULL,
-                       M2SlidingWindowSize   = NULL,
-                       baseNumPerRow         = 100,
-                       heightPerRow          = 200,
-                       signalRatioCutoff     = 0.33,
-                       showTrimmed           = TRUE)
+                      readFeature           = "Forward Read",
+                      readFileName          = A_chloroticaFFN,
+                      geneticCode           = GENETIC_CODE,
+                      TrimmingMethod        = "M1",
+                      M1TrimmingCutoff      = 0.0001,
+                      M2CutoffQualityScore  = NULL,
+                      M2SlidingWindowSize   = NULL,
+                      baseNumPerRow         = 100,
+                      heightPerRow          = 200,
+                      signalRatioCutoff     = 0.33,
+                      showTrimmed           = TRUE)
+
 
 
 The inputs of :code:`SangerRead` constructor function and :code:`new` method are the same. For more details about *SangerRead* inputs and slots definition, please refer to the `sangeranalyseR reference manual <https://bioconductor.org/packages/release/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf>`_. The created *SangerRead* instance, :code:`sangerReadF`, is used as the input for the following functions.
+
+
+Inside the R shell, you can run :code:`sangerReadF` to get basic information of the instance or run :code:`sangerReadF@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`sangerReadF` is successfully created.
+
+Here is the output of :code:`sangerReadF`::
+
+   SangerRead S4 instance
+            Input Source :  ABIF 
+            Read Feature :  Forward Read 
+            Read FileName :  Achl_ACHLO006-09_1_F.ab1 
+         Trimming Method :  M1 
+         Primary Sequence :  CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG 
+      Secondary Sequence :  CTGGGCGTCTGAGCAGGAATGGTTGGAGCCGGTATAAGACTTCTAATTCGAATCGAGCTAAGACAACCAGGAGCGTTCCTGGGCAGAGACCAACTATACAATACTATCGTTACTGCACACGCATTTGTAATAATCTTCTTTCTAGTAATGCCTGTATTCATCGGGGGATTCGGAAACTGGCTTTTACCTTTAATACTTGGAGCCCCCGATATAGCATTCCCTCGACTCAACAACATGAGATTCTGACTACTTCCCCCATCACTGATCCTTTTAGTGTCCTCTGCGGCGGTAGAAAAAGGCGCTGGTACGGGGTGAACTGTTTATCCGCCTCTAGCAAGAAATCTTGCCCACGCAGGCCCGTCTGTAGATTTAGCCATCTTTTCCCTTCATTTAGCGGGTGCGTCTTCTATTCTAGGGGCTATTAATTTTATCACCACAGTTATTAATATGCGTTGAAGAGG 
+   SUCCESS [2021-12-07 23:31:16] 'Achl_ACHLO006-09_1_F.ab1' is successfully created!
+
+
+Here is the output of :code:`sangerReadF@objectResults@readResultTable`::
+   
+                     readName creationResult errorType errorMessage inputSource    direction
+   1 Achl_ACHLO006-09_1_F.ab1           TRUE      None         None        ABIF Forward Read
+
+
 
 |
 
@@ -129,7 +163,7 @@ After quality trimming, users can write :code:`sangerReadF` into a **FASTA** fil
 
 .. code-block:: R
 
-   writeFasta(newSangerRead,
+   writeFasta(sangerReadF,
               outputDir         = tempdir(),
               compress          = FALSE,
               compression_level = NA)
@@ -145,7 +179,7 @@ Last but not least, users can save :code:`sangerReadF` into a static **HTML** re
 
 .. code-block:: R
 
-   generateReport(newSangerRead,
+   generateReport(sangerReadF,
                   outputDir = tempdir())
 
 .. `SangerRead_Report_ab1.html <https://howardchao.github.io/sangeranalyseR_report/SangerRead/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_ab1.html>`_ is the generated *SangerRead* report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*', '*Amino Acids Sequence*', '*Quality Trimming*' and '*Chromatogram*' sections inside this report.
@@ -171,16 +205,12 @@ Last but not least, users can save :code:`sangerReadF` into a static **HTML** re
 
 
 
-
-
-
-A Reproducible Example (*SangerRead*, **ab1**)
+Code summary (*SangerRead*, **ab1**)
 +++++++++++++++++++++++++++++++++++++++++++++++
 
 
 (1) Preparing *SangerRead* **AB1** input
 ----------------------------------------
-The data of this example is in the sangeranalyseR package; thus, you can simply get its path from the library.
 
 .. code-block:: R
 
@@ -194,8 +224,6 @@ The data of this example is in the sangeranalyseR package; thus, you can simply 
 
 (2) Creating *SangerRead* instance from **AB1**
 -----------------------------------------------
-Run the following on-liner, SangerRead :code:`constructor` or :code:`new` method, to create the *SangerRead* object.
-
 
 .. code-block:: R
 
@@ -237,7 +265,6 @@ Run the following on-liner, SangerRead :code:`constructor` or :code:`new` method
 (3) Visualizing *SangerRead* trimmed read
 -----------------------------------------
 
-Launch an interactive plotly plot to check the trimmed read.
 
 .. code-block:: R
 
@@ -249,7 +276,6 @@ Launch an interactive plotly plot to check the trimmed read.
 (4) Writing *SangerRead* FASTA file :sub:`(AB1)`
 -------------------------------------------------
 
-Write the trimmed read into a FASTA file.
 
 .. code-block:: R
 
@@ -281,7 +307,6 @@ And you will get one FASTA file:
 (5) Generating *SangerRead* report :sub:`(AB1)`
 -----------------------------------------------
 
-Last but not least, generate an Rmarkdown report to store all sequence information.
 
 .. code-block:: R
 
