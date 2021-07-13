@@ -31,7 +31,7 @@ The value of :code:`fastaFN` is where the **FASTA** file is placed. If your oper
 
       /Library/Frameworks/R.framework/Versions/4.0/Resources/library/sangeranalyseR/extdata/fasta/SangerContig/Achl_ACHLO006-09.fa
 
-And we showed the reads in :code:`fastaFN` in Figure_2:
+And we showed the reads in :code:`fastaFN` in Figure_2 (:download:`example FASTA file <../files/SangerContig_fasta/Achl_ACHLO006-09.fa>`):
 
 .. _SangerContig_fasta_input:
 .. figure::  ../image/SangerContig_fasta_input.png
@@ -41,7 +41,7 @@ And we showed the reads in :code:`fastaFN` in Figure_2:
    Figure 2. *SangerContig* **FASTA** input file.
 
 
-Inside the **FASTA** file (:ref:`Figure_2<SangerContig_fasta_input>`), the strings starting with ">" before each read are the read names. There are two ways of grouping reads which are **"regular expression matching"** and **"CSV file matching"**, and following are instructions of how to prepare your **FASTA** input file.
+Inside the **FASTA** file (:ref:`Figure_2<SangerContig_fasta_input>`; :download:`Achl_ACHLO006-09.fa <../files/SangerContig_fasta/Achl_ACHLO006-09.fa>`), the strings starting with ">" before each read are the read names. There are two ways of grouping reads which are **"regular expression matching"** and **"CSV file matching"**, and following are instructions of how to prepare your **FASTA** input file.
 
 
 
@@ -68,7 +68,7 @@ There are four parameters, :code:`FASTA_File`, :code:`contigName`, :code:`REGEX_
 If you don't know what regular expression is, don't panic - it's just a way of recognising text. Please refer to :ref:`What is a regular expression?` for more details. Here is an example of how it works in sangeranalseR:
 
 
-So how sangeranalyseR works is that it will first match the :code:`contigName` to exclude unrelated files and then separate the forward and reverse reads by matching :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. Therefore, it is important to make sure that all target reads in the **FASTA** file share the same :code:`contigName` and carefully select :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. The bad file-naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate wrong results. Therefore, it is important to have a consistent naming strategy. So, how should we systematically name the reads? We suggest users to follow the file-naming regulatio in :ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig_fasta>`. 
+So how sangeranalyseR works is that it first matches the :code:`contigName` to exclude unrelated files and then separate the forward and reverse reads by matching :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. Therefore, it is important to make sure that all target reads in the **FASTA** file share the same :code:`contigName` and carefully select your :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. The bad file-naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate wrong results. Therefore, it is important to have a consistent naming strategy. So, how should we systematically name the reads? We suggest users to follow the file-naming regulation in :ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig_fasta>`. 
 
 
 .. _sangeranalyseR_filename_convention_SangerContig_fasta:
@@ -118,9 +118,9 @@ There are three parameters, :code:`FASTA_File`, :code:`contigName`, and :code:`C
 The main difference between "CSV file matching" and "regular expression matching" is where the grouping rule is written. For "regular expression matching", rules are writtein in read names, and thus there are more naming requirements for users to follow. In contrast, rules of "CSV file matching" are written in an additional **CSV** file so it is more flexible on naming reads.
 
 
-So how sangeranalyseR works is that it will first read in the **CSV** file (with "reads", "direction", and "contig" columns), filter out rows whose "contig" is not the value of :code:`contigName` parameter, find the read names in the **FASTA** file listed in "reads", and assign directions to them based on "direction".
+So how sangeranalyseR works is that it first reads in the **CSV** file (with *"reads"*, *"direction"*, and *"contig"* columns), filter out rows whose *"contig"* is not the value of :code:`contigName` parameter, find the read names in the **FASTA** file listed in *"reads"*, and assign directions to them based on *"direction"*.
 
-To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerContig_fasta/names_conversion_1.csv>` (:code:`CSV_NamesConversion`) and a **FASTA** file showed in :ref:`Figure_2<SangerContig_fasta_input>` (:code:`ABIF_Directory`). In the **CSV** file, both rows have the contig name :code:`"Achl_ACHLO006-09"`, which is what we need to assign to the :code:`contigName` parameter. sangeranalyseR then checks and matches "reads" of these two rows, :code:`"Achl_ACHLO006-09_1_F"` and :code:`"Achl_ACHLO006-09_2_R"`. Last, these two reads are assigned into "forward read list" and "reverse read list" respectively by the "direction" column.
+To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerContig_fasta/names_conversion_1.csv>` (:code:`CSV_NamesConversion`) and a **FASTA** file showed in :ref:`Figure_2<SangerContig_fasta_input>` (:code:`ABIF_Directory`). In the **CSV** file, both rows have the contig name :code:`"Achl_ACHLO006-09"`, which is what we need to assign to the :code:`contigName` parameter. sangeranalyseR then checks and matches *"reads"* of these two rows, :code:`"Achl_ACHLO006-09_1_F"` and :code:`"Achl_ACHLO006-09_2_R"`. Last, these two reads are assigned into "forward read list" and "reverse read list" respectively by the *"direction"* column.
 
 After understanding how parameters work, please refer to :ref:`Creating *SangerContig* instance from **FASTA**` below to see how to create 'Achl_ACHLO006-09' *SangerContig* instance.
 
@@ -323,7 +323,7 @@ One thing to pay attention to is that if users have many reads, it will take qui
 
    generateReport(my_sangerContigFa,
                   outputDir           = tempdir(),
-                  includeSangerRead   = TRUE)
+                  includeSangerRead   = FALSE)
 
 Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.
 

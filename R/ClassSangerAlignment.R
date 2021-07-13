@@ -39,8 +39,7 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #'                           
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
-#' CSV_NamesConversion <- file.path(rawDataDir, "ab1", "SangerAlignment",
-#' "names_conversion.csv")
+#' CSV_NamesConversion <- file.path(rawDataDir, "ab1", "SangerAlignment", "names_conversion.csv")
 #' sangerAlignment <- new("SangerAlignment",
 #'                        processMethod          = "CSV",
 #'                        ABIF_Directory         = parentDir,
@@ -79,13 +78,13 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' ## Input From ABIF file format (Csv three column)
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
-#' CSV_NamesConversion <- file.path(rawDataDir, "ab1", "SangerAlignment",
-#' "names_conversion.csv")
+#' CSV_NamesConversion <- file.path(rawDataDir, "ab1", "SangerAlignment", 
+#' "names_conversion_all.csv")
 #' sangerAlignment <- new("SangerAlignment",
 #'                        inputSource           = "ABIF",
 #'                        processMethod         = "CSV",
-#'                        ABIF_Directory       = parentDir,
-#'                        CSV_NamesConversion    = CSV_NamesConversion,
+#'                        ABIF_Directory        = parentDir,
+#'                        CSV_NamesConversion   = CSV_NamesConversion,
 #'                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
 #'                        TrimmingMethod        = "M1",
 #'                        M1TrimmingCutoff      = 0.0001,
@@ -290,6 +289,7 @@ setMethod("initialize",
                 parentDirFiles[grepl(REGEX_SuffixForward, parentDirFiles)]
             reverseSelectInputFiles <-
                 parentDirFiles[grepl(REGEX_SuffixReverse, parentDirFiles)]
+            # cat("*** forwardSelectInputFiles: ", forwardSelectInputFiles)
             warnings <- checkGreplForward(forwardSelectInputFiles, 
                                           warnings[[1]], warnings[[2]])
             warnings <- checkGreplReverse(reverseSelectInputFiles, 
@@ -305,7 +305,7 @@ setMethod("initialize",
                                  simplify = FALSE))[c(TRUE, FALSE)]
             contigNames <- union(forwardContigName, reverseContigName)
             contigNumber <- length(contigNames)
-            
+            # cat("*** contigNames: ", contigNames)
             # Create contig for all list of contigNumber
             ### ----------------------------------------------------------------
             ##### Creating each SangerContig (store as SangerContigList)
@@ -315,6 +315,9 @@ setMethod("initialize",
                        function(eachConsRead) {
                            insideDirName<- dirname(eachConsRead)
                            insideContigName <- basename(eachConsRead)
+                           # cat("**** eachConsRead: ", eachConsRead)
+                           # cat("**** insideDirName: ", insideDirName)
+                           # cat("**** insideContigName: ", insideContigName)
                            newSangerContig <-
                                new("SangerContig",
                                    printLevel           = printLevel,
@@ -355,22 +358,33 @@ setMethod("initialize",
         } else if (inputSource == "ABIF" && processMethod == "CSV") {
             log_info("**** You are using CSV Name Conversion Method ",
                      "to group AB1 files!")
+            parentDirFiles <- list.files(ABIF_Directory, recursive = TRUE)
             csvFile <- read.csv(CSV_NamesConversion, header = TRUE)
             log_info("**** Contig number in your Csv file is ", 
                      length(unique(csvFile$contig)))
             contigNames <- as.character(unique(csvFile$contig))
+            contigNames <- lapply(contigNames, function(contigName) {
+                contigNameSelectInputFiles <-
+                    parentDirFiles[grepl(contigName, parentDirFiles)]   
+                inside_contigNames <- file.path(dirname(contigNameSelectInputFiles), contigName)
+                inside_contigNames
+            })
+            contigNames <- unique(unlist(contigNames, recursive = TRUE))
             SangerContigList <- lapply(contigNames, function(contigName) {
+                insideDirName<- dirname(contigName)
+                insideContigName <- basename(contigName)
                 newSangerContig <-
                     new("SangerContig",
                         printLevel           = printLevel,
                         inputSource          = inputSource,
                         processMethod        = processMethod,
-                        ABIF_Directory       = ABIF_Directory,
+                        ABIF_Directory       =
+                            file.path(ABIF_Directory, insideDirName),
                         FASTA_File           = FASTA_File,
                         REGEX_SuffixForward  = REGEX_SuffixForward,
                         REGEX_SuffixReverse  = REGEX_SuffixReverse,
                         CSV_NamesConversion  = CSV_NamesConversion,
-                        contigName           = contigName,
+                        contigName           = insideContigName,
                         geneticCode          = geneticCode,
                         TrimmingMethod       = TrimmingMethod,
                         M1TrimmingCutoff     = M1TrimmingCutoff,

@@ -50,8 +50,8 @@ For regular expression matching method, sangeranalyseR will group **AB1** files 
 
 .. note::
 
-    *  All the input files must have **.ab1** as its file extension
-    *  All the input files must have the same contig name in its filename.
+    *  All input files must have **.ab1** as its file extension
+    *  All input files must have the same contig name in their filename.
     *  Forward or reverse direction has to be specified in the filename.
 
 
@@ -71,7 +71,7 @@ There are four parameters, :code:`ABIF_Directory`, :code:`contigName`, :code:`RE
 
 If you don't know what regular expression is, don't panic - it's just a way of recognising text. Please refer to :ref:`What is a regular expression?` for more details. Here is an example of how it works in sangeranalseR:
 
-So how sangeranalyseR works is that it will first match the :code:`contigName` to exclude unrelated files and then separate the forward and reverse reads by matching :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. Therefore, it is important to make sure that all target **AB1** files share the same :code:`contigName` and carefully select :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. The bad file-naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate wrong results. Therefore, it is important to have a consistent naming strategy. So, how should we systematically name **AB1** files? We suggest users to follow the file-naming regulatio in :ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig>`. 
+So how sangeranalyseR works is that it first matches the :code:`contigName` to exclude unrelated files and then separate the forward and reverse reads by matching :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. Therefore, it is important to make sure that all target **AB1** files share the same :code:`contigName` and carefully select your :code:`REGEX_SuffixForward` and :code:`REGEX_SuffixReverse`. The bad file-naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate wrong results. Therefore, it is important to have a consistent naming strategy. So, how should we systematically name **AB1** files? We suggest users to follow the file-naming regulation in :ref:`Figure_3<sangeranalyseR_filename_convention_SangerContig>`. 
 
 .. _sangeranalyseR_filename_convention_SangerContig:
 .. figure::  ../image/sangeranalyseR_filename_convention.png
@@ -122,9 +122,9 @@ There are three parameters, :code:`ABIF_Directory`, :code:`contigName`, and :cod
 The main difference between "CSV file matching" and "regular expression matching" is where the grouping rule is written. For "regular expression matching", rules are writtein in filenames, and thus there are more naming requirements for users to follow. In contrast, rules of "CSV file matching" are written in an additional **CSV** file so it is more flexible on **AB1** file-naming.
 
 
-So how sangeranalyseR works is that it will first read in the **CSV** file (with "reads", "direction", and "contig" columns), filter out rows whose "contig" is not the value of :code:`contigName` parameter, find the names of **AB1** files listed in "reads", and assign directions to them based on "direction".
+So how sangeranalyseR works is that it first reads in the **CSV** file (with *"reads"*, *"direction"*, and *"contig"* columns), filter out rows whose *"contig"* is not the value of :code:`contigName` parameter, find the names of **AB1** files listed in *"reads"*, and assign directions to them based on *"direction"*.
 
-To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerContig_ab1/names_conversion_2.csv>` (:code:`CSV_NamesConversion`) and a file directory like :ref:`Figure_2<SangerContig_file_structure_ab1>` (:code:`ABIF_Directory`) with some **AB1** files from different contigs. In the **CSV** file, both rows have the contig name :code:`"Achl_RBNII384-13"`, which is what we need to assign to the :code:`contigName` parameter. sangeranalyseR then checks and matches "reads" of these two rows, :code:`"Achl_RBNII384-13_1_F.ab1"` and :code:`"Achl_RBNII384-13_2_R.ab1"`, in :code:`RBNII` directory and reduce candidates from eight to two **AB1** files. Last, these two reads are assigned into "forward read list" and "reverse read list" respectively by the "direction" column.
+To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerContig_ab1/names_conversion_2.csv>` (:code:`CSV_NamesConversion`) and a file directory like :ref:`Figure_2<SangerContig_file_structure_ab1>` (:code:`ABIF_Directory`) with some **AB1** files from different contigs. In the **CSV** file, both rows have the contig name :code:`"Achl_RBNII384-13"`, which is what we need to assign to the :code:`contigName` parameter. sangeranalyseR then checks and matches *"reads"* of these two rows, :code:`"Achl_RBNII384-13_1_F.ab1"` and :code:`"Achl_RBNII384-13_2_R.ab1"`, in :code:`RBNII` directory and reduce candidates from eight to two **AB1** files. Last, these two reads are assigned into "forward read list" and "reverse read list" respectively by the *"direction"* column.
 
 After understanding how parameters work, please refer to :ref:`Creating *SangerContig* instance from **AB1**` below to see how to create 'Achl_RBNII384-13' *SangerContig* instance.
 
@@ -542,7 +542,7 @@ One thing to pay attention to is that if users have many reads, it will take qui
 
    generateReport(my_sangerContig,
                   outputDir           = tempdir(),
-                  includeSangerRead   = TRUE)
+                  includeSangerRead   = FALSE)
 
 Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.
 
