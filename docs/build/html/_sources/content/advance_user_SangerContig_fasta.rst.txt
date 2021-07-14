@@ -82,7 +82,7 @@ As you can see, the first part of the regulation is a consensus read name (or co
 
 To make it more specific, let's go back to the true example. In :ref:`Figure_2<SangerContig_fasta_input>`, there are two reads in the :code:`FASTA` file (:code:`fasta_FN`). First, we set :code:`contigName` to :code:`"Achl_ACHLO006-09"` to confirm that two of them, :code:`Achl_ACHLO006-09_1_F` and :code:`Achl_ACHLO006-09_2_R`, contain our target :code:`contigName` and should be included. Then, we set :code:`REGEX_SuffixForward` to :code:`"_[0-9]*_F$"` and :code:`REGEX_SuffixReverse` to :code:`"_[0-9]*_R$"` to let sangeranalyseR match and group forward and reverse reads automatically. By the regular expression rule, :code:`Achl_ACHLO006-09_1_F` and :code:`Achl_ACHLO006-09_2_R` will be categorized into "forward read list" and "reverse read list" respectively. The reason why we strongly recommend you to follow this file-naming regulation is that by doing so, you can directly adopt the example regular expression matching values, :code:`"_[0-9]*_F$"` and :code:`"_[0-9]*_R$"`, to group reads and reduce chances of error. 
 
-After understanding how parameters work, please refer to :ref:`Creating *SangerContig* instance from **FASTA**` below to see how to create 'Achl_ACHLO006-09' *SangerContig* instance.
+After understanding how parameters work, please refer to :ref:`Creating *SangerContig* instance from **FASTA**` below to see how sangeranalseR creates 'Achl_ACHLO006-09' *SangerContig* instance.
 
 
 (2) "CSV file matching" *SangerContig* inputs (**FASTA**)
@@ -112,17 +112,17 @@ There are three parameters, :code:`FASTA_File`, :code:`contigName`, and :code:`C
 
   * :code:`FASTA_File`: this is the path to **FASTA** file that contains all sequences of reads, and it can be either an absolute or relative path. We suggest users to include only target reads inside this **FASTA** file and do not include any other unrelated reads.
   * :code:`contigName`: this is a regular expression that matches read names that are going to be included in the *SangerContig* analysis. :code:`grepl` function in R is used.
-  * :code:`CSV_NamesConversion`: this is the path to the **CSV** file. It can be either an absolute or relative path.
+  * :code:`CSV_NamesConversion`: this is the path to the CSV file. It can be either an absolute or relative path.
 
 
-The main difference between "CSV file matching" and "regular expression matching" is where the grouping rule is written. For "regular expression matching", rules are writtein in read names, and thus there are more naming requirements for users to follow. In contrast, rules of "CSV file matching" are written in an additional **CSV** file so it is more flexible on naming reads.
+The main difference between "CSV file matching" and "regular expression matching" is where the grouping rule is written. For "regular expression matching", rules are writtein in read names, and thus more naming requirements are required. In contrast, rules of "CSV file matching" are written in an additional CSV file so it is more flexible on naming reads.
 
 
-So how sangeranalyseR works is that it first reads in the **CSV** file (with *"reads"*, *"direction"*, and *"contig"* columns), filter out rows whose *"contig"* is not the value of :code:`contigName` parameter, find the read names in the **FASTA** file listed in *"reads"*, and assign directions to them based on *"direction"*.
+So how sangeranalyseR works is that it first reads in the CSV file (with *"reads"*, *"direction"*, and *"contig"* columns), filter out rows whose *"contig"* is not the value of :code:`contigName` parameter, find the read names in the **FASTA** file listed in *"reads"*, and assign directions to them based on *"direction"*.
 
-To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerContig_fasta/names_conversion_1.csv>` (:code:`CSV_NamesConversion`) and a :download:`FASTA file <../files/SangerContig_fasta/Achl_ACHLO006-09.fa>` (:code:`FASTA_File`). In the **CSV** file, both rows have the contig name :code:`"Achl_ACHLO006-09"`, which is what we need to assign to the :code:`contigName` parameter. sangeranalyseR then checks and matches *"reads"* of these two rows, :code:`"Achl_ACHLO006-09_1_F"` and :code:`"Achl_ACHLO006-09_2_R"`. Last, these two reads are assigned into "forward read list" and "reverse read list" respectively by the *"direction"* column.
+To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerContig_fasta/names_conversion_1.csv>` (:code:`CSV_NamesConversion`) and a :download:`FASTA file <../files/SangerContig_fasta/Achl_ACHLO006-09.fa>` (:code:`FASTA_File`). In the CSV file, both rows have the contig name :code:`"Achl_ACHLO006-09"`, which is what we need to assign to the :code:`contigName` parameter. sangeranalyseR then checks and matches *"reads"* of these two rows, :code:`"Achl_ACHLO006-09_1_F"` and :code:`"Achl_ACHLO006-09_2_R"`. Last, these two reads are assigned into "forward read list" and "reverse read list" respectively by the *"direction"* column.
 
-After understanding how parameters work, please refer to :ref:`Creating *SangerContig* instance from **FASTA**` below to see how to create 'Achl_ACHLO006-09' *SangerContig* instance.
+After understanding how parameters work, please refer to :ref:`Creating *SangerContig* instance from **FASTA**` below to see how sangeranalseR creates 'Achl_ACHLO006-09' *SangerContig* instance.
 
 
 
@@ -250,7 +250,7 @@ The consturctor function and :code:`new` method below contain three parameters, 
                             readingFrame          = 1,
                             processorsNum         = 1)
 
-First, you need to load the **CSV** file into the R environment. If you are still don't know how to prepare it, please check :ref:`(2) "CSV file matching" *SangerContig* inputs (**FASTA**)`. Then, it will follow rules in the CSV file and create :code:`my_sangerContigFa`. After it's created, inside the R shell, you can run :code:`my_sangerContigFa` to get basic information of the instance or run :code:`my_sangerContigFa@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`my_sangerContigFa` is successfully created.
+First, you need to load the CSV file into the R environment. If you are still don't know how to prepare it, please check :ref:`(2) "CSV file matching" *SangerContig* inputs (**FASTA**)`. Then, it will follow rules in the CSV file and create :code:`my_sangerContigFa`. After it's created, inside the R shell, you can run :code:`my_sangerContigFa` to get basic information of the instance or run :code:`my_sangerContigFa@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`my_sangerContigFa` is successfully created.
 
 Here is the output of :code:`my_sangerContigFa`::
 

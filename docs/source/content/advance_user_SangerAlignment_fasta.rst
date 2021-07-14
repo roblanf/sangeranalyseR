@@ -47,7 +47,7 @@ Inside the **FASTA** file (:ref:`Figure_2<SangerAlignment_fasta_input>`; :downlo
 (1) "regular expression matching" *SangerAlignment* inputs (**FASTA**)
 -----------------------------------------------------------------------
 
-For regular expression matching method, sangeranalyseR will group reads based on their contig name and read direction in their names automatically; therefore, users have to follow the read-naming regulations below:
+For regular expression matching method, sangeranalyseR will group reads based on their contig name and read direction in their read names automatically; therefore, users have to follow the read-naming regulations below:
 
 .. note::
 
@@ -80,15 +80,15 @@ Therefore, it is important to have a consistent naming strategy. You need to mak
 
 As you can see, the first part of the regulation is a consensus read name (or contig name), which helps sangeranalseR to identify which reads should be grouped into the same contig automatically. The second part of the regulation is an index; since there might be more than one read that is in the forward or reverse direction, we recommend you to number your reads in the same contig group. The Last part is a direction which is either 'F' (forward) or 'R' (reverse).
 
-To make it more specific, let's go back to the true example. In :ref:`Figure_2<SangerAlignment_fasta_input>`, there are eight reads in the :code:`FASTA` file (:code:`fasta_FN`; :download:`Sanger_all_reads.fa <../files/SangerAlignment_fasta/Sanger_all_reads.fa>`). First, we set :code:`REGEX_SuffixForward` to :code:`"_[0-9]*_F$"` and :code:`REGEX_SuffixReverse` to :code:`"_[0-9]*_R$"` to let sangeranalyseR match and group forward and reverse reads automatically. By the regular expression rule, :code:`Achl_ACHLO006-09_1_F`, :code:`Achl_ACHLO007-09_1_F`, :code:`Achl_ACHLO040-09_1_F`, and :code:`Achl_ACHLO041-09_1_F`, are categorized into forward reads, and :code:`Achl_ACHLO006-09_1_R`, :code:`Achl_ACHLO007-09_1_R`, :code:`Achl_ACHLO040-09_1_R`, and :code:`Achl_ACHLO041-09_1_R` are categorized into reverse reads. Then, :code:`str_split` function is used to split each filename above into "contig name" and "direction-suffix". Four contig names are detected in this example which are :code:`Achl_ACHLO006-09`, :code:`Achl_ACHLO007-09`, :code:`Achl_ACHLO040-09`, and :code:`Achl_ACHLO041-09`. Last, a loop iterates through all contigs, and sangeranalseR creates each of them into a **SangerContig** instance. You can check :ref:`Advanced User Guide - *SangerContig* (**FASTA**)` to see how sangeranalyseR works into **SangerContig** level.
+To make it more specific, let's go back to the true example. In :ref:`Figure_2<SangerAlignment_fasta_input>`, there are eight reads in the :code:`FASTA` file (:code:`fasta_FN`; :download:`Sanger_all_reads.fa <../files/SangerAlignment_fasta/Sanger_all_reads.fa>`). First, we set :code:`REGEX_SuffixForward` to :code:`"_[0-9]*_F$"` and :code:`REGEX_SuffixReverse` to :code:`"_[0-9]*_R$"` to let sangeranalyseR match and group forward and reverse reads automatically. By the regular expression rule, :code:`Achl_ACHLO006-09_1_F`, :code:`Achl_ACHLO007-09_1_F`, :code:`Achl_ACHLO040-09_1_F`, and :code:`Achl_ACHLO041-09_1_F`, are categorized into forward reads, and :code:`Achl_ACHLO006-09_1_R`, :code:`Achl_ACHLO007-09_1_R`, :code:`Achl_ACHLO040-09_1_R`, and :code:`Achl_ACHLO041-09_1_R` are categorized into reverse reads. Then, :code:`str_split` function is used to split each filename above into "contig name" and "direction-suffix". Four contig names are detected in this example which are :code:`Achl_ACHLO006-09`, :code:`Achl_ACHLO007-09`, :code:`Achl_ACHLO040-09`, and :code:`Achl_ACHLO041-09`. Last, a loop iterates through all contig names, and sangeranalseR creates each of them into a **SangerContig** instance. You can check :ref:`Advanced User Guide - *SangerContig* (**FASTA**)` to see how sangeranalyseR creates a *SangerContig* instance.
 
-The reason why we strongly recommend you to follow this file-naming regulation is that by doing so, you can directly adopt the example regular expression matching values, :code:`"_[0-9]*_F$"` and :code:`"_[0-9]*_R$"` to group reads and reduce chances of error. Everything mentioned above will be done automatically. 
+The reason why we strongly recommend you to follow this file-naming regulation is that by doing so, you can directly adopt the example regular expression matching values, :code:`"_[0-9]*_F$"` and :code:`"_[0-9]*_R$"`, to group reads and reduce chances of error. Everything mentioned above will be done automatically. 
 
-After understanding how parameters work, please refer to :ref:`Creating *SangerAlignment* instance from **FASTA**` below to see how to create *SangerAlignment* instance.
+After understanding how parameters work, please refer to :ref:`Creating *SangerAlignment* instance from **FASTA**` below to see how sangeranalseR creates *SangerAlignment* instance.
 
 (2) "CSV file matching" *SangerAlignment* inputs (**FASTA**)
 -------------------------------------------------------------
-No doubt that read names in the original **FASTA** file do not follow the naming regulation, and you do not want to change the original **FASTA** file; thus, we provide a second grouping approach, CSV file matching method. sangeranalyseR will group reads in the **FASTA** file based on the information in a CSV file automatically, and users do not need to alter the read names in the **FASTA** file; therefore, users have to follow the regulations below:
+No doubt that read names in the original **FASTA** file do not follow the naming regulation, and you do not want to change the original **FASTA** file; thus, we provide a second grouping approach, CSV file matching method. sangeranalyseR will group reads in the **FASTA** file based on the information in a CSV file automatically, and users do not need to alter the read names in the **FASTA** file. The note below shows the regulations:
 
 .. note::
 
@@ -112,17 +112,17 @@ There are two parameters, :code:`FASTA_File` and :code:`CSV_NamesConversion`,tha
 .. note::
 
   * :code:`FASTA_File`: this is the path to **FASTA** file that contains all sequences of reads, and it can be either an absolute or relative path. We suggest users to include only target reads inside this **FASTA** file and do not include any other unrelated reads.
-  * :code:`CSV_NamesConversion`: this is the path to the **CSV** file. It can be either an absolute or relative path.
+  * :code:`CSV_NamesConversion`: this is the path to the CSV file. It can be either an absolute or relative path.
 
-The main difference between "CSV file matching" and "regular expression matching" is where the grouping rule is written. For "regular expression matching", rules are writtein in filenames, and thus there are more naming requirements for users to follow. In contrast, rules of "CSV file matching" are written in an additional **CSV** file so it is more flexible on **AB1** file-naming.
-
-So how sangeranalyseR works is that it first reads in the **CSV** file (with *"reads"*, *"direction"*, and *"contig"* columns), filter out rows whose *"contig"* is not the value of :code:`contigName` parameter, find the read names in the **FASTA** file listed in *"reads"*, and assign directions to them based on *"direction"*.
+The main difference between "CSV file matching" and "regular expression matching" is where the grouping rule is written. For "regular expression matching", rules are writtein in read names, and thus more naming requirements are required. In contrast, rules of "CSV file matching" are written in an additional CSV file so it is more flexible on naming reads.
 
 
-To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerAlignment_fasta/names_conversion.csv>` (:code:`CSV_NamesConversion`) and a :download:`fasta file <../files/SangerAlignment_fasta/Sanger_all_reads.fa>` (:code:`FASTA_File`). In the **CSV** file, there are 8 rows and 4 distinct contig names. sangeranalyseR matches *"reads"* of these 8 rows to read names in the **FASTA** file. Then sangeranalyseR groups all matched reads, :code:`Achl_ACHLO006-09_1_F`, :code:`Achl_ACHLO007-09_1_F`, :code:`Achl_ACHLO040-09_1_F`, :code:`Achl_ACHLO041-09_1_F`,   :code:`Achl_ACHLO006-09_1_R`, :code:`Achl_ACHLO007-09_1_R`, :code:`Achl_ACHLO040-09_1_R`, and :code:`Achl_ACHLO041-09_1_R`, into 4 distinct contig names which are :code:`Achl_ACHLO006-09`, :code:`Achl_ACHLO007-09`, :code:`Achl_ACHLO040-09`, and :code:`Achl_ACHLO041-09`, by the *"contig"* column. Last, the directions of reads in each contig are assigned by the *"direction"* column. Take :code:`Achl_ACHLO041-09` contig as an example. Its "forward read list" will include :code:`Achl_ACHLO041-09_1_F`, and its "reverse read list" will include :code:`Achl_ACHLO041-09_1_R`.
+So how sangeranalyseR works is that it first reads in the CSV file (with *"reads"*, *"direction"*, and *"contig"* columns), find the read names in the **FASTA** file that are listed in *"reads"*, and assign directions to them based on *"direction"*.
+
+To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerAlignment_fasta/names_conversion.csv>` (:code:`CSV_NamesConversion`) and a :download:`fasta file <../files/SangerAlignment_fasta/Sanger_all_reads.fa>` (:code:`FASTA_File`). In the CSV file, there are 8 rows and 4 distinct contig names. sangeranalyseR matches *"reads"* of these 8 rows to read names in the **FASTA** file. Then sangeranalyseR groups all matched reads, :code:`Achl_ACHLO006-09_1_F`, :code:`Achl_ACHLO007-09_1_F`, :code:`Achl_ACHLO040-09_1_F`, :code:`Achl_ACHLO041-09_1_F`,   :code:`Achl_ACHLO006-09_1_R`, :code:`Achl_ACHLO007-09_1_R`, :code:`Achl_ACHLO040-09_1_R`, and :code:`Achl_ACHLO041-09_1_R`, into 4 distinct contigs which are :code:`Achl_ACHLO006-09`, :code:`Achl_ACHLO007-09`, :code:`Achl_ACHLO040-09`, and :code:`Achl_ACHLO041-09`, by the *"contig"* column. Last, the directions of reads in each contig are assigned by the *"direction"* column. Take :code:`Achl_ACHLO041-09` contig as an example. Its "forward read list" will include :code:`Achl_ACHLO041-09_1_F`, and its "reverse read list" will include :code:`Achl_ACHLO041-09_1_R`.
 
 
-After understanding how parameters work, please refer to :ref:`Creating *SangerAlignment* instance from **FASTA**` below to see how to create *SangerAlignment* instance.
+After understanding how parameters work, please refer to :ref:`Creating *SangerAlignment* instance from **FASTA**` below to see how sangeranalseR creates *SangerAlignment* instance.
 
 
 |
@@ -171,7 +171,7 @@ The consturctor function and :code:`new` method below contain three parameters, 
                                processorsNum         = 1)
 
 
-In this example, 8 reads are detected and 4 distinct **SangerContig** instances are created. These **SangerContig** instances are stored in a "contig list" in :code:`my_sangerAlignmentFa`, which will be used as the input for the following functions.
+In this example, 8 reads are detected and 4 distinct *SangerContig* instances are created. These *SangerContig* instances are stored in a "contig list" in :code:`my_sangerAlignmentFa`, which will be used as the input for the following functions.
 
 Inside the R shell, you can run :code:`my_sangerAlignmentFa` to get basic information of the instance or run :code:`my_sangerAlignmentFa@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`my_sangerAlignmentFa` is successfully created.
 
@@ -239,7 +239,7 @@ The consturctor function and :code:`new` method below contain two parameters, :c
                                processorsNum         = 1)
 
 
-First, you need to load the **CSV** file into the R environment. If you are still don't know how to prepare it, please check :ref:`(2) "CSV file matching" *SangerAlignment* inputs (**FASTA**)`. Then, it will follow rules in the CSV file and create :code:`my_sangerAlignmentFa`. After it's created, inside the R shell, you can run :code:`my_sangerAlignmentFa` to get basic information of the instance or run :code:`my_sangerAlignmentFa@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`my_sangerAlignmentFa` is successfully created.
+First, you need to load the CSV file into the R environment. If you are still don't know how to prepare it, please check :ref:`(2) "CSV file matching" *SangerAlignment* inputs (**FASTA**)`. Then, it will follow rules in the CSV file and create :code:`my_sangerAlignmentFa`. After it's created, inside the R shell, you can run :code:`my_sangerAlignmentFa` to get basic information of the instance or run :code:`my_sangerAlignmentFa@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`my_sangerAlignmentFa` is successfully created.
 
 Here is the output of :code:`my_sangerAlignmentFa`::
 
@@ -500,7 +500,7 @@ Code summary (*SangerAlignment*, **FASTA**)
                                processMethod        = "CSV",
                                FASTA_File           = fastaFN,
                                CSV_NamesConversion  = csv_namesConversion,
-                               refAminoAcidSeq      = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
+   `refAminoAcidSeq      = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN")
 
 
 .. container:: toggle

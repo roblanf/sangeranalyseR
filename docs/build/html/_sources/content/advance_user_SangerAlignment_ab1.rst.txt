@@ -17,7 +17,7 @@ In this section, we are going to go through details about a reproducible *Sanger
 Preparing *SangerAlignment* **AB1** input
 +++++++++++++++++++++++++++++++++++++++++++++
 
-The main input file format to create *SangerAlignment* instance is **AB1**. Before starting the analysis, users need to prepare one directory containing all **AB1** files, and they can be either all placed in the first layer of that directory or be distributed in different subdirectories. In this example, the data is in the sangeranalyseR package; thus, you can simply get its path by running the following codes:
+The main input file format to create *SangerAlignment* instance is **AB1**. Before starting the analysis, users need to prepare one directory containing all **AB1** files, and they can be either all placed in the first layer of that directory or be distributed in different subdirectories. In this example, the data are in the sangeranalyseR package; thus, you can simply get its path by running the following codes:
 
 
 .. code-block:: R
@@ -51,7 +51,7 @@ For regular expression matching method, sangeranalyseR will group **AB1** files 
 .. note::
 
     *  All input files must have **.ab1** as its file extension.
-    *  Input files that are in the same contig group must have the same contig name in their filename.
+    *  Input files that are in the same contig group must have the same contig name in their filenames.
     *  Forward or reverse direction has to be specified in the filename.
 
 There are three parameters, :code:`ABIF_Directory`, :code:`REGEX_SuffixForward`, and :code:`REGEX_SuffixReverse`, that define the grouping rule to let sangeranalyseR automatically match correct **AB1** files and divide them into forward and reverse directions.
@@ -84,18 +84,18 @@ As you can see, the first part of the regulation is a consensus read name (or co
 To make it more specific, let's go back to the true example. In :ref:`Figure_2<SangerAlignment_file_structure_ab1>`, there are two subdirectories, :code:`ACHLO` and :code:`RBNII`, containing lots of **AB1** files from different contigs in the root directory, :code:`Allolobophora_chlorotica` (:code:`ABIF_Directory`). 
 
 
-First, we set :code:`REGEX_SuffixForward` to :code:`"_[0-9]*_F.ab1$"` and :code:`REGEX_SuffixReverse` to :code:`"_[0-9]*_R.ab1$"` to let sangeranalyseR match and group forward and reverse reads automatically. By the regular expression rule, :code:`Achl_ACHLO006-09_1_F.ab1`, :code:`Achl_ACHLO007-09_1_F.ab1`, :code:`Achl_ACHLO040-09_1_F.ab1`, :code:`Achl_ACHLO041-09_1_F.ab1`, :code:`Achl_RBNII384-13_1_F.ab1`, :code:`Achl_RBNII395-13_1_F.ab1`, :code:`Achl_RBNII396-13_1_F.ab1`, and :code:`Achl_RBNII397-13_1_F.ab1` are categorized into forward reads, and :code:`Achl_ACHLO006-09_1_R.ab1`, :code:`Achl_ACHLO007-09_1_R.ab1`, :code:`Achl_ACHLO040-09_1_R.ab1`, :code:`Achl_ACHLO041-09_1_R.ab1`, :code:`Achl_RBNII384-13_1_R.ab1`, :code:`Achl_RBNII395-13_1_R.ab1`, :code:`Achl_RBNII396-13_1_R.ab1`, and :code:`Achl_RBNII397-13_1_R.ab1` are categorized into reverse reads. Then, :code:`str_split` function is used to split each filename above into "contig name" and "direction-suffix". Eight contig names are detected in this example which are :code:`Achl_ACHLO006-09`, :code:`Achl_ACHLO007-09`, :code:`Achl_ACHLO040-09`, :code:`Achl_ACHLO041-09`, :code:`Achl_RBNII384-13`, :code:`Achl_RBNII395-13`, :code:`Achl_RBNII396-13`, and :code:`Achl_RBNII397-13`. Last, a loop iterates through all contigs, and sangeranalseR creates each of them into a **SangerContig** instance. You can check :ref:`Advanced User Guide - *SangerContig* (**AB1**)` to see how sangeranalyseR works into **SangerContig** level.
+First, we set :code:`REGEX_SuffixForward` to :code:`"_[0-9]*_F.ab1$"` and :code:`REGEX_SuffixReverse` to :code:`"_[0-9]*_R.ab1$"` to let sangeranalyseR match and group forward and reverse reads automatically. By the regular expression rule, :code:`Achl_ACHLO006-09_1_F.ab1`, :code:`Achl_ACHLO007-09_1_F.ab1`, :code:`Achl_ACHLO040-09_1_F.ab1`, :code:`Achl_ACHLO041-09_1_F.ab1`, :code:`Achl_RBNII384-13_1_F.ab1`, :code:`Achl_RBNII395-13_1_F.ab1`, :code:`Achl_RBNII396-13_1_F.ab1`, and :code:`Achl_RBNII397-13_1_F.ab1` are categorized into forward reads, and :code:`Achl_ACHLO006-09_1_R.ab1`, :code:`Achl_ACHLO007-09_1_R.ab1`, :code:`Achl_ACHLO040-09_1_R.ab1`, :code:`Achl_ACHLO041-09_1_R.ab1`, :code:`Achl_RBNII384-13_1_R.ab1`, :code:`Achl_RBNII395-13_1_R.ab1`, :code:`Achl_RBNII396-13_1_R.ab1`, and :code:`Achl_RBNII397-13_1_R.ab1` are categorized into reverse reads. Then, :code:`str_split` function is used to split each filename above into "contig name" and "direction-suffix". Eight contig names are detected in this example which are :code:`Achl_ACHLO006-09`, :code:`Achl_ACHLO007-09`, :code:`Achl_ACHLO040-09`, :code:`Achl_ACHLO041-09`, :code:`Achl_RBNII384-13`, :code:`Achl_RBNII395-13`, :code:`Achl_RBNII396-13`, and :code:`Achl_RBNII397-13`. Last, a loop iterates through all contigs, and sangeranalseR creates each of them into a *SangerContig* instance. You can check :ref:`Advanced User Guide - *SangerContig* (**AB1**)` to see how sangeranalyseR creates a *SangerContig* instance.
 
-The reason why we strongly recommend you to follow this file-naming regulation is that by doing so, you can directly adopt the example regular expression matching values, :code:`"_[0-9]*_F.ab1$"` and :code:`"_[0-9]*_R.ab1$"` to group reads and reduce chances of error. Everything mentioned above will be done automatically. 
+The reason why we strongly recommend you to follow this file-naming regulation is that by doing so, you can directly adopt the example regular expression matching values, :code:`"_[0-9]*_F.ab1$"` and :code:`"_[0-9]*_R.ab1$"`, to group reads and reduce chances of error. Everything mentioned above will be done automatically. 
 
 
 
-After understanding how parameters work, please refer to :ref:`Creating *SangerAlignment* instance from **AB1**` below to see how to create *SangerAlignment* instance.
+After understanding how parameters work, please refer to :ref:`Creating *SangerAlignment* instance from **AB1**` below to see how sangeranalseR creates *SangerAlignment* instance.
 
 
 (2) "CSV file matching" *SangerAlignment* inputs (**AB1**)
 -----------------------------------------------------------
-For those who are not familiar with regular expression, we provide a second grouping approach, **CSV** file matching method. sangeranalyseR will group **AB1** files based on the information in a **CSV** file automatically; therefore, users have to follow the regulations below:
+For those who are not familiar with regular expression, we provide a second grouping approach, CSV file matching method. sangeranalyseR will group **AB1** files based on the information in a CSV file automatically. The note below shows the regulations:
 
 .. note::
 
@@ -119,20 +119,16 @@ There are two parameters, :code:`ABIF_Directory` and :code:`CSV_NamesConversion`
 .. note::
 
   * :code:`ABIF_Directory`: this is the directory that contains all **AB1** files, and it can be either an absolute or relative path. We suggest users to put only target AB1 files inside this directory and do not include any other unrelated files.
-  * :code:`CSV_NamesConversion`: this is the path to the **CSV** file. It can be either an absolute or relative path.
+  * :code:`CSV_NamesConversion`: this is the path to the CSV file. It can be either an absolute or relative path.
 
-The main difference between "CSV file matching" and "regular expression matching" is where the grouping rule is written. For "regular expression matching", rules are writtein in filenames, and thus there are more naming requirements for users to follow. In contrast, rules of "CSV file matching" are written in an additional **CSV** file so it is more flexible on **AB1** file-naming.
+The main difference between "CSV file matching" and "regular expression matching" is where the grouping rule is written. For "regular expression matching", rules are writtein in filenames, and thus more naming requirements are required. In contrast, rules of "CSV file matching" are written in an additional CSV file so it is more flexible on **AB1** file-naming.
 
-So how sangeranalyseR works is that it first reads in the **CSV** file (with *"reads"*, *"direction"*, and *"contig"* columns), find the names of **AB1** files listed in *"reads"*, group them based on *"contig"*, and assign directions to them based on *"direction"*.
+So how sangeranalyseR works is that it first reads in the CSV file (with *"reads"*, *"direction"*, and *"contig"* columns), find the names of **AB1** files listed in *"reads"*, group them based on *"contig"*, and assign directions to them based on *"direction"*.
 
-To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerAlignment_ab1/names_conversion.csv>` (:code:`CSV_NamesConversion`) and a file directory like :ref:`Figure_2<SangerAlignment_file_structure_ab1>` (:code:`ABIF_Directory`) with **AB1** files from different contigs. 
-
-
-
-In the **CSV** file, there are 16 rows and 8 distinct contig names. sangeranalyseR matches *"reads"* of these 16 rows to filenames in :code:`Allolobophora_chlorotica` directory. Then sangeranalyseR groups all matched reads, :code:`Achl_ACHLO006-09_1_F.ab1`, :code:`Achl_ACHLO007-09_1_F.ab1`, :code:`Achl_ACHLO040-09_1_F.ab1`, :code:`Achl_ACHLO041-09_1_F.ab1`, :code:`Achl_RBNII384-13_1_F.ab1`, :code:`Achl_RBNII395-13_1_F.ab1`, :code:`Achl_RBNII396-13_1_F.ab1`, :code:`Achl_RBNII397-13_1_F.ab1`,  :code:`Achl_ACHLO006-09_1_R.ab1`, :code:`Achl_ACHLO007-09_1_R.ab1`, :code:`Achl_ACHLO040-09_1_R.ab1`, :code:`Achl_ACHLO041-09_1_R.ab1`, :code:`Achl_RBNII384-13_1_R.ab1`, :code:`Achl_RBNII395-13_1_R.ab1`, :code:`Achl_RBNII396-13_1_R.ab1`, and :code:`Achl_RBNII397-13_1_R.ab1`, into 8 distinct contig names which are :code:`Achl_ACHLO006-09`, :code:`Achl_ACHLO007-09`, :code:`Achl_ACHLO040-09`, :code:`Achl_ACHLO041-09`, :code:`Achl_RBNII384-13`, :code:`Achl_RBNII395-13`, :code:`Achl_RBNII396-13`, and :code:`Achl_RBNII397-13`, by the *"contig"* column. Last, the directions of reads in each contig are assigned by the *"direction"* column. Take :code:`Achl_ACHLO041-09` contig as an example. Its "forward read list" will include :code:`Achl_ACHLO041-09_1_F.ab1`, and its "reverse read list" will include :code:`Achl_ACHLO041-09_1_R.ab1`.
+To make it more specific, let's go back to the true example. First, we prepare a :download:`CSV file <../files/SangerAlignment_ab1/names_conversion.csv>` (:code:`CSV_NamesConversion`) and a file directory like :ref:`Figure_2<SangerAlignment_file_structure_ab1>` (:code:`ABIF_Directory`) with **AB1** files from different contigs. In the CSV file, there are 16 rows and 8 distinct contig names. sangeranalyseR matches *"reads"* of these 16 rows to filenames in :code:`Allolobophora_chlorotica` directory. Then sangeranalyseR groups all matched reads, :code:`Achl_ACHLO006-09_1_F.ab1`, :code:`Achl_ACHLO007-09_1_F.ab1`, :code:`Achl_ACHLO040-09_1_F.ab1`, :code:`Achl_ACHLO041-09_1_F.ab1`, :code:`Achl_RBNII384-13_1_F.ab1`, :code:`Achl_RBNII395-13_1_F.ab1`, :code:`Achl_RBNII396-13_1_F.ab1`, :code:`Achl_RBNII397-13_1_F.ab1`,  :code:`Achl_ACHLO006-09_1_R.ab1`, :code:`Achl_ACHLO007-09_1_R.ab1`, :code:`Achl_ACHLO040-09_1_R.ab1`, :code:`Achl_ACHLO041-09_1_R.ab1`, :code:`Achl_RBNII384-13_1_R.ab1`, :code:`Achl_RBNII395-13_1_R.ab1`, :code:`Achl_RBNII396-13_1_R.ab1`, and :code:`Achl_RBNII397-13_1_R.ab1`, into 8 distinct contig names which are :code:`Achl_ACHLO006-09`, :code:`Achl_ACHLO007-09`, :code:`Achl_ACHLO040-09`, :code:`Achl_ACHLO041-09`, :code:`Achl_RBNII384-13`, :code:`Achl_RBNII395-13`, :code:`Achl_RBNII396-13`, and :code:`Achl_RBNII397-13`, by the *"contig"* column. Last, the directions of reads in each contig are assigned by the *"direction"* column. Take :code:`Achl_ACHLO041-09` contig as an example. Its "forward read list" will include :code:`Achl_ACHLO041-09_1_F.ab1`, and its "reverse read list" will include :code:`Achl_ACHLO041-09_1_R.ab1`.
 
 
-After understanding how parameters work, please refer to :ref:`Creating *SangerAlignment* instance from **AB1**` below to see how to create *SangerAlignment* instance.
+After understanding how parameters work, please refer to :ref:`Creating *SangerAlignment* instance from **AB1**` below to see how sangeranalseR creates *SangerAlignment* instance.
 
 |
 
@@ -203,7 +199,7 @@ The consturctor function and :code:`new` method below contain three parameters, 
 
 
 
-In this example, 16 reads are detected and 8 distinct **SangerContig** instances are created. These **SangerContig** instances are stored in a "contig list" in :code:`my_sangerAlignment`, which will be used as the input for the following functions.
+In this example, 16 reads are detected and 8 distinct *SangerContig* instances are created. These *SangerContig* instances are stored in a "contig list" in :code:`my_sangerAlignment`, which will be used as the input for the following functions.
 
 Inside the R shell, you can run :code:`my_sangerAlignment` to get basic information of the instance or run :code:`my_sangerAlignment@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`my_sangerAlignment` is successfully created.
 
@@ -296,7 +292,7 @@ The consturctor function and :code:`new` method below contain two parameters, :c
                              processorsNum        = 1)
 
 
-First, you need to load the **CSV** file into the R environment. If you are still don't know how to prepare it, please check :ref:`(2) "CSV file matching" *SangerAlignment* inputs (**AB1**)`. Then, it will follow rules in the CSV file and create :code:`my_sangerAlignment`. After it's created, inside the R shell, you can run :code:`my_sangerAlignment` to get basic information of the instance or run :code:`my_sangerAlignment@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`my_sangerAlignment` is successfully created.
+First, you need to load the CSV file into the R environment. If you are still don't know how to prepare it, please check :ref:`(2) "CSV file matching" *SangerAlignment* inputs (**AB1**)`. Then, it will follow rules in the CSV file and create :code:`my_sangerAlignment`. After it's created, inside the R shell, you can run :code:`my_sangerAlignment` to get basic information of the instance or run :code:`my_sangerAlignment@objectResults@readResultTable` to check the creation result of every Sanger read after :code:`my_sangerAlignment` is successfully created.
 
 Here is the output of :code:`my_sangerAlignment`::
 

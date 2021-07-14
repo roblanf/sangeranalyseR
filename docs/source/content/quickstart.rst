@@ -1,7 +1,7 @@
 Quick Start Guide
 =================
 
-This page provides simple quick-start information for using sangeranalyseR with :code:`.ab1` files. Please read the :ref:`Beginners Guide` page for more details on each step.
+This page provides simple quick-start information for using sangeranalyseR with :code:`AB1` files. Please read the :ref:`Beginners Guide` page for more details on each step.
 
 If you haven't already, please follow the steps in the :ref:`Installation` page to install and load sangeranalyseR.
 
@@ -15,8 +15,8 @@ The most minimal example gets the job done in three lines of code. More details 
 .. code-block:: R
 
    my_aligned_contigs <- SangerAlignment(ABIF_Directory      = "./my_data/",
-                                         REGEX_SuffixForward = "_[0-9]+_F+",
-                                         REGEX_SuffixReverse = "_[0-9]+_R+")
+                                         REGEX_SuffixForward = "_[0-9]*_F.ab1$",
+                                         REGEX_SuffixReverse = "_[0-9]*_R.ab1$")
 
    writeFasta(my_aligned_contigs)
 
@@ -39,8 +39,8 @@ Step 2: Load and analyse your data
 .. code-block:: R
 
    my_aligned_contigs <- SangerAlignment(ABIF_Directory      = "./my_data/",
-                                         REGEX_SuffixForward = "_[0-9]+_F+",
-                                         REGEX_SuffixReverse = "_[0-9]+_R+")
+                                         REGEX_SuffixForward = "_[0-9]*_F.ab1$",
+                                         REGEX_SuffixReverse = "_[0-9]*_F.ab1$")
 
 
 This command loads, trims, builds contigs, and aligns contigs. All of these are done with sensible default values, which can be changed. I
@@ -107,8 +107,8 @@ Run the following on-liner to create the sanger alignment object.
 .. code-block:: R
 
    ACHLO_contigs <- SangerAlignment(ABIF_Directory     = parentDir,
-                                    REGEX_SuffixForward = "_[0-9]+_F+",
-                                    REGEX_SuffixReverse = "_[0-9]+_R+")
+                                    REGEX_SuffixForward = "_[0-9]*_F.ab1$",
+                                    REGEX_SuffixReverse = "_[0-9]*_R.ab1$")
 
 
 

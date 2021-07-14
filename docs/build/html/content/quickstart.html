@@ -190,7 +190,7 @@
             
   <div class="section" id="quick-start-guide">
 <h1>Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Permalink to this headline">¶</a></h1>
-<p>This page provides simple quick-start information for using sangeranalyseR with <code class="code docutils literal notranslate"><span class="pre">.ab1</span></code> files. Please read the <a class="reference internal" href="beginner.html#beginners-guide"><span class="std std-ref">Beginners Guide</span></a> page for more details on each step.</p>
+<p>This page provides simple quick-start information for using sangeranalyseR with <code class="code docutils literal notranslate"><span class="pre">AB1</span></code> files. Please read the <a class="reference internal" href="beginner.html#beginners-guide"><span class="std std-ref">Beginners Guide</span></a> page for more details on each step.</p>
 <p>If you haven't already, please follow the steps in the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">Installation</span></a> page to install and load sangeranalyseR.</p>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -199,8 +199,8 @@
 <h2>Super-Quick Start (3 lines of code)<a class="headerlink" href="#super-quick-start-3-lines-of-code" title="Permalink to this headline">¶</a></h2>
 <p>The most minimal example gets the job done in three lines of code. More details below.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">ABIF_Directory</span>      <span class="o">=</span> <span class="s">&quot;./my_data/&quot;</span><span class="p">,</span>
-                                      <span class="n">REGEX_SuffixForward</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_F+&quot;</span><span class="p">,</span>
-                                      <span class="n">REGEX_SuffixReverse</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R+&quot;</span><span class="p">)</span>
+                                      <span class="n">REGEX_SuffixForward</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
+                                      <span class="n">REGEX_SuffixReverse</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_R.ab1$&quot;</span><span class="p">)</span>
 
 <span class="nf">writeFasta</span><span class="p">(</span><span class="n">my_aligned_contigs</span><span class="p">)</span>
 
@@ -222,8 +222,8 @@
 <div class="section" id="step-2-load-and-analyse-your-data">
 <h2>Step 2: Load and analyse your data<a class="headerlink" href="#step-2-load-and-analyse-your-data" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">my_aligned_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">ABIF_Directory</span>      <span class="o">=</span> <span class="s">&quot;./my_data/&quot;</span><span class="p">,</span>
-                                      <span class="n">REGEX_SuffixForward</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_F+&quot;</span><span class="p">,</span>
-                                      <span class="n">REGEX_SuffixReverse</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R+&quot;</span><span class="p">)</span>
+                                      <span class="n">REGEX_SuffixForward</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
+                                      <span class="n">REGEX_SuffixReverse</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This command loads, trims, builds contigs, and aligns contigs. All of these are done with sensible default values, which can be changed. I</p>
@@ -277,8 +277,8 @@
 <h3>2. Load and analyse your data<a class="headerlink" href="#load-and-analyse-your-data" title="Permalink to this headline">¶</a></h3>
 <p>Run the following on-liner to create the sanger alignment object.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">ACHLO_contigs</span> <span class="o">&lt;-</span> <span class="nf">SangerAlignment</span><span class="p">(</span><span class="n">ABIF_Directory</span>     <span class="o">=</span> <span class="n">parentDir</span><span class="p">,</span>
-                                 <span class="n">REGEX_SuffixForward</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_F+&quot;</span><span class="p">,</span>
-                                 <span class="n">REGEX_SuffixReverse</span> <span class="o">=</span> <span class="s">&quot;_[0-9]+_R+&quot;</span><span class="p">)</span>
+                                 <span class="n">REGEX_SuffixForward</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_F.ab1$&quot;</span><span class="p">,</span>
+                                 <span class="n">REGEX_SuffixReverse</span> <span class="o">=</span> <span class="s">&quot;_[0-9]*_R.ab1$&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="toggle docutils container">
