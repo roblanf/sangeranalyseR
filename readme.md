@@ -91,7 +91,7 @@ Launch the Shiny app to check the visualized results.
 ``` R
 launchApp(ACHLO_contigs)
 ```
-The following figure shows the SangerAlignment Shiny app user interface.![image](https://user-images.githubusercontent.com/26069376/126213907-44180b80-29b2-4b6c-9cd3-41f01733cc97.png)
+The following figure shows the *SangerAlignment* Shiny app user interface.
 
 <img src="https://i.imgur.com/gwY6AqB.png" style="width:100%">
 
