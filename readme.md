@@ -1,5 +1,5 @@
 <!-- badges: start -->
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Travis build status](https://travis-ci.org/roblanf/sangeranalyseR.svg?branch=master)](https://travis-ci.org/roblanf/sangeranalyseR) ![documentation build status](https://readthedocs.org/projects/pip/badge/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Travis build status](https://travis-ci.org/roblanf/sangeranalyseR.svg?branch=master)](https://travis-ci.org/roblanf/sangeranalyseR) ![documentation build status](https://readthedocs.org/projects/pip/badge/) ![os](https://img.shields.io/badge/platform-macOS_/Linux_/Windows-green.svg)
 <!-- badges: end -->
   
 # sangeranalyseR
