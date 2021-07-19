@@ -546,6 +546,10 @@ One thing to pay attention to is that if users have many reads, it will take qui
                   includeSangerRead   = FALSE,
                   includeSangerContig = FALSE)
 
+
+Here is the generated `SangerAlignment html report of this example (ABIF) <https://kuanhao-chao.github.io/sangeranalyseR_report/SangerAlignment/AB1/SangerAlignment/SangerAlignment_Report.html>`_. Users can access to '*Basic Information*', '*Contigs Consensus*', '*Contigs Alignment*', '*Contigs Tree*', and '*Contig Reports*' sections inside it. Furthermore, users can also navigate through html reports of all contigs and forward and reverse *SangerRead* in this *SangerAlignment* report.
+
+
 -----
 
 |
@@ -1160,6 +1164,8 @@ You will get three FASTA files:
 .. code-block:: R
 
    generateReport(my_sangerAlignment)
+
+You can check the html report of `this SangerAlignment example (ABIF) <https://kuanhao-chao.github.io/sangeranalyseR_report/SangerAlignment/AB1/SangerAlignment/SangerAlignment_Report.html>`_.
 
 -----
 

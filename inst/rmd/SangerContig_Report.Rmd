@@ -47,25 +47,26 @@ library(sangeranalyseR)
   <li>**Output Directory : **  <span>*`r params$outputDir`*</span></li>
 
 ```{r results='asis', echo=FALSE, warning=FALSE}
-if (params$SangerContig@inputSource == "ABIF" && !is.null(params$SangerContig@parentDirectory)) {
-    cat("<li>**Input Parent Directory : **  <span><i>", params$SangerContig@parentDirectory, "</i></span></li>")
-} else if (params$SangerContig@inputSource == "FASTA" && !is.null(params$SangerContig@fastaFileName) && !is.null(params$SangerContig@namesConversionCSV)){
-    cat("<li>**Fasta File Name : **  <span><i>", params$SangerContig@fastaFileName, "</i></span></li>")
-  if (!is.null(params$SangerContig@namesConversionCSV)) {
-    cat("<li>**Filename Conversion CSV : **  <span><i>", params$SangerContig@namesConversionCSV, "</i></span></li>")
-  }
+cat("<li>**Input Source : **  <span><i>", params$SangerContig@inputSource, "</i></span></li>")
+cat("<li>**Process Method : **  <span><i>", params$SangerContig@processMethod, "</i></span></li>")
+
+if (params$SangerContig@inputSource == "ABIF" && !is.null(params$SangerContig@ABIF_Directory)) {
+    cat("<li>**Input ABIF Directory : **  <span><i>", params$SangerContig@ABIF_Directory, "</i></span></li>")
+} else if (params$SangerContig@inputSource == "FASTA" && !is.null(params$SangerContig@FASTA_File)){
+    cat("<li>**Fasta File Name : **  <span><i>", params$SangerContig@FASTA_File, "</i></span></li>")
 }
+
+if (params$SangerContig@processMethod == "REGEX" && !is.null(params$SangerContig@REGEX_SuffixForward) && !is.null(params$SangerContig@REGEX_SuffixReverse)) {
+      cat("<li>**Forward Reads Suffix Regex : **  <span><i>", params$SangerContig@REGEX_SuffixForward, "</i></span></li>")
+      cat("<li>**Reverse Reads Suffix Regex : **  <span><i>", params$SangerContig@REGEX_SuffixReverse, "</i></span></li>")
+} else if (params$SangerContig@processMethod == "CSV" && !is.null(params$SangerContig@CSV_NamesConversion)) {
+        cat("<li>**Names Conversion CSV file : **  <span><i>", params$SangerContig@CSV_NamesConversion, "</i></span></li>")
+} 
 ```
 
   <li>**Contig Name : **  <span><i>`r basename(params$SangerContig@contigName)`</i></span></li>
 
-  <li>**Trimming Method : **  <span>*`r params$SangerContig@trimmingMethodSC`*</span></li>
-  
-  <li>**Forward Reads Suffix Regex : **  <span>*`r params$SangerContig@suffixForwardRegExp`*</span></li>
-
   <li>**Forward Read Number : **  <span>*`r length(params$SangerContig@forwardReadList)`*</span></li>
-
-  <li>**Reverse Reads Suffic Regex : **  <span>*`r params$SangerContig@suffixReverseRegExp`*</span></li>
   
   <li>**Reverse Read Number : **  <span>*`r length(params$SangerContig@reverseReadList)`*</span></li>
   
@@ -331,6 +332,8 @@ if (is.null(params$reverseReadFN)) {
 </details>
 
 ---
+
+<br>
 
 `r if(!is.null(params$navigationAlignmentFN)){paste0('<br><br><a style="margin-left:-20px" href="', file.path("..", basename(params$navigationAlignmentFN)), '" class="btn btn-success btn-block btn-lg active" role="button">Back to \'SangerAlignment Report\'</a>')}`
 

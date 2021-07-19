@@ -122,9 +122,7 @@ Last but not least, users can save :code:`sangerReadFfa` into a static **HTML** 
    generateReport(sangerReadFfa,
                   outputDir = tempdir())
 
-.. `SangerRead_Report_fasta.html <https://howardchao.github.io/sangeranalyseR_report/SangerRead/FASTA/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_fasta.html>`_ is the generated *SangerRead* report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*' and '*Amino Acids Sequence*' sections inside this report.
-
-.. It might seem a bit confusing why we go through all troubles to create an R class only for the purpose of  storing the **FASTA** file. That is because when it comes to the higher levels, *SangerContig* and *SangerAlignment*, we can build upon *SangerRead* class and do further analyses like sequence alignment, frameshifts correcting, and so on. Please refer to :ref:`Advanced User Guide - *SangerContig* (**FASTA**)` and :ref:`Advanced User Guide - *SangerAlignment* (**FASTA**)` to see how to start the Sanger sequencing analysis with **FASTA** files in a higher level.
+`SangerRead_Report_fasta.html <https://kuanhao-chao.github.io/sangeranalyseR_report/SangerRead/FASTA/Achl_ACHLO006-09_1_F/SangerRead_Report_fasta.html>`_ is the generated *SangerRead* report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*' and '*Amino Acids Sequence*' sections inside this report.
 
 -----
 
@@ -237,6 +235,7 @@ And you will get one FASTA file:
 
    generateReport(sangerReadFfa)
 
+You can check the html report of `this SangerRead example (FASTA) <https://kuanhao-chao.github.io/sangeranalyseR_report/SangerRead/FASTA/Achl_ACHLO006-09_1_F/SangerRead_Report_fasta.html>`_.
 
 -----
 

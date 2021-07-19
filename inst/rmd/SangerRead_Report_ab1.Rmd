@@ -322,22 +322,18 @@ chromatogram_overwrite(hetcalls,
              colors=colors)
 ```
 
-<br>
-<br>
-
-`r if(!is.null(params$navigationContigFN)){paste0('<br><br><a style="margin-left:-20px" href="', file.path("..", basename(params$navigationContigFN)), '" class="btn btn-success btn-block btn-lg active" role="button">Back to \'SangerContig\' Report</a>')}`
-
-
 [Click Here to Open Chromatogram in New Page ](`r file.path(".", "Chromatogram.pdf")`)
 
 <iframe src=`r file.path(".", "Chromatogram.pdf")` style="width:100%; height:700px;" frameborder="0"></iframe>
+
 
 </details>
 
 --- 
 
+<br>
 
-
+`r if(!is.null(params$navigationContigFN)){paste0('<br><br><a style="margin-left:-20px" href="', file.path("..", basename(params$navigationContigFN)), '" class="btn btn-success btn-block btn-lg active" role="button">Back to \'SangerContig\' Report</a>')}`
 
 
 <style>

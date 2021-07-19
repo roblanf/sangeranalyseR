@@ -323,10 +323,9 @@ One thing to pay attention to is that if users have many reads, it will take qui
 
    generateReport(my_sangerContigFa,
                   outputDir           = tempdir(),
-                  includeSangerRead   = FALSE)
+                  includeSangerRead   = TRUE)
 
-Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside the generated `SangerContig html report of this example <https://howardchao.github.io/sangeranalyseR_report/SangerContig/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]/SangerContig_Report.html>`_. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.
-
+Here is the generated `SangerContig html report of this example (FASTA) <https://kuanhao-chao.github.io/sangeranalyseR_report/SangerContig/FASTA/Achl_ACHLO006-09/SangerContig_Report.html>`_. Users can access to '*Basic Information*', '*SangerContig Input Parameters*', '*Contig Sequence*' and '*Contig Results*' sections inside it. Furthermore, users can also navigate through html reports of all forward and reverse *SangerRead* in this *SangerContig* report.
 
 
 -----
@@ -451,6 +450,8 @@ And you will get three FASTA files:
 .. code-block:: R
 
    generateReport(my_sangerContigFa)
+
+You can check the html report of `this SangerContig example (FASTA) <https://kuanhao-chao.github.io/sangeranalyseR_report/SangerContig/FASTA/Achl_ACHLO006-09/SangerContig_Report.html>`_.
 
 -----
 

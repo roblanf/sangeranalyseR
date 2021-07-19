@@ -176,6 +176,7 @@ suppressWarnings(suppressMessages(
 
 --- 
 
+<br>
 
 `r if(!is.null(params$navigationContigFN)){paste0('<br><br><a style="margin-left:-20px" href="', file.path("..", basename(params$navigationContigFN)), '" class="btn btn-success btn-block btn-lg active" role="button">Back to \'SangerContig\' Report</a>')}`
 

@@ -34,8 +34,8 @@ setClassUnion("DNAStringSetORNULL", c("DNAStringSet", "NULL"))
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
 #' my_aligned_contigs <- new("SangerAlignment",
 #'                           ABIF_Directory     = parentDir,
-#'                           REGEX_SuffixForward = "_[0-9]+_F+",
-#'                           REGEX_SuffixReverse = "_[0-9]+_R+")
+#'                           REGEX_SuffixForward = "_[0-9]*_F.ab1$",
+#'                           REGEX_SuffixReverse = "_[0-9]*_R.ab1$")
 #'                           
 #' rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 #' parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')

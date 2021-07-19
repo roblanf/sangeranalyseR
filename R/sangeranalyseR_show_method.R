@@ -8,14 +8,28 @@ setMethod('show', 'SangerRead', function(object){
             trimmedFinishPos <- object@QualityReport@trimmedFinishPos
             primaryDNA <- substr(primaryDNA, trimmedStartPos+1, trimmedFinishPos)
             secondaryDNA <- substr(secondaryDNA, trimmedStartPos+1,trimmedFinishPos)
-            cat("SangerRead S4 instance\n",
-                "          Input Source : ", object@inputSource, "\n",
-                "          Read Feature : ", object@readFeature, "\n",
-                "         Read FileName : ", basename(object@readFileName), "\n",
-                "       Trimming Method : ", object@QualityReport@TrimmingMethod, "\n",
-                "      Primary Sequence : ", primaryDNA, "\n",
-                "    Secondary Sequence : ", secondaryDNA, "\n"
-            )
+            if (object@QualityReport@TrimmingMethod == "M1") {
+                cat("SangerRead S4 instance\n",
+                    "          Input Source : ", object@inputSource, "\n",
+                    "          Read Feature : ", object@readFeature, "\n",
+                    "         Read FileName : ", basename(object@readFileName), "\n",
+                    "       Trimming Method : ", object@QualityReport@TrimmingMethod, "\n",
+                    "    M1 Trimming Cutoff : ", object@QualityReport@M1TrimmingCutoff, "\n",
+                    "      Primary Sequence : ", primaryDNA, "\n",
+                    "    Secondary Sequence : ", secondaryDNA, "\n"
+                )    
+            } else if (object@QualityReport@TrimmingMethod == "M2") {
+                cat("SangerRead S4 instance\n",
+                    "          Input Source : ", object@inputSource, "\n",
+                    "          Read Feature : ", object@readFeature, "\n",
+                    "         Read FileName : ", basename(object@readFileName), "\n",
+                    "       Trimming Method : ", object@QualityReport@TrimmingMethod, "\n",
+                    "  M2 Cutoff Qual Score : ", object@QualityReport@M2CutoffQualityScore, "\n",
+                    "  M2 Sliding Window Sz : ", object@QualityReport@M2SlidingWindowSize, "\n",
+                    "      Primary Sequence : ", primaryDNA, "\n",
+                    "    Secondary Sequence : ", secondaryDNA, "\n"
+                )    
+            }
         } else if (object@inputSource == "FASTA") {
             cat("SangerRead S4 instance\n",
                 "          Input Source : ", object@inputSource, "\n",

@@ -44,24 +44,21 @@ library(sangeranalyseR)
   <li>**Output Directory : **  <span>*`r params$outputDir`*</span></li>
 
 ```{r results='asis', echo=FALSE, warning=FALSE}
-if (params$SangerAlignment@inputSource == "ABIF" && !is.null(params$SangerAlignment@parentDirectory)) {
-    cat("<li>**Input Parent Directory : **  <span><i>", params$SangerAlignment@parentDirectory, "</i></span></li>")
-} else if (params$SangerAlignment@inputSource == "FASTA" && !is.null(params$SangerAlignment@fastaFileName)){
-    cat("<li>**Fasta File Name : **  <span><i>", params$SangerAlignment@fastaFileName, "</i></span></li>")
-  if (!is.null(params$SangerAlignment@namesConversionCSV)) {
-    cat("<li>**Filename Conversion CSV : **  <span><i>", params$SangerAlignment@namesConversionCSV, "</i></span></li>")
-  }
+cat("<li>**Input Source : **  <span><i>", params$SangerAlignment@inputSource, "</i></span></li>")
+cat("<li>**Process Method : **  <span><i>", params$SangerAlignment@processMethod, "</i></span></li>")
+if (params$SangerAlignment@inputSource == "ABIF" && !is.null(params$SangerAlignment@ABIF_Directory)) {
+    cat("<li>**Input ABIF Directory : **  <span><i>", params$SangerAlignment@ABIF_Directory, "</i></span></li>")
+} else if (params$SangerAlignment@inputSource == "FASTA" && !is.null(params$SangerAlignment@FASTA_File)){
+    cat("<li>**Fasta File Name : **  <span><i>", params$SangerAlignment@FASTA_File, "</i></span></li>")
 }
-```
-  <li>**Trimming Method : **  <span>*`r params$SangerAlignment@contigList[[1]]@trimmingMethodSC`*</span></li>
-  
-  <li>**Forward Reads Suffix Regex : **  <span>*`r params$SangerAlignment@suffixForwardRegExp`*</span></li>
 
-  <li>**Reverse Reads Suffic Regex : **  <span>*`r params$SangerAlignment@suffixReverseRegExp`*</span></li>
-  
-  <li>**Minimum Fraction Call (SA) : **  <span>*`r params$SangerAlignment@minFractionCallSA`*</span></li>
-  
-  <li>**Maximum Fraction Lost (SA) : **  <span>*`r params$SangerAlignment@maxFractionLostSA`*</span></li>
+if (params$SangerAlignment@processMethod == "REGEX" && !is.null(params$SangerAlignment@REGEX_SuffixForward) && !is.null(params$SangerAlignment@REGEX_SuffixReverse)) {
+      cat("<li>**Forward Reads Suffix Regex : **  <span><i>", params$SangerAlignment@REGEX_SuffixForward, "</i></span></li>")
+      cat("<li>**Reverse Reads Suffix Regex : **  <span><i>", params$SangerAlignment@REGEX_SuffixReverse, "</i></span></li>")
+} else if (params$SangerAlignment@processMethod == "CSV" && !is.null(params$SangerAlignment@CSV_NamesConversion)) {
+        cat("<li>**Names Conversion CSV file : **  <span><i>", params$SangerAlignment@CSV_NamesConversion, "</i></span></li>")
+} 
+```
   
 </ul>
 </div>
@@ -138,7 +135,7 @@ shiny::includeHTML(browseSeqHTML)
 <details class="description"><summary data-open="CLOSE" data-close="MORE DETAILS"></summary>
 <div style="overflow: scroll;">
 ```{r results='asis', echo=FALSE, warning=FALSE}
-if (params$SangerAlignment@contigsTree$tip.label == '') {
+if (length(params$SangerAlignment@contigsTree$tip.label) == 0) {
   cat("<p style='font-size: 13px; font-weight:bold'> The number of contigs is less than 3 or quality of reads are too low. 'Contigs Tree' cannot be created. </p>")
 } else {
   plot(params$SangerAlignment@contigsTree) 

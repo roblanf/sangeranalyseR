@@ -182,7 +182,7 @@ Last but not least, users can save :code:`sangerReadF` into a static **HTML** re
    generateReport(sangerReadF,
                   outputDir = tempdir())
 
-.. `SangerRead_Report_ab1.html <https://howardchao.github.io/sangeranalyseR_report/SangerRead/AB1/ACHLO006-09[LCO1490_t1,HCO2198_t1]_1_F/SangerRead_Report_ab1.html>`_ is the generated *SangerRead* report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*', '*Amino Acids Sequence*', '*Quality Trimming*' and '*Chromatogram*' sections inside this report.
+`SangerRead_Report_ab1.html <https://kuanhao-chao.github.io/sangeranalyseR_report/SangerRead/AB1/Achl_ACHLO006-09_1_F/SangerRead_Report_ab1.html>`_ is the generated *SangerRead* report html of this example. Users can access to '*Basic Information*', '*DNA Sequence*', '*Amino Acids Sequence*', '*Quality Trimming*' and '*Chromatogram*' sections inside this report.
 
 -----
 
@@ -312,6 +312,7 @@ And you will get one FASTA file:
 
    generateReport(sangerReadF)
 
+You can check the html report of `this SangerRead example (ABIF) <https://kuanhao-chao.github.io/sangeranalyseR_report/SangerRead/AB1/Achl_ACHLO006-09_1_F/SangerRead_Report_ab1.html>`_.
 
 -----
 
