@@ -7,8 +7,10 @@ sangeranalyseR
 
 Documentation: [[link](https://sangeranalyser.readthedocs.io/en/latest/)]
 
-sangeranalyseR is on bioRxiv now [[link](https://www.biorxiv.org/content/10.1101/2020.05.18.102459v1.article-info)].
+sangeranalyseR is on ***Genome Biology and Evolution (GBE)*** now [[link](https://academic.oup.com/gbe/advance-article/doi/10.1093/gbe/evab028/6137837?guestAccessKey=a28b32d6-ffab-41f2-8132-9c2dd28b99fe)].
 
 If you use sangeranalyseR in your published work, please cite
 
-> **Kuan-Hao Chao, Kirston Barton, Sarah Palmer, Robert Lanfear (2020). sangeranalyseR: simple and interactive analysis of Sanger sequencing data in R, bioRxiv 2020.05.18.102459; doi: https://doi.org/10.1101/2020.05.18.102459**
+> **Kuan-Hao Chao, Kirston Barton, Sarah Palmer, and Robert Lanfear (2021). "sangeranalyseR: simple and interactive processing of Sanger sequencing data in R" in Genome Biology and Evolution. DOI: [doi.org/10.1093/gbe/evab028](https://doi.org/10.1093/gbe/evab028)**
+
+
