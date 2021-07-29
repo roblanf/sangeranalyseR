@@ -42,7 +42,7 @@ Depends:
     openxlsx,
     tools,
     rmarkdown,
-    kableExtra,
+    kableExtra (>= 1.3.4),
     seqinr,
     BiocStyle,
     logger

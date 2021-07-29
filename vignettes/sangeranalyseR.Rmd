@@ -100,22 +100,22 @@ First step is to prepare all reads in the same directory and define the project 
 
 * `inputFilesParentDir` is the directory storing all raw ABIF files. 
 * `contigName` is the name of contigs. All targets share the same contig name.
-* `suffixForwardRegExp` is the regular expression for forward read suffix.
-* `suffixReverseRegExp` is the regular expression for reverse read suffix. 
+* `REGEX_SuffixForward` is the regular expression for forward read suffix.
+* `REGEX_SuffixReverse` is the regular expression for reverse read suffix. 
 
 ```{r}
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 inputFilesParentDir <- file.path(rawDataDir, "Allolobophora_chlorotica", "ACHLO")
 contigName <- "Achl_ACHLO006-09"
-suffixForwardRegExp <- "_[0-9]*_[F].ab1"
-suffixReverseRegExp <- "_[0-9]*_[R].ab1"
+regex_suffix_f <- "_[0-9]*_[F].ab1"
+regex_suffix_r <- "_[0-9]*_[R].ab1"
 ```
 After defining parameters, users can create ***'SangerContig'*** instance by running `SangerContig` constructor function.
 ```{r}
-sangerContig <- SangerContig(parentDirectory      = inputFilesParentDir,
+sangerContig <- SangerContig(ABIF_Directory       = inputFilesParentDir,
                              contigName           = contigName,
-                             suffixForwardRegExp  = suffixForwardRegExp,
-                             suffixReverseRegExp  = suffixReverseRegExp)
+                             REGEX_SuffixForward  = regex_suffix_f,
+                             REGEX_SuffixReverse  = regex_suffix_r)
 ```
 
 <h2> 3.2 &nbsp;&nbsp;&nbsp;&nbsp; Launch Shiny App </h2>
@@ -149,21 +149,21 @@ generateReportSC(sangerContig)
 First step is to prepare all reads in the same directory and define the project parameters.  
 
 * `inputFilesParentDir` is the directory storing all raw ABIF files. 
-* `suffixForwardRegExp` is the regular expression for forward read suffix.
-* `suffixReverseRegExp` is the regular expression for reverse read suffix. 
+* `REGEX_SuffixForward` is the regular expression for forward read suffix.
+* `REGEX_SuffixReverse` is the regular expression for reverse read suffix. 
 
 ```{r}
 rawDir <- system.file("extdata", package="sangeranalyseR")
 parentDir <- file.path(rawDir, "Allolobophora_chlorotica", "RBNII")
-suffixForwardRegExp <- "_[F]_[0-9]*.ab1"
-suffixReverseRegExp <- "_[R]_[0-9]*.ab1"
+regex_suffix_f <- "_[F]_[0-9]*.ab1"
+regex_suffix_r <- "_[R]_[0-9]*.ab1"
 ```
 Users can create ***'SangerAlignment'*** instance by running `SangerAlignment` constructor function.
 ```{r  eval=FALSE}
 sangerAlignment <- 
-        SangerAlignment(parentDirectory = parentDir,
-                        suffixForwardRegExp = suffixForwardRegExp,
-                        suffixReverseRegExp = suffixReverseRegExp,)
+        SangerAlignment(ABIF_Directory      = parentDir,
+                        REGEX_SuffixForward = regex_suffix_f,
+                        REGEX_SuffixReverse = regex_suffix_r,)
 ```
 
 <h2> 4.2 &nbsp;&nbsp;&nbsp;&nbsp; Launch Shiny App </h2>
