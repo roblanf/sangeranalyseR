@@ -4,12 +4,22 @@
 \alias{SangerRead}
 \title{SangerRead}
 \usage{
-SangerRead(inputSource = "ABIF", readFeature = "", readFileName = "",
-  fastaReadName = "", geneticCode = GENETIC_CODE,
-  TrimmingMethod = "M1", M1TrimmingCutoff = 1e-04,
-  M2CutoffQualityScore = NULL, M2SlidingWindowSize = NULL,
-  baseNumPerRow = 100, heightPerRow = 200, signalRatioCutoff = 0.33,
-  showTrimmed = TRUE)
+SangerRead(
+  printLevel = "SangerRead",
+  inputSource = "ABIF",
+  readFeature = "",
+  readFileName = "",
+  fastaReadName = NULL,
+  geneticCode = GENETIC_CODE,
+  TrimmingMethod = "M1",
+  M1TrimmingCutoff = 1e-04,
+  M2CutoffQualityScore = NULL,
+  M2SlidingWindowSize = NULL,
+  baseNumPerRow = 100,
+  heightPerRow = 200,
+  signalRatioCutoff = 0.33,
+  showTrimmed = TRUE
+)
 }
 \arguments{
 \item{inputSource}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
@@ -22,7 +32,7 @@ SangerRead(inputSource = "ABIF", readFeature = "", readFileName = "",
 
 \item{geneticCode}{Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
 
-\item{TrimmingMethod}{TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{'M2'}.}
+\item{TrimmingMethod}{TrimmingMethod The read trimming method for this SangerRead. The value must be \code{"M1"} (the default) or \code{"M2"}. M1 is the modified Mott's trimming algorithm that can also be found in Phred/Phrap and Biopython. M2 is like trimmomatic's sliding window method.}
 
 \item{M1TrimmingCutoff}{The trimming cutoff for the Method 1. If \code{TrimmingMethod} is \code{"M1"}, then the default value is \code{0.0001}. Otherwise, the value must be \code{NULL}.}
 
@@ -51,6 +61,7 @@ A_chloroticaFdFN <- file.path(inputFilesPath,
                               "ACHLO",
                               "Achl_ACHLO006-09_1_F.ab1")
 sangerRead <- SangerRead(
+                   printLevel            = "SangerRead",
                    inputSource           = "ABIF",
                    readFeature           = "Forward Read",
                    readFileName          = A_chloroticaFdFN,

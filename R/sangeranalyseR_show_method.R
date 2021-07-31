@@ -17,7 +17,7 @@ setMethod('show', 'SangerRead', function(object){
                     "    M1 Trimming Cutoff : ", object@QualityReport@M1TrimmingCutoff, "\n",
                     "      Primary Sequence : ", primaryDNA, "\n",
                     "    Secondary Sequence : ", secondaryDNA, "\n"
-                )    
+                )
             } else if (object@QualityReport@TrimmingMethod == "M2") {
                 cat("SangerRead S4 instance\n",
                     "          Input Source : ", object@inputSource, "\n",
@@ -28,7 +28,7 @@ setMethod('show', 'SangerRead', function(object){
                     "  M2 Sliding Window Sz : ", object@QualityReport@M2SlidingWindowSize, "\n",
                     "      Primary Sequence : ", primaryDNA, "\n",
                     "    Secondary Sequence : ", secondaryDNA, "\n"
-                )    
+                )
             }
         } else if (object@inputSource == "FASTA") {
             cat("SangerRead S4 instance\n",

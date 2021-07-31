@@ -4,12 +4,18 @@
 \alias{generateReportSR}
 \title{Method generateReportSR}
 \usage{
-generateReportSR(object, outputDir = NULL, ...)
+generateReportSR(object, outputDir = NULL, colors = "default", ...)
 }
 \arguments{
 \item{object}{A SangerRead S4 instance.}
 
 \item{outputDir}{The output directory of the generated HTML report.}
+
+\item{colors}{A vector for users to set the colors of (A, T, C, G, else). 
+There are three options for users to choose from. 
+  1. "default":  (green, blue, black, red, purple). 
+  2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+  3. Users can set their own colors with a vector with five elements.}
 
 \item{...}{Further generateReportSR-related parameters.}
 }

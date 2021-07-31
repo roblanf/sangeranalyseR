@@ -4,8 +4,14 @@
 \alias{generateReport}
 \title{Method generateReport}
 \usage{
-generateReport(object, outputDir = NULL, includeSangerContig = TRUE,
-  includeSangerRead = TRUE, ...)
+generateReport(
+  object,
+  outputDir = NULL,
+  includeSangerContig = TRUE,
+  includeSangerRead = TRUE,
+  colors = "default",
+  ...
+)
 }
 \arguments{
 \item{object}{A SangerRead, SangerContig, or SangerAlignment S4 instance.}
@@ -15,6 +21,12 @@ generateReport(object, outputDir = NULL, includeSangerContig = TRUE,
 \item{includeSangerContig}{The parameter that decides whether to include SangerContig level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.}
 
 \item{includeSangerRead}{The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.}
+
+\item{colors}{A vector for users to set the colors of (A, T, C, G, else). 
+There are three options for users to choose from. 
+  1. "default":  (green, blue, black, red, purple). 
+  2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+  3. Users can set their own colors with a vector with five elements.}
 
 \item{...}{Further generateReportSR, generateReportSC, and generateReportSA related parameters.}
 }
@@ -31,8 +43,11 @@ data(sangerContigData)
 data(sangerAlignmentData)
 \dontrun{
 generateReport(sangerReadFData)
+generateReport(sangerReadFData, colors="cb_friendly")
 generateReport(sangerContigData)
-generateReport(sangerAlignmentData)}
+generateReport(sangerContigData, colors="cb_friendly")
+generateReport(sangerAlignmentData)
+generateReport(sangerAlignmentData, colors="cb_friendly")}
 }
 \author{
 Kuan-Hao Chao

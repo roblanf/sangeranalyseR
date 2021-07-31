@@ -4,12 +4,18 @@
 \alias{launchAppSA}
 \title{Method launchAppSA}
 \usage{
-launchAppSA(object, outputDir = NULL)
+launchAppSA(object, outputDir = NULL, colors = "default")
 }
 \arguments{
 \item{object}{A SangerAlignment S4 instance.}
 
 \item{outputDir}{The output directory of the saved new SangerAlignment S4 instance.}
+
+\item{colors}{A vector for users to set the colors of (A, T, C, G, else). 
+There are three options for users to choose from. 
+  1. "default":  (green, blue, black, red, purple). 
+  2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+  3. Users can set their own colors with a vector with five elements.}
 }
 \value{
 A \code{shiny.appobj} object.

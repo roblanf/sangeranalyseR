@@ -4,8 +4,13 @@
 \alias{writeFastaSC}
 \title{Method writeFastaSC}
 \usage{
-writeFastaSC(object, outputDir = NULL, compress = FALSE,
-  compression_level = NA, selection = "all")
+writeFastaSC(
+  object,
+  outputDir = NULL,
+  compress = FALSE,
+  compression_level = NA,
+  selection = "all"
+)
 }
 \arguments{
 \item{object}{A SangerContig S4 instance.}

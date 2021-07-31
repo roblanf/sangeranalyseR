@@ -4,8 +4,13 @@
 \alias{generateReportSC}
 \title{Method generateReportSC}
 \usage{
-generateReportSC(object, outputDir = NULL, includeSangerRead = TRUE,
-  ...)
+generateReportSC(
+  object,
+  outputDir = NULL,
+  includeSangerRead = TRUE,
+  colors = "default",
+  ...
+)
 }
 \arguments{
 \item{object}{A SangerContig S4 instance.}
@@ -13,6 +18,12 @@ generateReportSC(object, outputDir = NULL, includeSangerRead = TRUE,
 \item{outputDir}{The output directory of the generated HTML report.}
 
 \item{includeSangerRead}{The parameter that decides whether to include SangerRead level report. The value is \code{TRUE} or \code{FALSE} and the default is \code{TRUE}.}
+
+\item{colors}{A vector for users to set the colors of (A, T, C, G, else). 
+There are three options for users to choose from. 
+  1. "default":  (green, blue, black, red, purple). 
+  2. "cb_friendly":  ((0, 0, 0), (199, 199, 199), (0, 114, 178), (213, 94, 0), (204, 121, 167)). 
+  3. Users can set their own colors with a vector with five elements.}
 
 \item{...}{Further generateReportSC-related parameters.}
 }

@@ -4,9 +4,14 @@
 \alias{updateQualityParam}
 \title{Method updateQualityParam}
 \usage{
-updateQualityParam(object, TrimmingMethod = "M1",
-  M1TrimmingCutoff = 1e-04, M2CutoffQualityScore = NULL,
-  M2SlidingWindowSize = NULL, ...)
+updateQualityParam(
+  object,
+  TrimmingMethod = "M1",
+  M1TrimmingCutoff = 1e-04,
+  M2CutoffQualityScore = NULL,
+  M2SlidingWindowSize = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{A QualityReport, SangerRead, SangerContig, or SangerAlignment S4 instance.}

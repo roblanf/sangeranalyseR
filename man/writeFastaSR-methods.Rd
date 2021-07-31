@@ -4,8 +4,12 @@
 \alias{writeFastaSR}
 \title{Method writeFastaSR}
 \usage{
-writeFastaSR(object, outputDir = NULL, compress = FALSE,
-  compression_level = NA)
+writeFastaSR(
+  object,
+  outputDir = NULL,
+  compress = FALSE,
+  compression_level = NA
+)
 }
 \arguments{
 \item{object}{A SangerRead S4 instance.}

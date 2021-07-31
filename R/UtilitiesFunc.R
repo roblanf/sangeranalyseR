@@ -88,7 +88,7 @@ alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
                 aln.tree$tip.label <- names(aln)
                 # deal with -ve branches
                 # This is not necessarily accurate, but it is good enough to
-                # judge seuqences using the tree
+                # judge seuquences using the tree
                 aln.tree$edge.length[which(aln.tree$edge.length<0)] =
                     abs(aln.tree$edge.length[which(aln.tree$edge.length<0)])
             }, warning = function(warning_condition) {

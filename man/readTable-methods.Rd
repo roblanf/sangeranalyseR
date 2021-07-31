@@ -4,7 +4,7 @@
 \alias{readTable}
 \title{Method readTable}
 \usage{
-readTable(object, indentation, ...)
+readTable(object, indentation = 0, ...)
 }
 \arguments{
 \item{object}{A SangerRead, SangerContig, or SangerAlignment S4 instance.}

@@ -4,8 +4,13 @@
 \alias{writeFasta}
 \title{Method writeFasta}
 \usage{
-writeFasta(object, outputDir = NULL, compress = FALSE,
-  compression_level = NA, selection = "all")
+writeFasta(
+  object,
+  outputDir = NULL,
+  compress = FALSE,
+  compression_level = NA,
+  selection = "all"
+)
 }
 \arguments{
 \item{object}{A SangerRead, SangerContig, or SangerAlignment S4 instance.}

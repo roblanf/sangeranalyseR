@@ -4,8 +4,13 @@
 \alias{writeFastaSA}
 \title{Method writeFastaSA}
 \usage{
-writeFastaSA(object, outputDir = NULL, compress = FALSE,
-  compression_level = NA, selection = "all")
+writeFastaSA(
+  object,
+  outputDir = NULL,
+  compress = FALSE,
+  compression_level = NA,
+  selection = "all"
+)
 }
 \arguments{
 \item{object}{A SangerAlignment S4 instance.}

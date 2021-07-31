@@ -10,23 +10,21 @@ An S4 class containing SangerContigs lists and contigs alignment results which c
 \section{Slots}{
 
 \describe{
+\item{\code{objectResults}}{This is the object that stores all information of the creation result.}
+
 \item{\code{inputSource}}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
 
-\item{\code{fastaFileName}}{If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{""} by default.}
+\item{\code{processMethod}}{The method to create a contig from reads. The value is \code{"REGEX"} or \code{"CSV"}. The default value is \code{"REGEX"}.}
 
-\item{\code{namesConversionCSV}}{The file path to the CSV file that provides read names that follow the naming regulation. If \code{inputSource} is \code{"FASTA"}, then users need to prepare the csv file or make sure the original names inside FASTA file are valid; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
+\item{\code{ABIF_Directory}}{If \code{inputSource} is \code{"ABIF"}, then this value is the path of a parent directory storing all reads in ABIF format you want to analyse. If \code{inputSource} is \code{"FASTA"}, then this value has to be \code{NULL} by default.}
 
-\item{\code{parentDirectory}}{If \code{inputSource} is \code{"ABIF"}, then this value is the path of the parent directory storing all reads in ABIF format you wish to analyse and cannot be NULL. In SangerAlignment, all reads in subdirectories will be scanned recursively. If \code{inputSource} is \code{"FASTA"}, then this value is \code{NULL} by default.}
+\item{\code{FASTA_File}}{If \code{inputSource} is \code{"FASTA"}, then this value has to be the path to a valid FASTA file ; if \code{inputSource} is \code{"ABIF"}, then this value has to be \code{NULL} by default.}
 
-\item{\code{suffixForwardRegExp}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.}
+\item{\code{REGEX_SuffixForward}}{The suffix of the filenames for forward reads in regular expression, i.e. reads that do not need to be reverse-complemented. For forward reads, it should be \code{"_F.ab1"}.}
 
-\item{\code{suffixReverseRegExp}}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.}
+\item{\code{REGEX_SuffixReverse}}{The suffix of the filenames for reverse reads in regular expression, i.e. reads that need to be reverse-complemented. For revcerse reads, it should be \code{"_R.ab1"}.}
 
-\item{\code{trimmingMethodSA}}{The read trimming method for all SangerRead S4 instances in SangerAlignment. The value must be \code{"M1"} (the default) or \code{'M2'}. All SangerReads must have the same trimming method.}
-
-\item{\code{minFractionCallSA}}{Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.}
-
-\item{\code{maxFractionLostSA}}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.}
+\item{\code{CSV_NamesConversion}}{The file path to the CSV file that provides read names, directions, and their contig groups. If \code{processMethod} is \code{"CSV"}, then this value has to be the path to a valid CSV file; if \code{processMethod} is \code{"REGEX"}, then this value has to be \code{NULL} by default.}
 
 \item{\code{geneticCode}}{Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
 
@@ -42,17 +40,34 @@ An S4 class containing SangerContigs lists and contigs alignment results which c
 }}
 
 \examples{
-## Input From ABIF file format (Regex)
+## Simple example
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
-suffixForwardRegExp <- "_[0-9]*_F.ab1"
-suffixReverseRegExp <- "_[0-9]*_R.ab1"
+my_aligned_contigs <- new("SangerAlignment",
+                          ABIF_Directory     = parentDir,
+                          REGEX_SuffixForward = "_[0-9]*_F.ab1$",
+                          REGEX_SuffixReverse = "_[0-9]*_R.ab1$")
+                          
+rawDataDir <- system.file("extdata", package = "sangeranalyseR")
+parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
+CSV_NamesConversion <- file.path(rawDataDir, "ab1", "SangerAlignment", "names_conversion.csv")
 sangerAlignment <- new("SangerAlignment",
+                       processMethod          = "CSV",
+                       ABIF_Directory         = parentDir,
+                       CSV_NamesConversion    = CSV_NamesConversion)
+
+## Input From ABIF file format (Regex)
+REGEX_SuffixForward <- "_[0-9]*_F.ab1$"
+REGEX_SuffixReverse <- "_[0-9]*_R.ab1$"
+sangerAlignment <- new("SangerAlignment",
+                       printLevel            = "SangerAlignment",
                        inputSource           = "ABIF",
-                       parentDirectory       = parentDir,
-                       suffixForwardRegExp   = suffixForwardRegExp,
-                       suffixReverseRegExp   = suffixReverseRegExp,
-                       refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                       processMethod         = "REGEX",
+                       FASTA_File            = NULL,
+                       CSV_NamesConversion   = NULL,
+                       ABIF_Directory        = parentDir,
+                       REGEX_SuffixForward   = REGEX_SuffixForward,
+                       REGEX_SuffixReverse   = REGEX_SuffixReverse,
                        TrimmingMethod        = "M1",
                        M1TrimmingCutoff      = 0.0001,
                        M2CutoffQualityScore  = NULL,
@@ -61,17 +76,26 @@ sangerAlignment <- new("SangerAlignment",
                        heightPerRow          = 200,
                        signalRatioCutoff     = 0.33,
                        showTrimmed           = TRUE,
+                       refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
+                       minReadsNum           = 2,
+                       minReadLength         = 20,
+                       minFractionCall       = 0.5,
+                       maxFractionLost       = 0.5,
+                       geneticCode           = GENETIC_CODE,
+                       acceptStopCodons      = TRUE,
+                       readingFrame          = 1,
                        processorsNum         = 2)
 
 ## Input From ABIF file format (Csv three column)
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 parentDir <- file.path(rawDataDir, 'Allolobophora_chlorotica', 'ACHLO')
-namesConversionCSV <- file.path(rawDataDir, "ab1", "SangerAlignment",
-"names_conversion.csv")
+CSV_NamesConversion <- file.path(rawDataDir, "ab1", "SangerAlignment", 
+"names_conversion_all.csv")
 sangerAlignment <- new("SangerAlignment",
                        inputSource           = "ABIF",
-                       parentDirectory       = parentDir,
-                       namesConversionCSV    = namesConversionCSV,
+                       processMethod         = "CSV",
+                       ABIF_Directory        = parentDir,
+                       CSV_NamesConversion   = CSV_NamesConversion,
                        refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
                        TrimmingMethod        = "M1",
                        M1TrimmingCutoff      = 0.0001,
@@ -87,13 +111,14 @@ sangerAlignment <- new("SangerAlignment",
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
                      "SangerAlignment", "Sanger_all_reads.fa")
-suffixForwardRegExpFa <- "_[0-9]*_F$"
-suffixReverseRegExpFa <- "_[0-9]*_R$"
+REGEX_SuffixForwardFa <- "_[0-9]*_F$"
+REGEX_SuffixReverseFa <- "_[0-9]*_R$"
 sangerAlignmentFa <- new("SangerAlignment",
                          inputSource           = "FASTA",
-                         fastaFileName         = fastaFN,
-                         suffixForwardRegExp   = suffixForwardRegExpFa,
-                         suffixReverseRegExp   = suffixReverseRegExpFa,
+                         processMethod         = "REGEX",
+                         FASTA_File            = fastaFN,
+                         REGEX_SuffixForward   = REGEX_SuffixForwardFa,
+                         REGEX_SuffixReverse   = REGEX_SuffixReverseFa,
                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
                          processorsNum         = 2)
 
@@ -101,12 +126,13 @@ sangerAlignmentFa <- new("SangerAlignment",
 rawDataDir <- system.file("extdata", package = "sangeranalyseR")
 fastaFN <- file.path(rawDataDir, "fasta",
                      "SangerAlignment", "Sanger_all_reads.fa")
-namesConversionCSV <- file.path(rawDataDir, "fasta",
+CSV_NamesConversion <- file.path(rawDataDir, "fasta",
                                 "SangerAlignment", "names_conversion.csv")
 sangerAlignmentFa <- new("SangerAlignment",
                          inputSource           = "FASTA",
-                         fastaFileName         = fastaFN,
-                         namesConversionCSV    = namesConversionCSV,
+                         processMethod         = "CSV",
+                         FASTA_File            = fastaFN,
+                         CSV_NamesConversion   = CSV_NamesConversion,
                          refAminoAcidSeq = "SRQWLFSTNHKDIGTLYFIFGAWAGMVGTSLSILIRAELGHPGALIGDDQIYNVIVTAHAFIMIFFMVMPIMIGGFGNWLVPLMLGAPDMAFPRMNNMSFWLLPPALSLLLVSSMVENGAGTGWTVYPPLSAGIAHGGASVDLAIFSLHLAGISSILGAVNFITTVINMRSTGISLDRMPLFVWSVVITALLLLLSLPVLAGAITMLLTDRNLNTSFFDPAGGGDPILYQHLFWFFGHPEVYILILPGFGMISHIISQESGKKETFGSLGMIYAMLAIGLLGFIVWAHHMFTVGMDVDTRAYFTSATMIIAVPTGIKIFSWLATLHGTQLSYSPAILWALGFVFLFTVGGLTGVVLANSSVDIILHDTYYVVAHFHYVLSMGAVFAIMAGFIHWYPLFTGLTLNNKWLKSHFIIMFIGVNLTFFPQHFLGLAGMPRRYSDYPDAYTTWNIVSTIGSTISLLGILFFFFIIWESLVSQRQVIYPIQLNSSIEWYQNTPPAEHSYSELPLLTN",
                          processorsNum         = 2)
 }

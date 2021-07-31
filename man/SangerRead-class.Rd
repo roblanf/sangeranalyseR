@@ -10,15 +10,19 @@ An S4 class extending sangerseq S4 class which corresponds to a single ABIF file
 \section{Slots}{
 
 \describe{
+\item{\code{objectResults}}{This is the object that stores all information of the creation result.}
+
 \item{\code{inputSource}}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
 
 \item{\code{readFeature}}{The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.}
 
-\item{\code{readFileName}}{The filename of the target input file. It can be \code{"ABIF"} or \code{"FASTA"} file.}
+\item{\code{readFileName}}{The filename of the target input file.}
 
 \item{\code{fastaReadName}}{If \code{inputSource} is \code{"FASTA"}, then this value has to be the name of the read inside the FASTA file; if \code{inputSource} is \code{"ABIF"}, then this value is \code{NULL} by default.}
 
-\item{\code{abifRawData}}{A S4 class containing all fields in the ABIF file. It is defined in sangerseqR package.}
+\item{\code{geneticCode}}{Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
+
+\item{\code{abifRawData}}{An S4 class containing all fields in the ABIF file. It is the abif class defined in sangerseqR package.}
 
 \item{\code{QualityReport}}{A S4 class containing quality trimming related inputs and trimming results.}
 
@@ -30,8 +34,6 @@ An S4 class extending sangerseq S4 class which corresponds to a single ABIF file
 
 \item{\code{primaryAASeqS3}}{A polypeptide translated from primary DNA sequence starting from the third nucleic acid.}
 
-\item{\code{geneticCode}}{Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.}
-
 \item{\code{primarySeqRaw}}{The raw primary sequence from sangerseq class in sangerseqR package before base calling.}
 
 \item{\code{secondarySeqRaw}}{The raw secondary sequence from sangerseq class in sangerseqR package before base calling.}
@@ -42,17 +44,28 @@ An S4 class extending sangerseq S4 class which corresponds to a single ABIF file
 }}
 
 \examples{
-## Input From ABIF file format
-# Forward Read
+## Simple example
 inputFilesPath <- system.file("extdata/", package = "sangeranalyseR")
 A_chloroticaFFN <- file.path(inputFilesPath,
                              "Allolobophora_chlorotica",
                              "ACHLO",
                              "Achl_ACHLO006-09_1_F.ab1")
 sangerReadF <- new("SangerRead",
+                    readFeature           = "Forward Read",
+                    readFileName          = A_chloroticaFFN)
+                          
+## Input From ABIF file format
+# Forward Read
+A_chloroticaFFN <- file.path(inputFilesPath,
+                             "Allolobophora_chlorotica",
+                             "ACHLO",
+                             "Achl_ACHLO006-09_1_F.ab1")
+sangerReadF <- new("SangerRead",
+                    printLevel            = "SangerRead",
                     inputSource           = "ABIF",
                     readFeature           = "Forward Read",
                     readFileName          = A_chloroticaFFN,
+                    fastaReadName         = NULL,
                     geneticCode           = GENETIC_CODE,
                     TrimmingMethod        = "M1",
                     M1TrimmingCutoff      = 0.0001,
