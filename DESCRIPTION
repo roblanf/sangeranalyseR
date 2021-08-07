@@ -46,7 +46,7 @@ Depends:
     kableExtra (>= 1.3.4),
     seqinr,
     BiocStyle,
-    logger (== 0.1.0)
+    logger
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Suggests: 

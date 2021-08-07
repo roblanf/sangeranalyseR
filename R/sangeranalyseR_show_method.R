@@ -39,7 +39,8 @@ setMethod('show', 'SangerRead', function(object){
                 "      Primary Sequence : ", as.character(object@primarySeq), "\n"
             )
         }
-        log_success("'", basename(object@readFileName), "'", " is successfully created!")
+        sapply(paste0("'", basename(object@readFileName), "'", " is successfully created!"), 
+               log_success, simplify = FALSE)
     } else {
         sapply(paste0(object@objectResults@errorTypes, '\n',object@objectResults@errorMessages, '\n') , 
                log_error, simplify = FALSE)
@@ -126,7 +127,8 @@ setMethod('show', 'SangerContig', function(object){
                 )    
             }
         } 
-        log_success("'", object@contigName, "'", " is successfully created!")
+        sapply(paste0("'", object@contigName, "'", " is successfully created!"), 
+               log_success, simplify = FALSE)
     } else {
         sapply(paste0(object@objectResults@errorTypes, '\n', object@objectResults@errorMessages, '\n') , 
                log_error, simplify = FALSE)
@@ -177,7 +179,8 @@ setMethod('show', 'SangerAlignment', function(object){
                 )
             }
         }    
-        log_success("'SangerAlignment'", " is successfully created!")
+        sapply(paste0("'SangerAlignment'", " is successfully created!"), 
+               log_success, simplify = FALSE)
     } else {
         sapply(paste0(object@objectResults@errorTypes, '\n', object@objectResults@errorMessages, '\n') , 
                log_error, simplify = FALSE)
