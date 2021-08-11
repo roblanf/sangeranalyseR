@@ -27,7 +27,6 @@
 #' @importFrom openxlsx int2col
 #' @importFrom tools file_ext
 #' @importFrom rmarkdown render
-#' @importFrom kableExtra %>%
 #' @importFrom excelR excelTable excelOutput renderExcel
 #' @importFrom seqinr read.fasta
 #' @importFrom parallel mclapply detectCores

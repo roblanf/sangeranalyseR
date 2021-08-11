@@ -43,7 +43,6 @@ Depends:
     tools,
     rmarkdown (>= 2.9),
     knitr (>= 1.33),
-    kableExtra (>= 1.3.4),
     seqinr,
     BiocStyle,
     logger
