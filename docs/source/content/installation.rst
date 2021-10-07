@@ -49,6 +49,11 @@ Then run the following code in your R console to install the newest version from
 .. code-block:: R
 
    library(devtools)
+
+   ## Install the release version 
+   install_github("roblanf/sangeranalyseR", ref = "master")
+   
+   ## Install the development version
    install_github("roblanf/sangeranalyseR", ref = "develop")
    library(sangeranalyseR)
 
