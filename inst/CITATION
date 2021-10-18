@@ -4,10 +4,10 @@ citEntry(entry="article",
                               as.person("Kirston Barton"),
                               as.person("Sarah Palmer"),
                               as.person("Robert Lanfear")),
-         year = 2020,
-         journal = "bioRxiv",
-         doi = "10.1101/2020.05.18.102459",
+         year = 2021,
+         journal = "Genome Biology and Evolution",
+         doi = "10.1093/gbe/evab028",
          textVersion =
          paste("Kuan-Hao Chao, Kirston Barton, Sarah Palmer, Robert Lanfear",
-               "sangeranalyseR: simple and interactive analysis of Sanger sequencing data in R",
-                "bioRxiv preprint (2020)" ) )
+               "sangeranalyseR: simple and interactive processing of Sanger sequencing data in R",
+                "Genome Biology and Evolution, Volume 13, Issue 3, March 2021, evab028" ) )
