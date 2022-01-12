@@ -170,6 +170,8 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
                                                  compression_level) {
     if (is.null(outputDir)) {
         outputDir <- tempdir()
+    }
+    if (!dir.exists(outputDir)) {
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
     outputDir <- normalizePath(outputDir)
@@ -240,6 +242,8 @@ setMethod("generateReportSR", "SangerRead",
               ### ------------------------------------------------------------------------
               if (is.null(outputDir)) {
                   outputDir <- tempdir()
+              }
+              if (!dir.exists(outputDir)) {
                   suppressWarnings(dir.create(outputDir, recursive = TRUE))
               }
               outputDir <- normalizePath(outputDir)

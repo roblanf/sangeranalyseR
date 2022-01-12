@@ -104,6 +104,8 @@ setMethod("launchAppSA", "SangerAlignment", function(object, outputDir = NULL,
         ### --------------------------------------------------------------------
         if (is.null(outputDir)) {
             outputDir <- tempdir()
+        }
+        if (!dir.exists(outputDir)) {
             suppressWarnings(dir.create(outputDir, recursive = TRUE))
         }
         log_info(">>> outputDir : ", outputDir)
@@ -160,6 +162,8 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
     ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
+    }
+    if (!dir.exists(outputDir)) {
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
     outputDir <- normalizePath(outputDir)
@@ -288,6 +292,8 @@ setMethod("generateReportSA", "SangerAlignment",
     ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
+    }
+    if (!dir.exists(outputDir)) {
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
     outputDir <- normalizePath(outputDir)

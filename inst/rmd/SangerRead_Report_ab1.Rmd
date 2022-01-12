@@ -310,7 +310,7 @@ hetcalls <- MakeBaseCalls(params$SangerRead,
                           signalRatioCutoff = params$SangerRead@ChromatogramParam@signalRatioCutoff)
 
 if (! dir.exists(params$outputDir)) {
-  dir.create(params$outputDir)
+  suppressWarnings(dir.create(params$outputDir, recursive = TRUE))
 }
 chromatogram_overwrite(hetcalls,
              width = strtoi(params$SangerRead@ChromatogramParam@baseNumPerRow) - 20,
@@ -322,9 +322,9 @@ chromatogram_overwrite(hetcalls,
              colors=colors)
 ```
 
-[Click Here to Open Chromatogram in New Page ](`r file.path(".", "Chromatogram.pdf")`)
+[Click Here to Open Chromatogram in New Page ](`r file.path(params$outputDir, "Chromatogram.pdf")`)
 
-<iframe src=`r file.path(".", "Chromatogram.pdf")` style="width:100%; height:700px;" frameborder="0"></iframe>
+<iframe src=`r file.path(params$outputDir, "Chromatogram.pdf")` style="width:100%; height:700px;" frameborder="0"></iframe>
 
 
 </details>

@@ -206,8 +206,8 @@ if (all(dim(params$SangerContig@differencesDF) == c(0,0))) {
     cat("<h4 style='font-weight: bold; font-style: italic;'> 'Differences' data frame is empty. </h4>")
 } else {
     params$SangerContig@differencesDF %>%
-      kable() %>%
-      kable_styling()
+      kable() 
+  #%>%kable_styling()
 }
 ```
 </div>
@@ -219,8 +219,8 @@ if (all(dim(params$SangerContig@distanceMatrix) == c(0,0))) {
     cat("<h4 style='font-weight: bold; font-style: italic;'> 'Distance' Matrix is empty. </h4>")
 } else {
     params$SangerContig@distanceMatrix %>%
-      kable() %>%
-      kable_styling()
+      kable() 
+    #%>%kable_styling()
 }
 ```
 </div>
@@ -234,8 +234,8 @@ ggdendrogram(params$SangerContig@dendrogram[[2]], rotate = TRUE)
 <div style="overflow: scroll;">
 ```{r echo=FALSE, warning=FALSE}
 params$SangerContig@dendrogram[[1]] %>%
-    kable() %>%
-    kable_styling()
+    kable() 
+  #%>%kable_styling()s
 ```
 </div>
 <br>
@@ -246,8 +246,8 @@ if (all(dim(params$SangerContig@indelsDF) == c(0,0))) {
     cat("<h4 style='font-weight: bold; font-style: italic;'> 'indelsDF' Data Frame is empty. </h4>")
 } else {
     params$SangerContig@indelsDF %>%
-      kable() %>%
-      kable_styling()
+      kable() 
+    #%>%kable_styling()
 }
 ```
 </div>
@@ -259,8 +259,8 @@ if (all(dim(params$SangerContig@stopCodonsDF) == c(0,0))) {
     cat("<h4 style='font-weight: bold; font-style: italic;'> 'stopCodonsDF' Data Frame is empty. </h4>")
 } else {
     params$SangerContig@stopCodonsDF %>%
-      kable() %>%
-      kable_styling()
+      kable() 
+    #%>%kable_styling()
 }
 ```
 </div>
@@ -272,8 +272,8 @@ if (all(dim(params$SangerContig@secondaryPeakDF) == c(0,0))) {
     cat("<p style='font-weight: bold; font-style: italic;'> 'secondaryPeakDF' Data Frame is empty. </p>")
 } else {
     params$SangerContig@secondaryPeakDF %>%
-      kable() %>%
-      kable_styling()
+      kable() 
+    #%>%kable_styling()
 }
 ```
 </div>

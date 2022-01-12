@@ -124,6 +124,8 @@ setMethod("launchAppSC", "SangerContig", function(object, outputDir = NULL, colo
         ### --------------------------------------------------------------------
         if (is.null(outputDir)) {
             outputDir <- tempdir()
+        }
+        if (!dir.exists(outputDir)) {
             suppressWarnings(dir.create(outputDir, recursive = TRUE))
         }
         log_info(">>> outputDir : ", outputDir)
@@ -302,6 +304,8 @@ setMethod("generateReportSC", "SangerContig",
     ### ------------------------------------------------------------------------
     if (is.null(outputDir)) {
         outputDir <- tempdir()
+    }
+    if (!dir.exists(outputDir)) {
         suppressWarnings(dir.create(outputDir, recursive = TRUE))
     }
     outputDir <- normalizePath(outputDir)
