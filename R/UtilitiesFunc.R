@@ -335,9 +335,8 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     dist = DistanceMatrix(aln, correction = "Jukes-Cantor",
                           penalizeGapLetterMatches = FALSE,
                           processors = processorsNum, verbose = FALSE)
-    dend = IdClusters(dist, type = "both",
-                      showPlot = FALSE,
-                      processors = processorsNum, verbose = FALSE)
+    dend = TreeLine(myDistMatrix=dist, method="UPGMA",
+                    type = "both", showPlot = FALSE, processors = processorsNum, verbose = FALSE)
 
     # add consensus to alignment
     aln2 = c(aln, DNAStringSet(consensus))

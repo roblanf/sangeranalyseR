@@ -1,34 +1,24 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="English" >
+<!--[if IE 8]><html class="no-js lt-ie9" lang="English" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="English" > <!--<![endif]-->
 <head>
-  <meta charset="utf-8" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Advanced User Guide - SangerContig (AB1) &mdash; sangeranalyseR  documentation</title>
   
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-
+  
   
   
 
   
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -40,6 +30,13 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Advanced User Guide - SangerAlignment (AB1)" href="advance_user_SangerAlignment_ab1.html" />
@@ -80,7 +77,6 @@
           
         </div>
 
-        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -143,7 +139,6 @@
             
           
         </div>
-        
       </div>
     </nav>
 
@@ -178,20 +173,18 @@
 
 
 
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html">Docs</a> &raquo;</li>
         
       <li>Advanced User Guide - <em>SangerContig</em> (<strong>AB1</strong>)</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../_sources/content/advance_user_SangerContig_ab1.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -205,18 +198,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="advanced-user-guide-sangercontig-ab1">
+  <section id="advanced-user-guide-sangercontig-ab1">
 <h1>Advanced User Guide - <em>SangerContig</em> (<strong>AB1</strong>)<a class="headerlink" href="#advanced-user-guide-sangercontig-ab1" title="Permalink to this headline">¶</a></h1>
 <p><em>SangerContig</em> is in the intermediate level of sangeranalyseR (<a class="reference internal" href="#sangercontig-hierarchy"><span class="std std-ref">Figure_1</span></a>), and each <em>SangerContig</em> instance corresponds to a contig in a Sanger sequencing experiment. Among its slots, there are two lists, forward and reverse read list, storing <em>SangerRead</em> in the corresponding direction.</p>
 <p>In this section, we are going to go through details about a reproducible <em>SangerContig</em> analysis example with the <strong>AB1</strong> file input in sangeranalyseR. By running the following example codes, you will get an end-to-end <em>SangerContig</em> analysis result.</p>
-<div class="figure align-center" id="id10">
+<figure class="align-center" id="id10">
 <span id="sangercontig-hierarchy"></span><a class="reference internal image-reference" href="../_images/SangerContig_hierarchy.png"><img alt="../_images/SangerContig_hierarchy.png" src="../_images/SangerContig_hierarchy.png" style="width: 586.6px; height: 217.8px;" /></a>
-<p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerContig</em> level.</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerContig</em> level.</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="section" id="preparing-sangercontig-ab1-inputs">
+<section id="preparing-sangercontig-ab1-inputs">
 <h2>Preparing <em>SangerContig</em> <strong>AB1</strong> inputs<a class="headerlink" href="#preparing-sangercontig-ab1-inputs" title="Permalink to this headline">¶</a></h2>
 <p>The main input file format to create <em>SangerContig</em> instance is <strong>AB1</strong>. Before starting the analysis, users need to prepare one directory containing all <strong>AB1</strong> files, and all of them must be in the first layer of that directory. In other words, there should be no subdirectories. In this example, the data are in the sangeranalyseR package; thus, you can simply get its path by running the following codes:</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">rawDataDir</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
@@ -228,12 +223,14 @@
 </pre></div>
 </div>
 <p>And we showed the files under <code class="code docutils literal notranslate"><span class="pre">parentDir</span></code> in <a class="reference internal" href="#sangercontig-file-structure-ab1"><span class="std std-ref">Figure_2</span></a>:</p>
-<div class="figure align-center" id="id11">
+<figure class="align-center" id="id11">
 <span id="sangercontig-file-structure-ab1"></span><a class="reference internal image-reference" href="../_images/SangerContig_file_structure.png"><img alt="../_images/SangerContig_file_structure.png" src="../_images/SangerContig_file_structure.png" style="width: 276.0px; height: 390.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 2. <em>SangerContig</em> filename regulation.</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 2. <em>SangerContig</em> filename regulation.</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p><a class="reference internal" href="#sangercontig-file-structure-ab1"><span class="std std-ref">Figure_2</span></a> shows the file-naming regulation and hierarchy. In this example, <code class="code docutils literal notranslate"><span class="pre">RBNII</span></code> is the parent directory, and all <strong>AB1</strong> files must be under its first layer. There are two ways for users to group their <strong>AB1</strong> files which are <strong>&quot;regular expression matching&quot;</strong> and <strong>&quot;CSV file matching&quot;</strong>, and following are instructions of how to prepare and name your <strong>AB1</strong> input files.</p>
-<div class="section" id="regular-expression-matching-sangercontig-inputs-ab1">
+<section id="regular-expression-matching-sangercontig-inputs-ab1">
 <h3>(1) &quot;regular expression matching&quot; <em>SangerContig</em> inputs (<strong>AB1</strong>)<a class="headerlink" href="#regular-expression-matching-sangercontig-inputs-ab1" title="Permalink to this headline">¶</a></h3>
 <p>For regular expression matching method, sangeranalyseR will group <strong>AB1</strong> files based on their contig names and read directions in their filenames automatically; therefore, users have to follow the file-naming regulations below:</p>
 <div class="admonition note">
@@ -256,26 +253,30 @@
 </div>
 <p>If you don't know what regular expression is, don't panic - it's just a way of recognising text. Please refer to <a class="reference internal" href="how_to_page.html#what-is-a-regular-expression"><span class="std std-ref">What is a regular expression?</span></a> for more details. Here is an example of how it works in sangeranalseR:</p>
 <p>So how sangeranalyseR works is that it first matches the <code class="code docutils literal notranslate"><span class="pre">contigName</span></code> to exclude unrelated files and then separate the forward and reverse reads by matching <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixForward</span></code> and <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixReverse</span></code>. Therefore, it is important to make sure that all target <strong>AB1</strong> files share the same <code class="code docutils literal notranslate"><span class="pre">contigName</span></code> and carefully select your <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixForward</span></code> and <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixReverse</span></code>. The bad file-naming and wrong regex matching might accidentally include reverse reads into the forward read list or vice versa, which will make the program generate wrong results. Therefore, it is important to have a consistent naming strategy. So, how should we systematically name <strong>AB1</strong> files? We suggest users to follow the file-naming regulation in <a class="reference internal" href="#sangeranalyser-filename-convention-sangercontig"><span class="std std-ref">Figure_3</span></a>.</p>
-<div class="figure align-center" id="id12">
+<figure class="align-center" id="id12">
 <span id="sangeranalyser-filename-convention-sangercontig"></span><a class="reference internal image-reference" href="../_images/sangeranalyseR_filename_convention.png"><img alt="../_images/sangeranalyseR_filename_convention.png" src="../_images/sangeranalyseR_filename_convention.png" style="width: 621.0px; height: 28.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 3. Suggested <strong>AB1</strong> file-naming regulation - <em>SangerContig</em>.</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 3. Suggested <strong>AB1</strong> file-naming regulation - <em>SangerContig</em>.</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>As you can see, the first part of the regulation is a consensus read name (or contig name), which narrows down the scope of <strong>AB1</strong> files to those we are going to examine. The second part of the regulation is an index. Since there might be more than one read that is in the forward or reverse direction, we recommend you to number your reads in the same contig group. The third part is a direction which is either 'F' (forward) or 'R' (reverse). Last but not least, files have to end with <strong>.ab1</strong> file extension.</p>
 <p>To make it more specific, let's go back to the true example. In <a class="reference internal" href="#sangercontig-file-structure-ab1"><span class="std std-ref">Figure_2</span></a>, there are a lot of <strong>AB1</strong> files from different contigs in <code class="code docutils literal notranslate"><span class="pre">RBNII</span></code> (<code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code>).
 First, we set <code class="code docutils literal notranslate"><span class="pre">contigName</span></code> to <code class="code docutils literal notranslate"><span class="pre">&quot;Achl_RBNII384-13&quot;</span></code> to reduce candidates from eight to two <strong>AB1</strong> files, <code class="code docutils literal notranslate"><span class="pre">Achl_RBNII384-13_1_F.ab1</span></code> and <code class="code docutils literal notranslate"><span class="pre">Achl_RBNII384-13_2_R.ab1</span></code>. Then, we set <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixForward</span></code> to <code class="code docutils literal notranslate"><span class="pre">&quot;_[0-9]*_F.ab1$&quot;</span></code> and <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixReverse</span></code> to <code class="code docutils literal notranslate"><span class="pre">&quot;_[0-9]*_R.ab1$&quot;</span></code> to let sangeranalyseR match and group forward and reverse reads automatically. By the regular expression rule, <code class="code docutils literal notranslate"><span class="pre">Achl_RBNII384-13_1_F.ab1</span></code> and <code class="code docutils literal notranslate"><span class="pre">Achl_RBNII384-13_2_R.ab1</span></code> will be categorized into &quot;forward read list&quot; and &quot;reverse read list&quot; respectively. The reason why we strongly recommend you to follow this file-naming regulation is that by doing so, you can directly adopt the example regular expression matching values, <code class="code docutils literal notranslate"><span class="pre">&quot;_[0-9]*_F.ab1$&quot;</span></code> and <code class="code docutils literal notranslate"><span class="pre">&quot;_[0-9]*_R.ab1$&quot;</span></code>, to group reads and reduce chances of error.</p>
 <p>After understanding how parameters work, please refer to <a class="reference internal" href="#creating-sangercontig-instance-from-ab1"><span class="std std-ref">Creating SangerContig instance from AB1</span></a> below to see how sangeranalseR creates 'Achl_RBNII384-13' <em>SangerContig</em> instance.</p>
-</div>
-<div class="section" id="csv-file-matching-sangercontig-inputs-ab1">
+</section>
+<section id="csv-file-matching-sangercontig-inputs-ab1">
 <h3>(2) &quot;CSV file matching&quot; <em>SangerContig</em> inputs (<strong>AB1</strong>)<a class="headerlink" href="#csv-file-matching-sangercontig-inputs-ab1" title="Permalink to this headline">¶</a></h3>
 <p>For those who are not familiar with regular expression, we provide a second grouping approach, CSV file matching method. sangeranalyseR will group <strong>AB1</strong> files based on the information in a CSV file automatically; therefore, users have to follow the regulations below:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Here is an <a class="reference download internal" download="" href="../_downloads/5650fc7db022343113057d999c117b2d/names_conversion_2.csv"><code class="xref download docutils literal notranslate"><span class="pre">example</span> <span class="pre">CSV</span> <span class="pre">file</span></code></a> (<a class="reference internal" href="#sangeranalyser-csv-file-sangercontig-ab1"><span class="std std-ref">Figure_4</span></a>)</p>
 <blockquote>
-<div><div class="figure align-center" id="id13">
+<div><figure class="align-center" id="id13">
 <span id="sangeranalyser-csv-file-sangercontig-ab1"></span><a class="reference internal image-reference" href="../_images/sangeranalyseR_csv_file_sangercontig_ab1.png"><img alt="../_images/sangeranalyseR_csv_file_sangercontig_ab1.png" src="../_images/sangeranalyseR_csv_file_sangercontig_ab1.png" style="width: 598.5px; height: 72.1px;" /></a>
-<p class="caption"><span class="caption-text">Figure 4. Example CSV file for <em>SangerContig</em> instance creation.</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 4. Example CSV file for <em>SangerContig</em> instance creation.</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 </div></blockquote>
 <ul class="simple">
 <li><p>There must be three columns, &quot;<strong>reads</strong>&quot;, &quot;<strong>direction</strong>&quot;, and &quot;<strong>contig</strong>&quot;, in the CSV file.</p></li>
@@ -300,12 +301,12 @@ First, we set <code class="code docutils literal notranslate"><span class="pre">
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-</div>
-<div class="section" id="creating-sangercontig-instance-from-ab1">
+</section>
+</section>
+<section id="creating-sangercontig-instance-from-ab1">
 <h2>Creating <em>SangerContig</em> instance from <strong>AB1</strong><a class="headerlink" href="#creating-sangercontig-instance-from-ab1" title="Permalink to this headline">¶</a></h2>
 <p>After preparing the input directory, we can create a <em>SangerContig</em> instance by running <code class="code docutils literal notranslate"><span class="pre">SangerContig</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for <code class="code docutils literal notranslate"><span class="pre">new</span></code> method and it makes instance creation more intuitive. Their input parameters are same, and all of them have their default values. For more details about <em>SangerContig</em> inputs and slots definition, please refer to <a class="reference external" href="https://bioconductor.org/packages/release/bioc/manuals/sangeranalyseR/man/sangeranalyseR.pdf">sangeranalyseR reference manual</a>. We will explain two <em>SangerContig</em> instance creation methods, &quot;regular expression matching&quot; and &quot;CSV file matching&quot;.</p>
-<div class="section" id="regular-expression-matching-sangercontig-creation-ab1">
+<section id="regular-expression-matching-sangercontig-creation-ab1">
 <h3>(1) &quot;regular expression matching&quot; <em>SangerContig</em> creation (<strong>AB1</strong>)<a class="headerlink" href="#regular-expression-matching-sangercontig-creation-ab1" title="Permalink to this headline">¶</a></h3>
 <p>The consturctor function and <code class="code docutils literal notranslate"><span class="pre">new</span></code> method below contain four parameters, <code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code>, <code class="code docutils literal notranslate"><span class="pre">contigName</span></code>, <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixForward</span></code>, and <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixReverse</span></code>, that we mentioned in the previous section. It also includes important parameters like quality trimming, chromatogram visualization, consensus alignment, and so on. Run the following code and create <code class="code docutils literal notranslate"><span class="pre">my_sangerContig</span></code> instance.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerContig instance</span>
@@ -388,8 +389,8 @@ SUCCESS [2021-12-07 17:01:18] &#39;Achl_RBNII384-13&#39; is successfully created
 <span class="mi">2</span> <span class="n">Achl_RBNII384</span><span class="o">-</span><span class="mi">13_2</span><span class="n">_R</span><span class="o">.</span><span class="n">ab1</span>           <span class="n">TRUE</span>      <span class="kc">None</span>         <span class="kc">None</span>        <span class="n">ABIF</span> <span class="n">Reverse</span> <span class="n">Read</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="csv-file-matching-sangercontig-creation-ab1">
+</section>
+<section id="csv-file-matching-sangercontig-creation-ab1">
 <h3>(2) &quot;CSV file matching&quot; <em>SangerContig</em> creation (<strong>AB1</strong>)<a class="headerlink" href="#csv-file-matching-sangercontig-creation-ab1" title="Permalink to this headline">¶</a></h3>
 <p>The consturctor function and <code class="code docutils literal notranslate"><span class="pre">new</span></code> method below contain three parameters, <code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code>, <code class="code docutils literal notranslate"><span class="pre">contigName</span></code>, and <code class="code docutils literal notranslate"><span class="pre">CSV_NamesConversion</span></code>, that we mentioned in the previous section. It also includes important parameters like quality trimming, chromatogram visualization, consensus alignment, and so on. Run the following code and create <code class="code docutils literal notranslate"><span class="pre">my_sangerContig</span></code> instance.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">csv_namesConversion</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">rawDataDir</span><span class="p">,</span> <span class="s">&quot;ab1&quot;</span><span class="p">,</span> <span class="s">&quot;SangerContig&quot;</span><span class="p">,</span> <span class="s">&quot;names_conversion_2.csv&quot;</span><span class="p">)</span>
@@ -474,9 +475,9 @@ SUCCESS [2021-12-07 17:11:48] &#39;Achl_RBNII384-13&#39; is successfully created
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-</div>
-<div class="section" id="updating-sangercontig-quality-trimming-parameters">
+</section>
+</section>
+<section id="updating-sangercontig-quality-trimming-parameters">
 <h2>Updating <em>SangerContig</em> quality trimming parameters<a class="headerlink" href="#updating-sangercontig-quality-trimming-parameters" title="Permalink to this headline">¶</a></h2>
 <p>In the previous <a class="reference internal" href="#creating-sangercontig-instance-from-ab1"><span class="std std-ref">Creating SangerContig instance from AB1</span></a> part, the constructor function will apply the quality trimming parameters to all reads. After creating a <em>SangerContig</em> instance, users can change the trimming parameters by running <code class="code docutils literal notranslate"><span class="pre">updateQualityParam</span></code> function which will update all reads with the new trimming parameters and redo reads alignment. If users want to do quality trimming read by read instead of all at once, please move on to the next section, <a class="reference internal" href="#launching-sangercontig-shiny-app"><span class="std std-ref">Launching SangerContig Shiny app</span></a> page.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">newSangerContig</span> <span class="o">&lt;-</span> <span class="nf">updateQualityParam</span><span class="p">(</span><span class="n">my_sangerContig</span><span class="p">,</span>
@@ -489,100 +490,130 @@ SUCCESS [2021-12-07 17:11:48] &#39;Achl_RBNII384-13&#39; is successfully created
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="launching-sangercontig-shiny-app">
+</section>
+<section id="launching-sangercontig-shiny-app">
 <h2>Launching <em>SangerContig</em> Shiny app<a class="headerlink" href="#launching-sangercontig-shiny-app" title="Permalink to this headline">¶</a></h2>
 <p>We create an interactive local Shiny app for users to go into each <em>SangerRead</em> in <em>SangerContig</em> instance. Users only need to run one function, <code class="code docutils literal notranslate"><span class="pre">launchApp</span></code>, with previously created instance as input and the <em>SangerContig</em> Shiny app will pop up. Here, we will go through <em>SangerRead</em> and <em>SangerContig</em> pages.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchApp</span><span class="p">(</span><span class="n">my_sangerContig</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="sangercontig-page-sc-app">
+<section id="sangercontig-page-sc-app">
 <h3><em>SangerContig</em> page (SC app)<a class="headerlink" href="#sangercontig-page-sc-app" title="Permalink to this headline">¶</a></h3>
 <p><em>SangerContig</em> page is the initial page of <em>SangerContig</em> Shiny app. <a class="reference internal" href="#sangercontig-shiny-sangercontig-page"><span class="std std-ref">Figure 5</span></a> shows the overview page of the contig. Notice that there is a red &quot;Re-calculate Contig&quot; button. Users need to click the button after changing the quality trimming parameters in order to get the updated information. In SangerContig page, there are two expendable tabs, “Forward Reads” and “Reverse Reads” storing the corresponding reads on the left-hand side navigation panel in <a class="reference internal" href="#sangercontig-shiny-sangercontig-page"><span class="std std-ref">Figure 5</span></a>. See <a class="reference internal" href="#sangerread-page-sc-app"><span class="std std-ref">SangerRead page (SC app)</span></a> for more details of the subpage.</p>
-<div class="figure align-center" id="id14">
+<figure class="align-center" id="id14">
 <span id="sangercontig-shiny-sangercontig-page"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_SangerContig_page.png"><img alt="../_images/SangerContig_shiny_SangerContig_page.png" src="../_images/SangerContig_shiny_SangerContig_page.png" style="width: 576.0px; height: 318.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 5. <em>SangerContig</em> Shiny app initial page - <em>SangerContig</em> page.</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 5. <em>SangerContig</em> Shiny app initial page - <em>SangerContig</em> page.</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>The information provided in this page are input parameters and contig results including “genetic code table”, “reference amino acid sequence”, “reads alignment”, “difference data frame”, “dendrogram”, “sample distance heatmap”, “indels data frame”, and “stop codons data frame”.</p>
 <p><a class="reference internal" href="#sangercontig-shiny-alignment-differencedf"><span class="std std-ref">Figure 6</span></a> shows reads alignment result and difference data frame. The alignment is generated by <code class="code docutils literal notranslate"><span class="pre">AlignSeqs</span></code> or <code class="code docutils literal notranslate"><span class="pre">AlignTranslation</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/DECIPHER.html">DECIPHER</a> package.</p>
-<div class="figure align-center" id="id15">
+<figure class="align-center" id="id15">
 <span id="sangercontig-shiny-alignment-differencedf"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_alignment_differenceDF.png"><img alt="../_images/SangerContig_shiny_alignment_differenceDF.png" src="../_images/SangerContig_shiny_alignment_differenceDF.png" style="width: 660.0px; height: 361.2px;" /></a>
-<p class="caption"><span class="caption-text">Figure 6. <em>SangerContig</em> page - reads alignment and difference data frame.</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
-</div>
-<p><a class="reference internal" href="#sangercontig-shiny-dendrogram"><span class="std std-ref">Figure 7</span></a> shows dendrogram result in both plot and in data frame. The results are generated by <code class="code docutils literal notranslate"><span class="pre">IdClusters</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/DECIPHER.html">DECIPHER</a> package.</p>
-<div class="figure align-center" id="id16">
+<figcaption>
+<p><span class="caption-text">Figure 6. <em>SangerContig</em> page - reads alignment and difference data frame.</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#sangercontig-shiny-dendrogram"><span class="std std-ref">Figure 7</span></a> shows dendrogram result in both plot and in data frame. The results are generated by <code class="code docutils literal notranslate"><span class="pre">TreeLine</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/DECIPHER.html">DECIPHER</a> package.</p>
+<figure class="align-center" id="id16">
 <span id="sangercontig-shiny-dendrogram"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_dendrogram.png"><img alt="../_images/SangerContig_shiny_dendrogram.png" src="../_images/SangerContig_shiny_dendrogram.png" style="width: 660.0px; height: 456.59999999999997px;" /></a>
-<p class="caption"><span class="caption-text">Figure 7. <em>SangerContig</em> page - dendrogram.</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 7. <em>SangerContig</em> page - dendrogram.</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p><a class="reference internal" href="#sangercontig-shiny-samples-distance"><span class="std std-ref">Figure 8</span></a> shows distance between <strong>AB1</strong> files. The results are generated by <code class="code docutils literal notranslate"><span class="pre">DistanceMatrix</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/DECIPHER.html">DECIPHER</a> package. The heatmap is generated by <code class="code docutils literal notranslate"><span class="pre">plot_ly</span></code> function in <a class="reference external" href="https://plot.ly/r/">plotly</a> package.</p>
-<div class="figure align-center" id="id17">
+<figure class="align-center" id="id17">
 <span id="sangercontig-shiny-samples-distance"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_samples_distance.png"><img alt="../_images/SangerContig_shiny_samples_distance.png" src="../_images/SangerContig_shiny_samples_distance.png" style="width: 658.8px; height: 455.4px;" /></a>
-<p class="caption"><span class="caption-text">Figure 8. <em>SangerContig</em> page - samples distance.</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 8. <em>SangerContig</em> page - samples distance.</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p><a class="reference internal" href="#sangercontig-shiny-indelsdf-stopcodonsdf"><span class="std std-ref">Figure 9</span></a> shows insertions, deletions and stop codons data frame.</p>
-<div class="figure align-center" id="id18">
+<figure class="align-center" id="id18">
 <span id="sangercontig-shiny-indelsdf-stopcodonsdf"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_indelsDF_stopcodonsDF.png"><img alt="../_images/SangerContig_shiny_indelsDF_stopcodonsDF.png" src="../_images/SangerContig_shiny_indelsDF_stopcodonsDF.png" style="width: 631.1999999999999px; height: 436.2px;" /></a>
-<p class="caption"><span class="caption-text">Figure 9. <em>SangerContig</em> page - indels and stop codons data frame.</span><a class="headerlink" href="#id18" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="sangerread-page-sc-app">
+<figcaption>
+<p><span class="caption-text">Figure 9. <em>SangerContig</em> page - indels and stop codons data frame.</span><a class="headerlink" href="#id18" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="sangerread-page-sc-app">
 <h3><em>SangerRead</em> page (SC app)<a class="headerlink" href="#sangerread-page-sc-app" title="Permalink to this headline">¶</a></h3>
 <p>Now, let's go to the next level which is also the lowest level, <em>SangerRead</em> page. <em>SangerRead</em> page contains all details of a read including its trimming and chromatogram inputs and results. All reads are in &quot;forward&quot; or &quot;reverse&quot; direction. In this example, there is one read in each direction and <a class="reference internal" href="#sangercontig-shiny-sangerread-page"><span class="std std-ref">Figure 10</span></a> shows &quot;1 Forward Read&quot; page. This page provides basic information, quality trimming inputs, chromatogram plotting inputs etc. Primary/secondary sequences and quality Phred scores table in this figure are dynamic based on the <code class="code docutils literal notranslate"><span class="pre">signalRatioCutoff</span></code> value for base calling and the length of them are always same. Another thing to mention is that primary/secondary sequences and the sequences in the chromatogram in <a class="reference internal" href="#sangercontig-shiny-chromatogram-panel"><span class="std std-ref">Figure 15</span></a> below will always be same after trimming and their color codings for A/T/C/G are same as well.</p>
-<div class="figure align-center" id="id19">
+<figure class="align-center" id="id19">
 <span id="sangercontig-shiny-sangerread-page"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_SangerRead_page.png"><img alt="../_images/SangerContig_shiny_SangerRead_page.png" src="../_images/SangerContig_shiny_SangerRead_page.png" style="width: 576.0px; height: 327.20000000000005px;" /></a>
-<p class="caption"><span class="caption-text">Figure 10. <em>SangerContig</em> Shiny app - <em>SangerRead</em> page</span><a class="headerlink" href="#id19" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 10. <em>SangerContig</em> Shiny app - <em>SangerRead</em> page</span><a class="headerlink" href="#id19" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>In quality trimming steps, we removes fragment at both ends of sequencing reads with low quality score. It is important because trimmed reads will improves alignment results. <a class="reference internal" href="#sangercontig-shiny-trimming-1"><span class="std std-ref">Figure 11</span></a> shows the UI for Trimming Method 1 (M1): ‘Modified Mott Trimming’. This method is implemented in <a class="reference external" href="http://www.phrap.org/phredphrapconsed.html">Phred</a>. Users can change the cutoff score and click “Apply Trimming Parameters&quot; button to update the UI. The value of input must be between 0 and 1. If the input is invalid, the cutoff score will be set to default 0.0001.</p>
-<div class="figure align-center" id="id20">
+<figure class="align-center" id="id20">
 <span id="sangercontig-shiny-trimming-1"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_trimming_1.png"><img alt="../_images/SangerContig_shiny_trimming_1.png" src="../_images/SangerContig_shiny_trimming_1.png" style="width: 693.0px; height: 324.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 11. <em>SangerRead</em> page - Trimming Method 1 (M1): ‘Modified Mott Trimming’ UI.</span><a class="headerlink" href="#id20" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 11. <em>SangerRead</em> page - Trimming Method 1 (M1): ‘Modified Mott Trimming’ UI.</span><a class="headerlink" href="#id20" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p><a class="reference internal" href="#sangercontig-shiny-trimming-2"><span class="std std-ref">Figure 12</span></a> shows another quality trimming method for users to choose from, Trimming Method 2 (M2): ‘Trimmomatics Sliding Window Trimming’. This method is implemented in <a class="reference external" href="http://www.usadellab.org/cms/?page=trimmomatic">Trimmomatics</a>. Users can change the cutoff quality score as well as sliding window size and click “Apply Trimming Parameters&quot; button to update the UI. The value of cutoff quality score must be between 0 and 60 (default 20); the value of sliding window size must be between 0 and 40 (default 10). If the inputs are invalid, their values will be set to default.</p>
-<div class="figure align-center" id="id21">
+<figure class="align-center" id="id21">
 <span id="sangercontig-shiny-trimming-2"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_trimming_2.png"><img alt="../_images/SangerContig_shiny_trimming_2.png" src="../_images/SangerContig_shiny_trimming_2.png" style="width: 693.6px; height: 323.4px;" /></a>
-<p class="caption"><span class="caption-text">Figure 12. <em>SangerRead</em> page - Trimming Method 2 (M2): ‘Trimmomatics Sliding Window Trimming’ UI.</span><a class="headerlink" href="#id21" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 12. <em>SangerRead</em> page - Trimming Method 2 (M2): ‘Trimmomatics Sliding Window Trimming’ UI.</span><a class="headerlink" href="#id21" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p><a class="reference internal" href="#sangercontig-shiny-trimmed-before-after"><span class="std std-ref">Figure 13</span></a> shows the quality report before and after trimming. After clicking the “Apply Trimming Parameters” button in <a class="reference internal" href="#sangercontig-shiny-trimming-1"><span class="std std-ref">Figure 11</span></a> or <a class="reference internal" href="#sangercontig-shiny-trimming-2"><span class="std std-ref">Figure 12</span></a>, the values of these information boxes will be updated to the latest values.</p>
-<div class="figure align-center" id="id22">
+<figure class="align-center" id="id22">
 <span id="sangercontig-shiny-trimmed-before-after"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_trimmed_before_after.png"><img alt="../_images/SangerContig_shiny_trimmed_before_after.png" src="../_images/SangerContig_shiny_trimmed_before_after.png" style="width: 660.6px; height: 384.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 13. <em>SangerRead</em> page - read quality report before / after trimming.</span><a class="headerlink" href="#id22" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 13. <em>SangerRead</em> page - read quality report before / after trimming.</span><a class="headerlink" href="#id22" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>In <a class="reference internal" href="#sangercontig-shiny-bp-quality-plot"><span class="std std-ref">Figure 14</span></a>, the x-axis is the index of the base pairs; the y-axis is the Phred quality score. The green horizontal bar at the top of the plot is the raw read region and the orange horizontal bar represents the remaining read region. Both <a class="reference internal" href="#sangercontig-shiny-bp-quality-plot"><span class="std std-ref">Figure 14</span></a> trimming plot and <a class="reference internal" href="#sangercontig-shiny-chromatogram-panel"><span class="std std-ref">Figure 15</span></a> chromatogram will be updated once users change the quality trimming parameters and click the “Apply Trimming Parameters&quot; button in <a class="reference internal" href="#sangercontig-shiny-chromatogram-panel"><span class="std std-ref">Figure 15</span></a>.</p>
-<div class="figure align-center" id="id23">
+<figure class="align-center" id="id23">
 <span id="sangercontig-shiny-bp-quality-plot"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_bp_quality_plot.png"><img alt="../_images/SangerContig_shiny_bp_quality_plot.png" src="../_images/SangerContig_shiny_bp_quality_plot.png" style="width: 646.1999999999999px; height: 312.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 14. <em>SangerContig</em> page - quality trimming plot.</span><a class="headerlink" href="#id23" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 14. <em>SangerContig</em> page - quality trimming plot.</span><a class="headerlink" href="#id23" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>If we only see primary and secondary sequences in the table, we will loose some variations. Chromatogram is very helpful to check the peak resolution. <a class="reference internal" href="#sangercontig-shiny-chromatogram-panel"><span class="std std-ref">Figure 15</span></a> shows the panel of plotting chromatogram. Users can change four parameters: <code class="code docutils literal notranslate"><span class="pre">Base</span> <span class="pre">Number</span> <span class="pre">Per</span> <span class="pre">Row</span></code>, <code class="code docutils literal notranslate"><span class="pre">Height</span> <span class="pre">Per</span> <span class="pre">Row</span></code>, <code class="code docutils literal notranslate"><span class="pre">Signal</span> <span class="pre">Ratio</span> <span class="pre">Cutoff</span></code>, and <code class="code docutils literal notranslate"><span class="pre">Show</span> <span class="pre">Trimmed</span> <span class="pre">Region</span></code>. Among them, <code class="code docutils literal notranslate"><span class="pre">Signal</span> <span class="pre">Ratio</span> <span class="pre">Cutoff</span></code> is a key parameter. If its value is default value 0.33, it indicates that the lower peak should be at least 1/3rd as high as the higher peak for it count as a secondary peak.</p>
-<div class="figure align-center" id="id24">
+<figure class="align-center" id="id24">
 <span id="sangercontig-shiny-chromatogram-panel"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_chromatogram_panel.png"><img alt="../_images/SangerContig_shiny_chromatogram_panel.png" src="../_images/SangerContig_shiny_chromatogram_panel.png" style="width: 693.6px; height: 488.4px;" /></a>
-<p class="caption"><span class="caption-text">Figure 15. <em>SangerContig</em> page - chromatogram panel.</span><a class="headerlink" href="#id24" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 15. <em>SangerContig</em> page - chromatogram panel.</span><a class="headerlink" href="#id24" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>Here is an example of applying new chromatogram parameters. We click “Show Trimmed Region” to set its value from <code class="code docutils literal notranslate"><span class="pre">FALSE</span></code> to <code class="code docutils literal notranslate"><span class="pre">TRUE</span></code> and click the &quot;Apply Chromatogram Parameters&quot; button. <a class="reference internal" href="#sangercontig-plotting-popup"><span class="std std-ref">Figure 16</span></a> shows the loading notification popup during base calling and chromatogram plotting.</p>
-<div class="figure align-center" id="id25">
+<figure class="align-center" id="id25">
 <span id="sangercontig-plotting-popup"></span><a class="reference internal image-reference" href="../_images/SangerContig_plotting_popup.png"><img alt="../_images/SangerContig_plotting_popup.png" src="../_images/SangerContig_plotting_popup.png" style="width: 691.1999999999999px; height: 487.79999999999995px;" /></a>
-<p class="caption"><span class="caption-text">Figure 16. <em>SangerContig</em> page - loading notification popup during replotting chromatogram.</span><a class="headerlink" href="#id25" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 16. <em>SangerContig</em> page - loading notification popup during replotting chromatogram.</span><a class="headerlink" href="#id25" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>After replotting the chromatogram, we can see that trimmed region is showed in red striped region. <a class="reference internal" href="#sangercontig-shiny-chromatogram"><span class="std std-ref">Figure 17</span></a> shows part of the the chromatogram (1 bp ~ 240 bp). Moreover, chromatogram will be replotted when trimmed positions or chromatogram parameters are updated.</p>
-<div class="figure align-center" id="id26">
+<figure class="align-center" id="id26">
 <span id="sangercontig-shiny-chromatogram"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_chromatogram.png"><img alt="../_images/SangerContig_shiny_chromatogram.png" src="../_images/SangerContig_shiny_chromatogram.png" style="width: 660.0px; height: 427.8px;" /></a>
-<p class="caption"><span class="caption-text">Figure 17. <em>SangerContig</em> page - chromatogram with trimmed region showed.</span><a class="headerlink" href="#id26" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 17. <em>SangerContig</em> page - chromatogram with trimmed region showed.</span><a class="headerlink" href="#id26" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>To let users browse the trimmed primary/secondary sequences without finding “Trimming Start Point” and “Trimming End Point” by themselves, we provide the final trimmed primary/secondary sequences that will be used for reads alignment with quality scores in table format in <a class="reference internal" href="#sangercontig-shiny-trimmed-sequences"><span class="std std-ref">Figure 18</span></a>. Frameshift amino acid sequences are also provided.</p>
-<div class="figure align-center" id="id27">
+<figure class="align-center" id="id27">
 <span id="sangercontig-shiny-trimmed-sequences"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_trimmed_sequences.png"><img alt="../_images/SangerContig_shiny_trimmed_sequences.png" src="../_images/SangerContig_shiny_trimmed_sequences.png" style="width: 646.8000000000001px; height: 298.48px;" /></a>
-<p class="caption"><span class="caption-text">Figure 18. <em>SangerContig</em> page - trimmed primary/secondary sequences and Phred quality score in table format.</span><a class="headerlink" href="#id27" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 18. <em>SangerContig</em> page - trimmed primary/secondary sequences and Phred quality score in table format.</span><a class="headerlink" href="#id27" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>We have updated the trimming and chromatogram parameters for each read. Now, we need to click “Re-calculate contig” button to do alignment again. Last but not least, we can save all data into a new ‘SangerContig’ S4 instance by clicking “Save S4 Instance button”. New S4 instance will be saved in <strong>Rda</strong> format. Users can run <code class="code docutils literal notranslate"><span class="pre">readRDS</span></code> function to load it into current R environment. <a class="reference internal" href="#sangercontig-shiny-save-popup"><span class="std std-ref">Figure 19</span></a> shows some hints in the save notification popup.</p>
-<div class="figure align-center" id="id28">
+<figure class="align-center" id="id28">
 <span id="sangercontig-shiny-save-popup"></span><a class="reference internal image-reference" href="../_images/SangerContig_shiny_save_popup.png"><img alt="../_images/SangerContig_shiny_save_popup.png" src="../_images/SangerContig_shiny_save_popup.png" style="width: 719.0px; height: 437.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 19. <em>SangerContig</em> page - saving notification popup.</span><a class="headerlink" href="#id28" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 19. <em>SangerContig</em> page - saving notification popup.</span><a class="headerlink" href="#id28" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-</div>
-<div class="section" id="writing-sangercontig-fasta-files-ab1">
+</section>
+</section>
+<section id="writing-sangercontig-fasta-files-ab1">
 <h2>Writing <em>SangerContig</em> FASTA files <sub>(AB1)</sub><a class="headerlink" href="#writing-sangercontig-fasta-files-ab1" title="Permalink to this headline">¶</a></h2>
 <p>Users can write the <em>SangerContig</em> instance, <code class="code docutils literal notranslate"><span class="pre">my_sangerContig</span></code>, to <strong>FASTA</strong> files. There are four options for users to choose from in <code class="code docutils literal notranslate"><span class="pre">selection</span></code> parameter.</p>
 <ul class="simple">
@@ -608,8 +639,8 @@ SUCCESS [2021-12-07 17:11:48] &#39;Achl_RBNII384-13&#39; is successfully created
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="generating-sangercontig-report-ab1">
+</section>
+<section id="generating-sangercontig-report-ab1">
 <h2>Generating <em>SangerContig</em> report <sub>(AB1)</sub><a class="headerlink" href="#generating-sangercontig-report-ab1" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least, users can save <em>SangerContig</em> instance, <code class="code docutils literal notranslate"><span class="pre">my_sangerContig</span></code>, into a report after the analysis. The report will be generated in <strong>HTML</strong> by knitting <strong>Rmd</strong> files.</p>
 <p>Users can set <code class="code docutils literal notranslate"><span class="pre">includeSangerRead</span></code> parameter to decide to which level the <em>SangerContig</em> report will go. Moreover, after the reports are generated,
@@ -626,10 +657,10 @@ users can easily navigate through reports in different levels within the <strong
 <div class="line"><br /></div>
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="code-summary-sangercontig-ab1">
+</section>
+<section id="code-summary-sangercontig-ab1">
 <h2>Code summary (<em>SangerContig</em>, <strong>AB1</strong>)<a class="headerlink" href="#code-summary-sangercontig-ab1" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
+<section id="id3">
 <h3>(1) Preparing <em>SangerContig</em> <strong>AB1</strong> inputs<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">rawDataDir</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
 <span class="n">parentDir</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">rawDataDir</span><span class="p">,</span> <span class="s">&quot;Allolobophora_chlorotica&quot;</span><span class="p">,</span> <span class="s">&quot;RBNII&quot;</span><span class="p">)</span>
@@ -638,10 +669,10 @@ users can easily navigate through reports in different levels within the <strong
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="id4">
+</section>
+<section id="id4">
 <h3>(2) Creating <em>SangerContig</em> instance from <strong>AB1</strong><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="regular-expression-method-sangercontig-creation-ab1">
+<section id="regular-expression-method-sangercontig-creation-ab1">
 <h4>(2.1) &quot;Regular Expression Method&quot; <em>SangerContig</em> creation (<strong>AB1</strong>)<a class="headerlink" href="#regular-expression-method-sangercontig-creation-ab1" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerContig instance</span>
 <span class="n">my_sangerContig</span> <span class="o">&lt;-</span> <span class="nf">SangerContig</span><span class="p">(</span><span class="n">inputSource</span>           <span class="o">=</span> <span class="s">&quot;ABIF&quot;</span><span class="p">,</span>
@@ -702,8 +733,8 @@ DEBUG [2021-29-06 17:44:16]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="id5">
+</section>
+<section id="id5">
 <h4>(2.2) &quot;CSV file matching&quot; <em>SangerContig</em> creation (<strong>AB1</strong>)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">csv_namesConversion</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">rawDataDir</span><span class="p">,</span> <span class="s">&quot;ab1&quot;</span><span class="p">,</span> <span class="s">&quot;SangerContig&quot;</span><span class="p">,</span> <span class="s">&quot;names_conversion_2.csv&quot;</span><span class="p">)</span>
 
@@ -771,9 +802,9 @@ DEBUG [2021-09-07 01:47:51]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-</div>
-<div class="section" id="id6">
+</section>
+</section>
+<section id="id6">
 <h3>(3) Updating <em>SangerContig</em> quality trimming parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">newSangerContig</span> <span class="o">&lt;-</span> <span class="nf">updateQualityParam</span><span class="p">(</span><span class="n">my_sangerContig</span><span class="p">,</span>
                                       <span class="n">TrimmingMethod</span>       <span class="o">=</span> <span class="s">&quot;M2&quot;</span><span class="p">,</span>
@@ -785,8 +816,8 @@ DEBUG [2021-09-07 01:47:51]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="id7">
+</section>
+<section id="id7">
 <h3>(4) Launching <em>SangerContig</em> Shiny app<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchApp</span><span class="p">(</span><span class="n">my_sangerContig</span><span class="p">)</span>
 </pre></div>
@@ -794,8 +825,8 @@ DEBUG [2021-09-07 01:47:51]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="id8">
+</section>
+<section id="id8">
 <h3>(5) Writing <em>SangerContig</em> FASTA files <sub>(AB1)</sub><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">my_sangerContig</span><span class="p">)</span>
 </pre></div>
@@ -826,8 +857,8 @@ DEBUG [2021-09-07 01:47:51]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="id9">
+</section>
+<section id="id9">
 <h3>(6) Generating <em>SangerContig</em> report <sub>(AB1)</sub><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">my_sangerContig</span><span class="p">)</span>
 </pre></div>
@@ -838,38 +869,38 @@ DEBUG [2021-09-07 01:47:51]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line"><br /></div>
 <div class="line"><br /></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
            
           </div>
           <footer>
+  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="advance_user_SangerAlignment_ab1.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerAlignment (AB1)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="advance_user_SangerRead_ab1.html" class="btn btn-neutral float-left" title="Advanced User Guide - SangerRead (AB1)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+      
+        <a href="advance_user_SangerAlignment_ab1.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerAlignment (AB1)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="advance_user_SangerRead_ab1.html" class="btn btn-neutral float-left" title="Advanced User Guide - SangerRead (AB1)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Kuan-Hao Chao.
+        &copy; Copyright 2019, Kuan-Hao Chao
 
     </p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
+
         </div>
       </div>
 
@@ -877,6 +908,7 @@ DEBUG [2021-09-07 01:47:51]    &gt;&gt; Run &#39;object@objectResults@readResult
 
   </div>
   
+
 
   <script type="text/javascript">
       jQuery(function () {

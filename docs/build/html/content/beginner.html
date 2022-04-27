@@ -1,34 +1,24 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="English" >
+<!--[if IE 8]><html class="no-js lt-ie9" lang="English" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="English" > <!--<![endif]-->
 <head>
-  <meta charset="utf-8" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Beginners Guide &mdash; sangeranalyseR  documentation</title>
   
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-
+  
   
   
 
   
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -40,6 +30,13 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Advanced User Guide - SangerRead (AB1)" href="advance_user_SangerRead_ab1.html" />
@@ -80,7 +77,6 @@
           
         </div>
 
-        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -118,7 +114,6 @@
             
           
         </div>
-        
       </div>
     </nav>
 
@@ -153,20 +148,18 @@
 
 
 
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html">Docs</a> &raquo;</li>
         
       <li>Beginners Guide</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../_sources/content/beginner.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -180,14 +173,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="beginners-guide">
+  <section id="beginners-guide">
 <h1>Beginners Guide<a class="headerlink" href="#beginners-guide" title="Permalink to this headline">¶</a></h1>
 <p>If you haven't already, please follow the steps in the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">Installation</span></a> page to install and load sangeranalyseR.</p>
 <p>This guide is for users who are starting with <strong>AB1</strong> (<code class="code docutils literal notranslate"><span class="pre">.ab1</span></code>) files. If you are starting with <strong>FASTA</strong> (<code class="code docutils literal notranslate"><span class="pre">.fasta</span></code> or <code class="code docutils literal notranslate"><span class="pre">.fa</span></code>) files, please read through this guide then follow the slightly different path for those starting with FASTA data here: <a class="reference internal" href="advance_user_SangerAlignment_fasta.html#advanced-user-guide-sangeralignment-fasta"><span class="std std-ref">Advanced User Guide - SangerAlignment (FASTA)</span></a>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="section" id="step-1-preparing-your-input-files">
+<section id="step-1-preparing-your-input-files">
 <h2>Step 1: Preparing your input files<a class="headerlink" href="#step-1-preparing-your-input-files" title="Permalink to this headline">¶</a></h2>
 <p>sangeranalyseR takes as input a group of <strong>AB1</strong> files, which it then groups together into contigs. Once the individual contigs are built, all the contigs are aligned and a simple phylogenetic tree is made. This section explains how you should organize your files before running sangeranalyseR.</p>
 <p>First, prepare a directory and put all your <strong>AB1</strong> files inside it (there can be other files in there too, sangeranalyseR will ignore anything without a <cite>AB1</cite> file extension). Files can be organised in as many sub-folders as you like. sangeranalyseR will recursively search all the directories inside <code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code> and find all files that end with <strong>AB1</strong>.</p>
@@ -197,10 +190,12 @@
 <li><p>using a three-column csv file</p></li>
 </ul>
 <p>We'll cover both approaches using the following example. Imagine you have sequenced four contigs with a forward and reverse read, all from the same species, but from different locations. In this case you might have arranged your data something like <a class="reference internal" href="#sangeralignment-file-structure-beginner"><span class="std std-ref">Figure_1</span></a>, below.</p>
-<div class="figure align-center" id="id1">
+<figure class="align-center" id="id1">
 <span id="sangeralignment-file-structure-beginner"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_file_structure_beginner.png"><img alt="../_images/SangerAlignment_file_structure_beginner.png" src="../_images/SangerAlignment_file_structure_beginner.png" style="width: 319.0px; height: 385.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 1. Input ab1 files inside the parent directory, <code class="code docutils literal notranslate"><span class="pre">./tmp/</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>When using the filenames to group the reads, you'll need to specify three parameters: <code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code>, <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixForward</span></code>, and <code class="code docutils literal notranslate"><span class="pre">REGEX_SuffixReverse</span></code>:</p>
 <ul class="simple">
 <li><p><code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code>: this is the directory that contains all the <strong>AB1</strong> files. In this example, the reads are in the <code class="code docutils literal notranslate"><span class="pre">/tmp/</span></code> directory, so for convenience we'll just say that <code class="code docutils literal notranslate"><span class="pre">ABIF_Directory</span></code> should be <code class="code docutils literal notranslate"><span class="pre">/path/to/tmp/</span></code>. In your case, it should be the absolute path to the folder that contains your reads.</p></li>
@@ -232,8 +227,8 @@
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="step-2-loading-and-analysing-your-data">
+</section>
+<section id="step-2-loading-and-analysing-your-data">
 <h2>Step 2: Loading and analysing your data<a class="headerlink" href="#step-2-loading-and-analysing-your-data" title="Permalink to this headline">¶</a></h2>
 <p>After preparing the input files, you can create and align your contigs with just a single line of R code. In technical jargon, we are creating a <em>SangerAlignment</em> S4 instance.</p>
 <p>It's important to note that this function is designed to be both <em>simple</em> and <em>flexible</em>. It's simple in that it has sensible defaults for all the usual things like trimming reads. But it's flexible in that you can change any and all of these defaults to suit your particular data and analyses. Here we just cover the simplest usage. The more flexible things are covered in the Advanced sections of the user guide.</p>
@@ -255,24 +250,26 @@
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="step-3-exploring-your-data-with-the-shiny-app">
+</section>
+<section id="step-3-exploring-your-data-with-the-shiny-app">
 <h2>Step 3: Exploring your data with the Shiny app<a class="headerlink" href="#step-3-exploring-your-data-with-the-shiny-app" title="Permalink to this headline">¶</a></h2>
 <p>sangeranalseR includes a Shiny app that allows you to see, interact with, and adjust the parameters of your aligned contigs. For example, you can adjust things like the trimming parameters, and see how that changes your reads and your contigs.</p>
 <p>To launch the interactive Shiny app use the <code class="code docutils literal notranslate"><span class="pre">launchApp</span></code> function as follows</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">launchApp</span><span class="p">(</span><span class="n">my_aligned_contigs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id2">
+<figure class="align-center" id="id2">
 <span id="sangeralignment-shiny-app"></span><img alt="../_images/SangerAlignment_shiny_app.png" src="../_images/SangerAlignment_shiny_app.png" />
-<p class="caption"><span class="caption-text">Figure 2. <em>SangerAlignment</em> Shiny app user interface.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 2. <em>SangerAlignment</em> Shiny app user interface.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p><a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">Figure_2</span></a> shows what the Shiny app looks like. On the left-hand side of <a class="reference internal" href="#sangeralignment-shiny-app"><span class="std std-ref">Figure_2</span></a>, there is a navigation menu that you can click to get more detail on every contig and every read. You can explore this app to get a lot more detail and make adjustments to your data. (Note that sangeranalyseR doesn't allow for editing individual bases of reads though - that's just not something that R is good for).</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="step-4-outputting-your-aligned-contigs">
+</section>
+<section id="step-4-outputting-your-aligned-contigs">
 <h2>Step 4: Outputting your aligned contigs<a class="headerlink" href="#step-4-outputting-your-aligned-contigs" title="Permalink to this headline">¶</a></h2>
 <p>Once you're happy with your aligned contigs, you'll want to save them somewhere.</p>
 <p>The following function can write the <em>SangerAlignment</em> object into FASTA files. You just need to tell it where with the <code class="code docutils literal notranslate"><span class="pre">outputDir</span></code> argument. Here we just wrote the alignment to the same folder that contains our reads.</p>
@@ -282,26 +279,30 @@
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="step-5-generating-an-interactive-report">
+</section>
+<section id="step-5-generating-an-interactive-report">
 <h2>Step 5: Generating an interactive report<a class="headerlink" href="#step-5-generating-an-interactive-report" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least, it is useful to store all the results in a report for future reference. You can generate a detailed report by running the following one-line function. <a class="reference internal" href="#sangeralignment-alignment-result"><span class="std std-ref">Figure_3</span></a> and <a class="reference internal" href="#sangeralignment-tree"><span class="std std-ref">Figure_4</span></a>.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">my_aligned_contigs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id3">
+<figure class="align-center" id="id3">
 <span id="sangeralignment-alignment-result"></span><img alt="../_images/SangerAlignment_alignment_result.png" src="../_images/SangerAlignment_alignment_result.png" />
-<p class="caption"><span class="caption-text">Figure 3. An alignment of all contigs in the <em>SangerAlignment</em> object.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-<div class="figure align-center" id="id4">
+<figcaption>
+<p><span class="caption-text">Figure 3. An alignment of all contigs in the <em>SangerAlignment</em> object.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id4">
 <span id="sangeralignment-tree"></span><a class="reference internal image-reference" href="../_images/SangerAlignment_tree.png"><img alt="../_images/SangerAlignment_tree.png" src="../_images/SangerAlignment_tree.png" style="width: 547.1999999999999px; height: 160.2px;" /></a>
-<p class="caption"><span class="caption-text">Figure 4. A phylogenetic tree with contigs as the leaf nodes. This can help diagnose any issues with your contigs.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 4. A phylogenetic tree with contigs as the leaf nodes. This can help diagnose any issues with your contigs.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="what-s-next">
+</section>
+<section id="what-s-next">
 <h2>What's next ?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
 <p>Now you've finished the <a class="reference internal" href="#beginners-guide"><span class="std std-ref">Beginners Guide</span></a>, you should have a good overview of how to use the package. To dig a lot deeper into what you can do and why you might bother, there are also a set of advanced guides that focus on the three levels at which you can analyse Sanger data in the sangeranalyseR package. You can analyse individual reads with the <em>SangerRead</em> object, individual contigs with the <em>SangerContig</em> object, and alignments of two or more contigs (as we focussed on in this intro) with teh <em>SangerAlignment</em> object.</p>
 <p>If you want to start the analysis from <strong>AB1</strong> files, please choose the analysis level and read the following three links.</p>
@@ -316,37 +317,37 @@
 <li><p><a class="reference internal" href="advance_user_SangerContig_fasta.html#advanced-user-guide-sangercontig-fasta"><span class="std std-ref">Advanced User Guide - SangerContig (FASTA)</span></a></p></li>
 <li><p><a class="reference internal" href="advance_user_SangerAlignment_fasta.html#advanced-user-guide-sangeralignment-fasta"><span class="std std-ref">Advanced User Guide - SangerAlignment (FASTA)</span></a></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
            
           </div>
           <footer>
+  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="advance_user_SangerRead_ab1.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerRead (AB1)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+      
+        <a href="advance_user_SangerRead_ab1.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerRead (AB1)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Kuan-Hao Chao.
+        &copy; Copyright 2019, Kuan-Hao Chao
 
     </p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
+
         </div>
       </div>
 
@@ -354,6 +355,7 @@
 
   </div>
   
+
 
   <script type="text/javascript">
       jQuery(function () {

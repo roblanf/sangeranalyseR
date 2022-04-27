@@ -1,34 +1,24 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="English" >
+<!--[if IE 8]><html class="no-js lt-ie9" lang="English" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="English" > <!--<![endif]-->
 <head>
-  <meta charset="utf-8" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Advanced User Guide - SangerRead (AB1) &mdash; sangeranalyseR  documentation</title>
   
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-
+  
   
   
 
   
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -40,6 +30,13 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Advanced User Guide - SangerContig (AB1)" href="advance_user_SangerContig_ab1.html" />
@@ -80,7 +77,6 @@
           
         </div>
 
-        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -126,7 +122,6 @@
             
           
         </div>
-        
       </div>
     </nav>
 
@@ -161,20 +156,18 @@
 
 
 
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html">Docs</a> &raquo;</li>
         
       <li>Advanced User Guide - <em>SangerRead</em> (<strong>AB1</strong>)</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../_sources/content/advance_user_SangerRead_ab1.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -188,14 +181,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="advanced-user-guide-sangerread-ab1">
+  <section id="advanced-user-guide-sangerread-ab1">
 <h1>Advanced User Guide - <em>SangerRead</em> (<strong>AB1</strong>)<a class="headerlink" href="#advanced-user-guide-sangerread-ab1" title="Permalink to this headline">¶</a></h1>
 <p><em>SangerRead</em> is in the bottommost level of sangeranalyseR (<a class="reference internal" href="#sangerread-hierarchy"><span class="std std-ref">Figure_1</span></a>), and each <em>SangerRead</em> object corresponds to a single read (one <strong>AB1</strong> file) in a Sanger sequencing experiment. <em>SangerRead</em> class extends <em>sangerseq</em> class from <a class="reference external" href="https://www.bioconductor.org/packages/release/bioc/html/sangerseqR.html">sangerseqR</a> package and contains input parameters and results of quality trimming and chromatogram. In this section, we are going to go through detailed sangeranalyseR data analysis steps in <em>SangerRead level</em> with <strong>AB1</strong> file input.</p>
-<div class="figure align-center" id="id6">
+<figure class="align-center" id="id6">
 <span id="sangerread-hierarchy"></span><a class="reference internal image-reference" href="../_images/SangerRead_hierarchy.png"><img alt="../_images/SangerRead_hierarchy.png" src="../_images/SangerRead_hierarchy.png" style="width: 626.6px; height: 217.8px;" /></a>
-<p class="caption"><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerRead</em> level.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
-</div>
-<div class="section" id="preparing-sangerread-ab1-input">
+<figcaption>
+<p><span class="caption-text">Figure 1. Hierarchy of classes in sangeranalyseR, <em>SangerRead</em> level.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<section id="preparing-sangerread-ab1-input">
 <h2>Preparing <em>SangerRead</em> <strong>AB1</strong> input<a class="headerlink" href="#preparing-sangerread-ab1-input" title="Permalink to this headline">¶</a></h2>
 <p>The main input file format to create <em>SangerRead</em> instance is <strong>AB1</strong>. Before starting the analysis, users need to prepare one target <strong>AB1</strong> file, and in this example, it is in the sangeranalyseR package; thus, you can simply get its path by running the following codes:</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">inputFilesPath</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata/&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
@@ -220,20 +215,24 @@
 <li><p><strong>&quot;Direction&quot;</strong> :  <code class="code docutils literal notranslate"><span class="pre">F</span></code></p></li>
 <li><p><strong>&quot;ab1 file extension&quot;</strong> :  <code class="code docutils literal notranslate"><span class="pre">.ab1</span></code></p></li>
 </ul>
-<div class="figure align-center" id="id7">
+<figure class="align-center" id="id7">
 <span id="sangerread-file-structure"></span><a class="reference internal image-reference" href="../_images/SangerRead_file_structure.png"><img alt="../_images/SangerRead_file_structure.png" src="../_images/SangerRead_file_structure.png" style="width: 248.0px; height: 33.6px;" /></a>
-<p class="caption"><span class="caption-text">Figure 2. <em>SangerRead</em> filename regulation.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 2. <em>SangerRead</em> filename regulation.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>In <em>SangerRead</em> section, it is not compulsory to follow the file-naming regulation because users can directly specify the filename in input (see <a class="reference internal" href="#creating-sangerread-instance-from-ab1"><span class="std std-ref">Creating SangerRead instance from AB1</span></a>); however, in the <em>SangerContig</em> and <em>SangerAlignment</em>, sangeranalyseR will automatically group files, so it is compulsory to have systematic file-naming strategy. For more details, please read <a class="reference internal" href="advance_user_SangerContig_ab1.html#advanced-user-guide-sangercontig-ab1"><span class="std std-ref">Advanced User Guide - SangerContig (AB1)</span></a> and <a class="reference internal" href="advance_user_SangerAlignment_ab1.html#advanced-user-guide-sangeralignment-ab1"><span class="std std-ref">Advanced User Guide - SangerAlignment (AB1)</span></a>. <a class="reference internal" href="#sangeranalyser-filename-convention-sangerread"><span class="std std-ref">Figure_3</span></a> shows the suggested <strong>AB1</strong> file-naming regulation.</p>
-<div class="figure align-center" id="id8">
+<figure class="align-center" id="id8">
 <span id="sangeranalyser-filename-convention-sangerread"></span><a class="reference internal image-reference" href="../_images/sangeranalyseR_filename_convention.png"><img alt="../_images/sangeranalyseR_filename_convention.png" src="../_images/sangeranalyseR_filename_convention.png" style="width: 621.0px; height: 28.0px;" /></a>
-<p class="caption"><span class="caption-text">Figure 3. Suggested <strong>AB1</strong> file-naming regulation - <em>SangerRead</em>.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 3. Suggested <strong>AB1</strong> file-naming regulation - <em>SangerRead</em>.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="creating-sangerread-instance-from-ab1">
+</section>
+<section id="creating-sangerread-instance-from-ab1">
 <h2>Creating <em>SangerRead</em> instance from <strong>AB1</strong><a class="headerlink" href="#creating-sangerread-instance-from-ab1" title="Permalink to this headline">¶</a></h2>
 <p>After preparing the <em>SangerRead</em> input <strong>AB1</strong> file, <code class="code docutils literal notranslate"><span class="pre">A_chloroticaFFN</span></code> , the next step is to create a <em>SangerRead</em> instance by running <code class="code docutils literal notranslate"><span class="pre">SangerRead</span></code> constructor function or <code class="code docutils literal notranslate"><span class="pre">new</span></code> method. The constructor function is a wrapper for the <code class="code docutils literal notranslate"><span class="pre">new</span></code> method which makes instance creation more intuitive. The inputs include <strong>Basic Parameters</strong>, <strong>Trimming Parameters</strong>, and <strong>Chromatogram Parameters</strong>, and all of them have default values. In the example below, we show both <em>SangerRead</em> creation methods with important parameters.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerRead instance</span>
@@ -285,22 +284,24 @@ SUCCESS [2021-12-07 23:31:16] &#39;Achl_ACHLO006-09_1_F.ab1&#39; is successfully
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="visualizing-sangerread-trimmed-read">
+</section>
+<section id="visualizing-sangerread-trimmed-read">
 <h2>Visualizing <em>SangerRead</em> trimmed read<a class="headerlink" href="#visualizing-sangerread-trimmed-read" title="Permalink to this headline">¶</a></h2>
 <p>Before going to <a class="reference internal" href="#writing-sangerread-fasta-file-ab1"><span class="std std-ref">Writing SangerRead FASTA file (AB1)</span></a> and <a class="reference internal" href="#generating-sangerread-report-ab1"><span class="std std-ref">Generating SangerRead report (AB1)</span></a> pages, it is suggested to visualize the trimmed <em>SangerRead</em>. Run the <code class="code docutils literal notranslate"><span class="pre">qualityBasePlot</span></code> function to get the result in <a class="reference internal" href="#sangerread-qualitybaseplot"><span class="std std-ref">Figure_4</span></a>. It shows the quality score for each base pairs and the trimming start/end points of the sequence.</p>
-<div class="figure align-center" id="id9">
+<figure class="align-center" id="id9">
 <span id="sangerread-qualitybaseplot"></span><a class="reference internal image-reference" href="../_images/SangerRead_qualityBasePlot.png"><img alt="../_images/SangerRead_qualityBasePlot.png" src="../_images/SangerRead_qualityBasePlot.png" style="width: 498.0px; height: 337.2px;" /></a>
-<p class="caption"><span class="caption-text">Figure 4. <em>SangerRead</em> trimmed read visualization.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Figure 4. <em>SangerRead</em> trimmed read visualization.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">qualityBasePlot</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="updating-sangerread-quality-trimming-parameters">
+</section>
+<section id="updating-sangerread-quality-trimming-parameters">
 <h2>Updating <em>SangerRead</em> quality trimming parameters<a class="headerlink" href="#updating-sangerread-quality-trimming-parameters" title="Permalink to this headline">¶</a></h2>
 <p>In the previous <a class="reference internal" href="#creating-sangerread-instance-from-ab1"><span class="std std-ref">Creating SangerRead instance from AB1</span></a> part, the constructor function applies the quality trimming parameters to the read. These parameters are not fixed. After instance creation, users can run <code class="code docutils literal notranslate"><span class="pre">updateQualityParam</span></code> function which will change the <em>QualityReport</em> instance inside the <em>SangerRead</em> and update frameshift amino acid sequences.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">newSangerRead</span> <span class="o">&lt;-</span> <span class="nf">updateQualityParam</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">,</span>
@@ -313,8 +314,8 @@ SUCCESS [2021-12-07 23:31:16] &#39;Achl_ACHLO006-09_1_F.ab1&#39; is successfully
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="writing-sangerread-fasta-file-ab1">
+</section>
+<section id="writing-sangerread-fasta-file-ab1">
 <h2>Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub><a class="headerlink" href="#writing-sangerread-fasta-file-ab1" title="Permalink to this headline">¶</a></h2>
 <p>After quality trimming, users can write <code class="code docutils literal notranslate"><span class="pre">sangerReadF</span></code> into a <strong>FASTA</strong> file. Below is the one-liner that needs to be run. This function, <code class="code docutils literal notranslate"><span class="pre">writeFasta</span></code>, mainly depends on <code class="code docutils literal notranslate"><span class="pre">writeXStringSet</span></code> function in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">Biostrings</a> R package. Users can further set the compression level through it.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">,</span>
@@ -327,8 +328,8 @@ SUCCESS [2021-12-07 23:31:16] &#39;Achl_ACHLO006-09_1_F.ab1&#39; is successfully
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="generating-sangerread-report-ab1">
+</section>
+<section id="generating-sangerread-report-ab1">
 <h2>Generating <em>SangerRead</em> report <sub>(AB1)</sub><a class="headerlink" href="#generating-sangerread-report-ab1" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least, users can save <code class="code docutils literal notranslate"><span class="pre">sangerReadF</span></code> into a static <strong>HTML</strong> report by knitting <strong>Rmd</strong> files. In this example, <code class="code docutils literal notranslate"><span class="pre">tempdir</span></code> function will generate a random path.</p>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">,</span>
@@ -341,10 +342,10 @@ SUCCESS [2021-12-07 23:31:16] &#39;Achl_ACHLO006-09_1_F.ab1&#39; is successfully
 <div class="line"><br /></div>
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="code-summary-sangerread-ab1">
+</section>
+<section id="code-summary-sangerread-ab1">
 <h2>Code summary (<em>SangerRead</em>, <strong>ab1</strong>)<a class="headerlink" href="#code-summary-sangerread-ab1" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
+<section id="id1">
 <h3>(1) Preparing <em>SangerRead</em> <strong>AB1</strong> input<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">inputFilesPath</span> <span class="o">&lt;-</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata/&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;sangeranalyseR&quot;</span><span class="p">)</span>
 <span class="n">A_chloroticaFFN</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">inputFilesPath</span><span class="p">,</span>
@@ -356,8 +357,8 @@ SUCCESS [2021-12-07 23:31:16] &#39;Achl_ACHLO006-09_1_F.ab1&#39; is successfully
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h3>(2) Creating <em>SangerRead</em> instance from <strong>AB1</strong><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `constructor` function to create SangerRead instance</span>
 <span class="n">sangerReadF</span> <span class="o">&lt;-</span> <span class="nf">SangerRead</span><span class="p">(</span><span class="n">readFeature</span>           <span class="o">=</span> <span class="s">&quot;Forward Read&quot;</span><span class="p">,</span>
@@ -394,8 +395,8 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="id3">
+</section>
+<section id="id3">
 <h3>(3) Visualizing <em>SangerRead</em> trimmed read<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">qualityBasePlot</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
@@ -403,8 +404,8 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="id4">
+</section>
+<section id="id4">
 <h3>(4) Writing <em>SangerRead</em> FASTA file <sub>(AB1)</sub><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">writeFasta</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
@@ -431,8 +432,8 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-<div class="section" id="id5">
+</section>
+<section id="id5">
 <h3>(5) Generating <em>SangerRead</em> report <sub>(AB1)</sub><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">generateReport</span><span class="p">(</span><span class="n">sangerReadF</span><span class="p">)</span>
 </pre></div>
@@ -443,38 +444,38 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 <div class="line"><br /></div>
 <div class="line"><br /></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
            
           </div>
           <footer>
+  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="advance_user_SangerContig_ab1.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerContig (AB1)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="beginner.html" class="btn btn-neutral float-left" title="Beginners Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+      
+        <a href="advance_user_SangerContig_ab1.html" class="btn btn-neutral float-right" title="Advanced User Guide - SangerContig (AB1)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="beginner.html" class="btn btn-neutral float-left" title="Beginners Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Kuan-Hao Chao.
+        &copy; Copyright 2019, Kuan-Hao Chao
 
     </p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
+
         </div>
       </div>
 
@@ -482,6 +483,7 @@ DEBUG [2021-29-06 16:28:40]    &gt;&gt; Run &#39;object@objectResults@readResult
 
   </div>
   
+
 
   <script type="text/javascript">
       jQuery(function () {
