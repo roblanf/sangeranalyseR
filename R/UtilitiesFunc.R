@@ -911,9 +911,9 @@ chromatogram_overwrite <- function(obj, trim5=0, trim3=0,
                  density=15)
         }
         lines(traces[plotrange,1], col=A_color)
-        lines(traces[plotrange,2], col=T_color)
-        lines(traces[plotrange,3], col=C_color)
-        lines(traces[plotrange,4], col=G_color)
+        lines(traces[plotrange,2], col=C_color )
+        lines(traces[plotrange,3], col=G_color)
+        lines(traces[plotrange,4], col=T_color)
         mtext(as.character(which(range)[1]), side=2, line=0, cex=cex.mtext)
         
         for(k in 1:length(lab1)) {
