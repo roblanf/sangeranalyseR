@@ -46,7 +46,7 @@ Depends:
     seqinr,
     BiocStyle,
     logger
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr
 Suggests: 
     testthat (>= 2.1.0)
