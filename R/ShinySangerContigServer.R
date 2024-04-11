@@ -308,7 +308,7 @@ SangerContigServer <- function(input, output, session) {
                         collapsible = TRUE,
                         status = "success", width = 12,
                         column(width = 12,
-                               plotOutput("dendrogramPlot"),
+                               plotlyOutput("dendrogramPlot"),
                                style = paste("height:100%; overflow-y:",
                                              "scroll;overflow-x: scroll;")
                         ),

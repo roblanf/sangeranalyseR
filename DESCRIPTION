@@ -25,7 +25,6 @@ Depends:
     DECIPHER,
     parallel,
     reshape2,
-    phangorn,
     sangerseqR,
     gridExtra,
     shiny,
