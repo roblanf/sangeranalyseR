@@ -330,7 +330,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     rownames(diffsDf) = NULL
 
     # get a dendrogram
-    dist = DistanceMatrix(aln, correction = "Jukes-Cantor",
+    dist = DistanceMatrix(aln, correction = "JC69",
                           penalizeGapLetterMatches = FALSE,
                           processors = processorsNum, verbose = FALSE)
     dend = TreeLine(myDistMatrix=dist, method="UPGMA",
