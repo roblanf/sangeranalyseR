@@ -333,7 +333,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     dist = DistanceMatrix(aln, correction = "JC69",
                           penalizeGapLetterMatches = FALSE,
                           processors = processorsNum, verbose = FALSE)
-    dend = TreeLine(myDistMatrix=dist, method="UPGMA",
+    dend = Treeline(myDistMatrix=dist, method="UPGMA",
                     type = "both", showPlot = FALSE, processors = processorsNum, verbose = FALSE)
 
     # add consensus to alignment

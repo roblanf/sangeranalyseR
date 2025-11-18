@@ -16,7 +16,7 @@
 #' @importFrom shinyjs useShinyjs html
 #' @importFrom plotly plot_ly add_markers add_trace layout add_annotations plotlyOutput renderPlotly plotly_build
 #' @importFrom DECIPHER AlignSeqs AlignTranslation ConsensusSequence
-#'               CorrectFrameshifts DistanceMatrix TreeLine RemoveGaps BrowseSeqs
+#'               CorrectFrameshifts DistanceMatrix Treeline RemoveGaps BrowseSeqs
 #' @importFrom Biostrings DNAString DNAStringSet AAStringSet GENETIC_CODE trinucleotideFrequency
 #'               reverseComplement translate writeXStringSet translate subseq
 #' @importFrom pwalign compareStrings
