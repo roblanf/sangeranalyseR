@@ -718,7 +718,6 @@ qualityScoreDisplay <- function(PhredScore) {
     colnames(PhredScoreDF) <- substr(colnames(PhredScoreDF), 2, 100)
     rownames(PhredScoreDF) <- NULL
     styleList <- SetAllStyleList(PhredScoreDF, "#ecffd9")
-    message(length(PhredScoreDF))
     width <- rep(80, length(PhredScoreDF))
     # styleList1 <- SetAllStyleList(AAStringDF, "#ecffd9")
     # styleList2 <- SetCharStyleList (AAStringDF, "*", "#cf0000")

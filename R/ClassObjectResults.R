@@ -61,3 +61,26 @@ setMethod("initialize",
                            printLevel       = printLevel)
           })
 
+### ============================================================================
+### Post-construction invariants for ObjectResults (Phase 4)
+###
+### Catches any code path that lands the parallel error/warning vectors in
+### inconsistent states.
+### ============================================================================
+setValidity("ObjectResults", function(object) {
+    errs <- character()
+    if (length(object@creationResult) != 1L ||
+        !is.logical(object@creationResult)) {
+        errs <- c(errs, "creationResult must be a single logical value")
+    }
+    if (length(object@errorMessages) != length(object@errorTypes)) {
+        errs <- c(errs, paste0("errorMessages and errorTypes must have ",
+                               "equal length"))
+    }
+    if (length(object@warningMessages) != length(object@warningTypes)) {
+        errs <- c(errs, paste0("warningMessages and warningTypes must have ",
+                               "equal length"))
+    }
+    if (length(errs) == 0L) TRUE else errs
+})
+

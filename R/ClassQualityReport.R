@@ -157,4 +157,36 @@ setMethod("initialize",
                              M2SlidingWindowSize     = M2SlidingWindowSize)
           })
 
+### ============================================================================
+### Post-construction invariants for QualityReport (Phase 4)
+###
+### These check structural slot consistency that the initialize method is
+### supposed to maintain. Input validation lives in the check* layer.
+### ============================================================================
+setValidity("QualityReport", function(object) {
+    errs <- character()
+
+    # Skip checks for the empty/default state — useful for fresh
+    # `new("QualityReport")` calls in vignettes/examples.
+    if (length(object@qualityPhredScores) == 0L) return(TRUE)
+
+    if (object@trimmedStartPos < 0L) {
+        errs <- c(errs, "trimmedStartPos must be non-negative")
+    }
+    if (object@trimmedFinishPos < object@trimmedStartPos) {
+        errs <- c(errs, "trimmedFinishPos must be >= trimmedStartPos")
+    }
+    if (length(object@qualityBaseScores) > 0L &&
+        length(object@qualityPhredScores) != length(object@qualityBaseScores)) {
+        errs <- c(errs, paste0("qualityPhredScores and qualityBaseScores ",
+                               "must have equal length"))
+    }
+    if (length(object@remainingRatio) == 1L &&
+        (object@remainingRatio < 0 || object@remainingRatio > 1)) {
+        errs <- c(errs, "remainingRatio must be in [0, 1]")
+    }
+
+    if (length(errs) == 0L) TRUE else errs
+})
+
 setClassUnion("QualityReportORNULL", c("QualityReport", "NULL"))

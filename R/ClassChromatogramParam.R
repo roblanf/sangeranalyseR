@@ -61,5 +61,35 @@ setMethod("initialize",
                              showTrimmed       = showTrimmed)
           })
 
+### ============================================================================
+### Post-construction invariants for ChromatogramParam (Phase 4)
+###
+### These guard the *output* state. Input validation lives in the
+### initialize / `check*` layer; setValidity catches any code path (including
+### `slot<-` assignments) that would land an out-of-range value in the slots.
+### ============================================================================
+setValidity("ChromatogramParam", function(object) {
+    errs <- character()
+    if (length(object@baseNumPerRow) != 1L ||
+        !is.numeric(object@baseNumPerRow) ||
+        object@baseNumPerRow < 0 || object@baseNumPerRow > 200) {
+        errs <- c(errs, "baseNumPerRow must be a single number in [0, 200]")
+    }
+    if (length(object@heightPerRow) != 1L ||
+        !is.numeric(object@heightPerRow) ||
+        object@heightPerRow < 50 || object@heightPerRow > 600) {
+        errs <- c(errs, "heightPerRow must be a single number in [50, 600]")
+    }
+    if (length(object@signalRatioCutoff) != 1L ||
+        !is.numeric(object@signalRatioCutoff) ||
+        object@signalRatioCutoff < 0 || object@signalRatioCutoff > 1) {
+        errs <- c(errs, "signalRatioCutoff must be a single number in [0, 1]")
+    }
+    if (length(object@showTrimmed) != 1L || !is.logical(object@showTrimmed)) {
+        errs <- c(errs, "showTrimmed must be a single logical")
+    }
+    if (length(errs) == 0L) TRUE else errs
+})
+
 setClassUnion("ChromatogramParamORNULL", c("ChromatogramParam", "NULL"))
 

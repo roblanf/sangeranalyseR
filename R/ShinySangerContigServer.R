@@ -1279,7 +1279,6 @@ SangerContigServer <- function(input, output, session) {
     ### Difference
     ### ------------------------------------------------------------------------
     output$SCDifferencesDFUI <- renderUI({
-        print("** Inside SCDifferencesDFUI !!!")
         if (all(dim(contigParam[["differencesDF"]]) == c(0,0))) {
             h4("*** 'Differences' dataframe is empty. ***",
                style="font-weight: bold; font-style: italic;")

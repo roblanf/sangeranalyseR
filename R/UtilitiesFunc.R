@@ -277,7 +277,7 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     ### Remove reads with stop codons
     ### ------------------------------------------------------------------------
     if (!acceptStopCodons) {
-        print("Removing reads with stop codons")
+        log_info("Removing reads with stop codons")
         if(refAminoAcidSeq == ""){ # otherwise we already did it above
             stops =
                 as.numeric(unlist(mclapply(frReadSet,
@@ -941,8 +941,8 @@ chromatogram_overwrite <- function(obj, trim5=0, trim3=0,
     }
     if(!is.null(filename)) {
         dev.off()
-        cat(paste("Chromatogram saved to", filename, 
-                  "in the current working directory"))
+        log_info("Chromatogram saved to ", filename,
+                 " in the current working directory")
     }
     else par(originalpar)
 }
