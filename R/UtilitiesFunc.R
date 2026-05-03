@@ -1,36 +1,47 @@
 ### ============================================================================
 ### Global helper functions
 ### ============================================================================
-getProcessors <- function(processors = NULL) {
-    sysinf <- Sys.info()
-    if (!is.null(sysinf)){
-        os <- sysinf["sysname"]
-        if (os == "Darwin")
-            os <- "macos"
-    } else {
-        ## mystery machine
-        os <- .Platform$OS.type
-        if (grepl("^darwin", R.version$os))
-            os <- "macos"
-        if (grepl("linux-gnu", R.version$os))
-            os <- "linux"
+
+### Phase 6: BPPARAM resolution.
+###
+### Translates a (processorsNum, BPPARAM) input pair into a single BPPARAM
+### object suitable for `bplapply` and `bpnworkers`. Honours the historical
+### contract that `processorsNum = 1` means "run serially":
+###   * BPPARAM supplied → use it (caller is responsible).
+###   * processorsNum == 1 (or NULL on Windows) → SerialParam().
+###   * processorsNum >= 2 → MulticoreParam(workers = N) on Unix,
+###                          SnowParam(workers = N) on Windows.
+###   * processorsNum == NULL on Unix → bpparam() (registered default,
+###     usually MulticoreParam with all cores).
+.resolveBPPARAM <- function(processorsNum = NULL, BPPARAM = NULL) {
+    if (!is.null(BPPARAM)) return(BPPARAM)
+    on_windows <- identical(.Platform$OS.type, "windows")
+    if (is.null(processorsNum)) {
+        if (on_windows) return(BiocParallel::SerialParam())
+        return(BiocParallel::bpparam())
     }
-    os <- tolower(os)
-    if (os != "linux" && os != "osx") {
-        ### --------------------------------------------------------------------
-        ### Operating system is Window
-        ### --------------------------------------------------------------------
-        return(1)
-    } else {
-        ### --------------------------------------------------------------------
-        ### Operating system is macOS or Linux
-        ### --------------------------------------------------------------------
-        if(is.null(processors)){
-            processors = detectCores(all.tests = FALSE, logical = FALSE)
-        }
-        return(processors)
+    if (!is.numeric(processorsNum) || length(processorsNum) != 1L ||
+        processorsNum < 1L) {
+        return(BiocParallel::SerialParam())
     }
+    n <- as.integer(processorsNum)
+    if (n == 1L) return(BiocParallel::SerialParam())
+    if (on_windows) return(BiocParallel::SnowParam(workers = n))
+    BiocParallel::MulticoreParam(workers = n)
 }
+
+### Back-compat shim: keep `getProcessors()` returning an integer count,
+### now derived from a BPPARAM. External callers (e.g. DECIPHER's
+### `processors=` argument) consume the integer; internal call sites can
+### either keep using the integer or migrate to BPPARAM directly.
+getProcessors <- function(processors = NULL) {
+    if (!is.null(processors) && is.numeric(processors) &&
+        length(processors) == 1L && processors >= 1L) {
+        return(as.integer(processors))
+    }
+    BiocParallel::bpnworkers(.resolveBPPARAM(processors))
+}
+
 suppressPlotlyMessage <- function(p) {
     suppressMessages(plotly_build(p))
 }
@@ -44,7 +55,9 @@ suppressPlotlyMessage <- function(p) {
 ### Aligning SangerContigs (SangerAlignment)
 ### ----------------------------------------------------------------------------
 alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
-                         minFractionCallSA, maxFractionLostSA, processorsNum) {
+                         minFractionCallSA, maxFractionLostSA, processorsNum,
+                         BPPARAM = NULL) {
+    if (!is.null(BPPARAM)) processorsNum <- BiocParallel::bpnworkers(BPPARAM)
     ### ------------------------------------------------------------------------
     ### Creating SangerContigList DNAStringSet
     ### ------------------------------------------------------------------------
@@ -152,11 +165,12 @@ nPairwiseDiffs <- function(pattern, subject){
     ps = str_count(comp, '\\+')
     return(c(qs, ps))
 }
-countCoincidentSp <- function(aln, processorsNum){
-    # make a data frame of columns in the alignment that have
-    # more than one secondary peak
+countCoincidentSp <- function(aln, processorsNum = NULL){
+    # Phase 6: each oneAmbiguousColumn call is microsecond-fast — Phase-2 audit
+    # showed mclapply fork overhead dominated the actual work. Plain serial
+    # lapply is faster on realistic alignment widths.
     is = seq_len(aln@ranges@width[1])
-    r = mclapply(is, oneAmbiguousColumn, aln=aln, mc.cores = processorsNum)
+    r = lapply(is, oneAmbiguousColumn, aln=aln)
     r = Filter(Negate(is.null), r)
 
     if(length(r)>0){
@@ -183,7 +197,10 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                refAminoAcidSeq, minFractionCall,
                                maxFractionLost, geneticCode,
                                acceptStopCodons, readingFrame,
-                               processorsNum = NULL, printLevel="") {
+                               processorsNum = NULL, printLevel="",
+                               BPPARAM = NULL) {
+    BPPARAM <- .resolveBPPARAM(processorsNum, BPPARAM)
+    processorsNum <- BiocParallel::bpnworkers(BPPARAM)
     ### ------------------------------------------------------------------------
     ### forward & reverse character reads list string creation
     ### ------------------------------------------------------------------------
@@ -253,9 +270,10 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         
         frReadSet = corrected$sequences
         indels = getIndelDf(corrected$indels)
-        stops = as.numeric(unlist(mclapply(frReadSet, countStopSodons,
-                                           readingFrame, geneticCode,
-                                           mc.cores = processorsNum)))
+        stops = as.numeric(unlist(BiocParallel::bplapply(
+            frReadSet, countStopSodons,
+            readingFrame, geneticCode,
+            BPPARAM = BPPARAM)))
         stopsDf = data.frame("read" = names(frReadSet),
                              "stop.codons" = stops)
         frReadSetLen = unlist(lapply(frReadSet, function(x) length(x)))
@@ -280,10 +298,10 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         log_info("Removing reads with stop codons")
         if(refAminoAcidSeq == ""){ # otherwise we already did it above
             stops =
-                as.numeric(unlist(mclapply(frReadSet,
-                                           countStopSodons,
-                                           readingFrame, geneticCode,
-                                           mc.cores = processorsNum)))
+                as.numeric(unlist(BiocParallel::bplapply(
+                    frReadSet, countStopSodons,
+                    readingFrame, geneticCode,
+                    BPPARAM = BPPARAM)))
             stopsDf = data.frame("read" = names(frReadSet),
                                  "stopCodons" = stops)
         }
@@ -321,8 +339,9 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                   ambiguity = TRUE
     )[[1]]
 
-    diffs = mclapply(aln, nPairwiseDiffs,
-                     subject = consensus, mc.cores = processorsNum)
+    # Phase 6: nPairwiseDiffs is microsecond-fast per read; serial lapply
+    # avoids fork overhead that previously dominated this call site.
+    diffs = lapply(aln, nPairwiseDiffs, subject = consensus)
     diffs = do.call(rbind, diffs)
     diffsDf = data.frame("name" = names(aln),
                          "pairwise.diffs.to.consensus" = diffs[,1],

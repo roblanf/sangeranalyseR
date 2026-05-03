@@ -80,7 +80,9 @@ SangerAlignment <- function(printLevel             = "SangerAlignment",
                             maxFractionLost        = 0.5,
                             acceptStopCodons       = TRUE,
                             readingFrame           = 1,
-                            processorsNum          = 1) {
+                            processorsNum          = 1,
+                            BPPARAM                = NULL,
+                            lazyAA                 = TRUE) {
     newAlignment <- new("SangerAlignment",
                         inputSource            = inputSource,
                         processMethod          = processMethod,
@@ -105,7 +107,9 @@ SangerAlignment <- function(printLevel             = "SangerAlignment",
                         maxFractionLost        = maxFractionLost,
                         acceptStopCodons       = acceptStopCodons,
                         readingFrame           = readingFrame,
-                        processorsNum          = processorsNum)
+                        processorsNum          = processorsNum,
+        BPPARAM                = BPPARAM,
+        lazyAA                 = lazyAA)
     return(newAlignment)
 }
 
@@ -195,7 +199,9 @@ SangerContig <- function(printLevel             = "SangerContig",
                          maxFractionLost        = 0.5,
                          acceptStopCodons       = TRUE,
                          readingFrame           = 1,
-                         processorsNum          = 1) {
+                         processorsNum          = 1,
+                            BPPARAM                = NULL,
+                            lazyAA                 = TRUE) {
     newContig <- new("SangerContig",
                      printLevel             = printLevel,
                      inputSource            = inputSource,
@@ -222,7 +228,9 @@ SangerContig <- function(printLevel             = "SangerContig",
                      maxFractionLost        = maxFractionLost,
                      acceptStopCodons       = acceptStopCodons,
                      readingFrame           = readingFrame,
-                     processorsNum          = processorsNum)
+                     processorsNum          = processorsNum,
+        BPPARAM                = BPPARAM,
+        lazyAA                 = lazyAA)
     return(newContig)
 }
 
@@ -287,7 +295,8 @@ SangerRead <- function(printLevel            = "SangerRead",
                        baseNumPerRow         = 100,
                        heightPerRow          = 200,
                        signalRatioCutoff     = 0.33,
-                       showTrimmed           = TRUE) {
+                       showTrimmed           = TRUE,
+                       lazyAA               = TRUE) {
     newRead <- new("SangerRead",
                    printLevel           = printLevel,
                    inputSource          = inputSource,
@@ -302,6 +311,7 @@ SangerRead <- function(printLevel            = "SangerRead",
                    baseNumPerRow        = baseNumPerRow,
                    heightPerRow         = heightPerRow,
                    signalRatioCutoff    = signalRatioCutoff,
-                   showTrimmed          = showTrimmed)
+                   showTrimmed          = showTrimmed,
+       lazyAA               = lazyAA)
     return(newRead)
 }

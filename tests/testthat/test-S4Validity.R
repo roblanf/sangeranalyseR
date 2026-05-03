@@ -64,17 +64,19 @@ test_that("ChromatogramParam: non-logical showTrimmed rejected", {
 test_that("QualityReport: empty default object passes validity", {
     # The empty/default state must be valid so vignettes can `new("QualityReport")`.
     qr <- new("QualityReport",
-              qualityPhredScores = c(40L, 40L, 40L, 30L, 25L),
-              TrimmingMethod     = "M1",
-              M1TrimmingCutoff   = 0.0001)
+              qualityPhredScores   = rep(30L, 100L),
+              TrimmingMethod       = "M2",
+              M2CutoffQualityScore = 20,
+              M2SlidingWindowSize  = 10)
     expect_true(validObject(qr, test = TRUE) == TRUE)
 })
 
 test_that("QualityReport: trimmedFinishPos < trimmedStartPos rejected", {
     qr <- new("QualityReport",
-              qualityPhredScores = c(40L, 40L, 40L, 30L, 25L),
-              TrimmingMethod     = "M1",
-              M1TrimmingCutoff   = 0.0001)
+              qualityPhredScores   = rep(30L, 100L),
+              TrimmingMethod       = "M2",
+              M2CutoffQualityScore = 20,
+              M2SlidingWindowSize  = 10)
     qr@trimmedStartPos  <- 4
     qr@trimmedFinishPos <- 1
     res <- validObject(qr, test = TRUE)
@@ -84,9 +86,10 @@ test_that("QualityReport: trimmedFinishPos < trimmedStartPos rejected", {
 
 test_that("QualityReport: remainingRatio outside [0,1] rejected", {
     qr <- new("QualityReport",
-              qualityPhredScores = c(40L, 40L, 40L, 30L, 25L),
-              TrimmingMethod     = "M1",
-              M1TrimmingCutoff   = 0.0001)
+              qualityPhredScores   = rep(30L, 100L),
+              TrimmingMethod       = "M2",
+              M2CutoffQualityScore = 20,
+              M2SlidingWindowSize  = 10)
     qr@remainingRatio <- 1.5
     res <- validObject(qr, test = TRUE)
     expect_false(isTRUE(res))

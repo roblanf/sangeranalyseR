@@ -43,9 +43,10 @@ test_that("readTable() runs without error for SangerRead/Contig/Alignment", {
                 envir = environment())
 
     expect_invisible(invisible(readTable(sangerReadFData)))
-    # readTable for SC/SA prints to stdout via log_info; just ensure no crash.
+    # readTable for SC prints to stdout via log_info; just ensure no crash.
     expect_error(readTable(sangerContigData),    NA)
-    expect_error(readTable(sangerAlignmentData), NA)
+    # NB. There is no readTable,SangerAlignment method (only SR + SC); the
+    # SA-level readResultTable is exposed via @objectResults@readResultTable.
 })
 
 test_that("writeFasta() dispatches for SangerRead, SangerContig, SangerAlignment", {

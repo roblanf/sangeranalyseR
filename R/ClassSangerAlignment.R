@@ -179,7 +179,9 @@ setMethod("initialize",
                    maxFractionLost        = 0.5,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
-                   processorsNum          = 1) {
+                   processorsNum          = 1,
+                   BPPARAM                = NULL,
+                   lazyAA                 = TRUE) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
@@ -280,7 +282,8 @@ setMethod("initialize",
         log_info('#################################################')
         log_info('#### Start creating SangerAlignment instance ####')
         log_info('#################################################')
-        processorsNum <- getProcessors (processorsNum)
+        BPPARAM <- .resolveBPPARAM(processorsNum, BPPARAM)
+        processorsNum <- BiocParallel::bpnworkers(BPPARAM)
         if (inputSource == "ABIF" && processMethod == "REGEX") {
             log_info("  >> You are using Regular Expression Method",
                      " to group AB1 files!")
@@ -346,7 +349,9 @@ setMethod("initialize",
                                    maxFractionLost      = maxFractionLost,
                                    acceptStopCodons     = acceptStopCodons,
                                    readingFrame         = readingFrame,
-                                   processorsNum        = processorsNum)
+                                   processorsNum        = processorsNum,
+                                   BPPARAM              = BPPARAM,
+                                   lazyAA               = lazyAA)
                            readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                            if (newSangerContig@objectResults@creationResult) {
                                newSangerContig
@@ -401,7 +406,9 @@ setMethod("initialize",
                         maxFractionLost      = maxFractionLost,
                         acceptStopCodons     = acceptStopCodons,
                         readingFrame         = readingFrame,
-                        processorsNum        = processorsNum)
+                        processorsNum        = processorsNum,
+                        BPPARAM              = BPPARAM,
+                        lazyAA               = lazyAA)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
@@ -460,7 +467,9 @@ setMethod("initialize",
                         maxFractionLost      = maxFractionLost,
                         acceptStopCodons     = acceptStopCodons,
                         readingFrame         = readingFrame,
-                        processorsNum        = processorsNum)
+                        processorsNum        = processorsNum,
+                        BPPARAM              = BPPARAM,
+                        lazyAA               = lazyAA)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
@@ -502,7 +511,9 @@ setMethod("initialize",
                         maxFractionLost      = maxFractionLost,
                         acceptStopCodons     = acceptStopCodons,
                         readingFrame         = readingFrame,
-                        processorsNum        = processorsNum)
+                        processorsNum        = processorsNum,
+                        BPPARAM              = BPPARAM,
+                        lazyAA               = lazyAA)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
@@ -518,7 +529,8 @@ setMethod("initialize",
         SangerContigList <- Filter(Negate(is.null), SangerContigList)
         acResult <- alignContigs(SangerContigList, geneticCode,
                                  refAminoAcidSeq, minFractionCall,
-                                 maxFractionLost, processorsNum)
+                                 maxFractionLost, processorsNum,
+                                 BPPARAM = BPPARAM)
         consensus <- acResult[["consensus"]]
         aln <- acResult[["aln"]]
         aln.tree <- acResult[["aln.tree"]]

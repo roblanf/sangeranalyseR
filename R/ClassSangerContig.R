@@ -185,11 +185,13 @@ setMethod("initialize",
                    maxFractionLost        = 0.5,
                    acceptStopCodons       = TRUE,
                    readingFrame           = 1,
-                   processorsNum          = 1) {
+                   processorsNum          = 1,
+                   BPPARAM                = NULL,
+                   lazyAA                 = TRUE) {
     creationResult <- TRUE
     errors <- list(character(0), character(0))
     warnings <- list(character(0), character(0))
-    readResultTableName <- c("readName","creationResult", "errorType", 
+    readResultTableName <- c("readName","creationResult", "errorType",
                              "errorMessage", "inputSource", "direction")
     readResultTable <- data.frame()
     if (printLevel == "SangerContig") {
@@ -283,7 +285,8 @@ setMethod("initialize",
         log_info("================ Creating 'SangerContig' ===============")
         log_info("========================================================")
         log_info("  >> Contig Name: '", contigName, "'")
-        processorsNum <- getProcessors (processorsNum)
+        BPPARAM <- .resolveBPPARAM(processorsNum, BPPARAM)
+        processorsNum <- BiocParallel::bpnworkers(BPPARAM)
         if (inputSource == "ABIF" && processMethod == "REGEX") {
             if (printLevel == "SangerContig") {
                 log_info("  >> You are using Regular Expression Method",
@@ -308,7 +311,7 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
-            forwardReadList <- lapply(forwardAllReads[[1]], function(forwardN){
+            forwardReadList <- BiocParallel::bplapply(forwardAllReads[[1]], BPPARAM = BPPARAM, FUN = function(forwardN){
                 newSangerRead<- new("SangerRead",
                                     printLevel           = printLevel,
                                     inputSource          = inputSource,
@@ -323,13 +326,14 @@ setMethod("initialize",
                                     baseNumPerRow        = baseNumPerRow,
                                     heightPerRow         = heightPerRow,
                                     signalRatioCutoff    = signalRatioCutoff,
-                                    showTrimmed          = showTrimmed)
+                                    showTrimmed          = showTrimmed,
+                                    lazyAA               = lazyAA)
             })
             names(forwardReadList) <- forwardAllReads[[1]]
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
-            reverseReadList <- lapply(reverseAllReads[[1]], function(reverseN){
+            reverseReadList <- BiocParallel::bplapply(reverseAllReads[[1]], BPPARAM = BPPARAM, FUN = function(reverseN){
                 newSangerRead <- new("SangerRead",
                                      printLevel           = printLevel,
                                      inputSource          = inputSource,
@@ -344,7 +348,8 @@ setMethod("initialize",
                                      baseNumPerRow        = baseNumPerRow,
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
-                                     showTrimmed          = showTrimmed)
+                                     showTrimmed          = showTrimmed,
+                                     lazyAA               = lazyAA)
             })
             names(reverseReadList) <- reverseAllReads[[1]]
         } else if (inputSource == "ABIF" && processMethod == "CSV") {
@@ -367,7 +372,7 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
-            forwardReadList <- lapply(fAbsoluteAB1, function(forwardN){
+            forwardReadList <- BiocParallel::bplapply(fAbsoluteAB1, BPPARAM = BPPARAM, FUN = function(forwardN){
                 newSangerRead <- new("SangerRead",
                                      printLevel           = printLevel,
                                      inputSource          = inputSource,
@@ -382,7 +387,8 @@ setMethod("initialize",
                                      baseNumPerRow        = baseNumPerRow,
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
-                                     showTrimmed          = showTrimmed)
+                                     showTrimmed          = showTrimmed,
+                                     lazyAA               = lazyAA)
             })
             names(forwardReadList) <- fAbsoluteAB1
             # reverse reads CSV matching
@@ -395,7 +401,7 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
-            reverseReadList <- lapply(rAbsoluteAB1, function(reverseN){
+            reverseReadList <- BiocParallel::bplapply(rAbsoluteAB1, BPPARAM = BPPARAM, FUN = function(reverseN){
                 newSangerRead <- new("SangerRead",
                                      printLevel           = printLevel,
                                      inputSource          = inputSource,
@@ -410,7 +416,8 @@ setMethod("initialize",
                                      baseNumPerRow        = baseNumPerRow,
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
-                                     showTrimmed          = showTrimmed)
+                                     showTrimmed          = showTrimmed,
+                                     lazyAA               = lazyAA)
             })
             names(reverseReadList) <- rAbsoluteAB1
         }
@@ -448,7 +455,7 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
-            forwardReadList <- lapply(forwardSelectNames, function(forwardName){
+            forwardReadList <- BiocParallel::bplapply(forwardSelectNames, BPPARAM = BPPARAM, FUN = function(forwardName){
                 newSangerRead <- new("SangerRead",
                                      printLevel           = printLevel,
                                      inputSource          = inputSource,
@@ -463,13 +470,14 @@ setMethod("initialize",
                                      baseNumPerRow        = baseNumPerRow,
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
-                                     showTrimmed          = showTrimmed)
+                                     showTrimmed          = showTrimmed,
+                                     lazyAA               = lazyAA)
             })
             names(forwardReadList) <- forwardSelectNames
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (reverse list)
             ### ----------------------------------------------------------------
-            reverseReadList <- lapply(reverseSelectNames, function(reverseName){
+            reverseReadList <- BiocParallel::bplapply(reverseSelectNames, BPPARAM = BPPARAM, FUN = function(reverseName){
                 newSangerRead <- new("SangerRead",
                                      printLevel           = printLevel,
                                      inputSource          = inputSource,
@@ -484,7 +492,8 @@ setMethod("initialize",
                                      baseNumPerRow        = baseNumPerRow,
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
-                                     showTrimmed          = showTrimmed)
+                                     showTrimmed          = showTrimmed,
+                                     lazyAA               = lazyAA)
             })
             names(reverseReadList) <- reverseSelectNames
         } else if (inputSource == "FASTA" && processMethod == "CSV") {
@@ -508,7 +517,7 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             ### "SangerRead" S4 class creation (forward list)
             ### ----------------------------------------------------------------
-            forwardReadList <- lapply(forwardReads, function(forwardName){
+            forwardReadList <- BiocParallel::bplapply(forwardReads, BPPARAM = BPPARAM, FUN = function(forwardName){
                 newSangerRead <- new("SangerRead",
                                      printLevel         = printLevel,
                                      inputSource        = inputSource,
@@ -523,7 +532,8 @@ setMethod("initialize",
                                      baseNumPerRow        = baseNumPerRow,
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
-                                     showTrimmed          = showTrimmed)
+                                     showTrimmed          = showTrimmed,
+                                     lazyAA               = lazyAA)
             })
             names(forwardReadList) <- forwardReads
             ### ----------------------------------------------------------------
@@ -535,7 +545,7 @@ setMethod("initialize",
             reverseReads <- intersect(fastaNames, reverseCsvReads)
             warnings <- checkCSVConvReverse(reverseReads, 
                                             warnings[[1]], warnings[[2]])
-            reverseReadList <- lapply(reverseReads, function(reverseName){
+            reverseReadList <- BiocParallel::bplapply(reverseReads, BPPARAM = BPPARAM, FUN = function(reverseName){
                 newSangerRead <- new("SangerRead",
                                      printLevel           = printLevel,
                                      inputSource          = inputSource,
@@ -550,7 +560,8 @@ setMethod("initialize",
                                      baseNumPerRow        = baseNumPerRow,
                                      heightPerRow         = heightPerRow,
                                      signalRatioCutoff    = signalRatioCutoff,
-                                     showTrimmed          = showTrimmed)
+                                     showTrimmed          = showTrimmed,
+                                     lazyAA               = lazyAA)
             })
             names(reverseReadList) <- reverseReads
         }
@@ -699,7 +710,8 @@ setMethod("initialize",
                                                 acceptStopCodons = acceptStopCodons,
                                                 readingFrame     = readingFrame,
                                                 processorsNum    = processorsNum,
-                                                printLevel       = printLevel)
+                                                printLevel       = printLevel,
+                                                BPPARAM          = BPPARAM)
                 contigGapfree <- CSResult$consensusGapfree
                 contigLen <- length(contigGapfree)
                 ## This is the only part that is correct!

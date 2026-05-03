@@ -30,7 +30,9 @@ SangerContig(
   maxFractionLost = 0.5,
   acceptStopCodons = TRUE,
   readingFrame = 1,
-  processorsNum = 1
+  processorsNum = 1,
+  BPPARAM = NULL,
+  lazyAA = TRUE
 )
 }
 \arguments{

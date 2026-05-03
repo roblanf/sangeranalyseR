@@ -25,6 +25,7 @@ Depends:
     pwalign,
     DECIPHER,
     parallel,
+    BiocParallel,
     reshape2,
     sangerseqR,
     gridExtra,

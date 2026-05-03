@@ -1,0 +1,4 @@
+[PASS] lazy slot is empty AAString
+[PASS] primaryAASeqS1() == eager slot
+[PASS] primaryAASeqS2() == eager slot
+[PASS] primaryAASeqS3() == eager slot

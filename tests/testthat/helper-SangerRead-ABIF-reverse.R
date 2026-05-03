@@ -14,5 +14,6 @@ sangerReadR <- new("SangerRead",
                    baseNumPerRow         = 100,
                    heightPerRow          = 200,
                    signalRatioCutoff     = 0.33,
-                   showTrimmed           = TRUE)
+                   showTrimmed           = TRUE,
+                   lazyAA                = FALSE)
 

@@ -31,5 +31,6 @@
 #' @importFrom excelR excelTable excelOutput renderExcel
 #' @importFrom seqinr read.fasta
 #' @importFrom parallel mclapply detectCores
+#' @importFrom BiocParallel bplapply bpparam bpnworkers SerialParam MulticoreParam SnowParam
 #' @import logger
 NULL

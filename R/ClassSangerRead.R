@@ -148,7 +148,8 @@ setMethod("initialize",
                    baseNumPerRow        = 100,
                    heightPerRow         = 200,
                    signalRatioCutoff    = 0.33,
-                   showTrimmed          = TRUE) {
+                   showTrimmed          = TRUE,
+                   lazyAA               = TRUE) {
     creationResult <- TRUE
     errors <- list(character(0), character(0))
     readResultTableName <- c("readName","creationResult", "errorType", 
@@ -318,11 +319,22 @@ setMethod("initialize",
                 primaryAASeqS2 <- AAString("")
                 primaryAASeqS3 <- AAString("")
             } else {
-                AASeqResult    <- calculateAASeq (primarySeq, trimmedStartPos,
-                                                  trimmedFinishPos, geneticCode)
-                primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
-                primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
-                primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+                ## Phase 6: lazy translation. The 3-frame translation is the
+                ## single most expensive step in SangerRead construction
+                ## (~35% of wall time per Phase 5 profiling). Skip when
+                ## lazyAA = TRUE (default) and no AA reference is supplied;
+                ## the primaryAASeqS1/S2/S3() accessors compute on demand.
+                if (lazyAA) {
+                    primaryAASeqS1 <- AAString("")
+                    primaryAASeqS2 <- AAString("")
+                    primaryAASeqS3 <- AAString("")
+                } else {
+                    AASeqResult    <- calculateAASeq (primarySeq, trimmedStartPos,
+                                                      trimmedFinishPos, geneticCode)
+                    primaryAASeqS1 <- AASeqResult[["primaryAASeqS1"]]
+                    primaryAASeqS2 <- AASeqResult[["primaryAASeqS2"]]
+                    primaryAASeqS3 <- AASeqResult[["primaryAASeqS3"]]
+                }
                 log_success("--------------------------------------------------------")
                 log_success("-------- 'SangerRead' S4 instance is created !! --------")
                 log_success("--------------------------------------------------------")

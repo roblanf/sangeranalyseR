@@ -5,6 +5,44 @@ setClassUnion("abifORNULL", c("abif", "NULL"))
 setClassUnion("characterORNULL", c("character", "NULL"))
 
 ### ============================================================================
+### Defined in SangerRead (Phase 6 lazy AA accessors)
+### ============================================================================
+#' Method primaryAASeqS1
+#' @name primaryAASeqS1
+#' @rdname primaryAASeqS1-methods
+#'
+#' @param object A SangerRead S4 instance.
+#'
+#' @return The frame-1 amino-acid translation of the read's primary
+#'   sequence as an \code{AAString}. Computed lazily — if the slot was
+#'   populated eagerly at construction time it is returned directly; if
+#'   the slot is empty (the default when \code{refAminoAcidSeq == ""} and
+#'   \code{lazyAA = TRUE}) it is computed via \code{calculateAASeq()} on
+#'   demand.
+#'
+#' @exportMethod primaryAASeqS1
+#' @examples
+#' data(sangerReadFData)
+#' primaryAASeqS1(sangerReadFData)
+setGeneric("primaryAASeqS1", function(object) standardGeneric("primaryAASeqS1"))
+
+#' Method primaryAASeqS2
+#' @name primaryAASeqS2
+#' @rdname primaryAASeqS2-methods
+#' @param object A SangerRead S4 instance.
+#' @return Frame-2 AA translation as \code{AAString} (lazy).
+#' @exportMethod primaryAASeqS2
+setGeneric("primaryAASeqS2", function(object) standardGeneric("primaryAASeqS2"))
+
+#' Method primaryAASeqS3
+#' @name primaryAASeqS3
+#' @rdname primaryAASeqS3-methods
+#' @param object A SangerRead S4 instance.
+#' @return Frame-3 AA translation as \code{AAString} (lazy).
+#' @exportMethod primaryAASeqS3
+setGeneric("primaryAASeqS3", function(object) standardGeneric("primaryAASeqS3"))
+
+### ============================================================================
 ### Defined in QualityReport, SangerRead, SangerContig
 ### ============================================================================
 #' Method qualityBasePlot

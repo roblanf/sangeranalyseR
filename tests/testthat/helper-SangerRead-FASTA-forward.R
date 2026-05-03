@@ -9,4 +9,5 @@ sangerReadFFa <- new("SangerRead",
                      readFeature        = "Forward Read",
                      readFileName       = SRfastaFFN,
                      fastaReadName      = fastaReadFName,
-                     geneticCode        = GENETIC_CODE)
+                     geneticCode        = GENETIC_CODE,
+                      lazyAA        = FALSE)

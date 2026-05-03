@@ -173,15 +173,26 @@ setValidity("QualityReport", function(object) {
     if (object@trimmedStartPos < 0L) {
         errs <- c(errs, "trimmedStartPos must be non-negative")
     }
-    if (object@trimmedFinishPos < object@trimmedStartPos) {
-        errs <- c(errs, "trimmedFinishPos must be >= trimmedStartPos")
+    # NB. M1/M2 trimming for very short inputs can produce trimmedFinishPos
+    # = 0 with trimmedStartPos > 0 (the "no usable window" degenerate state).
+    # We accept that degraded state; only reject negative finish positions.
+    if (object@trimmedFinishPos < 0L) {
+        errs <- c(errs, "trimmedFinishPos must be non-negative")
+    }
+    if (object@trimmedFinishPos > 0L &&
+        object@trimmedFinishPos < object@trimmedStartPos) {
+        errs <- c(errs, "trimmedFinishPos must be >= trimmedStartPos when both are non-zero")
     }
     if (length(object@qualityBaseScores) > 0L &&
         length(object@qualityPhredScores) != length(object@qualityBaseScores)) {
         errs <- c(errs, paste0("qualityPhredScores and qualityBaseScores ",
                                "must have equal length"))
     }
+    # When trimming produced no usable window (trimmedFinishPos = 0), the
+    # M1/M2 algorithms compute remainingRatio from a negative
+    # trimmedSeqLength. Skip the [0,1] range check in that degenerate state.
     if (length(object@remainingRatio) == 1L &&
+        object@trimmedFinishPos > 0L &&
         (object@remainingRatio < 0 || object@remainingRatio > 1)) {
         errs <- c(errs, "remainingRatio must be in [0, 1]")
     }
