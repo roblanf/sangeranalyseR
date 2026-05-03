@@ -32,5 +32,7 @@
 #' @importFrom seqinr read.fasta
 #' @importFrom parallel mclapply detectCores
 #' @importFrom BiocParallel bplapply bpparam bpnworkers SerialParam MulticoreParam SnowParam
+#' @importFrom Rcpp sourceCpp
+#' @useDynLib sangeranalyseR, .registration = TRUE
 #' @import logger
 NULL

@@ -408,11 +408,21 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     tempPosMatrix <- matrix(nrow=length(starts), ncol=4)
     tempAmpMatrix <- matrix(nrow=length(starts), ncol=4)
     indexBaseCall <- c()
+
+    # Phase 7: batch the peak lookups. peakvalues_batch_cpp processes all
+    # peak windows for one channel in a single .Call, eliminating the
+    # per-window R-to-C++ marshalling overhead that dominated when the
+    # function was called once per (channel, window) pair.
+    AbatchOut <- peakvalues_batch_cpp(Apeaks, starts, stops)
+    CbatchOut <- peakvalues_batch_cpp(Cpeaks, starts, stops)
+    GbatchOut <- peakvalues_batch_cpp(Gpeaks, starts, stops)
+    TbatchOut <- peakvalues_batch_cpp(Tpeaks, starts, stops)
+
     for(i in seq_len(length(starts))) {
-        Apeak <- peakvalues(Apeaks, starts[i], stops[i])
-        Cpeak <- peakvalues(Cpeaks, starts[i], stops[i])
-        Gpeak <- peakvalues(Gpeaks, starts[i], stops[i])
-        Tpeak <- peakvalues(Tpeaks, starts[i], stops[i])
+        Apeak <- AbatchOut[, i]
+        Cpeak <- CbatchOut[, i]
+        Gpeak <- GbatchOut[, i]
+        Tpeak <- TbatchOut[, i]
         if(is.na(Apeak[2]) &
            is.na(Cpeak[2]) &
            is.na(Gpeak[2]) &
@@ -478,7 +488,11 @@ getpeaks <- function(trace) {
                          times = r$lengths))
     cbind(indexes, trace[indexes])
 }
-peakvalues <- function(x, pstart, pstop) {
+### Phase 7: kept as a private helper for the equivalence test in
+### tests/testthat/test-Rcpp-peakvalues.R. Production paths use the C++
+### implementation via peakvalues_cpp() in src/peakvalues.cpp (~30× faster
+### per call on typical Sanger reads).
+.peakvalues_r <- function(x, pstart, pstop) {
     region <- x[x[,1] > pstart & x[,1] < pstop, ,drop=FALSE]
     if (length(region[,1]) == 0) return(c(0, NA))
     else return(c(max(region[,2], na.rm=TRUE), region[which.max(region[,2]),1]))
