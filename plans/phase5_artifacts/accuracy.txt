@@ -1,0 +1,9 @@
+[PASS] SangerAlignment built (M1)
+[PASS] contigList non-empty (M1)
+[PASS] contigsConsensus non-empty (M1)
+[PASS] contigsAlignment is DNAStringSet (M1)
+[PASS] All child reads valid (M1)
+[PASS] SangerAlignment built (M2)
+[PASS] M1 vs M2: contig count equal
+[PASS] M1 vs M2: same contig names
+[PASS] Consensus is deterministic across two runs
