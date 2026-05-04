@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' data("sangerAlignmentData")
-#' \dontrun{
+#' \donttest{
 #' updateQualityParam(sangerAlignmentData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
@@ -280,7 +280,7 @@ setMethod("writeFastaSA", "SangerAlignment", function(object, outputDir, compres
 #'
 #' @examples
 #' data("sangerAlignmentData")
-#' \dontrun{
+#' \donttest{
 #' generateReportSA(sangerAlignmentData)
 #' generateReportSA(sangerAlignmentData, colors="cb_friendly")}
 setMethod("generateReportSA", "SangerAlignment",

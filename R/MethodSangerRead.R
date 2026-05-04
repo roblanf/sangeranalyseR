@@ -20,16 +20,22 @@
     res[[paste0("primaryAASeqS", frame)]]
 }
 
+#' @rdname primaryAASeqS1-methods
+#' @aliases primaryAASeqS1,SangerRead-method
 setMethod("primaryAASeqS1", "SangerRead", function(object) {
     if (length(object@primaryAASeqS1) > 0L) return(object@primaryAASeqS1)
     .computeAASeq(object, 1L)
 })
 
+#' @rdname primaryAASeqS2-methods
+#' @aliases primaryAASeqS2,SangerRead-method
 setMethod("primaryAASeqS2", "SangerRead", function(object) {
     if (length(object@primaryAASeqS2) > 0L) return(object@primaryAASeqS2)
     .computeAASeq(object, 2L)
 })
 
+#' @rdname primaryAASeqS3-methods
+#' @aliases primaryAASeqS3,SangerRead-method
 setMethod("primaryAASeqS3", "SangerRead", function(object) {
     if (length(object@primaryAASeqS3) > 0L) return(object@primaryAASeqS3)
     .computeAASeq(object, 3L)
@@ -50,7 +56,7 @@ setMethod("primaryAASeqS3", "SangerRead", function(object) {
 #'
 #' @examples
 #' data("sangerReadFData")
-#' \dontrun{
+#' \donttest{
 #' qualityBasePlot(sangerReadFData)}
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     if (object@inputSource == "ABIF") {
@@ -267,7 +273,7 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 #'
 #' @examples
 #' data("sangerReadFData")
-#' \dontrun{
+#' \donttest{
 #' generateReportSR(sangerReadFData, "~/Documents")
 #' generateReportSR(sangerReadFData, colors="cb_friendly")}
 setMethod("generateReportSR", "SangerRead",
@@ -334,7 +340,7 @@ setMethod("generateReportSR", "SangerRead",
 #' data(sangerReadFData)
 #' data(sangerContigData)
 #' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' readTable(sangerReadFData)
 #' readTable(sangerContigData)
 #' readTable(sangerAlignmentData)

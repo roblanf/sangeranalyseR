@@ -4,11 +4,17 @@
 \name{sangerReadFData}
 \alias{sangerReadFData}
 \title{SangerRead instance}
+\format{
+A \code{\link{SangerRead-class}} S4 object with populated
+  \code{primarySeq}, \code{secondarySeq}, \code{traceMatrix}, and
+  nested \code{QualityReport} / \code{ChromatogramParam}.
+}
 \usage{
 data(sangerReadFData)
 }
 \description{
-SangerRead instance
+A pre-built \code{SangerRead} S4 object for one forward
+  ABIF read from the ACHLO fixture.
 }
 \author{
 Kuan-Hao Chao

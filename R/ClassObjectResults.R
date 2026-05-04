@@ -2,13 +2,13 @@
 #'
 #' @description  An S4 class storing results related inputs in a SangerRead, SangerContig, and SangerAlignment S4 object.
 #' 
-#' @slot creationResult
-#' @slot errorMessages
-#' @slot errorTypes
-#' @slot warningMessages
-#' @slot warningTypes
-#' @slot readResultTable
-#' @slot printLevel
+#' @slot creationResult Single logical: TRUE if construction succeeded, FALSE if any input failed validation.
+#' @slot errorMessages Character vector of error messages collected during construction (one per failure).
+#' @slot errorTypes Character vector of machine-readable error tags (e.g. \code{"PARAMETER_RANGE_ERROR"}); same length as \code{errorMessages}.
+#' @slot warningMessages Character vector of warning messages emitted during construction.
+#' @slot warningTypes Character vector of machine-readable warning tags; same length as \code{warningMessages}.
+#' @slot readResultTable A data frame with one row per Sanger read processed, recording per-read creation outcome and any error tag.
+#' @slot printLevel Character indicating which tier (\code{"SangerRead"}, \code{"SangerContig"}, or \code{"SangerAlignment"}) emitted these results.
 #'
 #' @name ObjectResults-class
 #'

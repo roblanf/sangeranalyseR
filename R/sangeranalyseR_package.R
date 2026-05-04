@@ -34,5 +34,28 @@
 #' @importFrom BiocParallel bplapply bpparam bpnworkers SerialParam MulticoreParam SnowParam
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib sangeranalyseR, .registration = TRUE
+#' @importFrom methods new is isVirtualClass setClass setClassUnion setGeneric
+#'             setMethod setValidity slotNames validObject callNextMethod
+#'             slot slot<-
+#' @importFrom utils read.csv write.csv head tail capture.output data
+#' @importFrom stats setNames IQR quantile
+#' @importFrom stringr str_split
+#' @importFrom Biostrings AAString
+#' @importFrom plotly "%>%"
+#' @importFrom grDevices colorRamp dev.off pdf rgb
+#' @importFrom graphics axis lines mtext par rect
+#' @importFrom ape as.phylo rtree
+#' @importFrom shiny shinyApp shinyOptions
+#' @importFrom S4Vectors isEmpty
 #' @import logger
 NULL
+
+if (getRversion() >= "2.15.1") {
+    # `<<-` assignments inside the Shiny servers walk past `getShinyOption(..)`
+    # values that are seeded by launchAppSA / launchAppSC at startup. Declare
+    # the names so R CMD check doesn't warn about "no visible binding".
+    utils::globalVariables(c(
+        "NEW_SANGER_ALIGNED_CONSENSUS_READ_SET",
+        "NEW_SANGER_CONTIG"
+    ))
+}

@@ -31,6 +31,9 @@ setGeneric("primaryAASeqS1", function(object) standardGeneric("primaryAASeqS1"))
 #' @rdname primaryAASeqS2-methods
 #' @param object A SangerRead S4 instance.
 #' @return Frame-2 AA translation as \code{AAString} (lazy).
+#' @examples
+#' data(sangerReadFData)
+#' primaryAASeqS2(sangerReadFData)
 #' @exportMethod primaryAASeqS2
 setGeneric("primaryAASeqS2", function(object) standardGeneric("primaryAASeqS2"))
 
@@ -39,6 +42,9 @@ setGeneric("primaryAASeqS2", function(object) standardGeneric("primaryAASeqS2"))
 #' @rdname primaryAASeqS3-methods
 #' @param object A SangerRead S4 instance.
 #' @return Frame-3 AA translation as \code{AAString} (lazy).
+#' @examples
+#' data(sangerReadFData)
+#' primaryAASeqS3(sangerReadFData)
 #' @exportMethod primaryAASeqS3
 setGeneric("primaryAASeqS3", function(object) standardGeneric("primaryAASeqS3"))
 
@@ -85,7 +91,7 @@ setGeneric("qualityBasePlot", function(object) {
 #' data(sangerReadFData)
 #' data(sangerContigData)
 #' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' updateQualityParam(qualityReportData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
@@ -225,7 +231,7 @@ setGeneric("writeFastaSR", function(object,outputDir = NULL,
 #' @exportMethod launchAppSC
 #' @examples
 #' data(sangerContigData)
-#' \dontrun{
+#' \donttest{
 #' launchAppSC(sangerContigData)}
 setGeneric("launchAppSC", function(object, outputDir = NULL, colors = "default") {
     standardGeneric("launchAppSC")
@@ -248,7 +254,7 @@ setGeneric("launchAppSC", function(object, outputDir = NULL, colors = "default")
 #' @exportMethod launchAppSA
 #' @examples
 #' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' launchAppSA(sangerAlignmentData)}
 setGeneric("launchAppSA", function(object, outputDir = NULL, colors = "default") {
     standardGeneric("launchAppSA")
@@ -272,7 +278,7 @@ setGeneric("launchAppSA", function(object, outputDir = NULL, colors = "default")
 #' data(sangerReadFData)
 #' data(sangerContigData)
 #' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' readTable(sangerReadFData)
 #' readTable(sangerContigData)
 #' readTable(sangerAlignmentData)
@@ -302,7 +308,7 @@ setGeneric("readTable", function(object, indentation = 0, ...) {
 #' @exportMethod generateReportSR
 #' @examples
 #' data(sangerReadFData)
-#' \dontrun{
+#' \donttest{
 #' generateReportSR(sangerReadFData)}
 setGeneric("generateReportSR", function(object, outputDir = NULL, colors="default", ...) {
     standardGeneric("generateReportSR")
@@ -327,7 +333,7 @@ setGeneric("generateReportSR", function(object, outputDir = NULL, colors="defaul
 #' @exportMethod generateReportSC
 #' @examples
 #' data(sangerContigData)
-#' \dontrun{
+#' \donttest{
 #' generateReportSC(sangerContigData)}
 setGeneric("generateReportSC", function(object, outputDir = NULL,
                                         includeSangerRead = TRUE, colors="default", ...) {
@@ -354,7 +360,7 @@ setGeneric("generateReportSC", function(object, outputDir = NULL,
 #' @exportMethod generateReportSA
 #' @examples
 #' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' generateReportSA(sangerAlignmentData)}
 setGeneric("generateReportSA", function(object, outputDir = NULL,
                                         includeSangerContig = TRUE,

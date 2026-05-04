@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' data("sangerContigData")
-#' \dontrun{
+#' \donttest{
 #' updateQualityParam(sangerContigData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
@@ -286,7 +286,7 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
 #'
 #' @examples
 #' data("sangerContigData")
-#' \dontrun{
+#' \donttest{
 #' generateReportSC(sangerContigData)
 #' generateReportSC(sangerContigData, colors="cb_friendly")}
 setMethod("generateReportSC", "SangerContig",
@@ -380,7 +380,7 @@ setMethod("generateReportSC", "SangerContig",
 #' data(sangerReadFData)
 #' data(sangerContigData)
 #' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' readTable(sangerReadFData)
 #' readTable(sangerContigData)
 #' readTable(sangerAlignmentData)

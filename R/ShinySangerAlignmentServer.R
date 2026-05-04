@@ -2,6 +2,10 @@
 ### R shiny SangerAlignment server function
 ### ============================================================================
 SangerAlignmentServer <- function(input, output, session) {
+    # Bind NEW_SANGER_ALIGNED_CONSENSUS_READ_SET in this server's
+    # enclosing scope; otherwise `<<-` in the saveS4 handler steps up to
+    # globalenv() and triggers an R CMD check warning.
+    NEW_SANGER_ALIGNED_CONSENSUS_READ_SET <- NULL
     # Suppress Warning
     options(warn = -1)
     ### ------------------------------------------------------------------------

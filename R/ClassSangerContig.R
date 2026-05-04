@@ -767,7 +767,7 @@ setMethod("initialize",
             }
             if (printLevel == "SangerContig") {
                 if (TrimmingMethod == "M1") {
-                    log_info("   >> Trimmed by 'M1 - Mott’s trimming algorithm'.")
+                    log_info("   >> Trimmed by 'M1 - Mott's trimming algorithm'.")
                 } else if (TrimmingMethod == "M2") {
                     log_info("   >> Trimmed by 'M2 - sliding window method'.")
                 }

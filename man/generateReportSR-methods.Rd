@@ -27,6 +27,6 @@ Method generateReportSR
 }
 \examples{
 data(sangerReadFData)
-\dontrun{
+\donttest{
 generateReportSR(sangerReadFData)}
 }

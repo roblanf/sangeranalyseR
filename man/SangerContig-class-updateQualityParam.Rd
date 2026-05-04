@@ -35,7 +35,7 @@ A SangerContig method which updates QualityReport parameter for each the SangerR
 }
 \examples{
 data("sangerContigData")
-\dontrun{
+\donttest{
 updateQualityParam(sangerContigData,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,

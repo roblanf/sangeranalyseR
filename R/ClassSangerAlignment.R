@@ -562,7 +562,7 @@ setMethod("initialize",
             }
             log_info("  >> ", readNum, " reads created from ", inputSource, " file.")
             if (TrimmingMethod == "M1") {
-                log_info("  >> Reads are trimmed by 'M1 - Mott’s trimming algorithm'.")
+                log_info("  >> Reads are trimmed by 'M1 - Mott's trimming algorithm'.")
             } else if (TrimmingMethod == "M2") {
                 log_info("  >> Reads are trimmed by 'M2 - sliding window method'.")
             }   

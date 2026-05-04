@@ -640,11 +640,11 @@ primarySeqDisplay <- function(sequenceParam, colors) {
         G_color = "#c9c9c9"
         unknown_color = "purple"
     } else if (colors == "cb_friendly") {
-        A_color = rgb(122, 122, 122, max = 255)
-        T_color = rgb(199, 199, 199, max = 255)
-        C_color = rgb(0, 114, 178, max = 255)
-        G_color = rgb(213, 94, 0, max = 255)
-        unknown_color = rgb(204, 121, 167, max = 255)
+        A_color = rgb(122, 122, 122, maxColorValue = 255)
+        T_color = rgb(199, 199, 199, maxColorValue = 255)
+        C_color = rgb(0, 114, 178, maxColorValue = 255)
+        G_color = rgb(213, 94, 0, maxColorValue = 255)
+        unknown_color = rgb(204, 121, 167, maxColorValue = 255)
     } else {
         A_color = colors[1]
         T_color = colors[2]
@@ -680,11 +680,11 @@ secondarySeqDisplay <- function(sequenceParam, colors) {
         G_color = "#c9c9c9"
         unknown_color = "purple"
     } else if (colors == "cb_friendly") {
-        A_color = rgb(122, 122, 122, max = 255)
-        T_color = rgb(199, 199, 199, max = 255)
-        C_color = rgb(0, 114, 178, max = 255)
-        G_color = rgb(213, 94, 0, max = 255)
-        unknown_color = rgb(204, 121, 167, max = 255)
+        A_color = rgb(122, 122, 122, maxColorValue = 255)
+        T_color = rgb(199, 199, 199, maxColorValue = 255)
+        C_color = rgb(0, 114, 178, maxColorValue = 255)
+        G_color = rgb(213, 94, 0, maxColorValue = 255)
+        unknown_color = rgb(204, 121, 167, maxColorValue = 255)
     } else {
         A_color = colors[1]
         T_color = colors[2]
@@ -814,11 +814,11 @@ primarySeqTrimmedDisplay <- function(input, output, session,
         G_color = "#c9c9c9"
         unknown_color = "purple"
     } else if (colors == "cb_friendly") {
-        A_color = rgb(122, 122, 122, max = 255)
-        T_color = rgb(199, 199, 199, max = 255)
-        C_color = rgb(0, 114, 178, max = 255)
-        G_color = rgb(213, 94, 0, max = 255)
-        unknown_color = rgb(204, 121, 167, max = 255)
+        A_color = rgb(122, 122, 122, maxColorValue = 255)
+        T_color = rgb(199, 199, 199, maxColorValue = 255)
+        C_color = rgb(0, 114, 178, maxColorValue = 255)
+        G_color = rgb(213, 94, 0, maxColorValue = 255)
+        unknown_color = rgb(204, 121, 167, maxColorValue = 255)
     } else {
         A_color = colors[1]
         T_color = colors[2]
@@ -863,11 +863,11 @@ secondSeqTrimmedDisplay <- function(input, output, session,
         G_color = "#c9c9c9"
         unknown_color = "purple"
     } else if (colors == "cb_friendly") {
-        A_color = rgb(122, 122, 122, max = 255)
-        T_color = rgb(199, 199, 199, max = 255)
-        C_color = rgb(0, 114, 178, max = 255)
-        G_color = rgb(213, 94, 0, max = 255)
-        unknown_color = rgb(204, 121, 167, max = 255)
+        A_color = rgb(122, 122, 122, maxColorValue = 255)
+        T_color = rgb(199, 199, 199, maxColorValue = 255)
+        C_color = rgb(0, 114, 178, maxColorValue = 255)
+        G_color = rgb(213, 94, 0, maxColorValue = 255)
+        unknown_color = rgb(204, 121, 167, maxColorValue = 255)
     } else {
         A_color = colors[1]
         T_color = colors[2]

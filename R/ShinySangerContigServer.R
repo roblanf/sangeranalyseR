@@ -2,6 +2,10 @@
 ### R shiny contigSeq server function
 ### ============================================================================
 SangerContigServer <- function(input, output, session) {
+    # Bind NEW_SANGER_CONTIG in this server's enclosing scope so the
+    # `<<-` assignment in the saveS4 handler (line 877) writes here
+    # instead of stepping up to globalenv() — keeps R CMD check happy.
+    NEW_SANGER_CONTIG <- NULL
     # Suppress Warning
     options(warn = -1)
     ### ------------------------------------------------------------------------

@@ -36,7 +36,7 @@ A SangerAlignment method which generates final reports of the SangerContig insta
 }
 \examples{
 data("sangerAlignmentData")
-\dontrun{
+\donttest{
 generateReportSA(sangerAlignmentData)
 generateReportSA(sangerAlignmentData, colors="cb_friendly")}
 }

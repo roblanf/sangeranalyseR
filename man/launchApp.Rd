@@ -27,7 +27,7 @@ A method which launches Shiny application of the SangerContig
 \examples{
 data(sangerContigData)
 data(sangerAlignmentData)
-\dontrun{
+\donttest{
 launchApp(sangerContigData)
 launchApp(sangerContigData, colors="cb_friendly")
 launchApp(sangerAlignmentData)

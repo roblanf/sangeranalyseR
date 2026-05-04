@@ -345,7 +345,7 @@ setMethod("initialize",
                 }
                 if (printLevel == "SangerRead") {
                     if (TrimmingMethod == "M1" && printLevel == "SangerRead") {
-                        log_info("   >> Read is trimmed by 'M1 - Mott’s trimming algorithm'.")
+                        log_info("   >> Read is trimmed by 'M1 - Mott's trimming algorithm'.")
                     } else if (TrimmingMethod == "M2" && printLevel == "SangerRead") {
                         log_info("   >> Read is trimmed by 'M2 - sliding window method'.")
                     }   

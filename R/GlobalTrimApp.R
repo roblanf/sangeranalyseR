@@ -32,7 +32,7 @@
 #'   or NULL if the user cancels.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' data(sangerAlignmentData)
 #' SA2 <- globalTrimApp(sangerAlignmentData)
 #' }

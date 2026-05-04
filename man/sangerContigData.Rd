@@ -4,11 +4,16 @@
 \name{sangerContigData}
 \alias{sangerContigData}
 \title{SangerContig instance}
+\format{
+A \code{\link{SangerContig-class}} S4 object.
+}
 \usage{
 data(sangerContigData)
 }
 \description{
-SangerContig instance
+A pre-built \code{SangerContig} S4 object containing one
+  forward + one reverse \code{SangerRead} from the ACHLO fixture, plus
+  the assembled contig consensus.
 }
 \author{
 Kuan-Hao Chao

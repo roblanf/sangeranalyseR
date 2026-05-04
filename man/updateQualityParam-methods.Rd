@@ -37,7 +37,7 @@ data(qualityReportData)
 data(sangerReadFData)
 data(sangerContigData)
 data(sangerAlignmentData)
-\dontrun{
+\donttest{
 updateQualityParam(qualityReportData,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,

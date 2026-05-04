@@ -7,11 +7,11 @@
 ### Translates a (processorsNum, BPPARAM) input pair into a single BPPARAM
 ### object suitable for `bplapply` and `bpnworkers`. Honours the historical
 ### contract that `processorsNum = 1` means "run serially":
-###   * BPPARAM supplied → use it (caller is responsible).
-###   * processorsNum == 1 (or NULL on Windows) → SerialParam().
-###   * processorsNum >= 2 → MulticoreParam(workers = N) on Unix,
+###   * BPPARAM supplied -> use it (caller is responsible).
+###   * processorsNum == 1 (or NULL on Windows) -> SerialParam().
+###   * processorsNum >= 2 -> MulticoreParam(workers = N) on Unix,
 ###                          SnowParam(workers = N) on Windows.
-###   * processorsNum == NULL on Unix → bpparam() (registered default,
+###   * processorsNum == NULL on Unix -> bpparam() (registered default,
 ###     usually MulticoreParam with all cores).
 .resolveBPPARAM <- function(processorsNum = NULL, BPPARAM = NULL) {
     if (!is.null(BPPARAM)) return(BPPARAM)
@@ -166,7 +166,7 @@ nPairwiseDiffs <- function(pattern, subject){
     return(c(qs, ps))
 }
 countCoincidentSp <- function(aln, processorsNum = NULL){
-    # Phase 6: each oneAmbiguousColumn call is microsecond-fast — Phase-2 audit
+    # Phase 6: each oneAmbiguousColumn call is microsecond-fast -- Phase-2 audit
     # showed mclapply fork overhead dominated the actual work. Plain serial
     # lapply is faster on realistic alignment widths.
     is = seq_len(aln@ranges@width[1])
@@ -490,7 +490,7 @@ getpeaks <- function(trace) {
 }
 ### Phase 7: kept as a private helper for the equivalence test in
 ### tests/testthat/test-Rcpp-peakvalues.R. Production paths use the C++
-### implementation via peakvalues_cpp() in src/peakvalues.cpp (~30× faster
+### implementation via peakvalues_cpp() in src/peakvalues.cpp (~30x faster
 ### per call on typical Sanger reads).
 .peakvalues_r <- function(x, pstart, pstop) {
     region <- x[x[,1] > pstart & x[,1] < pstop, ,drop=FALSE]
@@ -827,7 +827,7 @@ vline <- function(x = 0, color = "red") {
 ### Shiny/htmlwidgets at full resolution.
 ###
 ### `chromatogram_plotly()` returns a single Plotly htmlwidget that:
-###   * uses `scattergl` (WebGL) traces — keeps the browser responsive
+###   * uses `scattergl` (WebGL) traces -- keeps the browser responsive
 ###     even at >50k points per channel,
 ###   * downsamples to `max_points` per channel by uniform-stride
 ###     subsampling when the trace is longer (preserves peak silhouettes
@@ -840,6 +840,35 @@ vline <- function(x = 0, color = "red") {
 ### can render with `plotly::renderPlotly`.
 ### ============================================================================
 
+#' Render a Sanger chromatogram as an interactive Plotly widget
+#'
+#' Wraps the four trace channels (A/C/G/T) of a sangerseq / SangerRead
+#' object into a single \code{plotly} htmlwidget that renders via WebGL
+#' (\code{scattergl}). Intended for embedding in Shiny dashboards where
+#' the static \code{\link{chromatogram_overwrite}} would be too heavy.
+#'
+#' @param obj A sangerseq or SangerRead instance with a populated
+#'   \code{traceMatrix}.
+#' @param trim5 Integer; if \code{showtrim} is TRUE, shade the first
+#'   \code{trim5} positions to indicate the 5' trim region.
+#' @param trim3 Integer; if \code{showtrim} is TRUE, shade the last
+#'   \code{trim3} positions to indicate the 3' trim region.
+#' @param max_points Integer cap on the number of points rendered per
+#'   channel. When the trace exceeds \code{max_points} it is downsampled
+#'   by uniform stride.
+#' @param showtrim Logical; whether to overlay shaded trim regions.
+#' @param colors Either \code{"default"}, \code{"cb_friendly"}, or a
+#'   length-5 character vector of hex colours for (A, T, C, G, other).
+#'
+#' @return A \code{plotly} htmlwidget. The returned object carries a
+#'   \code{downsample_info} attribute reporting the original and rendered
+#'   point counts plus the stride.
+#'
+#' @examples
+#' data(sangerReadFData)
+#' \donttest{
+#' chromatogram_plotly(sangerReadFData)
+#' }
 #' @export
 chromatogram_plotly <- function(obj,
                                  trim5      = 0,
@@ -865,7 +894,7 @@ chromatogram_plotly <- function(obj,
 
     trace_mat <- obj@traceMatrix
     if (is.null(trace_mat) || nrow(trace_mat) == 0L) {
-        stop("`obj@traceMatrix` is empty — no chromatogram to render.")
+        stop("`obj@traceMatrix` is empty -- no chromatogram to render.")
     }
     n_total <- nrow(trace_mat)
 
@@ -947,10 +976,40 @@ SangerReadInnerTrimming <- function(SangerReadInst, inputSource) {
     return(primaryDNA)
 }
 
+#' Static base-R chromatogram renderer with a corrected color palette.
+#'
+#' Reimplementation of \code{sangerseqR::chromatogram} with a fix for
+#' base color rendering. Intended for static (PDF / PNG) export. For
+#' interactive embedding in Shiny see \code{\link{chromatogram_plotly}}.
+#'
+#' @param obj A sangerseq or SangerRead instance.
+#' @param trim5 Integer; number of bases to mark as 5' trimmed.
+#' @param trim3 Integer; number of bases to mark as 3' trimmed.
+#' @param showcalls One of \code{"primary"}, \code{"secondary"},
+#'   \code{"both"}, or \code{"none"}.
+#' @param width Bases per row.
+#' @param height Plot height per row (relative units).
+#' @param cex.mtext Text size for marginal annotations.
+#' @param cex.base Text size for base-call labels.
+#' @param ylim Maximum y-axis multiplier (relative to robust mean).
+#' @param filename Optional path to write a PDF.
+#' @param showtrim Logical; if TRUE, shade the trim regions.
+#' @param showhets Logical; if TRUE, mark heterozygous positions.
+#' @param colors Either \code{"default"}, \code{"cb_friendly"}, or a
+#'   length-5 character vector of hex colours.
+#'
+#' @return Invisibly returns NULL; called for its side effect of
+#'   plotting (or writing to \code{filename}).
+#'
+#' @examples
+#' data(sangerReadFData)
+#' \donttest{
+#' chromatogram_overwrite(sangerReadFData)
+#' }
 #' @export
-chromatogram_overwrite <- function(obj, trim5=0, trim3=0, 
-                                   showcalls=c("primary", "secondary", "both", "none"), 
-                                   width=100, height=2, cex.mtext=1, cex.base=1, ylim=3, 
+chromatogram_overwrite <- function(obj, trim5=0, trim3=0,
+                                   showcalls=c("primary", "secondary", "both", "none"),
+                                   width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
                                    filename=NULL, showtrim=FALSE, showhets=TRUE, colors="default") {
     if (colors == "default") {
         A_color = "green"
@@ -959,11 +1018,11 @@ chromatogram_overwrite <- function(obj, trim5=0, trim3=0,
         G_color = "red"
         unknown_color = "purple"
     } else if (colors == "cb_friendly") {
-        A_color = rgb(0, 0, 0, max = 255)
-        T_color = rgb(199, 199, 199, max = 255)
-        C_color = rgb(0, 114, 178, max = 255)
-        G_color = rgb(213, 94, 0, max = 255)
-        unknown_color = rgb(204, 121, 167, max = 255)
+        A_color = rgb(0, 0, 0, maxColorValue = 255)
+        T_color = rgb(199, 199, 199, maxColorValue = 255)
+        C_color = rgb(0, 114, 178, maxColorValue = 255)
+        G_color = rgb(213, 94, 0, maxColorValue = 255)
+        unknown_color = rgb(204, 121, 167, maxColorValue = 255)
     } else {
         A_color = colors[1]
         T_color = colors[2]

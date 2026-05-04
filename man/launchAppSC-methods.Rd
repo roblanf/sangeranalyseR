@@ -25,6 +25,6 @@ Method launchAppSC
 }
 \examples{
 data(sangerContigData)
-\dontrun{
+\donttest{
 launchAppSC(sangerContigData)}
 }

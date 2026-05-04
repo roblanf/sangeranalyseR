@@ -41,7 +41,7 @@ A method which generates final reports of the SangerRead,
 data(sangerReadFData)
 data(sangerContigData)
 data(sangerAlignmentData)
-\dontrun{
+\donttest{
 generateReport(sangerReadFData)
 generateReport(sangerReadFData, colors="cb_friendly")
 generateReport(sangerContigData)

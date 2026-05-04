@@ -23,6 +23,8 @@ SangerRead(
 )
 }
 \arguments{
+\item{printLevel}{Internal — controls log verbosity when this constructor is called recursively from a parent class. Defaults to \code{"SangerRead"}; do not set manually.}
+
 \item{inputSource}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
 
 \item{readFeature}{The direction of the Sanger read. The value must be \code{"Forward Read"} or \code{"Reverse Read"}.}
@@ -48,6 +50,8 @@ SangerRead(
 \item{signalRatioCutoff}{The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.}
 
 \item{showTrimmed}{The logical value storing whether to show trimmed base pairs in chromatogram. The default value is \code{TRUE}.}
+
+\item{lazyAA}{Logical (default \code{TRUE}). Skip eager 3-frame AA translation; use \code{primaryAASeqS1/S2/S3()} accessors instead.}
 }
 \value{
 A SangerRead instance.
