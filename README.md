@@ -16,29 +16,13 @@ For full documentation see **📒 [sangeranalyseR Documentation](https://sangera
 
 ---
 
-## What's new (devel)
+## What's new
 
-The current development branch ships with a major rewrite of the assembly engine. **End-to-end `SangerAlignment(...)` builds are now ~1.7× faster** on the bundled fixtures, with full backward compatibility on the public API.
+- **~1.7× faster `SangerAlignment(...)`** thanks to a C++ peak-detection inner loop, parallel per-read construction (`BiocParallel`), and lazy 3-frame amino-acid translation that only runs when you ask for it.
+- **Interactive Plotly + WebGL chromatograms** via the new `chromatogram_plotly()` — smooth scrolling and zoom on Sanger traces with tens of thousands of points.
+- **Global trimming dashboard** via the new `globalTrimApp(sa)` — adjust M1 / M2 trimming parameters across an entire `SangerAlignment` with a live consensus preview.
 
-| Feature                              | What it does                                                                                                                                | Impact                                                                                  |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| **`BiocParallel` support**           | The per-`SangerRead` construction loop now uses `bplapply` instead of `parallel::mclapply`. Pass `BPPARAM = bpparam()` (or any `BiocParallelParam`) to choose your backend. | Multicore on Linux / macOS, automatic `SnowParam` on Windows — first-class parallelism cross-platform. |
-| **Lazy AA translation (`lazyAA`)**   | The 3-frame `Biostrings::translate` step is skipped at construction time when no `refAminoAcidSeq` is supplied. AA frames compute lazily via `primaryAASeqS1/S2/S3()` accessors. | Removes ~35% of construction wall time on protein-coding reads.                          |
-| **Rcpp `peakvalues` port**           | The peak-detection inner loop in `MakeBaseCallsInside` is now C++ via `peakvalues_batch_cpp` (one `.Call` per channel instead of one per peak). | ~1.28× end-to-end speedup on the ACHLO fixture; ~320 ms saved per `SangerAlignment` build. |
-| **Plotly + WebGL chromatograms**     | New exported `chromatogram_plotly()` renders Sanger traces as Plotly htmlwidgets using `scattergl` (WebGL) with automatic stride downsampling. | Embeds chromatograms in Shiny dashboards without browser-freeze on > 50 k point traces. |
-| **Global Trimming gadget**           | New exported `globalTrimApp(SA)` opens a Shiny gadget with M1 / M2 sliders that re-trim every read in a `SangerAlignment` and live-preview the consensus. | Faster batch parameter tuning than per-read sliders.                                    |
-| **S4 `setValidity` invariants**      | Post-construction sanity checks on `QualityReport`, `ChromatogramParam`, and `ObjectResults`.                                                 | Catches silent slot mutations.                                                          |
-| **Strict build compliance**          | `R CMD check` is fully clean (0 errors / 0 warnings / 0 notes). 1360 testthat tests pass, with coverage > 87% on every non-Shiny file.       | Production-quality build.                                                               |
-
-Cumulative wall-time progression (8-read ACHLO fixture, mean of 5 reps, single thread):
-
-| Milestone                                | Wall time | vs. baseline |
-| ---------------------------------------- | --------: | -----------: |
-| Pre-refactor baseline (eager AA, R-only) |  1.85 s   | 1.0×         |
-| Lazy AA + BiocParallel plumbing          |  1.33 s   | 1.39×        |
-| **Rcpp `peakvalues_batch_cpp`**          | **1.07 s (best)** / 1.14 s (mean) | **~1.62× best / 1.62× mean** |
-
-See `plans/05_e2e_validation_report.md`, `plans/06_scaling_summary.md`, and `plans/07_rcpp_optimization_log.md` for the full benchmark methodology and raw artifacts.
+For the full per-version changelog see [`NEWS.md`](NEWS.md).
 
 ---
 
@@ -112,7 +96,17 @@ length(sa@contigsConsensus)            # cross-contig consensus length
 sa2 <- globalTrimApp(sa)
 ```
 
-### 3. Inspect a chromatogram in WebGL (no browser freeze on long traces)
+### 3. Explore your data
+
+Open the per-read Shiny app for a `SangerContig` (or use `launchApp(sa)` on a full `SangerAlignment`):
+
+```r
+launchApp(sa)
+```
+
+<img src="https://i.imgur.com/gwY6AqB.png" alt="sangeranalyseR Shiny app — interactive contig browser" style="width:100%">
+
+You can also pull up an interactive WebGL chromatogram for a single read without launching the full app:
 
 ```r
 sr <- sa@contigList[[1]]@forwardReadList[[1]]
