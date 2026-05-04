@@ -818,6 +818,122 @@ vline <- function(x = 0, color = "red") {
     )
 }
 
+### ============================================================================
+### Phase 8: Plotly + WebGL chromatogram renderer.
+###
+### A full Sanger trace can have ~10^4 points per channel. The legacy
+### `chromatogram_overwrite` uses base-R graphics via `polygon()` which is
+### fine for static images but freezes the browser when wrapped in
+### Shiny/htmlwidgets at full resolution.
+###
+### `chromatogram_plotly()` returns a single Plotly htmlwidget that:
+###   * uses `scattergl` (WebGL) traces — keeps the browser responsive
+###     even at >50k points per channel,
+###   * downsamples to `max_points` per channel by uniform-stride
+###     subsampling when the trace is longer (preserves peak silhouettes
+###     well; for production use one would prefer LTTB, but stride is
+###     deterministic and zero-dep),
+###   * supports the same `colors` argument as `chromatogram_overwrite`
+###     ("default" / "cb_friendly" / a 5-vector of hex colours).
+###
+### Returned object is a `plotly::plotly` htmlwidget that the Shiny app
+### can render with `plotly::renderPlotly`.
+### ============================================================================
+
+#' @export
+chromatogram_plotly <- function(obj,
+                                 trim5      = 0,
+                                 trim3      = 0,
+                                 max_points = 8000L,
+                                 showtrim   = FALSE,
+                                 colors     = "default") {
+    if (!is(obj, "sangerseq")) {
+        stop("'obj' must be a sangerseq (or SangerRead) S4 object.")
+    }
+
+    palette <- if (identical(colors, "default")) {
+        c(A = "#2ca02c", T = "#1f77b4", C = "#000000", G = "#d62728",
+          other = "#9467bd")
+    } else if (identical(colors, "cb_friendly")) {
+        c(A = "#000000", T = "#c7c7c7", C = "#0072b2", G = "#d55e00",
+          other = "#cc79a7")
+    } else if (is.character(colors) && length(colors) == 5L) {
+        setNames(colors, c("A", "T", "C", "G", "other"))
+    } else {
+        stop("'colors' must be \"default\", \"cb_friendly\", or a length-5 character vector")
+    }
+
+    trace_mat <- obj@traceMatrix
+    if (is.null(trace_mat) || nrow(trace_mat) == 0L) {
+        stop("`obj@traceMatrix` is empty — no chromatogram to render.")
+    }
+    n_total <- nrow(trace_mat)
+
+    # Uniform-stride downsample if the trace is longer than max_points.
+    if (n_total > max_points) {
+        stride <- ceiling(n_total / max_points)
+        idx    <- seq.int(1L, n_total, by = stride)
+    } else {
+        idx <- seq.int(1L, n_total)
+    }
+    x_axis <- idx
+
+    # Order matches sangerseqR convention: traceMatrix columns are A, C, G, T.
+    p <- plotly::plot_ly()
+    p <- plotly::add_trace(p,
+        x = x_axis, y = trace_mat[idx, 1L],
+        type = "scattergl", mode = "lines",
+        line = list(color = palette[["A"]], width = 1),
+        name = "A")
+    p <- plotly::add_trace(p,
+        x = x_axis, y = trace_mat[idx, 2L],
+        type = "scattergl", mode = "lines",
+        line = list(color = palette[["C"]], width = 1),
+        name = "C")
+    p <- plotly::add_trace(p,
+        x = x_axis, y = trace_mat[idx, 3L],
+        type = "scattergl", mode = "lines",
+        line = list(color = palette[["G"]], width = 1),
+        name = "G")
+    p <- plotly::add_trace(p,
+        x = x_axis, y = trace_mat[idx, 4L],
+        type = "scattergl", mode = "lines",
+        line = list(color = palette[["T"]], width = 1),
+        name = "T")
+
+    # Optional shaded trim region.
+    if (showtrim && (trim5 > 0 || trim3 > 0)) {
+        if (trim5 > 0) {
+            p <- plotly::add_trace(p,
+                x = c(0, trim5), y = c(0, 0),
+                type = "scattergl", mode = "lines",
+                line = list(color = "rgba(200, 200, 200, 0.5)", width = 30),
+                name = "5' trimmed", hoverinfo = "skip")
+        }
+        if (trim3 > 0) {
+            p <- plotly::add_trace(p,
+                x = c(n_total - trim3, n_total), y = c(0, 0),
+                type = "scattergl", mode = "lines",
+                line = list(color = "rgba(200, 200, 200, 0.5)", width = 30),
+                name = "3' trimmed", hoverinfo = "skip")
+        }
+    }
+
+    p <- plotly::layout(p,
+        xaxis  = list(title = "Trace position",
+                      range = c(1L, n_total)),
+        yaxis  = list(title = "Signal"),
+        legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.1),
+        hovermode = "x unified")
+
+    attr(p, "downsample_info") <- list(
+        original_points     = n_total,
+        rendered_points     = length(idx),
+        downsample_stride   = if (exists("stride", inherits = FALSE)) stride else 1L
+    )
+    p
+}
+
 SangerReadInnerTrimming <- function(SangerReadInst, inputSource) {
     primaryDNA <- as.character(SangerReadInst@primarySeq)
     if (inputSource == "ABIF") {

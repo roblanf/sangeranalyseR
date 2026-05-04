@@ -385,14 +385,14 @@ SangerContigServer <- function(input, output, session) {
                     as.character(SangerContig@
                                      forwardReadList[[readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerContig@
-                                     forwardReadList[[readIndex]]@primaryAASeqS1)
+                    as.character(primaryAASeqS1(SangerContig@
+                                     forwardReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerContig@
-                                     forwardReadList[[readIndex]]@primaryAASeqS2)
+                    as.character(primaryAASeqS2(SangerContig@
+                                     forwardReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerContig@
-                                     forwardReadList[[readIndex]]@primaryAASeqS3)
+                    as.character(primaryAASeqS3(SangerContig@
+                                     forwardReadList[[readIndex]]))
                 ChromatogramParam[["baseNumPerRow"]] <<-
                     SangerContig@forwardReadList[[readIndex]]@
                     ChromatogramParam@baseNumPerRow
@@ -475,14 +475,14 @@ SangerContigServer <- function(input, output, session) {
                     as.character(SangerContig@
                                      reverseReadList[[readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerContig@
-                                     reverseReadList[[readIndex]]@primaryAASeqS1)
+                    as.character(primaryAASeqS1(SangerContig@
+                                     reverseReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerContig@
-                                     reverseReadList[[readIndex]]@primaryAASeqS2)
+                    as.character(primaryAASeqS2(SangerContig@
+                                     reverseReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerContig@
-                                     reverseReadList[[readIndex]]@primaryAASeqS3)
+                    as.character(primaryAASeqS3(SangerContig@
+                                     reverseReadList[[readIndex]]))
                 ChromatogramParam[["baseNumPerRow"]] <<-
                     SangerContig@reverseReadList[[readIndex]]@
                     ChromatogramParam@baseNumPerRow
@@ -1744,14 +1744,14 @@ SangerContigServer <- function(input, output, session) {
                     as.character(SangerContig@forwardReadList[[
                         readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerContig@forwardReadList[[
-                        readIndex]]@primaryAASeqS1)
+                    as.character(primaryAASeqS1(SangerContig@forwardReadList[[
+                        readIndex]]))
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerContig@forwardReadList[[
-                        readIndex]]@primaryAASeqS2)
+                    as.character(primaryAASeqS2(SangerContig@forwardReadList[[
+                        readIndex]]))
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerContig@forwardReadList[[
-                        readIndex]]@primaryAASeqS3)
+                    as.character(primaryAASeqS3(SangerContig@forwardReadList[[
+                        readIndex]]))
             } else if (directionParam == "Reverse") {
                 rawSeqLength <-
                     SangerContig@reverseReadList[[readIndex]]@
@@ -1798,14 +1798,14 @@ SangerContigServer <- function(input, output, session) {
                     as.character(SangerContig@reverseReadList[[
                         readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerContig@reverseReadList[[
-                        readIndex]]@primaryAASeqS1)
+                    as.character(primaryAASeqS1(SangerContig@reverseReadList[[
+                        readIndex]]))
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerContig@reverseReadList[[
-                        readIndex]]@primaryAASeqS2)
+                    as.character(primaryAASeqS2(SangerContig@reverseReadList[[
+                        readIndex]]))
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerContig@reverseReadList[[
-                        readIndex]]@primaryAASeqS3)
+                    as.character(primaryAASeqS3(SangerContig@reverseReadList[[
+                        readIndex]]))
             }
 
             # log_info(">>>>>>>>>>>> 'MakeBaseCalls' finished")
