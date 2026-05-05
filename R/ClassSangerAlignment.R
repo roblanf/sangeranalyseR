@@ -181,7 +181,10 @@ setMethod("initialize",
                    readingFrame           = 1,
                    processorsNum          = 1,
                    BPPARAM                = NULL,
-                   lazyAA                 = TRUE) {
+                   lazyAA                 = TRUE,
+                   minOverlapFraction     = 0.0,
+                   minOverlapBases        = 0L,
+                   alignSeqsParams        = list()) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
@@ -369,7 +372,10 @@ setMethod("initialize",
                                    readingFrame         = readingFrame,
                                    processorsNum        = processorsNum,
                                    BPPARAM              = BPPARAM,
-                                   lazyAA               = lazyAA)
+                                   lazyAA               = lazyAA,
+                                   minOverlapFraction   = minOverlapFraction,
+                                   minOverlapBases      = minOverlapBases,
+                                   alignSeqsParams      = alignSeqsParams)
                            readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                            if (newSangerContig@objectResults@creationResult) {
                                newSangerContig
@@ -455,7 +461,10 @@ setMethod("initialize",
                         readingFrame         = readingFrame,
                         processorsNum        = processorsNum,
                         BPPARAM              = BPPARAM,
-                        lazyAA               = lazyAA)
+                        lazyAA               = lazyAA,
+                        minOverlapFraction   = minOverlapFraction,
+                        minOverlapBases      = minOverlapBases,
+                        alignSeqsParams      = alignSeqsParams)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
@@ -516,7 +525,10 @@ setMethod("initialize",
                         readingFrame         = readingFrame,
                         processorsNum        = processorsNum,
                         BPPARAM              = BPPARAM,
-                        lazyAA               = lazyAA)
+                        lazyAA               = lazyAA,
+                        minOverlapFraction   = minOverlapFraction,
+                        minOverlapBases      = minOverlapBases,
+                        alignSeqsParams      = alignSeqsParams)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
@@ -560,7 +572,10 @@ setMethod("initialize",
                         readingFrame         = readingFrame,
                         processorsNum        = processorsNum,
                         BPPARAM              = BPPARAM,
-                        lazyAA               = lazyAA)
+                        lazyAA               = lazyAA,
+                        minOverlapFraction   = minOverlapFraction,
+                        minOverlapBases      = minOverlapBases,
+                        alignSeqsParams      = alignSeqsParams)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 if (newSangerContig@objectResults@creationResult) {
                     newSangerContig

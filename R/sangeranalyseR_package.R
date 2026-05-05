@@ -38,7 +38,7 @@
 #'             setMethod setValidity slotNames validObject callNextMethod
 #'             slot slot<-
 #' @importFrom utils read.csv write.csv head tail capture.output data
-#' @importFrom stats setNames IQR quantile
+#' @importFrom stats setNames IQR quantile aggregate
 #' @importFrom stringr str_split
 #' @importFrom Biostrings AAString
 #' @importFrom plotly "%>%"
@@ -47,6 +47,7 @@
 #' @importFrom ape as.phylo rtree
 #' @importFrom shiny shinyApp shinyOptions
 #' @importFrom S4Vectors isEmpty
+#' @importFrom BiocGenerics width
 #' @import logger
 NULL
 

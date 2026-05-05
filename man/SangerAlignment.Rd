@@ -31,7 +31,10 @@ SangerAlignment(
   readingFrame = 1,
   processorsNum = 1,
   BPPARAM = NULL,
-  lazyAA = TRUE
+  lazyAA = TRUE,
+  minOverlapFraction = 0,
+  minOverlapBases = 0L,
+  alignSeqsParams = list()
 )
 }
 \arguments{
@@ -88,6 +91,12 @@ SangerAlignment(
 \item{BPPARAM}{A \code{BiocParallelParam} instance that controls how the per-\code{SangerRead} construction loop is parallelised. Defaults to \code{NULL}, in which case it is derived from \code{processorsNum}.}
 
 \item{lazyAA}{Logical (default \code{TRUE}). When \code{TRUE} and \code{refAminoAcidSeq == ""}, the per-read 3-frame amino-acid translation is skipped at construction time and computed on demand via \code{primaryAASeqS1/S2/S3()}.}
+
+\item{minOverlapFraction}{Numeric in [0, 1] (default \code{0.0}). When > 0, after read alignment the smallest pairwise non-gap overlap is computed; if it falls below \code{minOverlapFraction * shorter_read_length}, a \code{LOW_OVERLAP_WARN} is logged. Use this to detect spurious merges of poorly-overlapping forward/reverse reads (issues #94, #66).}
+
+\item{minOverlapBases}{Integer (default \code{0L}). Like \code{minOverlapFraction} but expressed in absolute base pairs; the warning fires if the smallest pairwise overlap is below this value. Whichever of the two thresholds is larger applies.}
+
+\item{alignSeqsParams}{A named list (default \code{list()}) of additional arguments forwarded to \code{DECIPHER::AlignSeqs} (or \code{AlignTranslation} when \code{refAminoAcidSeq != ""}). Useful for tuning alignment behaviour on minimal-overlap 16S reads (e.g. \code{list(iterations = 1L, refinements = 1L)}).}
 }
 \value{
 A SangerAlignment instance.

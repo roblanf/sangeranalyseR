@@ -29,6 +29,7 @@ Depends:
     sangerseqR
 Imports:
     ape,
+    BiocGenerics,
     BiocParallel,
     S4Vectors,
     data.table,

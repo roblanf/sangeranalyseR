@@ -478,6 +478,25 @@ checkAb1FastaCsv <- function(ABIF_Directory, FASTA_File,
                           "CSV_VALUE_ERROR"))
     }
 
+    ## Issue #65: warn when a single read name is assigned to more than one
+    ## distinct contig label. Pre-Phase-16 the package silently double-counted
+    ## that read in every contig it appeared in.
+    read_to_contig <- aggregate(
+        as.character(csvFile$contig),
+        by   = list(read = as.character(csvFile$reads)),
+        FUN  = function(v) length(unique(v))
+    )
+    multi_assigned <- read_to_contig$read[read_to_contig$x > 1L]
+    if (length(multi_assigned) > 0L) {
+        msg <- paste0(
+            "Read(s) assigned to >1 distinct contig in CSV: ",
+            paste(sQuote(multi_assigned), collapse = ", "),
+            ". Each read must belong to exactly one contig."
+        )
+        log_warn(msg)
+        warnings <- c(warnings, paste0(msg, " (READ_ASSIGNED_MULTIPLE_CONTIGS_WARN)"))
+    }
+
     if (length(warnings) != 0L) invisible(lapply(warnings, log_warn))
     list(errors, errorTypes)
 }

@@ -198,7 +198,10 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                maxFractionLost, geneticCode,
                                acceptStopCodons, readingFrame,
                                processorsNum = NULL, printLevel="",
-                               BPPARAM = NULL) {
+                               BPPARAM = NULL,
+                               minOverlapFraction = 0.0,
+                               minOverlapBases    = 0L,
+                               alignSeqsParams    = list()) {
     BPPARAM <- .resolveBPPARAM(processorsNum, BPPARAM)
     processorsNum <- BiocParallel::bpnworkers(BPPARAM)
     ### ------------------------------------------------------------------------
@@ -320,17 +323,116 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     }
 
     ### ------------------------------------------------------------------------
-    ### Start aligning reads
+    ### Issue #42: defensive pre-alignment filter — drop reads whose
+    ### trimmed primary sequence is shorter than 2 bp. The Phase-3 / -4
+    ### `minReadLength` filter at the SangerContig level handles the
+    ### typical case, but on aggressively-trimmed degenerate inputs (M1
+    ### produces trimmedFinishPos = 0 for some windows; FASTA reads can
+    ### be length 1 if the user supplied a very short fragment) a length-
+    ### 1 entry can survive into `frReadSet` and silently break the
+    ### downstream alignment / consensus.
     ### ------------------------------------------------------------------------
+    too_short <- BiocGenerics::width(frReadSet) < 2L
+    if (any(too_short)) {
+        log_warn(">> Dropping ", sum(too_short),
+                 " read(s) with trimmed length < 2 bp ",
+                 "(MIN_READ_LENGTH_DEFENSIVE_DROP).")
+        frReadSet <- frReadSet[!too_short]
+    }
+    if (length(frReadSet) < 2L) {
+        ## Issue #42: when the defensive filter (or upstream filtering)
+        ## drops us below the AlignSeqs minimum, we must NOT enter
+        ## DECIPHER — it errors on length-1 inputs. Return a degenerate
+        ## but well-formed result so the SangerContig.initialize caller
+        ## can fold this into a controlled READ_NUMBER_ERROR instead of
+        ## crashing the whole alignment.
+        log_warn(">> Fewer than 2 usable reads after defensive filter; ",
+                 "returning empty consensus.")
+        if (length(frReadSet) == 1L) {
+            consensusGapfree <- frReadSet[[1L]]
+        } else {
+            consensusGapfree <- DNAString()
+        }
+        return(list("consensusGapfree" = consensusGapfree,
+                    "diffsDf"          = data.frame(),
+                    "aln2"             = DNAStringSet(),
+                    "dist"             = matrix(),
+                    "dend"             = list(),
+                    "indels"           = indels,
+                    "stopsDf"          = stopsDf,
+                    "spDf"             = data.frame()))
+    }
+
+    ### ------------------------------------------------------------------------
+    ### Start aligning reads
+    ###
+    ### Issue #94: users with low-overlap F+R reads (~50 bp overlap on
+    ### 800 bp reads, common in 16S barcoding) need fine control over the
+    ### DECIPHER alignment parameters. Pass `alignSeqsParams` through to
+    ### `AlignSeqs` / `AlignTranslation` so callers can tune
+    ### `iterations`, `gapOpening`, `refinements`, etc.
+    ### ------------------------------------------------------------------------
+    base_align_args <- list(myXStringSet = frReadSet,
+                            processors    = processorsNum,
+                            verbose       = FALSE)
+    extra_align_args <- alignSeqsParams[
+        !names(alignSeqsParams) %in% names(base_align_args)]
     if (refAminoAcidSeq != "") {
-        aln = AlignTranslation(frReadSet, geneticCode = geneticCode,
-                               processors = processorsNum, verbose = FALSE)
+        aln = do.call(AlignTranslation,
+                      c(base_align_args,
+                        list(geneticCode = geneticCode),
+                        extra_align_args))
     } else {
-        aln = AlignSeqs(frReadSet,
-                        processors = processorsNum, verbose = FALSE)
+        aln = do.call(AlignSeqs,
+                      c(base_align_args, extra_align_args))
     }
     names(aln) = paste(seq_len(length(aln)), "Read",
                        basename(names(aln)), sep="_")
+
+    ### ------------------------------------------------------------------------
+    ### Issue #94 / #66: post-alignment overlap-quality check.
+    ###
+    ### Compute, for each pair of aligned reads, the number of alignment
+    ### columns where BOTH reads have a non-gap base. That count is the
+    ### "shared overlap length". If the minimum shared overlap across all
+    ### pairs is below `minOverlapFraction * shorter_read_length` AND
+    ### below `minOverlapBases` (when supplied), log a `LOW_OVERLAP_WARN`.
+    ###
+    ### The default thresholds (0.0 / 0L) preserve pre-Phase-16 behaviour
+    ### unless the caller opts in. Callers that opt in get protection
+    ### against the silent IUPAC-ambiguity-soup outputs reported in #66.
+    ### ------------------------------------------------------------------------
+    overlap_min_obs <- NA_integer_
+    overlap_min_pair <- NA_character_
+    if (length(aln) >= 2L &&
+        (minOverlapFraction > 0 || minOverlapBases > 0L)) {
+        nongap <- as.matrix(aln) != "-"
+        ## Pairwise overlap counts via crossprod.
+        ## (rows = reads, cols = alignment columns)
+        ovl <- crossprod(t(nongap))     # nreads x nreads
+        diag(ovl) <- NA_integer_
+        ## Each read's effective length (non-gap column count).
+        read_len <- rowSums(nongap)
+        overlap_min_obs <- min(ovl, na.rm = TRUE)
+        ix <- which(ovl == overlap_min_obs, arr.ind = TRUE)
+        if (nrow(ix) > 0L) {
+            overlap_min_pair <- paste(rownames(ovl)[ix[1L, 1L]],
+                                       colnames(ovl)[ix[1L, 2L]],
+                                       sep = " <-> ")
+        }
+        shorter_pair_len <- min(read_len[ix[1L, ]])
+        threshold_frac <- minOverlapFraction * shorter_pair_len
+        threshold      <- max(threshold_frac, as.numeric(minOverlapBases))
+        if (overlap_min_obs < threshold) {
+            log_warn(">> LOW_OVERLAP_WARN: smallest pairwise overlap is ",
+                     overlap_min_obs, " bp (between ", overlap_min_pair,
+                     "); required threshold is ", round(threshold, 1L),
+                     " bp. Consensus may contain spurious IUPAC ",
+                     "ambiguity codes; review carefully or tighten ",
+                     "trimming parameters before merging.")
+        }
+    }
+
     consensus = ConsensusSequence(aln,
                                   minInformation = minFractionCall,
                                   includeTerminalGaps = TRUE,

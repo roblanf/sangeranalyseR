@@ -32,7 +32,10 @@ SangerContig(
   readingFrame = 1,
   processorsNum = 1,
   BPPARAM = NULL,
-  lazyAA = TRUE
+  lazyAA = TRUE,
+  minOverlapFraction = 0,
+  minOverlapBases = 0L,
+  alignSeqsParams = list()
 )
 }
 \arguments{
@@ -91,6 +94,12 @@ SangerContig(
 \item{BPPARAM}{A \code{BiocParallelParam} instance for the per-read parallel loop. Default \code{NULL} (derived from \code{processorsNum}).}
 
 \item{lazyAA}{Logical (default \code{TRUE}). Skip eager 3-frame AA translation when no \code{refAminoAcidSeq} is supplied; use the \code{primaryAASeqS1/S2/S3()} accessors on demand instead.}
+
+\item{minOverlapFraction}{Numeric in [0, 1] (default \code{0.0}). Triggers a \code{LOW_OVERLAP_WARN} when the smallest pairwise non-gap overlap is below \code{minOverlapFraction * shorter_read_length}. See SangerAlignment for full discussion.}
+
+\item{minOverlapBases}{Integer (default \code{0L}). Absolute-base-pair threshold variant of \code{minOverlapFraction}.}
+
+\item{alignSeqsParams}{A named list (default \code{list()}) of additional arguments forwarded to \code{DECIPHER::AlignSeqs}.}
 }
 \value{
 A SangerContig instance.

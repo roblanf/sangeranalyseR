@@ -187,7 +187,10 @@ setMethod("initialize",
                    readingFrame           = 1,
                    processorsNum          = 1,
                    BPPARAM                = NULL,
-                   lazyAA                 = TRUE) {
+                   lazyAA                 = TRUE,
+                   minOverlapFraction     = 0.0,
+                   minOverlapBases        = 0L,
+                   alignSeqsParams        = list()) {
     creationResult <- TRUE
     errors <- list(character(0), character(0))
     warnings <- list(character(0), character(0))
@@ -724,7 +727,10 @@ setMethod("initialize",
                                                 readingFrame     = readingFrame,
                                                 processorsNum    = processorsNum,
                                                 printLevel       = printLevel,
-                                                BPPARAM          = BPPARAM)
+                                                BPPARAM          = BPPARAM,
+                                                minOverlapFraction = minOverlapFraction,
+                                                minOverlapBases    = minOverlapBases,
+                                                alignSeqsParams    = alignSeqsParams)
                 contigGapfree <- CSResult$consensusGapfree
                 contigLen <- length(contigGapfree)
                 ## This is the only part that is correct!
