@@ -35,7 +35,9 @@ SangerContig(
   lazyAA = TRUE,
   minOverlapFraction = 0,
   minOverlapBases = 0L,
-  alignSeqsParams = list()
+  alignSeqsParams = list(),
+  consensusMethod = "strict",
+  qualityAware = FALSE
 )
 }
 \arguments{
@@ -100,6 +102,10 @@ SangerContig(
 \item{minOverlapBases}{Integer (default \code{0L}). Absolute-base-pair threshold variant of \code{minOverlapFraction}.}
 
 \item{alignSeqsParams}{A named list (default \code{list()}) of additional arguments forwarded to \code{DECIPHER::AlignSeqs}.}
+
+\item{consensusMethod}{One of \code{"strict"} (default), \code{"majority"}, or \code{"quality_weighted"}. See SangerAlignment for full discussion.}
+
+\item{qualityAware}{Logical shorthand for \code{consensusMethod = "quality_weighted"}. Issue #48.}
 }
 \value{
 A SangerContig instance.

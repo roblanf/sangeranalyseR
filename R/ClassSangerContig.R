@@ -190,7 +190,9 @@ setMethod("initialize",
                    lazyAA                 = TRUE,
                    minOverlapFraction     = 0.0,
                    minOverlapBases        = 0L,
-                   alignSeqsParams        = list()) {
+                   alignSeqsParams        = list(),
+                   consensusMethod        = "strict",
+                   qualityAware           = FALSE) {
     creationResult <- TRUE
     errors <- list(character(0), character(0))
     warnings <- list(character(0), character(0))
@@ -716,6 +718,34 @@ setMethod("initialize",
         if (readNumber >= minReadsNum) {
             msg <- ""
             if (readNumber >= 2) {
+                ### --------------------------------------------------------
+                ### Issue #48: when the user requests a quality-weighted
+                ### consensus, build the per-read Phred vectors from the
+                ### nested QualityReport slots and forward them. ABIF only —
+                ### FASTA-derived reads have no Phred scores.
+                ### --------------------------------------------------------
+                qpls <- NULL
+                wants_quality <- isTRUE(qualityAware) ||
+                    consensusMethod == "quality_weighted"
+                if (wants_quality && inputSource == "ABIF") {
+                    qpls <- list()
+                    .extract_q <- function(sr) {
+                        qp <- sr@QualityReport@qualityPhredScores
+                        ts <- sr@QualityReport@trimmedStartPos
+                        tf <- sr@QualityReport@trimmedFinishPos
+                        if (length(qp) == 0L || tf <= ts) return(integer(0))
+                        qp[(ts + 1L):tf]
+                    }
+                    for (sr in forwardReadListFilter) {
+                        qpls[[basename(sr@readFileName)]] <- .extract_q(sr)
+                    }
+                    for (sr in reverseReadListFilter) {
+                        ## Reverse reads are reverse-complemented before
+                        ## alignment; their Phred scores must be reversed too
+                        ## so column index in the alignment lines up.
+                        qpls[[basename(sr@readFileName)]] <- rev(.extract_q(sr))
+                    }
+                }
                 CSResult <- calculateContigSeq (inputSource      = inputSource,
                                                 forwardReadList  = forwardReadListFilter,
                                                 reverseReadList  = reverseReadListFilter,
@@ -730,7 +760,10 @@ setMethod("initialize",
                                                 BPPARAM          = BPPARAM,
                                                 minOverlapFraction = minOverlapFraction,
                                                 minOverlapBases    = minOverlapBases,
-                                                alignSeqsParams    = alignSeqsParams)
+                                                alignSeqsParams    = alignSeqsParams,
+                                                consensusMethod        = consensusMethod,
+                                                qualityAware           = qualityAware,
+                                                qualityPhredScoresList = qpls)
                 contigGapfree <- CSResult$consensusGapfree
                 contigLen <- length(contigGapfree)
                 ## This is the only part that is correct!

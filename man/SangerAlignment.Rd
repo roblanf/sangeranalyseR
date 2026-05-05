@@ -34,7 +34,9 @@ SangerAlignment(
   lazyAA = TRUE,
   minOverlapFraction = 0,
   minOverlapBases = 0L,
-  alignSeqsParams = list()
+  alignSeqsParams = list(),
+  consensusMethod = "strict",
+  qualityAware = FALSE
 )
 }
 \arguments{
@@ -97,6 +99,10 @@ SangerAlignment(
 \item{minOverlapBases}{Integer (default \code{0L}). Like \code{minOverlapFraction} but expressed in absolute base pairs; the warning fires if the smallest pairwise overlap is below this value. Whichever of the two thresholds is larger applies.}
 
 \item{alignSeqsParams}{A named list (default \code{list()}) of additional arguments forwarded to \code{DECIPHER::AlignSeqs} (or \code{AlignTranslation} when \code{refAminoAcidSeq != ""}). Useful for tuning alignment behaviour on minimal-overlap 16S reads (e.g. \code{list(iterations = 1L, refinements = 1L)}).}
+
+\item{consensusMethod}{One of \code{"strict"} (default; uses DECIPHER's \code{ConsensusSequence} with IUPAC ambiguity codes), \code{"majority"} (per-column plurality vote, no ambiguity codes), or \code{"quality_weighted"} (per-column vote weighted by source-read Phred scores). Issues #87, #48.}
+
+\item{qualityAware}{Logical shorthand (default \code{FALSE}); when \code{TRUE}, equivalent to \code{consensusMethod = "quality_weighted"}. Issue #48.}
 }
 \value{
 A SangerAlignment instance.

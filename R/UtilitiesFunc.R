@@ -191,6 +191,92 @@ oneAmbiguousColumn <- function(i, aln){
     }
 }
 ### ----------------------------------------------------------------------------
+### Phase 17: alternative consensus base-callers (Sprint 3)
+###
+### `.computeConsensusMajority(aln, weights = NULL)` — at each alignment
+### column, picks the base with the highest count (or highest summed
+### weight if `weights` is non-NULL). Returns a list with:
+###   * `consensus`: a single DNAString with one character per column
+###     ("-" if every read has a gap there).
+###   * `qualityScores`: an integer vector matching the consensus length,
+###     reporting either the synthetic agreement-Phred (no weights) or
+###     the mean Phred of agreeing reads (with weights).
+###
+### Used by Issue #87 (majority rule) and Issue #48 (Phred-aware
+### resolution). The synthetic / averaged scores power Issue #33
+### (consensus quality scores reported on `@contigSeq` via attr()).
+### ----------------------------------------------------------------------------
+.computeConsensusMajority <- function(aln, weights = NULL) {
+    mat   <- as.matrix(aln)
+    nrows <- nrow(mat)
+    ncols <- ncol(mat)
+    cons_chars <- character(ncols)
+    qscores    <- integer(ncols)
+    for (j in seq_len(ncols)) {
+        col   <- mat[, j]
+        keep  <- col != "-"
+        bases <- col[keep]
+        if (length(bases) == 0L) {
+            cons_chars[j] <- "-"
+            qscores[j]    <- 0L
+            next
+        }
+        if (is.null(weights)) {
+            tab    <- table(bases)
+            winner <- names(tab)[which.max(tab)]
+            qscores[j] <- as.integer(round(40 * max(tab) / length(bases)))
+        } else {
+            w    <- weights[keep, j]
+            tab  <- tapply(w, bases, sum)
+            winner <- names(tab)[which.max(tab)]
+            agree_w <- weights[col == winner, j]
+            qscores[j] <- if (length(agree_w) > 0L)
+                              as.integer(round(mean(agree_w)))
+                          else 0L
+        }
+        cons_chars[j] <- winner
+    }
+    list(
+        consensus     = DNAString(paste(cons_chars, collapse = "")),
+        qualityScores = qscores
+    )
+}
+
+### `.buildQualityMatrix(aln, qualityPhredScoresList)` — map each read's
+### per-base Phred score onto its aligned columns. Returns a numeric
+### matrix the same shape as `as.matrix(aln)` where entry (i, j) is the
+### Phred score of read i at alignment column j (0 in gap columns).
+.buildQualityMatrix <- function(aln, qualityPhredScoresList) {
+    mat    <- as.matrix(aln)
+    nrows  <- nrow(mat)
+    ncols  <- ncol(mat)
+    out    <- matrix(0L, nrow = nrows, ncol = ncols)
+    rnms   <- rownames(mat)
+    for (i in seq_len(nrows)) {
+        ## DECIPHER prefixes alignment names like "1_Read_<file>";
+        ## try the prefixed form first, then fall back to the basename.
+        key       <- rnms[i]
+        clean_key <- sub("^[0-9]+_Read_", "", key)
+        q <- qualityPhredScoresList[[key]]
+        if (is.null(q)) q <- qualityPhredScoresList[[clean_key]]
+        if (is.null(q)) {
+            ## No quality known — fall back to flat Phred 30 across the
+            ## non-gap columns of this read.
+            n_nongap <- sum(mat[i, ] != "-")
+            q <- rep(30L, n_nongap)
+        }
+        pos <- 0L
+        for (j in seq_len(ncols)) {
+            if (mat[i, j] != "-") {
+                pos <- pos + 1L
+                if (pos <= length(q)) out[i, j] <- as.integer(q[pos])
+            }
+        }
+    }
+    out
+}
+
+### ----------------------------------------------------------------------------
 ### Calculating SangerContig
 ### ----------------------------------------------------------------------------
 calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
@@ -199,9 +285,12 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                acceptStopCodons, readingFrame,
                                processorsNum = NULL, printLevel="",
                                BPPARAM = NULL,
-                               minOverlapFraction = 0.0,
-                               minOverlapBases    = 0L,
-                               alignSeqsParams    = list()) {
+                               minOverlapFraction     = 0.0,
+                               minOverlapBases        = 0L,
+                               alignSeqsParams        = list(),
+                               consensusMethod        = "strict",
+                               qualityAware           = FALSE,
+                               qualityPhredScoresList = NULL) {
     BPPARAM <- .resolveBPPARAM(processorsNum, BPPARAM)
     processorsNum <- BiocParallel::bpnworkers(BPPARAM)
     ### ------------------------------------------------------------------------
@@ -433,13 +522,61 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         }
     }
 
-    consensus = ConsensusSequence(aln,
-                                  minInformation = minFractionCall,
-                                  includeTerminalGaps = TRUE,
-                                  threshold = maxFractionLost,
-                                  noConsensusChar = "-",
-                                  ambiguity = TRUE
-    )[[1]]
+    ### ------------------------------------------------------------------------
+    ### Issues #87 / #48 / #33: pluggable consensus base-callers.
+    ###
+    ### `consensusMethod`:
+    ###   * "strict"           — pre-Phase-17 default; uses DECIPHER's
+    ###                          ConsensusSequence with IUPAC ambiguity codes
+    ###                          for disagreeing bases (issue #87 reporter
+    ###                          calls this "ambiguous bases in consensus").
+    ###   * "majority"         — at each column pick the most-frequent base
+    ###                          (plurality vote); ties break by alphabetical
+    ###                          order of the base. Synthesises per-position
+    ###                          Phred = 40 * (winner_count / total_count).
+    ###   * "quality_weighted" — same as majority but votes are weighted by
+    ###                          source-read Phred scores. Per-position
+    ###                          consensus Phred is the mean of agreeing
+    ###                          reads' scores at that column. (issue #48)
+    ###
+    ### `qualityAware = TRUE` is shorthand for `consensusMethod =
+    ### "quality_weighted"`.
+    ###
+    ### Consensus quality scores (issue #33) are returned both as a
+    ### top-level list element AND attached to the gap-free consensus via
+    ### `attr(..., "qualityScores")` so they're discoverable from
+    ### `attributes(sc@contigSeq)$qualityScores`.
+    ### ------------------------------------------------------------------------
+    if (isTRUE(qualityAware)) consensusMethod <- "quality_weighted"
+    if (!consensusMethod %in% c("strict", "majority", "quality_weighted")) {
+        stop("`consensusMethod` must be one of 'strict', 'majority', ",
+             "or 'quality_weighted'.")
+    }
+
+    if (consensusMethod == "strict") {
+        consensus <- ConsensusSequence(aln,
+                                        minInformation = minFractionCall,
+                                        includeTerminalGaps = TRUE,
+                                        threshold = maxFractionLost,
+                                        noConsensusChar = "-",
+                                        ambiguity = TRUE)[[1L]]
+        consensusQualityScores <- integer(0)
+    } else {
+        weights_mat <- NULL
+        if (consensusMethod == "quality_weighted") {
+            if (is.null(qualityPhredScoresList)) {
+                log_warn(">> consensusMethod = 'quality_weighted' requested ",
+                         "but no qualityPhredScoresList supplied; falling ",
+                         "back to flat Phred-30 weights.")
+            }
+            qpls <- if (is.null(qualityPhredScoresList)) list()
+                    else qualityPhredScoresList
+            weights_mat <- .buildQualityMatrix(aln, qpls)
+        }
+        majority_res <- .computeConsensusMajority(aln, weights = weights_mat)
+        consensus              <- majority_res$consensus
+        consensusQualityScores <- majority_res$qualityScores
+    }
 
     # Phase 6: nPairwiseDiffs is microsecond-fast per read; serial lapply
     # avoids fork overhead that previously dominated this call site.
@@ -463,19 +600,37 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     # strip gaps from consensus (must be an easier way!!)
     consensusGapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
 
+    ### ------------------------------------------------------------------------
+    ### Issue #33: align the consensus quality vector to the gap-stripped
+    ### consensus. `consensusQualityScores` initially has one entry per
+    ### alignment column including the gap columns we just stripped; we
+    ### subset to the non-gap positions so length(qualityScores) ==
+    ### length(consensusGapfree).
+    ### ------------------------------------------------------------------------
+    if (length(consensusQualityScores) > 0L) {
+        cons_str <- as.character(consensus)
+        cons_chars <- strsplit(cons_str, "", fixed = TRUE)[[1L]]
+        keep <- cons_chars != "-"
+        cons_qs_gapfree <- consensusQualityScores[keep]
+    } else {
+        cons_qs_gapfree <- integer(0)
+    }
+    attr(consensusGapfree, "qualityScores") <- cons_qs_gapfree
+
     # count columns in the alignment with >1 coincident secondary peaks
     spDf = countCoincidentSp(aln, processorsNum = processorsNum)
     if (is.null(spDf)) {
         spDf = data.frame()
     }
-    return(list("consensusGapfree" = consensusGapfree,
-                "diffsDf"          = diffsDf,
-                "aln2"             = aln2,
-                "dist"             = dist,
-                "dend"             = dend,
-                "indels"           = indels,
-                "stopsDf"          = stopsDf,
-                "spDf"             = spDf))
+    return(list("consensusGapfree"        = consensusGapfree,
+                "diffsDf"                 = diffsDf,
+                "aln2"                    = aln2,
+                "dist"                    = dist,
+                "dend"                    = dend,
+                "indels"                  = indels,
+                "stopsDf"                 = stopsDf,
+                "spDf"                    = spDf,
+                "consensusQualityScores"  = cons_qs_gapfree))
 }
 ### ----------------------------------------------------------------------------
 ### MakeBaseCalls related function

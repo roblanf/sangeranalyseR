@@ -184,7 +184,9 @@ setMethod("initialize",
                    lazyAA                 = TRUE,
                    minOverlapFraction     = 0.0,
                    minOverlapBases        = 0L,
-                   alignSeqsParams        = list()) {
+                   alignSeqsParams        = list(),
+                   consensusMethod        = "strict",
+                   qualityAware           = FALSE) {
     ### ------------------------------------------------------------------------
     ### Input parameter prechecking
     ### ------------------------------------------------------------------------
@@ -375,7 +377,9 @@ setMethod("initialize",
                                    lazyAA               = lazyAA,
                                    minOverlapFraction   = minOverlapFraction,
                                    minOverlapBases      = minOverlapBases,
-                                   alignSeqsParams      = alignSeqsParams)
+                                   alignSeqsParams      = alignSeqsParams,
+                                   consensusMethod      = consensusMethod,
+                                   qualityAware         = qualityAware)
                            readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                            if (newSangerContig@objectResults@creationResult) {
                                newSangerContig
@@ -464,7 +468,9 @@ setMethod("initialize",
                         lazyAA               = lazyAA,
                         minOverlapFraction   = minOverlapFraction,
                         minOverlapBases      = minOverlapBases,
-                        alignSeqsParams      = alignSeqsParams)
+                        alignSeqsParams      = alignSeqsParams,
+                        consensusMethod      = consensusMethod,
+                        qualityAware         = qualityAware)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
@@ -528,7 +534,9 @@ setMethod("initialize",
                         lazyAA               = lazyAA,
                         minOverlapFraction   = minOverlapFraction,
                         minOverlapBases      = minOverlapBases,
-                        alignSeqsParams      = alignSeqsParams)
+                        alignSeqsParams      = alignSeqsParams,
+                        consensusMethod      = consensusMethod,
+                        qualityAware         = qualityAware)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
@@ -575,7 +583,9 @@ setMethod("initialize",
                         lazyAA               = lazyAA,
                         minOverlapFraction   = minOverlapFraction,
                         minOverlapBases      = minOverlapBases,
-                        alignSeqsParams      = alignSeqsParams)
+                        alignSeqsParams      = alignSeqsParams,
+                        consensusMethod      = consensusMethod,
+                        qualityAware         = qualityAware)
                 readResultTable <<- rbind(readResultTable, newSangerContig@objectResults@readResultTable)
                 if (newSangerContig@objectResults@creationResult) {
                     newSangerContig
