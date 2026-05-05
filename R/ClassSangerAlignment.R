@@ -258,10 +258,28 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             # Check REGEX_SuffixForward and REGEX_SuffixReverse 
             #  and set CSV_NamesConversion to NULL
-            errors <- checkREGEX_SuffixForward(REGEX_SuffixForward, 
+            errors <- checkREGEX_SuffixForward(REGEX_SuffixForward,
                                                errors[[1]], errors[[2]])
-            errors <- checkREGEX_SuffixReverse(REGEX_SuffixReverse, 
+            errors <- checkREGEX_SuffixReverse(REGEX_SuffixReverse,
                                                errors[[1]], errors[[2]])
+            ## Issue #92 fix: forward-only / reverse-only datasets.
+            ## When the user passes NULL (or NA) for one of the two
+            ## suffixes, substitute a sentinel that never matches any
+            ## filename so the downstream grepl returns nothing for that
+            ## direction. The existing "no reads detected" warning path
+            ## then logs a friendly message instead of crashing.
+            if (is.null(REGEX_SuffixForward) ||
+                (length(REGEX_SuffixForward) == 1L && is.na(REGEX_SuffixForward))) {
+                log_warn(">> No 'REGEX_SuffixForward' supplied; treating as ",
+                         "reverse-only run.")
+                REGEX_SuffixForward <- .NEVER_MATCH_REGEX
+            }
+            if (is.null(REGEX_SuffixReverse) ||
+                (length(REGEX_SuffixReverse) == 1L && is.na(REGEX_SuffixReverse))) {
+                log_warn(">> No 'REGEX_SuffixReverse' supplied; treating as ",
+                         "forward-only run.")
+                REGEX_SuffixReverse <- .NEVER_MATCH_REGEX
+            }
             CSV_NamesConversion <- NULL
         } else if (processMethod=="CSV") {
             ### ----------------------------------------------------------------
@@ -365,16 +383,45 @@ setMethod("initialize",
                      "to group AB1 files!")
             parentDirFiles <- list.files(ABIF_Directory, recursive = TRUE)
             csvFile <- read.csv(CSV_NamesConversion, header = TRUE)
-            log_info("**** Contig number in your Csv file is ", 
+            log_info("**** Contig number in your Csv file is ",
                      length(unique(csvFile$contig)))
-            contigNames <- as.character(unique(csvFile$contig))
-            contigNames <- lapply(contigNames, function(contigName) {
-                contigNameSelectInputFiles <-
-                    parentDirFiles[grepl(contigName, parentDirFiles)]   
-                inside_contigNames <- file.path(dirname(contigNameSelectInputFiles), contigName)
-                inside_contigNames
+            ## Issue #100 fix:
+            ## Pre-Phase-15 code did `parentDirFiles[grepl(contigName, parentDirFiles)]`
+            ## which incorrectly required every CSV contig label to appear as a
+            ## substring of its read filenames. The CSV-grouping mechanism is
+            ## explicitly designed to map arbitrary contig labels to arbitrary
+            ## filenames via the `reads` column, so the textual-substring
+            ## requirement caused CONTIG_NUMBER_ZERO_ERROR even when each
+            ## individual SangerContig() succeeded.
+            ##
+            ## The correct behaviour: for each unique contig label, find the
+            ## reads listed against it in the CSV, locate those exact filenames
+            ## (or basenames) under ABIF_Directory, and use the resulting
+            ## directory prefix.
+            contigLabels <- as.character(unique(csvFile$contig))
+            contigNames <- lapply(contigLabels, function(contigLabel) {
+                csvRows <- csvFile[csvFile$contig == contigLabel, , drop = FALSE]
+                csvReads <- as.character(csvRows$reads)
+                ## Match against either full relative path or basename.
+                matched_full <- intersect(parentDirFiles, csvReads)
+                matched_base <- parentDirFiles[
+                    basename(parentDirFiles) %in% csvReads]
+                matched <- unique(c(matched_full, matched_base))
+                if (length(matched) == 0L) {
+                    log_warn("  >> Contig '", contigLabel,
+                             "' has no reads matching any file under ",
+                             "ABIF_Directory; skipping.")
+                    return(character(0L))
+                }
+                d <- dirname(matched[1L])
+                if (identical(d, ".") || identical(d, "")) {
+                    contigLabel
+                } else {
+                    file.path(d, contigLabel)
+                }
             })
             contigNames <- unique(unlist(contigNames, recursive = TRUE))
+            contigNames <- contigNames[nzchar(contigNames)]
             SangerContigList <- lapply(contigNames, function(contigName) {
                 insideDirName<- dirname(contigName)
                 insideContigName <- basename(contigName)

@@ -257,10 +257,23 @@ setMethod("initialize",
             ### ----------------------------------------------------------------
             # Check REGEX_SuffixForward and REGEX_SuffixReverse 
             #  and set CSV_NamesConversion to NULL
-            errors <- checkREGEX_SuffixForward(REGEX_SuffixForward, 
+            errors <- checkREGEX_SuffixForward(REGEX_SuffixForward,
                                                errors[[1]], errors[[2]])
-            errors <- checkREGEX_SuffixReverse(REGEX_SuffixReverse, 
+            errors <- checkREGEX_SuffixReverse(REGEX_SuffixReverse,
                                                errors[[1]], errors[[2]])
+            ## Issue #92 fix: see ClassSangerAlignment.R for full rationale.
+            if (is.null(REGEX_SuffixForward) ||
+                (length(REGEX_SuffixForward) == 1L && is.na(REGEX_SuffixForward))) {
+                log_warn(">> No 'REGEX_SuffixForward' supplied; treating as ",
+                         "reverse-only contig.")
+                REGEX_SuffixForward <- .NEVER_MATCH_REGEX
+            }
+            if (is.null(REGEX_SuffixReverse) ||
+                (length(REGEX_SuffixReverse) == 1L && is.na(REGEX_SuffixReverse))) {
+                log_warn(">> No 'REGEX_SuffixReverse' supplied; treating as ",
+                         "forward-only contig.")
+                REGEX_SuffixReverse <- .NEVER_MATCH_REGEX
+            }
             CSV_NamesConversion <- NULL
         } else if (processMethod=="CSV") {
             ### ----------------------------------------------------------------

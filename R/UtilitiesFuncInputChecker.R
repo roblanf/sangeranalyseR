@@ -303,11 +303,18 @@ checkFASTA_File <- function(inputSource, FASTA_File, errors, errorTypes) {
                                   "' file extension must be '.fa' or '.fasta'."))
 }
 
+## Issue #92 fix:
+## REGEX_SuffixForward / REGEX_SuffixReverse can be NULL (or NA) to indicate
+## a single-direction dataset (e.g. forward-only 16S barcoding). In that
+## case the construction code substitutes an internal sentinel that never
+## matches any filename, so the existing "no reads detected" warning path
+## handles the missing direction gracefully without crashing the build.
+.NEVER_MATCH_REGEX <- "NEVER_MATCH_FORWARD_REVERSE_ONLY_SENTINEL"
+
 checkREGEX_SuffixForward <- function(REGEX_SuffixForward, errors, errorTypes) {
-    if (is.null(REGEX_SuffixForward)) {
-        return(.errAppend(errors, errorTypes,
-                          "'REGEX_SuffixForward' cannot be NULL.",
-                          "PARAMETER_VALUE_ERROR"))
+    if (is.null(REGEX_SuffixForward) || (length(REGEX_SuffixForward) == 1L &&
+                                          is.na(REGEX_SuffixForward))) {
+        return(list(errors, errorTypes))   # accept NULL/NA: reverse-only run
     }
     if (typeof(REGEX_SuffixForward) != "character") {
         return(.errAppend(errors, errorTypes,
@@ -318,10 +325,9 @@ checkREGEX_SuffixForward <- function(REGEX_SuffixForward, errors, errorTypes) {
 }
 
 checkREGEX_SuffixReverse <- function(REGEX_SuffixReverse, errors, errorTypes) {
-    if (is.null(REGEX_SuffixReverse)) {
-        return(.errAppend(errors, errorTypes,
-                          "'REGEX_SuffixReverse' cannot be NULL.",
-                          "PARAMETER_VALUE_ERROR"))
+    if (is.null(REGEX_SuffixReverse) || (length(REGEX_SuffixReverse) == 1L &&
+                                          is.na(REGEX_SuffixReverse))) {
+        return(list(errors, errorTypes))   # accept NULL/NA: forward-only run
     }
     if (typeof(REGEX_SuffixReverse) != "character") {
         return(.errAppend(errors, errorTypes,

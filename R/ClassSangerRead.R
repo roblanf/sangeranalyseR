@@ -230,12 +230,33 @@ setMethod("initialize",
                     ### --------------------------------------------------------
                     ### 1. Running 'MakeBaseCall'!
                     ### --------------------------------------------------------
-                    ## Reverse the 'traceMatrix' and 'peakPosMatrixRaw' before 
+                    ## Reverse the 'traceMatrix' and 'peakPosMatrixRaw' before
                     ##   running MakeBaseCallsInside function.
+                    ##
+                    ## Issue #76 fix: some ABIF files (older 3500 firmware,
+                    ## Beckman, certain SCF-converted outputs) succeed at
+                    ## `read.abif` but have a missing/empty `PCON.2` quality
+                    ## block. Pre-Phase-15, that produced an empty
+                    ## qualityPhredScores vector and a hard
+                    ## "qualityPhredScores length cannot be zero" error.
+                    ## Phase 15 detects the missing-quality state, synthesises
+                    ## a flat Phred 30 vector matching the peak count, and
+                    ## logs a MISSING_QUALITY_SCORES_WARN so the rest of the
+                    ## pipeline can run. Trimming under such a synthetic
+                    ## quality vector is a no-op — users should still inspect
+                    ## the resulting consensus carefully.
+                    rawQualityVec <- abifRawData@data$PCON.2
+                    if (is.null(rawQualityVec) || length(rawQualityVec) == 0L) {
+                        log_warn(">> ABIF '", basename(readFileName),
+                                 "' has no PCON.2 quality block; ",
+                                 "synthesising flat Phred 30 ",
+                                 "(MISSING_QUALITY_SCORES_WARN).")
+                        rawQualityVec <- rep(30L, nrow(peakPosMatrixRaw))
+                    }
                     MBCResult <-
                         MakeBaseCallsInside (traceMatrix, peakPosMatrixRaw,
-                                             abifRawData@data$PCON.2,
-                                             signalRatioCutoff, readFeature, 
+                                             rawQualityVec,
+                                             signalRatioCutoff, readFeature,
                                              printLevel)
                     ### ========================================================
                     ### 2. Update Once (Only during creation)
