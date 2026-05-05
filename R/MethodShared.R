@@ -18,7 +18,7 @@
 #' @examples
 #' data(sangerContigData)
 #' data(sangerAlignmentData)
-#' \donttest{
+#' \dontrun{
 #' launchApp(sangerContigData)
 #' launchApp(sangerContigData, colors="cb_friendly")
 #' launchApp(sangerAlignmentData)

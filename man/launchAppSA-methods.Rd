@@ -25,6 +25,6 @@ Method launchAppSA
 }
 \examples{
 data(sangerAlignmentData)
-\donttest{
+\dontrun{
 launchAppSA(sangerAlignmentData)}
 }

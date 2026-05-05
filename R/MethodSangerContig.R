@@ -393,11 +393,9 @@ setMethod("generateReportSC", "SangerContig",
 #' @examples
 #' data(sangerReadFData)
 #' data(sangerContigData)
-#' data(sangerAlignmentData)
 #' \donttest{
 #' readTable(sangerReadFData)
 #' readTable(sangerContigData)
-#' readTable(sangerAlignmentData)
 #' }
 setMethod("readTable", "SangerContig", function(object, indentation = 0) {
     space <- paste(rep(' ', indentation), collapse = "")

@@ -75,14 +75,38 @@ ISSUE_HEADER_RE = re.compile(r"^### Issue #(\d+)\b")
 FENCE_RE = re.compile(r"^\s*```(.*)$")
 
 
-def parse_issues(md_text: str) -> Iterator[tuple[int, str]]:
+ACTION_RE = re.compile(r"^\s*\*?\*?Action\*?\*?\s*:\s*(close|comment)\b",
+                       re.IGNORECASE)
+
+
+def parse_issues(md_text: str) -> Iterator[tuple[int, str, str]]:
     """
-    Yield (issue_number, body) for each issue block in the Markdown file.
+    Yield (issue_number, body, action) for each issue block.
+
+    `action` is one of:
+      * "close"   — POST comment then PATCH state=closed (default).
+      * "comment" — POST comment only (do NOT close). Used for
+                    "please retest on devel" requests where the
+                    reporter still has to confirm the fix.
+
+    The action is read from an optional metadata line in the issue
+    section *before* the ```markdown reply body, e.g.:
+
+        ### Issue #60 — Shiny addResourcePath cannot normalize path
+
+        **URL**: https://github.com/.../issues/60
+        **Action**: comment
+
+        ```markdown
+        ...
+        ```
+
+    If no `Action:` line is present, the action defaults to "close".
 
     Each issue block has shape:
 
         ### Issue #<n> — <title>
-        ... metadata lines (URL etc.) ...
+        ... metadata lines (URL, Action, etc.) ...
         ```markdown
         <body, possibly containing nested fenced blocks: ```r ... ```
         and unlabeled  ``` ... ``` >
@@ -94,9 +118,9 @@ def parse_issues(md_text: str) -> Iterator[tuple[int, str]]:
     same syntax as the outer closer). The robust rule: the OUTER
     closer is the LAST line matching `^\\s*```\\s*$` between the
     `### Issue #N` header that starts this block and the NEXT
-    `### Issue #N` header (or EOF, or a horizontal-rule `---`).
-    Everything between the outer opener (exclusive) and outer
-    closer (exclusive) is the body, verbatim.
+    `### Issue #N` header (or EOF). Everything between the outer
+    opener (exclusive) and outer closer (exclusive) is the body,
+    verbatim.
     """
     lines = md_text.split("\n")
     bare_fence = re.compile(r"^\s*```\s*$")
@@ -108,22 +132,28 @@ def parse_issues(md_text: str) -> Iterator[tuple[int, str]]:
             continue
         issue_num = int(m.group(1))
 
-        # Walk forward to the outer ```markdown opener.
+        # Default action; can be overridden by an `Action:` metadata
+        # line inside the issue section (before the ```markdown body).
+        action = "close"
+
+        # Walk forward to the outer ```markdown opener; pick up any
+        # Action: metadata along the way.
         j = i + 1
         while j < len(lines):
             if lines[j].lstrip().startswith("```markdown"):
                 break
             if ISSUE_HEADER_RE.match(lines[j]):
                 break
+            am = ACTION_RE.match(lines[j])
+            if am:
+                action = am.group(1).lower()
             j += 1
         if j >= len(lines) or not lines[j].lstrip().startswith("```markdown"):
             i = j
             continue
         body_start = j + 1
 
-        # Find section end: next ### Issue header, OR next standalone
-        # `---` rule that is NOT inside a fenced block (we'll just take
-        # the next ### header to keep it simple), OR EOF.
+        # Find section end: next ### Issue header, OR EOF.
         sec_end = body_start
         while sec_end < len(lines):
             if ISSUE_HEADER_RE.match(lines[sec_end]):
@@ -142,7 +172,7 @@ def parse_issues(md_text: str) -> Iterator[tuple[int, str]]:
             continue
 
         body = "\n".join(lines[body_start:outer_close_line])
-        yield issue_num, body
+        yield issue_num, body, action
         i = sec_end
 
 
@@ -235,7 +265,7 @@ def main(argv: list[str]) -> int:
     issues = list(parse_issues(md_text))
 
     if args.issue is not None:
-        issues = [(n, b) for (n, b) in issues if n == args.issue]
+        issues = [(n, b, a) for (n, b, a) in issues if n == args.issue]
         if not issues:
             print(f"ERROR: issue #{args.issue} not found in {md_path}",
                   file=sys.stderr)
@@ -246,9 +276,10 @@ def main(argv: list[str]) -> int:
         return 1
 
     print(f"Parsed {len(issues)} issue(s) from {md_path}:")
-    for num, body in issues:
+    for num, body, action in issues:
         first = next((ln for ln in body.splitlines() if ln.strip()), "")
-        print(f"  • #{num:<4} ({len(body):>5} chars)  first line: {first[:70]!r}")
+        print(f"  • #{num:<4} [{action:7s}] ({len(body):>5} chars)  "
+              f"first line: {first[:60]!r}")
     print()
 
     if args.dry_run:
@@ -267,11 +298,12 @@ def main(argv: list[str]) -> int:
         return 2
 
     failures: list[tuple[int, str]] = []
-    for num, body in issues:
-        print(f"\n=== Issue #{num} ===")
+    for num, body, action in issues:
+        verb = "comment + close" if action == "close" else "comment only"
+        print(f"\n=== Issue #{num} [{action}] ===")
         if not args.no_confirm:
             try:
-                input(f"  Press Enter to comment + close #{num} "
+                input(f"  Press Enter to {verb} #{num} "
                       "(or Ctrl+C to abort)... ")
             except KeyboardInterrupt:
                 print("\n  Aborted by user.")
@@ -288,6 +320,10 @@ def main(argv: list[str]) -> int:
         except Exception as e:
             print(f"  ✗ comment FAILED on #{num}: {e}", file=sys.stderr)
             failures.append((num, f"comment exception: {e}"))
+            continue
+
+        if action != "close":
+            print(f"  · skipping close (action={action})")
             continue
 
         try:

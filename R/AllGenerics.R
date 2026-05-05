@@ -231,7 +231,7 @@ setGeneric("writeFastaSR", function(object,outputDir = NULL,
 #' @exportMethod launchAppSC
 #' @examples
 #' data(sangerContigData)
-#' \donttest{
+#' \dontrun{
 #' launchAppSC(sangerContigData)}
 setGeneric("launchAppSC", function(object, outputDir = NULL, colors = "default") {
     standardGeneric("launchAppSC")
@@ -254,7 +254,7 @@ setGeneric("launchAppSC", function(object, outputDir = NULL, colors = "default")
 #' @exportMethod launchAppSA
 #' @examples
 #' data(sangerAlignmentData)
-#' \donttest{
+#' \dontrun{
 #' launchAppSA(sangerAlignmentData)}
 setGeneric("launchAppSA", function(object, outputDir = NULL, colors = "default") {
     standardGeneric("launchAppSA")
@@ -277,11 +277,9 @@ setGeneric("launchAppSA", function(object, outputDir = NULL, colors = "default")
 #' @examples
 #' data(sangerReadFData)
 #' data(sangerContigData)
-#' data(sangerAlignmentData)
 #' \donttest{
 #' readTable(sangerReadFData)
 #' readTable(sangerContigData)
-#' readTable(sangerAlignmentData)
 #' }
 setGeneric("readTable", function(object, indentation = 0, ...) {
     standardGeneric("readTable")

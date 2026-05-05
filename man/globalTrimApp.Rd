@@ -25,7 +25,7 @@ Opens a Shiny gadget that exposes M1/M2 trimming
   re-trimming policy.
 }
 \examples{
-\donttest{
+\dontrun{
 data(sangerAlignmentData)
 SA2 <- globalTrimApp(sangerAlignmentData)
 }

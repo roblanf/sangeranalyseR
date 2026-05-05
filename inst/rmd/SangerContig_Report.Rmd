@@ -37,6 +37,7 @@ vignette: >
 
 ```{r echo=FALSE}
 library(sangeranalyseR)
+library(knitr)
 ```
 
 
