@@ -20,8 +20,7 @@ vignette: >
 BiocStyle::markdown()
 knitr::opts_chunk$set(tidy = FALSE,
                       warning = FALSE,
-                      message = FALSE,
-                      eval = FALSE)
+                      message = FALSE)
 ```
 
 ```{r setup}
@@ -60,7 +59,7 @@ list.files(ab1_dir, pattern = "\\.ab1$")
 
 ## How to assemble a single contig
 
-```{r recipe-single-contig}
+```{r recipe-single-contig, eval=FALSE}
 sc <- SangerContig(
     inputSource         = "ABIF",
     processMethod       = "REGEX",
@@ -79,7 +78,7 @@ as.character(sc@contigSeq)              # the consensus sequence
 
 ## How to assemble many contigs at once (`SangerAlignment`)
 
-```{r recipe-alignment}
+```{r recipe-alignment, eval=FALSE}
 sa <- SangerAlignment(
     inputSource         = "ABIF",
     processMethod       = "REGEX",
@@ -97,7 +96,7 @@ length(sa@contigsConsensus)            # cross-contig consensus length
 When your filenames don't follow a clean `_F.ab1` / `_R.ab1` convention, supply
 a `reads,direction,contig` CSV that explicitly maps every read:
 
-```{r recipe-csv}
+```{r recipe-csv, eval=FALSE}
 csv_path <- system.file("extdata", "ab1", "SangerAlignment",
                         "names_conversion.csv", package = "sangeranalyseR")
 sa_csv <- SangerAlignment(
@@ -117,7 +116,7 @@ Common in 16S barcoding and short-read survey pipelines. Pass `NULL` (or
 `NA_character_`) for the missing-direction suffix and set `minReadsNum = 1` so
 each surviving read can become its own contig:
 
-```{r recipe-forward-only}
+```{r recipe-forward-only, eval=FALSE}
 sa_fwd <- SangerAlignment(
     inputSource         = "ABIF",
     processMethod       = "REGEX",
@@ -139,7 +138,7 @@ Two trimming algorithms, controlled by `TrimmingMethod`:
 
 Tighter trimming for noisy data:
 
-```{r recipe-strict-trim}
+```{r recipe-strict-trim, eval=FALSE}
 sa_strict <- SangerAlignment(
     inputSource          = "ABIF",
     processMethod        = "REGEX",
@@ -162,7 +161,7 @@ warning, so you never see `DECIPHER::AlignSeqs` crash on degenerate inputs.
 Forward + reverse reads with poor overlap silently produce IUPAC-ambiguity-soup
 consensus. Phase-16 adds an opt-in alignment-quality check:
 
-```{r recipe-overlap-check}
+```{r recipe-overlap-check, eval=FALSE}
 sa_overlap <- SangerAlignment(
     inputSource         = "ABIF",
     processMethod       = "REGEX",
@@ -187,7 +186,7 @@ Three modes are exposed via `consensusMethod`:
 | `"majority"`              | Per-column plurality vote; ties break alphabetically. No IUPAC codes ever appear in the output.    | synthetic Phred       |
 | `"quality_weighted"`      | Same as majority but votes are weighted by source-read Phred. Alias: `qualityAware = TRUE`.        | mean Phred of agreers |
 
-```{r recipe-majority-consensus}
+```{r recipe-majority-consensus, eval=FALSE}
 sc_majority <- SangerContig(
     inputSource         = "ABIF",
     processMethod       = "REGEX",
@@ -220,7 +219,7 @@ re-runs the base-calling step on those raw traces using the
 Visualize either as a static PDF (`chromatogram_overwrite()`) or an interactive
 WebGL widget (`chromatogram_plotly()` — Phase-8):
 
-```{r recipe-chromatogram}
+```{r recipe-chromatogram, eval=FALSE}
 sr <- sa@contigList[[1]]@forwardReadList[[1]]
 chromatogram_plotly(sr, max_points = 8000, showtrim = TRUE)
 ```
@@ -241,19 +240,19 @@ Each `SangerRead` exposes:
 To inspect secondary peaks within a contig alignment, look at
 `sc@secondaryPeakDF` — Phase-3 added one-row-per-ambiguous-column reporting:
 
-```{r recipe-secondary-peaks}
+```{r recipe-secondary-peaks, eval=FALSE}
 head(sc@secondaryPeakDF)
 ```
 
 Re-run base-calling with a tighter (or looser) cutoff:
 
-```{r recipe-rebasecall}
+```{r recipe-rebasecall, eval=FALSE}
 sr_re <- MakeBaseCalls(sr, signalRatioCutoff = 0.22)
 ```
 
 ## How to launch the interactive Shiny app
 
-```{r recipe-shiny}
+```{r recipe-shiny, eval=FALSE}
 launchApp(sa)             # works on SangerAlignment or SangerContig
 ```
 
@@ -261,13 +260,13 @@ Per-read trimming sliders, contig overview, alignment browser, FASTA / HTML
 report export. Phase-8 also added a lightweight gadget for **batch** trimming
 across a whole alignment:
 
-```{r recipe-globaltrim}
+```{r recipe-globaltrim, eval=FALSE}
 sa2 <- globalTrimApp(sa)  # opens a Shiny dialog; returns the re-trimmed SA
 ```
 
 ## How to export results
 
-```{r recipe-export}
+```{r recipe-export, eval=FALSE}
 out_dir <- tempdir()
 writeFasta(sa, outputDir = out_dir)        # SR / SC / SA dispatcher
 

@@ -51,6 +51,38 @@
 - ASCII-only source: replaced curly apostrophes, em-dashes, arrows, and multiplication signs across `R/UtilitiesFunc.R`, `R/Class*.R` (was a `R CMD check` warning).
 - Re-saved `data/*.RData` with xz compression (largest file 1.5 MB → 698 KB).
 
+## Bug fixes
+
+GitHub-issue cleanup across three resolution sprints (Phases 15–17):
+
+- **#100 (CSV substring contig-name match):** `processCSV.R` now matches contig names exactly instead of via `grepl(name, …)`, so a contig named `good` is no longer accidentally absorbed into a contig named `good_extra`.
+- **#92 (forward-only `NULL` handling):** `SangerContig()` accepts `REGEX_SuffixReverse = NULL` (or `NA_character_`) and `minReadsNum = 1` for forward-only / reverse-only datasets. Previously the constructor errored with `argument is of length zero`.
+- **#76 (missing `PCON.2` block):** ABIF reads with empty `PCON.2` quality data now get a synthetic Phred-30 score per base with a `MISSING_QUALITY_SCORES_WARN`, instead of silently constructing an unusable read.
+- **#89 (single-read `writeFasta`):** `writeFastaSC` no longer errors on `SangerContig`s built from a single read.
+- **#94 (low-overlap detection):** new `minOverlapBases` (default 20) and `minOverlapFraction` (default 0.4) post-alignment guards in `calculateContigSeq`. Spurious low-overlap merges emit `LOW_OVERLAP_WARN` and the contig is rejected before it propagates to the alignment.
+- **#66 (degenerate consensus):** IUPAC ambiguity-code handling in `ConsensusSequence(ambiguity = TRUE)` is correctly preserved; consumers that called `as.character()` on the consensus once again see ambiguity codes rather than `N` collapse.
+- **#65 (multi-contig duplicate reads):** when a read is matched into more than one contig (CSV or REGEX), `SangerAlignment` now logs `READ_ASSIGNED_MULTIPLE_CONTIGS_WARN` and assigns the read to the first matching contig only.
+- **#42 (length-1 reads):** reads of width < 2 bp are dropped at alignment time with `MIN_READ_LENGTH_DEFENSIVE_DROP`, allowing the contig to build from the surviving reads instead of failing the whole alignment.
+- **#91 (M2 trimming on degraded reads):** the `QualityReport` validator now accepts the degenerate "no usable trim window" state (`trimmedFinishPos == 0` while `trimmedStartPos > 0`) on extremely low-quality reads.
+
+## New features (Phase 17 — consensus algorithms)
+
+- **`consensusMethod` argument** on `SangerContig()` and `SangerAlignment()` with three options:
+  - `"strict"` (default; pre-Phase-17 behaviour) — IUPAC ambiguity codes preserved at disagreeing columns.
+  - `"majority"` — most-frequent base wins per column; ties break alphabetically. No IUPAC codes in the output.
+  - `"quality_weighted"` — votes weighted by per-base Phred from the source reads; falls back to flat Phred 30 (with a warning) when scores are missing or for FASTA inputs.
+- **`qualityAware = TRUE`** is a shorthand for `consensusMethod = "quality_weighted"`.
+- **Per-position consensus quality scores.** `attr(@contigSeq, "qualityScores")` is now an integer vector of length `length(contigSeq)` under `"majority"` and `"quality_weighted"` modes (empty `integer(0)` under `"strict"` for backwards compatibility). Closes the long-standing #87 / #48 / #33 cluster.
+
+## Documentation (Phase 18)
+
+- **Vignette overhaul.** `vignettes/sangeranalyseR.Rmd` rewritten end-to-end with a "How to..." recipe gallery (10 recipes covering single-contig assembly, CSV mapping, forward-only data, low-quality trimming, low-overlap detection, consensus methods, secondary peaks, Shiny launch, FASTA / HTML export), a constructor parameter reference (4 tables), a troubleshooting matrix mapping common errors to the Phases 15–17 fixes, and a `sessionInfo()` block. Closes #13, #49, #71, #99.
+- **`R CMD check --run-donttest` hardening.** Multiple pre-existing latent example bugs were fixed:
+  - `inst/rmd/SangerContig_Report.Rmd` now loads `library(knitr)` so `kable()` resolves during report rendering.
+  - `readTable.SangerRead` and `readTable.SangerContig` examples no longer call `readTable(sangerAlignmentData)` (no method exists for `SangerAlignment`).
+  - `globalTrimApp`, `launchApp`, `launchAppSC`, `launchAppSA` examples switched from `\donttest{}` to `\dontrun{}` so `runGadget()` / auto-printed `shiny.appobj` no longer hang the example runner.
+- **Maintainer tooling.** `plans/close_issues.py` (Phase 16.5) now parses an `Action: close|comment` metadata flag from each issue's reply Markdown — comment-only entries (used for "please retest on devel" responses) skip the `state=closed` PATCH. Backwards-compatible with the existing Phase-16 / Phase-17 reply files.
+
 # sangeranalyseR 1.20.0 (current Bioconductor release)
 
 Maintenance release on the `RELEASE_3_22` branch:
@@ -59,4 +91,14 @@ Maintenance release on the `RELEASE_3_22` branch:
 - Bumped DECIPHER minimum version.
 - Standard Bioc release-cycle version bumps (even `y` on release, odd `y` on devel).
 
-(Pre-1.20.0 history is in the legacy `NEWS` file in DCF format.)
+# sangeranalyseR 1.6.1
+
+- Fix chromatogram colour issue.
+
+# sangeranalyseR 0.99.1
+
+- Base class `SangerReads` designed to store each forward / reverse read.
+
+# sangeranalyseR 0.1.0
+
+- Project starts.
