@@ -1,4 +1,4 @@
-# sangeranalyseR 1.21.1 (development)
+# sangeranalyseR 1.23.0
 
 ## Performance
 
