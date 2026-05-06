@@ -2,8 +2,8 @@
 
 **Date:** 2026-05-05
 **Branch:** `devel`
-**Package version:** `1.21.1`
-**Bioc cycle:** 3.23 (devel)
+**Package version:** `1.23.0` (post-rebase; was `1.21.1` pre-rebase, inherited from `upstream/devel`'s post-RELEASE_3_23 cycle bump)
+**Bioc cycle:** 3.24-pre (Bioconductor cut RELEASE_3_23 on 2026-05-04 / 05; `master` does not exist on the per-package Bioc remote — `devel` is the active development branch)
 
 ## NEWS.md consolidation
 
@@ -112,15 +112,23 @@ Commit message: `Phase 19 - Consolidated NEWS.md, final BiocCheck audit, and Bio
 | Remote name        | `upstream`                                                                              |
 | URL                | `git@git.bioconductor.org:packages/sangeranalyseR.git`                                  |
 | Local source       | `devel`                                                                                |
-| Bioc target branch | `master` (Bioc devel = `master` in Bioc's Git server convention)                       |
-| Push command       | `git push upstream devel:master`                                                        |
-| Pre-fetch verify   | `git fetch upstream && git ls-remote --heads upstream` to confirm `master` is active.   |
+| Bioc target branch | `devel` (this package's Bioc remote has **no `master` branch** — `devel` is the active devel; the user's Phase-19 instruction said `devel:master`, but `git ls-remote --heads upstream` confirmed `master` doesn't exist) |
+| Push command       | `git push upstream HEAD:devel` (after rebase)                                          |
+| Pre-fetch verify   | `git fetch upstream && git ls-remote --heads upstream` confirmed branches: `RELEASE_3_12` … `RELEASE_3_23` and `devel`. No `master`. |
 
-**Pre-push gate:** `git fetch upstream` requires an SSH key in the local SSH agent. The user must run `! ssh-add ~/.ssh/id_rsa` (interactive in this Claude Code session) before the upstream push. After `git fetch`, I will surface the upstream branch list and pause for explicit user confirmation that `master` is the right target branch (Phase 13 noted historical layout drift between `upstream/master` and `upstream/devel`).
+### Rebase before push
+
+Bioconductor cut `RELEASE_3_23` while we were working, so `upstream/devel` had moved 2 commits ahead with version-bump-only changes (`1.21.1 → 1.22.0` for the release cut, then `→ 1.23.0` for the new devel cycle). Local `origin/devel` had 17 Phase 1–19 commits on the older base.
+
+Rebase strategy: `git rebase upstream/devel` replayed the 17 commits on top of `upstream/devel` HEAD. **No conflicts** — Bioc's commits only touch `DESCRIPTION` (Version field); ours don't. Post-rebase, `DESCRIPTION` reads `Version: 1.23.0` (inherited from upstream's bump), which is the correct devel-cycle target now that `RELEASE_3_23` exists.
+
+`origin/devel` was force-pushed with `--force-with-lease` to install the rewritten history; `upstream/devel` was a fast-forward.
 
 ## Commit hashes
 
-| Remote / branch     | Hash                                       |
-| ------------------- | ------------------------------------------ |
-| `origin/devel`      | _to be filled in after `git push origin devel`_ |
-| `upstream/master`   | _to be filled in after `git push upstream devel:master`_ |
+| Remote / branch       | Hash       | Note                                                  |
+| --------------------- | ---------- | ----------------------------------------------------- |
+| Pre-rebase `origin/devel` | `7e3b3aa` | Original Phase 19 commit on the Bioc-3.22-era base |
+| Post-rebase HEAD       | **`7a8e4d3`** | Phase 19 replayed onto `upstream/devel` (Version 1.23.0) |
+| `origin/devel`         | `7a8e4d3`  | Force-pushed with `--force-with-lease` (`7e3b3aa..7a8e4d3 forced update`) |
+| `upstream/devel`       | `7a8e4d3`  | Fast-forward from `f2961fc` (Bioc's post-RELEASE_3_23 bump commit) |
