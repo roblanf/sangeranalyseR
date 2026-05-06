@@ -1,0 +1,47 @@
+by.self (top 25):
+                           self.time self.pct total.time total.pct
+"peakvalues"                   0.240     15.6      0.365      23.8
+".Call2"                       0.190     12.4      0.210      13.7
+"c"                            0.050      3.3      0.055       3.6
+">"                            0.050      3.3      0.050       3.3
+"isatty"                       0.050      3.3      0.050       3.3
+"unlist"                       0.045      2.9      0.130       8.5
+"<"                            0.045      2.9      0.045       2.9
+"is"                           0.040      2.6      0.090       5.9
+"paste"                        0.035      2.3      0.085       5.5
+"initialize"                   0.025      1.6      1.535     100.0
+"FUN"                          0.025      1.6      1.520      99.0
+"getClassDef"                  0.025      1.6      0.095       6.2
+"&"                            0.025      1.6      0.025       1.6
+"MakeBaseCallsInside"          0.020      1.3      0.490      31.9
+"read.abif"                    0.020      1.3      0.140       9.1
+"do.call"                      0.020      1.3      0.120       7.8
+"readBin"                      0.020      1.3      0.020       1.3
+"lapply"                       0.015      1.0      1.520      99.0
+"standardGeneric"              0.015      1.0      0.200      13.0
+"<Anonymous>"                  0.015      1.0      0.130       8.5
+"stri_replace_first_regex"     0.015      1.0      0.060       3.9
+"stopifnot"                    0.015      1.0      0.055       3.6
+"validObject"                  0.015      1.0      0.050       3.3
+"order"                        0.015      1.0      0.045       2.9
+".getClassesFromCache"         0.015      1.0      0.030       1.9
+
+by.total (top 15):
+                           total.time total.pct self.time self.pct
+"initialize"                    1.535     100.0     0.025      1.6
+".local"                        1.535     100.0     0.010      0.7
+"new"                           1.535     100.0     0.010      0.7
+"SangerAlignment"               1.535     100.0     0.000      0.0
+"FUN"                           1.520      99.0     0.025      1.6
+"lapply"                        1.520      99.0     0.015      1.0
+"withCallingHandlers"           0.630      41.0     0.000      0.0
+"suppressWarnings"              0.560      36.5     0.000      0.0
+"translate"                     0.550      35.8     0.005      0.3
+"Biostrings::translate"         0.550      35.8     0.000      0.0
+"calculateAASeq"                0.550      35.8     0.000      0.0
+"MakeBaseCallsInside"           0.490      31.9     0.020      1.3
+".make_fuzzy_genetic_code"      0.490      31.9     0.000      0.0
+"peakvalues"                    0.365      23.8     0.240     15.6
+"calculateContigSeq"            0.240      15.6     0.000      0.0
+
+Total sampling time: 1.535 s (93 samples)

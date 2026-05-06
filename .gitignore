@@ -32,3 +32,5 @@ sangeranalyseR.Rproj
 
 inst/rmd/test.Rmd
 inst/rmd/test.html
+.positai
+__pycache__/

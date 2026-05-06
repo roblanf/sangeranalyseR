@@ -30,11 +30,22 @@ SangerContig(
   maxFractionLost = 0.5,
   acceptStopCodons = TRUE,
   readingFrame = 1,
-  processorsNum = 1
+  processorsNum = 1,
+  BPPARAM = NULL,
+  lazyAA = TRUE,
+  minOverlapFraction = 0,
+  minOverlapBases = 0L,
+  alignSeqsParams = list(),
+  consensusMethod = "strict",
+  qualityAware = FALSE
 )
 }
 \arguments{
+\item{printLevel}{Internal — controls log verbosity when this constructor is called recursively from a parent class. Defaults to \code{"SangerContig"}; do not set manually.}
+
 \item{inputSource}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
+
+\item{processMethod}{Either \code{"REGEX"} or \code{"CSV"}. Default \code{"REGEX"}.}
 
 \item{ABIF_Directory}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerContig, all reads must be in the first layer in this directory.}
 
@@ -81,6 +92,20 @@ SangerContig(
 \item{readingFrame}{\code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.}
 
 \item{processorsNum}{The number of processors to use, or NULL (the default) for all available processors.}
+
+\item{BPPARAM}{A \code{BiocParallelParam} instance for the per-read parallel loop. Default \code{NULL} (derived from \code{processorsNum}).}
+
+\item{lazyAA}{Logical (default \code{TRUE}). Skip eager 3-frame AA translation when no \code{refAminoAcidSeq} is supplied; use the \code{primaryAASeqS1/S2/S3()} accessors on demand instead.}
+
+\item{minOverlapFraction}{Numeric in [0, 1] (default \code{0.0}). Triggers a \code{LOW_OVERLAP_WARN} when the smallest pairwise non-gap overlap is below \code{minOverlapFraction * shorter_read_length}. See SangerAlignment for full discussion.}
+
+\item{minOverlapBases}{Integer (default \code{0L}). Absolute-base-pair threshold variant of \code{minOverlapFraction}.}
+
+\item{alignSeqsParams}{A named list (default \code{list()}) of additional arguments forwarded to \code{DECIPHER::AlignSeqs}.}
+
+\item{consensusMethod}{One of \code{"strict"} (default), \code{"majority"}, or \code{"quality_weighted"}. See SangerAlignment for full discussion.}
+
+\item{qualityAware}{Logical shorthand for \code{consensusMethod = "quality_weighted"}. Issue #48.}
 }
 \value{
 A SangerContig instance.

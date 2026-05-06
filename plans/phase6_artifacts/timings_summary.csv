@@ -1,0 +1,5 @@
+"config","secs"
+"lazy=FALSE + SerialParam",2.125
+"lazy=TRUE  + MulticoreParam(2)",2.301
+"lazy=TRUE  + MulticoreParam(4)",2.4596
+"lazy=TRUE  + SerialParam",1.331

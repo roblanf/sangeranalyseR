@@ -109,7 +109,7 @@ suppressWarnings(suppressMessages(
 <div style="overflow: scroll;">
 <h3> Amino Acids Sequence frameshit 0 </h3>
 ```{r echo=FALSE, warning=FALSE}
-AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS1))
+AAString <- data.frame(AAString(primaryAASeqS1(params$SangerRead)))
 AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
 colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
 rownames(AAStringDF) <- NULL
@@ -128,7 +128,7 @@ suppressWarnings(suppressMessages(
 ```
 <h3> Amino Acids Sequence frameshit 1  </h3>
 ```{r echo=FALSE, warning=FALSE}
-AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS2))
+AAString <- data.frame(AAString(primaryAASeqS2(params$SangerRead)))
 AAString <- rbind(NA, AAString)
 AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
 colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)
@@ -150,7 +150,7 @@ suppressWarnings(suppressMessages(
 ```
 <h3> Amino Acids Sequence frameshit 2 </h3>
 ```{r echo=FALSE, warning=FALSE}
-AAString <- data.frame(AAString(params$SangerRead@primaryAASeqS3))
+AAString <- data.frame(AAString(primaryAASeqS3(params$SangerRead)))
 AAString <- rbind(NA, NA, AAString)
 AAStringDF <- data.frame(t(AAString), stringsAsFactors = FALSE)
 colnames(AAStringDF) <- substr(colnames(AAStringDF), 2, 100)

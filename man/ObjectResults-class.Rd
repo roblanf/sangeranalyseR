@@ -10,7 +10,19 @@ An S4 class storing results related inputs in a SangerRead, SangerContig, and Sa
 \section{Slots}{
 
 \describe{
-\item{\code{printLevel}}{}
+\item{\code{creationResult}}{Single logical: TRUE if construction succeeded, FALSE if any input failed validation.}
+
+\item{\code{errorMessages}}{Character vector of error messages collected during construction (one per failure).}
+
+\item{\code{errorTypes}}{Character vector of machine-readable error tags (e.g. \code{"PARAMETER_RANGE_ERROR"}); same length as \code{errorMessages}.}
+
+\item{\code{warningMessages}}{Character vector of warning messages emitted during construction.}
+
+\item{\code{warningTypes}}{Character vector of machine-readable warning tags; same length as \code{warningMessages}.}
+
+\item{\code{readResultTable}}{A data frame with one row per Sanger read processed, recording per-read creation outcome and any error tag.}
+
+\item{\code{printLevel}}{Character indicating which tier (\code{"SangerRead"}, \code{"SangerContig"}, or \code{"SangerAlignment"}) emitted these results.}
 }}
 
 \examples{

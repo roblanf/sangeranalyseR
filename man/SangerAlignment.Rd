@@ -29,11 +29,22 @@ SangerAlignment(
   maxFractionLost = 0.5,
   acceptStopCodons = TRUE,
   readingFrame = 1,
-  processorsNum = 1
+  processorsNum = 1,
+  BPPARAM = NULL,
+  lazyAA = TRUE,
+  minOverlapFraction = 0,
+  minOverlapBases = 0L,
+  alignSeqsParams = list(),
+  consensusMethod = "strict",
+  qualityAware = FALSE
 )
 }
 \arguments{
+\item{printLevel}{Internal — controls log verbosity when this constructor is called recursively from a parent class. Defaults to \code{"SangerAlignment"}; do not set manually.}
+
 \item{inputSource}{The input source of the raw file. It must be \code{"ABIF"} or \code{"FASTA"}. The default value is \code{"ABIF"}.}
+
+\item{processMethod}{The method used to group reads into contigs. Either \code{"REGEX"} (use \code{REGEX_SuffixForward} / \code{REGEX_SuffixReverse}) or \code{"CSV"} (use \code{CSV_NamesConversion}). The default is \code{"REGEX"}.}
 
 \item{ABIF_Directory}{The parent directory of all of the reads contained in ABIF format you wish to analyse. In SangerAlignment, all reads in subdirectories will be scanned recursively.}
 
@@ -79,9 +90,19 @@ SangerAlignment(
 
 \item{processorsNum}{The number of processors to use, or NULL (the default) for all available processors.}
 
-\item{minFractionCallSA}{Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.}
+\item{BPPARAM}{A \code{BiocParallelParam} instance that controls how the per-\code{SangerRead} construction loop is parallelised. Defaults to \code{NULL}, in which case it is derived from \code{processorsNum}.}
 
-\item{maxFractionLostSA}{Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.}
+\item{lazyAA}{Logical (default \code{TRUE}). When \code{TRUE} and \code{refAminoAcidSeq == ""}, the per-read 3-frame amino-acid translation is skipped at construction time and computed on demand via \code{primaryAASeqS1/S2/S3()}.}
+
+\item{minOverlapFraction}{Numeric in [0, 1] (default \code{0.0}). When > 0, after read alignment the smallest pairwise non-gap overlap is computed; if it falls below \code{minOverlapFraction * shorter_read_length}, a \code{LOW_OVERLAP_WARN} is logged. Use this to detect spurious merges of poorly-overlapping forward/reverse reads (issues #94, #66).}
+
+\item{minOverlapBases}{Integer (default \code{0L}). Like \code{minOverlapFraction} but expressed in absolute base pairs; the warning fires if the smallest pairwise overlap is below this value. Whichever of the two thresholds is larger applies.}
+
+\item{alignSeqsParams}{A named list (default \code{list()}) of additional arguments forwarded to \code{DECIPHER::AlignSeqs} (or \code{AlignTranslation} when \code{refAminoAcidSeq != ""}). Useful for tuning alignment behaviour on minimal-overlap 16S reads (e.g. \code{list(iterations = 1L, refinements = 1L)}).}
+
+\item{consensusMethod}{One of \code{"strict"} (default; uses DECIPHER's \code{ConsensusSequence} with IUPAC ambiguity codes), \code{"majority"} (per-column plurality vote, no ambiguity codes), or \code{"quality_weighted"} (per-column vote weighted by source-read Phred scores). Issues #87, #48.}
+
+\item{qualityAware}{Logical shorthand (default \code{FALSE}); when \code{TRUE}, equivalent to \code{consensusMethod = "quality_weighted"}. Issue #48.}
 }
 \value{
 A SangerAlignment instance.

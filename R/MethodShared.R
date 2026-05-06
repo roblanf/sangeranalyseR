@@ -25,11 +25,11 @@
 #' launchApp(sangerAlignmentData, colors="cb_friendly")}
 launchApp <- function(object, outputDir = NULL, colors="default") {
     if(isS4(object)) {
-        if (class(object)[1] == 'SangerAlignment') {
+        if (is(object, 'SangerAlignment')) {
             log_info("Your input is 'SangerAlignment' S4 instance")
             shinyApp <- launchAppSA(object, outputDir = outputDir, colors=colors)
             return(shinyApp)
-        } else if (class(object)[1] == 'SangerContig') {
+        } else if (is(object, 'SangerContig')) {
             log_info("Your input is 'SangerContig' S4 instance")
             shinyApp <- launchAppSC(object, outputDir = outputDir, colors=colors)
             return(shinyApp)
@@ -61,26 +61,26 @@ launchApp <- function(object, outputDir = NULL, colors="default") {
 #' data(sangerReadFData)
 #' data(sangerContigData)
 #' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' writeFasta(sangerReadFData)
 #' writeFasta(sangerContigData)
 #' writeFasta(sangerAlignmentData)}
 writeFasta <- function(object, outputDir = NULL, compress  = FALSE,
                        compression_level = NA, selection = "all") {
     if(isS4(object)) {
-        if (class(object)[1] == 'SangerAlignment') {
+        if (is(object, 'SangerAlignment')) {
             log_info("Your input is 'SangerAlignment' S4 instance")
             writeFastaSA(object, outputDir = outputDir,
                          compress  = compress,
                          compression_level = compression_level,
                          selection = selection)
-        } else if (class(object)[1] == 'SangerContig') {
+        } else if (is(object, 'SangerContig')) {
             log_info("Your input is 'SangerContig' S4 instance")
             writeFastaSC(object, outputDir = outputDir,
                          compress  = compress,
                          compression_level = compression_level,
                          selection = selection)
-        } else if (class(object)[1] == 'SangerRead') {
+        } else if (is(object, 'SangerRead')) {
             log_info("Your input is 'SangerRead' S4 instance")
             writeFastaSR(object, outputDir = outputDir,
                          compress  = compress,
@@ -118,7 +118,7 @@ writeFasta <- function(object, outputDir = NULL, compress  = FALSE,
 #' data(sangerReadFData)
 #' data(sangerContigData)
 #' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' generateReport(sangerReadFData)
 #' generateReport(sangerReadFData, colors="cb_friendly")
 #' generateReport(sangerContigData)
@@ -129,7 +129,7 @@ generateReport <- function(object, outputDir = NULL,
                            includeSangerContig = TRUE,
                            includeSangerRead = TRUE, colors="default", ...) {
     if(isS4(object)) {
-        if (class(object)[1] == 'SangerAlignment') {
+        if (is(object, 'SangerAlignment')) {
             log_info("Your input is 'SangerAlignment' S4 instance")
             outputHtml <-
                 generateReportSA(object, outputDir = outputDir,
@@ -137,14 +137,14 @@ generateReport <- function(object, outputDir = NULL,
                                  includeSangerRead = includeSangerContig, 
                                  colors=colors, ...)
             return(outputHtml)
-        } else if (class(object)[1] == 'SangerContig') {
+        } else if (is(object, 'SangerContig')) {
             log_info("Your input is 'SangerContig' S4 instance")
             outputHtml <-
                 generateReportSC(object, outputDir = outputDir,
                                  includeSangerRead = includeSangerRead, 
                                  colors=colors, ...)
             return(outputHtml)
-        } else if (class(object)[1] == 'SangerRead') {
+        } else if (is(object, 'SangerRead')) {
             log_info("Your input is 'SangerRead' S4 instance")
             outputHtml <- generateReportSR(object, outputDir = outputDir, 
                                            colors=colors, ...)

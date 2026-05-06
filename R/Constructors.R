@@ -25,9 +25,16 @@
 #' @param geneticCode Named character vector in the same format as \code{GENETIC_CODE} (the default), which represents the standard genetic code. This is the code with which the function will attempt to translate your DNA sequences. You can get an appropriate vector with the getGeneticCode() function. The default is the standard code.
 #' @param acceptStopCodons The logical value \code{TRUE} or \code{FALSE}. \code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; \code{FALSE}: reject reads with stop codons. If \code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).
 #' @param readingFrame \code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
-#' @param minFractionCallSA Minimum fraction of the sequences required to call a consensus sequence for SangerAlignment at any given position (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.75 implying that 3/4 of all reads must be present in order to call a consensus.
-#' @param maxFractionLostSA Numeric giving the maximum fraction of sequence information that can be lost in the consensus sequence for SangerAlignment (see the ConsensusSequence() function from DECIPHER for more information). Defaults to 0.5, implying that each consensus base can ignore at most 50 percent of the information at a given position.
 #' @param processorsNum The number of processors to use, or NULL (the default) for all available processors.
+#' @param printLevel Internal — controls log verbosity when this constructor is called recursively from a parent class. Defaults to \code{"SangerAlignment"}; do not set manually.
+#' @param processMethod The method used to group reads into contigs. Either \code{"REGEX"} (use \code{REGEX_SuffixForward} / \code{REGEX_SuffixReverse}) or \code{"CSV"} (use \code{CSV_NamesConversion}). The default is \code{"REGEX"}.
+#' @param BPPARAM A \code{BiocParallelParam} instance that controls how the per-\code{SangerRead} construction loop is parallelised. Defaults to \code{NULL}, in which case it is derived from \code{processorsNum}.
+#' @param lazyAA Logical (default \code{TRUE}). When \code{TRUE} and \code{refAminoAcidSeq == ""}, the per-read 3-frame amino-acid translation is skipped at construction time and computed on demand via \code{primaryAASeqS1/S2/S3()}.
+#' @param minOverlapFraction Numeric in [0, 1] (default \code{0.0}). When > 0, after read alignment the smallest pairwise non-gap overlap is computed; if it falls below \code{minOverlapFraction * shorter_read_length}, a \code{LOW_OVERLAP_WARN} is logged. Use this to detect spurious merges of poorly-overlapping forward/reverse reads (issues #94, #66).
+#' @param minOverlapBases Integer (default \code{0L}). Like \code{minOverlapFraction} but expressed in absolute base pairs; the warning fires if the smallest pairwise overlap is below this value. Whichever of the two thresholds is larger applies.
+#' @param alignSeqsParams A named list (default \code{list()}) of additional arguments forwarded to \code{DECIPHER::AlignSeqs} (or \code{AlignTranslation} when \code{refAminoAcidSeq != ""}). Useful for tuning alignment behaviour on minimal-overlap 16S reads (e.g. \code{list(iterations = 1L, refinements = 1L)}).
+#' @param consensusMethod One of \code{"strict"} (default; uses DECIPHER's \code{ConsensusSequence} with IUPAC ambiguity codes), \code{"majority"} (per-column plurality vote, no ambiguity codes), or \code{"quality_weighted"} (per-column vote weighted by source-read Phred scores). Issues #87, #48.
+#' @param qualityAware Logical shorthand (default \code{FALSE}); when \code{TRUE}, equivalent to \code{consensusMethod = "quality_weighted"}. Issue #48.
 #'
 #' @title SangerAlignment
 #' @name SangerAlignment
@@ -80,7 +87,14 @@ SangerAlignment <- function(printLevel             = "SangerAlignment",
                             maxFractionLost        = 0.5,
                             acceptStopCodons       = TRUE,
                             readingFrame           = 1,
-                            processorsNum          = 1) {
+                            processorsNum          = 1,
+                            BPPARAM                = NULL,
+                            lazyAA                 = TRUE,
+                            minOverlapFraction     = 0.0,
+                            minOverlapBases        = 0L,
+                            alignSeqsParams        = list(),
+                            consensusMethod        = "strict",
+                            qualityAware           = FALSE) {
     newAlignment <- new("SangerAlignment",
                         inputSource            = inputSource,
                         processMethod          = processMethod,
@@ -105,7 +119,14 @@ SangerAlignment <- function(printLevel             = "SangerAlignment",
                         maxFractionLost        = maxFractionLost,
                         acceptStopCodons       = acceptStopCodons,
                         readingFrame           = readingFrame,
-                        processorsNum          = processorsNum)
+                        processorsNum          = processorsNum,
+        BPPARAM                = BPPARAM,
+        lazyAA                 = lazyAA,
+        minOverlapFraction     = minOverlapFraction,
+        minOverlapBases        = minOverlapBases,
+        alignSeqsParams        = alignSeqsParams,
+        consensusMethod        = consensusMethod,
+        qualityAware           = qualityAware)
     return(newAlignment)
 }
 
@@ -140,6 +161,15 @@ SangerAlignment <- function(printLevel             = "SangerAlignment",
 #' @param acceptStopCodons The logical value \code{TRUE} or \code{FALSE}. \code{TRUE} (the defualt): keep all reads, regardless of whether they have stop codons; \code{FALSE}: reject reads with stop codons. If \code{FALSE} is selected, then the number of stop codons is calculated after attempting to correct frameshift mutations (if applicable).
 #' @param readingFrame \code{1}, \code{2}, or \code{3}. Only used if \code{accept.stop.codons == FALSE}. This specifies the reading frame that is used to determine stop codons. If you use a \code{refAminoAcidSeq}, then the frame should always be \code{1}, since all reads will be shifted to frame 1 during frameshift correction. Otherwise, you should select the appropriate reading frame.
 #' @param processorsNum The number of processors to use, or NULL (the default) for all available processors.
+#' @param printLevel Internal — controls log verbosity when this constructor is called recursively from a parent class. Defaults to \code{"SangerContig"}; do not set manually.
+#' @param processMethod Either \code{"REGEX"} or \code{"CSV"}. Default \code{"REGEX"}.
+#' @param BPPARAM A \code{BiocParallelParam} instance for the per-read parallel loop. Default \code{NULL} (derived from \code{processorsNum}).
+#' @param lazyAA Logical (default \code{TRUE}). Skip eager 3-frame AA translation when no \code{refAminoAcidSeq} is supplied; use the \code{primaryAASeqS1/S2/S3()} accessors on demand instead.
+#' @param minOverlapFraction Numeric in [0, 1] (default \code{0.0}). Triggers a \code{LOW_OVERLAP_WARN} when the smallest pairwise non-gap overlap is below \code{minOverlapFraction * shorter_read_length}. See SangerAlignment for full discussion.
+#' @param minOverlapBases Integer (default \code{0L}). Absolute-base-pair threshold variant of \code{minOverlapFraction}.
+#' @param alignSeqsParams A named list (default \code{list()}) of additional arguments forwarded to \code{DECIPHER::AlignSeqs}.
+#' @param consensusMethod One of \code{"strict"} (default), \code{"majority"}, or \code{"quality_weighted"}. See SangerAlignment for full discussion.
+#' @param qualityAware Logical shorthand for \code{consensusMethod = "quality_weighted"}. Issue #48.
 #'
 #' @title SangerContig
 #' @name SangerContig
@@ -195,7 +225,14 @@ SangerContig <- function(printLevel             = "SangerContig",
                          maxFractionLost        = 0.5,
                          acceptStopCodons       = TRUE,
                          readingFrame           = 1,
-                         processorsNum          = 1) {
+                         processorsNum          = 1,
+                            BPPARAM                = NULL,
+                            lazyAA                 = TRUE,
+                            minOverlapFraction     = 0.0,
+                            minOverlapBases        = 0L,
+                            alignSeqsParams        = list(),
+                            consensusMethod        = "strict",
+                            qualityAware           = FALSE) {
     newContig <- new("SangerContig",
                      printLevel             = printLevel,
                      inputSource            = inputSource,
@@ -222,7 +259,14 @@ SangerContig <- function(printLevel             = "SangerContig",
                      maxFractionLost        = maxFractionLost,
                      acceptStopCodons       = acceptStopCodons,
                      readingFrame           = readingFrame,
-                     processorsNum          = processorsNum)
+                     processorsNum          = processorsNum,
+        BPPARAM                = BPPARAM,
+        lazyAA                 = lazyAA,
+        minOverlapFraction     = minOverlapFraction,
+        minOverlapBases        = minOverlapBases,
+        alignSeqsParams        = alignSeqsParams,
+        consensusMethod        = consensusMethod,
+        qualityAware           = qualityAware)
     return(newContig)
 }
 
@@ -246,6 +290,8 @@ SangerContig <- function(printLevel             = "SangerContig",
 #' @param heightPerRow It defines the height of each row in chromatogram. The default value is \code{200}.
 #' @param signalRatioCutoff The ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are excluded. The default value is \code{0.33}.
 #' @param showTrimmed The logical value storing whether to show trimmed base pairs in chromatogram. The default value is \code{TRUE}.
+#' @param printLevel Internal — controls log verbosity when this constructor is called recursively from a parent class. Defaults to \code{"SangerRead"}; do not set manually.
+#' @param lazyAA Logical (default \code{TRUE}). Skip eager 3-frame AA translation; use \code{primaryAASeqS1/S2/S3()} accessors instead.
 #'
 #' @title SangerRead
 #' @name SangerRead
@@ -287,7 +333,8 @@ SangerRead <- function(printLevel            = "SangerRead",
                        baseNumPerRow         = 100,
                        heightPerRow          = 200,
                        signalRatioCutoff     = 0.33,
-                       showTrimmed           = TRUE) {
+                       showTrimmed           = TRUE,
+                       lazyAA               = TRUE) {
     newRead <- new("SangerRead",
                    printLevel           = printLevel,
                    inputSource          = inputSource,
@@ -302,6 +349,7 @@ SangerRead <- function(printLevel            = "SangerRead",
                    baseNumPerRow        = baseNumPerRow,
                    heightPerRow         = heightPerRow,
                    signalRatioCutoff    = signalRatioCutoff,
-                   showTrimmed          = showTrimmed)
+                   showTrimmed          = showTrimmed,
+                   lazyAA               = lazyAA)
     return(newRead)
 }

@@ -1,14 +1,13 @@
 ---
 title: "An Introduction to sangeranalyseR"
-author: "Author: Kuan-Hao Chao (u7022787@anu.edu.au)"
+author: "Kuan-Hao Chao (ntueeb05howard@gmail.com)"
 date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
-output: 
+output:
   BiocStyle::html_document:
     toc_float: true
     code_folding: show
     fig_caption: yes
   BiocStyle::pdf_document: default
-#bibliography: bibliography.bib
 fontsize: 14pt
 vignette: >
   %\VignetteIndexEntry{sangeranalyseR}
@@ -24,13 +23,332 @@ knitr::opts_chunk$set(tidy = FALSE,
                       message = FALSE)
 ```
 
-```{r}
+```{r setup}
 library(sangeranalyseR)
 ```
 
 # Introduction
-[sangeranalyseR](https://github.com/roblanf/sangeranalyseR) is an R package that provides fast, flexible, and reproducible workflows for assembling your sanger seuqencing data into contigs. It adds to a list of already widely-used tools, like Geneious, CodonCode Aligner and Phred-Phrap-Consed;. What makes it different from these tools is that it’s free, it’s open source, and it’s in R.
 
-For more information, please check our 📒[sangeranalyseR documentation](https://sangeranalyser.readthedocs.io/en/latest/#).
+[sangeranalyseR](https://github.com/roblanf/sangeranalyseR) is an R package that
+provides fast, flexible, and reproducible workflows for assembling Sanger
+sequencing data into contigs. It is a free, open-source alternative to Geneious,
+CodonCode Aligner, and Phred-Phrap-Consed. The full reference manual is on the
+[ReadTheDocs site](https://sangeranalyser.readthedocs.io/en/latest/); this
+vignette focuses on the *recipes* most users actually need: how to call the
+constructors, what each parameter does, and how to interpret the output.
 
+The package is built around three S4 classes that form a containment hierarchy:
 
+```
+SangerAlignment   ← a set of contigs aligned to each other
+└── SangerContig  ← one assembled contig (forward + reverse reads)
+    └── SangerRead ← one ABIF or FASTA read
+```
+
+# How to … (recipe gallery)
+
+Every recipe uses the bundled `Allolobophora chlorotica` ABIF fixture (8 reads
+arranged into 4 forward+reverse pairs). The `system.file()` call below works
+from any installed copy of the package.
+
+```{r locate-fixture}
+ab1_dir <- system.file("extdata", "Allolobophora_chlorotica", "ACHLO",
+                       package = "sangeranalyseR")
+list.files(ab1_dir, pattern = "\\.ab1$")
+```
+
+## How to assemble a single contig
+
+```{r recipe-single-contig, eval=FALSE}
+sc <- SangerContig(
+    inputSource         = "ABIF",
+    processMethod       = "REGEX",
+    ABIF_Directory      = ab1_dir,
+    contigName          = "Achl_ACHLO006-09",
+    REGEX_SuffixForward = "_[0-9]*_F\\.ab1$",
+    REGEX_SuffixReverse = "_[0-9]*_R\\.ab1$",
+    TrimmingMethod      = "M1",
+    M1TrimmingCutoff    = 0.0001
+)
+sc@objectResults@creationResult        # TRUE
+length(sc@forwardReadList)              # 1 forward read
+length(sc@reverseReadList)              # 1 reverse read
+as.character(sc@contigSeq)              # the consensus sequence
+```
+
+## How to assemble many contigs at once (`SangerAlignment`)
+
+```{r recipe-alignment, eval=FALSE}
+sa <- SangerAlignment(
+    inputSource         = "ABIF",
+    processMethod       = "REGEX",
+    ABIF_Directory      = ab1_dir,
+    REGEX_SuffixForward = "_[0-9]*_F\\.ab1$",
+    REGEX_SuffixReverse = "_[0-9]*_R\\.ab1$",
+    TrimmingMethod      = "M1"
+)
+length(sa@contigList)                  # 4 contigs
+length(sa@contigsConsensus)            # cross-contig consensus length
+```
+
+## How to use a CSV mapping instead of regex
+
+When your filenames don't follow a clean `_F.ab1` / `_R.ab1` convention, supply
+a `reads,direction,contig` CSV that explicitly maps every read:
+
+```{r recipe-csv, eval=FALSE}
+csv_path <- system.file("extdata", "ab1", "SangerAlignment",
+                        "names_conversion.csv", package = "sangeranalyseR")
+sa_csv <- SangerAlignment(
+    inputSource         = "ABIF",
+    processMethod       = "CSV",
+    ABIF_Directory      = ab1_dir,
+    CSV_NamesConversion = csv_path
+)
+```
+
+Phase-15 fix: contig labels in the CSV no longer have to appear as substrings
+of filenames. The CSV's `reads` column drives the lookup directly.
+
+## How to handle forward-only (or reverse-only) datasets
+
+Common in 16S barcoding and short-read survey pipelines. Pass `NULL` (or
+`NA_character_`) for the missing-direction suffix and set `minReadsNum = 1` so
+each surviving read can become its own contig:
+
+```{r recipe-forward-only, eval=FALSE}
+sa_fwd <- SangerAlignment(
+    inputSource         = "ABIF",
+    processMethod       = "REGEX",
+    ABIF_Directory      = ab1_dir,
+    REGEX_SuffixForward = "_[0-9]*_F\\.ab1$",
+    REGEX_SuffixReverse = NULL,        # explicit forward-only (Phase-15)
+    minReadsNum         = 1
+)
+```
+
+## How to deal with low-quality / short reads
+
+Two trimming algorithms, controlled by `TrimmingMethod`:
+
+| Method | Algorithm                                          | Parameters                                           |
+| ------ | -------------------------------------------------- | ---------------------------------------------------- |
+| `"M1"` | Modified Mott's (Phred/Phrap-style cumulative)     | `M1TrimmingCutoff` (probability; default `0.0001`)   |
+| `"M2"` | Sliding-window mean Phred (Trimmomatic-style)      | `M2CutoffQualityScore`, `M2SlidingWindowSize`        |
+
+Tighter trimming for noisy data:
+
+```{r recipe-strict-trim, eval=FALSE}
+sa_strict <- SangerAlignment(
+    inputSource          = "ABIF",
+    processMethod        = "REGEX",
+    ABIF_Directory       = ab1_dir,
+    REGEX_SuffixForward  = "_[0-9]*_F\\.ab1$",
+    REGEX_SuffixReverse  = "_[0-9]*_R\\.ab1$",
+    TrimmingMethod       = "M2",
+    M2CutoffQualityScore = 30,
+    M2SlidingWindowSize  = 15,
+    minReadLength        = 50      # post-trim length floor
+)
+```
+
+Phase-16 added a defensive width filter: any read trimmed to < 2 bp is
+silently dropped before alignment with a `MIN_READ_LENGTH_DEFENSIVE_DROP`
+warning, so you never see `DECIPHER::AlignSeqs` crash on degenerate inputs.
+
+## How to detect spurious low-overlap merges
+
+Forward + reverse reads with poor overlap silently produce IUPAC-ambiguity-soup
+consensus. Phase-16 adds an opt-in alignment-quality check:
+
+```{r recipe-overlap-check, eval=FALSE}
+sa_overlap <- SangerAlignment(
+    inputSource         = "ABIF",
+    processMethod       = "REGEX",
+    ABIF_Directory      = ab1_dir,
+    REGEX_SuffixForward = "_[0-9]*_F\\.ab1$",
+    REGEX_SuffixReverse = "_[0-9]*_R\\.ab1$",
+    minOverlapBases     = 50L,        # warn if any pairwise overlap < 50 bp
+    minOverlapFraction  = 0.05        # or < 5% of the shorter read
+)
+```
+
+When triggered, you'll see `LOW_OVERLAP_WARN` in the log alongside the offending
+read pair.
+
+## How to choose a consensus base-calling method
+
+Three modes are exposed via `consensusMethod`:
+
+| Mode                      | Behaviour                                                                                          | Per-position quality |
+| ------------------------- | -------------------------------------------------------------------------------------------------- | --------------------- |
+| `"strict"` (default)      | DECIPHER's `ConsensusSequence` with IUPAC ambiguity codes for disagreements.                       | not provided          |
+| `"majority"`              | Per-column plurality vote; ties break alphabetically. No IUPAC codes ever appear in the output.    | synthetic Phred       |
+| `"quality_weighted"`      | Same as majority but votes are weighted by source-read Phred. Alias: `qualityAware = TRUE`.        | mean Phred of agreers |
+
+```{r recipe-majority-consensus, eval=FALSE}
+sc_majority <- SangerContig(
+    inputSource         = "ABIF",
+    processMethod       = "REGEX",
+    ABIF_Directory      = ab1_dir,
+    contigName          = "Achl_ACHLO006-09",
+    REGEX_SuffixForward = "_[0-9]*_F\\.ab1$",
+    REGEX_SuffixReverse = "_[0-9]*_R\\.ab1$",
+    consensusMethod     = "majority"
+)
+as.character(sc_majority@contigSeq)        # plain ACGT, no IUPAC codes
+attr(sc_majority@contigSeq, "qualityScores")  # per-position synthetic Phred
+```
+
+## How to interpret the chromatogram
+
+ABIF files store per-base trace amplitudes for the four channels (A, C, G, T)
+and per-base Phred quality scores in the `PCON.2` data block. `sangeranalyseR`
+re-runs the base-calling step on those raw traces using the
+`MakeBaseCallsInside` helper:
+
+1. Detect peaks per channel (`getpeaks`).
+2. For each base position, identify the strongest peak across A/C/G/T using
+   `signalRatioCutoff` (default 0.33 — secondary peaks below that fraction of
+   the primary peak are dropped).
+3. Tied peaks → the IUPAC ambiguity code corresponding to the equally-strong
+   bases.
+4. Quality scores come from `abifRawData@data$PCON.2` (one entry per detected
+   peak).
+
+Visualize either as a static PDF (`chromatogram_overwrite()`) or an interactive
+WebGL widget (`chromatogram_plotly()` — Phase-8):
+
+```{r recipe-chromatogram, eval=FALSE}
+sr <- sa@contigList[[1]]@forwardReadList[[1]]
+chromatogram_plotly(sr, max_points = 8000, showtrim = TRUE)
+```
+
+For very long traces (> 50 k points) the widget downsamples by uniform stride
+to keep the browser responsive; the original / rendered point counts are
+reported via `attr(p, "downsample_info")`.
+
+## How to deal with secondary peaks
+
+Each `SangerRead` exposes:
+
+* `@primarySeq` — the strongest base at each position (DNAString).
+* `@secondarySeq` — the second-strongest base at each position (DNAString).
+* `@signalRatioCutoff` (in `@ChromatogramParam`) — the threshold below which a
+  secondary peak is dropped.
+
+To inspect secondary peaks within a contig alignment, look at
+`sc@secondaryPeakDF` — Phase-3 added one-row-per-ambiguous-column reporting:
+
+```{r recipe-secondary-peaks, eval=FALSE}
+head(sc@secondaryPeakDF)
+```
+
+Re-run base-calling with a tighter (or looser) cutoff:
+
+```{r recipe-rebasecall, eval=FALSE}
+sr_re <- MakeBaseCalls(sr, signalRatioCutoff = 0.22)
+```
+
+## How to launch the interactive Shiny app
+
+```{r recipe-shiny, eval=FALSE}
+launchApp(sa)             # works on SangerAlignment or SangerContig
+```
+
+Per-read trimming sliders, contig overview, alignment browser, FASTA / HTML
+report export. Phase-8 also added a lightweight gadget for **batch** trimming
+across a whole alignment:
+
+```{r recipe-globaltrim, eval=FALSE}
+sa2 <- globalTrimApp(sa)  # opens a Shiny dialog; returns the re-trimmed SA
+```
+
+## How to export results
+
+```{r recipe-export, eval=FALSE}
+out_dir <- tempdir()
+writeFasta(sa, outputDir = out_dir)        # SR / SC / SA dispatcher
+
+generateReport(sa, outputDir = out_dir)     # HTML report (requires pandoc)
+```
+
+Phase-8 fix: reports now correctly populate the per-frame AA tables under the
+default `lazyAA = TRUE` constructor mode (previously the tables silently
+rendered empty).
+
+# Constructor parameter reference
+
+Every recipe above is built on three S4 constructors. The full parameter list
+is in `?SangerAlignment` / `?SangerContig` / `?SangerRead`; the most-asked-about
+groups are summarised below.
+
+## Required parameters (REGEX path)
+
+| Parameter             | What it controls                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------------------- |
+| `inputSource`         | `"ABIF"` (raw chromatograms) or `"FASTA"` (pre-called sequences).                                   |
+| `processMethod`       | `"REGEX"` (group reads by filename suffix) or `"CSV"` (explicit `reads,direction,contig` mapping). |
+| `ABIF_Directory`      | Path to the directory of `.ab1` files. Required for `inputSource = "ABIF"`.                         |
+| `FASTA_File`          | Path to a single FASTA file. Required for `inputSource = "FASTA"`.                                  |
+| `REGEX_SuffixForward` | A regex matched against forward-read filenames, e.g. `"_F\\.ab1$"`. Pass `NULL` for reverse-only.   |
+| `REGEX_SuffixReverse` | A regex matched against reverse-read filenames, e.g. `"_R\\.ab1$"`. Pass `NULL` for forward-only.   |
+| `contigName`          | (`SangerContig` only) The label / prefix shared by reads in this contig.                            |
+| `CSV_NamesConversion` | Path to a CSV with three columns: `reads`, `direction` (F/R), `contig`. Required for `processMethod = "CSV"`. |
+
+## Trimming parameters
+
+| Parameter              | When used                  | Default        | Notes                                                              |
+| ---------------------- | -------------------------- | -------------- | ------------------------------------------------------------------ |
+| `TrimmingMethod`        | always                     | `"M1"`          | `"M1"` (modified Mott) or `"M2"` (sliding window).                 |
+| `M1TrimmingCutoff`      | `TrimmingMethod = "M1"`     | `0.0001`        | Cumulative probability cutoff. Tighter = more aggressive trim.     |
+| `M2CutoffQualityScore`  | `TrimmingMethod = "M2"`     | `20`            | Mean Phred threshold within the sliding window.                    |
+| `M2SlidingWindowSize`   | `TrimmingMethod = "M2"`     | `10`            | Width of the sliding window in bp.                                 |
+| `minReadLength`         | always                     | `20L`           | Reads trimmed to less than this are dropped from the contig.        |
+| `signalRatioCutoff`     | `inputSource = "ABIF"`      | `0.33`          | Secondary peaks below this fraction of the primary peak are dropped. |
+
+## Consensus parameters
+
+| Parameter              | Default      | Notes                                                                                                     |
+| ---------------------- | ------------ | --------------------------------------------------------------------------------------------------------- |
+| `consensusMethod`      | `"strict"`   | `"strict"` (DECIPHER+IUPAC), `"majority"` (plurality vote, no IUPAC), `"quality_weighted"` (Phred-weighted). |
+| `qualityAware`         | `FALSE`      | Shorthand for `consensusMethod = "quality_weighted"`.                                                     |
+| `minFractionCall`      | `0.5`        | DECIPHER `minInformation` for `"strict"` mode.                                                            |
+| `maxFractionLost`      | `0.5`        | DECIPHER `threshold` for `"strict"` mode.                                                                  |
+| `minOverlapBases`       | `0L`         | If > 0, log `LOW_OVERLAP_WARN` when smallest pairwise non-gap overlap < this.                            |
+| `minOverlapFraction`    | `0.0`        | Same in fractional terms (overlap as a fraction of the shorter read).                                     |
+| `alignSeqsParams`        | `list()`     | Extra named args forwarded to `DECIPHER::AlignSeqs` (e.g. `list(iterations = 1L, refinements = 1L)`).     |
+
+## Performance / parallelism parameters
+
+| Parameter        | Default | Notes                                                                                                                |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------- |
+| `processorsNum`   | `1`     | Legacy integer worker count. Honoured for backwards compatibility.                                                    |
+| `BPPARAM`         | `NULL`  | Any `BiocParallelParam`. Auto-derived from `processorsNum` if `NULL` (`SerialParam` for 1, `Multicore`/`Snow` for ≥2). |
+| `lazyAA`          | `TRUE`  | Skip eager 3-frame AA translation (Phase-6 default; ~35% wall-time saving). Use `primaryAASeqS{1,2,3}()` accessors.    |
+
+# Troubleshooting
+
+| Symptom                                                                          | Cause / fix                                                                                                                                                                                                          |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `'qualityPhredScores' length cannot be zero`                                      | ABIF has empty `PCON.2` quality block (older 3500/Beckman firmware). Phase-15 fix: synthesises Phred 30 with `MISSING_QUALITY_SCORES_WARN`. Update to the devel branch.                                              |
+| `'REGEX_SuffixReverse' must be character type` on forward-only data              | Phase-15 fix: pass `REGEX_SuffixReverse = NULL` (or `NA_character_`) for forward-only datasets, plus `minReadsNum = 1`.                                                                                              |
+| `CONTIG_NUMBER_ZERO_ERROR` even though each `SangerContig()` works individually  | Phase-15 fix: the CSV+ABIF aggregator no longer requires contig labels to be substrings of filenames; the `reads` column drives the lookup.                                                                          |
+| `'x' must be an XStringSet object` from `writeFasta` on a single-read contig    | Phase-15 fix: `writeFastaSC` detects empty alignment and writes a single-record FASTA from `@contigSeq`.                                                                                                              |
+| Consensus is full of IUPAC ambiguity codes                                       | Phase-17: try `consensusMethod = "majority"` or `"quality_weighted"`. Also check pairwise overlap with `minOverlapBases = 50L` to detect spurious merges.                                                              |
+| Reports render with empty AA tables                                              | Phase-8 fix: the RMD templates were reading `@primaryAASeqS*` slots directly under `lazyAA = TRUE`. Fixed in the `devel` branch — use `primaryAASeqS1/S2/S3()` accessors if you customise the templates.            |
+
+# Citation
+
+Please cite the package via:
+
+> Kuan-Hao Chao, Kirston Barton, Sarah Palmer, Robert Lanfear (2021).
+> *sangeranalyseR: simple and interactive processing of Sanger sequencing data
+> in R.* Genome Biology and Evolution.
+> [doi:10.1093/gbe/evab028](https://doi.org/10.1093/gbe/evab028).
+
+# Session info
+
+```{r session-info, eval=TRUE}
+sessionInfo()
+```

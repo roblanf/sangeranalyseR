@@ -38,6 +38,6 @@ Method generateReportSA
 }
 \examples{
 data(sangerAlignmentData)
-\dontrun{
+\donttest{
 generateReportSA(sangerAlignmentData)}
 }

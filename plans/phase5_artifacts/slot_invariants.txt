@@ -1,0 +1,6 @@
+[PASS] primarySeqRaw   == sangerseq parent primarySeq
+[PASS] secondarySeqRaw == sangerseq parent secondarySeq
+[PASS] peakPosMatrixRaw  == parent peakPosMatrix
+[PASS] peakAmpMatrixRaw  == parent peakAmpMatrix
+[PASS] traceMatrix (inherited) == parent traceMatrix
+[PASS] primarySeq (post-MakeBaseCalls) length == qualityPhredScores length

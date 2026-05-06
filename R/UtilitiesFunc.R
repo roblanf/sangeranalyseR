@@ -1,36 +1,47 @@
 ### ============================================================================
 ### Global helper functions
 ### ============================================================================
-getProcessors <- function(processors = NULL) {
-    sysinf <- Sys.info()
-    if (!is.null(sysinf)){
-        os <- sysinf["sysname"]
-        if (os == "Darwin")
-            os <- "macos"
-    } else {
-        ## mystery machine
-        os <- .Platform$OS.type
-        if (grepl("^darwin", R.version$os))
-            os <- "macos"
-        if (grepl("linux-gnu", R.version$os))
-            os <- "linux"
+
+### Phase 6: BPPARAM resolution.
+###
+### Translates a (processorsNum, BPPARAM) input pair into a single BPPARAM
+### object suitable for `bplapply` and `bpnworkers`. Honours the historical
+### contract that `processorsNum = 1` means "run serially":
+###   * BPPARAM supplied -> use it (caller is responsible).
+###   * processorsNum == 1 (or NULL on Windows) -> SerialParam().
+###   * processorsNum >= 2 -> MulticoreParam(workers = N) on Unix,
+###                          SnowParam(workers = N) on Windows.
+###   * processorsNum == NULL on Unix -> bpparam() (registered default,
+###     usually MulticoreParam with all cores).
+.resolveBPPARAM <- function(processorsNum = NULL, BPPARAM = NULL) {
+    if (!is.null(BPPARAM)) return(BPPARAM)
+    on_windows <- identical(.Platform$OS.type, "windows")
+    if (is.null(processorsNum)) {
+        if (on_windows) return(BiocParallel::SerialParam())
+        return(BiocParallel::bpparam())
     }
-    os <- tolower(os)
-    if (os != "linux" && os != "osx") {
-        ### --------------------------------------------------------------------
-        ### Operating system is Window
-        ### --------------------------------------------------------------------
-        return(1)
-    } else {
-        ### --------------------------------------------------------------------
-        ### Operating system is macOS or Linux
-        ### --------------------------------------------------------------------
-        if(is.null(processors)){
-            processors = detectCores(all.tests = FALSE, logical = FALSE)
-        }
-        return(processors)
+    if (!is.numeric(processorsNum) || length(processorsNum) != 1L ||
+        processorsNum < 1L) {
+        return(BiocParallel::SerialParam())
     }
+    n <- as.integer(processorsNum)
+    if (n == 1L) return(BiocParallel::SerialParam())
+    if (on_windows) return(BiocParallel::SnowParam(workers = n))
+    BiocParallel::MulticoreParam(workers = n)
 }
+
+### Back-compat shim: keep `getProcessors()` returning an integer count,
+### now derived from a BPPARAM. External callers (e.g. DECIPHER's
+### `processors=` argument) consume the integer; internal call sites can
+### either keep using the integer or migrate to BPPARAM directly.
+getProcessors <- function(processors = NULL) {
+    if (!is.null(processors) && is.numeric(processors) &&
+        length(processors) == 1L && processors >= 1L) {
+        return(as.integer(processors))
+    }
+    BiocParallel::bpnworkers(.resolveBPPARAM(processors))
+}
+
 suppressPlotlyMessage <- function(p) {
     suppressMessages(plotly_build(p))
 }
@@ -44,7 +55,9 @@ suppressPlotlyMessage <- function(p) {
 ### Aligning SangerContigs (SangerAlignment)
 ### ----------------------------------------------------------------------------
 alignContigs <- function(SangerContigList, geneticCode, refAminoAcidSeq,
-                         minFractionCallSA, maxFractionLostSA, processorsNum) {
+                         minFractionCallSA, maxFractionLostSA, processorsNum,
+                         BPPARAM = NULL) {
+    if (!is.null(BPPARAM)) processorsNum <- BiocParallel::bpnworkers(BPPARAM)
     ### ------------------------------------------------------------------------
     ### Creating SangerContigList DNAStringSet
     ### ------------------------------------------------------------------------
@@ -152,11 +165,12 @@ nPairwiseDiffs <- function(pattern, subject){
     ps = str_count(comp, '\\+')
     return(c(qs, ps))
 }
-countCoincidentSp <- function(aln, processorsNum){
-    # make a data frame of columns in the alignment that have
-    # more than one secondary peak
+countCoincidentSp <- function(aln, processorsNum = NULL){
+    # Phase 6: each oneAmbiguousColumn call is microsecond-fast -- Phase-2 audit
+    # showed mclapply fork overhead dominated the actual work. Plain serial
+    # lapply is faster on realistic alignment widths.
     is = seq_len(aln@ranges@width[1])
-    r = mclapply(is, oneAmbiguousColumn, aln=aln, mc.cores = processorsNum)
+    r = lapply(is, oneAmbiguousColumn, aln=aln)
     r = Filter(Negate(is.null), r)
 
     if(length(r)>0){
@@ -177,13 +191,108 @@ oneAmbiguousColumn <- function(i, aln){
     }
 }
 ### ----------------------------------------------------------------------------
+### Phase 17: alternative consensus base-callers (Sprint 3)
+###
+### `.computeConsensusMajority(aln, weights = NULL)` — at each alignment
+### column, picks the base with the highest count (or highest summed
+### weight if `weights` is non-NULL). Returns a list with:
+###   * `consensus`: a single DNAString with one character per column
+###     ("-" if every read has a gap there).
+###   * `qualityScores`: an integer vector matching the consensus length,
+###     reporting either the synthetic agreement-Phred (no weights) or
+###     the mean Phred of agreeing reads (with weights).
+###
+### Used by Issue #87 (majority rule) and Issue #48 (Phred-aware
+### resolution). The synthetic / averaged scores power Issue #33
+### (consensus quality scores reported on `@contigSeq` via attr()).
+### ----------------------------------------------------------------------------
+.computeConsensusMajority <- function(aln, weights = NULL) {
+    mat   <- as.matrix(aln)
+    nrows <- nrow(mat)
+    ncols <- ncol(mat)
+    cons_chars <- character(ncols)
+    qscores    <- integer(ncols)
+    for (j in seq_len(ncols)) {
+        col   <- mat[, j]
+        keep  <- col != "-"
+        bases <- col[keep]
+        if (length(bases) == 0L) {
+            cons_chars[j] <- "-"
+            qscores[j]    <- 0L
+            next
+        }
+        if (is.null(weights)) {
+            tab    <- table(bases)
+            winner <- names(tab)[which.max(tab)]
+            qscores[j] <- as.integer(round(40 * max(tab) / length(bases)))
+        } else {
+            w    <- weights[keep, j]
+            tab  <- tapply(w, bases, sum)
+            winner <- names(tab)[which.max(tab)]
+            agree_w <- weights[col == winner, j]
+            qscores[j] <- if (length(agree_w) > 0L)
+                              as.integer(round(mean(agree_w)))
+                          else 0L
+        }
+        cons_chars[j] <- winner
+    }
+    list(
+        consensus     = DNAString(paste(cons_chars, collapse = "")),
+        qualityScores = qscores
+    )
+}
+
+### `.buildQualityMatrix(aln, qualityPhredScoresList)` — map each read's
+### per-base Phred score onto its aligned columns. Returns a numeric
+### matrix the same shape as `as.matrix(aln)` where entry (i, j) is the
+### Phred score of read i at alignment column j (0 in gap columns).
+.buildQualityMatrix <- function(aln, qualityPhredScoresList) {
+    mat    <- as.matrix(aln)
+    nrows  <- nrow(mat)
+    ncols  <- ncol(mat)
+    out    <- matrix(0L, nrow = nrows, ncol = ncols)
+    rnms   <- rownames(mat)
+    for (i in seq_len(nrows)) {
+        ## DECIPHER prefixes alignment names like "1_Read_<file>";
+        ## try the prefixed form first, then fall back to the basename.
+        key       <- rnms[i]
+        clean_key <- sub("^[0-9]+_Read_", "", key)
+        q <- qualityPhredScoresList[[key]]
+        if (is.null(q)) q <- qualityPhredScoresList[[clean_key]]
+        if (is.null(q)) {
+            ## No quality known — fall back to flat Phred 30 across the
+            ## non-gap columns of this read.
+            n_nongap <- sum(mat[i, ] != "-")
+            q <- rep(30L, n_nongap)
+        }
+        pos <- 0L
+        for (j in seq_len(ncols)) {
+            if (mat[i, j] != "-") {
+                pos <- pos + 1L
+                if (pos <= length(q)) out[i, j] <- as.integer(q[pos])
+            }
+        }
+    }
+    out
+}
+
+### ----------------------------------------------------------------------------
 ### Calculating SangerContig
 ### ----------------------------------------------------------------------------
 calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
                                refAminoAcidSeq, minFractionCall,
                                maxFractionLost, geneticCode,
                                acceptStopCodons, readingFrame,
-                               processorsNum = NULL, printLevel="") {
+                               processorsNum = NULL, printLevel="",
+                               BPPARAM = NULL,
+                               minOverlapFraction     = 0.0,
+                               minOverlapBases        = 0L,
+                               alignSeqsParams        = list(),
+                               consensusMethod        = "strict",
+                               qualityAware           = FALSE,
+                               qualityPhredScoresList = NULL) {
+    BPPARAM <- .resolveBPPARAM(processorsNum, BPPARAM)
+    processorsNum <- BiocParallel::bpnworkers(BPPARAM)
     ### ------------------------------------------------------------------------
     ### forward & reverse character reads list string creation
     ### ------------------------------------------------------------------------
@@ -253,9 +362,10 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
         
         frReadSet = corrected$sequences
         indels = getIndelDf(corrected$indels)
-        stops = as.numeric(unlist(mclapply(frReadSet, countStopSodons,
-                                           readingFrame, geneticCode,
-                                           mc.cores = processorsNum)))
+        stops = as.numeric(unlist(BiocParallel::bplapply(
+            frReadSet, countStopSodons,
+            readingFrame, geneticCode,
+            BPPARAM = BPPARAM)))
         stopsDf = data.frame("read" = names(frReadSet),
                              "stop.codons" = stops)
         frReadSetLen = unlist(lapply(frReadSet, function(x) length(x)))
@@ -277,13 +387,13 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     ### Remove reads with stop codons
     ### ------------------------------------------------------------------------
     if (!acceptStopCodons) {
-        print("Removing reads with stop codons")
+        log_info("Removing reads with stop codons")
         if(refAminoAcidSeq == ""){ # otherwise we already did it above
             stops =
-                as.numeric(unlist(mclapply(frReadSet,
-                                           countStopSodons,
-                                           readingFrame, geneticCode,
-                                           mc.cores = processorsNum)))
+                as.numeric(unlist(BiocParallel::bplapply(
+                    frReadSet, countStopSodons,
+                    readingFrame, geneticCode,
+                    BPPARAM = BPPARAM)))
             stopsDf = data.frame("read" = names(frReadSet),
                                  "stopCodons" = stops)
         }
@@ -302,27 +412,175 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     }
 
     ### ------------------------------------------------------------------------
-    ### Start aligning reads
+    ### Issue #42: defensive pre-alignment filter — drop reads whose
+    ### trimmed primary sequence is shorter than 2 bp. The Phase-3 / -4
+    ### `minReadLength` filter at the SangerContig level handles the
+    ### typical case, but on aggressively-trimmed degenerate inputs (M1
+    ### produces trimmedFinishPos = 0 for some windows; FASTA reads can
+    ### be length 1 if the user supplied a very short fragment) a length-
+    ### 1 entry can survive into `frReadSet` and silently break the
+    ### downstream alignment / consensus.
     ### ------------------------------------------------------------------------
+    too_short <- BiocGenerics::width(frReadSet) < 2L
+    if (any(too_short)) {
+        log_warn(">> Dropping ", sum(too_short),
+                 " read(s) with trimmed length < 2 bp ",
+                 "(MIN_READ_LENGTH_DEFENSIVE_DROP).")
+        frReadSet <- frReadSet[!too_short]
+    }
+    if (length(frReadSet) < 2L) {
+        ## Issue #42: when the defensive filter (or upstream filtering)
+        ## drops us below the AlignSeqs minimum, we must NOT enter
+        ## DECIPHER — it errors on length-1 inputs. Return a degenerate
+        ## but well-formed result so the SangerContig.initialize caller
+        ## can fold this into a controlled READ_NUMBER_ERROR instead of
+        ## crashing the whole alignment.
+        log_warn(">> Fewer than 2 usable reads after defensive filter; ",
+                 "returning empty consensus.")
+        if (length(frReadSet) == 1L) {
+            consensusGapfree <- frReadSet[[1L]]
+        } else {
+            consensusGapfree <- DNAString()
+        }
+        return(list("consensusGapfree" = consensusGapfree,
+                    "diffsDf"          = data.frame(),
+                    "aln2"             = DNAStringSet(),
+                    "dist"             = matrix(),
+                    "dend"             = list(),
+                    "indels"           = indels,
+                    "stopsDf"          = stopsDf,
+                    "spDf"             = data.frame()))
+    }
+
+    ### ------------------------------------------------------------------------
+    ### Start aligning reads
+    ###
+    ### Issue #94: users with low-overlap F+R reads (~50 bp overlap on
+    ### 800 bp reads, common in 16S barcoding) need fine control over the
+    ### DECIPHER alignment parameters. Pass `alignSeqsParams` through to
+    ### `AlignSeqs` / `AlignTranslation` so callers can tune
+    ### `iterations`, `gapOpening`, `refinements`, etc.
+    ### ------------------------------------------------------------------------
+    base_align_args <- list(myXStringSet = frReadSet,
+                            processors    = processorsNum,
+                            verbose       = FALSE)
+    extra_align_args <- alignSeqsParams[
+        !names(alignSeqsParams) %in% names(base_align_args)]
     if (refAminoAcidSeq != "") {
-        aln = AlignTranslation(frReadSet, geneticCode = geneticCode,
-                               processors = processorsNum, verbose = FALSE)
+        aln = do.call(AlignTranslation,
+                      c(base_align_args,
+                        list(geneticCode = geneticCode),
+                        extra_align_args))
     } else {
-        aln = AlignSeqs(frReadSet,
-                        processors = processorsNum, verbose = FALSE)
+        aln = do.call(AlignSeqs,
+                      c(base_align_args, extra_align_args))
     }
     names(aln) = paste(seq_len(length(aln)), "Read",
                        basename(names(aln)), sep="_")
-    consensus = ConsensusSequence(aln,
-                                  minInformation = minFractionCall,
-                                  includeTerminalGaps = TRUE,
-                                  threshold = maxFractionLost,
-                                  noConsensusChar = "-",
-                                  ambiguity = TRUE
-    )[[1]]
 
-    diffs = mclapply(aln, nPairwiseDiffs,
-                     subject = consensus, mc.cores = processorsNum)
+    ### ------------------------------------------------------------------------
+    ### Issue #94 / #66: post-alignment overlap-quality check.
+    ###
+    ### Compute, for each pair of aligned reads, the number of alignment
+    ### columns where BOTH reads have a non-gap base. That count is the
+    ### "shared overlap length". If the minimum shared overlap across all
+    ### pairs is below `minOverlapFraction * shorter_read_length` AND
+    ### below `minOverlapBases` (when supplied), log a `LOW_OVERLAP_WARN`.
+    ###
+    ### The default thresholds (0.0 / 0L) preserve pre-Phase-16 behaviour
+    ### unless the caller opts in. Callers that opt in get protection
+    ### against the silent IUPAC-ambiguity-soup outputs reported in #66.
+    ### ------------------------------------------------------------------------
+    overlap_min_obs <- NA_integer_
+    overlap_min_pair <- NA_character_
+    if (length(aln) >= 2L &&
+        (minOverlapFraction > 0 || minOverlapBases > 0L)) {
+        nongap <- as.matrix(aln) != "-"
+        ## Pairwise overlap counts via crossprod.
+        ## (rows = reads, cols = alignment columns)
+        ovl <- crossprod(t(nongap))     # nreads x nreads
+        diag(ovl) <- NA_integer_
+        ## Each read's effective length (non-gap column count).
+        read_len <- rowSums(nongap)
+        overlap_min_obs <- min(ovl, na.rm = TRUE)
+        ix <- which(ovl == overlap_min_obs, arr.ind = TRUE)
+        if (nrow(ix) > 0L) {
+            overlap_min_pair <- paste(rownames(ovl)[ix[1L, 1L]],
+                                       colnames(ovl)[ix[1L, 2L]],
+                                       sep = " <-> ")
+        }
+        shorter_pair_len <- min(read_len[ix[1L, ]])
+        threshold_frac <- minOverlapFraction * shorter_pair_len
+        threshold      <- max(threshold_frac, as.numeric(minOverlapBases))
+        if (overlap_min_obs < threshold) {
+            log_warn(">> LOW_OVERLAP_WARN: smallest pairwise overlap is ",
+                     overlap_min_obs, " bp (between ", overlap_min_pair,
+                     "); required threshold is ", round(threshold, 1L),
+                     " bp. Consensus may contain spurious IUPAC ",
+                     "ambiguity codes; review carefully or tighten ",
+                     "trimming parameters before merging.")
+        }
+    }
+
+    ### ------------------------------------------------------------------------
+    ### Issues #87 / #48 / #33: pluggable consensus base-callers.
+    ###
+    ### `consensusMethod`:
+    ###   * "strict"           — pre-Phase-17 default; uses DECIPHER's
+    ###                          ConsensusSequence with IUPAC ambiguity codes
+    ###                          for disagreeing bases (issue #87 reporter
+    ###                          calls this "ambiguous bases in consensus").
+    ###   * "majority"         — at each column pick the most-frequent base
+    ###                          (plurality vote); ties break by alphabetical
+    ###                          order of the base. Synthesises per-position
+    ###                          Phred = 40 * (winner_count / total_count).
+    ###   * "quality_weighted" — same as majority but votes are weighted by
+    ###                          source-read Phred scores. Per-position
+    ###                          consensus Phred is the mean of agreeing
+    ###                          reads' scores at that column. (issue #48)
+    ###
+    ### `qualityAware = TRUE` is shorthand for `consensusMethod =
+    ### "quality_weighted"`.
+    ###
+    ### Consensus quality scores (issue #33) are returned both as a
+    ### top-level list element AND attached to the gap-free consensus via
+    ### `attr(..., "qualityScores")` so they're discoverable from
+    ### `attributes(sc@contigSeq)$qualityScores`.
+    ### ------------------------------------------------------------------------
+    if (isTRUE(qualityAware)) consensusMethod <- "quality_weighted"
+    if (!consensusMethod %in% c("strict", "majority", "quality_weighted")) {
+        stop("`consensusMethod` must be one of 'strict', 'majority', ",
+             "or 'quality_weighted'.")
+    }
+
+    if (consensusMethod == "strict") {
+        consensus <- ConsensusSequence(aln,
+                                        minInformation = minFractionCall,
+                                        includeTerminalGaps = TRUE,
+                                        threshold = maxFractionLost,
+                                        noConsensusChar = "-",
+                                        ambiguity = TRUE)[[1L]]
+        consensusQualityScores <- integer(0)
+    } else {
+        weights_mat <- NULL
+        if (consensusMethod == "quality_weighted") {
+            if (is.null(qualityPhredScoresList)) {
+                log_warn(">> consensusMethod = 'quality_weighted' requested ",
+                         "but no qualityPhredScoresList supplied; falling ",
+                         "back to flat Phred-30 weights.")
+            }
+            qpls <- if (is.null(qualityPhredScoresList)) list()
+                    else qualityPhredScoresList
+            weights_mat <- .buildQualityMatrix(aln, qpls)
+        }
+        majority_res <- .computeConsensusMajority(aln, weights = weights_mat)
+        consensus              <- majority_res$consensus
+        consensusQualityScores <- majority_res$qualityScores
+    }
+
+    # Phase 6: nPairwiseDiffs is microsecond-fast per read; serial lapply
+    # avoids fork overhead that previously dominated this call site.
+    diffs = lapply(aln, nPairwiseDiffs, subject = consensus)
     diffs = do.call(rbind, diffs)
     diffsDf = data.frame("name" = names(aln),
                          "pairwise.diffs.to.consensus" = diffs[,1],
@@ -342,19 +600,37 @@ calculateContigSeq <- function(inputSource, forwardReadList, reverseReadList,
     # strip gaps from consensus (must be an easier way!!)
     consensusGapfree = RemoveGaps(DNAStringSet(consensus))[[1]]
 
+    ### ------------------------------------------------------------------------
+    ### Issue #33: align the consensus quality vector to the gap-stripped
+    ### consensus. `consensusQualityScores` initially has one entry per
+    ### alignment column including the gap columns we just stripped; we
+    ### subset to the non-gap positions so length(qualityScores) ==
+    ### length(consensusGapfree).
+    ### ------------------------------------------------------------------------
+    if (length(consensusQualityScores) > 0L) {
+        cons_str <- as.character(consensus)
+        cons_chars <- strsplit(cons_str, "", fixed = TRUE)[[1L]]
+        keep <- cons_chars != "-"
+        cons_qs_gapfree <- consensusQualityScores[keep]
+    } else {
+        cons_qs_gapfree <- integer(0)
+    }
+    attr(consensusGapfree, "qualityScores") <- cons_qs_gapfree
+
     # count columns in the alignment with >1 coincident secondary peaks
     spDf = countCoincidentSp(aln, processorsNum = processorsNum)
     if (is.null(spDf)) {
         spDf = data.frame()
     }
-    return(list("consensusGapfree" = consensusGapfree,
-                "diffsDf"          = diffsDf,
-                "aln2"             = aln2,
-                "dist"             = dist,
-                "dend"             = dend,
-                "indels"           = indels,
-                "stopsDf"          = stopsDf,
-                "spDf"             = spDf))
+    return(list("consensusGapfree"        = consensusGapfree,
+                "diffsDf"                 = diffsDf,
+                "aln2"                    = aln2,
+                "dist"                    = dist,
+                "dend"                    = dend,
+                "indels"                  = indels,
+                "stopsDf"                 = stopsDf,
+                "spDf"                    = spDf,
+                "consensusQualityScores"  = cons_qs_gapfree))
 }
 ### ----------------------------------------------------------------------------
 ### MakeBaseCalls related function
@@ -389,11 +665,21 @@ MakeBaseCallsInside <- function(traceMatrix, peakPosMatrixRaw,
     tempPosMatrix <- matrix(nrow=length(starts), ncol=4)
     tempAmpMatrix <- matrix(nrow=length(starts), ncol=4)
     indexBaseCall <- c()
+
+    # Phase 7: batch the peak lookups. peakvalues_batch_cpp processes all
+    # peak windows for one channel in a single .Call, eliminating the
+    # per-window R-to-C++ marshalling overhead that dominated when the
+    # function was called once per (channel, window) pair.
+    AbatchOut <- peakvalues_batch_cpp(Apeaks, starts, stops)
+    CbatchOut <- peakvalues_batch_cpp(Cpeaks, starts, stops)
+    GbatchOut <- peakvalues_batch_cpp(Gpeaks, starts, stops)
+    TbatchOut <- peakvalues_batch_cpp(Tpeaks, starts, stops)
+
     for(i in seq_len(length(starts))) {
-        Apeak <- peakvalues(Apeaks, starts[i], stops[i])
-        Cpeak <- peakvalues(Cpeaks, starts[i], stops[i])
-        Gpeak <- peakvalues(Gpeaks, starts[i], stops[i])
-        Tpeak <- peakvalues(Tpeaks, starts[i], stops[i])
+        Apeak <- AbatchOut[, i]
+        Cpeak <- CbatchOut[, i]
+        Gpeak <- GbatchOut[, i]
+        Tpeak <- TbatchOut[, i]
         if(is.na(Apeak[2]) &
            is.na(Cpeak[2]) &
            is.na(Gpeak[2]) &
@@ -459,7 +745,11 @@ getpeaks <- function(trace) {
                          times = r$lengths))
     cbind(indexes, trace[indexes])
 }
-peakvalues <- function(x, pstart, pstop) {
+### Phase 7: kept as a private helper for the equivalence test in
+### tests/testthat/test-Rcpp-peakvalues.R. Production paths use the C++
+### implementation via peakvalues_cpp() in src/peakvalues.cpp (~30x faster
+### per call on typical Sanger reads).
+.peakvalues_r <- function(x, pstart, pstop) {
     region <- x[x[,1] > pstart & x[,1] < pstop, ,drop=FALSE]
     if (length(region[,1]) == 0) return(c(0, NA))
     else return(c(max(region[,2], na.rm=TRUE), region[which.max(region[,2]),1]))
@@ -785,6 +1075,151 @@ vline <- function(x = 0, color = "red") {
     )
 }
 
+### ============================================================================
+### Phase 8: Plotly + WebGL chromatogram renderer.
+###
+### A full Sanger trace can have ~10^4 points per channel. The legacy
+### `chromatogram_overwrite` uses base-R graphics via `polygon()` which is
+### fine for static images but freezes the browser when wrapped in
+### Shiny/htmlwidgets at full resolution.
+###
+### `chromatogram_plotly()` returns a single Plotly htmlwidget that:
+###   * uses `scattergl` (WebGL) traces -- keeps the browser responsive
+###     even at >50k points per channel,
+###   * downsamples to `max_points` per channel by uniform-stride
+###     subsampling when the trace is longer (preserves peak silhouettes
+###     well; for production use one would prefer LTTB, but stride is
+###     deterministic and zero-dep),
+###   * supports the same `colors` argument as `chromatogram_overwrite`
+###     ("default" / "cb_friendly" / a 5-vector of hex colours).
+###
+### Returned object is a `plotly::plotly` htmlwidget that the Shiny app
+### can render with `plotly::renderPlotly`.
+### ============================================================================
+
+#' Render a Sanger chromatogram as an interactive Plotly widget
+#'
+#' Wraps the four trace channels (A/C/G/T) of a sangerseq / SangerRead
+#' object into a single \code{plotly} htmlwidget that renders via WebGL
+#' (\code{scattergl}). Intended for embedding in Shiny dashboards where
+#' the static \code{\link{chromatogram_overwrite}} would be too heavy.
+#'
+#' @param obj A sangerseq or SangerRead instance with a populated
+#'   \code{traceMatrix}.
+#' @param trim5 Integer; if \code{showtrim} is TRUE, shade the first
+#'   \code{trim5} positions to indicate the 5' trim region.
+#' @param trim3 Integer; if \code{showtrim} is TRUE, shade the last
+#'   \code{trim3} positions to indicate the 3' trim region.
+#' @param max_points Integer cap on the number of points rendered per
+#'   channel. When the trace exceeds \code{max_points} it is downsampled
+#'   by uniform stride.
+#' @param showtrim Logical; whether to overlay shaded trim regions.
+#' @param colors Either \code{"default"}, \code{"cb_friendly"}, or a
+#'   length-5 character vector of hex colours for (A, T, C, G, other).
+#'
+#' @return A \code{plotly} htmlwidget. The returned object carries a
+#'   \code{downsample_info} attribute reporting the original and rendered
+#'   point counts plus the stride.
+#'
+#' @examples
+#' data(sangerReadFData)
+#' \donttest{
+#' chromatogram_plotly(sangerReadFData)
+#' }
+#' @export
+chromatogram_plotly <- function(obj,
+                                 trim5      = 0,
+                                 trim3      = 0,
+                                 max_points = 8000L,
+                                 showtrim   = FALSE,
+                                 colors     = "default") {
+    if (!is(obj, "sangerseq")) {
+        stop("'obj' must be a sangerseq (or SangerRead) S4 object.")
+    }
+
+    palette <- if (identical(colors, "default")) {
+        c(A = "#2ca02c", T = "#1f77b4", C = "#000000", G = "#d62728",
+          other = "#9467bd")
+    } else if (identical(colors, "cb_friendly")) {
+        c(A = "#000000", T = "#c7c7c7", C = "#0072b2", G = "#d55e00",
+          other = "#cc79a7")
+    } else if (is.character(colors) && length(colors) == 5L) {
+        setNames(colors, c("A", "T", "C", "G", "other"))
+    } else {
+        stop("'colors' must be \"default\", \"cb_friendly\", or a length-5 character vector")
+    }
+
+    trace_mat <- obj@traceMatrix
+    if (is.null(trace_mat) || nrow(trace_mat) == 0L) {
+        stop("`obj@traceMatrix` is empty -- no chromatogram to render.")
+    }
+    n_total <- nrow(trace_mat)
+
+    # Uniform-stride downsample if the trace is longer than max_points.
+    if (n_total > max_points) {
+        stride <- ceiling(n_total / max_points)
+        idx    <- seq.int(1L, n_total, by = stride)
+    } else {
+        idx <- seq.int(1L, n_total)
+    }
+    x_axis <- idx
+
+    # Order matches sangerseqR convention: traceMatrix columns are A, C, G, T.
+    p <- plotly::plot_ly()
+    p <- plotly::add_trace(p,
+        x = x_axis, y = trace_mat[idx, 1L],
+        type = "scattergl", mode = "lines",
+        line = list(color = palette[["A"]], width = 1),
+        name = "A")
+    p <- plotly::add_trace(p,
+        x = x_axis, y = trace_mat[idx, 2L],
+        type = "scattergl", mode = "lines",
+        line = list(color = palette[["C"]], width = 1),
+        name = "C")
+    p <- plotly::add_trace(p,
+        x = x_axis, y = trace_mat[idx, 3L],
+        type = "scattergl", mode = "lines",
+        line = list(color = palette[["G"]], width = 1),
+        name = "G")
+    p <- plotly::add_trace(p,
+        x = x_axis, y = trace_mat[idx, 4L],
+        type = "scattergl", mode = "lines",
+        line = list(color = palette[["T"]], width = 1),
+        name = "T")
+
+    # Optional shaded trim region.
+    if (showtrim && (trim5 > 0 || trim3 > 0)) {
+        if (trim5 > 0) {
+            p <- plotly::add_trace(p,
+                x = c(0, trim5), y = c(0, 0),
+                type = "scattergl", mode = "lines",
+                line = list(color = "rgba(200, 200, 200, 0.5)", width = 30),
+                name = "5' trimmed", hoverinfo = "skip")
+        }
+        if (trim3 > 0) {
+            p <- plotly::add_trace(p,
+                x = c(n_total - trim3, n_total), y = c(0, 0),
+                type = "scattergl", mode = "lines",
+                line = list(color = "rgba(200, 200, 200, 0.5)", width = 30),
+                name = "3' trimmed", hoverinfo = "skip")
+        }
+    }
+
+    p <- plotly::layout(p,
+        xaxis  = list(title = "Trace position",
+                      range = c(1L, n_total)),
+        yaxis  = list(title = "Signal"),
+        legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.1),
+        hovermode = "x unified")
+
+    attr(p, "downsample_info") <- list(
+        original_points     = n_total,
+        rendered_points     = length(idx),
+        downsample_stride   = if (exists("stride", inherits = FALSE)) stride else 1L
+    )
+    p
+}
+
 SangerReadInnerTrimming <- function(SangerReadInst, inputSource) {
     primaryDNA <- as.character(SangerReadInst@primarySeq)
     if (inputSource == "ABIF") {
@@ -798,10 +1233,40 @@ SangerReadInnerTrimming <- function(SangerReadInst, inputSource) {
     return(primaryDNA)
 }
 
+#' Static base-R chromatogram renderer with a corrected color palette.
+#'
+#' Reimplementation of \code{sangerseqR::chromatogram} with a fix for
+#' base color rendering. Intended for static (PDF / PNG) export. For
+#' interactive embedding in Shiny see \code{\link{chromatogram_plotly}}.
+#'
+#' @param obj A sangerseq or SangerRead instance.
+#' @param trim5 Integer; number of bases to mark as 5' trimmed.
+#' @param trim3 Integer; number of bases to mark as 3' trimmed.
+#' @param showcalls One of \code{"primary"}, \code{"secondary"},
+#'   \code{"both"}, or \code{"none"}.
+#' @param width Bases per row.
+#' @param height Plot height per row (relative units).
+#' @param cex.mtext Text size for marginal annotations.
+#' @param cex.base Text size for base-call labels.
+#' @param ylim Maximum y-axis multiplier (relative to robust mean).
+#' @param filename Optional path to write a PDF.
+#' @param showtrim Logical; if TRUE, shade the trim regions.
+#' @param showhets Logical; if TRUE, mark heterozygous positions.
+#' @param colors Either \code{"default"}, \code{"cb_friendly"}, or a
+#'   length-5 character vector of hex colours.
+#'
+#' @return Invisibly returns NULL; called for its side effect of
+#'   plotting (or writing to \code{filename}).
+#'
+#' @examples
+#' data(sangerReadFData)
+#' \donttest{
+#' chromatogram_overwrite(sangerReadFData)
+#' }
 #' @export
-chromatogram_overwrite <- function(obj, trim5=0, trim3=0, 
-                                   showcalls=c("primary", "secondary", "both", "none"), 
-                                   width=100, height=2, cex.mtext=1, cex.base=1, ylim=3, 
+chromatogram_overwrite <- function(obj, trim5=0, trim3=0,
+                                   showcalls=c("primary", "secondary", "both", "none"),
+                                   width=100, height=2, cex.mtext=1, cex.base=1, ylim=3,
                                    filename=NULL, showtrim=FALSE, showhets=TRUE, colors="default") {
     if (colors == "default") {
         A_color = "green"
@@ -810,11 +1275,11 @@ chromatogram_overwrite <- function(obj, trim5=0, trim3=0,
         G_color = "red"
         unknown_color = "purple"
     } else if (colors == "cb_friendly") {
-        A_color = rgb(0, 0, 0, max = 255)
-        T_color = rgb(199, 199, 199, max = 255)
-        C_color = rgb(0, 114, 178, max = 255)
-        G_color = rgb(213, 94, 0, max = 255)
-        unknown_color = rgb(204, 121, 167, max = 255)
+        A_color = rgb(0, 0, 0, maxColorValue = 255)
+        T_color = rgb(199, 199, 199, maxColorValue = 255)
+        C_color = rgb(0, 114, 178, maxColorValue = 255)
+        G_color = rgb(213, 94, 0, maxColorValue = 255)
+        unknown_color = rgb(204, 121, 167, maxColorValue = 255)
     } else {
         A_color = colors[1]
         T_color = colors[2]
@@ -941,8 +1406,8 @@ chromatogram_overwrite <- function(obj, trim5=0, trim3=0,
     }
     if(!is.null(filename)) {
         dev.off()
-        cat(paste("Chromatogram saved to", filename, 
-                  "in the current working directory"))
+        log_info("Chromatogram saved to ", filename,
+                 " in the current working directory")
     }
     else par(originalpar)
 }

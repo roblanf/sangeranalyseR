@@ -36,7 +36,7 @@ A SangerRead method which generates final reports of the SangerRead instance.
 }
 \examples{
 data("sangerReadFData")
-\dontrun{
+\donttest{
 generateReportSR(sangerReadFData, "~/Documents")
 generateReportSR(sangerReadFData, colors="cb_friendly")}
 }

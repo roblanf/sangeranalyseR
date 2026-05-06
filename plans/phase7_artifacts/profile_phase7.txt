@@ -1,0 +1,47 @@
+by.self (top 25):
+                        self.time self.pct total.time total.pct
+".Call"                     0.150   15.710      0.150    15.710
+"c"                         0.060    6.280      0.060     6.280
+"isatty"                    0.060    6.280      0.060     6.280
+"MakeBaseCallsInside"       0.040    4.190      0.350    36.650
+"stopifnot"                 0.035    3.660      0.055     5.760
+"stri_split_boundaries"     0.035    3.660      0.035     3.660
+"windows"                   0.025    2.620      0.140    14.660
+"order"                     0.025    2.620      0.090     9.420
+"vapply"                    0.025    2.620      0.060     6.280
+"getClass"                  0.025    2.620      0.045     4.710
+"read.abif"                 0.020    2.090      0.165    17.280
+"new"                       0.015    1.570      0.955   100.000
+"getClassDef"               0.015    1.570      0.030     3.140
+"sys.function"              0.015    1.570      0.025     2.620
+"readBin"                   0.015    1.570      0.020     2.090
+".local"                    0.010    1.050      0.955   100.000
+"lapply"                    0.010    1.050      0.935    97.910
+"<Anonymous>"               0.010    1.050      0.695    72.770
+"update_ranges"             0.010    1.050      0.065     6.810
+"match.arg"                 0.010    1.050      0.035     3.660
+"solveUserSEW"              0.010    1.050      0.035     3.660
+"length"                    0.010    1.050      0.020     2.090
+".External2"                0.010    1.050      0.010     1.050
+".getClassesFromCache"      0.010    1.050      0.010     1.050
+"is.numeric"                0.010    1.050      0.010     1.050
+
+by.total (top 15):
+                         total.time total.pct self.time self.pct
+"new"                         0.955   100.000     0.015    1.570
+".local"                      0.955   100.000     0.010    1.050
+"initialize"                  0.955   100.000     0.005    0.520
+"run_sa"                      0.955   100.000     0.000    0.000
+"SangerAlignment"             0.955   100.000     0.000    0.000
+"lapply"                      0.935    97.910     0.010    1.050
+"FUN"                         0.935    97.910     0.005    0.520
+"<Anonymous>"                 0.695    72.770     0.010    1.050
+"do.call"                     0.680    71.200     0.000    0.000
+"withCallingHandlers"         0.635    66.490     0.000    0.000
+".bpinit"                     0.620    64.920     0.000    0.000
+"BiocParallel::bplapply"      0.620    64.920     0.000    0.000
+"bploop.lapply"               0.620    64.920     0.000    0.000
+"bploop"                      0.620    64.920     0.000    0.000
+".bploop_impl"                0.615    64.400     0.000    0.000
+
+Total sampling time: 0.955 s

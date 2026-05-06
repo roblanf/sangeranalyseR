@@ -2,6 +2,10 @@
 ### R shiny SangerAlignment server function
 ### ============================================================================
 SangerAlignmentServer <- function(input, output, session) {
+    # Bind NEW_SANGER_ALIGNED_CONSENSUS_READ_SET in this server's
+    # enclosing scope; otherwise `<<-` in the saveS4 handler steps up to
+    # globalenv() and triggers an R CMD check warning.
+    NEW_SANGER_ALIGNED_CONSENSUS_READ_SET <- NULL
     # Suppress Warning
     options(warn = -1)
     ### ------------------------------------------------------------------------
@@ -601,17 +605,17 @@ SangerAlignmentServer <- function(input, output, session) {
                                      contigList[[contigIndex]]@
                                      forwardReadList[[readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerAlignment@
+                    as.character(primaryAASeqS1(SangerAlignment@
                                      contigList[[contigIndex]]@
-                                     forwardReadList[[readIndex]]@primaryAASeqS1)
+                                     forwardReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerAlignment@
+                    as.character(primaryAASeqS2(SangerAlignment@
                                      contigList[[contigIndex]]@
-                                     forwardReadList[[readIndex]]@primaryAASeqS2)
+                                     forwardReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerAlignment@
+                    as.character(primaryAASeqS3(SangerAlignment@
                                      contigList[[contigIndex]]@
-                                     forwardReadList[[readIndex]]@primaryAASeqS3)
+                                     forwardReadList[[readIndex]]))
                 trimmedParam[["M1TrimmingCutoff"]] <<-
                     SangerAlignment@
                     contigList[[contigIndex]]@
@@ -704,17 +708,17 @@ SangerAlignmentServer <- function(input, output, session) {
                                      contigList[[contigIndex]]@
                                      reverseReadList[[readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerAlignment@
+                    as.character(primaryAASeqS1(SangerAlignment@
                                      contigList[[contigIndex]]@
-                                     reverseReadList[[readIndex]]@primaryAASeqS1)
+                                     reverseReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerAlignment@
+                    as.character(primaryAASeqS2(SangerAlignment@
                                      contigList[[contigIndex]]@
-                                     reverseReadList[[readIndex]]@primaryAASeqS2)
+                                     reverseReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerAlignment@
+                    as.character(primaryAASeqS3(SangerAlignment@
                                      contigList[[contigIndex]]@
-                                     reverseReadList[[readIndex]]@primaryAASeqS3)
+                                     reverseReadList[[readIndex]]))
                 
                 trimmedParam[["M1TrimmingCutoff"]] <<-
                     SangerAlignment@
@@ -2250,14 +2254,14 @@ SangerAlignmentServer <- function(input, output, session) {
                     as.character(SangerAlignment@contigList[[contigIndex]]@
                                      forwardReadList[[readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerAlignment@contigList[[contigIndex]]@
-                                     forwardReadList[[readIndex]]@primaryAASeqS1)
+                    as.character(primaryAASeqS1(SangerAlignment@contigList[[contigIndex]]@
+                                     forwardReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerAlignment@contigList[[contigIndex]]@
-                                     forwardReadList[[readIndex]]@primaryAASeqS2)
+                    as.character(primaryAASeqS2(SangerAlignment@contigList[[contigIndex]]@
+                                     forwardReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerAlignment@contigList[[contigIndex]]@
-                                     forwardReadList[[readIndex]]@primaryAASeqS3)
+                    as.character(primaryAASeqS3(SangerAlignment@contigList[[contigIndex]]@
+                                     forwardReadList[[readIndex]]))
             } else if (directionParam == "Reverse") {
                 rawSeqLength <-
                     SangerAlignment@contigList[[contigIndex]]@
@@ -2314,14 +2318,14 @@ SangerAlignmentServer <- function(input, output, session) {
                     as.character(SangerAlignment@contigList[[contigIndex]]@
                                      reverseReadList[[readIndex]]@secondarySeq)
                 sequenceParam[["primaryAASeqS1"]] <<-
-                    as.character(SangerAlignment@contigList[[contigIndex]]@
-                                     reverseReadList[[readIndex]]@primaryAASeqS1)
+                    as.character(primaryAASeqS1(SangerAlignment@contigList[[contigIndex]]@
+                                     reverseReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS2"]] <<-
-                    as.character(SangerAlignment@contigList[[contigIndex]]@
-                                     reverseReadList[[readIndex]]@primaryAASeqS2)
+                    as.character(primaryAASeqS2(SangerAlignment@contigList[[contigIndex]]@
+                                     reverseReadList[[readIndex]]))
                 sequenceParam[["primaryAASeqS3"]] <<-
-                    as.character(SangerAlignment@contigList[[contigIndex]]@
-                                     reverseReadList[[readIndex]]@primaryAASeqS3)
+                    as.character(primaryAASeqS3(SangerAlignment@contigList[[contigIndex]]@
+                                     reverseReadList[[readIndex]]))
             }
             # log_info(">>>>>>>>>>>> 'MakeBaseCalls' finished")
             chromatogram_overwrite(hetcalls,
@@ -2346,4 +2350,3 @@ SangerAlignmentServer <- function(input, output, session) {
         }
     })
 }
-

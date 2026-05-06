@@ -21,10 +21,8 @@ A SangerRead method which generates summary table for SangerRead instance
 \examples{
 data(sangerReadFData)
 data(sangerContigData)
-data(sangerAlignmentData)
-\dontrun{
+\donttest{
 readTable(sangerReadFData)
 readTable(sangerContigData)
-readTable(sangerAlignmentData)
 }
 }

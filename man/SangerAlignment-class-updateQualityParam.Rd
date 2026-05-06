@@ -35,7 +35,7 @@ A SangerAlignment method which updates QualityReport parameter for each the Sang
 }
 \examples{
 data("sangerAlignmentData")
-\dontrun{
+\donttest{
 updateQualityParam(sangerAlignmentData,
                    TrimmingMethod         = "M2",
                    M1TrimmingCutoff       = NULL,

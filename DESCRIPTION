@@ -1,10 +1,13 @@
 Package: sangeranalyseR
 Type: Package
 Title: sangeranalyseR: a suite of functions for the analysis of Sanger sequence data in R
-Version: 1.20.0
+Version: 1.23.0
 Date: 2024-04-24
-Author: Rob Lanfear <rob.lanfear@gmail.com>, Kuan-Hao Chao <ntueeb05howard@gmail.com>
-Maintainer: Kuan-Hao Chao <ntueeb05howard@gmail.com>
+Authors@R: c(
+    person("Rob", "Lanfear", email = "rob.lanfear@gmail.com",
+           role = "aut"),
+    person("Kuan-Hao", "Chao", email = "ntueeb05howard@gmail.com",
+           role = c("aut", "cre")))
 biocViews: Genetics, Alignment, Sequencing, SangerSeq, Preprocessing, 
            QualityControl, Visualization, GUI
 Description: This package builds on sangerseqR to allow users to create contigs
@@ -15,41 +18,56 @@ Description: This package builds on sangerseqR to allow users to create contigs
              interactively either in R or in the associated Shiny applications. 
              There is extensive online documentation, and the package can outputs 
              detailed HTML reports, including chromatograms.
-License: GPL-2
+License: GPL-2 | file LICENSE
+URL: https://github.com/roblanf/sangeranalyseR
+BugReports: https://github.com/roblanf/sangeranalyseR/issues
 Encoding: UTF-8
-Depends: 
+Depends:
     R (>= 4.0.0),
-    stringr,
-    ape,
     Biostrings,
-    pwalign,
     DECIPHER,
-    parallel,
-    reshape2,
-    sangerseqR,
+    sangerseqR
+Imports:
+    ape,
+    BiocGenerics,
+    BiocParallel,
+    S4Vectors,
+    data.table,
+    DT,
+    excelR,
+    ggdendro,
+    grDevices,
+    graphics,
     gridExtra,
+    logger,
+    methods,
+    openxlsx,
+    parallel,
+    plotly,
+    pwalign,
+    Rcpp,
+    rmarkdown (>= 2.9),
+    seqinr,
     shiny,
+    shinycssloaders,
     shinydashboard,
     shinyjs,
-    data.table,
-    plotly,
-    DT,
-    zeallot,
-    excelR,
-    shinycssloaders,
-    ggdendro,
     shinyWidgets,
-    openxlsx,
+    stats,
+    stringr,
     tools,
-    rmarkdown (>= 2.9),
-    knitr (>= 1.33),
-    seqinr,
-    BiocStyle,
-    logger
+    utils
+LinkingTo: Rcpp
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
-Suggests: 
-    testthat (>= 2.1.0)
+Suggests:
+    testthat (>= 2.1.0),
+    withr,
+    BiocManager,
+    BiocStyle,
+    knitr (>= 1.33),
+    reshape2,
+    zeallot
 Collate: 
     'AllGenerics.R'
     'ClassChromatogramParam.R'
@@ -59,12 +77,14 @@ Collate:
     'ClassSangerAlignment.R'
     'ClassSangerContig.R'
     'Constructors.R'
+    'GlobalTrimApp.R'
     'LoadMessage.R'
     'MethodSangerAlignment.R'
     'MethodSangerContig.R'
     'MethodSangerRead.R'
     'MethodShared.R'
     'MethodsQualityReport.R'
+    'RcppExports.R'
     'ShinySangerAlignmentServer.R'
     'ShinySangerAlignmentUI.R'
     'ShinySangerContigServer.R'

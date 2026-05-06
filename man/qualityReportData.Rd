@@ -4,11 +4,18 @@
 \name{qualityReportData}
 \alias{qualityReportData}
 \title{QualityReport instance}
+\format{
+A \code{\link{QualityReport-class}} S4 object containing
+  per-base Phred scores, the trimmed start/finish positions, and the
+  raw / trimmed mean / minimum quality scores.
+}
 \usage{
 data(qualityReportData)
 }
 \description{
-QualityReport instance
+A pre-built \code{QualityReport} S4 object derived from the
+  bundled ACHLO ABIF fixture, suitable for vignette and example use
+  without re-running the trimming pipeline.
 }
 \author{
 Kuan-Hao Chao

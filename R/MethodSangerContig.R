@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' data("sangerContigData")
-#' \dontrun{
+#' \donttest{
 #' updateQualityParam(sangerContigData,
 #'                    TrimmingMethod         = "M2",
 #'                    M1TrimmingCutoff       = NULL,
@@ -190,12 +190,26 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
     ### ------------------------------------------------------------------------
     if (selection == "all" || selection == "reads_alignment") {
         log_info("\n    >> Writing alignment to FASTA ...")
-        alignmentObject = object@alignment
+        ## Issue #89 fix: contigs built from a single read (or any case where
+        ## calculateContigSeq was skipped because readNumber < 2) have an
+        ## empty `@alignment` slot. Pre-Phase-15, `append(empty_DNAStringSet,
+        ## list(contigSeq))` returned a list (not an XStringSet) and
+        ## writeXStringSet errored with "'x' must be an XStringSet object".
+        ## Phase 15 detects the empty-alignment state and writes the contig
+        ## sequence on its own.
+        alignmentObject <- object@alignment
         alignmentObject$Consensus <- NULL
-        writeAlignment <- append(alignmentObject, list(object@contigSeq))
-        names(writeAlignment) <- sub("^[0-9]*_", "", names(writeAlignment))
-        names(writeAlignment)[length(writeAlignment)] <-
-            paste0(object@contigName, "_contig")
+
+        if (length(alignmentObject) == 0L) {
+            writeAlignment <- DNAStringSet(object@contigSeq)
+            names(writeAlignment) <- paste0(object@contigName, "_contig")
+        } else {
+            writeAlignment <- c(alignmentObject,
+                                 DNAStringSet(object@contigSeq))
+            names(writeAlignment) <- sub("^[0-9]*_", "", names(writeAlignment))
+            names(writeAlignment)[length(writeAlignment)] <-
+                paste0(object@contigName, "_contig")
+        }
         writeXStringSet(writeAlignment,
                         file.path(outputDir,
                                   paste0(contigName, "_reads_alignment.fa")),
@@ -286,7 +300,7 @@ setMethod("writeFastaSC", "SangerContig", function(object, outputDir, compress,
 #'
 #' @examples
 #' data("sangerContigData")
-#' \dontrun{
+#' \donttest{
 #' generateReportSC(sangerContigData)
 #' generateReportSC(sangerContigData, colors="cb_friendly")}
 setMethod("generateReportSC", "SangerContig",
@@ -379,11 +393,9 @@ setMethod("generateReportSC", "SangerContig",
 #' @examples
 #' data(sangerReadFData)
 #' data(sangerContigData)
-#' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' readTable(sangerReadFData)
 #' readTable(sangerContigData)
-#' readTable(sangerAlignmentData)
 #' }
 setMethod("readTable", "SangerContig", function(object, indentation = 0) {
     space <- paste(rep(' ', indentation), collapse = "")

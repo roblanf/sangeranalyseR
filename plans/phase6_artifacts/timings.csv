@@ -1,0 +1,13 @@
+"rep","config","secs"
+1,"lazy=TRUE  + SerialParam",1.2543
+1,"lazy=FALSE + SerialParam",2.0541
+1,"lazy=TRUE  + MulticoreParam(2)",2.1878
+1,"lazy=TRUE  + MulticoreParam(4)",2.2315
+2,"lazy=TRUE  + SerialParam",1.303
+2,"lazy=FALSE + SerialParam",2.0875
+2,"lazy=TRUE  + MulticoreParam(2)",2.286
+2,"lazy=TRUE  + MulticoreParam(4)",2.8803
+3,"lazy=TRUE  + SerialParam",1.4357
+3,"lazy=FALSE + SerialParam",2.2333
+3,"lazy=TRUE  + MulticoreParam(2)",2.4292
+3,"lazy=TRUE  + MulticoreParam(4)",2.2671

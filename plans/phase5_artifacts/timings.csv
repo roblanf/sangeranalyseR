@@ -1,0 +1,7 @@
+"method","stage","seconds"
+"M1","ingest_and_assemble",1.8545
+"M1","writeFasta",0.0211
+"M1","updateQP",0.9844
+"M2","ingest_and_assemble",1.7427
+"M2","writeFasta",0.0069
+"M2","updateQP",0.9633

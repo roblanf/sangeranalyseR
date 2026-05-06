@@ -34,7 +34,7 @@ A method which writes FASTA files of the SangerRead,
 data(sangerReadFData)
 data(sangerContigData)
 data(sangerAlignmentData)
-\dontrun{
+\donttest{
 writeFasta(sangerReadFData)
 writeFasta(sangerContigData)
 writeFasta(sangerAlignmentData)}

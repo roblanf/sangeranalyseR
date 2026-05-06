@@ -4,11 +4,17 @@
 \name{sangerAlignmentData}
 \alias{sangerAlignmentData}
 \title{SangerAlignment instance}
+\format{
+A \code{\link{SangerAlignment-class}} S4 object containing
+  \code{contigList}, \code{contigsAlignment}, \code{contigsConsensus},
+  and a \code{contigsTree} \code{phylo} instance.
+}
 \usage{
 data(sangerAlignmentData)
 }
 \description{
-SangerAlignment instance
+A pre-built \code{SangerAlignment} S4 object aggregating
+  four contigs from the ACHLO fixture.
 }
 \author{
 Kuan-Hao Chao

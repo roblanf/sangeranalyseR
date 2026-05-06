@@ -18,6 +18,6 @@ A SangerRead method which creates quality base interactive plot.
 }
 \examples{
 data("sangerReadFData")
-\dontrun{
+\donttest{
 qualityBasePlot(sangerReadFData)}
 }

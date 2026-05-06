@@ -35,6 +35,6 @@ Method generateReportSC
 }
 \examples{
 data(sangerContigData)
-\dontrun{
+\donttest{
 generateReportSC(sangerContigData)}
 }

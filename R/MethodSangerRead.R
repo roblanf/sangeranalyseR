@@ -1,4 +1,47 @@
 ### ============================================================================
+### Lazy 3-frame AA accessors (Phase 6)
+###
+### When SangerRead is constructed with lazyAA = TRUE (the default) and no
+### AA reference sequence, the primaryAASeqS1/S2/S3 slots stay as empty
+### AAStrings to avoid the ~35% wall-time cost of eager translation. These
+### methods return the cached slot when populated, or compute on demand
+### otherwise.
+### ============================================================================
+.computeAASeq <- function(object, frame) {
+    if (object@inputSource == "ABIF" &&
+        !is.null(object@QualityReport)) {
+        ts <- object@QualityReport@trimmedStartPos
+        tf <- object@QualityReport@trimmedFinishPos
+    } else {
+        ts <- 0
+        tf <- length(object@primarySeq)
+    }
+    res <- calculateAASeq(object@primarySeq, ts, tf, object@geneticCode)
+    res[[paste0("primaryAASeqS", frame)]]
+}
+
+#' @rdname primaryAASeqS1-methods
+#' @aliases primaryAASeqS1,SangerRead-method
+setMethod("primaryAASeqS1", "SangerRead", function(object) {
+    if (length(object@primaryAASeqS1) > 0L) return(object@primaryAASeqS1)
+    .computeAASeq(object, 1L)
+})
+
+#' @rdname primaryAASeqS2-methods
+#' @aliases primaryAASeqS2,SangerRead-method
+setMethod("primaryAASeqS2", "SangerRead", function(object) {
+    if (length(object@primaryAASeqS2) > 0L) return(object@primaryAASeqS2)
+    .computeAASeq(object, 2L)
+})
+
+#' @rdname primaryAASeqS3-methods
+#' @aliases primaryAASeqS3,SangerRead-method
+setMethod("primaryAASeqS3", "SangerRead", function(object) {
+    if (length(object@primaryAASeqS3) > 0L) return(object@primaryAASeqS3)
+    .computeAASeq(object, 3L)
+})
+
+### ============================================================================
 ### Plotting quality for each base for "SangerRead" S4 object
 ### ============================================================================
 #' A SangerRead method which creates quality base interactive plot.
@@ -13,7 +56,7 @@
 #'
 #' @examples
 #' data("sangerReadFData")
-#' \dontrun{
+#' \donttest{
 #' qualityBasePlot(sangerReadFData)}
 setMethod("qualityBasePlot",  "SangerRead", function(object){
     if (object@inputSource == "ABIF") {
@@ -230,7 +273,7 @@ setMethod("writeFastaSR", "SangerRead", function(object, outputDir, compress,
 #'
 #' @examples
 #' data("sangerReadFData")
-#' \dontrun{
+#' \donttest{
 #' generateReportSR(sangerReadFData, "~/Documents")
 #' generateReportSR(sangerReadFData, colors="cb_friendly")}
 setMethod("generateReportSR", "SangerRead",
@@ -296,11 +339,9 @@ setMethod("generateReportSR", "SangerRead",
 #' @examples
 #' data(sangerReadFData)
 #' data(sangerContigData)
-#' data(sangerAlignmentData)
-#' \dontrun{
+#' \donttest{
 #' readTable(sangerReadFData)
 #' readTable(sangerContigData)
-#' readTable(sangerAlignmentData)
 #' }
 setMethod("readTable", "SangerRead", function(object, indentation = 0) {
     space <- paste(rep(' ', indentation), collapse = "")

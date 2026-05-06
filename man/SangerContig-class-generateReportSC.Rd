@@ -36,7 +36,7 @@ A SangerContig method which generates final reports of the SangerContig instance
 }
 \examples{
 data("sangerContigData")
-\dontrun{
+\donttest{
 generateReportSC(sangerContigData)
 generateReportSC(sangerContigData, colors="cb_friendly")}
 }
