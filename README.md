@@ -176,7 +176,7 @@ Available on [Genome Biology and Evolution (GBE)](https://academic.oup.com/gbe/a
 ## Maintainers
 
 - **Kuan-Hao Chao** &lt;ntueeb05howard@gmail.com&gt; (creator, maintainer)
-- **Rob Lanfear** &lt;rob.lanfear@gmail.com&gt; (author)
+- **Rob Lanfear** &lt;rob.lanfear@gmail.com&gt; (creator, author)
 
 License: **GPL-2** (see `LICENSE`).
 
